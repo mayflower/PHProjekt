@@ -7,11 +7,13 @@
  *
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
- * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt 
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *             GNU Public License 2.0
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
+ * @author     David Soria Parra <soria_parra@mayflower.de>
  * @since      File available since Release 1.0
  */
 
@@ -23,7 +25,8 @@
  * is not setable using the Zend_View_Abstract::setScriptPath operations.
  * They are set using the translated filename from the helper.
  *
- * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *             GNU Public License 2.0
  * @version    Release: @package_version@
@@ -49,8 +52,8 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     /**
      * Constructor
      *
-     * @param string $tmplPath
-     * @param array $extraParams
+     * @param string $compilePath Path for the compiled smarty templates
+     *
      * @return void
      */
     public function __construct($compilePath = null)
@@ -71,11 +74,12 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * Allows setting a specific key to the specified value, OR passing an array
      * of key => value pairs to set en masse.
      *
-     * @see __set()
-     * @param string|array $spec The assignment strategy to use (key or array of key
+     * @param string|array $key   the assigments to use (key or array of key
      * => value pairs)
-     * @param mixed $value (Optional) If assigning a named variable, use this
-     * as the value.
+     * @param mixed        $value (Optional) If assigning a named variable, 
+     * use this as the value.
+     *
+     * @see __set
      * @return void
      */
     public function assign($key, $value = null)
@@ -90,8 +94,9 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     /**
      * Assign a variable to the template
      *
-     * @param string $key The variable name.
-     * @param mixed $val The variable value.
+     * @param string $key   The variable name.
+     * @param mixed  $value The variable value.
+     *
      * @return void
      */
     public function __set($key, $value)
@@ -103,6 +108,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * Retrieve an assigned variable
      *
      * @param string $key The variable name.
+     * 
      * @return mixed The variable value.
      */
     public function __get($key)
@@ -111,25 +117,24 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     }
 
     /**
-     * Run
+     * Run - helper function to fit with zend view 
      *
-     * @param string $name The template to process.
      * @return string The output.
      */
-    protected function _run()
+    protected function run()
     {
         /* why 'this'?
          * to emulate standard zend view functionality
          * doesn't mess up smarty in any way */
         $this->_smarty->assign_by_ref('this', $this);
 
-       /*
-        * smarty needs a template_dir, and can only use templates,
-        * found in that directory, so we have to strip it from the filename
-        * We use the given filename to set the template dir,
-        * so we we have a nice ":moduleDir/:action" configuration available
-        * in the front setup */
-        $file = func_get_arg(0);
+        /*
+         * smarty needs a template_dir, and can only use templates,
+         * found in that directory, so we have to strip it from the filename
+         * We use the given filename to set the template dir,
+         * so we we have a nice ":moduleDir/:action" configuration available
+         * in the front setup */
+        $file                        = func_get_arg(0);
         $this->_smarty->template_dir = dirname($file);
 
         $cpath = realpath($this->_smarty->template_dir
@@ -143,7 +148,8 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         } elseif (is_dir($cpath)) {
             $this->_smarty->compile_dir = $cpath;
         } else {
-            throw new Zend_View_Exception('Cannot set directory for compiled templates');
+            throw new Zend_View_Exception('Cannot set directory '.
+                                          'for compiled templates');
         }
 
         // process the template (and filter the output)
