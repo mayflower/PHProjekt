@@ -8,9 +8,8 @@
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt 
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
- *             GNU Public License 2.0
+ * @package    PHProjekt
+ * @license    http://phprojekt.com/license
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
  * @author     David Soria Parra <soria_parra@mayflower.de>
@@ -27,8 +26,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
- *             GNU Public License 2.0
+ * @license    http://phprojekt.com/license
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
@@ -76,7 +74,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      *
      * @param string|array $key   the assigments to use (key or array of key
      * => value pairs)
-     * @param mixed        $value (Optional) If assigning a named variable, 
+     * @param mixed        $value (Optional) If assigning a named variable,
      * use this as the value.
      *
      * @see __set
@@ -108,7 +106,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * Retrieve an assigned variable
      *
      * @param string $key The variable name.
-     * 
+     *
      * @return mixed The variable value.
      */
     public function __get($key)
@@ -117,11 +115,11 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     }
 
     /**
-     * Run - helper function to fit with zend view 
+     * Run - helper function to fit with zend view
      *
      * @return string The output.
      */
-    protected function run()
+    protected function _run()
     {
         /* why 'this'?
          * to emulate standard zend view functionality
