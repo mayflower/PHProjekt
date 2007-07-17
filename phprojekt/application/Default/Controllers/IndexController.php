@@ -3,7 +3,7 @@
  * Default Controller for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://phprojekt.com/license
+ * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @package    PHProjekt
@@ -18,7 +18,7 @@ require_once 'Zend/Controller/Action.php';
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license    http://phprojekt.com/license
+ * @license    http://phprojekt.com/license PHProjekt 6 License
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
