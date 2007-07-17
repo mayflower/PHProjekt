@@ -6,6 +6,7 @@
  * @package    Htdocs
  * @copyright  2007 Mayflower GmbH
  * @version    CVS: $Id$
+ * @license    http://phprojekt.com/license
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 define('PHPR_CONFIG_SECTION', 'production');
