@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<phprojekt-configuration>
+    <production>
+        <log>
+          <priority>DEBUG</priority>
+          <filename>/home/dsp/public_html/phprojekt-mvc/logs/debug.log</filename>
+        </log>
+        <log>
+          <priority>CRITICAL</priority>
+          <filename>/home/dsp/public_html/phprojekt-mvc/logs/crit.log</filename>
+        </log>
+        <database>
+            <type>pdo_mysql</type>
+            <host>localhost</host>
+            <username>phprojekt</username>
+            <password>phprojekt</password>
+            <name>phprojekt-mvc</name>
+        </database>
+   </production>
+</phprojekt-configuration>
