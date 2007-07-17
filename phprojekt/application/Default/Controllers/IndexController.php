@@ -25,7 +25,16 @@ require_once 'Zend/Controller/Action.php';
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class DefaultController extends Zend_Controller_Action
+class IndexController extends Zend_Controller_Action
 {
-    // more here...
+    /**
+     * Standard action
+     *
+     */
+    public function indexAction()
+    {
+        /* @var $renderer Zend_View_Abstract */
+        $renderer = Zend_Registry::get('view');
+        $renderer->name = "David";
+    }
 }
