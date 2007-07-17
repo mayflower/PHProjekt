@@ -9,7 +9,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
- * @license    http://phprojekt.com/license
+ * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
  * @author     David Soria Parra <soria_parra@mayflower.de>
@@ -26,7 +26,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
- * @license    http://phprojekt.com/license
+ * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
