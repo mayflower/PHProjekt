@@ -1,3 +1,5 @@
+
+l
 <?php
 /**
  * Simple ActiveRecord implementation based on Zend_Db_Table
@@ -231,7 +233,7 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
 
             $instance = new $className(array('db' => $this->getAdapter()),
                            $this->getAdapter()->quoteInto(sprintf('%s = ?',
-                                $this->_translateKeyFormat(et_class($this))),
+                                $this->_translateKeyFormat(get_class($this))),
                                 $this->id));
 
             $this->_data[$key] = $instance;
@@ -288,8 +290,23 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
             $wheres[] = $where;
         }
 
-        return parent::fetchAll(implode(' AND ', $wheres), $order,
-                                $count, $offset);
+        $where = (count($wheres) > 0) ? implode(' AND ', $wheres) : null;
+        $rows = parent::fetchAll($where, $order,
+                                 $count, $offset);
+
+        $result = array();
+        foreach ($rows as $row) {
+            $instance        = clone $this;
+            $instance->_data = array();
+
+            foreach ($row->toArray() as $k => $v) {
+                $instance->_data[$k] = $v;
+            }
+
+            $result[] = $instance;
+        }
+
+        return $result;
     }
 
     /**
@@ -302,16 +319,13 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
         $args = func_get_args();
 
         $find = parent::find($args[0]);
-        $find = $find->current();
+        $find = $find[0];
 
-        if (null !== $find) {
-            $findArray = $find->toArray();
-            foreach ($findArray as $k=>$v) {
-                $this->_data[$k] = $v;
-            }
-        }
+        $this->_data = $find->_data;
 
-        return $find;
+        unset($find);
+
+        return $this;
     }
 
     /**
