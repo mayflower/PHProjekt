@@ -1,0 +1,64 @@
+<?php
+/**
+ * Language Interface for use the PHProject lang files
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ *             GNU Public License 2.0
+ * @version    CVS: $Id: 
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+*/
+
+/** Zend_Locale */
+require_once 'Zend/Translate.php';
+
+/** Default_Helpers_PhprojectLanguage */
+require_once (PHPR_CORE_PATH . '/Default/Helpers/PhprojectLanguage.php');
+
+/**
+ * Extend Zend_Translate for add a new adapter
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @version    Release: @package_version@
+ * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ *             GNU Public License 2.0
+ * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ * @author     Gustavo Solt <solt@mayflower.de>
+ */
+class Default_Helpers_Language extends Zend_Translate
+{
+    public function __construct($adapter, $options, $locale = null)
+    {
+        $this->_adapter = new Default_Helpers_PhprojectLanguage($options, $locale);
+    }
+
+    /**
+     * Translate the given string
+     *
+     * @param  string              $messageId  Original to translate
+     * @param  string|Zend_Locale  $locale     OPTIONAL locale/language to translate to
+     * @return string
+     */
+    public function _($messageId, $locale = null)
+    {
+        return $this->_adapter->translate($messageId, $locale);
+    }
+
+
+    /**
+     * Translate the given string
+     *
+     * @param  string              $messageId  Original to translate
+     * @param  string|Zend_Locale  $locale     OPTIONAL locale/language to translate to
+     * @return string
+     */
+    public function translate($messageId, $locale = null)
+    {
+        return $this->_adapter->translate($messageId, $locale);
+    }
+}
