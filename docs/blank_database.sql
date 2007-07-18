@@ -1,23 +1,23 @@
-DROP TABLE IF EXISTS module_instances
+DROP TABLE IF EXISTS module_instance
 ;
-DROP TABLE IF EXISTS user_module_settings
+DROP TABLE IF EXISTS user_module_setting
 ;
-DROP TABLE IF EXISTS projects
+DROP TABLE IF EXISTS project
 ;
 DROP TABLE IF EXISTS project_user_role_rel
 ;
 DROP TABLE IF EXISTS history
 ;
-DROP TABLE IF EXISTS users
+DROP TABLE IF EXISTS user
 ;
-DROP TABLE IF EXISTS roles
+DROP TABLE IF EXISTS role
 ;
 DROP TABLE IF EXISTS database_manager
 ;
 
 
 
-CREATE TABLE module_instances
+CREATE TABLE module_instance
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
 	project_id MEDIUMINT,
@@ -25,11 +25,11 @@ CREATE TABLE module_instances
 	name VARCHAR(250) NOT NULL,
 	PRIMARY KEY (id),
 	KEY (project_id)
-) 
+)
 ;
 
 
-CREATE TABLE user_module_settings
+CREATE TABLE user_module_setting
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
 	user_id MEDIUMINT NOT NULL,
@@ -38,11 +38,11 @@ CREATE TABLE user_module_settings
 	module VARCHAR(50) NOT NULL,
 	PRIMARY KEY (id),
 	KEY (user_id)
-) 
+)
 ;
 
 
-CREATE TABLE projects
+CREATE TABLE project
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
 	parent MEDIUMINT,
@@ -58,7 +58,7 @@ CREATE TABLE projects
 	budget FLOAT(0),
 	PRIMARY KEY (id),
 	KEY (owner_id)
-) 
+)
 ;
 
 
@@ -70,7 +70,7 @@ CREATE TABLE project_user_role_rel
 	KEY (project_id),
 	KEY (role_id),
 	KEY (user_id)
-) 
+)
 ;
 
 
@@ -85,11 +85,11 @@ CREATE TABLE history
 	action VARCHAR(50) NOT NULL,
 	PRIMARY KEY (id),
 	KEY (user_id)
-) 
+)
 ;
 
 
-CREATE TABLE users
+CREATE TABLE user
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
 	username VARCHAR(250) NOT NULL,
@@ -99,17 +99,17 @@ CREATE TABLE users
 	language VARCHAR(5) NOT NULL,
 	PRIMARY KEY (id),
 	UNIQUE (username)
-) 
+)
 ;
 
 
-CREATE TABLE roles
+CREATE TABLE role
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
 	module VARCHAR(250) NOT NULL,
 	permission VARCHAR(50) NOT NULL,
 	PRIMARY KEY (id)
-) 
+)
 ;
 
 
@@ -136,5 +136,5 @@ CREATE TABLE database_manager
 	is_required TINYINT,
 	is_unique INTEGER,
 	PRIMARY KEY (id)
-) 
+)
 ;
