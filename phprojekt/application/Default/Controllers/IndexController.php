@@ -167,6 +167,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+        $translate = Zend_Registry::get('translate');
+        $this->setListView($translate->_("solved"));
     }
 
     /**

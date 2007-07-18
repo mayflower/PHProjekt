@@ -49,7 +49,16 @@ Zend_Controller_Action_HelperBroker::addHelper($oViewRenderer);
 
 Zend_Registry::set('view', $oView);
 
-/* front controller stuff */
+/* Languages Set */
+Zend_Loader::loadClass('Default_Helpers_Language', PHPR_CORE_PATH);
+$locale = 'es';
+$oTranslate = new Default_Helpers_Language('PhprojectLanguage',PHPR_ROOT_PATH
+                                                               . '/languages/'
+                                                               . $locale
+                                                               . '.inc.php', $locale);
+Zend_Registry::set('translate', $oTranslate);
+
+/* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();
 
 foreach (scandir(PHPR_CORE_PATH) as $module)
