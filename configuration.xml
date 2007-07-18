@@ -2,18 +2,18 @@
 <phprojekt-configuration>
     <production>
         <log>
-          <priority>DEBUG</priority>
-          <filename>/home/dsp/public_html/phprojekt-mvc/logs/debug.log</filename>
-        </log>
-        <log>
-          <priority>CRITICAL</priority>
-          <filename>/home/dsp/public_html/phprojekt-mvc/logs/crit.log</filename>
+            <DEBUG>
+                <filename>path/debug.log</filename>
+            </DEBUG>
+            <CRIT>
+                <filename>path/crit.log</filename>
+            </CRIT>
         </log>
         <database>
             <type>pdo_mysql</type>
             <host>localhost</host>
-            <username>phprojekt</username>
-            <password>phprojekt</password>
+            <username>user</username>
+            <password>pass</password>
             <name>phprojekt-mvc</name>
         </database>
    </production>

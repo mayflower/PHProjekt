@@ -24,19 +24,38 @@ set_include_path('.' . PATH_SEPARATOR
 require_once 'Zend/Loader.php';
 Zend_Loader::registerAutoload();
 
-/* start zend session to handle all session stuff */
+/* Start zend session to handle all session stuff */
 Zend_Session::start();
 
-/* read the config file, but only the production setting */
+/* Read the config file, but only the production setting */
 $config = new Zend_Config_Xml(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION);
 Zend_Registry::set('config', $config);
 
-Zend_Loader::loadClass('Default_Helpers_Smarty', PHPR_CORE_PATH);
+/* Make the connection to the DB*/
+require_once 'Zend/Db.php';
+$db = Zend_Db::factory($config->database->type, array(
+    'host'     => $config->database->host, 
+    'username' => $config->database->username,
+    'password' => $config->database->password,
+    'dbname'   => $config->database->name,
+));
+Zend_Registry::set('db', $db);
+
+/**
+ * Initialize Debug Log 
+ *
+ * use $log->priority($txt);
+ * Where priority can be emerg,alert,crit,err,warn,notice,info,debug
+ */
+Zend_Loader::loadClass('Default_Helpers_Log', PHPR_CORE_PATH);
+$oLog = new Default_Helpers_Log();
+Zend_Registry::set('log', $oLog);
 
 /**
  * Configure the ViewRenderer Helper
  * to enable the autorendering feature of ZF
  */
+Zend_Loader::loadClass('Default_Helpers_Smarty', PHPR_CORE_PATH);
 $oView = new Default_Helpers_Smarty(PHPR_TEMP_PATH . DIRECTORY_SEPARATOR . 'templates_c');
 
 $oViewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($oView);
@@ -44,9 +63,7 @@ $oViewRenderer->setViewBasePathSpec(':moduleDir/Views')
               ->setViewScriptPathSpec(':action.:suffix')
               ->setViewScriptPathNoControllerSpec(':action.:suffix')
               ->setViewSuffix('tpl');
-
 Zend_Controller_Action_HelperBroker::addHelper($oViewRenderer);
-
 Zend_Registry::set('view', $oView);
 
 /* Languages Set */
