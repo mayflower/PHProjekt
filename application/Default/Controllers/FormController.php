@@ -3,7 +3,8 @@
  * Form Controller for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://phprojekt.com/licence PHProjekt 6 License
+ * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ *             GNU Public License 2.0
  * @version    CVS: $Id: 
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
@@ -18,7 +19,8 @@ require_once ('IndexController.php');
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ *             GNU Public License 2.0
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
@@ -31,7 +33,7 @@ class FormController extends IndexController
 	 */
 	public function cancelAction()
 	{
-        return $this->_forward('index');
+        $this->render('index');
 	}
 
 	/**
@@ -55,7 +57,7 @@ class FormController extends IndexController
 	 */
 	public function deleteAction()
     {
-        return $this->_forward('index');
+        $this->render('index');
 	}
 
 	/**
@@ -63,13 +65,15 @@ class FormController extends IndexController
 	 */
 	public function displayAction()
     {
+        $this->render('index');
 	}
 
 	/**
 	 * Displays the edit screen for the current item 
 	 */
 	public function editAction()
-	{
+    {
+        $this->render('index');
 	}
 
 	/**
@@ -85,6 +89,6 @@ class FormController extends IndexController
 	 */
 	public function saveAction()
     {
-        return $this->_forward('index');
+        $this->render('index');
 	}
 }

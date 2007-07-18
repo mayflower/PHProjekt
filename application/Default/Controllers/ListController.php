@@ -3,7 +3,8 @@
  * List Controller for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://phprojekt.com/licence PHProjekt 6 License
+ * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ *             GNU Public License 2.0
  * @version    CVS: $Id: 
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
@@ -18,7 +19,8 @@ require_once ('IndexController.php');
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ *             GNU Public License 2.0
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
@@ -26,13 +28,12 @@ require_once ('IndexController.php');
  */
 class ListController extends IndexController
 {
-
 	/**
 	 * Adds a single filter to the current view
 	 */
 	public function addFilterAction()
 	{
-        return $this->_forward('index');
+        $this->render('index');
 	}
 
 	/**
@@ -64,6 +65,7 @@ class ListController extends IndexController
 	 */
 	public function listAction()
 	{
+        $this->render('index');
 	}
 
 	/**
@@ -71,7 +73,7 @@ class ListController extends IndexController
 	 */
 	public function removeFilterAction()
 	{
-        return $this->_forward('index');
+        $this->render('index');
 	}
 
 	/**
@@ -79,6 +81,6 @@ class ListController extends IndexController
 	 */
 	public function sortAction()
 	{
-        return $this->_forward('index');
+        $this->render('index');
 	}
 }

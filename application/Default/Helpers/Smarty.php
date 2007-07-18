@@ -60,6 +60,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
                         PHPR_LIBRARY_PATH.DIRECTORY_SEPARATOR.'Smarty');
 
         $this->_smarty = new Smarty();
+        $this->caching = false;
 
         if (null !== $compilePath) {
             $this->templateCompiledDir = $compilePath;
