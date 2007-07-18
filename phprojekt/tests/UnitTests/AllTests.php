@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * AllTests merges all test from the modules
  *
