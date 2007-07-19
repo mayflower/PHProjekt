@@ -13,7 +13,11 @@
  * @since      File available since Release 1.0
 */
 
+/* IndexController */
 require_once ('IndexController.php');
+
+/* Default_Helpers_ListView */
+require_once (PHPR_CORE_PATH . '/Default/Helpers/ListView.php');
 
 /**
  * List Controller for PHProjekt 6.0
@@ -64,7 +68,23 @@ class ListController extends IndexController
 	 * List all the data 
 	 */
 	public function listAction()
-	{
+    {
+        /*
+        * data from the List Class like
+        * '0' => array('Name','Description'),
+        * '1' => array('Projecto 1','Test<br />a e i o u'),
+        * '2' => array('Projecto 2','Test2'),
+        * '3' => array('Projecto 3','Test<br />k a ñ')
+        * );
+        */
+        $data = array();
+
+        /* List Actions */
+        $oListView = new Default_Helpers_ListView($data);
+        $this->titles = $oListView->getTitles($data); 
+        $this->lines  = $oListView->getItems($data); 
+        $this->setListView($this->_render('list'));
+
         $this->render('index');
 	}
 

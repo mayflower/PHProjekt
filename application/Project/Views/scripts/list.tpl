@@ -1,1 +1,1 @@
-PROJECTS LIST VIEW
+{include file="../../../Default/Views/scripts/list.tpl"}
