@@ -47,6 +47,11 @@ class Phprojekt_ActiveRecordTest extends PHPUnit_Extensions_ExceptionTestCase
 {
 
     /**
+     * @var Zend_Db_Adapter_Abstract
+     */
+    public $sharedFixture;
+
+    /**
      * setUp method for PHPUnit. We use a shared db connection
      *
      */
@@ -117,6 +122,26 @@ class Phprojekt_ActiveRecordTest extends PHPUnit_Extensions_ExceptionTestCase
 
         $instance->find(1);
         $this->assertEquals('Test Project', $instance->project->title);
+    }
+
+    /**
+     * Update hasMany relations
+     */
+    public function testUpdateHasMany()
+    {
+        $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $instance->find(1);
+        $instance->id = 2;
+        $instance->save();
+
+        $instance->find(2);
+        $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
+        $this->assertEquals(2, $instance->instances->find(1)->project_id);
+
+        $instance->find(2);
+        $instance->id = 1;
+        $instance->save();
+
     }
 
     /**
