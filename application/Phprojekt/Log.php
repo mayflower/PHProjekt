@@ -28,7 +28,7 @@ require_once 'Zend/Log.php';
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Helpers_Log extends Zend_Log
+class Phprojekt_Log extends Zend_Log
 {
     const EMERG   = 0;  // Emergency: system is unusable
     const ALERT   = 1;  // Alert: action must be taken immediately

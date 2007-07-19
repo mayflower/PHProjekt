@@ -36,7 +36,7 @@ require_once 'Zend/Session/Namespace.php';
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Helpers_PhprojectLanguage extends Zend_Translate_Adapter
+class Phproject_LanguageAdapter extends Zend_Translate_Adapter
 {
     /**
      * Generates the adapter
@@ -98,6 +98,6 @@ class Default_Helpers_PhprojectLanguage extends Zend_Translate_Adapter
      */
     public function toString()
     {
-        return "PhprojectLanguage";
+        return "Phproject";
     }
 }

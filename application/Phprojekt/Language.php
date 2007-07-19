@@ -17,7 +17,7 @@
 require_once 'Zend/Translate.php';
 
 /** Default_Helpers_PhprojectLanguage */
-require_once (PHPR_CORE_PATH . '/Default/Helpers/PhprojectLanguage.php');
+require_once (PHPR_CORE_PATH . '/Phprojekt/LanguageAdapter.php');
 
 /**
  * Extend Zend_Translate for add a new adapter
@@ -30,11 +30,11 @@ require_once (PHPR_CORE_PATH . '/Default/Helpers/PhprojectLanguage.php');
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Helpers_Language extends Zend_Translate
+class Phprojekt_Language extends Zend_Translate
 {
     public function __construct($adapter, $options, $locale = null)
     {
-        $this->_adapter = new Default_Helpers_PhprojectLanguage($options, $locale);
+        $this->_adapter = new Phproject_LanguageAdapter($options, $locale);
     }
 
     /**

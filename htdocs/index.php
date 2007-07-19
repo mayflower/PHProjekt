@@ -47,8 +47,8 @@ Zend_Registry::set('db', $db);
  * use $log->priority($txt);
  * Where priority can be emerg,alert,crit,err,warn,notice,info,debug
  */
-Zend_Loader::loadClass('Default_Helpers_Log', PHPR_CORE_PATH);
-$oLog = new Default_Helpers_Log();
+Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
+$oLog = new Phprojekt_Log();
 Zend_Registry::set('log', $oLog);
 
 /**
@@ -67,12 +67,12 @@ Zend_Controller_Action_HelperBroker::addHelper($oViewRenderer);
 Zend_Registry::set('view', $oView);
 
 /* Languages Set */
-Zend_Loader::loadClass('Default_Helpers_Language', PHPR_CORE_PATH);
+Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
 $locale = 'es';
-$oTranslate = new Default_Helpers_Language('PhprojectLanguage',PHPR_ROOT_PATH
-                                                               . '/languages/'
-                                                               . $locale
-                                                               . '.inc.php', $locale);
+$oTranslate = new Phprojekt_Language('Phproject',PHPR_ROOT_PATH
+                                                 . '/languages/'
+                                                 . $locale
+                                                 . '.inc.php', $locale);
 Zend_Registry::set('translate', $oTranslate);
 
 /* Front controller stuff */
