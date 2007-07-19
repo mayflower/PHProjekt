@@ -42,7 +42,7 @@ CREATE TABLE `database_manager` (
   `is_required` tinyint(4) default NULL,
   `is_unique` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `database_manager`
@@ -68,7 +68,7 @@ CREATE TABLE `history` (
   `action` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `history`
@@ -91,7 +91,7 @@ CREATE TABLE `module_instance` (
   `name` varchar(250) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `project_id` (`project_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `module_instance`
@@ -123,7 +123,7 @@ CREATE TABLE `project` (
   `budget` float default NULL,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `project`
@@ -147,7 +147,7 @@ CREATE TABLE `project_user_role_rel` (
   KEY `project_id` (`project_id`),
   KEY `role_id` (`role_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `project_user_role_rel`
@@ -169,7 +169,7 @@ CREATE TABLE `role` (
   `module` varchar(250) NOT NULL,
   `permission` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `role`
@@ -191,7 +191,7 @@ CREATE TABLE `role_user_rel` (
   `role_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `role_user_rel`
@@ -217,7 +217,7 @@ CREATE TABLE `user` (
   `language` varchar(5) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
@@ -242,7 +242,7 @@ CREATE TABLE `user_module_setting` (
   `module` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_module_setting`
