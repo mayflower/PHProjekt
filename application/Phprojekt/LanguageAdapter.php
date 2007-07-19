@@ -72,20 +72,15 @@ class Phproject_LanguageAdapter extends Zend_Translate_Adapter
         } else {
             $session->translatedStrings = array();
         }
-        
+
         /* Collect a new trasnaltion set */ 
         if (empty($this->_translate[$locale])) {
-            $file = @fopen($filename, 'rb');
-            if (!$file) {
-                throw new Zend_Translate_Exception('Error opening translation file \'' . $filename . '\'.');
-            }
 
-            while(!feof($file)) {
-                $content = fgets($file);
-                $result = array();
-                if (preg_match('#_lang\["([\w-:;,\./= \r\n]+)+"\]( )+=( )+?"([\w-:;,\./= \r\n]+)+"#', $content, $result)) {
-                    $this->_translate[$locale][$result[1]] = $result[4];
-                }
+            /* Get the translation file */
+            require_once ($filename);
+
+            foreach ($_lang as $word => $translation) {
+                $this->_translate[$locale][$word] = $translation;
             }
             $session->translatedStrings = $this->_translate;
         }
