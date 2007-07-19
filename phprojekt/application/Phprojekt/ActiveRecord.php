@@ -1,5 +1,3 @@
-
-l
 <?php
 /**
  * Simple ActiveRecord implementation based on Zend_Db_Table
@@ -82,22 +80,22 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
 
     /**
      * Relationship where clause
+     * Filled with a simple where clause for belongsTo and hasMany relations
+     * $this->_relations['simple'] and complex descriptions for
+     * hasManyAndBelongsToMany in $this->_relations['hasManyAndBelongsToMany']
      *
-     * @var string $_relationWhere
+     * @var string $_relations
      */
-    protected $_relationWhere = null;
+    protected $_relations = array();
 
     /**
      * Initialize new object
      *
      * @param array  $config        Configuration for Zend_Db_Table
-     * @param string $relationWhere Configures a hasMany relation
      */
-    public function __construct($config = array(), $relationWhere = null)
+    public function __construct($config = array())
     {
         parent::__construct($config);
-
-        $this->_relationWhere = $relationWhere;
     }
 
     /**
@@ -137,6 +135,8 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
             return $this->_hasMany($varname);
         } elseif (array_key_exists($varname, $this->belongsTo)) {
             return $this->_belongsTo($varname);
+        } elseif (array_key_exists($varname, $this->hasManyAndBelongsToMany)) {
+            return $this->_hasManyAndBelongsToMany($varname);
         } elseif (array_key_exists($varname, get_object_vars($this))) {
             return $this->$varname;
         } elseif (array_key_exists($varname, $this->_data)) {
@@ -168,6 +168,97 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
         } else {
             throw new Exception("{$varname} doesnot exist");
         }
+    }
+
+    /**
+     *
+     * @param string $key The name of the hasManyAndBelongsToMany relation
+     *
+     * @return Phprojekt_ActiveRecord
+     */
+    protected function _hasManyAndBelongsToMany($key)
+    {
+        if (!array_key_exists($key, $this->_data)) {
+            $className = $this->_getClassNameForRelationship($key,
+                                                $this->hasManyAndBelongsToMany);
+
+            $instance = new $className(array('db' => $this->getAdapter()));
+            $instance->_relations['hasManyAndBelongsToMany'] =
+                    array('id'       =>   $this->id,
+                         'classname' => get_class($this));
+
+            $this->_data[$key] = $instance;
+        }
+
+        return $this->_data[$key];
+    }
+
+    /**
+     * Overwrite the fetch method if we have a hasManyAndBelongsToMany relation.
+     * This is needed as relations are handles using table objects on the ZF
+     * but as we want to keep things simple we don't want to have a
+     * e.g.: RoleUserRel object. We also cannot create this object on runtime
+     * as the Zend_Db_Table Relationships needs class names, and cannot handle
+     * just objects.
+     *
+     * @see _fetch
+     *
+     * @return unknown
+     */
+    protected function _fetchHasManyAndBelongsToMany()
+    {
+        $className = $this->_relations['hasManyAndBelongsToMany']['classname'];
+        $classId   = $this->_relations['hasManyAndBelongsToMany']['id'];
+
+        $tableNames   = array();
+
+        $foreignKeyName = $this->_translateKeyFormat(get_class($this));
+        $myKeyName      = $this->_translateKeyFormat($className);
+
+        $foreignTable  = $this->_translateClassNameToTable(get_class($this));
+        $myTable      = $this->_translateClassNameToTable($className);
+        $tableNames[] = $myTable;
+        $tableNames[] = $foreignTable;
+
+        sort($tableNames);
+        reset($tableNames);
+
+        $tableName = sprintf('%s_rel', implode('_', $tableNames));
+
+        $select = $this->getAdapter()->select();
+        $select->from(array('rel'     => $tableName), array())
+               ->from(array('foreign' => $foreignTable))
+               ->from(array('my'      => $myTable), array());
+
+        $select->where(sprintf("my.id = rel.%s", $myKeyName));
+        $select->where(sprintf("foreign.id = rel.%s", $foreignKeyName));
+        $select->where(sprintf("rel.%s = ?", $myKeyName), $classId);
+
+        Zend_Debug::dump($select->__toString());
+
+        $stmt = $this->getAdapter()->query($select);
+        return $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+    }
+
+    /**
+     * Overrwite fetch method to support hasManyAndBelongsToMany relationship
+     * For more information about that.
+     *
+     * @param string|array $where  Where clause
+     * @param string|array $order  Order clause
+     * @param string|array $count  Limit
+     * @param string|array $offset Offset
+     *
+     * @return array
+     */
+    protected function _fetch($where = null, $order = null, $count = null, $offset = null)
+    {
+        if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
+         && is_array($this->_relations['hasManyAndBelongsToMany'])) {
+            return $this->_fetchHasManyAndBelongsToMany();
+         } else {
+            return parent::_fetch($where, $order, $count, $offset);
+         }
     }
 
     /**
@@ -231,10 +322,12 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
             $className = $this->_getClassNameForRelationship($key,
                                                              $this->hasMany);
 
-            $instance = new $className(array('db' => $this->getAdapter()),
-                           $this->getAdapter()->quoteInto(sprintf('%s = ?',
+            /* @var Phprojekt_ActiveRecord $instance */
+            $instance = new $className(array('db' => $this->getAdapter()));
+            $instance->_relations['simple'] = $this->getAdapter()->quoteInto
+                            (sprintf('%s = ?',
                                 $this->_translateKeyFormat(get_class($this))),
-                                $this->id));
+                                $this->id);
 
             $this->_data[$key] = $instance;
         }
@@ -283,8 +376,8 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
                              $count = null, $offset = null)
     {
         $wheres = array();
-        if (null !== $this->_relationWhere) {
-            $wheres[] = $this->_relationWhere;
+        if (array_key_exists('simple', $this->_relations)) {
+            $wheres[] = $this->_relations['simple'];
         }
         if (null !== $where) {
             $wheres[] = $where;
