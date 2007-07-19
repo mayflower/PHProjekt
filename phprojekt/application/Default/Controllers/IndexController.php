@@ -69,13 +69,13 @@ class IndexController extends Zend_Controller_Action
         $this->_smarty = Zend_Registry::get('view');
 
         /* Set treeview */
-        $this->setTreeView($this->_helper->viewRenderer->view->render('tree.tpl'));
+        $this->setTreeView($this->_render('tree'));
 
         /* Set listview */
-        $this->setListView($this->_helper->viewRenderer->view->render('list.tpl'));
+        $this->setListView($this->_render('list'));
 
         /* Set detailview */
-        $this->setDetailView($this->_helper->viewRenderer->view->render('detail.tpl'));
+        $this->setDetailView($this->_render('detail'));
     }
 
     /**
@@ -91,7 +91,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Assign an output to the list view
+     * Render the listView
      *
      * @param string $output The output to show
      *
@@ -188,5 +188,57 @@ class IndexController extends Zend_Controller_Action
         }
         // all other methods throw an exception
         throw new Exception('Invalid method "' . $method . '" called');
+    }
+
+    /**
+     * Set a value into the smarty object for render it
+     *
+     * @param string name - Name of the value for render
+     * @param mix value   - Value for the var
+     * @return void
+     */
+    public function __set($name,$value)
+    {
+        if (!empty($name)) {
+            $this->_smarty->$name = $value;
+        }
+    }
+
+    /**
+     * Get a value from the smarty object
+     *
+     * @param string name - Name of the value
+     * @return mix - The value of the var
+     */
+    public function __get($name)
+    {
+        if (isset($this->_smarty->$name)) {
+            return $this->_smarty->$name;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Render a template
+     *
+     * @param string template - Which var of the index.tpl
+     * @return void
+     */
+    public function _render($template) {
+        switch ($template) {
+            case 'tree':
+                /* Set treeview */
+                return $this->_helper->viewRenderer->view->render('tree.tpl');
+                break;
+            case 'list':
+                /* Set listview */
+                return $this->_helper->viewRenderer->view->render('list.tpl');
+                break;
+            case 'detail':
+                /* Set detailview */
+                return $this->_helper->viewRenderer->view->render('detail.tpl');
+                break;
+        }
     }
 }
