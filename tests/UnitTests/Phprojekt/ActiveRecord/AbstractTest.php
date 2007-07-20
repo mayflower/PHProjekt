@@ -67,6 +67,31 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     /**
      *
      */
+    public function testCreateHasManyAndBelongsToMany()
+    {
+        $this->sharedFixture->beginTransaction();
+        try {
+            $user = new Phprojekt_User(array('db' => $this->sharedFixture));
+            $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
+
+            $david = $users[0];
+            $role  = $david->roles->create();
+            $role->name       = 'Project Admin';
+            $role->module     = 'Test Module';
+            $role->permission = 'Write';
+            $role->save();
+
+            $this->assertNotNull($role->id);
+        } catch (Exception $e) {
+            $this->sharedFixture->rollBack();
+            $this->fail($e->getMessage().$e->getTraceAsString());
+        }
+        $this->sharedFixture->rollBack();
+    }
+
+    /**
+     *
+     */
     public function testCreateProjectWithHasMany()
     {
         $this->sharedFixture->beginTransaction();
