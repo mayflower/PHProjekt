@@ -89,13 +89,43 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
     protected $_relations = array();
 
     /**
+     * Logging object from the global scope
+     *
+     * @var Zend_Log
+     */
+    protected $_log = null;
+
+    /**
+     * Defines if the id for the entry changed. We have to update
+     * the relations then
+     *
+     * @var integer
+     */
+    protected $_storedId = null;
+
+    /**
      * Initialize new object
      *
      * @param array  $config        Configuration for Zend_Db_Table
      */
-    public function __construct($config = array())
+    public function __construct($config)
     {
+        if (Zend_Registry::isRegistered('log')) {
+            $this->_log = Zend_Registry::get('log');
+        }
+
+        if (!array_key_exists('db', $config)
+         || !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
+             throw new
+               Phprojekt_ActiveRecord_Exception('ActiveRecord class must '
+                                              . 'be initialized using a valid '
+                                              . 'Zend_Db_Adapter_Abstract');
+
+        }
+
         parent::__construct($config);
+
+        $this->_initDataArray();
     }
 
     /**
@@ -104,6 +134,19 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
      */
     function __destruct()
     {
+    }
+
+    protected function _initDataArray()
+    {
+        /*
+         * We have to fill our data array with the colum names, as
+         * __set makes a lookup on the _data keys to validate if
+         * a column exists on the activerecord
+         */
+        $information = $this->info();
+        foreach ($information['cols'] as $col) {
+            $this->_data[$col] = null;
+        }
     }
 
     /**
@@ -141,6 +184,9 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
             return $this->$varname;
         } elseif (array_key_exists($varname, $this->_data)) {
             return $this->_data[$varname];
+        } elseif (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
+               && get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
+            return $this->_relations['hasManyAndBelongsToMany']['id'];
         } else {
             throw new Exception("{$varname} doesnot exist");
         }
@@ -184,8 +230,9 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
 
             $instance = new $className(array('db' => $this->getAdapter()));
             $instance->_relations['hasManyAndBelongsToMany'] =
-                    array('id'       =>   $this->id,
-                         'classname' => get_class($this));
+                    array('id'       => $this->id,
+                         'classname' => get_class($this),
+                         'refclass'  => $className); // needed for __get
 
             $this->_data[$key] = $instance;
         }
@@ -205,7 +252,7 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
      *
      * @return unknown
      */
-    protected function _fetchHasManyAndBelongsToMany()
+    protected function _fetchHasManyAndBelongsToMany($where = null)
     {
         $className = $this->_relations['hasManyAndBelongsToMany']['classname'];
         $classId   = $this->_relations['hasManyAndBelongsToMany']['id'];
@@ -215,7 +262,7 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
         $foreignKeyName = $this->_translateKeyFormat(get_class($this));
         $myKeyName      = $this->_translateKeyFormat($className);
 
-        $foreignTable  = $this->_translateClassNameToTable(get_class($this));
+        $foreignTable = $this->_translateClassNameToTable(get_class($this));
         $myTable      = $this->_translateClassNameToTable($className);
         $tableNames[] = $myTable;
         $tableNames[] = $foreignTable;
@@ -234,7 +281,17 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
         $select->where(sprintf("foreign.id = rel.%s", $foreignKeyName));
         $select->where(sprintf("rel.%s = ?", $myKeyName), $classId);
 
-        Zend_Debug::dump($select->__toString());
+        /*
+         * somewhat special, we might have a better solution here once.
+         * At the moment we asume that the where clause contains the id string,
+         * as it is called from find()
+         */
+        if (null !== $where)
+            $select->where(str_replace('`id`', 'foreign.id', $where));
+
+        if (null !== $this->_log) {
+            $this->_log->log($select->__toString(), 'DEBUG');
+        }
 
         $stmt = $this->getAdapter()->query($select);
         return $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
@@ -255,7 +312,7 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
     {
         if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
          && is_array($this->_relations['hasManyAndBelongsToMany'])) {
-            return $this->_fetchHasManyAndBelongsToMany();
+            return $this->_fetchHasManyAndBelongsToMany($where);
          } else {
             return parent::_fetch($where, $order, $count, $offset);
          }
@@ -289,6 +346,8 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
                     $instance->_data[$k] = $v;
                 }
             }
+
+            $instance->_storedId = $instance->_data['id'];
 
             $this->_data[$key] = $instance;
         }
@@ -324,15 +383,246 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
 
             /* @var Phprojekt_ActiveRecord $instance */
             $instance = new $className(array('db' => $this->getAdapter()));
-            $instance->_relations['simple'] = $this->getAdapter()->quoteInto
-                            (sprintf('%s = ?',
-                                $this->_translateKeyFormat(get_class($this))),
-                                $this->id);
+            /*
+            $instance->_relations['simple'] = );
+*/
+            $instance->_relations['hasMany'] =
+                                        array('id'       => $this->id,
+                                             'classname' => get_class($this),
+                                             'refclass'  => $className);
+
+            $instance->_storedId = $instance->_data['id'];
 
             $this->_data[$key] = $instance;
         }
 
         return $this->_data[$key];
+    }
+
+
+    /**
+     * Fetches all rows according to the where, order, count, offset rules
+     *
+     * @param string|array $where  Where clause
+     * @param string|array $order  Order by
+     * @param string|array $count  Limit query
+     * @param string|array $offset Query offset
+     *
+     * @return Zend_Db_Table_Rowset
+     */
+    public function fetchAll($where = null, $order = null,
+                             $count = null, $offset = null)
+    {
+        $wheres = array();
+        if (array_key_exists('hasMany', $this->_relations)) {
+            $wheres[] = $this->getAdapter()->quoteInto
+                            (sprintf('%s = ?',
+                                $this->_translateKeyFormat(
+                                    $this->_relations['hasMany']['classname'])),
+                                $this->_relations['hasMany']['id']);
+        }
+        if (null !== $where) {
+            $wheres[] = $where;
+        }
+
+        $where = (count($wheres) > 0) ? implode(' AND ', $wheres) : null;
+        $rows = parent::fetchAll($where, $order,
+                                 $count, $offset);
+
+        $result = array();
+        foreach ($rows as $row) {
+            $instance          = clone $this;
+            $instance->_data   = array();
+
+            foreach ($row->toArray() as $k => $v) {
+                $instance->_data[$k] = $v;
+            }
+
+            $instance->_storedId = $instance->_data['id'];
+
+            $result[] = $instance;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Enter description here...
+     *
+     */
+    public function create()
+    {
+        $instance = clone $this;
+        $instance->_relations = $this->_relations;
+
+        return $instance;
+    }
+
+    /**
+     * Enter description here...
+     *
+     */
+    public function __clone()
+    {
+        $this->_data = array();
+        $this->_storedId = null;
+        $this->_initDataArray();
+    }
+
+    /**
+     * Overwrite the find method to get relations too
+     *
+     * @return Phprojekt_ActiveRecord
+     */
+    public function find()
+    {
+        $args = func_get_args();
+
+        $find = parent::find($args[0]);
+        $find = $find[0];
+
+        /*
+         * reset data as all our relatios, etc stuff has to
+         * deal with a new id
+         */
+        $this->_data      = array();
+        $this->_storedId  = null;
+
+        $this->_data = (array) $find->_data;
+        unset($find);
+
+        $this->_storedId = $this->_data['id'];
+
+        return $this;
+    }
+
+    /**
+     * Save an entry
+     *
+     */
+    public function save()
+    {
+        $data = array();
+
+        foreach ($this->_data as $k => $v) {
+            if (is_scalar($v)) {
+                $data[$k] = $v;
+            }
+        }
+
+        if (null !== $this->_storedId) {
+            $this->update($data,
+                $this->getAdapter()->quoteInto('id = ?', $this->_storedId));
+
+            if ($this->id !== $this->_storedId
+             && count($this->hasMany) > 0) {
+                 $this->_updateHasMany($this->_storedId, $this->id);
+             }
+
+             if ($this->id !== $this->_storedId
+              && count($this->hasManyAndBelongsToMany) > 0) {
+                 $this->_updateHasManyAndBelongsToMany($this->_storedId,
+                                                        $this->id);
+             }
+        } else {
+            if (count($this->hasMany) > 0) {
+                $foreignKeyName = $this->_translateKeyFormat(
+                                    $this->_relations['classname']);
+                $data[$foreignKeyName] = $this->_relations['id'];
+            }
+
+            $this->insert($data);
+            $this->_data['id'] = $this->getAdapter()->lastInsertId();
+            $this->_storedId   = $this->_data['id'];
+        }
+    }
+
+    /**
+     * Count
+     *
+     * @return integer
+     */
+    public function count()
+    {
+        return parent::fetchAll()->count();
+    }
+
+    /**
+     * Enter description here...
+     *
+     * @param integer $oldId
+     * @param integer $newId
+     */
+    protected function _updateHasMany($oldId, $newId)
+    {
+        foreach ($this->hasMany as $key => $relationInfo) {
+            $className = $this->_getClassNameForRelationship($key,
+                                                    $this->hasMany);
+            $tableName  = $this->_translateClassNameToTable($className);
+            $columnName = $this->_translateKeyFormat(get_class($this));
+
+            $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
+                         $tableName, $columnName, $columnName);
+
+            /* @var Zend_Db_Statement $stmt */
+            $stmt = $this->getAdapter()->prepare($query);
+            $stmt->execute(array($newId, $oldId));
+
+            /*
+             * Manually update. Not nice, but effective.
+             */
+            if (array_key_exists($key, $this->_data)) {
+                foreach ($this->_data[$key] as $instance) {
+                    $instance->_data[$columnName] = $newId;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Enter description here...
+     *
+     * @param integer $oldId
+     * @param integer $newId
+     */
+    protected function _updateHasManyAndBelongsToMany($oldId, $newId)
+    {
+        foreach ($this->hasManyAndBelongsToMany as $key => $relationInfo) {
+            $className = $relationInfo['classname'];
+
+            $tableNames   = array();
+
+            $myKeyName      = $this->_translateKeyFormat(get_class($this));
+
+            $myTable       = $this->_translateClassNameToTable(get_class($this));
+            $foreignTable = $this->_translateClassNameToTable($className);
+            $tableNames[] = $myTable;
+            $tableNames[] = $foreignTable;
+
+            sort($tableNames);
+            reset($tableNames);
+
+            $tableName = sprintf('%s_rel', implode('_', $tableNames));
+
+            $select = $this->getAdapter()->select();
+
+            $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
+                            $tableName, $myKeyName, $myKeyName);
+
+            /* @var Zend_Db_Statement $stmt */
+            $stmt = $this->getAdapter()->prepare($query);
+            $stmt->execute(array($newId, $oldId));
+
+            /*
+             * Manually update. Not nice, but effective.
+             */
+            if (array_key_exists($key, $this->_data)) {
+                foreach ($this->_data[$key] as $instance) {
+                    $instance->_data[$columnName] = $newId;
+                }
+            }
+        }
     }
 
     /**
@@ -360,75 +650,6 @@ class Phprojekt_ActiveRecord extends Zend_Db_Table
         }
 
         return $className;
-    }
-
-    /**
-     * Fetches all rows according to the where, order, count, offset rules
-     *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     *
-     * @return Zend_Db_Table_Rowset
-     */
-    public function fetchAll($where = null, $order = null,
-                             $count = null, $offset = null)
-    {
-        $wheres = array();
-        if (array_key_exists('simple', $this->_relations)) {
-            $wheres[] = $this->_relations['simple'];
-        }
-        if (null !== $where) {
-            $wheres[] = $where;
-        }
-
-        $where = (count($wheres) > 0) ? implode(' AND ', $wheres) : null;
-        $rows = parent::fetchAll($where, $order,
-                                 $count, $offset);
-
-        $result = array();
-        foreach ($rows as $row) {
-            $instance        = clone $this;
-            $instance->_data = array();
-
-            foreach ($row->toArray() as $k => $v) {
-                $instance->_data[$k] = $v;
-            }
-
-            $result[] = $instance;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Overwrite the find method to get relations too
-     *
-     * @return Phprojekt_ActiveRecord
-     */
-    public function find()
-    {
-        $args = func_get_args();
-
-        $find = parent::find($args[0]);
-        $find = $find[0];
-
-        $this->_data = $find->_data;
-
-        unset($find);
-
-        return $this;
-    }
-
-    /**
-     * Count
-     *
-     * @return integer
-     */
-    public function count()
-    {
-        return parent::fetchAll()->count();
     }
 
     /**
