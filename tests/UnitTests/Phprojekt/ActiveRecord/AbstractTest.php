@@ -90,6 +90,29 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     }
 
     /**
+	 *
+	 */
+	public function testDeleteProject ()
+	{
+		$this->sharedFixture->beginTransaction();
+		try {
+			$project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+			$project->title = 'Hello World Project to delete';
+			$project->path = '/';
+			$project->save();
+			
+			$this->assertNotNull($project->id);
+			$project->delete();
+		   
+			$this->assertNull($project->id);
+        } catch (Exception $e) {
+            $this->sharedFixture->rollBack();
+            $this->fail($e->getMessage());
+        }
+        $this->sharedFixture->rollBack();
+	}
+
+    /**
      *
      */
     public function testCreateProjectWithHasMany()
