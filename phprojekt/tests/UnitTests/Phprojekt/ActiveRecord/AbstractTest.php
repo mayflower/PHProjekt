@@ -72,6 +72,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
         $this->sharedFixture->beginTransaction();
         try {
             $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+            $project->find(1);
             $module_instance = $project->instances->create();
             $module_instance->name = 'My TestModule';
             $module_instance->module = 'TestModule';
