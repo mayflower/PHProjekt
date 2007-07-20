@@ -18,6 +18,13 @@ require_once ('IndexController.php');
 /**
  * Form Controller for PHProjekt 6.0
  *
+ * The form controller is and extension of the indexController
+ * and use a Helper class for do the job.
+ * This is because the formControllers from other modules must
+ * have the function of the indexController
+ * and the formControllers functions.
+ * Since we can´t use a daiamont structure, we use a third class.
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
@@ -29,11 +36,21 @@ require_once ('IndexController.php');
 class FormController extends IndexController
 {
 	/**
+     * Default action
+	 */
+	public function indexAction()
+    {
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->indexAction();
+	}
+
+	/**
 	 * Abandon current changes and return to the default view
 	 */
 	public function cancelAction()
 	{
-        $this->render('index');
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->cancelAction();
 	}
 
 	/**
@@ -41,7 +58,8 @@ class FormController extends IndexController
 	 */
 	public function componentDisplayAction()
 	{
-        $this->_helper->viewRenderer->setNoRender();
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->componentDisplayAction();
 	}
 
 	/**
@@ -49,7 +67,8 @@ class FormController extends IndexController
 	 */
 	public function componentEditAction()
     {
-        $this->_helper->viewRenderer->setNoRender();
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->componentEditAction();
 	}
 
 	/**
@@ -57,7 +76,8 @@ class FormController extends IndexController
 	 */
 	public function deleteAction()
     {
-        $this->render('index');
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->deleteAction();
 	}
 
 	/**
@@ -65,7 +85,8 @@ class FormController extends IndexController
 	 */
 	public function displayAction()
     {
-        $this->render('index');
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->displayAction();
 	}
 
 	/**
@@ -73,15 +94,8 @@ class FormController extends IndexController
 	 */
 	public function editAction()
     {
-        $this->render('index');
-	}
-
-	/**
-	 * Default-Action, points to display
-	 */
-	public function indexAction()
-	{
-        return $this->_forward('display');
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->editAction();
 	}
 
 	/**
@@ -89,6 +103,7 @@ class FormController extends IndexController
 	 */
 	public function saveAction()
     {
-        $this->render('index');
+        $oFormView = new Default_Helpers_FormView($this);
+        $oFormView->saveAction();
 	}
 }

@@ -25,4 +25,45 @@ require_once (PHPR_CORE_PATH . '/Default/Controllers/IndexController.php');
  */
 class Project_IndexController extends IndexController
 {
+    public function getListData()
+    {
+        /* Stuff for list View */
+        $listData = array(
+         '0' => array('Name','Description'),
+         '1' => array('Projecto 1','Test<br />a e i o u'),
+         '2' => array('Projecto 2','Test2'),
+         '3' => array('Projecto 3','Test<br />k a ñ')
+        );
+
+        return $listData;
+    }
+
+    public function getFormData()
+    {
+        /* Stuff for form View */
+        $formData = array(
+            'title' => array(
+                'type'      => 'text',
+                'showName'  => 'Title',
+                'value'     => ''
+            ),
+            'description' => array(
+                'type'      => 'text',
+                'showName'  => 'Description',
+                'value'     => ''
+            ),
+            'description2' => array(
+                'type'      => 'text',
+                'showName'  => 'Description',
+                'value'     => ''
+            ),
+            'description4' => array(
+                'type'      => 'text',
+                'showName'  => 'Description',
+                'value'     => ''
+            )
+
+        );
+        return $formData;
+    }
 }

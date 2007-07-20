@@ -7,7 +7,7 @@
         <td>{$listView}</td>
     </tr>
     <tr>
-        <td>{$detailView}</td>
+        <td>{$formView}</td>
     </tr>
     </table>
     </td>

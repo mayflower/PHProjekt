@@ -13,10 +13,17 @@
  * @since      File available since Release 1.0
 */
 
-require_once (PHPR_CORE_PATH . '/Default/Controllers/ListController.php');
+require_once ('indexController.php');
 
 /**
  * List Project Module Controller for PHProjekt 6.0
+ *
+ * The list controller is and extension of the indexController
+ * and use a Helper class for do the job.
+ * This is because the listControllers from other modules must
+ * have the function of the indexController
+ * and the listControllers functions.
+ * Since we can´t use a daiamont structure, we use a third class.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -26,6 +33,68 @@ require_once (PHPR_CORE_PATH . '/Default/Controllers/ListController.php');
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_ListController extends ListController
+class Project_ListController extends Project_indexController
 {
+	/**
+	 * Adds a single filter to the current view
+	 */
+	public function addFilterAction()
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->addFilterAction();
+	}
+
+	/**
+	 * Delivers the inner part of the IndexAction using ajax
+	 */
+	public function componentIndexAction()
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->componentIndexAction();
+	}
+
+	/**
+	 * Delivers the inner part of the Listaction using ajax
+	 */
+	public function componentListAction()
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->componentEditAction();
+	}
+
+	/**
+     * Default action
+	 */
+	public function indexAction()
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->indexAction();
+	}
+
+	/**
+	 * List all the data 
+	 */
+	public function listAction()
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->listAction();
+	}
+
+	/**
+	 *  Remove a filter
+	 */
+	public function removeFilterAction()
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->removeFilterAction();
+	}
+
+	/**
+	 * Sort the list view
+	 */
+	public function sortAction()
+	{
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->sortFilterAction();
+	}
 }

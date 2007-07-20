@@ -15,6 +15,12 @@
 
 require_once 'Zend/Controller/Action.php';
 
+/* Default_Helpers_ListView */
+require_once (PHPR_CORE_PATH . '/Default/Helpers/ListView.php');
+
+/* Default_Helpers_FormView */
+require_once (PHPR_CORE_PATH . '/Default/Helpers/FormView.php');
+
 /**
  * Default Controller for PHProjekt 6.0
  *
@@ -28,126 +34,120 @@ require_once 'Zend/Controller/Action.php';
  */
 class IndexController extends Zend_Controller_Action
 {
-
     /**
      * Smarty object
+     *
      * @var Smarty
      */
     protected $_smarty;
 
     /**
-     * Tree View output
+     * Set true if is seted the treeView
      *
-     * @var string
+     * @var boolean
      */
-    public $treeView = '';
+    public $_treeViewSeted = false;
 
     /**
-     * List View output
+     * Set true if is seted the listView
      *
-     * @var string
+     * @var boolean
      */
-    public $listView = '';
+    public $_listViewSeted = false;
 
     /**
-     * Detail View output
+     * Set true if is seted the formView
      *
-     * @var string
+     * @var boolean
      */
-    public $detailView = '';
+    public $_formViewSeted = false;
+
+    /**
+     * Array with the all the data for render
+     * 'listData' => All the data for list
+     * 'formData' => All the data for form
+     * 'treeData' => All the data for trees
+     *
+     * @var array
+     */
+    public $_data = array('listData','formData','treeData');
+
+
+    /**
+     * How many columns will have the form
+     *
+     * @var integer
+     */
+    public $_formColumns  = 2;
 
     /**
      * Init function
-     * Get the Smarty instance and asign the tree, list and detail views
-     *
+     * Get the Smarty instance
+     * and the data for list and form 
+     * 
      * @param void
-     *
      * @return void
      */
-    public function init() {
+    public function init()
+    {
         /* Get the smarty object */
         $this->_smarty = Zend_Registry::get('view');
 
-        /* Set treeview */
-        $this->setTreeView($this->_render('tree'));
-
-        /* Set listview */
-        $this->setListView($this->_render('list'));
-
-        /* Set detailview */
-        $this->setDetailView($this->_render('detail'));
+        /* Stuff for list View */
+        $this->_data['listData'] = $this->getListData();
+        
+        /* Stuff for form View */
+        $this->_data['formData'] = $this->getFormData();
     }
 
     /**
-     * Assign an output to the tree view
+     * Standard action
+     */
+    public function indexAction()
+    {
+        $this->msg = '&nbsp;';
+        $this->generateOutput();
+    }
+
+    /**
+     * Render the treeView
      *
-     * @param string $output The output to show
-     *
+     * @param void
      * @return void
      */
     public function setTreeView($output)
     {
-        $this->_smarty->treeView = $output;
+        $this->treeView = $this->_render('tree');
     }
 
     /**
      * Render the listView
      *
-     * @param string $output The output to show
-     *
+     * @param void
      * @return void
      */
-    public function setListView($output)
+    public function setListView()
     {
-        $this->_smarty->listView = $output;
+        $this->_listViewSeted = true;
+        $oListView = new Default_Helpers_ListView($this);
+        $this->titles = $oListView->getTitles($this->_data['listData']); 
+        $this->lines  = $oListView->getItems($this->_data['listData']); 
+        $this->listView = $this->_render('list');
     }
 
     /**
-     * Assign an output to the detail view
+     * Render the formView
      *
-     * @param string $output The output to show
-     *
+     * @param void
      * @return void
      */
-    public function setDetailView($output)
+    public function setFormView($columns = 2)
     {
-        $this->_smarty->detailView = $output;
-    }
-
-    /**
-     * Get the tree output
-     *
-     * @param void 
-     *
-     * @return string The output to show
-     */
-    public function getTreeView()
-    {
-        return $this->_smarty->treeView;
-    }
-
-    /**
-     * Get the list output
-     *
-     * @param void 
-     *
-     * @return string The output to show
-     */
-    public function getListView()
-    {
-        return $this->_smarty->listView;
-    }
-
-    /**
-     * Get the detail output
-     *
-     * @param void 
-     *
-     * @return string The output to show
-     */
-    public function getDetailView($output)
-    {
-        return $this->_smarty->detailView;
+        $this->_formViewSeted = true;
+        $oFormView      = new Default_Helpers_FormView($this);
+        $this->columns  = $this->_formColumns;
+        $this->fields   = $oFormView->getFields($this->_data['formData']);
+        $this->formView = $this->_render('form');
     }
 
 	/**
@@ -160,24 +160,11 @@ class IndexController extends Zend_Controller_Action
 	}
 
     /**
-     * Standard action
-     *
-     * @return void
-     *
-     */
-    public function indexAction()
-    {
-        $translate = Zend_Registry::get('translate');
-        $this->setListView($translate->_("solved"));
-    }
-
-    /**
      * If the Action don´t exists, call indexAction
      *
      * @param string method - Action method
      * @param array  args   - Arguments for the Action
      * @return Zend_Exception
-     *
      */
     public function __call($method, $args)
     {
@@ -231,14 +218,63 @@ class IndexController extends Zend_Controller_Action
                 /* Set treeview */
                 return $this->_helper->viewRenderer->view->render('tree.tpl');
                 break;
+            case 'form':
+                /* Set formview */
+                return $this->_helper->viewRenderer->view->render('form.tpl');
+                break;
+            default:
             case 'list':
                 /* Set listview */
                 return $this->_helper->viewRenderer->view->render('list.tpl');
                 break;
-            case 'detail':
-                /* Set detailview */
-                return $this->_helper->viewRenderer->view->render('detail.tpl');
-                break;
         }
+    }
+
+    /**
+     * Render all the views that are not already renders
+     *
+     * @param void
+     * @return void
+     */
+    public function generateOutput()
+    {
+        if (!$this->_treeViewSeted) {
+            /* Set treeview */
+            $this->setTreeView($this->_render('tree'));
+        }
+
+        if (!$this->_listViewSeted) {
+            /* Set listview */
+            $this->setListView();
+        }
+
+        if (!$this->_formViewSeted) {
+            /* Set formview */
+            $this->setFormView();
+        }
+    }
+
+    /**
+     * Get the data for make the list
+     * This function must be redefined in each module
+     *
+     * @param void
+     * @return array - All the fields for list
+     */
+    public function getListData()
+    {
+        return array();
+    }
+
+    /**
+     * Get the data for make the form
+     * This function must be redefined in each module
+     *
+     * @param void
+     * @return array - All the fields for make the form
+     */
+    public function getFormData()
+    {
+        return array();
     }
 }
