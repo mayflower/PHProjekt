@@ -13,22 +13,22 @@
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
-class Phprojekt_Project extends Phprojekt_ActiveRecord
+class Phprojekt_Project extends Phprojekt_ActiveRecord_Abstract
 {
     public $hasMany = array('instances' => array('classname' => 'Phprojekt_ModuleInstance'));
 }
 
-class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord
+class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
 {
     public $belongsTo = array('project' => array('classname' => 'Phprojekt_Project'));
 }
 
-class Phprojekt_User extends Phprojekt_ActiveRecord
+class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
 {
     public $hasManyAndBelongsToMany = array('roles' => array('classname'=> 'Phprojekt_Role'));
 }
 
-class Phprojekt_Role extends Phprojekt_ActiveRecord
+class Phprojekt_Role extends Phprojekt_ActiveRecord_Abstract
 {
     public $hasManyAndBelongsToMany = array('users' => array('classname'=> 'Phprojekt_User'));
 }
@@ -43,7 +43,7 @@ class Phprojekt_Role extends Phprojekt_ActiveRecord
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_ActiveRecordTest extends PHPUnit_Extensions_ExceptionTestCase
+class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
 {
 
     /**
@@ -60,8 +60,52 @@ class Phprojekt_ActiveRecordTest extends PHPUnit_Extensions_ExceptionTestCase
         $this->sharedFixture = Zend_Db::factory('PDO_MYSQL', array(
                                           'username' => 'phprojekt',
                                           'password' => 'phprojekt',
-                                          'dbname' => 'phprojekt-mvc',
-                                          'host' => 'localhost'));
+                                          'dbname'   => 'phprojekt-mvc',
+                                          'host'     => 'localhost'));
+    }
+
+    /**
+     *
+     */
+    public function testCreateProjectWithHasMany()
+    {
+        $this->sharedFixture->beginTransaction();
+        try {
+            $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+            $module_instance = $project->instances->create();
+            $module_instance->name = 'My TestModule';
+            $module_instance->module = 'TestModule';
+            $module_instance->save();
+        } catch (Exception $e) {
+            $this->sharedFixture->rollBack();
+            $this->fail($e->getMessage());
+        }
+        $this->sharedFixture->rollBack();
+    }
+
+    /**
+     *
+     */
+    public function testCreateUser()
+    {
+        $this->sharedFixture->beginTransaction();
+        try {
+            $user = new Phprojekt_User(array('db'=>$this->sharedFixture));
+            $user->username  = 'gustavo';
+            $user->password  = md5('gustavo');
+            $user->firstname = 'Gustavo';
+            $user->lastname  = 'Solt';
+            $user->language  = 'es_AR';
+            $user->save();
+
+            $gustavo = new Phprojekt_User(array('db' => $this->sharedFixture));
+            $gustavo->find($user->id);
+            $this->assertEquals('gustavo', $gustavo->username);
+        } catch (Exception $e) {
+            $this->sharedFixture->rollBack();
+            $this->fail($e->getMessage());
+        }
+        $this->sharedFixture->rollBack();
     }
 
     /**
@@ -74,6 +118,7 @@ class Phprojekt_ActiveRecordTest extends PHPUnit_Extensions_ExceptionTestCase
         $user = new Phprojekt_User(array('db' => $this->sharedFixture));
         $user->find(1);
         $roles = $user->roles->fetchAll();
+        $this->assertEquals('Senior Developer', $user->roles->find(2)->name);
         $this->assertEquals('Developer', $roles[0]->name);
         $this->assertEquals('Senior Developer', $roles[1]->name);
         $this->assertEquals(2, $user->roles->count());
@@ -141,7 +186,34 @@ class Phprojekt_ActiveRecordTest extends PHPUnit_Extensions_ExceptionTestCase
         $instance->find(2);
         $instance->id = 1;
         $instance->save();
+    }
 
+    /**
+     * Update hasMany relations
+     */
+    public function testUpdateHasManyAndBelongsToMany()
+    {
+        $this->sharedFixture->beginTransaction();
+        try {
+            $user = new Phprojekt_User(array('db' => $this->sharedFixture));
+            $user->find(1);
+            $user->id = 2;
+            $user->username = 'dsp';
+            $user->save();
+
+            $roles = $user->roles->fetchAll();
+            $this->assertEquals(2, $roles[0]->user_id);
+            $this->assertEquals('Senior Developer', $roles[1]->name);
+
+            $user->find(2);
+            $user->id = 1;
+            $user->username = 'david';
+            $user->save();
+        }
+        catch(Exception $e) {
+            $this->sharedFixture->rollBack();
+            $this->fail($e->getMessage());
+        }
     }
 
     /**

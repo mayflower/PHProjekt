@@ -24,7 +24,7 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_ActiveRecord extends Zend_Db_Table
+abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 {
     /**
      * The format for the foreign key.
