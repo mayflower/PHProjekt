@@ -26,8 +26,4 @@ require_once 'PHPUnit/Framework.php';
  */
 class BaseTest extends PHPUnit_Framework_TestCase
 {
-    public function testAccessDenied()
-    {
-        $this->markTestIncomplete ('Test incomplete');
-    }
 }
