@@ -12,6 +12,7 @@
 define('PHPR_CONFIG_SECTION', 'production');
 
 define('PHPR_ROOT_PATH', realpath( dirname(__FILE__) . '/../') );
+define('PHPR_ROOT_WEB_PATH','http://localhost/mayflowers.de/phprojekt6/htdocs/');
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
 define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.xml');
@@ -34,7 +35,7 @@ Zend_Registry::set('config', $config);
 /* Make the connection to the DB*/
 require_once 'Zend/Db.php';
 $db = Zend_Db::factory($config->database->type, array(
-    'host'     => $config->database->host, 
+    'host'     => $config->database->host,
     'username' => $config->database->username,
     'password' => $config->database->password,
     'dbname'   => $config->database->name,
@@ -42,7 +43,7 @@ $db = Zend_Db::factory($config->database->type, array(
 Zend_Registry::set('db', $db);
 
 /**
- * Initialize Debug Log 
+ * Initialize Debug Log
  *
  * use $log->priority($txt);
  * Where priority can be emerg,alert,crit,err,warn,notice,info,debug
@@ -90,4 +91,5 @@ foreach (scandir(PHPR_CORE_PATH) as $module)
 $front->addModuleDirectory(PHPR_CORE_PATH);
 $front->setParam('useDefaultControllerAlways', true);
 
+$front->throwExceptions(true);
 $front->dispatch();

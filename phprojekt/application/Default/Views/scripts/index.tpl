@@ -1,8 +1,8 @@
-<table align="center" border="1">
+<table align="center" border="1" width="80%">
 <tr>
-    <td>{$treeView}</td>
-    <td>
-    <table border="1">
+    <td width="20%">{$treeView}</td>
+    <td width="80%">
+    <table border="1" width="100%">
     <tr>
         <td>{$listView}</td>
     </tr>

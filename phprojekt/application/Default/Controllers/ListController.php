@@ -6,7 +6,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -36,66 +36,66 @@ require_once ('IndexController.php');
  */
 class ListController extends IndexController
 {
-	/**
-	 * Adds a single filter to the current view
-	 */
-	public function addFilterAction()
+    /**
+     * Adds a single filter to the current view
+     */
+    public function addFilterAction()
     {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->addFilterAction();
-	}
+    }
 
-	/**
-	 * Delivers the inner part of the IndexAction using ajax
-	 */
-	public function componentIndexAction()
+    /**
+     * Delivers the inner part of the IndexAction using ajax
+     */
+    public function componentIndexAction()
     {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->componentIndexAction();
-	}
+    }
 
-	/**
-	 * Delivers the inner part of the Listaction using ajax
-	 */
-	public function componentListAction()
+    /**
+     * Delivers the inner part of the Listaction using ajax
+     */
+    public function componentListAction()
     {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->componentEditAction();
-	}
+    }
 
-	/**
+    /**
      * Default action
-	 */
-	public function indexAction()
+     */
+    public function indexAction()
     {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->indexAction();
-	}
+    }
 
-	/**
-	 * List all the data 
-	 */
-	public function listAction()
+    /**
+     * List all the data
+     */
+    public function listAction()
     {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->listAction();
-	}
+    }
 
-	/**
-	 *  Remove a filter
-	 */
-	public function removeFilterAction()
+    /**
+     * Remove a filter
+     */
+    public function removeFilterAction()
     {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->removeFilterAction();
-	}
+    }
 
-	/**
-	 * Sort the list view
-	 */
-	public function sortAction()
-	{
+    /**
+     * Sort the list view
+     */
+    public function sortAction()
+    {
         $oListView = new Default_Helpers_ListView($this);
         $oListView->sortFilterAction();
-	}
+    }
 }
