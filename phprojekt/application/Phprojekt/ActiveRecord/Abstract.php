@@ -404,159 +404,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
 
     /**
-     * Fetches all rows according to the where, order, count, offset rules
-     *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     *
-     * @return Zend_Db_Table_Rowset
-     */
-    public function fetchAll($where = null, $order = null,
-                             $count = null, $offset = null)
-    {
-        $wheres = array();
-        if (array_key_exists('hasMany', $this->_relations)) {
-            $wheres[] = $this->getAdapter()->quoteInto
-                            (sprintf('%s = ?',
-                                $this->_translateKeyFormat(
-                                    $this->_relations['hasMany']['classname'])),
-                                $this->_relations['hasMany']['id']);
-        }
-        if (null !== $where) {
-            $wheres[] = $where;
-        }
-
-        $where = (count($wheres) > 0) ? implode(' AND ', $wheres) : null;
-        $rows = parent::fetchAll($where, $order,
-                                 $count, $offset);
-
-        $result = array();
-        foreach ($rows as $row) {
-            $instance          = clone $this;
-            $instance->_data   = array();
-
-            foreach ($row->toArray() as $k => $v) {
-                $instance->_data[$k] = $v;
-            }
-
-            $instance->_storedId = $instance->_data['id'];
-
-            $result[] = $instance;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Creates a new instance and preserve relation information.
-     * Use this method to create a new object to save a relation
-     *
-     * @return Phprojekt_ActiveRecord_Abstract
-     */
-    public function create()
-    {
-        $instance = clone $this;
-        $instance->_relations = $this->_relations;
-        return $instance;
-    }
-
-    /**
-     * Overwrite the clone id, to reset _storeId and reinit the data array
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->_data = array();
-        $this->_storedId = null;
-        $this->_initDataArray();
-    }
-
-    /**
-     * Overwrite the find method to get relations too
-     *
-     * @return Phprojekt_ActiveRecord
-     */
-    public function find()
-    {
-        $args = func_get_args();
-
-        $find = parent::find($args[0]);
-        $find = $find[0];
-
-        /*
-         * reset data as all our relatios, etc stuff has to
-         * deal with a new id
-         */
-        $this->_data      = array();
-        $this->_storedId  = null;
-
-        $this->_data = (array) $find->_data;
-        unset($find);
-
-        $this->_storedId = $this->_data['id'];
-
-        return $this;
-    }
-
-    /**
-     * Save an entry. We either trigger update or create here.
-     *
-     * @return void
-     */
-    public function save()
-    {
-        $data = array();
-
-        foreach ($this->_data as $k => $v) {
-            if (is_scalar($v)) {
-                $data[$k] = $v;
-            }
-        }
-
-        /*
-         * If we have a storedId, the item was received from the databas
-         * and therefore should exist on the database, so we trigger an update.
-         * Otherwise we create the entry.
-         */
-        if (null !== $this->_storedId) {
-            $this->update($data,
-                $this->getAdapter()->quoteInto('id = ?', $this->_storedId));
-
-            if ($this->id !== $this->_storedId
-             && count($this->hasMany) > 0) {
-                 $this->_updateHasMany($this->_storedId, $this->id);
-             }
-
-             if ($this->id !== $this->_storedId
-              && count($this->hasManyAndBelongsToMany) > 0) {
-                 $this->_updateHasManyAndBelongsToMany($this->_storedId,
-                                                        $this->id);
-             }
-        } else {
-            /*
-             * We have to insert before we update the relations, as we
-             * need the new id for the relations (e.g.: n:m relations).
-             */
-            $this->insert($data);
-            $this->_data['id'] = $this->getAdapter()->lastInsertId();
-            $this->_storedId   = $this->_data['id'];
-
-            if (array_key_exists('hasMany', $this->_relations)) {
-                $foreignKeyName = $this->_translateKeyFormat(
-                                    $this->_relations['hasMany']['classname']);
-                $data[$foreignKeyName] = $this->_relations['hasMany']['id'];
-            }
-
-            if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {
-                $this->_insertHasManyAndBelongsToMany();
-            }
-        }
-    }
-
-    /**
      * Insert a n:m relation into the relation table
      *
      * @return void
@@ -575,16 +422,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                           $tableName, $myKeyName, $foreignKeyName);
         $stmt = $this->getAdapter()->prepare($query);
         $stmt->execute(array($this->id, $foreignId));
-    }
-
-    /**
-     * Count
-     *
-     * @return integer
-     */
-    public function count()
-    {
-        return parent::fetchAll()->count();
     }
 
     /**
@@ -745,4 +582,205 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         return sprintf('%s_rel', implode('_', $tableNames));
     }
+
+    /**
+     * Overwrite the clone id, to reset _storeId and reinit the data array
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->_data = array();
+        $this->_storedId = null;
+        $this->_initDataArray();
+    }
+
+    /**
+     * Creates a new instance and preserve relation information.
+     * Use this method to create a new object to save a relation
+     *
+     * @return Phprojekt_ActiveRecord_Abstract
+     */
+    public function create()
+    {
+        $instance = clone $this;
+        $instance->_relations = $this->_relations;
+        return $instance;
+    }
+
+    /**
+     * Save an entry. We either trigger update or create here.
+     *
+     * @return void
+     */
+    public function save()
+    {
+        $data = array();
+
+        foreach ($this->_data as $k => $v) {
+            if (is_scalar($v)) {
+                $data[$k] = $v;
+            }
+        }
+
+        /*
+         * If we have a storedId, the item was received from the databas
+         * and therefore should exist on the database, so we trigger an update.
+         * Otherwise we create the entry.
+         */
+        if (null !== $this->_storedId) {
+            $this->update($data,
+                $this->getAdapter()->quoteInto('id = ?', $this->_storedId));
+
+            if ($this->id !== $this->_storedId
+             && count($this->hasMany) > 0) {
+                 $this->_updateHasMany($this->_storedId, $this->id);
+             }
+
+             if ($this->id !== $this->_storedId
+              && count($this->hasManyAndBelongsToMany) > 0) {
+                 $this->_updateHasManyAndBelongsToMany($this->_storedId,
+                                                        $this->id);
+             }
+        } else {
+            /*
+             * We have to insert before we update the relations, as we
+             * need the new id for the relations (e.g.: n:m relations).
+             */
+            $this->insert($data);
+            $this->_data['id'] = $this->getAdapter()->lastInsertId();
+            $this->_storedId   = $this->_data['id'];
+
+            if (array_key_exists('hasMany', $this->_relations)) {
+                $foreignKeyName = $this->_translateKeyFormat(
+                                    $this->_relations['hasMany']['classname']);
+                $data[$foreignKeyName] = $this->_relations['hasMany']['id'];
+            }
+
+            if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {
+                $this->_insertHasManyAndBelongsToMany();
+            }
+        }
+    }
+
+	/**
+	 * Delete a record and all his relations
+	 *
+	 * @return void
+	 */
+	public function delete()
+	{
+		if (array_key_exists('id', $this->_data)) {
+            if (array_key_exists('hasMany', $this->_relations)) {
+				$className = $this->_relations['hasMany']['classname'];
+				$tableName = $this->_translateClassNameToTable($className);
+				$this->getAdapter()->delete($tableName, 
+							  $this->getAdapter()->quoteId(
+								  sprintf('%s = ?', 
+										  $this->_translateKeyFormat(
+											  $this->_relations['hasMany']['classname'])),
+								  $this->id));
+			}
+            if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {
+
+				$className = $this->_relations['hasManyAndBelongsToMany']['classname'];
+				$keyName   = $this->_translateKeyFormat(get_class($this));
+                $tableName = $this->_translateIntoRelationTableName(get_class($this),
+																	$className);
+				$this->getAdapter()->delete($tableName, 
+							  $this->getAdapter()->quoteId(
+								  sprintf('%s = ?', $keyName),
+								  $this->id));
+				
+            }
+			$tableName = $this->_translateClassNameToTable(get_class($this));
+			parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id']));
+			$this->_initDataArray();
+			$this->_relations = array();
+		}
+	}
+
+    /**
+     * Fetches all rows according to the where, order, count, offset rules
+     *
+     * @param string|array $where  Where clause
+     * @param string|array $order  Order by
+     * @param string|array $count  Limit query
+     * @param string|array $offset Query offset
+     *
+     * @return Zend_Db_Table_Rowset
+     */
+    public function fetchAll($where = null, $order = null,
+                             $count = null, $offset = null)
+    {
+        $wheres = array();
+        if (array_key_exists('hasMany', $this->_relations)) {
+            $wheres[] = $this->getAdapter()->quoteInto
+                            (sprintf('%s = ?',
+                                $this->_translateKeyFormat(
+                                    $this->_relations['hasMany']['classname'])),
+                                $this->_relations['hasMany']['id']);
+        }
+        if (null !== $where) {
+            $wheres[] = $where;
+        }
+
+        $where = (count($wheres) > 0) ? implode(' AND ', $wheres) : null;
+        $rows = parent::fetchAll($where, $order,
+                                 $count, $offset);
+
+        $result = array();
+        foreach ($rows as $row) {
+            $instance          = clone $this;
+            $instance->_data   = array();
+
+            foreach ($row->toArray() as $k => $v) {
+                $instance->_data[$k] = $v;
+            }
+
+            $instance->_storedId = $instance->_data['id'];
+
+            $result[] = $instance;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Overwrite the find method to get relations too
+     *
+     * @return Phprojekt_ActiveRecord
+     */
+    public function find()
+    {
+        $args = func_get_args();
+
+        $find = parent::find($args[0]);
+        $find = $find[0];
+
+        /*
+         * reset data as all our relatios, etc stuff has to
+         * deal with a new id
+         */
+        $this->_data      = array();
+        $this->_storedId  = null;
+
+        $this->_data = (array) $find->_data;
+        unset($find);
+
+        $this->_storedId = $this->_data['id'];
+
+        return $this;
+    }
+
+    /**
+     * Count
+     *
+     * @return integer
+     */
+    public function count()
+    {
+        return parent::fetchAll()->count();
+    }
+
 }
