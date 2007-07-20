@@ -42,7 +42,7 @@ class Default_Helpers_FormView
      * @var Zend_Controller_Action object
      */
     public $_actionController = '';
-    
+
     /**
      * Constructor
      *
@@ -56,7 +56,7 @@ class Default_Helpers_FormView
 
         $this->_actionController = $actionController;
     }
-    
+
     /**
      * Make all the input fields and return and arrar for
      * use in smarty.
@@ -96,6 +96,12 @@ class Default_Helpers_FormView
 
         $outout = '';
         switch ($fieldData['type']) {
+            case 'hidden':
+                $output = '<input type="hidden" '
+                          . 'name="' . $field . '"'
+                          . 'value="' . $fieldData['value'] .'"'
+                          . ' />';
+                break;
             default:
                 $output = '<input type="text" '
                           . 'name="' . $field . '"'
@@ -103,88 +109,105 @@ class Default_Helpers_FormView
                           . ' />';
                 break;
         }
-        
+
         return $output;
     }
 
-	/**
-     * Default action
-	 */
-	public function indexAction()
+    /**
+      * Default action
+      */
+    public function indexAction()
     {
         $this->displayAction();
-	}
+    }
 
-	/**
-	 * Abandon current changes and return to the default view
-	 */
-	public function cancelAction()
-	{
+    /**
+      * Abandon current changes and return to the default view
+      */
+    public function cancelAction()
+    {
         $this->_actionController->msg = '&nbsp;';
         $this->_actionController->setFormView();
         $this->_actionController->generateOutput();
 
         $this->_actionController->render('index');
-	}
+    }
 
-	/**
-	 * Ajax part of displayAction
-	 */
-	public function componentDisplayAction()
-	{
-	}
-
-	/**
-	 * Ajaxified part of the edit action 
-	 */
-	public function componentEditAction()
+    /**
+     * Ajax part of displayAction
+     */
+    public function componentDisplayAction()
     {
-	}
+    }
 
-	/**
-	 * Deletes a certain item
-	 */
-	public function deleteAction()
+    /**
+     * Ajaxified part of the edit action
+     */
+    public function componentEditAction()
     {
-        $this->_actionController->msg = 'Deleted';
-        $this->_actionController->setFormView();
+    }
+
+    /**
+     * Deletes a certain item
+     */
+    public function deleteAction()
+    {
+        $request = $this->_actionController->getRequest()->getParams();
+        if (!isset($request['id'])) {
+            $this->displayAction();
+        } else {
+            $this->_actionController->_oModels->deleteData($this->_actionController->getRequest()->getParams());
+            $this->_actionController->msg = 'Deleted';
+            $this->_actionController->generateOutput();
+
+            $this->_actionController->render('index');
+        }
+    }
+
+    /**
+     * Displays a single item
+     */
+    public function displayAction()
+    {
+        $this->_actionController->formAction =  $this->_actionController->_oModels->getActionForm('display');
+        $this->_actionController->buttons =  $this->_actionController->_oModels->getButtonsForm('display');
         $this->_actionController->generateOutput();
 
         $this->_actionController->render('index');
-	}
+    }
 
-	/**
-	 * displays a single item
-	 */
-	public function displayAction()
+    /**
+     * Displays the edit screen for the current item
+     */
+    public function editAction()
     {
-        $this->_actionController->setFormView();
-        $this->_actionController->generateOutput();
+        $request = $this->_actionController->getRequest()->getParams();
+        if (!isset($request['id'])) {
+            $this->displayAction();
+        } else {
+            $id = intval($request['id']);
 
-        $this->_actionController->render('index');
-	}
+            $this->_actionController->_data['formData'] = $this->_actionController->_oModels->getFormData($id);
+            $this->_actionController->formAction =  $this->_actionController->_oModels->getActionForm('edit',$id);
+            $this->_actionController->buttons =  $this->_actionController->_oModels->getButtonsForm('edit',$id);
+            $this->_actionController->generateOutput();
 
-	/**
-	 * Displays the edit screen for the current item 
-	 */
-	public function editAction()
+            $this->_actionController->render('index');
+        }
+    }
+
+    /**
+     * Saves the current item
+     */
+    public function saveAction()
     {
-        $this->_actionController->setFormView();
-        $this->_actionController->generateOutput();
+        $this->_actionController->_oModels->saveData($this->_actionController->getRequest()->getParams());
 
-        $this->_actionController->render('index');
-	}
-
-	/**
-	 * Saves the current item
-	 */
-	public function saveAction()
-    {
         $this->_actionController->msg = 'Saved';
         //$this->_actionController->errors = 'error!';
-        $this->_actionController->setFormView();
+        $this->_actionController->buttons =  $this->_actionController->_oModels->getButtonsForm('display');
         $this->_actionController->generateOutput();
 
         $this->_actionController->render('index');
-	}
+    }
 }

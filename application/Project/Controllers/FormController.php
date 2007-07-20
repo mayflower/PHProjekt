@@ -6,7 +6,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -35,75 +35,75 @@ require_once ('IndexController.php');
  */
 class Project_FormController extends Project_IndexController
 {
-	/**
+    /**
      * Default action
-	 */
-	public function indexAction()
+     */
+    public function indexAction()
     {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->indexAction();
-	}
+    }
 
-	/**
-	 * Abandon current changes and return to the default view
-	 */
-	public function cancelAction()
-	{
+    /**
+     * Abandon current changes and return to the default view
+     */
+    public function cancelAction()
+    {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->cancelAction();
-	}
+    }
 
-	/**
-	 * Ajax part of displayAction
-	 */
-	public function componentDisplayAction()
-	{
+    /**
+     * Ajax part of displayAction
+     */
+    public function componentDisplayAction()
+    {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->componentDisplayAction();
-	}
+    }
 
-	/**
-	 * Ajaxified part of the edit action 
-	 */
-	public function componentEditAction()
+    /**
+     * Ajaxified part of the edit action
+     */
+    public function componentEditAction()
     {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->componentEditAction();
-	}
+    }
 
-	/**
-	 * Deletes a certain item
-	 */
-	public function deleteAction()
+    /**
+     * Deletes a certain item
+     */
+    public function deleteAction()
     {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->deleteAction();
-	}
+    }
 
-	/**
-	 * displays a single item
-	 */
-	public function displayAction()
+    /**
+     * Displays the a single item
+     */
+    public function displayAction()
     {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->displayAction();
-	}
+    }
 
-	/**
-	 * Displays the edit screen for the current item 
-	 */
-	public function editAction()
+    /**
+     * Displays the edit screen for the current item
+     */
+    public function editAction()
     {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->editAction();
-	}
+    }
 
-	/**
-	 * Saves the current item
-	 */
-	public function saveAction()
+    /**
+     * Saves the current item
+     */
+    public function saveAction()
     {
         $oFormView = new Default_Helpers_FormView($this);
         $oFormView->saveAction();
-	}
+    }
 }

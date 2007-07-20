@@ -1,23 +1,20 @@
 <?php
 /**
- * A item, with database manager support
+ * Default model class
  *
- * LICENSE: Licensed under the terms of the PHProjekt 6 License
+ * LICENSE: Licensed under the terms of the GNU Publice License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  * @since      File available since Release 1.0
  */
 
-/* Default IndexController*/ 
-require_once ('ActiveRecord/Abstract.php');
-
 /**
- * A item, with database manager support
+ * Default model class
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -25,12 +22,29 @@ require_once ('ActiveRecord/Abstract.php');
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_Item extends Phprojekt_ActiveRecord_Abstract
+class Default_Models_Default
 {
-    public function __construct($config)
+    /**
+     * Default module has no fields for list
+     *
+     * @param void
+     * @return array
+     */
+    public function getListData()
     {
-        parent::__construct($config);
+        return array();
+    }
+
+    /**
+     * Default module has no fields for form
+     *
+     * @param void
+     * @return array
+     */
+    public function getFormData()
+    {
+        return array();
     }
 }

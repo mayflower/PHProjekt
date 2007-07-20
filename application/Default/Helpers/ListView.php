@@ -58,15 +58,15 @@ class Default_Helpers_ListView
 
         $this->_actionController = $actionController;
     }
-    
+
     /**
      * Return an array with the translated titles
      *
      * @param void
      * @return array - The titles translated
      */
-    public function getTitles() {
-
+    public function getTitles()
+    {
         $data = $this->_actionController->_data['listData'];
         $titles = array();
 
@@ -87,8 +87,8 @@ class Default_Helpers_ListView
      * @param void
      * @return array - An array with all the rows
      */
-    public function getItems() {
-
+    public function getItems()
+    {
         $data = $this->_actionController->_data['listData'];
         $items = array();
 
@@ -96,89 +96,99 @@ class Default_Helpers_ListView
             return $items;
         }
 
+        $editLink = PHPR_ROOT_WEB_PATH
+                            . $this->_actionController->getRequest()->getModuleName() . '/'
+                            . 'form/'
+                            . 'edit/'
+                            . 'id/';
+
         foreach ($data as $key => $itemData) {
             if ($key > 0) { // Ommit the titles
                 $items[$key] = array();
+                $first = 1;
                 foreach ($itemData as $field) {
                     if (empty($field)) {
                         $field = "&nbsp;";
                     }
-                    $items[$key][] = $field;
+                    if ($first) {
+                        $items[$key][] = '<a href="' . $editLink . $key . '">' . $field . '</a>';
+                        $first = 0;
+                    } else {
+                        $items[$key][] = $field;
+                    }
                 }
             }
-
         }
-
         return $items;
     }
 
-	/**
-	 * Adds a single filter to the current view
-	 */
-	public function addFilterAction()
+    /**
+     * Adds a single filter to the current view
+     */
+    public function addFilterAction()
     {
         $this->_actionController->setListView();
         $this->_actionController->msg = 'Filter Added';
 
         $this->_actionController->generateOutput();
         $this->_actionController->render('index');
-	}
+    }
 
-	/**
-	 * Delivers the inner part of the IndexAction using ajax
-	 */
-	public function componentIndexAction()
-	{
-	}
-
-	/**
-	 * Delivers the inner part of the Listaction using ajax
-	 */
-	public function componentListAction()
+    /**
+     * Delivers the inner part of the IndexAction using ajax
+     */
+    public function componentIndexAction()
     {
-	}
+    }
 
-	/**
+    /**
+     * Delivers the inner part of the Listaction using ajax
+     */
+    public function componentListAction()
+    {
+    }
+
+    /**
      * Default action
-	 */
-	public function indexAction()
+     */
+    public function indexAction()
     {
         $this->listAction();
-	}
+    }
 
-	/**
-	 * List all the data 
-	 */
-	public function listAction()
+    /**
+     * List all the data
+     */
+    public function listAction()
     {
         $this->_actionController->setListView();
         $this->_actionController->msg = '&nbsp;';
 
         $this->_actionController->generateOutput();
         $this->_actionController->render('index');
-	}
+    }
 
-	/**
-	 *  Remove a filter
-	 */
-	public function removeFilterAction()
+    /**
+     * Remove a filter
+     */
+    public function removeFilterAction()
     {
         $this->_actionController->setListView();
         $this->_actionController->msg = 'Filter Removed';
 
         $this->_actionController->generateOutput();
         $this->_actionController->render('index');
-	}
+    }
 
-	/**
-	 * Sort the list view
-	 */
-	public function sortAction()
-	{
+    /**
+     * Sort the list view
+     */
+    public function sortAction()
+    {
         $this->_actionController->setListView();
         $this->_actionController->msg = '&nbsp;';
 
         $this->_actionController->generateOutput();
         $this->_actionController->render('index');
-	}
+    }
 }

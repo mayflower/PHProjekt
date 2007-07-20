@@ -21,6 +21,9 @@ require_once (PHPR_CORE_PATH . '/Default/Helpers/ListView.php');
 /* Default_Helpers_FormView */
 require_once (PHPR_CORE_PATH . '/Default/Helpers/FormView.php');
 
+/* Default_Models_Default */
+require_once (PHPR_CORE_PATH . '/Default/Models/Default.php');
+
 /**
  * Default Controller for PHProjekt 6.0
  *
@@ -72,6 +75,12 @@ class IndexController extends Zend_Controller_Action
      */
     public $_data = array('listData','formData','treeData');
 
+    /**
+     * Object model with all the specific data
+     *
+     * @var Phprojekt_Item object
+     */
+    public $_oModels = '';
 
     /**
      * How many columns will have the form
@@ -83,21 +92,23 @@ class IndexController extends Zend_Controller_Action
     /**
      * Init function
      * Get the Smarty instance
-     * and the data for list and form 
-     * 
+     * and the data for list and form
+     *
      * @param void
      * @return void
      */
     public function init()
     {
         /* Get the smarty object */
-        $this->_smarty = Zend_Registry::get('view');
+        $this->_smarty           = Zend_Registry::get('view');
+
+        $this->_oModels          = $this->getModelsObject();
 
         /* Stuff for list View */
-        $this->_data['listData'] = $this->getListData();
-        
+        $this->_data['listData'] = $this->_oModels->getListData();
+
         /* Stuff for form View */
-        $this->_data['formData'] = $this->getFormData();
+        $this->_data['formData'] = $this->_oModels->getFormData();
     }
 
     /**
@@ -130,8 +141,9 @@ class IndexController extends Zend_Controller_Action
     {
         $this->_listViewSeted = true;
         $oListView = new Default_Helpers_ListView($this);
-        $this->titles = $oListView->getTitles($this->_data['listData']); 
-        $this->lines  = $oListView->getItems($this->_data['listData']); 
+        $this->_data['listData'] = $this->_oModels->getListData();
+        $this->titles = $oListView->getTitles($this->_data['listData']);
+        $this->lines  = $oListView->getItems($this->_data['listData']);
         $this->listView = $this->_render('list');
     }
 
@@ -141,23 +153,25 @@ class IndexController extends Zend_Controller_Action
      * @param void
      * @return void
      */
-    public function setFormView($columns = 2)
+    public function setFormView($id = 0)
     {
         $this->_formViewSeted = true;
         $oFormView      = new Default_Helpers_FormView($this);
         $this->columns  = $this->_formColumns;
+        if ($id == 0) {
+            $this->_data['formData'] = $this->_oModels->getFormData($id);
+        }
         $this->fields   = $oFormView->getFields($this->_data['formData']);
         $this->formView = $this->_render('form');
     }
 
-	/**
-	 * Return true if not have access 
-     *
-	 */
-	public function accessDenied()
-	{
+    /**
+     * Return true if not have access
+     */
+    public function accessDenied()
+    {
         return false;
-	}
+    }
 
     /**
      * If the Action don´t exists, call indexAction
@@ -170,8 +184,8 @@ class IndexController extends Zend_Controller_Action
     {
         if ('Action' == substr($method, -6)) {
             // If the action method was not found,
-            // forward to the index action            
-            return $this->_forward('index');  
+            // forward to the index action
+            return $this->_forward('index');
         }
         // all other methods throw an exception
         throw new Exception('Invalid method "' . $method . '" called');
@@ -255,26 +269,15 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Get the data for make the list
+     * Get the model object
      * This function must be redefined in each module
      *
      * @param void
      * @return array - All the fields for list
      */
-    public function getListData()
+    public function getModelsObject()
     {
-        return array();
-    }
-
-    /**
-     * Get the data for make the form
-     * This function must be redefined in each module
-     *
-     * @param void
-     * @return array - All the fields for make the form
-     */
-    public function getFormData()
-    {
-        return array();
+        $oModels = new Default_Models_Default();
+        return $oModels;
     }
 }
