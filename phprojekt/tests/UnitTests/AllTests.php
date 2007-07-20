@@ -24,6 +24,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Default/AllTests.php';
+require_once 'Phprojekt/AllTests.php';
 
 /**
  * AllTests merges all test from the modules
@@ -57,6 +58,8 @@ class AllTests
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
 
         $suite->addTest(Default_AllTests::suite());
+        $suite->addTest(Phprojekt_AllTests::suite());
+
         // add here additional test suites
 
         return $suite;
