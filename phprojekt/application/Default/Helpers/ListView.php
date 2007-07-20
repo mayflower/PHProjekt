@@ -18,7 +18,8 @@
 /**
  * List view helper
  *
- * The class will recive and array with data and draw a list view.
+ * The class process the info for show the list data
+ * ans all the acctions from the controller
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -32,42 +33,41 @@ class Default_Helpers_ListView
 {
     /**
      * Translator object
+     *
+     * @var Zend_Log object
      */
     private $_translator = '';
 
     /**
-     * Number of columns
+     * ActionController Object
+     *
+     * @var Zend_Controller_Action object
      */
-    public $_columns = '';
-    
-    /**
-     * Number of rows
-     */
-    public $_rows = '';
+    public $_actionController = '';
 
-    public function __construct($data = array())
+    /**
+     * Constructor
+     *
+     * @param Zend_Controller_Action object actionController
+     * @return void
+     */
+    public function __construct($actionController)
     {
         $translate = Zend_Registry::get('translate');
         $this->_translator = $translate;
 
-        /* Get how many columns and rows have */
-        if (!empty($data)) {
-            $this->_columns = count($data[0]);
-            $this->_rows    = count($data);
-        } else { 
-            $this->_columns = 0;
-            $this->_rows    = 0;
-        }
+        $this->_actionController = $actionController;
     }
     
     /**
      * Return an array with the translated titles
      *
-     * @param array data - The all data values for render
-     * @return array     - The titles translated
+     * @param void
+     * @return array - The titles translated
      */
-    public function getTitles($data = array()) {
+    public function getTitles() {
 
+        $data = $this->_actionController->_data['listData'];
         $titles = array();
 
         if (empty($data)) {
@@ -84,11 +84,12 @@ class Default_Helpers_ListView
     /**
      * Return an array with all the items
      *
-     * @param array data - The all data values for render
-     * @return array     - An array with all the rows
+     * @param void
+     * @return array - An array with all the rows
      */
-    public function getItems($data = array()) {
+    public function getItems() {
 
+        $data = $this->_actionController->_data['listData'];
         $items = array();
 
         if (empty($data)) {
@@ -110,4 +111,74 @@ class Default_Helpers_ListView
 
         return $items;
     }
+
+	/**
+	 * Adds a single filter to the current view
+	 */
+	public function addFilterAction()
+    {
+        $this->_actionController->setListView();
+        $this->_actionController->msg = 'Filter Added';
+
+        $this->_actionController->generateOutput();
+        $this->_actionController->render('index');
+	}
+
+	/**
+	 * Delivers the inner part of the IndexAction using ajax
+	 */
+	public function componentIndexAction()
+	{
+	}
+
+	/**
+	 * Delivers the inner part of the Listaction using ajax
+	 */
+	public function componentListAction()
+    {
+	}
+
+	/**
+     * Default action
+	 */
+	public function indexAction()
+    {
+        $this->listAction();
+	}
+
+	/**
+	 * List all the data 
+	 */
+	public function listAction()
+    {
+        $this->_actionController->setListView();
+        $this->_actionController->msg = '&nbsp;';
+
+        $this->_actionController->generateOutput();
+        $this->_actionController->render('index');
+	}
+
+	/**
+	 *  Remove a filter
+	 */
+	public function removeFilterAction()
+    {
+        $this->_actionController->setListView();
+        $this->_actionController->msg = 'Filter Removed';
+
+        $this->_actionController->generateOutput();
+        $this->_actionController->render('index');
+	}
+
+	/**
+	 * Sort the list view
+	 */
+	public function sortAction()
+	{
+        $this->_actionController->setListView();
+        $this->_actionController->msg = '&nbsp;';
+
+        $this->_actionController->generateOutput();
+        $this->_actionController->render('index');
+	}
 }

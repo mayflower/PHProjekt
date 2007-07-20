@@ -16,11 +16,15 @@
 /* IndexController */
 require_once ('IndexController.php');
 
-/* Default_Helpers_ListView */
-require_once (PHPR_CORE_PATH . '/Default/Helpers/ListView.php');
-
 /**
  * List Controller for PHProjekt 6.0
+ *
+ * The list controller is and extension of the indexController
+ * and use a Helper class for do the job.
+ * This is because the listControllers from other modules must
+ * have the function of the indexController
+ * and the listControllers functions.
+ * Since we can´t use a daiamont structure, we use a third class.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -36,16 +40,18 @@ class ListController extends IndexController
 	 * Adds a single filter to the current view
 	 */
 	public function addFilterAction()
-	{
-        $this->render('index');
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->addFilterAction();
 	}
 
 	/**
 	 * Delivers the inner part of the IndexAction using ajax
 	 */
 	public function componentIndexAction()
-	{
-        $this->_helper->viewRenderer->setNoRender();
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->componentIndexAction();
 	}
 
 	/**
@@ -53,15 +59,17 @@ class ListController extends IndexController
 	 */
 	public function componentListAction()
     {
-        $this->_helper->viewRenderer->setNoRender();
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->componentEditAction();
 	}
 
 	/**
-	 * The Default-Action: displays the list page 
+     * Default action
 	 */
 	public function indexAction()
-	{
-        return $this->_forward('list');
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->indexAction();
 	}
 
 	/**
@@ -69,31 +77,17 @@ class ListController extends IndexController
 	 */
 	public function listAction()
     {
-        /*
-        * data from the List Class like
-        * '0' => array('Name','Description'),
-        * '1' => array('Projecto 1','Test<br />a e i o u'),
-        * '2' => array('Projecto 2','Test2'),
-        * '3' => array('Projecto 3','Test<br />k a ñ')
-        * );
-        */
-        $data = array();
-
-        /* List Actions */
-        $oListView = new Default_Helpers_ListView($data);
-        $this->titles = $oListView->getTitles($data); 
-        $this->lines  = $oListView->getItems($data); 
-        $this->setListView($this->_render('list'));
-
-        $this->render('index');
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->listAction();
 	}
 
 	/**
 	 *  Remove a filter
 	 */
 	public function removeFilterAction()
-	{
-        $this->render('index');
+    {
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->removeFilterAction();
 	}
 
 	/**
@@ -101,6 +95,7 @@ class ListController extends IndexController
 	 */
 	public function sortAction()
 	{
-        $this->render('index');
+        $oListView = new Default_Helpers_ListView($this);
+        $oListView->sortFilterAction();
 	}
 }
