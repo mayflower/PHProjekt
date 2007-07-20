@@ -33,7 +33,7 @@ set_include_path('.' . PATH_SEPARATOR
 require_once 'Zend/Loader.php';
 Zend_Loader::registerAutoload();
 
-require_once 'ActiveRecordTest.php';
+require_once 'ActiveRecord/AbstractTest.php';
 
 /**
  * Test suite for the default module
@@ -67,7 +67,7 @@ class Phprojekt_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
-        $suite->addTestSuite('Phprojekt_ActiveRecordTest');
+        $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');
         // ...
 
         return $suite;
