@@ -174,11 +174,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $getter = 'get' . strtoupper($varname{0}) . substr($varname, 1);
         if (in_array($getter, get_class_methods(get_class()))) {
             return call_user_method($getter, $this);
-        } elseif (array_key_exists($varname, $this->hasMany)) {
+        } elseif (array_key_exists($varname, $this->hasMany)
+               && array_key_exists('id', $this->_data)) {
             return $this->_hasMany($varname);
-        } elseif (array_key_exists($varname, $this->belongsTo)) {
+        } elseif (array_key_exists($varname, $this->belongsTo)
+               && array_key_exists('id', $this->_data)) {
             return $this->_belongsTo($varname);
-        } elseif (array_key_exists($varname, $this->hasManyAndBelongsToMany)) {
+        } elseif (array_key_exists($varname, $this->hasManyAndBelongsToMany)
+               && array_key_exists('id', $this->_data)) {
             return $this->_hasManyAndBelongsToMany($varname);
         } elseif (array_key_exists($varname, get_object_vars($this))) {
             return $this->$varname;
@@ -454,7 +457,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $instance = clone $this;
         $instance->_relations = $this->_relations;
-
         return $instance;
     }
 
@@ -525,10 +527,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                                                         $this->id);
              }
         } else {
-            if (count($this->hasMany) > 0) {
+            if (array_key_exists('hasMany', $this->_relations)) {
                 $foreignKeyName = $this->_translateKeyFormat(
-                                    $this->_relations['classname']);
-                $data[$foreignKeyName] = $this->_relations['id'];
+                                    $this->_relations['hasMany']['classname']);
+                $data[$foreignKeyName] = $this->_relations['hasMany']['id'];
             }
 
             $this->insert($data);
