@@ -293,7 +293,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $select->where(str_replace('`id`', 'foreign.id', $where));
 
         if (null !== $this->_log) {
-            $this->_log->log($select->__toString(), 'DEBUG');
+            $this->_log->log($select->__toString(), Zend_Log::DEBUG);
         }
 
         $stmt = $this->getAdapter()->query($select);
@@ -420,6 +420,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                                                            $className);
         $query = sprintf ("INSERT INTO %s (%s, %s) VALUES (?, ?)",
                           $tableName, $myKeyName, $foreignKeyName);
+
+        if (null !== $this->_log) {
+            $this->_log->log($query, Zend_Log::DEBUG);
+        }
+
         $stmt = $this->getAdapter()->prepare($query);
         $stmt->execute(array($this->id, $foreignId));
     }
@@ -440,6 +445,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
                          $tableName, $columnName, $columnName);
+
+            if (null !== $this->_log) {
+                $this->_log->log($query, Zend_Log::DEBUG);
+            }
 
             /* @var Zend_Db_Statement $stmt */
             $stmt = $this->getAdapter()->prepare($query);
@@ -477,6 +486,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
                             $tableName, $myKeyName, $myKeyName);
+
+            if (null !== $this->_log) {
+                $this->_log->log($query, Zend_Log::DEBUG);
+            }
 
             /* @var Zend_Db_Statement $stmt */
             $stmt = $this->getAdapter()->prepare($query);
@@ -542,6 +555,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
                 if ($name{0} == '_') $name = substr($name, 1);
 
+                if (null !== $this->_log) {
+                    $this->_log->log(
+                        sprintf("%s translated to %s",
+                            $className, strtolower($name)),
+                        Zend_Log::DEBUG);
+                }
+
                 return strtolower($name);
             }
         }
@@ -561,7 +581,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $tableName = $this->_translateClassNameToTable($className, false);
 
-        return str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
+        $keyName = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
+
+        if (null !== $this->_log) {
+            $this->_log->log(sprintf("%s translated to %s",
+                                    $className, $keyName), Zend_Log::DEBUG);
+        }
+
+        return $keyName;
     }
 
     /**
@@ -580,7 +607,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         sort($tableNames);
         reset($tableNames);
 
-        return sprintf('%s_rel', implode('_', $tableNames));
+        $tableName = sprintf('%s_rel', implode('_', $tableNames));
+
+        if (null !== $this->_log) {
+            $this->_log->log(sprintf("%s, %s translated to %s",
+                                    $myClassName, $foreignClassName, $tableName),
+                             Zend_Log::DEBUG);
+        }
+
+        return $tableName;
     }
 
     /**
@@ -687,7 +722,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 foreach ($this->hasManyAndBelongsToMany as $key=>$arr) {
                     $className = $this->_getClassNameForRelationship($key,
                                             $this->hasManyAndBelongsToMany);
-    				// $className = $this->hasManyAndBelongsToMany
     				$keyName   = $this->_translateKeyFormat(get_class($this));
                     $tableName = $this->_translateIntoRelationTableName(get_class($this),
     																	$className);
