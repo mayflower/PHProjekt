@@ -304,7 +304,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $select->where(str_replace('`id`', 'foreign.id', $where));
 
         if (null !== $this->_log) {
-            $this->_log->log((string) $select, Zend_Log::DEBUG);
+            $this->_log->debug((string) $select);
         }
 
         $stmt = $this->getAdapter()->query($select);
@@ -433,7 +433,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                          $tableName, $myKeyName, $foreignKeyName);
 
         if (null !== $this->_log) {
-            $this->_log->log($query, Zend_Log::DEBUG);
+            $this->_log->debug($query);
         }
 
         $stmt = $this->getAdapter()->prepare($query);
@@ -460,7 +460,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                          $tableName, $columnName, $columnName);
 
             if (null !== $this->_log) {
-                $this->_log->log($query, Zend_Log::DEBUG);
+                $this->_log->debug($query );
             }
 
             /* @var Zend_Db_Statement $stmt */
@@ -499,7 +499,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                             $tableName, $myKeyName, $myKeyName);
 
             if (null !== $this->_log) {
-                $this->_log->log($query, Zend_Log::DEBUG);
+                $this->_log->debug($query);
             }
 
             /* @var Zend_Db_Statement $stmt */
@@ -568,9 +568,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 if ($name{0} == '_') $name = substr($name, 1);
 
                 if (null !== $this->_log) {
-                    $this->_log->log(sprintf("%s translated to %s",
-                                        $className, strtolower($name)),
-                                     Zend_Log::DEBUG);
+                    $this->_log->debug(sprintf("%s translated to %s",
+                                        $className, strtolower($name)));
                 }
 
                 return strtolower($name);
@@ -595,8 +594,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $keyName = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
 
         if (null !== $this->_log) {
-            $this->_log->log(sprintf("%s translated to %s",
-                                    $className, $keyName), Zend_Log::DEBUG);
+            $this->_log->debug(sprintf("%s translated to %s",
+                                    $className, $keyName));
         }
 
         return $keyName;
@@ -626,9 +625,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $tableName = sprintf('%s_rel', implode('_', $tableNames));
 
         if (null !== $this->_log) {
-            $this->_log->log(sprintf("%s, %s translated to %s",
-                                   $myClassName, $foreignClassName, $tableName),
-                             Zend_Log::DEBUG);
+            $this->_log->debug(sprintf("%s, %s translated to %s",
+                                   $myClassName, $foreignClassName, $tableName));
         }
 
         return $tableName;
