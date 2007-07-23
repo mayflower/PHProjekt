@@ -53,7 +53,7 @@ class Default_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
-        $suite->addTestSuite('BaseTest');
+        // $suite->addTestSuite('BaseTest');
         // ...
 
         return $suite;
