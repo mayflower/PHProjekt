@@ -13,8 +13,8 @@
  * @since      File available since Release 1.0
  */
 
-/* Phprojekt_Item */
-require_once (PHPR_CORE_PATH . '/Phprojekt/Item.php');
+/* Phprojekt_Item_Abstract */
+require_once (PHPR_CORE_PATH . '/Phprojekt/Item/Abstract.php');
 
 /**
  * Project model class
@@ -27,53 +27,20 @@ require_once (PHPR_CORE_PATH . '/Phprojekt/Item.php');
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_Models_Project extends Phprojekt_Item
+class Project_Models_Project extends Phprojekt_Item_Abstract
 {
-    /**
-     * Get the field for a list view from the db_manager
-     *
-     * @todo must be from the db_manager stuff
-     *
-     *@param void
-     * @return array - Array with the list fields
-     */
-    public function getFieldsForList()
-    {
-        return array('id','title','notes');
-    }
-
-    /**
-     * Get the field for a form from the db_manager
-     *
-     * @todo must be from the db_manager stuff
-     *
-     *@param void
-     * @return array - Array with the form fields
-     */
-    public function getFieldsForForm() {
-        return array('title','notes');
-    }
-
     /**
      * Get all the projects from the db
      *
-     *@param void
      * @return array - Array with the rows for render
      */
     public function getListData()
     {
-        $listFields = $this->getFieldsForList();
-        $listData = array('0' => array());
-
-        $info = $this->info();
-        foreach ($info['cols'] as $indexColumn => $nameColumn) {
-            if (in_array($nameColumn,$listFields)) {
-                array_push($listData[0],$nameColumn);
-            }
-        }
+        $listFields = $this->getFieldsForList('project');
+        $listData = array('0' => $listFields);
 
         foreach ($this->fetchAll() as $row) {
-            foreach ($info['cols'] as $fieldIndex => $fieldName) {
+            foreach ($listFields as $fieldName) {
                 if (!isset($listData[$row->id])) {
                     $listData[$row->id] = array();
                 }
@@ -86,39 +53,25 @@ class Project_Models_Project extends Phprojekt_Item
         return $listData;
     }
 
-
     /**
      * Get the form fields
      * If the id is defined will make the edit form
      * if not, will make the add form
      *
-     *@param integer $id - Optional, for edit the row
+     * @param integer $id - Optional, for edit the row
      * @return array - Array with the fields for render
      */
     public function getFormData($id = 0)
     {
-        $formFields = $this->getFieldsForForm();
-        $formData = array();
-        $info = $this->info();
+        $formData = $this->getFieldsForForm('project');
 
         if ($id > 0) {
             $this->find($id);
-        }
-
-        foreach ($info['cols'] as $indexColumn => $nameColumn) {
-            if (in_array($nameColumn,$formFields)) {
-                $fieldData = array($nameColumn =>
-                    array(
-                        'type' => 'text',
-                        'showName' => $nameColumn,
-                        'value' => $this->$nameColumn
-                    )
-                );
-                if (!isset($formData[$nameColumn])) {
-                    $formData[$nameColumn] = array();
-                }
-                $formData = array_merge($formData,$fieldData);
+            foreach ($formData as $fieldName => $fieldData) {
+                $tmpData[$fieldName] = $fieldData;
+                $tmpData[$fieldName]['value'] = $this->$fieldName;
             }
+            $formData = $tmpData;
         }
 
         return $formData;
@@ -127,7 +80,7 @@ class Project_Models_Project extends Phprojekt_Item
     /**
      * Save the data into the db
      *
-     *@param array $request - $_POST array
+     * @param array $request - $_POST array
      * @return void
      */
     public function saveData($request) {
@@ -143,7 +96,6 @@ class Project_Models_Project extends Phprojekt_Item
 
         $this->save();
     }
-
 
     /**
      * Get the action for make the form
