@@ -6,23 +6,23 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
-*/
+ */
 
-/** Zend_Locale */
+/* Zend_Locale */
 require_once 'Zend/Locale.php';
 
-/** Zend_Translate_Exception */
+/* Zend_Translate_Exception */
 require_once 'Zend/Translate/Exception.php';
 
-/** Zend_Translate_Adapter */
+/* Zend_Translate_Adapter */
 require_once 'Zend/Translate/Adapter.php';
 
-/** Zend_Session_Namespace */
+/* Zend_Session_Namespace */
 require_once 'Zend/Session/Namespace.php';
 
 /**
@@ -73,7 +73,7 @@ class Phproject_LanguageAdapter extends Zend_Translate_Adapter
             $session->translatedStrings = array();
         }
 
-        /* Collect a new trasnaltion set */ 
+        /* Collect a new trasnaltion set */
         if (empty($this->_translate[$locale])) {
 
             /* Get the translation file */

@@ -11,7 +11,7 @@
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
-*/
+ */
 
 /* IndexController */
 require_once ('IndexController.php');

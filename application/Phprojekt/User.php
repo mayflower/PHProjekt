@@ -10,8 +10,10 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  * @TODO       Check with phpcs ASAP
- * @todo       EVERYTHING, THIS IS A MOCKUP. 
-*/
+ * @todo       EVERYTHING, THIS IS A MOCKUP.
+ */
+
+/* Phprojekt_DatabaseManagerObject */
 require_once ('Phprojekt_DatabaseManagerObject.php');
 
 /**
@@ -55,7 +57,6 @@ class Phprojekt_User extends Phprojekt_Item
      */
     public $language;
 
-
     function __construct()
     {
     }
@@ -64,10 +65,9 @@ class Phprojekt_User extends Phprojekt_Item
     {
     }
 
-
     /**
      * Get a setting value of the user
-     * @param string name of the setting to be get 
+     * @param string name of the setting to be get
      * @return mixed value of the setting
      */
     public function getSetting(mixed $name)
@@ -105,12 +105,11 @@ class Phprojekt_User extends Phprojekt_Item
     /**
      * Sets any setting of the user
      * @param string name of the setting to be changed
-     * @param string value new value 
+     * @param string value new value
      * @return mixed The value set on the setting
      */
     public function setSetting(string $name, string $value)
     {
         return $this->$name = $value;
     }
-
 }

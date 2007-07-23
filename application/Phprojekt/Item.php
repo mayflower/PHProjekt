@@ -13,7 +13,7 @@
  * @since      File available since Release 1.0
  */
 
-/* Default IndexController*/ 
+/* Default IndexController*/
 require_once ('ActiveRecord/Abstract.php');
 
 /**
