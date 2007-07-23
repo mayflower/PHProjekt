@@ -248,10 +248,10 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render all the views that are not already renders
      *
-     * @param void
+     * @param integer $id - The id of the row
      * @return void
      */
-    public function generateOutput()
+    public function generateOutput($id = 0)
     {
         if (!$this->_treeViewSeted) {
             /* Set treeview */
@@ -265,7 +265,7 @@ class IndexController extends Zend_Controller_Action
 
         if (!$this->_formViewSeted) {
             /* Set formview */
-            $this->setFormView();
+            $this->setFormView($id);
         }
     }
 

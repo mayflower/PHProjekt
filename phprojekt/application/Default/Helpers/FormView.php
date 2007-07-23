@@ -69,7 +69,7 @@ class Default_Helpers_FormView
         $fields = array();
 
         foreach ($this->_actionController->_data['formData'] as $field => $fieldData) {
-            $fields[] = $this->_translator->translate($fieldData['showName'])
+            $fields[] = $this->_translator->translate($fieldData['label'])
                         . "&nbsp;"
                         . $this->getFormOutput($field, $fieldData);
         }
@@ -190,7 +190,7 @@ class Default_Helpers_FormView
             $this->_actionController->_data['formData'] = $this->_actionController->_oModels->getFormData($id);
             $this->_actionController->formAction =  $this->_actionController->_oModels->getActionForm('edit',$id);
             $this->_actionController->buttons =  $this->_actionController->_oModels->getButtonsForm('edit',$id);
-            $this->_actionController->generateOutput();
+            $this->_actionController->generateOutput($id);
 
             $this->_actionController->render('index');
         }
