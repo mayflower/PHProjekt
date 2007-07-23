@@ -30,7 +30,7 @@ Zend_Session::start();
 /* Read the config file, but only the production setting */
 $config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION);
 Zend_Registry::set('config', $config);
-define('PHPR_ROOT_WEB_PATH',$config->webpath);
+define('PHPR_ROOT_WEB_PATH',$config->webpath . 'index.php/');
 
 /* Make the connection to the DB*/
 require_once 'Zend/Db.php';
