@@ -47,4 +47,16 @@ class Default_Models_Default
     {
         return array();
     }
+
+    /**
+     * Get the buttons deppend on the action
+     *
+     * @param string $action - Define wich action are showing
+     * @param integer $id      - The  id of the edited item
+     * @return string               - <a href="">
+     */
+    public function getButtonsForm($action, $id = '')
+    {
+        return '&nbsp';
+    }
 }
