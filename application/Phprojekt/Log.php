@@ -6,7 +6,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -67,17 +67,17 @@ class Phprojekt_Log extends Zend_Log
      * @param  string  $priority  priority name
      * @return void
      */
-    public function addLog($priority = 'DEBUG')
+    public function addLog($priority = 'debug')
     {
         $config = Zend_Registry::get('config');
 
-        $priority = strtoupper($priority);
         if (isset($config->log->$priority->filename)) {
             $oWriter = new Zend_Log_Writer_Stream($config->log->$priority->filename);
         } else {
             $oWriter = new Zend_Log_Writer_Null;
         }
-        
+
+        $priority = strtoupper($priority);
         $this->_loguers[$priority] = new Zend_Log($oWriter);
     }
 
@@ -98,7 +98,7 @@ class Phprojekt_Log extends Zend_Log
 
         /* Add the new log if is not started */
         if (!isset($this->_loguers[$priority])) {
-            $this->addLog($priority);
+            $this->addLog($method);
         }
 
         if (($iPriority = array_search($priority, $this->_priorities)) !== false) {

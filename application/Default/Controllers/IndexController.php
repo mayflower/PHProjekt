@@ -117,6 +117,7 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->msg = '&nbsp;';
+        $this->buttons =  $this->_oModels->getButtonsForm('display');
         $this->generateOutput();
     }
 

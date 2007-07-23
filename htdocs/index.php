@@ -12,10 +12,9 @@
 define('PHPR_CONFIG_SECTION', 'production');
 
 define('PHPR_ROOT_PATH', realpath( dirname(__FILE__) . '/../') );
-define('PHPR_ROOT_WEB_PATH','http://localhost/mayflowers.de/phprojekt6/htdocs/');
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
-define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.xml');
+define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
 define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
 
 set_include_path('.' . PATH_SEPARATOR
@@ -29,8 +28,9 @@ Zend_Loader::registerAutoload();
 Zend_Session::start();
 
 /* Read the config file, but only the production setting */
-$config = new Zend_Config_Xml(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION);
+$config = new Zend_Config_Ini(PHPR_CONFIG_FILE,'production');
 Zend_Registry::set('config', $config);
+define('PHPR_ROOT_WEB_PATH',$config->webpath);
 
 /* Make the connection to the DB*/
 require_once 'Zend/Db.php';

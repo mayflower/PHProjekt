@@ -218,7 +218,7 @@ class Project_Models_Project extends Phprojekt_Item
         if (isset($request['id'])) {
             $id = intval($request['id']);
             $this->find($id);
-            //$this->delete();
+            $this->delete();
         }
     }
 }
