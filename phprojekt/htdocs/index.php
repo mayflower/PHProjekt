@@ -28,7 +28,7 @@ Zend_Loader::registerAutoload();
 Zend_Session::start();
 
 /* Read the config file, but only the production setting */
-$config = new Zend_Config_Ini(PHPR_CONFIG_FILE,'production');
+$config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION);
 Zend_Registry::set('config', $config);
 define('PHPR_ROOT_WEB_PATH',$config->webpath);
 
