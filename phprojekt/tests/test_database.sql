@@ -111,13 +111,14 @@ DROP TABLE IF EXISTS `project`;
 CREATE TABLE `project` (
   `id` mediumint(9) NOT NULL auto_increment,
   `parent` mediumint(9) default NULL,
-  `path` varchar(25) NOT NULL,
+  `path` varchar(25) NOT NULL default '',
   `title` varchar(250) NOT NULL,
+  `notes` varchar(250) NOT NULL default '',
   `owner_id` mediumint(9) default NULL,
   `start_date` datetime default NULL,
   `end_date` datetime default NULL,
   `priority` int(11) default NULL,
-  `current_status` varchar(50) NOT NULL,
+  `current_status` varchar(50) NOT NULL default 'working',
   `complete_percent` float default '0',
   `hourly_wage_rate` float default NULL,
   `budget` float default NULL,
@@ -131,7 +132,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,NULL,'/','Test Project',NULL,NULL,NULL,NULL,'ordered',0,NULL,NULL);
+INSERT INTO `project` VALUES (1,NULL,'/','Test Project','Test note',NULL,NULL,NULL,NULL,'ordered',0,NULL,NULL);
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
