@@ -139,3 +139,9 @@ CREATE TABLE database_manager
 	PRIMARY KEY (id)
 )
 ;
+
+
+## FOR TEST ##
+INSERT INTO `database_manager` VALUES (1, 'project', 'title', 1, 'title', 'title', 'text', 1, 1, '', NULL, '', 1, 'left', 1, 1, '', 0, 1, 0);
+INSERT INTO `database_manager` VALUES (2, 'project', 'notes', 1, 'notes', 'notes', 'textarea', 2, 2, '', NULL, '', 3, 'left', 1, 2, '1', 0, 1, 0);
+INSERT INTO `database_manager` VALUES (3, 'project', 'priority', 1, 'priority', 'priority', 'text', 3, 1, NULL, NULL, '5', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
