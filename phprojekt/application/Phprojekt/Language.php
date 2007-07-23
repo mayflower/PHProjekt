@@ -6,17 +6,17 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
 
-/** Zend_Locale */
+/* Zend_Locale */
 require_once 'Zend/Translate.php';
 
-/** Default_Helpers_PhprojectLanguage */
+/* Default_Helpers_PhprojectLanguage */
 require_once (PHPR_CORE_PATH . '/Phprojekt/LanguageAdapter.php');
 
 /**
