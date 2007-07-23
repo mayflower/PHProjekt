@@ -49,7 +49,7 @@ Zend_Registry::set('db', $db);
  * Where priority can be emerg,alert,crit,err,warn,notice,info,debug
  */
 Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
-$oLog = new Phprojekt_Log();
+$oLog = new Phprojekt_Log($config);
 Zend_Registry::set('log', $oLog);
 
 /**
@@ -69,7 +69,7 @@ Zend_Registry::set('view', $oView);
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-$locale = 'es';
+$locale = $config->language;
 $oTranslate = new Phprojekt_Language('Phproject',PHPR_ROOT_PATH
                                                  . '/languages/'
                                                  . $locale
