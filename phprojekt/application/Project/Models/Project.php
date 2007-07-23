@@ -39,7 +39,7 @@ class Project_Models_Project extends Phprojekt_Item
      */
     public function getFieldsForList()
     {
-        return array('id','title');
+        return array('id','title','notes');
     }
 
     /**
@@ -51,7 +51,7 @@ class Project_Models_Project extends Phprojekt_Item
      * @return array - Array with the form fields
      */
     public function getFieldsForForm() {
-        return array('title');
+        return array('title','notes');
     }
 
     /**
@@ -181,11 +181,13 @@ class Project_Models_Project extends Phprojekt_Item
      */
     public function getButtonsForm($action, $id = '')
     {
+        $translate = Zend_Registry::get('translate');
+
         $add = '<a href="'
                         . PHPR_ROOT_WEB_PATH
                         . 'project/'
                         . 'form'
-                        .  '">Add</a>';
+                        .  '">'. $translate->_("Add") . '</a>';
         $edit = '<a href="'
                       . PHPR_ROOT_WEB_PATH
                       . 'project/'
@@ -193,7 +195,7 @@ class Project_Models_Project extends Phprojekt_Item
                       . 'delete/'
                       . 'id/'
                       . $id
-                      .  '">Delete</a>';
+                      .  '">'. $translate->_("Delete") . '</a>';
 
         switch ($action) {
             default:
