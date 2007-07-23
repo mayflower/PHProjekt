@@ -100,11 +100,45 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 			$project->title = 'Hello World Project to delete';
 			$project->path = '/';
 			$project->save();
-			
+
 			$this->assertNotNull($project->id);
 			$project->delete();
-		   
+
 			$this->assertNull($project->id);
+        } catch (Exception $e) {
+            $this->sharedFixture->rollBack();
+            $this->fail($e->getMessage());
+        }
+        $this->sharedFixture->rollBack();
+	}
+
+	/*
+	 *
+	 */
+	public function testDeleteHasManyAndBelongsToMany()
+	{
+		$this->sharedFixture->beginTransaction();
+		try {
+			$user = new Phprojekt_User(array('db' => $this->sharedFixture));
+			$user->username = 'Foo';
+			$user->password = md5('Bar');
+			$user->language = 'en_GB';
+			$user->save();
+
+			$role = $user->roles->create();
+			$role->name       = 'Test';
+			$role->module     = 'Tasks';
+			$role->permission = 'Write';
+
+			$role->save();
+
+			$this->assertNotNull($user->id);
+			$this->assertEquals(1, $user->roles->count());
+
+			$user->delete();
+
+			$this->assertEquals(0, $user->roles->count());
+			$this->assertNull($user->id);
         } catch (Exception $e) {
             $this->sharedFixture->rollBack();
             $this->fail($e->getMessage());

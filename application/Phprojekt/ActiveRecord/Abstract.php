@@ -674,24 +674,29 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             if (array_key_exists('hasMany', $this->_relations)) {
 				$className = $this->_relations['hasMany']['classname'];
 				$tableName = $this->_translateClassNameToTable($className);
-				$this->getAdapter()->delete($tableName, 
-							  $this->getAdapter()->quoteId(
-								  sprintf('%s = ?', 
+				$this->getAdapter()->delete($tableName,
+							  $this->getAdapter()->quoteInto(
+								  sprintf('%s = ?',
 										  $this->_translateKeyFormat(
 											  $this->_relations['hasMany']['classname'])),
 								  $this->id));
 			}
-            if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {
+            if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
+             || count($this->hasManyAndBelongsToMany) > 0) {
 
-				$className = $this->_relations['hasManyAndBelongsToMany']['classname'];
-				$keyName   = $this->_translateKeyFormat(get_class($this));
-                $tableName = $this->_translateIntoRelationTableName(get_class($this),
-																	$className);
-				$this->getAdapter()->delete($tableName, 
-							  $this->getAdapter()->quoteId(
-								  sprintf('%s = ?', $keyName),
-								  $this->id));
-				
+                foreach ($this->hasManyAndBelongsToMany as $key=>$arr) {
+                    $className = $this->_getClassNameForRelationship($key,
+                                            $this->hasManyAndBelongsToMany);
+    				// $className = $this->hasManyAndBelongsToMany
+    				$keyName   = $this->_translateKeyFormat(get_class($this));
+                    $tableName = $this->_translateIntoRelationTableName(get_class($this),
+    																	$className);
+    				$this->getAdapter()->delete($tableName,
+    							  $this->getAdapter()->quoteInto(
+    								  sprintf('%s = ?', $keyName),
+    								  $this->id));
+                }
+
             }
 			$tableName = $this->_translateClassNameToTable(get_class($this));
 			parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id']));
