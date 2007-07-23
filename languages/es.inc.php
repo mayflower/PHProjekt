@@ -10,7 +10,7 @@ $l_text31a = array("por defecto", "15 min.", "30 min.", " 1 hora", " 2 horas", "
 $l_text31b = array(0, 15, 30, 60, 120, 240, 1440);
 $name_day = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
 $name_day2 = array("Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do");
-            
+
 
 //Lang Data
 
@@ -1301,4 +1301,14 @@ $_lang["Your token has already been expired."]  = "Su clave ha expirado";
 $_lang["Your token has already been used.<br />If it wasnt you, who used the token please contact your administrator."]  = "Su token ha sido utilizado.<br />Si no ha sido usted, por favor contáctese con su administrador.";
 $_lang["Your user do not allow login with logintoken. To change this setting enable it on Settings section."]  = "Su usuario no permite entrar con logintoken. Para cambiar esta configuración habilitela en la sección 'Opciones'";
 $_lang["Zip code"]  = "Código postal";
+
+/* New lang stuff */
+$_lang['Add'] = "Agregar";
+$_lang['Delete'] = "Borrar";
+$_lang['Saved'] = "Grabado";
+$_lang['Deleted'] = "Borrado";
+
+$_lang['id'] = "ID";
+$_lang['title'] = "Título";
+$_lang['notes'] = "Descripción";
 ?>

@@ -157,7 +157,7 @@ class Default_Helpers_FormView
             $this->displayAction();
         } else {
             $this->_actionController->_oModels->deleteData($this->_actionController->getRequest()->getParams());
-            $this->_actionController->msg = 'Deleted';
+            $this->_actionController->msg = $this->_translator->_('Deleted');
             $this->_actionController->generateOutput();
 
             $this->_actionController->render('index');
@@ -203,7 +203,7 @@ class Default_Helpers_FormView
     {
         $this->_actionController->_oModels->saveData($this->_actionController->getRequest()->getParams());
 
-        $this->_actionController->msg = 'Saved';
+        $this->_actionController->msg = $this->_translator->_('Saved');
         //$this->_actionController->errors = 'error!';
         $this->_actionController->buttons =  $this->_actionController->_oModels->getButtonsForm('display');
         $this->_actionController->generateOutput();
