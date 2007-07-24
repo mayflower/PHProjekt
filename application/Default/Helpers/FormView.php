@@ -86,10 +86,10 @@ class Default_Helpers_FormView
     /**
      * Make a input form deppend on the type of the field
      *
-     * @param string $field         The name of the field
-     * @param array $fieldData  Array with data of the field
+     * @param string $field        The name of the field
+     * @param array $fieldData Array with data of the field
      *
-     * @return string                     The HTML output for the field
+     * @return string                    The HTML output for the field
      */
     public function getFormOutput($field, $fieldData)
     {
@@ -166,7 +166,8 @@ class Default_Helpers_FormView
             $this->displayAction();
         } else {
             $this->actionController->oModels->deleteData($this->actionController->getRequest()->getParams());
-            $this->actionController->msg = $this->_translator->_('Deleted');
+            $this->actionController->msg             = $this->_translator->_('Deleted');
+            $this->actionController->buttons       =  $this->actionController->oModels->getButtonsForm('display');
             $this->actionController->generateOutput();
 
             $this->actionController->render('index');
