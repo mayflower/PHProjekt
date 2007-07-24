@@ -31,10 +31,12 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_FormController extends Project_IndexController
+class Project_Cotrollers_FormController extends Project_IndexController
 {
     /**
      * Default action
+     *
+     * @return string render view
      */
     public function indexAction()
     {
@@ -44,6 +46,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Abandon current changes and return to the default view
+     *
+     * @return string render view
      */
     public function cancelAction()
     {
@@ -53,6 +57,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Ajax part of displayAction
+     *
+     * @return string render view
      */
     public function componentDisplayAction()
     {
@@ -62,6 +68,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Ajaxified part of the edit action
+     *
+     * @return string render view
      */
     public function componentEditAction()
     {
@@ -71,6 +79,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Deletes a certain item
+     *
+     * @return string render view
      */
     public function deleteAction()
     {
@@ -80,6 +90,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Displays the a single item
+     *
+     * @return string render view
      */
     public function displayAction()
     {
@@ -89,6 +101,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Displays the edit screen for the current item
+     *
+     * @return string render view
      */
     public function editAction()
     {
@@ -98,6 +112,8 @@ class Project_FormController extends Project_IndexController
 
     /**
      * Saves the current item
+     *
+     * @return string render view
      */
     public function saveAction()
     {
