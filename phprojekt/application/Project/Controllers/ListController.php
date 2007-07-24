@@ -31,10 +31,12 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_ListController extends Project_indexController
+class Project_Controllers_ListController extends Project_indexController
 {
     /**
      * Adds a single filter to the current view
+     *
+     * @return string render view
      */
     public function addFilterAction()
     {
@@ -44,6 +46,8 @@ class Project_ListController extends Project_indexController
 
     /**
      * Delivers the inner part of the IndexAction using ajax
+     *
+     * @return string render view
      */
     public function componentIndexAction()
     {
@@ -53,6 +57,8 @@ class Project_ListController extends Project_indexController
 
     /**
      * Delivers the inner part of the Listaction using ajax
+     *
+     * @return string render view
      */
     public function componentListAction()
     {
@@ -62,6 +68,8 @@ class Project_ListController extends Project_indexController
 
     /**
      * Default action
+     *
+     * @return string render view
      */
     public function indexAction()
     {
@@ -71,6 +79,8 @@ class Project_ListController extends Project_indexController
 
     /**
      * List all the data
+     *
+     * @return string render view
      */
     public function listAction()
     {
@@ -80,6 +90,8 @@ class Project_ListController extends Project_indexController
 
     /**
      * Remove a filter
+     *
+     * @return string render view
      */
     public function removeFilterAction()
     {
@@ -89,6 +101,8 @@ class Project_ListController extends Project_indexController
 
     /**
      * Sort the list view
+     *
+     * @return string render view
      */
     public function sortAction()
     {

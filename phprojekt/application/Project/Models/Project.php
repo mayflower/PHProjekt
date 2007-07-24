@@ -34,15 +34,15 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function getListData()
     {
         $listFields = $this->getFieldsForList('project');
-        $listData = array('0' => $listFields);
+        $listData   = array('0' => $listFields);
 
         foreach ($this->fetchAll() as $row) {
             foreach ($listFields as $fieldName) {
                 if (!isset($listData[$row->id])) {
                     $listData[$row->id] = array();
                 }
-                if (in_array($fieldName,$listFields)) {
-                    array_push($listData[$row->id],$row->$fieldName);
+                if (in_array($fieldName, $listFields)) {
+                    array_push($listData[$row->id], $row->$fieldName);
                 }
             }
         }
@@ -55,8 +55,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      * If the id is defined will make the edit form
      * if not, will make the add form
      *
-     * @param integer $id - Optional, for edit the row
-     * @return array - Array with the fields for render
+     * @param integer $id Optional, for edit the row
+     * @return array          Array with the fields for render
      */
     public function getFormData($id = 0)
     {
@@ -65,8 +65,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         if ($id > 0) {
             $this->find($id);
             foreach ($formData as $fieldName => $fieldData) {
-                $tmpData[$fieldName] = $fieldData;
-                $tmpData[$fieldName]['value'] = $this->$fieldName;
+                $tmpData[$fieldName]                = $fieldData;
+                $tmpData[$fieldName]['value']  = $this->$fieldName;
             }
             $formData = $tmpData;
         }
@@ -77,16 +77,18 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Save the data into the db
      *
-     * @param array $request - $_POST array
+     * @param array $request $_POST array
+     *
      * @return void
      */
-    public function saveData($request) {
+    public function saveData($request)
+    {
         if (isset($request['id'])) {
             $id = intval($request['id']);
             $this->find($id);
         }
         foreach($request as $k => $v) {
-          if (array_key_exists($k, $this->_data)) {
+            if (array_key_exists($k, $this->_data)) {
               $this->$k = $v;
           }
         }
@@ -106,17 +108,17 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             default:
             case 'display':
                 return PHPR_ROOT_WEB_PATH
-                            . 'project/'
-                            . 'form/'
-                            . 'save';
+                        . 'project/'
+                        . 'form/'
+                        . 'save';
                 break;
             case 'edit':
                 return PHPR_ROOT_WEB_PATH
-                            . 'project/'
-                            . 'form/'
-                            . 'save/'
-                            . 'id/'
-                            . $id;
+                        . 'project/'
+                        . 'form/'
+                        . 'save/'
+                        . 'id/'
+                        . $id;
             break;
         }
     }
@@ -124,9 +126,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Get the buttons deppend on the action
      *
-     * @param string $action - Define wich action are showing
-     * @param integer $id      - The  id of the edited item
-     * @return string               - <a href="">
+     * @param string $action  Define wich action are showing
+     * @param integer $id      The  id of the edited item
+     *
+     * @return string              <a href="">
      */
     public function getButtonsForm($action, $id = '')
     {
@@ -162,10 +165,12 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Delete a row
      *
-     * @param array $request - $_POST array
+     * @param array $request $_POST array
+     *
      * @return void
      */
-    public function deleteData($request) {
+    public function deleteData($request)
+    {
         if (isset($request['id'])) {
             $id = intval($request['id']);
             $this->find($id);

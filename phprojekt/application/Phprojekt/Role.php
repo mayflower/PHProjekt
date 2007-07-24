@@ -45,7 +45,7 @@ class Phprojekt_Role
      * Adds a permission to any module
      *
      * @param string $module Module where the permission will be granted
-     * @param int       $right    Right access level granted
+     * @param int $right          Right access level granted
      *
      * @return boolean True if permissin add was sucessful
      */

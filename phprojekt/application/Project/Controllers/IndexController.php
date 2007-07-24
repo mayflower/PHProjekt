@@ -21,7 +21,7 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Project_IndexController extends IndexController
+class Project_Controllers_IndexController extends IndexController
 {
     /**
      * How many columns will have the form
@@ -34,6 +34,7 @@ class Project_IndexController extends IndexController
      * Init the Module object
      *
      * @param void
+     *
      * @return Zend_Item object
      */
     public function getModelsObject()
