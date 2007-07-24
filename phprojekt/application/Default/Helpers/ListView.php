@@ -48,7 +48,7 @@ class Default_Helpers_ListView
     /**
      * Constructor
      *
-     * @param Zend_Controller_Action object actionController
+     * @param Zend_Controller_Action $actionController Action object controller
      *
      * @return void
      */
