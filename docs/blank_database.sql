@@ -20,11 +20,11 @@ DROP TABLE IF EXISTS database_manager
 CREATE TABLE module_instance
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	project_id MEDIUMINT,
+	projectId MEDIUMINT,
 	module VARCHAR(250) NOT NULL,
 	name VARCHAR(250) NOT NULL,
 	PRIMARY KEY (id),
-	KEY (project_id)
+	KEY (projectId)
 )
 ;
 
@@ -32,12 +32,12 @@ CREATE TABLE module_instance
 CREATE TABLE user_module_setting
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	user_id MEDIUMINT NOT NULL,
-	key_value VARCHAR(250) NOT NULL,
+	userId MEDIUMINT NOT NULL,
+	keyValue VARCHAR(250) NOT NULL,
 	value VARCHAR(250) NOT NULL,
 	module VARCHAR(50) NOT NULL,
 	PRIMARY KEY (id),
-	KEY (user_id)
+	KEY (userId)
 )
 ;
 
@@ -49,28 +49,28 @@ CREATE TABLE project
 	path VARCHAR(25) NOT NULL DEFAULT "\\",
 	title VARCHAR(250) NOT NULL,
 	notes TEXT NOT NULL,
-	owner_id MEDIUMINT,
-	start_date DATETIME,
-	end_date DATETIME,
+	ownerId MEDIUMINT,
+	startDate DATETIME,
+	endDate DATETIME,
 	priority INTEGER,
-	current_status VARCHAR(50) NOT NULL DEFAULT 'working',
-	complete_percent FLOAT(0) DEFAULT 0,
-	hourly_wage_rate FLOAT(0),
+	currentStatus VARCHAR(50) NOT NULL DEFAULT 'working',
+	completePercent FLOAT(0) DEFAULT 0,
+	hourlyWageRate FLOAT(0),
 	budget FLOAT(0),
 	PRIMARY KEY (id),
-	KEY (owner_id)
+	KEY (ownerId)
 )
 ;
 
 
 CREATE TABLE project_user_role_rel
 (
-	project_id MEDIUMINT NOT NULL,
-	user_id MEDIUMINT NOT NULL,
-	role_id MEDIUMINT NOT NULL,
-	KEY (project_id),
-	KEY (role_id),
-	KEY (user_id)
+	projectId MEDIUMINT NOT NULL,
+	userId MEDIUMINT NOT NULL,
+	roleId MEDIUMINT NOT NULL,
+	KEY (projectId),
+	KEY (roleId),
+	KEY (userId)
 )
 ;
 
@@ -78,14 +78,14 @@ CREATE TABLE project_user_role_rel
 CREATE TABLE history
 (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	user_id MEDIUMINT NOT NULL,
-	dataobject_id MEDIUMINT NOT NULL,
+	userId MEDIUMINT NOT NULL,
+	dataobjectId MEDIUMINT NOT NULL,
 	module VARCHAR(50) NOT NULL,
-	old_value VARCHAR(100) NOT NULL,
-	new_value VARCHAR(250) NOT NULL,
+	oldValue VARCHAR(100) NOT NULL,
+	newValue VARCHAR(250) NOT NULL,
 	action VARCHAR(50) NOT NULL,
 	PRIMARY KEY (id),
-	KEY (user_id)
+	KEY (userId)
 )
 ;
 
