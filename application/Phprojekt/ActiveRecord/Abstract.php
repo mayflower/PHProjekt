@@ -107,7 +107,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
-     *
+     * 
      */
     public function __construct($config)
     {
@@ -193,11 +193,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             return $this->$varname;
         } elseif (array_key_exists($varname, $this->_data)) {
             return $this->_data[$varname];
-        } elseif (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
-               && get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
+        } elseif (array_key_exists('hasManyAndBelongsToMany', $this->_relations) &&
+               get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
             return $this->_relations['hasManyAndBelongsToMany']['id'];
         } else {
-            throw new Exception("{$varname} doesnot exist");
+            throw new Exception("{$varname} does not exist");
         }
     }
 
@@ -460,7 +460,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                          $tableName, $columnName, $columnName);
 
             if (null !== $this->_log) {
-                $this->_log->debug($query );
+                $this->_log->debug($query);
             }
 
             /* @var Zend_Db_Statement $stmt */
