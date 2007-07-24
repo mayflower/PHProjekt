@@ -10,7 +10,7 @@
        margin-left: 0px;
        margin-right: 0px;
        font-family: Verdana, Helvetica, sans;
-       font-size: 10px;
+       font-size: 12px;
      }
 
     #main caption {
