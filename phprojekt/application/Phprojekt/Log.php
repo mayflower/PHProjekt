@@ -46,7 +46,9 @@ class Phprojekt_Log extends Zend_Log
             if (defined($constant)) {
 
                 $priority = constant($constant);
-                $logger   = new Zend_Log(new Zend_Log_Writer_Stream($val->filename));
+                $logger   = new Zend_Log(
+                                   new Zend_Log_Writer_Stream($val->filename)
+                                   );
                 $logger->addFilter(new Zend_Log_Filter_Priority($priority));
                 $this->_loggers[] = $logger;
             }
@@ -57,7 +59,7 @@ class Phprojekt_Log extends Zend_Log
      * Write the text into the file
      *
      * @param string $message Text to write
-     * @param string $priority Type of log
+     * @param string $priority   Type of log
      *
      * @return void
      */
