@@ -39,8 +39,8 @@ class Phprojekt_Loader extends Zend_Loader
     public static function loadClass($class, $dirs = null)
     {
         if (preg_match("@Controller$@", $class)) {
-            if ($class == 'IndexController') {
-                $class = 'Default_IndexController';
+            if (strpos('_', $class) === false) {
+                $class = 'Default_'.$class;
             }
 
             $class = preg_replace("@([A-Za-z0-9]*_)?([A-Za-z]+)Controller$@",
