@@ -24,7 +24,7 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_Controllers_IndexController extends IndexController
+class Project_IndexController extends IndexController
 {
     /**
      * How many columns will have the form

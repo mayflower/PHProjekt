@@ -29,7 +29,6 @@ class Default_Models_Default
     /**
      * Default module has no fields for list
      *
-     * @param void
      * @return array
      */
     public function getListData()
@@ -40,7 +39,6 @@ class Default_Models_Default
     /**
      * Default module has no fields for form
      *
-     * @param void
      * @return array
      */
     public function getFormData()
@@ -51,9 +49,10 @@ class Default_Models_Default
     /**
      * Get the buttons deppend on the action
      *
-     * @param string $action - Define wich action are showing
-     * @param integer $id      - The  id of the edited item
-     * @return string               - <a href="">
+     * @param string $action Define wich action are showing
+     * @param integer $id     The  id of the edited item
+     *
+     * @return string              <a href="">
      */
     public function getButtonsForm($action, $id = '')
     {
