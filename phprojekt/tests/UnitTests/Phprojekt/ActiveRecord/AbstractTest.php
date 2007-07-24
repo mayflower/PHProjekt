@@ -264,7 +264,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 
         $instance->find(2);
         $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
-        $this->assertEquals(2, $instance->instances->find(1)->project_id);
+        $this->assertEquals(2, $instance->instances->find(1)->projectId);
 
         $instance->find(2);
         $instance->id = 1;
@@ -285,7 +285,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
             $user->save();
 
             $roles = $user->roles->fetchAll();
-            $this->assertEquals(2, $roles[0]->user_id);
+            $this->assertEquals(2, $roles[0]->userId);
             $this->assertEquals('Senior Developer', $roles[1]->name);
 
             $user->find(2);
