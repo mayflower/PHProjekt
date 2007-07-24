@@ -22,27 +22,27 @@
 DROP TABLE IF EXISTS `database_manager`;
 CREATE TABLE `database_manager` (
   `id` mediumint(9) NOT NULL auto_increment,
-  `table_name` varchar(50) default NULL,
-  `table_field` varchar(60) default NULL,
-  `form_tab` int(11) default NULL,
-  `form_label` varchar(255) default NULL,
-  `form_tooltip` varchar(255) default NULL,
-  `form_type` varchar(50) default NULL,
-  `form_position` int(11) default NULL,
-  `form_columns` int(11) default NULL,
-  `form_regexp` varchar(255) default NULL,
-  `form_range` text,
-  `default_value` varchar(255) default NULL,
-  `list_position` int(11) default NULL,
-  `list_align` varchar(20) default NULL,
-  `list_use_filter` tinyint(4) default NULL,
-  `alt_position` int(11) default NULL,
+  `tableName` varchar(50) default NULL,
+  `tableField` varchar(60) default NULL,
+  `formTab` int(11) default NULL,
+  `formLabel` varchar(255) default NULL,
+  `formTooltip` varchar(255) default NULL,
+  `formType` varchar(50) default NULL,
+  `formPosition` int(11) default NULL,
+  `formColumns` int(11) default NULL,
+  `formRegexp` varchar(255) default NULL,
+  `formRange` text,
+  `defaultValue` varchar(255) default NULL,
+  `listPosition` int(11) default NULL,
+  `listAlign` varchar(20) default NULL,
+  `listUseFilter` tinyint(4) default NULL,
+  `altPosition` int(11) default NULL,
   `status` varchar(20) default NULL,
-  `is_integer` tinyint(4) default NULL,
-  `is_required` tinyint(4) default NULL,
-  `is_unique` int(11) default NULL,
+  `isInteger` tinyint(4) default NULL,
+  `isRequired` tinyint(4) default NULL,
+  `isUnique` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `database_manager`
@@ -50,6 +50,7 @@ CREATE TABLE `database_manager` (
 
 LOCK TABLES `database_manager` WRITE;
 /*!40000 ALTER TABLE `database_manager` DISABLE KEYS */;
+INSERT INTO `database_manager` VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `database_manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,15 +61,15 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `history`;
 CREATE TABLE `history` (
   `id` mediumint(9) NOT NULL auto_increment,
-  `user_id` mediumint(9) NOT NULL,
-  `dataobject_id` mediumint(9) NOT NULL,
+  `userId` mediumint(9) NOT NULL,
+  `dataobjectId` mediumint(9) NOT NULL,
   `module` varchar(50) NOT NULL,
-  `old_value` varchar(100) NOT NULL,
-  `new_value` varchar(250) NOT NULL,
+  `oldValue` varchar(100) NOT NULL,
+  `newValue` varchar(250) NOT NULL,
   `action` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB ;
 
 --
 -- Dumping data for table `history`
@@ -86,12 +87,12 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `module_instance`;
 CREATE TABLE `module_instance` (
   `id` mediumint(9) NOT NULL auto_increment,
-  `project_id` mediumint(9) default NULL,
+  `projectId` mediumint(9) default NULL,
   `module` varchar(250) NOT NULL,
   `name` varchar(250) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  KEY `projectId` (`projectId`)
+) ENGINE=InnoDB AUTO_INCREMENT=3;
 
 --
 -- Dumping data for table `module_instance`
@@ -111,20 +112,20 @@ DROP TABLE IF EXISTS `project`;
 CREATE TABLE `project` (
   `id` mediumint(9) NOT NULL auto_increment,
   `parent` mediumint(9) default NULL,
-  `path` varchar(25) NOT NULL default '',
+  `path` varchar(25) NOT NULL default '\\',
   `title` varchar(250) NOT NULL,
-  `notes` varchar(250) NOT NULL default '',
-  `owner_id` mediumint(9) default NULL,
-  `start_date` datetime default NULL,
-  `end_date` datetime default NULL,
+  `notes` text NOT NULL,
+  `ownerId` mediumint(9) default NULL,
+  `startDate` datetime default NULL,
+  `endDate` datetime default NULL,
   `priority` int(11) default NULL,
-  `current_status` varchar(50) NOT NULL default 'working',
-  `complete_percent` float default '0',
-  `hourly_wage_rate` float default NULL,
+  `currentStatus` varchar(50) NOT NULL default 'working',
+  `completePercent` float default '0',
+  `hourlyWageRate` float default NULL,
   `budget` float default NULL,
   PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  KEY `ownerId` (`ownerId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2;
 
 --
 -- Dumping data for table `project`
@@ -142,13 +143,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `project_user_role_rel`;
 CREATE TABLE `project_user_role_rel` (
-  `project_id` mediumint(9) NOT NULL,
-  `user_id` mediumint(9) NOT NULL,
-  `role_id` mediumint(9) NOT NULL,
-  KEY `project_id` (`project_id`),
-  KEY `role_id` (`role_id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `projectId` mediumint(9) NOT NULL,
+  `userId` mediumint(9) NOT NULL,
+  `roleId` mediumint(9) NOT NULL,
+  KEY `projectId` (`projectId`),
+  KEY `roleId` (`roleId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB ;
 
 --
 -- Dumping data for table `project_user_role_rel`
@@ -166,11 +167,11 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
   `id` mediumint(9) NOT NULL auto_increment,
-  `name` varchar(200) default NULL,
+  `name` varchar(250) NOT NULL,
   `module` varchar(250) NOT NULL,
   `permission` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3;
 
 --
 -- Dumping data for table `role`
@@ -188,11 +189,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `role_user_rel`;
 CREATE TABLE `role_user_rel` (
-  `ID` int(11) NOT NULL auto_increment,
-  `role_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY  (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL auto_increment,
+  `roleId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3;
 
 --
 -- Dumping data for table `role_user_rel`
@@ -218,7 +219,7 @@ CREATE TABLE `user` (
   `language` varchar(5) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2;
 
 --
 -- Dumping data for table `user`
@@ -237,13 +238,13 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `user_module_setting`;
 CREATE TABLE `user_module_setting` (
   `id` mediumint(9) NOT NULL auto_increment,
-  `user_id` mediumint(9) NOT NULL,
-  `key_value` varchar(250) NOT NULL,
+  `userId` mediumint(9) NOT NULL,
+  `keyValue` varchar(250) NOT NULL,
   `value` varchar(250) NOT NULL,
   `module` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB ;
 
 --
 -- Dumping data for table `user_module_setting`
@@ -263,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-07-19 15:30:15
+-- Dump completed on 2007-07-24 17:08:23
