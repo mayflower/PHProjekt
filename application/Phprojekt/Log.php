@@ -27,6 +27,11 @@
  */
 class Phprojekt_Log extends Zend_Log
 {
+    /**
+     * An array of Zend_Logs with priority filtering
+     *
+     * @var array
+     */
     protected $_loggers = array();
 
     /**
@@ -53,7 +58,7 @@ class Phprojekt_Log extends Zend_Log
     }
 
     /**
-     * Write the text into the file
+     * Write the text into the file.
      *
      * @param string $message Text to write
      * @param string $priority   Type of log
@@ -62,7 +67,11 @@ class Phprojekt_Log extends Zend_Log
      */
     public function log($message, $priority)
     {
-        /* @var Zend_Log $logger */
+        /*
+         * Pass the message to all Zend_Log instances saved in _loggers,
+         * but they have priority filtering and therefore decide themself
+         * if they pass the message to the file
+         */
         foreach ($this->_loggers as $logger) {
             $logger->log($message, $priority);
         }
