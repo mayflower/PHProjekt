@@ -29,7 +29,6 @@ class Phprojekt_Role
 {
     /**
      * Constructor
-     *
      */
     function __destruct()
     {
@@ -37,7 +36,6 @@ class Phprojekt_Role
 
     /**
      * Destructor
-     *
      */
     public function __construct()
     {
@@ -46,11 +44,12 @@ class Phprojekt_Role
     /**
      * Adds a permission to any module
      *
-     * @param string module module where the permission will be granted
-     * @param integer right access level granted
-     * @return boolean true if permissin add was sucessful
+     * @param string $module Module where the permission will be granted
+     * @param int $right Right access level granted
+     *
+     * @return boolean True if permissin add was sucessful
      */
-    public function addPermissionForModule(string $module, int $right)
+    public function addPermissionForModule($module, $right)
     {
         return true;
     }
@@ -62,7 +61,7 @@ class Phprojekt_Role
      *
      * @return boolean True if permission was sucessful deleted
      */
-    public function deletePermissionForModule(string $module)
+    public function deletePermissionForModule($module)
     {
         return true;
     }
@@ -84,7 +83,7 @@ class Phprojekt_Role
      *
      * @return integer The permission value for that module
      */
-    public function getPermissionForModule(string $module)
+    public function getPermissionForModule($module)
     {
         return true;
     }
