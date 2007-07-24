@@ -13,17 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-require_once 'Zend/Controller/Action.php';
-
-/* Default_Helpers_ListView */
-require_once (PHPR_CORE_PATH . '/Default/Helpers/ListView.php');
-
-/* Default_Helpers_FormView */
-require_once (PHPR_CORE_PATH . '/Default/Helpers/FormView.php');
-
-/* Default_Models_Default */
-require_once (PHPR_CORE_PATH . '/Default/Models/Default.php');
-
 /**
  * Default Controller for PHProjekt 6.0
  *
@@ -175,7 +164,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * If the Action don´t exists, call indexAction
+     * If the Action donï¿½t exists, call indexAction
      *
      * @param string method - Action method
      * @param array  args   - Arguments for the Action

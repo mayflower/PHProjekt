@@ -13,9 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Zend_Log */
-require_once 'Zend/Log.php';
-
 /**
  * Manage an array with Log objects
  * for log each type of log in one distinct file

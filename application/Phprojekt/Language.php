@@ -13,12 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Zend_Locale */
-require_once 'Zend/Translate.php';
-
-/* Default_Helpers_PhprojectLanguage */
-require_once PHPR_CORE_PATH . '/Phprojekt/LanguageAdapter.php';
-
 /**
  * Extend Zend_Translate for add a new adapter
  *

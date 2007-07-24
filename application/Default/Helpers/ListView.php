@@ -49,6 +49,7 @@ class Default_Helpers_ListView
      * Constructor
      *
      * @param Zend_Controller_Action object actionController
+     *
      * @return void
      */
     public function __construct($actionController)
@@ -62,7 +63,6 @@ class Default_Helpers_ListView
     /**
      * Return an array with the translated titles
      *
-     * @param void
      * @return array - The titles translated
      */
     public function getTitles()
@@ -84,7 +84,6 @@ class Default_Helpers_ListView
     /**
      * Return an array with all the items
      *
-     * @param void
      * @return array - An array with all the rows
      */
     public function getItems()
@@ -124,6 +123,8 @@ class Default_Helpers_ListView
 
     /**
      * Adds a single filter to the current view
+      *
+      * @return void
      */
     public function addFilterAction()
     {
@@ -136,6 +137,8 @@ class Default_Helpers_ListView
 
     /**
      * Delivers the inner part of the IndexAction using ajax
+     *
+     * @return void
      */
     public function componentIndexAction()
     {
@@ -143,6 +146,8 @@ class Default_Helpers_ListView
 
     /**
      * Delivers the inner part of the Listaction using ajax
+     *
+     * @return void
      */
     public function componentListAction()
     {
@@ -150,6 +155,8 @@ class Default_Helpers_ListView
 
     /**
      * Default action
+     *
+     * @return void
      */
     public function indexAction()
     {
@@ -158,6 +165,8 @@ class Default_Helpers_ListView
 
     /**
      * List all the data
+     *
+     * @return void
      */
     public function listAction()
     {
@@ -170,6 +179,8 @@ class Default_Helpers_ListView
 
     /**
      * Remove a filter
+     *
+     * @return void
      */
     public function removeFilterAction()
     {
@@ -182,6 +193,8 @@ class Default_Helpers_ListView
 
     /**
      * Sort the list view
+     *
+     * @return void
      */
     public function sortAction()
     {

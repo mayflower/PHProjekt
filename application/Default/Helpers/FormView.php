@@ -46,7 +46,8 @@ class Default_Helpers_FormView
     /**
      * Constructor
      *
-     * @param Zend_Controller_Action actionController
+     * @param Zend_Controller_Action $actionController The action controller
+     *
      * @return void
      */
     public function __construct($actionController)
@@ -62,6 +63,7 @@ class Default_Helpers_FormView
      * use in smarty.
      *
      * @param void
+     *
      * @return array - The data for show in the template
      */
     public function getFields() {
@@ -90,6 +92,7 @@ class Default_Helpers_FormView
      *
      * @param string field    - The name of the field
      * @param array fieldData - Array with data of the field
+     *
      * @return string         - The HTML output for the field
      */
     public function getFormOutput($field, $fieldData) {
@@ -115,6 +118,8 @@ class Default_Helpers_FormView
 
     /**
       * Default action
+      *
+      * @return void
       */
     public function indexAction()
     {
@@ -123,6 +128,8 @@ class Default_Helpers_FormView
 
     /**
       * Abandon current changes and return to the default view
+      *
+      * @return void
       */
     public function cancelAction()
     {
@@ -135,6 +142,8 @@ class Default_Helpers_FormView
 
     /**
      * Ajax part of displayAction
+      *
+      * @return void
      */
     public function componentDisplayAction()
     {
@@ -142,6 +151,8 @@ class Default_Helpers_FormView
 
     /**
      * Ajaxified part of the edit action
+      *
+      * @return void
      */
     public function componentEditAction()
     {
@@ -149,6 +160,8 @@ class Default_Helpers_FormView
 
     /**
      * Deletes a certain item
+      *
+      * @return void
      */
     public function deleteAction()
     {
@@ -166,6 +179,8 @@ class Default_Helpers_FormView
 
     /**
      * Displays a single item
+      *
+      * @return void
      */
     public function displayAction()
     {
@@ -178,6 +193,8 @@ class Default_Helpers_FormView
 
     /**
      * Displays the edit screen for the current item
+      *
+      * @return void
      */
     public function editAction()
     {
@@ -198,6 +215,8 @@ class Default_Helpers_FormView
 
     /**
      * Saves the current item
+      *
+      * @return void
      */
     public function saveAction()
     {

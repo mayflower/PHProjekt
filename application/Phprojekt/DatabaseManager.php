@@ -13,9 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Phprojekt_ActiveRecord_Abstract */
-require_once PHPR_CORE_PATH . '/Phprojekt/ActiveRecord/Abstract.php';
-
 /**
  * The class provide the stuff from the database_manager
  *
