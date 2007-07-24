@@ -13,9 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Phprojekt_Item_Abstract */
-require_once (PHPR_CORE_PATH . '/Phprojekt/Item/Abstract.php');
-
 /**
  * Project model class
  *

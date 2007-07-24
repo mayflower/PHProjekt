@@ -13,18 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Zend_Locale */
-require_once 'Zend/Locale.php';
-
-/* Zend_Translate_Exception */
-require_once 'Zend/Translate/Exception.php';
-
-/* Zend_Translate_Adapter */
-require_once 'Zend/Translate/Adapter.php';
-
-/* Zend_Session_Namespace */
-require_once 'Zend/Session/Namespace.php';
-
 /**
  * Adapter class for use the PHProject lang files
  *

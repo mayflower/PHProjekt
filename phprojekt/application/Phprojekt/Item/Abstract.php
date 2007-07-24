@@ -13,12 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Phprojekt_ActiveRecord_Abstract */
-require_once (PHPR_CORE_PATH . '/Phprojekt/ActiveRecord/Abstract.php');
-
-/* Phprojekt_DatabaseManager */
-require_once (PHPR_CORE_PATH . '/Phprojekt/DatabaseManager.php');
-
 /**
  * A item, with database manager support
  *

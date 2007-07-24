@@ -11,9 +11,6 @@
  * @since     File available since Release 1.0
  */
 
-/* Phprojekt_DatabaseManagerObject */
-require_once 'Phprojekt_DatabaseManagerObject.php';
-
 /**
  * Phprojekt_User for PHProjekt 6.0
  *
@@ -21,7 +18,7 @@ require_once 'Phprojekt_DatabaseManagerObject.php';
  * @version    Release: @package_version@
  * @license   http://www.phprojekt.com/license PHProjekt6 License
  * @author     Eduardo Polidor <polidor@mayflower.de>
- * @package    PHProjekt 
+ * @package    PHProjekt
  */
 
 class Phprojekt_User extends Phprojekt_Item
@@ -65,7 +62,7 @@ class Phprojekt_User extends Phprojekt_Item
     }
 
     /**
-     * Destruct object 
+     * Destruct object
      *
      */
     function __destruct()
@@ -74,9 +71,9 @@ class Phprojekt_User extends Phprojekt_Item
 
     /**
      * Get a setting value of the user
-     * 
+     *
      * @param string $name of the setting to be get
-     * 
+     *
      * @return mixed $value of the setting
      */
     public function getSetting(mixed $name)
@@ -86,7 +83,7 @@ class Phprojekt_User extends Phprojekt_Item
 
     /**
      * Checks if user is active
-     * 
+     *
      * @return boolean id user is active or not
      */
     public function isActive()
@@ -96,7 +93,7 @@ class Phprojekt_User extends Phprojekt_Item
 
     /**
      * Makes the login process
-     * 
+     *
      * @return boolean true if login process was sucessful
      */
     public function login()
@@ -106,7 +103,7 @@ class Phprojekt_User extends Phprojekt_Item
 
     /**
      * Makes the logout process
-     * 
+     *
      * @return boolean true if logout process was sucessful
      */
     public function logout()
@@ -116,10 +113,10 @@ class Phprojekt_User extends Phprojekt_Item
 
     /**
      * Sets any setting of the user
-     * 
+     *
      * @param string $name  of the setting to be changed
      * @param string $value new value
-     * 
+     *
      * @return mixed The value set on the setting
      */
     public function setSetting(string $name, string $value)

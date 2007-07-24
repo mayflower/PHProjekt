@@ -11,12 +11,6 @@
  * @since      File available since Release 1.0
  */
 
-/* Default IndexController*/
-require_once (PHPR_CORE_PATH . '/Default/Controllers/IndexController.php');
-
-/* Project_Models_Project*/
-require_once (PHPR_CORE_PATH . '/Project/Models/Project.php');
-
 /**
  * Default Project Module Controller for PHProjekt 6.0
  *

@@ -19,10 +19,13 @@ define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
 
 set_include_path('.' . PATH_SEPARATOR
                . PHPR_LIBRARY_PATH . PATH_SEPARATOR
+               . PHPR_CORE_PATH . PATH_SEPARATOR
                . get_include_path());
 
 require_once 'Zend/Loader.php';
-Zend_Loader::registerAutoload();
+require_once 'Phprojekt/Loader.php';
+
+Zend_Loader::registerAutoload('Phprojekt_Loader');
 
 /* Start zend session to handle all session stuff */
 Zend_Session::start();
