@@ -63,15 +63,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     /**
      * Get the sorted form fields for the form
      *
-     * @param string $table - The table name of the module
-     * @return array              - Array with the data of the form field
+     * @param string $table The table name of the module
+     * 
+     * @return array Array with the data of the form field
      */
     public function getFieldsForForm($table)
     {
         $formFields = array();
 
-        $where = "table_name  = '" . $table . "'";
-        $order = "form_position";
+        $where  = "table_name  = '" . $table . "'";
+        $order  = "form_position";
         $fields = $this->fetchAll($where);
         foreach ($fields as $fieldData) {
             $formFields[$fieldData->table_field] = array(
