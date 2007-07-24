@@ -31,7 +31,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @var Smarty
      */
-    protected $smarty;
+    protected $_smarty;
 
     /**
      * Set true if is seted the treeView
@@ -88,7 +88,7 @@ class IndexController extends Zend_Controller_Action
     public function init()
     {
         /* Get the smarty object */
-        $this->smarty                   = Zend_Registry::get('view');
+        $this->_smarty                 = Zend_Registry::get('view');
 
         $this->oModels                 = $this->getModelsObject();
 
@@ -139,17 +139,19 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render the formView
      *
+     * @param integer $id Optional, The id of the row
+     *
      * @return void
      */
     public function setFormView($id = 0)
     {
         $this->formViewSeted = true;
-        $oFormView      = new Default_Helpers_FormView($this);
-        $this->columns  = $this->formColumns;
+        $oFormView                  = new Default_Helpers_FormView($this);
+        $this->columns              = $this->formColumns;
         if ($id == 0) {
             $this->data['formData'] = $this->oModels->getFormData($id);
         }
-        $this->fields   = $oFormView->getFields($this->data['formData']);
+        $this->fields       = $oFormView->getFields($this->data['formData']);
         $this->formView = $this->_render('form');
     }
 
@@ -192,7 +194,7 @@ class IndexController extends Zend_Controller_Action
     public function __set($name,$value)
     {
         if (!empty($name)) {
-            $this->smarty->$name = $value;
+            $this->_smarty->$name = $value;
         }
     }
 
@@ -205,8 +207,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function __get($name)
     {
-        if (isset($this->smarty->$name)) {
-            return $this->smarty->$name;
+        if (isset($this->_smarty->$name)) {
+            return $this->_smarty->$name;
         } else {
             return null;
         }

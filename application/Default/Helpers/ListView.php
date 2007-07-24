@@ -36,7 +36,7 @@ class Default_Helpers_ListView
      *
      * @var Zend_Log object
      */
-    private $translator = '';
+    private $_translator = '';
 
     /**
      * ActionController Object
@@ -55,7 +55,7 @@ class Default_Helpers_ListView
     public function __construct($actionController)
     {
         $translate                     = Zend_Registry::get('translate');
-        $this->translator          = $translate;
+        $this->_translator        = $translate;
         $this->actionController = $actionController;
     }
 
@@ -74,7 +74,7 @@ class Default_Helpers_ListView
         }
 
         foreach ($data[0] as $titleData) {
-            $titles[] = $this->translator->translate($titleData);
+            $titles[] = $this->_translator->translate($titleData);
         }
 
         return $titles;
