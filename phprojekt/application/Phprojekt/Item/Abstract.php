@@ -27,31 +27,32 @@
 abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Phprojekt_ActiveRecord_Abstract
+     * Represents the database_manager class
      *
-     * @var unknown_type
+     * @var Phprojekt_ActiveRecord_Abstract
      */
     public $_dbManager = '';
 
     /**
      * Initialize new object
      *
-     * @param array  $config  - Configuration for Zend_Db_Table
+     * @param array $config Configuration for Zend_Db_Table
      */
     public function __construct($config)
     {
         parent::__construct($config);
+
         $dbManager = new Phprojekt_DatabaseManager($config);
 
-        $this->_dbManager  = $dbManager;
+        $this->_dbManager = $dbManager;
     }
 
     /**
      * Get the field for list view from the databae_manager
      *
-     * @param string $table - The name of the module table
-     * @return array              - Array with the data of the fields
-     *                                          for make the list
+     * @param string $table The name of the module table
+     *
+     * @return array Array with the data of the fields for make the list
      */
     public function getFieldsForList($table)
     {
@@ -61,9 +62,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     /**
      * Get the field for the form view from the databae_manager
      *
-     * @param string $table - The name of the module table
-     * @return array              - Array with the data of the fields
-     *                                          for make the form
+     * @param string $table The name of the module table
+     *
+     * @return array Array with the data of the fields for make the form
      */
     public function getFieldsForForm($table)
     {
