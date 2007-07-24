@@ -95,7 +95,7 @@ class Default_Helpers_ListView
         }
 
         $editLink = PHPR_ROOT_WEB_PATH
-            . $this->_actionController->getRequest()->getModuleName() . '/'
+            . $this->actionController->getRequest()->getModuleName() . '/'
             . 'form/'
             . 'edit/'
             . 'id/';

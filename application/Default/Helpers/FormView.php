@@ -205,7 +205,7 @@ class Default_Helpers_FormView
             $this->actionController->buttons                  =  $this->actionController->oModels->getButtonsForm('edit',$id);
             $this->actionController->generateOutput($id);
 
-            $this->_actionController->render('index');
+            $this->actionController->render('index');
         }
     }
 

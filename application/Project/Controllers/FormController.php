@@ -31,12 +31,12 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_Cotrollers_FormController extends Project_Controllers_IndexController
+class Project_FormController extends Project_IndexController
 {
     /**
      * Default action
      *
-     * @return string render view
+     * @return void
      */
     public function indexAction()
     {
@@ -47,7 +47,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Abandon current changes and return to the default view
      *
-     * @return string render view
+     * @return void
      */
     public function cancelAction()
     {
@@ -58,7 +58,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Ajax part of displayAction
      *
-     * @return string render view
+     * @return void
      */
     public function componentDisplayAction()
     {
@@ -69,7 +69,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Ajaxified part of the edit action
      *
-     * @return string render view
+     * @return void
      */
     public function componentEditAction()
     {
@@ -80,7 +80,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Deletes a certain item
      *
-     * @return string render view
+     * @return void
      */
     public function deleteAction()
     {
@@ -91,7 +91,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Displays the a single item
      *
-     * @return string render view
+     * @return void
      */
     public function displayAction()
     {
@@ -102,7 +102,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Displays the edit screen for the current item
      *
-     * @return string render view
+     * @return void
      */
     public function editAction()
     {
@@ -113,7 +113,7 @@ class Project_Cotrollers_FormController extends Project_Controllers_IndexControl
     /**
      * Saves the current item
      *
-     * @return string render view
+     * @return void
      */
     public function saveAction()
     {

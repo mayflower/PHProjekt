@@ -105,7 +105,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      *
      * @return string             The action url
      */
-    public function getActionForm($action, $id = '') {
+    public function getActionForm($action, $id = '')
+    {
         switch ($action) {
             default:
             case 'display':
