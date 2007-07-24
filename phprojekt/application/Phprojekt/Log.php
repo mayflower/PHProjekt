@@ -56,7 +56,7 @@ class Phprojekt_Log extends Zend_Log
      * Write the text into the file
      *
      * @param string $message Text to write
-     * @param string $priority Type of log
+     * @param string $priority   Type of log
      *
      * @return void
      */
