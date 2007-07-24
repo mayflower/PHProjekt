@@ -31,28 +31,28 @@ class IndexController extends Zend_Controller_Action
      *
      * @var Smarty
      */
-    protected $_smarty;
+    protected $smarty;
 
     /**
      * Set true if is seted the treeView
      *
      * @var boolean
      */
-    public $_treeViewSeted = false;
+    public $treeViewSeted = false;
 
     /**
      * Set true if is seted the listView
      *
      * @var boolean
      */
-    public $_listViewSeted = false;
+    public $listViewSeted = false;
 
     /**
      * Set true if is seted the formView
      *
      * @var boolean
      */
-    public $_formViewSeted = false;
+    public $formViewSeted = false;
 
     /**
      * Array with the all the data for render
@@ -62,61 +62,61 @@ class IndexController extends Zend_Controller_Action
      *
      * @var array
      */
-    public $_data = array('listData','formData','treeData');
+    public $data = array('listData','formData','treeData');
 
     /**
      * Object model with all the specific data
      *
      * @var Phprojekt_Item object
      */
-    public $_oModels = '';
+    public $oModels = '';
 
     /**
      * How many columns will have the form
      *
      * @var integer
      */
-    public $_formColumns  = 2;
+    public $formColumns  = 2;
 
     /**
      * Init function
      * Get the Smarty instance
      * and the data for list and form
      *
-     * @param void
      * @return void
      */
     public function init()
     {
         /* Get the smarty object */
-        $this->_smarty           = Zend_Registry::get('view');
+        $this->smarty                   = Zend_Registry::get('view');
 
-        $this->_oModels          = $this->getModelsObject();
+        $this->oModels                 = $this->getModelsObject();
 
         /* Stuff for list View */
-        $this->_data['listData'] = $this->_oModels->getListData();
+        $this->data['listData']     = $this->oModels->getListData();
 
         /* Stuff for form View */
-        $this->_data['formData'] = $this->_oModels->getFormData();
+        $this->data['formData']  = $this->oModels->getFormData();
     }
 
     /**
      * Standard action
+     *
+     * @return void
      */
     public function indexAction()
     {
         $this->msg = '&nbsp;';
-        $this->buttons =  $this->_oModels->getButtonsForm('display');
+        $this->buttons =  $this->oModels->getButtonsForm('display');
         $this->generateOutput();
     }
 
     /**
-     * Render the treeView
+     * Render the tree view
      *
-     * @param void
      * @return void
      */
-    public function setTreeView($output)
+    public function setTreeView()
     {
         $this->treeView = $this->_render('tree');
     }
@@ -124,39 +124,39 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render the listView
      *
-     * @param void
      * @return void
      */
     public function setListView()
     {
         $this->_listViewSeted = true;
         $oListView = new Default_Helpers_ListView($this);
-        $this->_data['listData'] = $this->_oModels->getListData();
-        $this->titles = $oListView->getTitles($this->_data['listData']);
-        $this->lines  = $oListView->getItems($this->_data['listData']);
+        $this->data['listData'] = $this->oModels->getListData();
+        $this->titles = $oListView->getTitles($this->data['listData']);
+        $this->lines  = $oListView->getItems($this->data['listData']);
         $this->listView = $this->_render('list');
     }
 
     /**
      * Render the formView
      *
-     * @param void
      * @return void
      */
     public function setFormView($id = 0)
     {
-        $this->_formViewSeted = true;
+        $this->formViewSeted = true;
         $oFormView      = new Default_Helpers_FormView($this);
-        $this->columns  = $this->_formColumns;
+        $this->columns  = $this->formColumns;
         if ($id == 0) {
-            $this->_data['formData'] = $this->_oModels->getFormData($id);
+            $this->data['formData'] = $this->oModels->getFormData($id);
         }
-        $this->fields   = $oFormView->getFields($this->_data['formData']);
+        $this->fields   = $oFormView->getFields($this->data['formData']);
         $this->formView = $this->_render('form');
     }
 
     /**
      * Return true if not have access
+     *
+     * @return boolean
      */
     public function accessDenied()
     {
@@ -164,10 +164,11 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * If the Action don�t exists, call indexAction
+     * If the Action not exists, call indexAction
      *
-     * @param string method - Action method
-     * @param array  args   - Arguments for the Action
+     * @param string $method Action method
+     * @param array  $args      Arguments for the Action
+     *
      * @return Zend_Exception
      */
     public function __call($method, $args)
@@ -184,27 +185,28 @@ class IndexController extends Zend_Controller_Action
     /**
      * Set a value into the smarty object for render it
      *
-     * @param string name - Name of the value for render
-     * @param mix value   - Value for the var
+     * @param string $name Name of the value for render
+     * @param mix $value     Value for the var
      * @return void
      */
     public function __set($name,$value)
     {
         if (!empty($name)) {
-            $this->_smarty->$name = $value;
+            $this->smarty->$name = $value;
         }
     }
 
     /**
      * Get a value from the smarty object
      *
-     * @param string name - Name of the value
-     * @return mix - The value of the var
+     * @param string $name Name of the value
+     *
+     * @return mix The value of the var
      */
     public function __get($name)
     {
-        if (isset($this->_smarty->$name)) {
-            return $this->_smarty->$name;
+        if (isset($this->smarty->$name)) {
+            return $this->smarty->$name;
         } else {
             return null;
         }
@@ -213,7 +215,8 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render a template
      *
-     * @param string template - Which var of the index.tpl
+     * @param string $template  Which var of the index.tpl
+     *
      * @return void
      */
     public function _render($template) {
@@ -237,22 +240,23 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render all the views that are not already renders
      *
-     * @param integer $id - The id of the row
+     * @param integer $id The id of the row
+     *
      * @return void
      */
     public function generateOutput($id = 0)
     {
-        if (!$this->_treeViewSeted) {
+        if (!$this->treeViewSeted) {
             /* Set treeview */
             $this->setTreeView($this->_render('tree'));
         }
 
-        if (!$this->_listViewSeted) {
+        if (!$this->listViewSeted) {
             /* Set listview */
             $this->setListView();
         }
 
-        if (!$this->_formViewSeted) {
+        if (!$this->formViewSeted) {
             /* Set formview */
             $this->setFormView($id);
         }
@@ -262,8 +266,7 @@ class IndexController extends Zend_Controller_Action
      * Get the model object
      * This function must be redefined in each module
      *
-     * @param void
-     * @return array - All the fields for list
+     * @return array All the fields for list
      */
     public function getModelsObject()
     {

@@ -35,6 +35,8 @@ class ListController extends IndexController
 {
     /**
      * Adds a single filter to the current view
+     *
+     * @return void
      */
     public function addFilterAction()
     {
@@ -44,6 +46,8 @@ class ListController extends IndexController
 
     /**
      * Delivers the inner part of the IndexAction using ajax
+     *
+     * @return void
      */
     public function componentIndexAction()
     {
@@ -53,6 +57,8 @@ class ListController extends IndexController
 
     /**
      * Delivers the inner part of the Listaction using ajax
+     *
+     * @return void
      */
     public function componentListAction()
     {
@@ -62,6 +68,8 @@ class ListController extends IndexController
 
     /**
      * Default action
+     *
+     * @return void
      */
     public function indexAction()
     {
@@ -71,6 +79,8 @@ class ListController extends IndexController
 
     /**
      * List all the data
+     *
+     * @return void
      */
     public function listAction()
     {
@@ -80,6 +90,8 @@ class ListController extends IndexController
 
     /**
      * Remove a filter
+     *
+     * @return void
      */
     public function removeFilterAction()
     {
@@ -89,6 +101,8 @@ class ListController extends IndexController
 
     /**
      * Sort the list view
+     *
+     * @return void
      */
     public function sortAction()
     {
