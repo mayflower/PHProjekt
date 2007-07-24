@@ -47,8 +47,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * @return void
      */
-    protected function _loadTranslationData($filename,
-                                    $locale,$options = array())
+    protected function _loadTranslationData($data, $locale, array $options = array())
     {
         $options = array_merge($this->_options, $options);
         if (($options['clear'] == true) ||
