@@ -28,6 +28,11 @@
  */
 class Phprojekt_Loader extends Zend_Loader
 {
+    /**
+     * Directories
+     *
+     * @var array
+     */
     protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH);
 
     /**
@@ -39,7 +44,7 @@ class Phprojekt_Loader extends Zend_Loader
     public static function loadClass($class, $dirs = null)
     {
         if (preg_match("@Controller$@", $class)) {
-            if (strpos('_', $class) === false) {
+            if (strpos($class, '_') === false) {
                 $class = 'Default_'.$class;
             }
 

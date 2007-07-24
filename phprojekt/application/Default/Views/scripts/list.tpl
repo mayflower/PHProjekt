@@ -1,7 +1,7 @@
-<table align="center" border="1" width="100%">
+<table align="center" width="100%" class="listView">
 <tr align="center">
 {foreach name=titles item=showName from=$titles}
-    <td>{$showName}</td>
+    <th>{$showName}</th>
 {/foreach}
 </tr>
 {foreach name=lines item=line from=$lines}

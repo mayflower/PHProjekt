@@ -67,9 +67,8 @@ class Default_Helpers_FormView
         $fields = array();
 
         foreach ($this->actionController->data['formData'] as $field => $fieldData) {
-            $fields[] = $this->_translator->translate($fieldData['label'])
-                        . "&nbsp;"
-                        . $this->getFormOutput($field, $fieldData);
+            $fields[] = array('description' => $this->_translator->translate($fieldData['label']),
+                              'field'       => $this->getFormOutput($field, $fieldData));
         }
 
         $countFields = count($fields);
