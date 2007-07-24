@@ -35,6 +35,8 @@ class FormController extends IndexController
 {
     /**
      * Default action
+     *
+     * @return void
      */
     public function indexAction()
     {
@@ -44,6 +46,8 @@ class FormController extends IndexController
 
     /**
      * Abandon current changes and return to the default view
+     *
+     * @return void
      */
     public function cancelAction()
     {
@@ -53,6 +57,8 @@ class FormController extends IndexController
 
     /**
      * Ajax part of displayAction
+     *
+     * @return void
      */
     public function componentDisplayAction()
     {
@@ -62,6 +68,8 @@ class FormController extends IndexController
 
     /**
      * Ajaxified part of the edit action
+     *
+     * @return void
      */
     public function componentEditAction()
     {
@@ -71,6 +79,8 @@ class FormController extends IndexController
 
     /**
      * Deletes a certain item
+     *
+     * @return void
      */
     public function deleteAction()
     {
@@ -80,6 +90,8 @@ class FormController extends IndexController
 
     /**
      * Displays the a single item
+     *
+     * @return void
      */
     public function displayAction()
     {
@@ -89,6 +101,8 @@ class FormController extends IndexController
 
     /**
      * Displays the edit screen for the current item
+     *
+     * @return void
      */
     public function editAction()
     {
@@ -98,6 +112,8 @@ class FormController extends IndexController
 
     /**
      * Saves the current item
+     *
+     * @return void
      */
     public function saveAction()
     {
