@@ -36,14 +36,16 @@ require_once 'Zend/Session/Namespace.php';
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phproject_LanguageAdapter extends Zend_Translate_Adapter
+class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /**
      * Generates the adapter
      *
-     * @param  array               $data     Translation data
-     * @param  string|Zend_Locale  $locale   OPTIONAL Locale/Language to set, identical with locale identifier,
-     *                                       see Zend_Locale for more information
+     * @param  array $data Translation data
+     * @param  string|Zend_Locale $locale  OPTIONAL
+     *                 Locale/Language to set,
+     *                 identical with locale identifier,
+     *                 see Zend_Locale for more information
      */
     public function __construct($data, $locale = null)
     {
@@ -53,15 +55,20 @@ class Phproject_LanguageAdapter extends Zend_Translate_Adapter
     /**
      * Load translation data
      *
-     * @param  string|array  $filename  Filename and full path to the translation source
-     * @param  string        $locale    Locale/Language to add data for, identical with locale identifier,
-     *                                  see Zend_Locale for more information
-     * @param  array         $option    OPTIONAL Options to use
+     * @param  string|array $filename Filename
+     *                 and full path to the translation source
+     * @param  string $locale Locale/Language to add data for, i
+     *                 dentical with locale identifier,
+     *                 see Zend_Locale for more information
+     * @param  array $option OPTIONAL Options to use
+     * @return void
      */
-    protected function _loadTranslationData($filename, $locale, array $options = array())
+    protected function _loadTranslationData($filename, $locale,
+                                                                        array $options = array())
     {
         $options = array_merge($this->_options, $options);
-        if (($options['clear'] == true) ||  !isset($this->_translate[$locale])) {
+        if (($options['clear'] == true) ||
+        !isset($this->_translate[$locale])) {
             $this->_translate[$locale] = array();
         }
 
@@ -77,7 +84,7 @@ class Phproject_LanguageAdapter extends Zend_Translate_Adapter
         if (empty($this->_translate[$locale])) {
 
             /* Get the translation file */
-            require_once ($filename);
+            include_once($filename);
 
             foreach ($_lang as $word => $translation) {
                 $this->_translate[$locale][$word] = $translation;

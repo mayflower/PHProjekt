@@ -43,18 +43,18 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      * Get the sorted list of field for list
      *
      * @param string $table The table name of the module
-     * 
+     *
      * @return array Array with the data of the list fields
      */
     public function getFieldsForList($table)
     {
         $listFields = array('id');
 
-        $where  = "table_name  = '" . $table . "'";
-        $order  = "list_position";
+        $where  = "tableName  = '" . $table . "'";
+        $order  = "listPosition";
         $fields = $this->fetchAll($where, $order);
         foreach ($fields as $fieldData) {
-            $listFields[] = $fieldData->table_field;
+            $listFields[] = $fieldData->tableField;
         }
 
         return $listFields;
@@ -64,30 +64,30 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      * Get the sorted form fields for the form
      *
      * @param string $table The table name of the module
-     * 
+     *
      * @return array Array with the data of the form field
      */
     public function getFieldsForForm($table)
     {
         $formFields = array();
 
-        $where  = "table_name  = '" . $table . "'";
-        $order  = "form_position";
+        $where  = "tableName  = '" . $table . "'";
+        $order  = "formPosition";
         $fields = $this->fetchAll($where);
         foreach ($fields as $fieldData) {
-            $formFields[$fieldData->table_field] = array(
-                'type'            => $fieldData->form_type,
-                'tab'              => $fieldData->form_tab,
-                'label'           => $fieldData->form_label,
-                'tooltip'         => $fieldData->form_tooltip,
-                'position'       => $fieldData->form_position,
-                'columns'       => $fieldData->form_columns,
-                'regexp'        => $fieldData->form_regexp,
-                'range'           => $fieldData->form_range,
-                'value'            => $fieldData->default_value,
-                'is_integer'    => $fieldData->is_integer,
-                'is_required'  => $fieldData->is_required,
-                'is_unique'      => $fieldData->is_unique
+            $formFields[$fieldData->tableField] = array(
+                'type'            => $fieldData->formType,
+                'tab'              => $fieldData->formTab,
+                'label'           => $fieldData->formLabel,
+                'tooltip'         => $fieldData->formTooltip,
+                'position'       => $fieldData->formPosition,
+                'columns'       => $fieldData->formColumns,
+                'regexp'        => $fieldData->formRegexp,
+                'range'           => $fieldData->formRange,
+                'value'            => $fieldData->defaultValue,
+                'isInteger'    => $fieldData->isInteger,
+                'isRequired'  => $fieldData->isRequired,
+                'isUnique'      => $fieldData->isUnique
             );
         }
         return $formFields;
