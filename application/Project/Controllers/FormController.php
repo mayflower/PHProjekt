@@ -21,7 +21,7 @@
  * This is because the formControllers from other modules must
  * have the function of the indexController
  * and the formControllers functions.
- * Since we can�t use a daiamont structure, we use a third class.
+ * Since we can not use a daiamont structure, we use a third class.
 
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -31,7 +31,7 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_Cotrollers_FormController extends Project_IndexController
+class Project_Cotrollers_FormController extends Project_Controllers_IndexController
 {
     /**
      * Default action

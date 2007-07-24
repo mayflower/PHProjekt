@@ -29,7 +29,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Get all the projects from the db
      *
-     * @return array - Array with the rows for render
+     * @return array Array with the rows for render
      */
     public function getListData()
     {
@@ -56,6 +56,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      * if not, will make the add form
      *
      * @param integer $id Optional, for edit the row
+     *
      * @return array          Array with the fields for render
      */
     public function getFormData($id = 0)
@@ -65,8 +66,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         if ($id > 0) {
             $this->find($id);
             foreach ($formData as $fieldName => $fieldData) {
-                $tmpData[$fieldName]                = $fieldData;
-                $tmpData[$fieldName]['value']  = $this->$fieldName;
+                $tmpData[$fieldName]               = $fieldData;
+                $tmpData[$fieldName]['value'] = $this->$fieldName;
             }
             $formData = $tmpData;
         }
@@ -89,8 +90,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         }
         foreach($request as $k => $v) {
             if (array_key_exists($k, $this->_data)) {
-              $this->$k = $v;
-          }
+                $this->$k = $v;
+            }
         }
 
         $this->save();
@@ -99,26 +100,27 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Get the action for make the form
      *
-     * @param string $action - Define wich action are showing
-     * @param integer $id      - The  id of the edited item
-     * @return string               - The action url
+     * @param string $action Define wich action are showing
+     * @param integer $id     The  id of the edited item
+     *
+     * @return string             The action url
      */
     public function getActionForm($action, $id = '') {
         switch ($action) {
             default:
             case 'display':
                 return PHPR_ROOT_WEB_PATH
-                        . 'project/'
-                        . 'form/'
-                        . 'save';
+                    . 'project/'
+                    . 'form/'
+                    . 'save';
                 break;
             case 'edit':
                 return PHPR_ROOT_WEB_PATH
-                        . 'project/'
-                        . 'form/'
-                        . 'save/'
-                        . 'id/'
-                        . $id;
+                    . 'project/'
+                    . 'form/'
+                    . 'save/'
+                    . 'id/'
+                    . $id;
             break;
         }
     }
@@ -136,18 +138,18 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $translate = Zend_Registry::get('translate');
 
         $add = '<a href="'
-                        . PHPR_ROOT_WEB_PATH
-                        . 'project/'
-                        . 'form'
-                        .  '">'. $translate->_("Add") . '</a>';
+            .  PHPR_ROOT_WEB_PATH
+            . 'project/'
+            . 'form'
+            .  '">'. $translate->_("Add") . '</a>';
         $edit = '<a href="'
-                      . PHPR_ROOT_WEB_PATH
-                      . 'project/'
-                      . 'form/'
-                      . 'delete/'
-                      . 'id/'
-                      . $id
-                      .  '">'. $translate->_("Delete") . '</a>';
+            .  PHPR_ROOT_WEB_PATH
+            . 'project/'
+            . 'form/'
+            . 'delete/'
+            . 'id/'
+            . $id
+            .  '">'. $translate->_("Delete") . '</a>';
 
         switch ($action) {
             default:

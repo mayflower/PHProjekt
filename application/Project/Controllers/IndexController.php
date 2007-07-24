@@ -4,9 +4,11 @@
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
- * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id$
+ * @version    CVS: $Id:
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
@@ -14,12 +16,13 @@
 /**
  * Default Project Module Controller for PHProjekt 6.0
  *
- * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
+ * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Project_Controllers_IndexController extends IndexController
 {
@@ -28,18 +31,16 @@ class Project_Controllers_IndexController extends IndexController
      *
      * @var integer
      */
-    public $_formColumns  = 1;
+    public $formColumns  = 1;
 
     /**
      * Init the Module object
-     *
-     * @param void
      *
      * @return Zend_Item object
      */
     public function getModelsObject()
     {
-        $db = Zend_Registry::get('db');
+        $db          = Zend_Registry::get('db');
         $oModels = new Project_Models_Project(array('db' => $db));
 
         return $oModels;
