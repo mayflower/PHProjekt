@@ -14,7 +14,7 @@
  */
 
 /* Phprojekt_ActiveRecord_Abstract */
-require_once (PHPR_CORE_PATH . '/Phprojekt/ActiveRecord/Abstract.php');
+require_once PHPR_CORE_PATH . '/Phprojekt/ActiveRecord/Abstract.php';
 
 /**
  * The class provide the stuff from the database_manager
@@ -32,7 +32,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     /**
      * Initialize new object
      *
-     * @param array  $config  - Configuration for Zend_Db_Table
+     * @param array $config Configuration for Zend_Db_Table
      */
     public function __construct($config)
     {
@@ -42,16 +42,17 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     /**
      * Get the sorted list of field for list
      *
-     * @param string $table - The table name of the module
-     * @return array              - Array with the data of the list fields
+     * @param string $table The table name of the module
+     * 
+     * @return array Array with the data of the list fields
      */
     public function getFieldsForList($table)
     {
         $listFields = array('id');
 
-        $where = "table_name  = '" . $table . "'";
-        $order = "list_position";
-        $fields = $this->fetchAll($where,$order);
+        $where  = "table_name  = '" . $table . "'";
+        $order  = "list_position";
+        $fields = $this->fetchAll($where, $order);
         foreach ($fields as $fieldData) {
             $listFields[] = $fieldData->table_field;
         }
