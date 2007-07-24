@@ -107,7 +107,7 @@ class Phprojekt_User extends Phprojekt_Item
     /**
      * Makes the logout process
      * 
-     *@return boolean true if logout process was sucessful
+     * @return boolean true if logout process was sucessful
      */
     public function logout()
     {
