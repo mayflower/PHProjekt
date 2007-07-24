@@ -73,18 +73,18 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         $fields = $this->fetchAll($where);
         foreach ($fields as $fieldData) {
             $formFields[$fieldData->tableField] = array(
-                'type'            => $fieldData->formType,
-                'tab'              => $fieldData->formTab,
-                'label'           => $fieldData->formLabel,
-                'tooltip'         => $fieldData->formTooltip,
-                'position'       => $fieldData->formPosition,
-                'columns'       => $fieldData->formColumns,
-                'regexp'        => $fieldData->formRegexp,
-                'range'           => $fieldData->formRange,
-                'value'            => $fieldData->defaultValue,
-                'isInteger'    => $fieldData->isInteger,
-                'isRequired'  => $fieldData->isRequired,
-                'isUnique'      => $fieldData->isUnique
+                'type'       => $fieldData->formType,
+                'tab'        => $fieldData->formTab,
+                'label'      => $fieldData->formLabel,
+                'tooltip'    => $fieldData->formTooltip,
+                'position'   => $fieldData->formPosition,
+                'columns'    => $fieldData->formColumns,
+                'regexp'     => $fieldData->formRegexp,
+                'range'      => $fieldData->formRange,
+                'value'      => $fieldData->defaultValue,
+                'isInteger'  => $fieldData->isInteger,
+                'isRequired' => $fieldData->isRequired,
+                'isUnique'   => $fieldData->isUnique
             );
         }
         return $formFields;
