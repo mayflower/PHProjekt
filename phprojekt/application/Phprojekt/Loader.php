@@ -83,4 +83,25 @@ class Phprojekt_Loader extends Zend_Loader
             return false;
         }
     }
+
+    /**
+     * Enter description here...
+     *
+     * @param Phprojekt_ActiveRecord_Abstract $identifier
+     */
+    public static function getModel($module, $model)
+    {
+        $identifier = sprintf("%s_Models_%s", $module, $model);
+
+        $custom_ident = preg_replace("@(.*?_)?(.*?)$@",
+                                     "\\1Customized_\\2",
+                                     $identifier);
+        try {
+            self::loadClass($custom_ident, self::$_directories);
+            return $custom_ident;
+        } catch (Zend_Exception $ze) { }
+
+        self::loadClass($identifier, self::$_directories);
+        return $identifier;
+    }
 }
