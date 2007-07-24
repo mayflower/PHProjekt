@@ -34,7 +34,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Default is :tableName_id
      *
      */
-    const FOREIGN_KEY_FORMAT = ':tableName_id';
+    const FOREIGN_KEY_FORMAT = ':tableNameId';
 
     /**
      * Define the set of allowed characters for classes
@@ -107,7 +107,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
-     * 
+     *
      */
     public function __construct($config)
     {
