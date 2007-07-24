@@ -30,11 +30,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * Generates the adapter
      *
      * @param array $data Translation data
-     *
-     * @param string $locale OPTIONAL
-     *                Locale/Language to set,
-     *                identical with locale identifier,
-     *                see Zend_Locale for more information
+     * @param string $locale Locale/Language to set, identical with locale identifier, see Zend_Locale for more information
      *
      */
     public function __construct($data, $locale = null)
@@ -45,14 +41,9 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     /**
      * Get the lang translations for the lang file
      *
-     * @param string $filename Filename
-     *                and full path to the translation source
-     *
-     * @param string $locale Locale/Language to add data for,
-     *                identical with locale identifier,
-     *                see Zend_Locale for more information
-     *
-     * @param array $options OPTIONAL Options to use
+     * @param string $filename Filename and full path to the translation source
+     * @param string $locale Locale/Language to add data for, identical with locale identifier, see Zend_Locale for more information
+     * @param array $options Options to use
      *
      * @return void
      */
