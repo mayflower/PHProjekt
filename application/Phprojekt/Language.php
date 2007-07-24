@@ -17,7 +17,7 @@
 require_once 'Zend/Translate.php';
 
 /* Default_Helpers_PhprojectLanguage */
-require_once (PHPR_CORE_PATH . '/Phprojekt/LanguageAdapter.php');
+require_once PHPR_CORE_PATH . '/Phprojekt/LanguageAdapter.php';
 
 /**
  * Extend Zend_Translate for add a new adapter
@@ -32,16 +32,28 @@ require_once (PHPR_CORE_PATH . '/Phprojekt/LanguageAdapter.php');
  */
 class Phprojekt_Language extends Zend_Translate
 {
+    /**
+     * Create a new language object
+     *
+     * @param string $adapter Wich adaptor will you use
+     *                Since the constructor must be equal to the
+     *                parent constructor, this var are here but
+     *                not used
+     * @param string $options The filename of the lang gile
+     * @param string $locale Wich locale want to load
+     */
     public function __construct($adapter, $options, $locale = null)
     {
-        $this->_adapter = new Phproject_LanguageAdapter($options, $locale);
+        $this->_adapter = new Phprojekt_LanguageAdapter($options, $locale);
     }
 
     /**
      * Translate the given string
      *
-     * @param  string              $messageId  Original to translate
-     * @param  string|Zend_Locale  $locale     OPTIONAL locale/language to translate to
+     * @param  string $messageId Original to translate
+     * @param  string|Zend_Locale $locale OPTIONAL locale/language
+     *                 to translate to
+     *
      * @return string
      */
     public function _($messageId, $locale = null)
@@ -53,8 +65,10 @@ class Phprojekt_Language extends Zend_Translate
     /**
      * Translate the given string
      *
-     * @param  string              $messageId  Original to translate
-     * @param  string|Zend_Locale  $locale     OPTIONAL locale/language to translate to
+     * @param  string $messageId Original to translate
+     * @param  string|Zend_Locale $locale OPTIONAL locale/language
+     *                 to translate to
+     *
      * @return string
      */
     public function translate($messageId, $locale = null)

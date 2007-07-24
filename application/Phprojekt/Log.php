@@ -13,7 +13,7 @@
  * @since      File available since Release 1.0
  */
 
-/** Zend_Log */
+/* Zend_Log */
 require_once 'Zend/Log.php';
 
 /**
@@ -35,7 +35,7 @@ class Phprojekt_Log extends Zend_Log
     /**
      * Get the constants for use later
      *
-     * @param  void
+     * @param Zend_Config $config Object contain the user configuration
      */
     public function __construct(Zend_Config $config)
     {
@@ -53,6 +53,14 @@ class Phprojekt_Log extends Zend_Log
         }
     }
 
+    /**
+     * Write the text into the file
+     *
+     * @param string $message Text to write
+     * @param string $priority Type of log
+     *
+     * @return void
+     */
     public function log($message, $priority)
     {
         /* @var Zend_Log $logger */

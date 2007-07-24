@@ -2,32 +2,43 @@
 /**
  * Role class for PHProjekt 6.0
  *
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://phprojekt.com/license
+ * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @TODO       Check with phpcs ASAP
- * @todo       EVERYTHING, THIS IS A MOCKUP.
+ * @todo       EVERYTHING, THIS IS A MOCKUP
  */
-
 
 /**
  * Phprojekt_Role for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license    http://phprojekt.com/license
+ * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Role
 {
+    /**
+     * Constructor
+     *
+     */
     function __destruct()
     {
     }
 
+    /**
+     * Destructor
+     *
+     */
     public function __construct()
     {
     }
@@ -47,8 +58,9 @@ class Phprojekt_Role
     /**
      * Delete the permission to a specific module
      *
-     * @param string module name of the module
-     * @return boolean true if permission was sucessful deleted
+     * @param string $module Name of the module
+     *
+     * @return boolean True if permission was sucessful deleted
      */
     public function deletePermissionForModule(string $module)
     {
@@ -58,7 +70,7 @@ class Phprojekt_Role
     /**
      * Gets the role name
      *
-     * @return string name the name of the role
+     * @return string Name the name of the role
      */
     public function getName()
     {
@@ -68,8 +80,9 @@ class Phprojekt_Role
     /**
      * Gets the permission for a module
      *
-     * @param string module name of the module
-     * @return integer the permission value for that module
+     * @param string $module Name of the module
+     *
+     * @return integer The permission value for that module
      */
     public function getPermissionForModule(string $module)
     {
@@ -79,7 +92,7 @@ class Phprojekt_Role
     /**
      * Gets the permission list for a role
      *
-     * @return array with all permissions of the role
+     * @return array Array with all permissions of the role
      */
     public function getPermissions()
     {
@@ -88,7 +101,7 @@ class Phprojekt_Role
 
     /**
      * To be defined
-     * @param to be defined
+     *
      * @return boolean
      */
     public function hasPermission()
