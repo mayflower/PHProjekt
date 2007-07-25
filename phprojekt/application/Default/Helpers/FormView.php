@@ -99,13 +99,13 @@ class Default_Helpers_FormView
                     . 'name="' . $field . '"'
                     . 'value="' . $fieldData['value'] .'"'
                     . ' />';
-                break;
+            break;
         default:
                 $output = '<input type="text" '
                       . 'name="' . $field . '"'
                       . 'value="' . $fieldData['value'] .'"'
                       . ' />';
-                break;
+            break;
         }
 
         return $output;

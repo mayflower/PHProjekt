@@ -226,8 +226,8 @@ class Phprojekt_Loader extends Zend_Loader
      * This method can take more than the two arguments. Every other argument
      * is passed to the constructor.
      *
-     * @param string $module   Name of the module
-     * @param string $model    Name of the model
+     * @param string $module Name of the module
+     * @param string $model  Name of the model
      *
      * @return Object
      */
@@ -244,8 +244,8 @@ class Phprojekt_Loader extends Zend_Loader
     * Always use the returned name to instantiate a class, a customized
     * class name might be loaded and returned by this method
     *
-    * @param string $module   Name of the module
-    * @param string $view     Name of the view
+    * @param string $module Name of the module
+    * @param string $view   Name of the view
     *
     * @return Object
     */
