@@ -47,11 +47,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 {
 
     /**
-     * @var Zend_Db_Adapter_Abstract
-     */
-    public $sharedFixture;
-
-    /**
      * setUp method for PHPUnit. We use a shared db connection
      *
      */
@@ -60,7 +55,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
         $this->sharedFixture = Zend_Db::factory('PDO_MYSQL', array(
                                           'username' => 'phprojekt',
                                           'password' => 'phprojekt',
-                                          'dbname'   => 'phprojekt-mvc',
+                                          'dbname'   => 'phprojekt-mvc-test',
                                           'host'     => 'localhost'));
     }
 
