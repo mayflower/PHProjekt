@@ -60,6 +60,7 @@ Zend_Registry::set('log', $oLog);
  * to enable the autorendering feature of ZF
  */
 Zend_Loader::loadClass('Default_Helpers_Smarty', PHPR_CORE_PATH);
+
 $oView = new Default_Helpers_Smarty(PHPR_TEMP_PATH . DIRECTORY_SEPARATOR . 'templates_c');
 
 $oViewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($oView);
@@ -72,15 +73,18 @@ Zend_Registry::set('view', $oView);
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-$locale = $config->language;
 $oTranslate = new Phprojekt_Language('Phproject',PHPR_ROOT_PATH
                                                  . '/languages/'
-                                                 . $locale
-                                                 . '.inc.php', $locale);
+                                                 . $config->language
+                                                 . '.inc.php',
+                                                  $config->language);
 Zend_Registry::set('translate', $oTranslate);
+
 
 /* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();
+
+$front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
 
 foreach (scandir(PHPR_CORE_PATH) as $module)
 {
@@ -92,7 +96,7 @@ foreach (scandir(PHPR_CORE_PATH) as $module)
 }
 
 $front->addModuleDirectory(PHPR_CORE_PATH);
-$front->setParam('useDefaultControllerAlways', true);
+// $front->setParam('useDefaultControllerAlways', true);
 
-$front->throwExceptions(true);
+// $front->throwExceptions(true);
 $front->dispatch();
