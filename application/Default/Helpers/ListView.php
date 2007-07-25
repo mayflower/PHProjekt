@@ -87,7 +87,7 @@ class Default_Helpers_ListView
      */
     public function getItems()
     {
-        $data = $this->controller->data['listData'];
+        $data  = $this->controller->data['listData'];
         $items = array();
 
         if (empty($data)) {
@@ -103,7 +103,7 @@ class Default_Helpers_ListView
         foreach ($data as $key => $itemData) {
             if ($key > 0) { // Ommit the titles
                 $items[$key] = array();
-                $first             = 1;
+                $first       = 1;
                 foreach ($itemData as $field) {
                     if (empty($field)) {
                         $field = "&nbsp;";

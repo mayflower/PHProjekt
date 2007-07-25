@@ -27,6 +27,13 @@
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /**
+     * Array with all the lang translation
+     *
+     * @var array
+     */
+    private $_lang;
+
+    /**
      * Generates the adapter
      *
      * @param array  $data   Translation data

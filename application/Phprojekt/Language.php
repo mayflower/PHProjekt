@@ -46,20 +46,6 @@ class Phprojekt_Language extends Zend_Translate
      *
      * @return string
      */
-    public function _($messageId, $locale = null)
-    {
-        return $this->_adapter->translate($messageId, $locale);
-    }
-
-
-    /**
-     * Translate the given string
-     *
-     * @param string $messageId Original to translate
-     * @param string $locale    Locale/language to translate to
-     *
-     * @return string
-     */
     public function translate($messageId, $locale = null)
     {
         return $this->_adapter->translate($messageId, $locale);

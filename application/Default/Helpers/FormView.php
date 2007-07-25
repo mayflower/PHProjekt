@@ -51,9 +51,9 @@ class Default_Helpers_FormView
      */
     public function __construct($controller)
     {
-        $translate              = Zend_Registry::get('translate');
-        $this->_translator      = $translate;
-        $this->controller = $controller;
+        $translate         = Zend_Registry::get('translate');
+        $this->_translator = $translate;
+        $this->controller  = $controller;
     }
 
     /**
@@ -94,7 +94,8 @@ class Default_Helpers_FormView
     public function getFormOutput($field, $fieldData)
     {
         $outout = '';
-        switch ($fieldData['type']) {
+        switch ($fieldData['type'])
+        {
             case 'hidden':
                 $output = '<input type="hidden" '
                     . 'name="' . $field . '"'
@@ -165,7 +166,7 @@ class Default_Helpers_FormView
             $this->displayAction();
         } else {
             $params  = $this->controller->getRequest()->getParams();
-            $buttons = $this->Controller->oModels->getButtonsForm('display');
+            $buttons = $this->controller->oModels->getButtonsForm('display');
             $message = $this->_translator->translate('Deleted');
 
             $this->controller->oModels->deleteData($params);
