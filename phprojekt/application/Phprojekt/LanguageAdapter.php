@@ -33,7 +33,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * @param string $locale Locale/Language to set,
      *                       identical with locale identifier,
      *                       see Zend_Locale for more information
-     *
      */
     public function __construct($data, $locale = null)
     {

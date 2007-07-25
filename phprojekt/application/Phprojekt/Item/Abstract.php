@@ -48,8 +48,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     /**
      * Get the field for list view from the databae_manager
      *
-     * @param string $table The name of the module table
-     *
      * @return array        Array with the data of the fields for make the list
      */
     public function getFieldsForList()
@@ -59,8 +57,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * Get the field for the form view from the databae_manager
-     *
-     * @param string $table The name of the module table
      *
      * @return array        Array with the data of the fields for make the form
      */
