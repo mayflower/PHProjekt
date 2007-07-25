@@ -99,7 +99,6 @@ class Default_Helpers_ListView
             . 'form/'
             . 'edit/'
             . 'id/';
-
         foreach ($data as $key => $itemData) {
             if ($key > 0) { // Ommit the titles
                 $items[$key] = array();

@@ -34,14 +34,29 @@
 class Project_FormController extends Project_IndexController
 {
     /**
+     * Enter description here...
+     *
+     * @var unknown_type
+     */
+    protected $_oFormView = null;
+
+    /**
+     * Initialize
+     */
+    public function init ()
+    {
+        parent::init();
+        $this->_oFormView = new Default_Helpers_FormView($this);
+    }
+
+    /**
      * Default action
      *
      * @return void
      */
     public function indexAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->indexAction();
+        $this->_oFormView->indexAction();
     }
 
     /**
@@ -51,8 +66,7 @@ class Project_FormController extends Project_IndexController
      */
     public function cancelAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->cancelAction();
+        $this->_oFormView->cancelAction();
     }
 
     /**
@@ -62,8 +76,7 @@ class Project_FormController extends Project_IndexController
      */
     public function componentDisplayAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->componentDisplayAction();
+        $this->_oFormView->componentDisplayAction();
     }
 
     /**
@@ -73,8 +86,7 @@ class Project_FormController extends Project_IndexController
      */
     public function componentEditAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->componentEditAction();
+        $this->_oFormView->componentEditAction();
     }
 
     /**
@@ -84,8 +96,7 @@ class Project_FormController extends Project_IndexController
      */
     public function deleteAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->deleteAction();
+        $this->_oFormView->deleteAction();
     }
 
     /**
@@ -95,8 +106,7 @@ class Project_FormController extends Project_IndexController
      */
     public function displayAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->displayAction();
+        $this->_oFormView->displayAction();
     }
 
     /**
@@ -106,8 +116,7 @@ class Project_FormController extends Project_IndexController
      */
     public function editAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->editAction();
+        $this->_oFormView->editAction();
     }
 
     /**
@@ -117,7 +126,6 @@ class Project_FormController extends Project_IndexController
      */
     public function saveAction()
     {
-        $oFormView = new Default_Helpers_FormView($this);
-        $oFormView->saveAction();
+        $this->_oFormView->saveAction();
     }
 }

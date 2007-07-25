@@ -70,26 +70,21 @@ class Phprojekt_Loader extends Zend_Loader
     public static function loadClass($class, $dirs = null)
     {
         if (preg_match("@Controller$@", $class)) {
-            if (strpos($class, '_') === false) {
-                $class = 'Default_'.$class;
-            }
+            $names  = explode('_', $class);
+            $front  = Zend_Controller_Front::getInstance();
+            $module = (count($names) > 1) ? $names[0] : $front->getDefaultModule();
 
-            $class = preg_replace("@([A-Za-z0-9]*_)?([A-Za-z]+)Controller$@",
-                                  "\\1Controllers_\\2Controller", $class);
+            $file   = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
+                    . $module . DIRECTORY_SEPARATOR
+                    . $front->getModuleControllerDirectoryName()
+                    . DIRECTORY_SEPARATOR
+                    . array_pop($names) . '.php';
 
-            $path     = str_replace('_', DIRECTORY_SEPARATOR, $class);
-            $classDir = dirname($path);
-            if (!is_array($dirs)) {
-                $dirs = array($dirs, $classDir);
-            } else {
-                foreach ($dirs as $dir) {
-                    $dirs[] = $dir . DIRECTORY_SEPARATOR .$classDir;
-                }
-            }
-
+            self::_includeFile($file, true);
         }
 
-        parent::loadClass($class, $dirs);
+        if (!class_exists($class))
+            parent::loadClass($class, $dirs);
     }
 
     /**
@@ -146,13 +141,19 @@ class Phprojekt_Loader extends Zend_Loader
     {
         $logger = Zend_Registry::get('log');
 
-        $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
-        $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
+        if ($ident != self::CONTROLLER) {
+            $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
+            $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
+        } else {
+            $nIdentifier = sprintf("%s_%s", $module, $item);
+            $cIdentifier = sprintf("%s_Customized_%s", $module, $item);
+            $logger->debug("$nIdentifier");
+        }
 
         try {
             self::loadClass($cIdentifier, self::$_directories);
-            $logger->debug('get customized class {$cIdentifier} '
-                         . 'instead of {$nIdentifier}');
+            $logger->debug("get customized class {$cIdentifier} "
+                         . "instead of {$nIdentifier}");
             return $cIdentifier;
         } catch (Zend_Exception $ze) {
 

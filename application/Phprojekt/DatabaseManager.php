@@ -31,7 +31,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    public $dbFields = array();
+    protected $_dbFields = array();
 
     /**
      * Initialize new object
@@ -55,9 +55,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     {
         $listFields = array('id');
 
-        $where  = "tableName  = '" . $table . "'";
-        $order  = "listPosition";
-        $fields = $this->fetchAll($where, $order);
+        $where  = $this->getAdapter()->quoteInto('tableName = ?', $table);
+        $fields = $this->fetchAll($where, "listPosition");
+
         foreach ($fields as $fieldData) {
             $listFields[] = $fieldData->tableField;
         }
@@ -77,9 +77,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         if (empty($this->dbFields)) {
             $formFields = array();
 
-            $where  = "tableName  = '" . $table . "'";
-            $order  = "formPosition";
-            $fields = $this->fetchAll($where, $order);
+            $where  = $this->getAdapter()->quoteInto('tableName = ?', $table);
+            $fields = $this->fetchAll($where, "formPosition");
+
             foreach ($fields as $fieldData) {
                 $formFields[$fieldData->tableField] = array(
                     'type'       => $fieldData->formType,
@@ -96,8 +96,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
                     'isUnique'   => $fieldData->isUnique
                 );
             }
-            $this->dbFields = $formFields;
+            $this->_dbFields = $formFields;
         }
-        return $this->dbFields;
+        return $this->_dbFields;
     }
 }

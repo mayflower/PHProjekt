@@ -34,14 +34,29 @@
 class Project_ListController extends Project_IndexController
 {
     /**
+     * Enter description here...
+     *
+     * @var unknown_type
+     */
+    protected $_oListView = null;
+
+   /**
+     * Initialize
+     */
+    public function init ()
+    {
+        parent::init();
+        $this->_oListView = new Default_Helpers_ListView($this);
+    }
+
+    /**
      * Adds a single filter to the current view
      *
      * @return void
      */
     public function addFilterAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->addFilterAction();
+        $this->_oListView->addFilterAction();
     }
 
     /**
@@ -51,8 +66,7 @@ class Project_ListController extends Project_IndexController
      */
     public function componentIndexAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->componentIndexAction();
+        $this->_oListView->componentIndexAction();
     }
 
     /**
@@ -62,8 +76,7 @@ class Project_ListController extends Project_IndexController
      */
     public function componentListAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->componentEditAction();
+        $this->_oListView->componentEditAction();
     }
 
     /**
@@ -73,8 +86,7 @@ class Project_ListController extends Project_IndexController
      */
     public function indexAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->indexAction();
+        $this->_oListView->indexAction();
     }
 
     /**
@@ -84,8 +96,7 @@ class Project_ListController extends Project_IndexController
      */
     public function listAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->listAction();
+        $this->_oListView->listAction();
     }
 
     /**
@@ -95,8 +106,7 @@ class Project_ListController extends Project_IndexController
      */
     public function removeFilterAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->removeFilterAction();
+        $this->_oListView->removeFilterAction();
     }
 
     /**
@@ -106,7 +116,6 @@ class Project_ListController extends Project_IndexController
      */
     public function sortAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->sortFilterAction();
+        $this->_oListView->sortFilterAction();
     }
 }

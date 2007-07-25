@@ -87,14 +87,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-        /* Get the smarty object */
         $this->_smarty = Zend_Registry::get('view');
         $this->oModels = $this->getModelsObject();
 
-        /* Stuff for list View */
         $this->data['listData'] = $this->oModels->getListData();
-
-        /* Stuff for form View */
         $this->data['formData'] = $this->oModels->getFormData();
     }
 
@@ -180,7 +176,7 @@ class IndexController extends Zend_Controller_Action
                forward to the index action */
             return $this->_forward('index');
         }
-        /* all other methods throw an exception */
+
         throw new Exception('Invalid method "' . $method . '" called');
     }
 
@@ -222,22 +218,18 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    private function _render($template)
+    protected function _render($template)
     {
         switch ($template) {
         case 'tree':
-                /* Set treeview */
-                $this->view->phprojekt_version = "PHProjekt 6 - Charon";
-                return $this->_helper->viewRenderer->view->render('tree.tpl');
+                return $this->view->render('tree.tpl');
             break;
         case 'form':
-                /* Set formview */
-                return $this->_helper->viewRenderer->view->render('form.tpl');
+                return $this->view->render('form.tpl');
             break;
-        default:
         case 'list':
-                /* Set listview */
-                return $this->_helper->viewRenderer->view->render('list.tpl');
+        default:
+                return $this->view->render('list.tpl');
             break;
         }
     }
@@ -252,17 +244,14 @@ class IndexController extends Zend_Controller_Action
     public function generateOutput($id = 0)
     {
         if (!$this->treeViewSeted) {
-            /* Set treeview */
             $this->setTreeView($this->_render('tree'));
         }
 
         if (!$this->listViewSeted) {
-            /* Set listview */
             $this->setListView();
         }
 
         if (!$this->formViewSeted) {
-            /* Set formview */
             $this->setFormView($id);
         }
     }
