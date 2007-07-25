@@ -55,7 +55,7 @@ class AllTests
      */
     public static function suite()
     {
-        $log = new Phprojekt_Log(new Zend_Config_Ini('../../configuration.ini'));
+        // $log = new Phprojekt_Log(new Zend_Config_Ini('../../configuration.ini', 'production'));
         Zend_Registry::set('log', $log);
 
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
