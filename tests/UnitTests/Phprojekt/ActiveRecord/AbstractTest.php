@@ -339,6 +339,20 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     }
 
     /**
+     * Test getting a nonexisting attribute.
+     * Should throw an exception
+     *
+     * @return void
+     */
+    public function testWrongGet()
+    {
+        $this->setExpectedException('Exception');
+
+        $instance = new PHprojekt_Project(array('db' => $this->sharedFixture));
+        $get      = $instance->wrongAttribute;
+    }
+
+    /**
      * Test, db not given
      *
      * @return void
