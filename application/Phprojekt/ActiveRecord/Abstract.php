@@ -107,7 +107,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
-     *
      */
     public function __construct($config)
     {
