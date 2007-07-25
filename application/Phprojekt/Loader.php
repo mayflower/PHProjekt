@@ -80,11 +80,14 @@ class Phprojekt_Loader extends Zend_Loader
                     . DIRECTORY_SEPARATOR
                     . array_pop($names) . '.php';
 
-            self::_includeFile($file, true);
+            if (self::isReadable($file)) {
+                self::_includeFile($file, true);
+            }
         }
 
-        if (!class_exists($class))
+        if (!class_exists($class)) {
             parent::loadClass($class, $dirs);
+        }
     }
 
     /**
@@ -162,6 +165,7 @@ class Phprojekt_Loader extends Zend_Loader
         self::loadClass($nIdentifier, self::$_directories);
         return $nIdentifier;
     }
+
 
     /**
      * Load the class of a model and return the name of the class.
