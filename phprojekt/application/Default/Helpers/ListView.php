@@ -39,24 +39,24 @@ class Default_Helpers_ListView
     private $_translator = '';
 
     /**
-     * ActionController Object
+     * Controller Object
      *
      * @var Zend_Controller_Action object
      */
-    public $actionController = '';
+    public $controller = '';
 
     /**
      * Constructor
      *
-     * @param Zend_Controller_Action $actionController Action object controller
+     * @param Zend_Controller_Action $controller Action object controller
      *
      * @return void
      */
-    public function __construct($actionController)
+    public function __construct($controller)
     {
-        $translate                     = Zend_Registry::get('translate');
-        $this->_translator        = $translate;
-        $this->actionController = $actionController;
+        $translate         = Zend_Registry::get('translate');
+        $this->_translator = $translate;
+        $this->controller  = $controller;
     }
 
     /**
@@ -66,7 +66,7 @@ class Default_Helpers_ListView
      */
     public function getTitles()
     {
-        $data = $this->actionController->data['listData'];
+        $data = $this->controller->data['listData'];
         $titles = array();
 
         if (empty($data)) {
@@ -87,7 +87,7 @@ class Default_Helpers_ListView
      */
     public function getItems()
     {
-        $data = $this->actionController->data['listData'];
+        $data = $this->controller->data['listData'];
         $items = array();
 
         if (empty($data)) {
@@ -95,7 +95,7 @@ class Default_Helpers_ListView
         }
 
         $editLink = PHPR_ROOT_WEB_PATH
-            . $this->actionController->getRequest()->getModuleName() . '/'
+            . $this->controller->getRequest()->getModuleName() . '/'
             . 'form/'
             . 'edit/'
             . 'id/';
@@ -129,10 +129,10 @@ class Default_Helpers_ListView
      */
     public function addFilterAction()
     {
-        $this->actionController->setListView();
-        $this->actionController->msg = 'Filter Added';
-        $this->actionController->generateOutput();
-        $this->actionController->render('index');
+        $this->controller->setListView();
+        $this->controller->msg = 'Filter Added';
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 
     /**
@@ -170,10 +170,10 @@ class Default_Helpers_ListView
      */
     public function listAction()
     {
-        $this->actionController->setListView();
-        $this->actionController->msg = '&nbsp;';
-        $this->actionController->generateOutput();
-        $this->actionController->render('index');
+        $this->controller->setListView();
+        $this->controller->msg = '&nbsp;';
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 
     /**
@@ -183,10 +183,10 @@ class Default_Helpers_ListView
      */
     public function removeFilterAction()
     {
-        $this->actionController->setListView();
-        $this->actionController->msg = 'Filter Removed';
-        $this->actionController->generateOutput();
-        $this->actionController->render('index');
+        $this->controller->setListView();
+        $this->controller->msg = 'Filter Removed';
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 
     /**
@@ -196,9 +196,9 @@ class Default_Helpers_ListView
      */
     public function sortAction()
     {
-        $this->actionController->setListView();
-        $this->actionController->msg = '&nbsp;';
-        $this->actionController->generateOutput();
-        $this->actionController->render('index');
+        $this->controller->setListView();
+        $this->controller->msg = '&nbsp;';
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 }
