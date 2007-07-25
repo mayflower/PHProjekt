@@ -189,6 +189,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @param string $name  Name of the value for render
      * @param mix    $value Value for the var
+     *
      * @return void
      */
     public function __set($name,$value)
@@ -223,19 +224,18 @@ class IndexController extends Zend_Controller_Action
      */
     private function _render($template)
     {
-        switch ($template)
-        {
-            case 'tree':
+        switch ($template) {
+        case 'tree':
                 /* Set treeview */
                 $this->view->phprojekt_version = "PHProjekt 6 - Charon";
                 return $this->_helper->viewRenderer->view->render('tree.tpl');
                 break;
-            case 'form':
+        case 'form':
                 /* Set formview */
                 return $this->_helper->viewRenderer->view->render('form.tpl');
                 break;
-            default:
-            case 'list':
+        default:
+        case 'list':
                 /* Set listview */
                 return $this->_helper->viewRenderer->view->render('list.tpl');
                 break;

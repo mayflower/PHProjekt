@@ -107,16 +107,15 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function getActionForm($action, $id = '')
     {
-        switch ($action)
-        {
-            default:
-            case 'display':
+        switch ($action) {
+        default:
+        case 'display':
                 return PHPR_ROOT_WEB_PATH
                 . 'project/'
                 . 'form/'
                 . 'save';
-            break;
-            case 'edit':
+                break;
+        case 'edit':
                 return PHPR_ROOT_WEB_PATH
                 . 'project/'
                 . 'form/'
@@ -153,13 +152,12 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             . $id
             .  '">'. $translate->translate("Delete") . '</a>';
 
-        switch ($action)
-        {
-            default:
-            case 'display':
+        switch ($action) {
+        default:
+        case 'display':
                 $buttons = $add;
                 break;
-            case 'edit':
+        case 'edit':
                 $buttons = $add . '&nbsp; ' . $edit;
                 break;
         }

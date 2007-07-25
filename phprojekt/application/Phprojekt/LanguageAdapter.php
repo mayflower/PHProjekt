@@ -31,7 +31,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * @var array
      */
-    private $_lang;
+    protected $_lang;
 
     /**
      * Generates the adapter

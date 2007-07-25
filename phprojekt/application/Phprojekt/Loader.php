@@ -64,6 +64,8 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @param string       $class Name of the class
      * @param string|array $dirs  Directories to search
+     *
+     * @return void
      */
     public static function loadClass($class, $dirs = null)
     {
@@ -95,7 +97,8 @@ class Phprojekt_Loader extends Zend_Loader
      * Returns either the name of the class or false, if
      * loading failed.
      *
-     * @param  string $class The name of the class
+     * @param string $class The name of the class
+     *
      * @return mixed
      */
     public static function autoload($class)
@@ -162,11 +165,14 @@ class Phprojekt_Loader extends Zend_Loader
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method
      *
-     * @param Phprojekt_ActiveRecord_Abstract $identifier
+     * @param string $module Name of the module
+     * @param string $model  Name of the class to be loaded
      *
      * @see _getClass
      *
      * @throws Zend_Exception If class not found
+     *
+     * @return string
      */
     public static function getModel($module, $model)
     {
@@ -178,11 +184,14 @@ class Phprojekt_Loader extends Zend_Loader
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method
      *
-     * @param Phprojekt_ActiveRecord_Abstract $identifier
+     * @param string $module     Name of the module
+     * @param string $controller Name of the class to be loaded
      *
      * @see _getClass
      *
      * @throws Zend_Exception If class not found
+     *
+     * @return string
      */
     public static function getController($module, $controller)
     {
@@ -194,11 +203,14 @@ class Phprojekt_Loader extends Zend_Loader
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method
      *
-     * @param Phprojekt_ActiveRecord_Abstract $identifier
+     * @param string $module Name of the module
+     * @param string $view   Name of the class to be loaded
      *
      * @see _getClass
      *
      * @throws Zend_Exception If class not found
+     *
+     * @return string
      */
     public static function getView($module, $view)
     {
@@ -215,6 +227,8 @@ class Phprojekt_Loader extends Zend_Loader
      * @param string $module   Name of the module
      * @param string $model    Name of the model
      * @param mixed  $pass,... Passed to the constructor
+     *
+     * @return Object
      */
     public static function getModelFactory($module, $model)
     {
@@ -232,6 +246,8 @@ class Phprojekt_Loader extends Zend_Loader
      * @param string $module   Name of the module
      * @param string $view     Name of the view
      * @param mixed  $pass,... Passed to the constructor
+     *
+     * @return Object
      */
     public static function getViewFactory($module, $view)
     {
