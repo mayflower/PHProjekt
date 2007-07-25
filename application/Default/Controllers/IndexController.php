@@ -229,16 +229,16 @@ class IndexController extends Zend_Controller_Action
                 /* Set treeview */
                 $this->view->phprojekt_version = "PHProjekt 6 - Charon";
                 return $this->_helper->viewRenderer->view->render('tree.tpl');
-                break;
+            break;
         case 'form':
                 /* Set formview */
                 return $this->_helper->viewRenderer->view->render('form.tpl');
-                break;
+            break;
         default:
         case 'list':
                 /* Set listview */
                 return $this->_helper->viewRenderer->view->render('list.tpl');
-                break;
+            break;
         }
     }
 

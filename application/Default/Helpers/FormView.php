@@ -47,7 +47,6 @@ class Default_Helpers_FormView
      * Constructor
      *
      * @param Zend_Controller_Action $controller The action controller
-     *
      */
     public function __construct($controller)
     {
@@ -94,15 +93,14 @@ class Default_Helpers_FormView
     public function getFormOutput($field, $fieldData)
     {
         $outout = '';
-        switch ($fieldData['type'])
-        {
-            case 'hidden':
+        switch ($fieldData['type']) {
+        case 'hidden':
                 $output = '<input type="hidden" '
                     . 'name="' . $field . '"'
                     . 'value="' . $fieldData['value'] .'"'
                     . ' />';
                 break;
-            default:
+        default:
                 $output = '<input type="text" '
                       . 'name="' . $field . '"'
                       . 'value="' . $fieldData['value'] .'"'
