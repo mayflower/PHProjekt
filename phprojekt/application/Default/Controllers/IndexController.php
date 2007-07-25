@@ -221,8 +221,10 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function _render($template) {
-        switch ($template) {
+    private function _render($template)
+    {
+        switch ($template)
+        {
             case 'tree':
                 /* Set treeview */
                 $this->view->phprojekt_version = "PHProjekt 6 - Charon";

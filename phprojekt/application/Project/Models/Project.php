@@ -107,7 +107,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function getActionForm($action, $id = '')
     {
-        switch ($action) {
+        switch ($action)
+        {
             default:
             case 'display':
                 return PHPR_ROOT_WEB_PATH
@@ -129,10 +130,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Get the buttons deppend on the action
      *
-     * @param string  $action  Define wich action are showing
-     * @param integer $id      The  id of the edited item
+     * @param string  $action Define wich action are showing
+     * @param integer $id     The  id of the edited item
      *
-     * @return string          <a href="">
+     * @return string         <a href="">
      */
     public function getButtonsForm($action, $id = '')
     {
@@ -142,7 +143,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             .  constant("PHPR_ROOT_WEB_PATH")
             . 'project/'
             . 'form'
-            .  '">'. $translate->_("Add") . '</a>';
+            .  '">'. $translate->translate("Add") . '</a>';
         $edit = '<a href="'
             .  constant("PHPR_ROOT_WEB_PATH")
             . 'project/'
@@ -150,9 +151,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             . 'delete/'
             . 'id/'
             . $id
-            .  '">'. $translate->_("Delete") . '</a>';
+            .  '">'. $translate->translate("Delete") . '</a>';
 
-        switch ($action) {
+        switch ($action)
+        {
             default:
             case 'display':
                 $buttons = $add;

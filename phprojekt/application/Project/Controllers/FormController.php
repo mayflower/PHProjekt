@@ -22,7 +22,7 @@
  * have the function of the indexController
  * and the formControllers functions.
  * Since we can not use a daiamont structure, we use a third class.
-
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
