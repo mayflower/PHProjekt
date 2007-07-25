@@ -154,7 +154,9 @@ class Phprojekt_Loader extends Zend_Loader
             $logger->debug('get customized class {$cIdentifier} '
                          . 'instead of {$nIdentifier}');
             return $cIdentifier;
-        } catch (Zend_Exception $ze) { }
+        } catch (Zend_Exception $ze) {
+
+        }
 
         self::loadClass($nIdentifier, self::$_directories);
         return $nIdentifier;
@@ -214,7 +216,7 @@ class Phprojekt_Loader extends Zend_Loader
      */
     public static function getView($module, $view)
     {
-        return self::_getClass($module, $view, self::VIEW );
+        return self::_getClass($module, $view, self::VIEW);
     }
 
     /**
@@ -226,7 +228,6 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @param string $module   Name of the module
      * @param string $model    Name of the model
-     * @param mixed  $pass,... Passed to the constructor
      *
      * @return Object
      */
@@ -239,16 +240,15 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
    /**
-     * Load the class of a view and return an new instance of the class.
-     * Always use the returned name to instantiate a class, a customized
-     * class name might be loaded and returned by this method
-     *
-     * @param string $module   Name of the module
-     * @param string $view     Name of the view
-     * @param mixed  $pass,... Passed to the constructor
-     *
-     * @return Object
-     */
+    * Load the class of a view and return an new instance of the class.
+    * Always use the returned name to instantiate a class, a customized
+    * class name might be loaded and returned by this method
+    *
+    * @param string $module   Name of the module
+    * @param string $view     Name of the view
+    *
+    * @return Object
+    */
     public static function getViewFactory($module, $view)
     {
         $name = self::getView($module, $view);

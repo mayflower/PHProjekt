@@ -114,7 +114,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
                 . 'project/'
                 . 'form/'
                 . 'save';
-                break;
+            break;
         case 'edit':
                 return PHPR_ROOT_WEB_PATH
                 . 'project/'
@@ -122,7 +122,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
                 . 'save/'
                 . 'id/'
                 . $id;
-                break;
+            break;
         }
     }
 
@@ -156,10 +156,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         default:
         case 'display':
                 $buttons = $add;
-                break;
+            break;
         case 'edit':
                 $buttons = $add . '&nbsp; ' . $edit;
-                break;
+            break;
         }
 
         return $buttons;
