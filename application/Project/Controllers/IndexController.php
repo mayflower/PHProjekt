@@ -40,7 +40,7 @@ class Project_IndexController extends IndexController
      */
     public function getModelsObject()
     {
-        $db          = Zend_Registry::get('db');
+        $db      = Zend_Registry::get('db');
         $oModels = new Project_Models_Project(array('db' => $db));
 
         return $oModels;

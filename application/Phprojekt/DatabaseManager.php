@@ -27,6 +27,13 @@
 class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
 {
     /**
+     * Array with the data of each fields
+     *
+     * @var array
+     */
+    public $dbFields = array();
+
+    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -34,6 +41,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     public function __construct($config)
     {
         parent::__construct($config);
+
     }
 
     /**
@@ -41,7 +49,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $table The table name of the module
      *
-     * @return array Array with the data of the list fields
+     * @return array        Array with the data of the list fields
      */
     public function getFieldsForList($table)
     {
@@ -62,31 +70,34 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $table The table name of the module
      *
-     * @return array Array with the data of the form field
+     * @return array        Array with the data of the form field
      */
     public function getFieldsForForm($table)
     {
-        $formFields = array();
+        if (empty($this->dbFields)) {
+            $formFields = array();
 
-        $where  = "tableName  = '" . $table . "'";
-        $order  = "formPosition";
-        $fields = $this->fetchAll($where);
-        foreach ($fields as $fieldData) {
-            $formFields[$fieldData->tableField] = array(
-                'type'       => $fieldData->formType,
-                'tab'        => $fieldData->formTab,
-                'label'      => $fieldData->formLabel,
-                'tooltip'    => $fieldData->formTooltip,
-                'position'   => $fieldData->formPosition,
-                'columns'    => $fieldData->formColumns,
-                'regexp'     => $fieldData->formRegexp,
-                'range'      => $fieldData->formRange,
-                'value'      => $fieldData->defaultValue,
-                'isInteger'  => $fieldData->isInteger,
-                'isRequired' => $fieldData->isRequired,
-                'isUnique'   => $fieldData->isUnique
-            );
+            $where  = "tableName  = '" . $table . "'";
+            $order  = "formPosition";
+            $fields = $this->fetchAll($where, $order);
+            foreach ($fields as $fieldData) {
+                $formFields[$fieldData->tableField] = array(
+                    'type'       => $fieldData->formType,
+                    'tab'        => $fieldData->formTab,
+                    'label'      => $fieldData->formLabel,
+                    'tooltip'    => $fieldData->formTooltip,
+                    'position'   => $fieldData->formPosition,
+                    'columns'    => $fieldData->formColumns,
+                    'regexp'     => $fieldData->formRegexp,
+                    'range'      => $fieldData->formRange,
+                    'value'      => $fieldData->defaultValue,
+                    'isInteger'  => $fieldData->isInteger,
+                    'isRequired' => $fieldData->isRequired,
+                    'isUnique'   => $fieldData->isUnique
+                );
+            }
+            $this->dbFields = $formFields;
         }
-        return $formFields;
+        return $this->dbFields;
     }
 }

@@ -31,7 +31,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
-    public $_dbManager = '';
+    public $dbManager = '';
 
     /**
      * Initialize new object
@@ -41,10 +41,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function __construct($config)
     {
         parent::__construct($config);
-
-        $dbManager = new Phprojekt_DatabaseManager($config);
-
-        $this->_dbManager = $dbManager;
+        $dbManager       = new Phprojekt_DatabaseManager($config);
+        $this->dbManager = $dbManager;
     }
 
     /**
@@ -52,11 +50,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $table The name of the module table
      *
-     * @return array Array with the data of the fields for make the list
+     * @return array        Array with the data of the fields for make the list
      */
-    public function getFieldsForList($table)
+    public function getFieldsForList()
     {
-        return $this->_dbManager->getFieldsForList($table);
+        return $this->dbManager->getFieldsForList($this->_name);
     }
 
     /**
@@ -64,10 +62,60 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $table The name of the module table
      *
-     * @return array Array with the data of the fields for make the form
+     * @return array        Array with the data of the fields for make the form
      */
-    public function getFieldsForForm($table)
+    public function getFieldsForForm()
     {
-        return $this->_dbManager->getFieldsForForm($table);
+        return $this->dbManager->getFieldsForForm($this->_name);
+    }
+
+    /**
+     * Assign a value to a var using some validations
+     *
+     * @param string $varname Name of the var to assign
+     * @param mixed  $value   Value for assign to the var
+     *
+     * @return void
+     */
+    public function __set($varname, $value)
+    {
+        /* First look if exists a validateField function */
+        $validatter = 'validate' . ucfirst($varname);
+        if (in_array($validatter, get_class_methods(get_class($this)))) {
+            $value = call_user_method($validatter, $this, $value);
+        } else {
+            /* Validate with the database_manager stuff */
+            $fields = $this->dbManager->getFieldsForForm($this->_name);
+            if (isset($fields[$varname])) {
+                $validations = $fields[$varname];
+
+                /* Integer */
+                if ($validations['isInteger']) {
+                    $value = intval($value);
+                }
+
+                /* Is Required */
+                if ($validations['isRequired']) {
+                    if (empty($value)) {
+                        //throw new Phprojekt_Validation_Exeption('Falta el campo')
+                        $value = $validations['value'];
+                    }
+                }
+            }
+        }
+        parent::__set($varname, $value);
+    }
+
+    /**
+     * Get a value of a var using some validations
+     *
+     * @param string $varname Name of the var to assign
+     *
+     * @return mixed
+     */
+    public function __get($varname)
+    {
+        $var = parent::__get($varname);
+        return $var;
     }
 }

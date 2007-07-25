@@ -30,8 +30,8 @@ class Phprojekt_Language extends Zend_Translate
      * Create a new language object
      *
      * @param string $adapter Wich adaptor will you use
-     * @param string $options   The filename of the lang gile
-     * @param string $locale     Wich locale want to load
+     * @param string $options The filename of the lang gile
+     * @param string $locale  Wich locale want to load
      */
     public function __construct($adapter, $options, $locale = null)
     {
@@ -42,7 +42,7 @@ class Phprojekt_Language extends Zend_Translate
      * Translate the given string
      *
      * @param string $messageId Original to translate
-     * @param string $locale          Locale/language to translate to
+     * @param string $locale    Locale/language to translate to
      *
      * @return string
      */
@@ -56,7 +56,7 @@ class Phprojekt_Language extends Zend_Translate
      * Translate the given string
      *
      * @param string $messageId Original to translate
-     * @param string $locale          Locale/language to translate to
+     * @param string $locale    Locale/language to translate to
      *
      * @return string
      */

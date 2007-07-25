@@ -88,15 +88,14 @@ class IndexController extends Zend_Controller_Action
     public function init()
     {
         /* Get the smarty object */
-        $this->_smarty                 = Zend_Registry::get('view');
-
-        $this->oModels                 = $this->getModelsObject();
+        $this->_smarty = Zend_Registry::get('view');
+        $this->oModels = $this->getModelsObject();
 
         /* Stuff for list View */
-        $this->data['listData']     = $this->oModels->getListData();
+        $this->data['listData'] = $this->oModels->getListData();
 
         /* Stuff for form View */
-        $this->data['formData']  = $this->oModels->getFormData();
+        $this->data['formData'] = $this->oModels->getFormData();
     }
 
     /**
@@ -106,7 +105,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->msg = '&nbsp;';
+        $this->msg     = '&nbsp;';
         $this->buttons =  $this->oModels->getButtonsForm('display');
         $this->generateOutput();
     }
@@ -128,11 +127,12 @@ class IndexController extends Zend_Controller_Action
      */
     public function setListView()
     {
-        $this->_listViewSeted = true;
-        $oListView = new Default_Helpers_ListView($this);
+        $this->_listViewSeted   = true;
+        $oListView              = new Default_Helpers_ListView($this);
         $this->data['listData'] = $this->oModels->getListData();
-        $this->titles = $oListView->getTitles($this->data['listData']);
-        $this->lines  = $oListView->getItems($this->data['listData']);
+
+        $this->titles   = $oListView->getTitles($this->data['listData']);
+        $this->lines    = $oListView->getItems($this->data['listData']);
         $this->listView = $this->_render('list');
     }
 
@@ -146,12 +146,12 @@ class IndexController extends Zend_Controller_Action
     public function setFormView($id = 0)
     {
         $this->formViewSeted = true;
-        $oFormView                  = new Default_Helpers_FormView($this);
-        $this->columns              = $this->formColumns;
+        $oFormView           = new Default_Helpers_FormView($this);
+        $this->columns       = $this->formColumns;
         if ($id == 0) {
             $this->data['formData'] = $this->oModels->getFormData($id);
         }
-        $this->fields       = $oFormView->getFields($this->data['formData']);
+        $this->fields   = $oFormView->getFields($this->data['formData']);
         $this->formView = $this->_render('form');
     }
 
@@ -169,26 +169,26 @@ class IndexController extends Zend_Controller_Action
      * If the Action not exists, call indexAction
      *
      * @param string $method Action method
-     * @param array  $args      Arguments for the Action
+     * @param array  $args   Arguments for the Action
      *
      * @return Zend_Exception
      */
     public function __call($method, $args)
     {
         if ('Action' == substr($method, -6)) {
-            // If the action method was not found,
-            // forward to the index action
+            /* If the action method was not found,
+               forward to the index action */
             return $this->_forward('index');
         }
-        // all other methods throw an exception
+        /* all other methods throw an exception */
         throw new Exception('Invalid method "' . $method . '" called');
     }
 
     /**
      * Set a value into the smarty object for render it
      *
-     * @param string $name Name of the value for render
-     * @param mix $value     Value for the var
+     * @param string $name  Name of the value for render
+     * @param mix    $value Value for the var
      * @return void
      */
     public function __set($name,$value)
@@ -217,7 +217,7 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render a template
      *
-     * @param string $template  Which var of the index.tpl
+     * @param string $template Which var of the index.tpl
      *
      * @return void
      */

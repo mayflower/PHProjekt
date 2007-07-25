@@ -37,23 +37,23 @@ class Default_Helpers_FormView
     private $_translator = '';
 
     /**
-     * ActionController Object
+     * Controller Object
      *
      * @var Zend_Controller_Action object
      */
-    public $actionController = '';
+    public $controller = '';
 
     /**
      * Constructor
      *
-     * @param Zend_Controller_Action $actionController The action controller
+     * @param Zend_Controller_Action $controller The action controller
      *
      */
-    public function __construct($actionController)
+    public function __construct($controller)
     {
-        $translate                     = Zend_Registry::get('translate');
-        $this->_translator        = $translate;
-        $this->actionController = $actionController;
+        $translate              = Zend_Registry::get('translate');
+        $this->_translator      = $translate;
+        $this->controller = $controller;
     }
 
     /**
@@ -66,15 +66,16 @@ class Default_Helpers_FormView
     {
         $fields = array();
 
-        foreach ($this->actionController->data['formData'] as $field => $fieldData) {
-            $fields[] = array('description' => $this->_translator->translate($fieldData['label']),
-                              'field'       => $this->getFormOutput($field, $fieldData));
+        foreach ($this->controller->data['formData'] as $field => $fieldData) {
+            $fields[] = array(
+            'description' => $this->_translator->translate($fieldData['label']),
+            'field'       => $this->getFormOutput($field, $fieldData));
         }
 
         $countFields = count($fields);
-        $modFields   = $countFields % $this->actionController->formColumns;
+        $modFields   = $countFields % $this->controller->formColumns;
         if ($modFields != 0) {
-            for ($index = $modFields; $index < $this->actionController->formColumns; $index++) {
+            for ($index = $modFields; $index < $this->controller->formColumns; $index++) {
                 $fields[] = '&nbsp';
             }
         }
@@ -85,10 +86,10 @@ class Default_Helpers_FormView
     /**
      * Make a input form deppend on the type of the field
      *
-     * @param string $field        The name of the field
-     * @param array $fieldData Array with data of the field
+     * @param string $field     The name of the field
+     * @param array  $fieldData Array with data of the field
      *
-     * @return string                    The HTML output for the field
+     * @return string           The HTML output for the field
      */
     public function getFormOutput($field, $fieldData)
     {
@@ -128,11 +129,10 @@ class Default_Helpers_FormView
       */
     public function cancelAction()
     {
-        $this->actionController->msg = '&nbsp;';
-        $this->actionController->setFormView();
-        $this->actionController->generateOutput();
-
-        $this->actionController->render('index');
+        $this->controller->msg = '&nbsp;';
+        $this->controller->setFormView();
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 
     /**
@@ -160,16 +160,20 @@ class Default_Helpers_FormView
      */
     public function deleteAction()
     {
-        $request = $this->actionController->getRequest()->getParams();
+        $request = $this->controller->getRequest()->getParams();
         if (!isset($request['id'])) {
             $this->displayAction();
         } else {
-            $this->actionController->oModels->deleteData($this->actionController->getRequest()->getParams());
-            $this->actionController->msg             = $this->_translator->_('Deleted');
-            $this->actionController->buttons       =  $this->actionController->oModels->getButtonsForm('display');
-            $this->actionController->generateOutput();
+            $params  = $this->controller->getRequest()->getParams();
+            $buttons = $this->Controller->oModels->getButtonsForm('display');
+            $message = $this->_translator->translate('Deleted');
 
-            $this->actionController->render('index');
+            $this->controller->oModels->deleteData($params);
+
+            $this->controller->msg     = $message;
+            $this->controller->buttons = $buttons;
+            $this->controller->generateOutput();
+            $this->controller->render('index');
         }
     }
 
@@ -180,11 +184,14 @@ class Default_Helpers_FormView
      */
     public function displayAction()
     {
-        $this->actionController->formAction =  $this->actionController->oModels->getActionForm('display');
-        $this->actionController->buttons       =  $this->actionController->oModels->getButtonsForm('display');
-        $this->actionController->generateOutput();
+        $action  = $this->controller->oModels->getActionForm('display');
+        $buttons = $this->controller->oModels->getButtonsForm('display');
 
-        $this->actionController->render('index');
+        $this->controller->formAction = $action;
+        $this->controller->buttons    = $buttons;
+
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 
     /**
@@ -194,18 +201,21 @@ class Default_Helpers_FormView
      */
     public function editAction()
     {
-        $request = $this->actionController->getRequest()->getParams();
+        $request = $this->controller->getRequest()->getParams();
         if (!isset($request['id'])) {
             $this->displayAction();
         } else {
-            $id = intval($request['id']);
+            $id       = intval($request['id']);
+            $formData = $this->controller->oModels->getFormData($id);
+            $action   = $this->controller->oModels->getActionForm('edit', $id);
+            $buttons  = $this->controller->oModels->getButtonsForm('edit', $id);
 
-            $this->actionController->data['formData'] = $this->actionController->oModels->getFormData($id);
-            $this->actionController->formAction            =  $this->actionController->oModels->getActionForm('edit', $id);
-            $this->actionController->buttons                  =  $this->actionController->oModels->getButtonsForm('edit', $id);
-            $this->actionController->generateOutput($id);
+            $this->controller->data['formData'] = $formData;
+            $this->controller->formAction       = $action;
+            $this->controller->buttons          = $buttons;
 
-            $this->actionController->render('index');
+            $this->controller->generateOutput($id);
+            $this->controller->render('index');
         }
     }
 
@@ -216,13 +226,17 @@ class Default_Helpers_FormView
      */
     public function saveAction()
     {
-        $this->actionController->oModels->saveData($this->actionController->getRequest()->getParams());
+        $params  = $this->controller->getRequest()->getParams();
+        $message = $this->_translator->translate('Saved');
+        $buttons = $this->controller->oModels->getButtonsForm('display');
+        //$this->controller->errors = 'error!';
 
-        //$this->actionController->errors = 'error!';
-        $this->actionController->msg       = $this->_translator->_('Saved');
-        $this->actionController->buttons =  $this->actionController->oModels->getButtonsForm('display');
-        $this->actionController->generateOutput();
+        $this->controller->oModels->saveData($params);
 
-        $this->actionController->render('index');
+        $this->controller->msg     = $message;
+        $this->controller->buttons = $buttons;
+
+        $this->controller->generateOutput();
+        $this->controller->render('index');
     }
 }

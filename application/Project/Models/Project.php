@@ -57,7 +57,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      *
      * @param integer $id Optional, for edit the row
      *
-     * @return array          Array with the fields for render
+     * @return array      Array with the fields for render
      */
     public function getFormData($id = 0)
     {
@@ -66,7 +66,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         if ($id > 0) {
             $this->find($id);
             foreach ($formData as $fieldName => $fieldData) {
-                $tmpData[$fieldName]               = $fieldData;
+                $tmpData[$fieldName]          = $fieldData;
                 $tmpData[$fieldName]['value'] = $this->$fieldName;
             }
             $formData = $tmpData;
@@ -88,7 +88,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $id = intval($request['id']);
             $this->find($id);
         }
-        foreach($request as $k => $v) {
+        foreach ($request as $k => $v) {
             if (array_key_exists($k, $this->_data)) {
                 $this->$k = $v;
             }
@@ -100,10 +100,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     /**
      * Get the action for make the form
      *
-     * @param string $action Define wich action are showing
-     * @param integer $id     The  id of the edited item
+     * @param string  $action Define wich action are showing
+     * @param integer $id     The id of the edited item
      *
-     * @return string             The action url
+     * @return string         The action url
      */
     public function getActionForm($action, $id = '')
     {
@@ -111,40 +111,40 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             default:
             case 'display':
                 return PHPR_ROOT_WEB_PATH
-                    . 'project/'
-                    . 'form/'
-                    . 'save';
-                break;
+                . 'project/'
+                . 'form/'
+                . 'save';
+            break;
             case 'edit':
                 return PHPR_ROOT_WEB_PATH
-                    . 'project/'
-                    . 'form/'
-                    . 'save/'
-                    . 'id/'
-                    . $id;
-            break;
+                . 'project/'
+                . 'form/'
+                . 'save/'
+                . 'id/'
+                . $id;
+                break;
         }
     }
 
     /**
      * Get the buttons deppend on the action
      *
-     * @param string $action  Define wich action are showing
+     * @param string  $action  Define wich action are showing
      * @param integer $id      The  id of the edited item
      *
-     * @return string              <a href="">
+     * @return string          <a href="">
      */
     public function getButtonsForm($action, $id = '')
     {
         $translate = Zend_Registry::get('translate');
 
         $add = '<a href="'
-            .  PHPR_ROOT_WEB_PATH
+            .  constant("PHPR_ROOT_WEB_PATH")
             . 'project/'
             . 'form'
             .  '">'. $translate->_("Add") . '</a>';
         $edit = '<a href="'
-            .  PHPR_ROOT_WEB_PATH
+            .  constant("PHPR_ROOT_WEB_PATH")
             . 'project/'
             . 'form/'
             . 'delete/'
