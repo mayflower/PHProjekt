@@ -87,38 +87,10 @@ class Default_Helpers_ListView
      */
     public function getItems()
     {
-        $data  = $this->controller->data['listData'];
-        $items = array();
+        $data  = (array) $this->controller->data['listData'];
 
-        if (empty($data)) {
-            return $items;
-        }
-
-        $editLink = PHPR_ROOT_WEB_PATH
-            . $this->controller->getRequest()->getModuleName() . '/'
-            . 'form/'
-            . 'edit/'
-            . 'id/';
-        foreach ($data as $key => $itemData) {
-            if ($key > 0) { // Ommit the titles
-                $items[$key] = array();
-                $first       = 1;
-                foreach ($itemData as $field) {
-                    if (empty($field)) {
-                        $field = "&nbsp;";
-                    }
-                    if ($first) {
-                        $items[$key][] = '<a href="'
-                            . $editLink . $key
-                            . '">' . $field . '</a>';
-                        $first = 0;
-                    } else {
-                        $items[$key][] = $field;
-                    }
-                }
-            }
-        }
-        return $items;
+        array_shift($data);
+        return $data;
     }
 
     /**
@@ -129,7 +101,7 @@ class Default_Helpers_ListView
     public function addFilterAction()
     {
         $this->controller->setListView();
-        $this->controller->msg = 'Filter Added';
+        $this->controller->message = 'Filter Added';
         $this->controller->generateOutput();
         $this->controller->render('index');
     }
@@ -170,7 +142,7 @@ class Default_Helpers_ListView
     public function listAction()
     {
         $this->controller->setListView();
-        $this->controller->msg = '&nbsp;';
+        $this->controller->message = '&nbsp;';
         $this->controller->generateOutput();
         $this->controller->render('index');
     }
@@ -183,7 +155,7 @@ class Default_Helpers_ListView
     public function removeFilterAction()
     {
         $this->controller->setListView();
-        $this->controller->msg = 'Filter Removed';
+        $this->controller->message = 'Filter Removed';
         $this->controller->generateOutput();
         $this->controller->render('index');
     }
@@ -196,7 +168,7 @@ class Default_Helpers_ListView
     public function sortAction()
     {
         $this->controller->setListView();
-        $this->controller->msg = '&nbsp;';
+        $this->controller->message = '&nbsp;';
         $this->controller->generateOutput();
         $this->controller->render('index');
     }

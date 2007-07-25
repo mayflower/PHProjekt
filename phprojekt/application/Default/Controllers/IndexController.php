@@ -87,7 +87,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-        $this->_smarty = Zend_Registry::get('view');
+        $this->_smarty             = Zend_Registry::get('view');
+        $this->_smarty->module     = $this->getRequest()->getModuleName();
+        $this->_smarty->controller = $this->getRequest()->getControllerName();
+        $this->_smarty->action     = $this->getRequest()->getActionName();
+
         $this->oModels = $this->getModelsObject();
 
         $this->data['listData'] = $this->oModels->getListData();
@@ -102,7 +106,6 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->msg     = '&nbsp;';
-        $this->buttons =  $this->oModels->getButtonsForm('display');
         $this->generateOutput();
     }
 
@@ -243,6 +246,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function generateOutput($id = 0)
     {
+        $this->view->currentId = $this->getRequest()->getParam('id');
+
         if (!$this->treeViewSeted) {
             $this->setTreeView($this->_render('tree'));
         }
