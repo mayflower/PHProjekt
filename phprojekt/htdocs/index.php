@@ -36,7 +36,7 @@ Zend_Registry::set('config', $config);
 define('PHPR_ROOT_WEB_PATH',$config->webpath . 'index.php/');
 
 /* Make the connection to the DB*/
-require_once 'Zend/Db.php';
+// require_once 'Zend/Db.php';
 $db = Zend_Db::factory($config->database->type, array(
     'host'     => $config->database->host,
     'username' => $config->database->username,
@@ -83,18 +83,21 @@ Zend_Registry::set('translate', $oTranslate);
 
 /* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();
+$front->setDispatcher(new Phprojekt_Dispatcher());
 
 $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
+$front->setDefaultModule('Default');
 
 foreach (scandir(PHPR_CORE_PATH) as $module)
 {
-    $front->addControllerDirectory(PHPR_CORE_PATH
-                                 . DIRECTORY_SEPARATOR
-                                 . $module
-                                 . DIRECTORY_SEPARATOR
-                                 . 'Controllers', strtolower($module));
+    $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
+
+    if (is_dir($dir) && is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
+        $front->addModuleDirectory($dir);
+    }
 }
 
+$front->setModuleControllerDirectoryName('Controllers');
 $front->addModuleDirectory(PHPR_CORE_PATH);
 // $front->setParam('useDefaultControllerAlways', true);
 
