@@ -26,6 +26,11 @@
  */
 class ErrorController extends Zend_Controller_Action
 {
+    /**
+     * Default error action
+     *
+     * @return void
+     */
     public function errorAction()
     {
         $config = Zend_Registry::get('config');
