@@ -93,6 +93,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public function toString()
     {
-        return "Phproject";
+        return "Phprojekt";
     }
 }

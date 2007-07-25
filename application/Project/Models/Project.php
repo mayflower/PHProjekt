@@ -41,8 +41,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
                 if (!isset($listData[$row->id])) {
                     $listData[$row->id] = array();
                 }
-                if (in_array($fieldName, $listFields)) {
-                    array_push($listData[$row->id], $row->$fieldName);
+                 if (in_array($fieldName, $listFields)) {
+                    $listData[$row->id][$fieldName] = $row->$fieldName;
                 }
             }
         }
@@ -85,84 +85,16 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function saveData($request)
     {
         if (isset($request['id'])) {
-            $id = intval($request['id']);
+            $id = (int) $request['id'];
             $this->find($id);
         }
         foreach ($request as $k => $v) {
-            if (array_key_exists($k, $this->_data)) {
+            if ($this->keyExists($k)) {
                 $this->$k = $v;
             }
         }
 
         $this->save();
-    }
-
-    /**
-     * Get the action for make the form
-     *
-     * @param string  $action Define wich action are showing
-     * @param integer $id     The id of the edited item
-     *
-     * @return string         The action url
-     */
-    public function getActionForm($action, $id = '')
-    {
-        switch ($action) {
-        default:
-        case 'display':
-                return PHPR_ROOT_WEB_PATH
-                . 'Project/'
-                . 'form/'
-                . 'save';
-            break;
-        case 'edit':
-                return PHPR_ROOT_WEB_PATH
-                . 'Project/'
-                . 'form/'
-                . 'save/'
-                . 'id/'
-                . $id;
-            break;
-        }
-    }
-
-    /**
-     * Get the buttons deppend on the action
-     *
-     * @param string  $action Define wich action are showing
-     * @param integer $id     The  id of the edited item
-     *
-     * @return string         <a href="">
-     */
-    public function getButtonsForm($action, $id = '')
-    {
-        $translate = Zend_Registry::get('translate');
-
-        $add = '<a href="'
-            .  constant("PHPR_ROOT_WEB_PATH")
-            . 'Project/'
-            . 'form'
-            .  '">'. $translate->translate("Add") . '</a>';
-        $edit = '<a href="'
-            .  constant("PHPR_ROOT_WEB_PATH")
-            . 'Project/'
-            . 'form/'
-            . 'delete/'
-            . 'id/'
-            . $id
-            .  '">'. $translate->translate("Delete") . '</a>';
-
-        switch ($action) {
-        default:
-        case 'display':
-                $buttons = $add;
-            break;
-        case 'edit':
-                $buttons = $add . '&nbsp; ' . $edit;
-            break;
-        }
-
-        return $buttons;
     }
 
     /**

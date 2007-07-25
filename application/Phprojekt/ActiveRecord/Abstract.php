@@ -166,6 +166,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
+     * Enter description here...
+     *
+     * @param string $key Name of the key
+     * @return boolean
+     */
+    public function keyExists($key)
+    {
+        return array_key_exists($key, $this->_data);
+    }
+    /**
      * 1) look if we got a method getVarname, if it's there, use it
      * 2) get value for varname from data array
      * 3) throw exception, if neither of them exists

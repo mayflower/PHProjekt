@@ -28,13 +28,6 @@
  */
 class Phprojekt_Loader extends Zend_Loader
 {
-    /**
-     * Identifier for controllers
-     * It's normaly only needed by the internals
-     *
-     * @see _getClass
-     */
-    const CONTROLLER = 'Controllers';
 
     /**
      * Identifier for views
@@ -144,14 +137,8 @@ class Phprojekt_Loader extends Zend_Loader
     {
         $logger = Zend_Registry::get('log');
 
-        if ($ident != self::CONTROLLER) {
-            $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
-            $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
-        } else {
-            $nIdentifier = sprintf("%s_%s", $module, $item);
-            $cIdentifier = sprintf("%s_Customized_%s", $module, $item);
-            $logger->debug("$nIdentifier");
-        }
+        $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
+        $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
 
         try {
             self::loadClass($cIdentifier, self::$_directories);
@@ -184,25 +171,6 @@ class Phprojekt_Loader extends Zend_Loader
     public static function getModel($module, $model)
     {
         return self::_getClass($module, $model, self::MODEL);
-    }
-
-    /**
-     * Load the class of the controllers and return the name of the class.
-     * Always use the returned name to instantiate a class, a customized
-     * class name might be loaded and returned by this method
-     *
-     * @param string $module     Name of the module
-     * @param string $controller Name of the class to be loaded
-     *
-     * @see _getClass
-     *
-     * @throws Zend_Exception If class not found
-     *
-     * @return string
-     */
-    public static function getController($module, $controller)
-    {
-        return self::_getClass($module, $controller, self::CONTROLLER);
     }
 
     /**
@@ -244,16 +212,16 @@ class Phprojekt_Loader extends Zend_Loader
         return self::_newInstance($name, $args);
     }
 
-    /**
-     * Load the class of a view and return an new instance of the class.
-     * Always use the returned name to instantiate a class, a customized
-     * class name might be loaded and returned by this method
-     *
-     * @param string $module Name of the module
-     * @param string $view   Name of the view
-     *
-     * @return Object
-     */
+   /**
+    * Load the class of a view and return an new instance of the class.
+    * Always use the returned name to instantiate a class, a customized
+    * class name might be loaded and returned by this method
+    *
+    * @param string $module Name of the module
+    * @param string $view   Name of the view
+    *
+    * @return Object
+    */
     public static function getViewFactory($module, $view)
     {
         $name = self::getView($module, $view);

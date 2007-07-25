@@ -65,6 +65,14 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         if (null !== $compilePath) {
             $this->templateCompiledDir = $compilePath;
         }
+
+        /**
+         * Register various helper functions
+         */
+        $this->_smarty->register_function('url',
+                array($this, 'urlHelper'));
+        $this->_smarty->register_modifier('translate',
+                array($this, 'translateModifier'));
     }
 
     /**
@@ -122,11 +130,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      */
     protected function _run()
     {
-        /* why 'this'?
-         * to emulate standard zend view functionality
-         * doesn't mess up smarty in any way */
-        $this->_smarty->assign_by_ref('this', $this);
-
         /*
          * smarty needs a template_dir, and can only use templates,
          * found in that directory, so we have to strip it from the filename
@@ -151,7 +154,53 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
                                           'for compiled templates');
         }
 
-        // process the template (and filter the output)
+        $this->setHelperPath(PHPR_LIBRARY_PATH, 'Zend_View_Helper_');
+
+        /* why 'this'?
+         * to emulate standard zend view functionality
+         * doesn't mess up smarty in any way */
+        $this->_smarty->assign_by_ref('view', $this);
+
+        // process the template (an    d filter the output)
         echo $this->_smarty->fetch(basename($file));
+    }
+
+    /**
+     * Enter description here...
+     *
+     * @param unknown_type $array
+     * @param unknown_type $smarty
+     * @return unknown
+     */
+    public function urlHelper($array, &$smarty)
+    {
+        $defaults = array (
+            'module'     => $this->module,
+            'controller' => $this->controller,
+            'action'     => $this->action);
+
+        if (!array_key_exists('defaults', $array)
+         || $array['defaults'] == "true") {
+            $array = array_merge($defaults, $array);
+        }
+
+        if (array_key_exists('defaults', $array)) {
+            unset ($array['defaults']);
+        }
+
+        return $this->url($array, 'default', true);
+    }
+
+    /**
+     * Enter description here...
+     *
+     * @param unknown_type $array
+     * @param unknown_type $smarty
+     */
+    public function translateModifier($string)
+    {
+        $translator = Zend_Registry::get('translate');
+        /* @var $translator Zend_Translate_Adapter */
+        return $translator->translate($string);
     }
 }

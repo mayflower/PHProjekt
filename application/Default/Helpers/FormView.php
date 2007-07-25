@@ -63,14 +63,7 @@ class Default_Helpers_FormView
      */
     public function getFields()
     {
-        $fields = array();
-
-        foreach ($this->controller->data['formData'] as $field => $fieldData) {
-            $fields[] = array(
-            'description' => $this->_translator->translate($fieldData['label']),
-            'field'       => $this->getFormOutput($field, $fieldData));
-        }
-
+        $fields = (array) $this->controller->data['formData'];
         $countFields = count($fields);
         $modFields   = $countFields % $this->controller->formColumns;
         if ($modFields != 0) {
@@ -80,35 +73,6 @@ class Default_Helpers_FormView
         }
 
         return $fields;
-    }
-
-    /**
-     * Make a input form deppend on the type of the field
-     *
-     * @param string $field     The name of the field
-     * @param array  $fieldData Array with data of the field
-     *
-     * @return string           The HTML output for the field
-     */
-    public function getFormOutput($field, $fieldData)
-    {
-        $outout = '';
-        switch ($fieldData['type']) {
-        case 'hidden':
-                $output = '<input type="hidden" '
-                    . 'name="' . $field . '"'
-                    . 'value="' . $fieldData['value'] .'"'
-                    . ' />';
-            break;
-        default:
-                $output = '<input type="text" '
-                      . 'name="' . $field . '"'
-                      . 'value="' . $fieldData['value'] .'"'
-                      . ' />';
-            break;
-        }
-
-        return $output;
     }
 
     /**
@@ -164,13 +128,10 @@ class Default_Helpers_FormView
             $this->displayAction();
         } else {
             $params  = $this->controller->getRequest()->getParams();
-            $buttons = $this->controller->oModels->getButtonsForm('display');
-            $message = $this->_translator->translate('Deleted');
 
             $this->controller->oModels->deleteData($params);
 
-            $this->controller->msg     = $message;
-            $this->controller->buttons = $buttons;
+            $this->controller->message = 'Deleted';
             $this->controller->generateOutput();
             $this->controller->render('index');
         }
@@ -183,12 +144,6 @@ class Default_Helpers_FormView
      */
     public function displayAction()
     {
-        $action  = $this->controller->oModels->getActionForm('display');
-        $buttons = $this->controller->oModels->getButtonsForm('display');
-
-        $this->controller->formAction = $action;
-        $this->controller->buttons    = $buttons;
-
         $this->controller->generateOutput();
         $this->controller->render('index');
     }
@@ -206,13 +161,8 @@ class Default_Helpers_FormView
         } else {
             $id       = intval($request['id']);
             $formData = $this->controller->oModels->getFormData($id);
-            $action   = $this->controller->oModels->getActionForm('edit', $id);
-            $buttons  = $this->controller->oModels->getButtonsForm('edit', $id);
 
             $this->controller->data['formData'] = $formData;
-            $this->controller->formAction       = $action;
-            $this->controller->buttons          = $buttons;
-
             $this->controller->generateOutput($id);
             $this->controller->render('index');
         }
@@ -225,16 +175,11 @@ class Default_Helpers_FormView
      */
     public function saveAction()
     {
-        $params  = $this->controller->getRequest()->getParams();
-        $message = $this->_translator->translate('Saved');
-        $buttons = $this->controller->oModels->getButtonsForm('display');
-        //$this->controller->errors = 'error!';
+        $params = $this->controller->getRequest()->getParams();
 
         $this->controller->oModels->saveData($params);
 
-        $this->controller->msg     = $message;
-        $this->controller->buttons = $buttons;
-
+        $this->controller->message = 'Saved';
         $this->controller->generateOutput();
         $this->controller->render('index');
     }
