@@ -40,9 +40,8 @@ class Project_IndexController extends IndexController
      */
     public function getModelsObject()
     {
-        $db      = Zend_Registry::get('db');
+        $db = Zend_Registry::get('db');
 
-        return Phprojekt_Loader::getModelFactory('Project', 'Project',
-                    array('db' => $db));
+        return Phprojekt_Loader::getModelFactory('Project', 'Project', array('db' => $db));
     }
 }

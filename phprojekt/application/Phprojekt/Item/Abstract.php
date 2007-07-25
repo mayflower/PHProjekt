@@ -31,7 +31,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
-    public $dbManager = '';
+    protected $_dbManager = null;
 
     /**
      * Initialize new object
@@ -41,8 +41,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function __construct($config)
     {
         parent::__construct($config);
-        $dbManager       = new Phprojekt_DatabaseManager($config);
-        $this->dbManager = $dbManager;
+
+        $this->_dbManager = new Phprojekt_DatabaseManager($config);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForList()
     {
-        return $this->dbManager->getFieldsForList($this->_name);
+        return $this->_dbManager->getFieldsForList($this->_name);
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForForm()
     {
-        return $this->dbManager->getFieldsForForm($this->_name);
+        return $this->_dbManager->getFieldsForForm($this->_name);
     }
 
     /**
@@ -81,7 +81,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
             $value = call_user_method($validatter, $this, $value);
         } else {
             /* Validate with the database_manager stuff */
-            $fields = $this->dbManager->getFieldsForForm($this->_name);
+            $fields = $this->_dbManager->getFieldsForForm($this->_name);
             if (isset($fields[$varname])) {
                 $validations = $fields[$varname];
 

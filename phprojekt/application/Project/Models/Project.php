@@ -111,13 +111,13 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         default:
         case 'display':
                 return PHPR_ROOT_WEB_PATH
-                . 'project/'
+                . 'Project/'
                 . 'form/'
                 . 'save';
             break;
         case 'edit':
                 return PHPR_ROOT_WEB_PATH
-                . 'project/'
+                . 'Project/'
                 . 'form/'
                 . 'save/'
                 . 'id/'
@@ -140,12 +140,12 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
 
         $add = '<a href="'
             .  constant("PHPR_ROOT_WEB_PATH")
-            . 'project/'
+            . 'Project/'
             . 'form'
             .  '">'. $translate->translate("Add") . '</a>';
         $edit = '<a href="'
             .  constant("PHPR_ROOT_WEB_PATH")
-            . 'project/'
+            . 'Project/'
             . 'form/'
             . 'delete/'
             . 'id/'

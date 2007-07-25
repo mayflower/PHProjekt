@@ -34,14 +34,25 @@
 class ListController extends IndexController
 {
     /**
+     * List view
+     *
+     * @var Default_Helpers_ListView
+     */
+    protected $_oListView = null;
+
+    public function init()
+    {
+        parent::init();
+        $this->_oListView = new Default_Helpers_ListView($this);
+    }
+    /**
      * Adds a single filter to the current view
      *
      * @return void
      */
     public function addFilterAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->addFilterAction();
+        $this->_oListView->addFilterAction();
     }
 
     /**
@@ -51,8 +62,7 @@ class ListController extends IndexController
      */
     public function componentIndexAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->componentIndexAction();
+        $this->_oListView->componentIndexAction();
     }
 
     /**
@@ -62,8 +72,7 @@ class ListController extends IndexController
      */
     public function componentListAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->componentEditAction();
+        $this->_oListView->componentEditAction();
     }
 
     /**
@@ -73,8 +82,7 @@ class ListController extends IndexController
      */
     public function indexAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->indexAction();
+        $this->_oListView->indexAction();
     }
 
     /**
@@ -84,8 +92,7 @@ class ListController extends IndexController
      */
     public function listAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->listAction();
+        $this->_oListView->listAction();
     }
 
     /**
@@ -95,8 +102,7 @@ class ListController extends IndexController
      */
     public function removeFilterAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->removeFilterAction();
+        $this->_oListView->removeFilterAction();
     }
 
     /**
@@ -106,7 +112,6 @@ class ListController extends IndexController
      */
     public function sortAction()
     {
-        $oListView = new Default_Helpers_ListView($this);
-        $oListView->sortFilterAction();
+        $this->_oListView->sortFilterAction();
     }
 }
