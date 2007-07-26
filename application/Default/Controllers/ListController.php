@@ -37,9 +37,15 @@ class ListController extends IndexController
      * List view
      *
      * @var Default_Helpers_ListView
+     * 
      */
     protected $_oListView = null;
 
+    /**
+     * Initializes helpers for list view
+     *
+     * @return void
+     */
     public function init()
     {
         parent::init();

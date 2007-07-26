@@ -33,89 +33,89 @@
  */
 class Project_ListController extends Project_IndexController
 {
-    /**
+	/**
      * Enter description here...
      *
      * @var unknown_type
      */
-    protected $_oListView = null;
+	protected $_oListView = null;
 
-   /**
+	/**
      * Initialize
      */
-    public function init ()
-    {
-        parent::init();
-        $this->_oListView = new Default_Helpers_ListView($this);
-    }
+	public function init ()
+	{
+		parent::init();
+		$this->_oListView = new Default_Helpers_ListView($this);
+	}
 
-    /**
+	/**
      * Adds a single filter to the current view
      *
      * @return void
      */
-    public function addFilterAction()
-    {
-        $this->_oListView->addFilterAction();
-    }
+	public function addFilterAction()
+	{
+		$this->_oListView->addFilterAction();
+	}
 
-    /**
+	/**
      * Delivers the inner part of the IndexAction using ajax
      *
      * @return void
      */
-    public function componentIndexAction()
-    {
-        $this->_oListView->componentIndexAction();
-    }
+	public function componentIndexAction()
+	{
+		$this->_oListView->componentIndexAction();
+	}
 
-    /**
+	/**
      * Delivers the inner part of the Listaction using ajax
      *
      * @return void
      */
-    public function componentListAction()
-    {
-        $this->_oListView->componentEditAction();
-    }
+	public function componentListAction()
+	{
+		$this->_oListView->componentEditAction();
+	}
 
-    /**
+	/**
      * Default action
      *
      * @return void
      */
-    public function indexAction()
-    {
-        $this->_oListView->indexAction();
-    }
+	public function indexAction()
+	{
+		$this->_oListView->indexAction();
+	}
 
-    /**
+	/**
      * List all the data
      *
      * @return void
      */
-    public function listAction()
-    {
-        $this->_oListView->listAction();
-    }
+	public function listAction()
+	{
+		$this->_oListView->listAction();
+	}
 
-    /**
+	/**
      * Remove a filter
      *
      * @return void
      */
-    public function removeFilterAction()
-    {
-        $this->_oListView->removeFilterAction();
-    }
+	public function removeFilterAction()
+	{
+		$this->_oListView->removeFilterAction();
+	}
 
-    /**
+	/**
      * Sort the list view
      *
      * @return void
      */
-    public function sortAction()
-    {
-        $this->_oListView->sortFilterAction();
-    }
+	public function sortAction()
+	{
+		$this->_oListView->sortFilterAction();
+	}
 }

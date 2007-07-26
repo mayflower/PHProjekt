@@ -42,6 +42,8 @@ class FormController extends IndexController
 
     /**
      * Initialize
+     *
+     * @return void
      */
     public function init ()
     {
