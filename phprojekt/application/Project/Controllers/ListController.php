@@ -44,7 +44,6 @@ class Project_ListController extends Project_IndexController
      * Initializes helpers for list view
      *
      * @return void
-     *
      */
     public function init ()
     {
