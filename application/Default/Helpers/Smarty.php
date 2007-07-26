@@ -168,8 +168,8 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     /**
      * Enter description here...
      *
-     * @param array $array
-     * @param object $smarty
+     * @param array  $array Helper array for building urls
+     * @param object &$smarty
      * 
      * @return array
      */
@@ -195,8 +195,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     /**
      * Enter description here...
      *
-     * @param array $array
-     * @param object $smarty
+     * @param string $string input text to be translated
      * 
      * @return array
      */
