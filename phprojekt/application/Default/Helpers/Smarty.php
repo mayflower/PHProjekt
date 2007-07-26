@@ -166,14 +166,13 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     }
 
     /**
-     * Enter description here...
+     * This helper make the links in the template
      *
-     * @param array  $array Helper array for building urls
-     * @param object &$smarty
-     * 
+     * @param array $array Helper array for building urls
+     *
      * @return array
      */
-    public function urlHelper($array, &$smarty)
+    public function urlHelper($array)
     {
         $defaults = array (
         'module'     => $this->module,
@@ -193,10 +192,10 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     }
 
     /**
-     * Enter description here...
+     * Translate all the string with " |translate"
      *
-     * @param string $string input text to be translated
-     * 
+     * @param string $string Input text to be translated
+     *
      * @return array
      */
     public function translateModifier($string)
