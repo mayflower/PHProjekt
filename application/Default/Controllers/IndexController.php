@@ -150,6 +150,18 @@ class IndexController extends Zend_Controller_Action
         if ($id == 0) {
             $this->data['formData'] = $this->oModels->getFormData($id);
         }
+
+        /* Asign post values */
+        $params = $this->getRequest()->getParams();
+        $formData = $this->data['formData'];
+        $tmp = $formData;
+        foreach ($formData as $fieldName => $value) {
+            if (isset($params[$fieldName])) {
+                $tmp[$fieldName]['value'] = $params[$fieldName];
+            }
+        }
+        $this->data['formData'] = $tmp;
+
         $this->fields   = $oFormView->getFields($this->data['formData']);
         $this->formView = $this->_render('form');
     }

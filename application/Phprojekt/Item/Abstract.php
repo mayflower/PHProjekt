@@ -92,8 +92,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
                 if ($validations['isRequired']) {
                     if (empty($value)) {
-                        $value = $validations['defaultValue'];
-                        //throw new Phprojekt_Validation_Exeption('Falta el campo')
+                        throw new Phprojekt_Item_Exception('The fields marked'
+                                  . ' with * are required');
                     }
                 }
             }

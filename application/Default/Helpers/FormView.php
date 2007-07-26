@@ -151,8 +151,8 @@ class Default_Helpers_FormView
 
     /**
      * Displays the edit screen for the current item
-      *
-      * @return void
+     *
+     * @return void
      */
     public function editAction()
     {
@@ -171,16 +171,20 @@ class Default_Helpers_FormView
 
     /**
      * Saves the current item
-      *
-      * @return void
+     *
+     * @return void
      */
     public function saveAction()
     {
         $params = $this->controller->getRequest()->getParams();
 
-        $this->controller->oModels->saveData($params);
+        try {
+            $this->controller->oModels->saveData($params);
+            $this->controller->message = 'Saved';
+        } catch (Phprojekt_Item_Exception $error) {
+            $this->controller->errors = $error->getMessage();
+        }
 
-        $this->controller->message = 'Saved';
         $this->controller->generateOutput();
         $this->controller->render('index');
     }
