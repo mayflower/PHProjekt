@@ -69,10 +69,10 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         /**
          * Register various helper functions
          */
-        $this->_smarty->register_function('url',
-        array($this, 'urlHelper'));
+        $this->_smarty->register_function('url', array($this, 'urlHelper'));
+        $this->_smarty->register_function('link_to', array($this, 'urlHelper'));
         $this->_smarty->register_modifier('translate',
-        array($this, 'translateModifier'));
+                                         array($this, 'translateModifier'));
     }
 
     /**
