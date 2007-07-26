@@ -166,16 +166,17 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Enter description here...
+     * Checks if a key exists in the system
      *
      * @param string $key Name of the key
-     * 
+     *
      * @return boolean
      */
     public function keyExists($key)
     {
         return array_key_exists($key, $this->_data);
     }
+
     /**
      * 1) look if we got a method getVarname, if it's there, use it
      * 2) get value for varname from data array
@@ -343,7 +344,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Enter description here...
+     * Receive a belongsTo relation
      *
      * @param string $key The name of the belongsTo relation
      *
@@ -380,7 +381,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Enter description here...
+     * Receive a hasMany relation
      *
      * @param string $key The name of the hasMany relation
      *
@@ -451,7 +452,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Enter description here...
+     * Update an hasMany relation
      *
      * @param integer $oldId The old primary id of the record
      * @param integer $newId The new primary id of the record
@@ -490,7 +491,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
 
     /**
-     * Enter description here...
+     * Update an has many and belongs to many relation
      *
      * @param integer $oldId The old primary id of the record
      * @param integer $newId The new primary id of the record
