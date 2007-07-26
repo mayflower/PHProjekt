@@ -29,11 +29,10 @@ class Phprojekt_Language extends Zend_Translate
     /**
      * Generates the adapter
      *
-     * @param string|Zend_Locale $locale  Locale/Language to set,
-     *                                    identical with Locale identifiers
-     *                                    see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set,
+     *                                   identical with Locale identifiers
+     *                                   see Zend_Locale for more information
      *
-     * @throws Zend_Translate_Exception
      */
     public function __construct($locale)
     {

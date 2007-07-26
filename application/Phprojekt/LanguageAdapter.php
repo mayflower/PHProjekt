@@ -35,7 +35,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *                                    see Zend_Locale for more information
      * @param string|array       $options Options for the adaptor
      *
-     * @throws Zend_Translate_Exception
      */
     public function __construct($data, $locale = null, array $options = array())
     {
