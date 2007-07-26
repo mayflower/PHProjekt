@@ -43,12 +43,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($config);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($config);
+        $this->_dbManager->getFields($this->_name);
     }
 
     /**
      * Get the field for list view from the databae_manager
      *
-     * @return array        Array with the data of the fields for make the list
+     * @return array Array with the data of the fields for make the list
      */
     public function getFieldsForList()
     {
@@ -58,7 +59,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     /**
      * Get the field for the form view from the databae_manager
      *
-     * @return array        Array with the data of the fields for make the form
+     * @return array Array with the data of the fields for make the form
      */
     public function getFieldsForForm()
     {
@@ -85,16 +86,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
             if (isset($fields[$varname])) {
                 $validations = $fields[$varname];
 
-                /* Integer */
                 if ($validations['isInteger']) {
                     $value = intval($value);
                 }
 
-                /* Is Required */
                 if ($validations['isRequired']) {
                     if (empty($value)) {
+                        $value = $validations['defaultValue'];
                         //throw new Phprojekt_Validation_Exeption('Falta el campo')
-                        $value = $validations['value'];
                     }
                 }
             }

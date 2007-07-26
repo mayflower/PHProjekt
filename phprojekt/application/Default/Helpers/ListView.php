@@ -62,11 +62,12 @@ class Default_Helpers_ListView
     /**
      * Return an array with the translated titles
      *
+     * @param array $data The array with data of each field
+     *
      * @return array The titles translated
      */
-    public function getTitles()
+    public function getTitles($data)
     {
-        $data = $this->controller->data['listData'];
         $titles = array();
 
         if (empty($data)) {
@@ -74,7 +75,7 @@ class Default_Helpers_ListView
         }
 
         foreach ($data[0] as $titleData) {
-            $titles[] = $this->_translator->translate($titleData);
+            $titles[] = $this->_translator->translate($titleData['formLabel']);
         }
 
         return $titles;
@@ -83,13 +84,18 @@ class Default_Helpers_ListView
     /**
      * Return an array with all the items
      *
+     * @param array $data The array with data of each field
+     *
      * @return array An array with all the rows
      */
-    public function getItems()
+    public function getItems(array $data)
     {
-        $data  = (array) $this->controller->data['listData'];
+        foreach ($data as $id => $fieldData) {
+            if ($id > 0) {
+                $tmp[$id] = $fieldData;
+            }
+        }
 
-        array_shift($data);
         return $data;
     }
 

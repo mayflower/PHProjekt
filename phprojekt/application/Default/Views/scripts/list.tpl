@@ -4,11 +4,11 @@
     <th>{$showName}</th>
 {/foreach}
 </tr>
-{foreach name=lines item=line from=$lines}
+{foreach name=lines item=line key=key from=$lines}
 <tr>
     {foreach item=field from=$line}
     <td>
-     <a href="{url action="edit" controller="form" module=$module id=`$line.id`}">{$field}</a>
+     <a href="{url action="edit" controller="form" module=$module id=`$key`}">{$field.value}</a>
     </td>
     {/foreach}
 </tr>
