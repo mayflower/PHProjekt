@@ -34,7 +34,7 @@ class Phprojekt_LoaderTest extends PHPUnit_Extensions_ExceptionTestCase
         $this->sharedFixture = Zend_Db::factory('PDO_MYSQL', array(
                                           'username' => 'phprojekt',
                                           'password' => 'phprojekt',
-                                          'dbname'   => 'phprojekt-mvc-test',
+                                          'dbname'   => 'phprojekt-mvc',
                                           'host'     => 'localhost'));
     }
 
