@@ -36,6 +36,10 @@
        background-color: white;
      }
 
+     .error {
+        color: red;
+        margin-left: 2px;
+     }
 {/literal}
    </style>
  </head>

@@ -7,12 +7,16 @@
 {else}
     <form method="post" action="{url action='save' id=$currentId}">
 {/if}
-    {$errors}
+    <span class="error">{$errors}</span><br />
     <table width="100%" align="center">
     {foreach name=fields item=field from=$fields}
     <tr>
         <td>{$field.formLabel|translate}</td>
-        <td>{$view->formText("`$field.formLabel`", "`$field.value`")}</td>
+        <td>{$view->formText("`$field.formLabel`", "`$field.value`")}
+        {if $field.isRequired}
+        <span class="error">*</span>
+        {/if}
+        </td>
     <tr>
     {/foreach}
     </table>
