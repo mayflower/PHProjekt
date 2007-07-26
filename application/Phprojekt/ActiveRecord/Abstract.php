@@ -169,6 +169,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Enter description here...
      *
      * @param string $key Name of the key
+     * 
      * @return boolean
      */
     public function keyExists($key)
