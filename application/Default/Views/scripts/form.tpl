@@ -11,8 +11,8 @@
     <table width="100%" align="center">
     {foreach name=fields item=field from=$fields}
     <tr>
-        <td>{$field.label|translate}</td>
-        <td>{$view->formText("`$field.label`", "`$field.value`")}</td>
+        <td>{$field.formLabel|translate}</td>
+        <td>{$view->formText("`$field.formLabel`", "`$field.value`")}</td>
     <tr>
     {/foreach}
     </table>

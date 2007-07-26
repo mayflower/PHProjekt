@@ -37,12 +37,13 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $listData   = array('0' => $listFields);
 
         foreach ($this->fetchAll() as $row) {
-            foreach ($listFields as $fieldName) {
+            foreach ($listFields as $fieldName => $fieldData) {
                 if (!isset($listData[$row->id])) {
                     $listData[$row->id] = array();
                 }
-                if (in_array($fieldName, $listFields)) {
-                    $listData[$row->id][$fieldName] = $row->$fieldName;
+                if (in_array($fieldName, array_keys($listFields))) {
+                    $fieldData['value']             = $row->$fieldName;
+                    $listData[$row->id][$fieldName] = $fieldData;
                 }
             }
         }
