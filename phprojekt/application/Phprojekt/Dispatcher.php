@@ -33,7 +33,8 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
     /**
      * Format a string into a controller class name.
      *
-     * @param string $unformatted
+     * @param string $unformatted current controller name
+     * 
      * @return string
      */
     public function formatControllerName($unformatted)
