@@ -34,9 +34,9 @@
 class FormController extends IndexController
 {
     /**
-     * Enter description here...
+     * Form view
      *
-     * @var unknown_type
+     * @var Default_Helpers_FormView
      */
     protected $_oFormView = null;
 

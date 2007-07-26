@@ -1,5 +1,5 @@
 <br />
-<a href="{url defaults="false" controller="form"}">{"Add"|translate}</a>
+<a href="{url action="display" controller="form"}">{"Add"|translate}</a>
 <a href="{url action="delete" controller="form" id=$currentId}">{"Delete"|translate}</a>
 {if $message == ''}
 {if $action == 'add'}

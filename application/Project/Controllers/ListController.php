@@ -34,14 +34,18 @@
 class Project_ListController extends Project_IndexController
 {
     /**
-     * Enter description here...
+     * List view
      *
-     * @var unknown_type
+     * @var Default_Helpers_ListView
+     *
      */
     protected $_oListView = null;
 
     /**
-     * Initialize
+     * Initializes helpers for list view
+     *
+     * @return void
+     *
      */
     public function init ()
     {

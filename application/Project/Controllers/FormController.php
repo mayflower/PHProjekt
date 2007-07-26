@@ -34,15 +34,15 @@
 class Project_FormController extends Project_IndexController
 {
     /**
-     * Enter description here...
+     * Form view
      *
-     * @var unknown_type
-     * 
+     * @var Default_Helpers_FormView
+     *
      */
     protected $_oFormView = null;
 
     /**
-     * Initializes helpers for list view
+     * Initializes helpers for form view
      *
      * @return void
      */
