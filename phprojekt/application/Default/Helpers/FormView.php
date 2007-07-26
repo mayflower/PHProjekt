@@ -59,13 +59,12 @@ class Default_Helpers_FormView
      * Make all the input fields and return and arrar for
      * use in smarty.
      *
-     * @param $fields Array with the data of each field
+     * @param array $fields Array with the data of each field
      *
-     * @return array  The data for show in the template
+     * @return array        The data for show in the template
      */
     public function getFields($fields)
     {
-        $fields      = (array) $this->controller->data['formData'];
         $countFields = count($fields);
         $modFields   = $countFields % $this->controller->formColumns;
         if ($modFields != 0) {

@@ -53,7 +53,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     public function getFieldsForList($table)
     {
         $this->getFields($table);
-        return $this->sortFieldsBy('listPosition',$this->_dbFields);
+        return $this->sortFieldsBy('listPosition', $this->_dbFields);
     }
 
     /**
@@ -66,7 +66,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     public function getFieldsForForm($table)
     {
         $this->getFields($table);
-        return $this->sortFieldsBy('formPosition',$this->_dbFields);
+        return $this->sortFieldsBy('formPosition', $this->_dbFields);
     }
 
     /**
@@ -134,8 +134,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
                           array($secondField['tableField'] => $secondField));
             }
         }
-        if ($change)
-        {
+        if ($change) {
             $result = $this->sortFieldsBy($field,$result);
         }
 
