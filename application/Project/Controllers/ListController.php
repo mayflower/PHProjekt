@@ -37,7 +37,6 @@ class Project_ListController extends Project_IndexController
      * List view
      *
      * @var Default_Helpers_ListView
-     *
      */
     protected $_oListView = null;
 

@@ -73,13 +73,8 @@ Zend_Registry::set('view', $oView);
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-$oTranslate = new Phprojekt_Language('Phproject',PHPR_ROOT_PATH
-                                                 . '/languages/'
-                                                 . $config->language
-                                                 . '.inc.php',
-                                                  $config->language);
+$oTranslate = new Phprojekt_Language($config->language);
 Zend_Registry::set('translate', $oTranslate);
-
 
 /* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();

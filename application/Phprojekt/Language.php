@@ -27,15 +27,18 @@
 class Phprojekt_Language extends Zend_Translate
 {
     /**
-     * Create a new language object
+     * Generates the adapter
      *
-     * @param string $adapter Wich adaptor will you use
-     * @param string $options The filename of the lang gile
-     * @param string $locale  Wich locale want to load
+     * @param string|Zend_Locale $locale  Locale/Language to set,
+     *                                    identical with Locale identifiers
+     *                                    see Zend_Locale for more information
+     *
+     * @throws Zend_Translate_Exception
      */
-    public function __construct($adapter, $options, $locale = null)
+    public function __construct($locale)
     {
-        $this->_adapter = new Phprojekt_LanguageAdapter($options, $locale);
+        $data = PHPR_ROOT_PATH . '/languages/' . $locale . '.inc.php';
+        $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
     }
 
     /**
