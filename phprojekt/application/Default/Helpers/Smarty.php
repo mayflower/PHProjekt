@@ -34,48 +34,48 @@
  */
 class Default_Helpers_Smarty extends Zend_View_Abstract
 {
-	/**
+    /**
      * Smarty object
      * @var Smarty
      */
-	protected $_smarty;
+    protected $_smarty;
 
-	/**
+    /**
      * Name of the directory where the compiled templates are stored
      *
      * @var string
      */
-	public $templateCompiledDir = 'templates_c';
+    public $templateCompiledDir = 'templates_c';
 
-	/**
+    /**
      * Constructor
      *
      * @param string $compilePath Path for the compiled smarty templates
      *
      * @return void
      */
-	public function __construct($compilePath = null)
-	{
-		Zend_Loader::loadFile('Smarty.class.php',
-		PHPR_LIBRARY_PATH.DIRECTORY_SEPARATOR.'Smarty');
+    public function __construct($compilePath = null)
+    {
+        Zend_Loader::loadFile('Smarty.class.php',
+        PHPR_LIBRARY_PATH.DIRECTORY_SEPARATOR.'Smarty');
 
-		$this->_smarty = new Smarty();
-		$this->caching = false;
+        $this->_smarty = new Smarty();
+        $this->caching = false;
 
-		if (null !== $compilePath) {
-			$this->templateCompiledDir = $compilePath;
-		}
+        if (null !== $compilePath) {
+            $this->templateCompiledDir = $compilePath;
+        }
 
-		/**
+        /**
          * Register various helper functions
          */
-		$this->_smarty->register_function('url',
-		array($this, 'urlHelper'));
-		$this->_smarty->register_modifier('translate',
-		array($this, 'translateModifier'));
-	}
+        $this->_smarty->register_function('url',
+        array($this, 'urlHelper'));
+        $this->_smarty->register_modifier('translate',
+        array($this, 'translateModifier'));
+    }
 
-	/**
+    /**
      * Assign variables to the template
      *
      * Allows setting a specific key to the specified value, OR passing an array
@@ -89,16 +89,16 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * @see __set
      * @return void
      */
-	public function assign($key, $value = null)
-	{
-		if (is_array($key)) {
-			$this->_smarty->assign($key);
-		} else {
-			$this->_smarty->assign($key, $value);
-		}
-	}
+    public function assign($key, $value = null)
+    {
+        if (is_array($key)) {
+            $this->_smarty->assign($key);
+        } else {
+            $this->_smarty->assign($key, $value);
+        }
+    }
 
-	/**
+    /**
      * Assign a variable to the template
      *
      * @param string $key   The variable name.
@@ -106,66 +106,66 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      *
      * @return void
      */
-	public function __set($key, $value)
-	{
-		$this->assign($key, $value);
-	}
+    public function __set($key, $value)
+    {
+        $this->assign($key, $value);
+    }
 
-	/**
+    /**
      * Retrieve an assigned variable
      *
      * @param string $key The variable name.
      *
      * @return mixed The variable value.
      */
-	public function __get($key)
-	{
-		return $this->_smarty->get_template_vars($key);
-	}
+    public function __get($key)
+    {
+        return $this->_smarty->get_template_vars($key);
+    }
 
-	/**
+    /**
      * Run - helper function to fit with zend view
      *
      * @return string The output.
      */
-	protected function _run()
-	{
-		/*
-		* smarty needs a template_dir, and can only use templates,
-		* found in that directory, so we have to strip it from the filename
-		* We use the given filename to set the template dir,
-		* so we we have a nice ":moduleDir/:action" configuration available
-		* in the front setup */
-		$file                        = func_get_arg(0);
-		$this->_smarty->template_dir = dirname($file);
+    protected function _run()
+    {
+        /*
+        * smarty needs a template_dir, and can only use templates,
+        * found in that directory, so we have to strip it from the filename
+        * We use the given filename to set the template dir,
+        * so we we have a nice ":moduleDir/:action" configuration available
+        * in the front setup */
+        $file                        = func_get_arg(0);
+        $this->_smarty->template_dir = dirname($file);
 
-		$cpath = realpath($this->_smarty->template_dir
-		. DIRECTORY_SEPARATOR
-		. '..'
-		. DIRECTORY_SEPARATOR
-		. $this->templateCompiledDir);
+        $cpath = realpath($this->_smarty->template_dir
+        . DIRECTORY_SEPARATOR
+        . '..'
+        . DIRECTORY_SEPARATOR
+        . $this->templateCompiledDir);
 
-		if (is_dir($this->templateCompiledDir)) {
-			$this->_smarty->compile_dir = $this->templateCompiledDir;
-		} elseif (is_dir($cpath)) {
-			$this->_smarty->compile_dir = $cpath;
-		} else {
-			throw new Zend_View_Exception('Cannot set directory '.
-			'for compiled templates');
-		}
+        if (is_dir($this->templateCompiledDir)) {
+            $this->_smarty->compile_dir = $this->templateCompiledDir;
+        } elseif (is_dir($cpath)) {
+            $this->_smarty->compile_dir = $cpath;
+        } else {
+            throw new Zend_View_Exception('Cannot set directory '.
+            'for compiled templates');
+        }
 
-		$this->setHelperPath(PHPR_LIBRARY_PATH, 'Zend_View_Helper_');
+        $this->setHelperPath(PHPR_LIBRARY_PATH, 'Zend_View_Helper_');
 
-		/* why 'this'?
-		* to emulate standard zend view functionality
-		* doesn't mess up smarty in any way */
-		$this->_smarty->assign_by_ref('view', $this);
+        /* why 'this'?
+        * to emulate standard zend view functionality
+        * doesn't mess up smarty in any way */
+        $this->_smarty->assign_by_ref('view', $this);
 
-		// process the template (an    d filter the output)
-		echo $this->_smarty->fetch(basename($file));
-	}
+        // process the template (an    d filter the output)
+        echo $this->_smarty->fetch(basename($file));
+    }
 
-	/**
+    /**
      * Enter description here...
      *
      * @param array $array
@@ -173,26 +173,26 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * 
      * @return array
      */
-	public function urlHelper($array, &$smarty)
-	{
-		$defaults = array (
-		'module'     => $this->module,
-		'controller' => $this->controller,
-		'action'     => $this->action);
+    public function urlHelper($array, &$smarty)
+    {
+        $defaults = array (
+        'module'     => $this->module,
+        'controller' => $this->controller,
+        'action'     => $this->action);
 
-		if (!array_key_exists('defaults', $array)
-		|| $array['defaults'] == "true") {
-			$array = array_merge($defaults, $array);
-		}
+        if (!array_key_exists('defaults', $array)
+        || $array['defaults'] == "true") {
+            $array = array_merge($defaults, $array);
+        }
 
-		if (array_key_exists('defaults', $array)) {
-			unset ($array['defaults']);
-		}
+        if (array_key_exists('defaults', $array)) {
+            unset ($array['defaults']);
+        }
 
-		return $this->url($array, 'default', true);
-	}
+        return $this->url($array, 'default', true);
+    }
 
-	/**
+    /**
      * Enter description here...
      *
      * @param array $array
@@ -200,10 +200,10 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * 
      * @return array
      */
-	public function translateModifier($string)
-	{
-		$translator = Zend_Registry::get('translate');
-		/* @var $translator Zend_Translate_Adapter */
-		return $translator->translate($string);
-	}
+    public function translateModifier($string)
+    {
+        $translator = Zend_Registry::get('translate');
+        /* @var $translator Zend_Translate_Adapter */
+        return $translator->translate($string);
+    }
 }
