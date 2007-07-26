@@ -34,7 +34,7 @@
 class Project_ListController extends Project_IndexController
 {
     /**
-     * List view
+     * Object Helper list view
      *
      * @var Default_Helpers_ListView
      */
