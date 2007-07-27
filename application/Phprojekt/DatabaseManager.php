@@ -135,7 +135,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
             }
         }
         if ($change) {
-            $result = $this->sortFieldsBy($field,$result);
+            $result = $this->sortFieldsBy($field, $result);
         }
 
         return $result;
