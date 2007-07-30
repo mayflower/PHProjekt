@@ -19,9 +19,10 @@
  * @license   http://www.phprojekt.com/license PHProjekt6 License
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
-
-class Phprojekt_Auth extends Zend_Auth 
+class Phprojekt_Auth extends Zend_Auth
 {
     
     
@@ -63,6 +64,9 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * Makes the login process
      *
+     * @param string username username provided
+     * @param stirng password clean password typed by user
+     * 
      * @return boolean true if login process was sucessful
      */
     public function login($username, $password)
@@ -119,9 +123,10 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * Compare a string with a user password
      *
-     * @param string $string key value to be cryted to check if it is or not the password
-     * @param string $password crypted password
-     * @return boolean true if the string crypted is equal to the password provided
+     * @param string string key value to be cryted to check if it is or not the password
+     * @param string password crypted password
+     * 
+     * @return boolean true if the string crypted is equal to provide password
      */
     private function _compareStringWithPassword($string, $password)
     {
@@ -129,9 +134,11 @@ class Phprojekt_Auth extends Zend_Auth
         /* one of the methods to check the password */
         $defaultMethod = 'phprojektmd5'.$string;
         $defaultMethod = Phprojekt_Auth::_cryptPassword($defaultMethod);
-
+        
         if ($defaultMethod == $password) {
+            
             return true;
+            
         }
         
         /* please add other valid methods here (e.g. not crypted password)
@@ -144,7 +151,8 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * String to be crytped
      *
-     * @param string $password string to be cripted
+     * @param string password string to be cripted
+     * 
      * @return scring crypted password
      */
     private function _cryptPassword($password)

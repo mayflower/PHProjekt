@@ -19,8 +19,9 @@
  * @license   http://www.phprojekt.com/license PHProjekt6 License
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
-
 class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
 {
 
@@ -50,6 +51,8 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
     /**
      * Searchs an user Id based on the username
      *
+     * @param string username username necessary to find the userId
+     * 
      * @return integer with the user id value. If the user is not found then function will return false
      */
     public function findIdByUsername($username)
