@@ -21,53 +21,9 @@
  * @package    PHProjekt
  */
 
-class Phprojekt_User extends Phprojekt_Item
+class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
 {
-    /**
-     * User id
-     * @var integer
-     */
-    public $id;
 
-    /**
-     * Username
-     * @var string
-     */
-    public $username;
-
-    /**
-     * Firstname
-     * @var string
-     */
-    public $firstname;
-
-    /**
-     * Lastname
-     * @var string
-     */
-    public $lastname;
-
-    /**
-     * Prefered languange
-     * @var string
-     */
-    public $language;
-
-    /**
-     * Create object of type PHProjekt_User
-     *
-     */
-    function __construct()
-    {
-    }
-
-    /**
-     * Destruct object
-     *
-     */
-    function __destruct()
-    {
-    }
 
     /**
      * Get a setting value of the user
@@ -92,24 +48,23 @@ class Phprojekt_User extends Phprojekt_Item
     }
 
     /**
-     * Makes the login process
+     * Searchs an user Id based on the username
      *
-     * @return boolean true if login process was sucessful
+     * @return integer with the user id value. If the user is not found then function will return false
      */
-    public function login()
+    public function findIdByUsername($username)
     {
-        return true;
+
+        $db = Zend_Registry::get('db');
+        /* @var $db Zend_Db_Adapter_Abstract */
+
+        $tmp = current((array)$this->fetchAll($db->quoteInto("username = ?", $username)));
+
+        return $tmp->id;
+
+
     }
 
-    /**
-     * Makes the logout process
-     *
-     * @return boolean true if logout process was sucessful
-     */
-    public function logout()
-    {
-        return true;
-    }
 
     /**
      * Sets any setting of the user
