@@ -2,7 +2,7 @@
 /**
  * List View helper class
  *
- * This class is for draw the list view
+ * This class is for help on the draw of the list view
  *
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
@@ -19,7 +19,6 @@
  * List view helper
  *
  * The class process the info for show the list data
- * ans all the acctions from the controller
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -32,53 +31,19 @@
 class Default_Helpers_ListView
 {
     /**
-     * Translator object
-     *
-     * @var Zend_Log object
-     */
-    private $_translator = '';
-
-    /**
-     * Controller Object
-     *
-     * @var Zend_Controller_Action object
-     */
-    public $controller = '';
-
-    /**
-     * Constructor
-     *
-     * @param Zend_Controller_Action $controller Action object controller
-     *
-     * @return void
-     */
-    public function __construct($controller)
-    {
-        $translate         = Zend_Registry::get('translate');
-        $this->_translator = $translate;
-        $this->controller  = $controller;
-    }
-
-    /**
-     * Return an array with the translated titles
+     * Return an array with the fields data
      *
      * @param array $data The array with data of each field
      *
-     * @return array The titles translated
+     * @return array The first row of the fields data
      */
-    public function getTitles($data)
+    public function getTitles(array $data)
     {
-        $titles = array();
-
         if (empty($data)) {
-            return '&nbsp;';
+            return $data[0] = array();
         }
 
-        foreach ($data[0] as $titleData) {
-            $titles[] = $this->_translator->translate($titleData['formLabel']);
-        }
-
-        return $titles;
+        return $data[0];
     }
 
     /**
@@ -97,85 +62,5 @@ class Default_Helpers_ListView
         }
 
         return $data;
-    }
-
-    /**
-     * Adds a single filter to the current view
-      *
-      * @return void
-     */
-    public function addFilterAction()
-    {
-        $this->controller->setListView();
-        $this->controller->message = 'Filter Added';
-        $this->controller->generateOutput();
-        $this->controller->render('index');
-    }
-
-    /**
-     * Delivers the inner part of the IndexAction using ajax
-     *
-     * @return void
-     */
-    public function componentIndexAction()
-    {
-    }
-
-    /**
-     * Delivers the inner part of the Listaction using ajax
-     *
-     * @return void
-     */
-    public function componentListAction()
-    {
-    }
-
-    /**
-     * Default action
-     *
-     * @return void
-     */
-    public function indexAction()
-    {
-        $this->listAction();
-    }
-
-    /**
-     * List all the data
-     *
-     * @return void
-     */
-    public function listAction()
-    {
-        $this->controller->setListView();
-        $this->controller->message = '&nbsp;';
-        $this->controller->generateOutput();
-        $this->controller->render('index');
-    }
-
-    /**
-     * Remove a filter
-     *
-     * @return void
-     */
-    public function removeFilterAction()
-    {
-        $this->controller->setListView();
-        $this->controller->message = 'Filter Removed';
-        $this->controller->generateOutput();
-        $this->controller->render('index');
-    }
-
-    /**
-     * Sort the list view
-     *
-     * @return void
-     */
-    public function sortAction()
-    {
-        $this->controller->setListView();
-        $this->controller->message = '&nbsp;';
-        $this->controller->generateOutput();
-        $this->controller->render('index');
     }
 }

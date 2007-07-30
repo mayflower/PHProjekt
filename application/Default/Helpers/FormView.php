@@ -2,6 +2,8 @@
 /**
  * Form View helper class
  *
+ * This class is for help on the draw of the form
+ *
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
@@ -16,8 +18,7 @@
 /**
  * Form View helper class
  *
- * This class is for draw the form
- * And process the form actions
+ * This class is for help on the draw of the form
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -30,162 +31,24 @@
 class Default_Helpers_FormView
 {
     /**
-     * Translator object
-     *
-     * @var Zend_Log object
-     */
-    private $_translator = '';
-
-    /**
-     * Controller Object
-     *
-     * @var Zend_Controller_Action object
-     */
-    public $controller = '';
-
-    /**
-     * Constructor
-     *
-     * @param Zend_Controller_Action $controller The action controller
-     */
-    public function __construct($controller)
-    {
-        $translate         = Zend_Registry::get('translate');
-        $this->_translator = $translate;
-        $this->controller  = $controller;
-    }
-
-    /**
      * Make all the input fields and return and arrar for
      * use in smarty.
      *
-     * @param array $fields Array with the data of each field
+     * @param array $fields      Array with the data of each field
+     * @param int   $formColumns Number of columns to show
      *
-     * @return array        The data for show in the template
+     * @return array             The data for show in the template
      */
-    public function getFields($fields)
+    public function makeColumns($fields,$formColumns)
     {
         $countFields = count($fields);
-        $modFields   = $countFields % $this->controller->formColumns;
+        $modFields   = $countFields % $formColumns;
         if ($modFields != 0) {
-            for ($index = $modFields; $index < $this->controller->formColumns; $index++) {
+            for ($index = $modFields; $index < $formColumns; $index++) {
                 $fields[] = '&nbsp';
             }
         }
 
         return $fields;
-    }
-
-    /**
-      * Default action
-      *
-      * @return void
-      */
-    public function indexAction()
-    {
-        $this->displayAction();
-    }
-
-    /**
-      * Abandon current changes and return to the default view
-      *
-      * @return void
-      */
-    public function cancelAction()
-    {
-        $this->controller->msg = '&nbsp;';
-        $this->controller->setFormView();
-        $this->controller->generateOutput();
-        $this->controller->render('index');
-    }
-
-    /**
-     * Ajax part of displayAction
-      *
-      * @return void
-     */
-    public function componentDisplayAction()
-    {
-    }
-
-    /**
-     * Ajaxified part of the edit action
-      *
-      * @return void
-     */
-    public function componentEditAction()
-    {
-    }
-
-    /**
-     * Deletes a certain item
-      *
-      * @return void
-     */
-    public function deleteAction()
-    {
-        $request = $this->controller->getRequest()->getParams();
-        if (!isset($request['id'])) {
-            $this->displayAction();
-        } else {
-            $params  = $this->controller->getRequest()->getParams();
-
-            $this->controller->oModels->deleteData($params);
-
-            $this->controller->message = 'Deleted';
-            $this->controller->generateOutput();
-            $this->controller->render('index');
-        }
-    }
-
-    /**
-     * Displays a single item
-      *
-      * @return void
-     */
-    public function displayAction()
-    {
-        $this->controller->generateOutput();
-        $this->controller->render('index');
-    }
-
-    /**
-     * Displays the edit screen for the current item
-     *
-     * @return void
-     */
-    public function editAction()
-    {
-        $request = $this->controller->getRequest()->getParams();
-        if (!isset($request['id'])) {
-            $this->displayAction();
-        } else {
-            $id       = intval($request['id']);
-            $formData = $this->controller->oModels->getFormData($id);
-
-            $this->controller->data['formData'] = $formData;
-            $this->controller->generateOutput($id);
-            $this->controller->render('index');
-        }
-    }
-
-    /**
-     * Saves the current item
-     *
-     * @return void
-     */
-    public function saveAction()
-    {
-        $params = $this->controller->getRequest()->getParams();
-
-        try {
-            $this->controller->oModels->saveData($params);
-            $this->controller->message = 'Saved';
-        } catch (Phprojekt_Item_Exception $error) {
-            $this->controller->errors = $error->getMessage();
-        }
-
-        $this->controller->generateOutput();
-        $this->controller->render('index');
     }
 }

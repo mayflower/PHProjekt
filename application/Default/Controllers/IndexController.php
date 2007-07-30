@@ -130,7 +130,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function addFilterAction()
     {
-        $this->_oListView->addFilterAction();
+        $this->setListView();
+        $this->message = 'Filter Added';
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -141,7 +144,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function componentIndexAction()
     {
-        $this->_oListView->componentIndexAction();
     }
 
     /**
@@ -152,7 +154,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function componentListAction()
     {
-        $this->_oListView->componentEditAction();
     }
 
     /**
@@ -163,7 +164,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function listAction()
     {
-        $this->_oListView->listAction();
+        $this->setListView();
+        $this->message = '&nbsp;';
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -174,7 +178,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function removeFilterAction()
     {
-        $this->_oListView->removeFilterAction();
+        $this->setListView();
+        $this->message = 'Filter Removed';
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -185,7 +192,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function sortAction()
     {
-        $this->_oListView->sortFilterAction();
+        $this->setListView();
+        $this->message = '&nbsp;';
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -196,7 +206,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function cancelAction()
     {
-        $this->_oFormView->cancelAction();
+        $this->msg = '&nbsp;';
+        $this->setFormView();
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -207,7 +220,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function componentDisplayAction()
     {
-        $this->_oFormView->componentDisplayAction();
     }
 
     /**
@@ -218,7 +230,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function componentEditAction()
     {
-        $this->_oFormView->componentEditAction();
     }
 
     /**
@@ -229,7 +240,15 @@ class IndexController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-        $this->_oFormView->deleteAction();
+        $request = $this->getRequest()->getParams();
+        if (!isset($request['id'])) {
+            $this->_forward('display');
+        } else {
+            $this->oModels->deleteData($request);
+            $this->message = 'Deleted';
+            $this->generateOutput();
+            $this->render('index');
+        }
     }
 
     /**
@@ -240,7 +259,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function displayAction()
     {
-        $this->_oFormView->displayAction();
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -251,7 +271,17 @@ class IndexController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $this->_oFormView->editAction();
+        $request = $this->getRequest()->getParams();
+        if (!isset($request['id'])) {
+            $this->_forward('display');
+        } else {
+            $id       = intval($request['id']);
+            $formData = $this->oModels->getFormData($id);
+
+            $this->data['formData'] = $formData;
+            $this->generateOutput($id);
+            $this->render('index');
+        }
     }
 
     /**
@@ -262,7 +292,16 @@ class IndexController extends Zend_Controller_Action
      */
     public function saveAction()
     {
-        $this->_oFormView->saveAction();
+       $request = $this->getRequest()->getParams();
+        try {
+            $this->oModels->saveData($request);
+            $this->message = 'Saved';
+        } catch (Phprojekt_Item_Exception $error) {
+            $this->errors = $error->getMessage();
+        }
+
+        $this->generateOutput();
+        $this->render('index');
     }
 
     /**
@@ -283,11 +322,10 @@ class IndexController extends Zend_Controller_Action
     public function setListView()
     {
         $this->_listViewSeted   = true;
-        $oListView              = new Default_Helpers_ListView($this);
         $this->data['listData'] = $this->oModels->getListData();
 
-        $this->titles   = $oListView->getTitles($this->data['listData']);
-        $this->lines    = $oListView->getItems($this->data['listData']);
+        $this->titles   = $this->_oListView->getTitles($this->data['listData']);
+        $this->lines    = $this->_oListView->getItems($this->data['listData']);
         $this->listView = $this->_render('list');
     }
 
@@ -301,7 +339,6 @@ class IndexController extends Zend_Controller_Action
     public function setFormView($id = 0)
     {
         $this->formViewSeted = true;
-        $oFormView           = new Default_Helpers_FormView($this);
         $this->columns       = $this->formColumns;
         if ($id == 0) {
             $this->data['formData'] = $this->oModels->getFormData($id);
@@ -318,7 +355,7 @@ class IndexController extends Zend_Controller_Action
         }
         $this->data['formData'] = $tmp;
 
-        $this->fields   = $oFormView->getFields($this->data['formData']);
+        $this->fields   = $this->_oFormView->makeColumns($this->data['formData'], $this->formColumns);
         $this->formView = $this->_render('form');
     }
 
@@ -399,8 +436,10 @@ class IndexController extends Zend_Controller_Action
                 return $this->view->render('form.tpl');
             break;
         case 'list':
-        default:
                 return $this->view->render('list.tpl');
+            break;
+        default:
+                return $this->view->render($template . '.tpl');
             break;
         }
     }
