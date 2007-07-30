@@ -79,6 +79,13 @@ abstract class Zend_Db_Adapter_Abstract
     protected $_connection = null;
 
     /**
+     * Transaction depth
+     *
+     * @var integer
+     */
+    protected $_transDepth;
+
+    /**
      * Specifies the case of column names retrieved in queries
      * Options
      * Zend_Db::CASE_NATURAL (default)
@@ -273,10 +280,14 @@ abstract class Zend_Db_Adapter_Abstract
      */
     public function beginTransaction()
     {
-        $this->_connect();
-        $q = $this->_profiler->queryStart('begin', Zend_Db_Profiler::TRANSACTION);
-        $this->_beginTransaction();
-        $this->_profiler->queryEnd($q);
+        $this->_transDepth++;
+
+        if (1 === $this->_transDepth) {
+            $this->_connect();
+            $q = $this->_profiler->queryStart('begin', Zend_Db_Profiler::TRANSACTION);
+            $this->_beginTransaction();
+            $this->_profiler->queryEnd($q);
+        }
         return true;
     }
 
@@ -287,10 +298,15 @@ abstract class Zend_Db_Adapter_Abstract
      */
     public function commit()
     {
-        $this->_connect();
-        $q = $this->_profiler->queryStart('commit', Zend_Db_Profiler::TRANSACTION);
-        $this->_commit();
-        $this->_profiler->queryEnd($q);
+        if (1 === $this->_transDepth) {
+            $this->_connect();
+            $q = $this->_profiler->queryStart('commit', Zend_Db_Profiler::TRANSACTION);
+            $this->_commit();
+            $this->_profiler->queryEnd($q);
+        }
+
+        $this->_transDepth--;
+
         return true;
     }
 
@@ -305,6 +321,9 @@ abstract class Zend_Db_Adapter_Abstract
         $q = $this->_profiler->queryStart('rollback', Zend_Db_Profiler::TRANSACTION);
         $this->_rollBack();
         $this->_profiler->queryEnd($q);
+
+        $this->_transDepth = 0;
+
         return true;
     }
 
