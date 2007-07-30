@@ -53,7 +53,8 @@ class LoginController extends Zend_Controller_Action
      * 
      * @return void
      */
-    public function loginAction() {
+    public function loginAction()
+    {
         
         $request = new Zend_Controller_Request_Http();
         
@@ -62,7 +63,7 @@ class LoginController extends Zend_Controller_Action
         $password = $request->getPost('password');
         
         try {
-            $success = Phprojekt_Auth::login($username,$password);
+            $success = Phprojekt_Auth::login($username, $password);
         }
         catch (Phprojekt_Auth_Exception $e) {
             
