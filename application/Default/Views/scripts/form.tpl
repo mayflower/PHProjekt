@@ -1,6 +1,6 @@
 <br />
-<a href="{url action="display" controller="form"}">{"Add"|translate}</a>
-<a href="{url action="delete" controller="form" id=$currentId}">{"Delete"|translate}</a>
+<a href="{url action="display"}">{"Add"|translate}</a>
+<a href="{url action="delete" id=$currentId}">{"Delete"|translate}</a>
 {if $message == ''}
 {if $action == 'add'}
     <form method="post" action="{url action='save'} id=''">

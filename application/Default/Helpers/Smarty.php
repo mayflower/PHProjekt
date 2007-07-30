@@ -176,7 +176,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     {
         $defaults = array (
         'module'     => $this->module,
-        'controller' => $this->controller,
         'action'     => $this->action);
 
         if (!array_key_exists('defaults', $array)
