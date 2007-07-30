@@ -66,8 +66,7 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
         try {
             if (is_object($tmp)) {
                 $userId = $tmp->id;
-            }
-            else {
+            } else {
                 return false;
             }
         }
