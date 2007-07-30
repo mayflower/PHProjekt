@@ -8,7 +8,7 @@
 <tr>
     {foreach item=field from=$line}
     <td>
-     <a href="{url action="edit" controller="form" module=$module id=`$key`}">{$field.value}</a>
+     <a href="{url action="edit" module=$module id=`$key`}">{$field.value}</a>
     </td>
     {/foreach}
 </tr>

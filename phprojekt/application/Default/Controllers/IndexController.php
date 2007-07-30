@@ -34,6 +34,21 @@ class IndexController extends Zend_Controller_Action
     protected $_smarty;
 
     /**
+     * Helper for list view
+     *
+     * @var Default_Helpers_ListView
+     *
+     */
+    protected $_oListView = null;
+
+    /**
+     * Helper for form view
+     *
+     * @var Default_Helpers_FormView
+     */
+    protected $_oFormView = null;
+
+    /**
      * Set true if is seted the treeView
      *
      * @var boolean
@@ -89,13 +104,12 @@ class IndexController extends Zend_Controller_Action
     {
         $this->_smarty             = Zend_Registry::get('view');
         $this->_smarty->module     = $this->getRequest()->getModuleName();
-        $this->_smarty->controller = $this->getRequest()->getControllerName();
         $this->_smarty->action     = $this->getRequest()->getActionName();
-
-        $this->oModels = $this->getModelsObject();
-
-        $this->data['listData'] = $this->oModels->getListData();
-        $this->data['formData'] = $this->oModels->getFormData();
+        $this->oModels             = $this->getModelsObject();
+        $this->data['listData']    = $this->oModels->getListData();
+        $this->data['formData']    = $this->oModels->getFormData();
+        $this->_oListView          = new Default_Helpers_ListView($this);
+        $this->_oFormView          = new Default_Helpers_FormView($this);
     }
 
     /**
@@ -105,8 +119,150 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->msg     = '&nbsp;';
-        $this->generateOutput();
+        $this->_forward('list');
+    }
+
+    /**
+     * Adds a single filter to the current view
+     * List Action
+     *
+     * @return void
+     */
+    public function addFilterAction()
+    {
+        $this->_oListView->addFilterAction();
+    }
+
+    /**
+     * Delivers the inner part of the IndexAction using ajax
+     * List Action
+     *
+     * @return void
+     */
+    public function componentIndexAction()
+    {
+        $this->_oListView->componentIndexAction();
+    }
+
+    /**
+     * Delivers the inner part of the Listaction using ajax
+     * List Action
+     *
+     * @return void
+     */
+    public function componentListAction()
+    {
+        $this->_oListView->componentEditAction();
+    }
+
+    /**
+     * List all the data
+     * List Action
+     *
+     * @return void
+     */
+    public function listAction()
+    {
+        $this->_oListView->listAction();
+    }
+
+    /**
+     * Remove a filter
+     * List Action
+     *
+     * @return void
+     */
+    public function removeFilterAction()
+    {
+        $this->_oListView->removeFilterAction();
+    }
+
+    /**
+     * Sort the list view
+     * List Action
+     *
+     * @return void
+     */
+    public function sortAction()
+    {
+        $this->_oListView->sortFilterAction();
+    }
+
+    /**
+     * Abandon current changes and return to the default view
+     * Form Action
+     *
+     * @return void
+     */
+    public function cancelAction()
+    {
+        $this->_oFormView->cancelAction();
+    }
+
+    /**
+     * Ajax part of displayAction
+     * Form Action
+     *
+     * @return void
+     */
+    public function componentDisplayAction()
+    {
+        $this->_oFormView->componentDisplayAction();
+    }
+
+    /**
+     * Ajaxified part of the edit action
+     * Form Action
+     *
+     * @return void
+     */
+    public function componentEditAction()
+    {
+        $this->_oFormView->componentEditAction();
+    }
+
+    /**
+     * Deletes a certain item
+     * Form Action
+     *
+     * @return void
+     */
+    public function deleteAction()
+    {
+        $this->_oFormView->deleteAction();
+    }
+
+    /**
+     * Displays the a single item
+     * Form Action
+     *
+     * @return void
+     */
+    public function displayAction()
+    {
+        $this->_oFormView->displayAction();
+    }
+
+    /**
+     * Displays the edit screen for the current item
+     * Form Action
+     *
+     * @return void
+     */
+    public function editAction()
+    {
+        $this->_oFormView->editAction();
+    }
+
+    /**
+     * Saves the current item
+     * Form Action
+     *
+     * @return void
+     */
+    public function saveAction()
+    {
+        $this->_oFormView->saveAction();
     }
 
     /**
