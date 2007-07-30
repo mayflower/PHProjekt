@@ -34,6 +34,7 @@ require_once 'Zend/Loader.php';
 Zend_Loader::registerAutoload();
 
 require_once 'ActiveRecord/AbstractTest.php';
+require_once 'Tree/Node/DatabaseTest.php';
 require_once 'LoaderTest.php';
 
 /**
@@ -69,6 +70,7 @@ class Phprojekt_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
         $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');
+        $suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         // ...
 
