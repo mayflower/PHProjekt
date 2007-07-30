@@ -141,7 +141,7 @@ class Phprojekt_Auth extends Zend_Auth
 
         }
 
-        /* please add other valid methods here (e.g. not crypted password)
+        /* please add other valid methods here (e.g. not crypted password) */
 
         /* none of the methods works */
 
