@@ -44,7 +44,7 @@ class LoginController extends Zend_Controller_Action
 
         $this->render('login');
     }
-        
+
     /**
      * Executes the login using the username and password provided on login form
      * If it works fine you will be redirect to homepage
@@ -55,26 +55,28 @@ class LoginController extends Zend_Controller_Action
      */
     public function loginAction()
     {
-        
+
+        $success = false;
+
         $request = new Zend_Controller_Request_Http();
-        
+
         $username = $request->getPost('username');
-                   
+
         $password = $request->getPost('password');
-        
+
         try {
             $success = Phprojekt_Auth::login($username, $password);
         }
         catch (Phprojekt_Auth_Exception $e) {
-            
+
             $this->view->message = $e->getMessage();
             $this->view->username = $username;
         }
-        
+
         if ($success) {
             $this->_redirect($config->webpath);
             die();
         }
-        
+
     }
 }

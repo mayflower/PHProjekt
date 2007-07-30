@@ -112,7 +112,7 @@ class IndexController extends Zend_Controller_Action
                 /* user not logged in, display login page */
                 $config = Zend_Registry::get('config');
 
-                $this->_redirect($config->webpath.'index.php/Login/index');
+                $this->_redirect($config->webpath.'/Login/index');
                 die();
             }
         }
