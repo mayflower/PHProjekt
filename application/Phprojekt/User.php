@@ -51,7 +51,7 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
     /**
      * Searchs an user Id based on the username
      *
-     * @param string username username necessary to find the userId
+     * @param string $username username necessary to find the userId
      * 
      * @return integer with the user id value. If the user is not found then function will return false
      */

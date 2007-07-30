@@ -64,8 +64,8 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * Makes the login process
      *
-     * @param string username username provided
-     * @param stirng password clean password typed by user
+     * @param string $username username provided
+     * @param stirng $password clean password typed by user
      * 
      * @return boolean true if login process was sucessful
      */
@@ -123,8 +123,8 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * Compare a string with a user password
      *
-     * @param string string key value to be cryted to check if it is or not the password
-     * @param string password crypted password
+     * @param string $string key value uncryted to check if it is the password
+     * @param string $password crypted password
      * 
      * @return boolean true if the string crypted is equal to provide password
      */
@@ -151,7 +151,7 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * String to be crytped
      *
-     * @param string password string to be cripted
+     * @param string $password string to be cripted
      * 
      * @return scring crypted password
      */
