@@ -31,11 +31,12 @@ class Phprojekt_LoaderTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function setUp()
     {
-        $this->sharedFixture = Zend_Db::factory('PDO_MYSQL', array(
-                                          'username' => 'phprojekt',
-                                          'password' => 'phprojekt',
-                                          'dbname'   => 'phprojekt-mvc',
-                                          'host'     => 'localhost'));
+        $config = new Zend_Config_Ini('../../configuration.ini', 'testing');
+        $this->sharedFixture = Zend_Db::factory($config->database->type, array(
+                                          'username' => $config->database->username,
+                                          'password' => $config->database->password,
+                                          'dbname'   => $config->database->name,
+                                          'host'     => $config->database->host));
     }
 
     /**

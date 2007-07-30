@@ -254,6 +254,25 @@ LOCK TABLES `user_module_setting` WRITE;
 /*!40000 ALTER TABLE `user_module_setting` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user_module_setting` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `tree`;
+CREATE TABLE `tree` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `parent` int(10) unsigned default NULL,
+  `path` varchar(255) NOT NULL,
+  `name` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tree`
+--
+
+LOCK TABLES `tree` WRITE;
+/*!40000 ALTER TABLE `tree` DISABLE KEYS */;
+INSERT INTO `tree` VALUES (2,NULL,'/','Root'),(3,2,'/2/','Child 1'),(4,2,'/2/','Child 2'),(5,4,'/2/4/','Sub Child 1'),(6,4,'/2/4/','Sub Child 2'),(7,2,'/2/','Child 3');
+/*!40000 ALTER TABLE `tree` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -263,5 +282,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2007-07-24 17:08:23
