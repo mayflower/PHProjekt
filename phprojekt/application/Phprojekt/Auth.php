@@ -82,8 +82,7 @@ class Phprojekt_Auth extends Zend_Auth
 
         if ($userId > 0) {
             $oUser->find($userId);
-        }
-        else {
+        } else {
             throw new Phprojekt_Auth_Exception('Invalid user or password', 4);
         }
 
