@@ -308,12 +308,14 @@ class IndexController extends Zend_Controller_Action
      */
     public function saveAction()
     {
-       $request = $this->getRequest()->getParams();
+        $request = $this->getRequest()->getParams();
         try {
             $this->oModels->saveData($request);
             $this->message = 'Saved';
         } catch (Phprojekt_Item_Exception $error) {
-            $this->errors = $error->getMessage();
+            list($errorField, $errorMessage) = split('#',$error->getMessage());
+            $this->errorField   = $errorField;
+            $this->errorMessage = $errorMessage;
         }
 
         $this->generateOutput();
