@@ -161,7 +161,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         * doesn't mess up smarty in any way */
         $this->_smarty->assign_by_ref('view', $this);
 
-        // process the template (an    d filter the output)
+        // process the template (and filter the output)
         echo $this->_smarty->fetch(basename($file));
     }
 
@@ -176,6 +176,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     {
         $defaults = array (
         'module'     => $this->module,
+        'controller' => $this->controller,
         'action'     => $this->action);
 
         if (!array_key_exists('defaults', $array)

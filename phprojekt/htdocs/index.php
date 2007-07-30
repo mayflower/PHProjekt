@@ -94,14 +94,7 @@ foreach (scandir(PHPR_CORE_PATH) as $module)
 
 $front->setModuleControllerDirectoryName('Controllers');
 $front->addModuleDirectory(PHPR_CORE_PATH);
-/*
-$router = $front->getRouter();
-$route  = new Zend_Controller_Router_Route(
-    ':module/:action/*',
-    array('controller'  => 'index')
-);
-$router->addRoute('default', $route);
-*/
+
 $front->setParam('useDefaultControllerAlways', true);
 
 $front->throwExceptions(true);
