@@ -26,6 +26,9 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
 
+require_once 'PHPUnit/Util/Filter.php';
+// PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(__FILE__)).'/application/');
+
 /**
  * AllTests merges all test from the modules
  *
@@ -55,9 +58,13 @@ class AllTests
      */
     public static function suite()
     {
+	
+	PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
         // $log = new Phprojekt_Log(new Zend_Config_Ini('../../configuration.ini', 'production'));
         Zend_Registry::set('log', $log);
-
+	// echo "Hier addwhitelist \n"; 
+	// PHPUnit_Util_Filter::addDirectoryToWhitelist('./application/');
+	// echo "Hier nach addwhitelist \n"; 
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
