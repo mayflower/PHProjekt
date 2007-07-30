@@ -7,7 +7,7 @@
 {else}
     <form method="post" action="{url action='save' id=$currentId}">
 {/if}
-    <span class="error">{$errors}</span><br />
+    <span class="error">{$errorField|translate} {$errorMessage|translate}</span><br />
     <table width="100%" align="center">
     {foreach name=fields item=field from=$fields}
     <tr>
