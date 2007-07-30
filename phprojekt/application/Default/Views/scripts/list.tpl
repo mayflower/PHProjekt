@@ -1,7 +1,7 @@
 <table align="center" width="100%" class="listView">
 <tr align="center">
-{foreach name=titles item=showName from=$titles}
-    <th>{$showName}</th>
+{foreach name=titles item=field from=$titles}
+    <th>{$field.formLabel|translate}</th>
 {/foreach}
 </tr>
 {foreach name=lines item=line key=key from=$lines}
