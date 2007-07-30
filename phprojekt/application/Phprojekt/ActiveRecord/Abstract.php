@@ -1,4 +1,4 @@
-<?php
+sa<?php
 /**
  * Simple ActiveRecord implementation based on Zend_Db_Table
  *
@@ -112,6 +112,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         if (Zend_Registry::isRegistered('log')) {
             $this->_log = Zend_Registry::get('log');
+        }
+
+        if (!is_array($config)) {
+            $config = array('db' => $config);
         }
 
         if (!array_key_exists('db', $config)
@@ -536,7 +540,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    protected function _getClassNameForRelationship($key, $array)
+    protected static function _getClassNameForRelationship($key, $array)
     {
         if (is_array($array)
          && is_array($array[$key])
@@ -568,7 +572,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *  contains illegal chars
      * @return string
      */
-    protected function _translateClassNameToTable($className)
+    protected static function _translateClassNameToTable($className)
     {
         if (preg_match('@' . self::CLASS_PATTERN . '@', $className)) {
             $match = array();
@@ -577,11 +581,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $name = preg_replace('@([A-Z])@', '_\\1', $match[1]);
 
                 if ($name{0} == '_') $name = substr($name, 1);
-
-                if (null !== $this->_log) {
-                    $this->_log->debug(sprintf("%s translated to %s",
-                                        $className, strtolower($name)));
-                }
 
                 return strtolower($name);
             }
@@ -720,6 +719,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $this->_insertHasManyAndBelongsToMany();
             }
         }
+
+        return $this;
     }
 
     /**
@@ -842,4 +843,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         return parent::fetchAll()->count();
     }
 
+    /**
+     * Returns the name of the table for the active record
+     *
+     * @return string
+     */
+    public function getTableName()
+    {
+        return $this->_translateClassNameToTable($this->_translateClassNameToTable(get_class($this)));
+    }
 }
