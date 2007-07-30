@@ -102,6 +102,21 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
+        
+        try {
+            Phprojekt_Auth::isLogguedIn();
+        }
+        catch (Phprojekt_Auth_Exception $ae) {
+            if ($ae->getCode() == 1) {
+                
+                /* user not logged in, display login page */
+                $config = Zend_Registry::get('config');
+                
+                $this->_redirect($config->webpath.'/Login/index');
+                die();
+            }
+        }
+        
         $this->_smarty             = Zend_Registry::get('view');
         $this->_smarty->module     = $this->getRequest()->getModuleName();
         $this->_smarty->action     = $this->getRequest()->getActionName();
