@@ -63,8 +63,22 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
 
         $tmp = current((array)$this->fetchAll($db->quoteInto("username = ?", $username)));
 
-        return $tmp->id;
+        try {
+            if (is_object($tmp)) {
+                $userId = $tmp->id;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (Phprojekt_ActiveRecord_Exception $are) {
+            return false;
+        }
+        catch (Exception $e) {
+            return false;
+        }
 
+        return $tmp->id;
 
     }
 
