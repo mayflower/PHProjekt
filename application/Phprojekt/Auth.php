@@ -24,8 +24,8 @@
  */
 class Phprojekt_Auth extends Zend_Auth
 {
-    
-    
+
+
     /**
      * Create object of type PHProjekt_Auth
      *
@@ -41,8 +41,8 @@ class Phprojekt_Auth extends Zend_Auth
     function __destruct()
     {
     }
-    
-    
+
+
     /**
      * Checks if user is loggued in or not. It uses the Zend
      *
@@ -50,14 +50,14 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function isLogguedIn()
     {
-        
+
         $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
-        
+
         if (!isset($authNamespace->userId) || empty($authNamespace->userId)) {
-            
+
             throw new Phprojekt_Auth_Exception('User not logged in', 1);
         }
-        
+
         return true;
     }
 
@@ -71,18 +71,18 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function login($username, $password)
     {
-        
-        
+
+
         $db = Zend_Registry::get('db');
         /* @var $db Zend_Db_Adapter_Abstract */
-        
+
         $oUser = new Phprojekt_User(array ('db' => $db));
-        
+
         $userId = $oUser->findIdByUsername($username);
-            
+
         $oUser->find($userId);
-        
-        
+
+
         try {
             /* the password does not match with password provided */
             if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$oUser->password)) {
@@ -92,17 +92,17 @@ class Phprojekt_Auth extends Zend_Auth
         catch (Exception $e) {
             throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
-        
+
         /* if the user was found we will save the user information on the session */
         $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
-        
+
         $authNamespace->userId = $oUser->id;
-        
-        
+
+
         /* please, put any extra info of user to be saved on session here */
-        
+
         return true;
-        
+
     }
 
     /**
@@ -112,42 +112,42 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function logout()
     {
-        
+
         $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
-        
+
         $authNamespace->unsetAll();
-        
+
         return true;
     }
-    
+
     /**
      * Compare a string with a user password
      *
-     * @param string $string key value uncryted to check if it is the password
+     * @param string $string   key uncryted to check if it is the password
      * @param string $password crypted password
      * 
      * @return boolean true if the string crypted is equal to provide password
      */
     private function _compareStringWithPassword($string, $password)
     {
-        
+
         /* one of the methods to check the password */
         $defaultMethod = 'phprojektmd5'.$string;
         $defaultMethod = Phprojekt_Auth::_cryptPassword($defaultMethod);
-        
+
         if ($defaultMethod == $password) {
-            
+
             return true;
-            
+
         }
-        
+
         /* please add other valid methods here (e.g. not crypted password)
-        
-        
+
         /* none of the methods works */
+
         return false;
     }
-    
+
     /**
      * String to be crytped
      *
