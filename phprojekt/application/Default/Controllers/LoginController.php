@@ -45,6 +45,14 @@ class LoginController extends Zend_Controller_Action
         $this->render('login');
     }
         
+    /**
+     * Executes the login using the username and password provided on login form
+     * If it works fine you will be redirect to homepage
+     * 
+     * @todo redirect to the correct page
+     * 
+     * @return void
+     */
     public function loginAction() {
         
         $request = new Zend_Controller_Request_Http();
