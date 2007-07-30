@@ -63,7 +63,8 @@ class LoginController extends Zend_Controller_Action
         }
         
         if ($success) {
-            $this->_forward('index','Project');
+            $this->_redirect($config->webpath);
+            die();
         }
         
     }
