@@ -47,21 +47,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 {
 
     /**
-     * setUp method for PHPUnit. We use a shared db connection
-     *
-     */
-    public function setUp()
-    {
-        $config = new Zend_Config_Ini('./configuration.ini', 'testing');
-
-        $this->sharedFixture = Zend_Db::factory('PDO_MYSQL', array(
-                                          'username' => $config->database->username,
-                                          'password' => $config->database->password,
-                                          'dbname'   => $config->database->name,
-                                          'host'     => $config->database->host));
-    }
-
-    /**
      *
      */
     public function testCreateHasManyAndBelongsToMany()
@@ -342,7 +327,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 
     /**
      * Test getting a nonexisting attribute.
-     * Should throw an exception
+     * Should throw an exceptio n
      *
      * @return void
      */

@@ -1,6 +1,7 @@
 <?php
 /**
- * AllTests merges all test from the modules
+ * AllTests merges all test from the modules and provides
+ * several switches to control unit testing
  *
  * AllTests merges defined test suites for each
  * module, while each module itself has its own AllTests
@@ -15,6 +16,9 @@
  * @since      File available since Release 1.0
  */
 
+/* use command line switches to overwrite this */
+define("DEFAULT_CONFIG_FILE", "configuration.ini");
+define("DEFAULT_CONFIG_SECTION", "testing-mysql");
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'AllTests::main');
@@ -27,7 +31,6 @@ require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
 
 require_once 'PHPUnit/Util/Filter.php';
-// PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(__FILE__)).'/application/');
 
 /**
  * AllTests merges all test from the modules
@@ -40,15 +43,15 @@ require_once 'PHPUnit/Util/Filter.php';
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class AllTests
+class AllTests extends PHPUnit_Framework_TestSuite
 {
     /**
      * Initialize the TestRunner
      *
      */
-    public static function main()
+    public static function main(Zend_Config $config)
     {
-        PHPUnit_TextUI_TestRunner::run(self::suite());
+        PHPUnit_TextUI_TestRunner::run(self::suite($config));
     }
 
     /**
@@ -56,14 +59,16 @@ class AllTests
      *
      * @return PHPUnit_Framework_TestSuite
      */
-    public static function suite()
+    public static function suite(Zend_Config $config)
     {
-	
-	PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
-        // $log = new Phprojekt_Log(new Zend_Config_Ini('../../configuration.ini', 'production'));
-        Zend_Registry::set('log', $log);
+        $db = Zend_Db::factory($config->database->type, array(
+                                          'username' => $config->database->username,
+                                          'password' => $config->database->password,
+                                          'dbname'   => $config->database->name,
+                                          'host'     => $config->database->host));
 
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
+        $suite->sharedFixture = $db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
 
@@ -73,6 +78,83 @@ class AllTests
     }
 }
 
+/*
+ * This is actually our entry point. If we run from the commandline
+ * we support several switches to the AllTest file.
+ *
+ * To see the switches try
+ *   php AllTests.php -h
+ */
 if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
-    AllTests::main();
+
+    /* default settings */
+    $whiteListing = true;
+    $configFile   = DEFAULT_CONFIG_FILE;
+    $configSect   = DEFAULT_CONFIG_SECTION;
+
+    if (function_exists('getopt') && isset($argv)) { /* Not available on windows */
+        $options = getopt('s:c:hd');
+        if (array_key_exists('h', $options)) {
+            usage();
+        }
+
+        if (array_key_exists('c', $options)) {
+            $configFile = $options['c'];
+        }
+
+        if (array_key_exists('s', $options)) {
+            $configSect = $options['s'];
+        }
+
+        if (array_key_exists('d', $options)) {
+            $whiteListing = ! $whiteListing;
+        }
+
+        if (!is_readable($configFile)) {
+            fprintf(STDERR, "Cannot read %s\nAborted\n", $configFile);
+            exit;
+        }
+    } elseif (isset($_GET)) {
+        /* @todo make checks to avoid security leaks */
+        if (array_key_exists('c', $_GET)) {
+            $configFile = realpath($_GET['c']);
+        }
+
+        if (array_key_exists('s', $_GET)) {
+            $configSect = $_GET['s'];
+        }
+
+        if (array_key_exists('d', $_GET)) {
+            $whiteListing = ! $whiteListing;
+        }
+    }
+
+
+    $config = new Zend_Config_Ini($configFile, $configSect);
+
+    if ($whiteListing) {
+        /* enable whitelisting for unit tests, these directories are
+         * covered for the code coverage even they are not part of unit testing */
+        PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDirectory . '/application');
+    }
+
+    AllTests::main($config);
+}
+
+function usage() {
+    $doc = <<<EOF
+PHProjekt UnitTesting suite. Uses PHPUnit by Sebastian Bergmann.
+
+usage:
+ php AllTests.php [OPTIONS]
+
+ OPTIONS:
+    -h           show help
+    -c <file>    use <file> as configuration file, default 'configuration.ini'
+    -s <section> <section> is used to read the ini, default 'testing-mysql'
+    -d           disable whitelist filtering
+
+EOF;
+    print $doc."\n";
+    exit;
 }
