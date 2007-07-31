@@ -36,7 +36,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      */
     public function setUp()
     {
-        $config = new Zend_Config_Ini('../../configuration.ini', 'testing');
+        $config = new Zend_Config_Ini('./configuration.ini', 'testing');
         $this->db = Zend_Db::factory($config->database->type, array(
                                           'username' => $config->database->username,
                                           'password' => $config->database->password,

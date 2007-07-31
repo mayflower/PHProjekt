@@ -52,11 +52,13 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
      */
     public function setUp()
     {
+        $config = new Zend_Config_Ini('./configuration.ini', 'testing');
+
         $this->sharedFixture = Zend_Db::factory('PDO_MYSQL', array(
-                                          'username' => 'phprojekt',
-                                          'password' => 'phprojekt',
-                                          'dbname'   => 'phprojekt-mvc-test',
-                                          'host'     => 'localhost'));
+                                          'username' => $config->database->username,
+                                          'password' => $config->database->password,
+                                          'dbname'   => $config->database->name,
+                                          'host'     => $config->database->host));
     }
 
     /**

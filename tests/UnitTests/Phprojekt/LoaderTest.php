@@ -31,7 +31,7 @@ class Phprojekt_LoaderTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function setUp()
     {
-        $config = new Zend_Config_Ini('../../configuration.ini', 'testing');
+        $config = new Zend_Config_Ini('./configuration.ini', 'testing');
         $this->sharedFixture = Zend_Db::factory($config->database->type, array(
                                           'username' => $config->database->username,
                                           'password' => $config->database->password,
