@@ -1,4 +1,4 @@
-sa<?php
+<?php
 /**
  * Simple ActiveRecord implementation based on Zend_Db_Table
  *
