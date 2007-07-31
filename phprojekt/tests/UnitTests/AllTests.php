@@ -62,9 +62,7 @@ class AllTests
 	PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
         // $log = new Phprojekt_Log(new Zend_Config_Ini('../../configuration.ini', 'production'));
         Zend_Registry::set('log', $log);
-	// echo "Hier addwhitelist \n"; 
-	// PHPUnit_Util_Filter::addDirectoryToWhitelist('./application/');
-	// echo "Hier nach addwhitelist \n"; 
+
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
