@@ -43,7 +43,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($config);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($config);
-        $this->_dbManager->getFields($this->_name);
     }
 
     /**
