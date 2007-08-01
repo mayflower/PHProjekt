@@ -67,11 +67,11 @@ class Phprojekt_Loader extends Zend_Loader
             $front  = Zend_Controller_Front::getInstance();
             $module = (count($names) > 1) ? $names[0] : $front->getDefaultModule();
 
-            $file   = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
-                    . $module . DIRECTORY_SEPARATOR
-                    . $front->getModuleControllerDirectoryName()
-                    . DIRECTORY_SEPARATOR
-                    . array_pop($names) . '.php';
+            $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
+                  . $module . DIRECTORY_SEPARATOR
+                  . $front->getModuleControllerDirectoryName()
+                  . DIRECTORY_SEPARATOR
+                  . array_pop($names) . '.php';
 
             if (self::isReadable($file)) {
                 self::_includeFile($file, true);

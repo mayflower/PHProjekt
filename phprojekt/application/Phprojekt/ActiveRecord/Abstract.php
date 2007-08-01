@@ -308,14 +308,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $select = $adapter->select();
         $select->from(array('rel' => $tableName), array());
 
-        $select->joinInner(
-                    array('my' => $myTable),
+        $select->joinInner(array('my' => $myTable),
                     sprintf("%s = %s",
                         $adapter->quoteIdentifier("my.id"),
                         $adapter->quoteIdentifier("rel." . $myKeyName)));
 
-        $select->joinInner(
-                    array('foreign' => $foreignTable),
+        $select->joinInner(array('foreign' => $foreignTable),
                     sprintf("%s = %s",
                         $adapter->quoteIdentifier("foreign.id"),
                         $adapter->quoteIdentifier("rel." . $foreignKeyName)));
@@ -330,13 +328,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
          * as it is called from find()
          */
         if (null !== $where) {
-            $select->where(str_replace(
-                        $adapter->quoteIdentifier("id"),
+            $select->where(str_replace($adapter->quoteIdentifier("id"),
                         $adapter->quoteIdentifier("foreign.id"), $where));
         }
 
         if (null !== $this->_log) {
-            $this->_log->debug($select->__toString());
+            $this->_log->debug((string) $select);
         }
 
         $stmt = $this->getAdapter()->query($select);
@@ -812,8 +809,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->_log->debug($where);
         }
 
-        $rows  = parent::fetchAll($where, $order,
-                                  $count, $offset);
+        $rows = parent::fetchAll($where, $order,
+                                 $count, $offset);
 
         $result = array();
         foreach ($rows as $row) {
@@ -876,7 +873,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function getTableName()
     {
-        return $this->_translateClassNameToTable(
-                        $this->_translateClassNameToTable(get_class($this)));
+        return $this->_translateClassNameToTable($this->_translateClassNameToTable(get_class($this)));
     }
 }

@@ -28,7 +28,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 {
     /**
      * The char that separates a tree path in the database
-     *
+     * It should not be edited, if you don't initialize a complete
+     * empty tree, as no conversion is done
      */
     const NODE_SEPARATOR = '/';
 
@@ -40,28 +41,34 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     protected $_parentNode = null;
 
     /**
-     * Array of nodes
+     * Array of child nodes objects.
      *
      * @var array
      */
     protected $_children = array();
 
     /**
-     * The active record pattern
+     * The active record pattern used to determine the table where
+     * our actual tree data is stored as well as receiving the additional
+     * columns from the table
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
     protected $_activeRecord = null;
 
     /**
-     * The requested id. We don't use the normal ID.
+     * The id of the initial requested element. We dont use the id here
+     * because id is received by the active record pattern and is used
+     * to determine if a node was sucessfull received. The requested id itself
+     * does nothing say about the current storage status of the node
      *
      * @var integer
      */
     protected $_requestedId = null;
 
     /**
-     * Holds an index of all notes in the subtree.
+     * If this is the root node, it holds an simple list of all nodes
+     * in the tree. This is used to do fast lookups on a given id
      *
      * @var array
      */
@@ -71,9 +78,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Initialize a new node and sets the tree the node belongs to
      *
-     * @param Phprojekt_Tree_Storage_Interface $tree
+     * @param Phprojekt_ActiveRecord_Abstract $activeRecord The active Record that holds the tree
+     * @param integer                         $id           The requested node, that will be the root node
      */
-    public function __construct(Phprojekt_ActiveRecord_Abstract $activeRecord, $id = NULL)
+    public function __construct(Phprojekt_ActiveRecord_Abstract $activeRecord, $id = null)
     {
         $this->_activeRecord = $activeRecord;
 
@@ -84,9 +92,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Reinialize
+     * Reinialize the tree and reset all internal information.
      *
      * @see delete()
+     *
+     * @return void
      */
     protected function _initialize()
     {
@@ -106,7 +116,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         $this->_activeRecord         = clone $this->_activeRecord;
         $this->_activeRecord->path   = self::NODE_SEPARATOR;
-        $this->_activeRecord->parent = NULL;
+        $this->_activeRecord->parent = null;
         $this->_activeRecord->save();
 
         $this->_requestedId = $this->id;
@@ -115,10 +125,13 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Setup a tree
+     * Try to receive a tree/subtree from the database using the
+     * active record object to get the name of the tree table.
+     * If the requested id is not set using the constructor this method
+     * usually fails throwing an exception.
      *
-     * @param Phprojekt_Filter_Interface  $filter
-     * @param Phprojekt_Compare_Interface $comparer
+     * @param Phprojekt_Filter_Interface  $filter   A filter to chain
+     * @param Phprojekt_Compare_Interface $comparer A comparer doing pre-sorting
      *
      * @throws Phprojekt_Tree_Node_Exception If no id was requested (see constructor)
      *
@@ -126,53 +139,55 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function setup(Phprojekt_Filter_Interface $filter = null, Phprojekt_Compare_Interface $comparer = null)
     {
-        if (null !== $this->_requestedId) {
-            $database = $this->_activeRecord->getAdapter();
-            $table    = $this->_activeRecord->getTableName();
-            $select   = $database->select();
+        if (null === $this->_requestedId) {
+            throw new Phprojekt_Tree_Node_Exception(
+                                                'You have to set a requested '
+                                              . 'treeid in the constructor');
+        }
 
-            $select->from($table, 'path')
-                   ->where($database->quoteInto('id = ?', $this->_requestedId))
-                   ->limit(1);
+        $database = $this->_activeRecord->getAdapter();
+        $table    = $this->_activeRecord->getTableName();
+        $select   = $database->select();
 
-            $rootPath = $database->fetchOne($select);
+        $select->from($table, 'path')
+               ->where($database->quoteInto('id = ?', $this->_requestedId))
+               ->limit(1);
 
-            if (null !== $rootPath) {
-                $rows = $this->_activeRecord->fetchAll(
-                            $database->quoteInto("path LIKE ?", $rootPath . '%')
-                          . ' OR '
-                          . $database->quoteInto("id = ?", $this->id),
-                            'path');
+        $rootPath = $database->fetchOne($select);
 
-                $this->_index = array();
-                foreach ($rows as $record) {
-                    $node = null;
+        if (null === $rootPath) {
+            throw
+              new Phprojekt_Tree_Node_Exception('Requested node not found');
+        }
 
-                    if ($record->id == $this->_requestedId) {
-                        $node = $this;
-                        $this->_activeRecord = $record;
-                    } elseif (array_key_exists($record->parent, $this->_index)) {
-                        $node = new Phprojekt_Tree_Node_Database($record);
-                        $this->_index[$node->parent]->appendNode($node);
-                    }
+        $where = sprintf("%s OR %s",
+                    $database->quoteInto("path LIKE ?", $rootPath . '%'),
+                    $database->quoteInto("id = ?", $this->id));
 
-                    if (null !== $node) {
-                        $this->_index[$node->id] = $node;
-                    }
-                }
-                return $this;
-            } else {
-                throw
-                  new Phprojekt_Tree_Node_Exception('Requested node not found');
+        $rows = $this->_activeRecord->fetchAll($where, 'path');
+
+        $this->_index = array();
+        foreach ($rows as $record) {
+            $node = null;
+
+            if ($record->id == $this->_requestedId) {
+                $node                = $this;
+                $this->_activeRecord = $record;
+            } elseif (array_key_exists($record->parent, $this->_index)) {
+                $node = new Phprojekt_Tree_Node_Database($record);
+                $this->_index[$node->parent]->appendNode($node);
+            }
+
+            if (null !== $node) {
+                $this->_index[$node->id] = $node;
             }
         }
 
-        throw new Phprojekt_Tree_Node_Exception('You have to set a requested '
-                                              . 'treeid in the constructor');
+        return $this;
     }
 
     /**
-     * Move upstairs until reach the root node.
+     * Move upstairs until reach the root node and returns them.
      *
      * @return Phprojekt_Tree_Node_Database
      */
@@ -186,11 +201,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Append a new node
+     * Append a new node. If it the new was not yet stored in the
+     * database (id === null) it's inserted
      *
-     * @param Phprojekt_Tree_Node_Database $node
+     * @param Phprojekt_Tree_Node_Database $node The node to append
      *
-     * @throws Phprojekt_Tree_Node_Exception
+     * @throws Phprojekt_Tree_Node_Exception If object has no current active record
      *
      * @return Phprojekt_Tree_Node_Database
      */
@@ -200,7 +216,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
             if (null === $node->id) {
                 $node->_activeRecord->parent = $this->id;
-                $node->_activeRecord->path = sprintf('%s%s%s', $this->path, $this->id, self::NODE_SEPARATOR);
+                $node->_activeRecord->path   = sprintf('%s%s%s',
+                                                        $this->path,
+                                                        $this->id,
+                                                        self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
             }
 
@@ -217,7 +236,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Recursive delete children
      *
-     * @param array $children
+     * @param array &$children Array of children to delete
+     *
+     * @return void
      */
     private function _deleteChildren(&$children)
     {
@@ -231,16 +252,19 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Delete a node an all subnodes
+     * Delete a node an all subnodes.
+     * ! NOTE this method uses transaction locking.
      *
-     * @throws Zend_Db_Exception
+     * @throws Zend_Db_Exception If node is not stored to database or
+     *                           was not received yet.
      *
      * @return void
      */
     public function delete()
     {
         if (null === $this->id) {
-            throw new Phprojekt_Tree_Node_Exception('Node not setup yet');
+            throw new Phprojekt_Tree_Node_Exception('Node not received or stored'
+                                                   .' from/to the database yet');
         }
 
         $table    = $this->_activeRecord->getTableName();
@@ -265,9 +289,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Set the parent node
+     * Set the parent node.
+     * ! NOTE this method is somewhat dumb, it doesnot check if
+     * it is a child of the given parent node. You can messup the tree
+     * using the method not carefully.
      *
-     * @param Phprojekt_Tree_Node_Database $node
+     * @param Phprojekt_Tree_Node_Database $node Parent node
      *
      * @return Phprojekt_Tree_Node_Database
      */
@@ -281,7 +308,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Overwrite getter to access protected properties as read-only
      *
-     * @param string $key
+     * @param string $key Identifier
      *
      * @return mixed
      */
@@ -290,7 +317,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         switch ($key) {
         case 'parentNode':
                 return $this->getParentNode();
-                break;
         default:
             if (null !== $this->_activeRecord) {
                 return $this->_activeRecord->$key;
@@ -301,8 +327,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Pass all sets to the active record
      *
-     * @param integer $key
-     * @param mixed $value
+     * @param integer $key   Identifier
+     * @param mixed   $value Value
      *
      * @return void
      */
@@ -319,7 +345,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Returns a node from the current tree.
      *
-     * @param integer $id
+     * @param integer $id Id of the node to receive
      *
      * @return Phprojekt_Tree_Node_Database
      */
@@ -332,7 +358,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * Returns a node from the tree intern index, that is maintained
      * by the root node
      *
-     * @param  integer $id
+     * @param integer $id Id of the node to receive
      *
      * @return Phprojekt_Tree_Node_Database
      */
@@ -378,18 +404,17 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * @return RecursiveIteratorIterator
      */
     public function getIterator ()
-	{
-		return new RecursiveIteratorIterator(
-			new Phprojekt_Tree_Node_Iterator($this),
-			RecursiveIteratorIterator::SELF_FIRST);
-	}
+    {
+        return new RecursiveIteratorIterator(new Phprojekt_Tree_Node_Iterator($this),
+                                             RecursiveIteratorIterator::SELF_FIRST);
+    }
 
-	/**
-	 * Returns the parent node of that node or null
-	 * if the node doesnt have a parent
-	 *
-	 * @return null|Phprojekt_Tree_Node
-	 */
+    /**
+     * Returns the parent node of that node or null
+     * if the node doesnt have a parent
+     *
+     * @return null|Phprojekt_Tree_Node
+     */
     public function getParentNode()
     {
         return $this->_parentNode;
@@ -428,7 +453,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function hasChildren()
     {
-        return count ($this->_children) > 0;
+        return count($this->_children) > 0;
     }
 
     /**

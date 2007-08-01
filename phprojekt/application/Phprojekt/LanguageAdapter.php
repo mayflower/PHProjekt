@@ -54,28 +54,29 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
         $options = array_merge($this->_options, $options);
-        if (($options['clear'] == true) ||
-        !isset($this->_translate[$locale])) {
+        if (true === $options['clear'] ||
+            false === isset($this->_translate[$locale])) {
             $this->_translate[$locale] = array();
         }
 
         /* Get the translated string from the session if exists */
         $session = new Zend_Session_Namespace();
-        if (isset($session->translatedStrings)) {
+        if (true === isset($session->translatedStrings)) {
             $this->_translate = $session->translatedStrings;
         } else {
             $session->translatedStrings = array();
         }
 
         /* Collect a new trasnaltion set */
-        if (empty($this->_translate[$locale])) {
-
+        if (false === empty($this->_translate[$locale])
+         && true  === is_readable($data)) {
             /* Get the translation file */
             include_once $data;
 
             foreach ($_lang as $word => $translation) {
                 $this->_translate[$locale][$word] = $translation;
             }
+
             $session->translatedStrings = $this->_translate;
         }
     }
@@ -85,7 +86,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * @return string
      */
-    public function toString()
+    public function __toString()
     {
         return "Phprojekt";
     }

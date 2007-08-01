@@ -34,99 +34,100 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     /**
      * Initialize
      *
-     * @param array $children
+     * @param array $children An array of children iterated by the iterator.
      */
-	function __construct($children)
-	{
-		if (is_array($children))
-			$this->_children = $children;
-		else
-			$this->_children = array($children);
-	}
+    function __construct($children)
+    {
+        if (is_array($children)) {
+            $this->_children = $children;
+        } else {
+            $this->_children = array($children);
+        }
+    }
 
-	/**
-	 * Returns the current item
-	 *
-	 * @see Iterator::current()
-	 *
-	 * @return Phprojekt_Tree_Node
-	 */
-	public function current()
-	{
-		return current($this->_children);
-	}
+    /**
+     * Returns the current item
+     *
+     * @see Iterator::current()
+     *
+     * @return Phprojekt_Tree_Node
+     */
+    public function current()
+    {
+        return current($this->_children);
+    }
 
-	/**
-	 * Returns the id/key for the current entry
-	 *
-	 * @see Iterator::key()
-	 *
-	 * @return mixed
-	 */
-	public function key()
-	{
-		return $this->current()->id;
-	}
+    /**
+     * Returns the id/key for the current entry
+     *
+     * @see Iterator::key()
+     *
+     * @return mixed
+     */
+    public function key()
+    {
+        return $this->current()->id;
+    }
 
-	/**
-	 * Move forward to the next item
-	 *
-	 * @see Iterator::next()
-	 *
-	 * @return void
-	 */
-	public function next()
-	{
-		next($this->_children);
-	}
+    /**
+     * Move forward to the next item
+     *
+     * @see Iterator::next()
+     *
+     * @return void
+     */
+    public function next()
+    {
+        next($this->_children);
+    }
 
-	/**
-	 * Reset to the first element
-	 *
-	 * @see Iterator::rewind()
-	 *
-	 * @return void
-	 */
-	public function rewind()
-	{
-		reset($this->_children);
-	}
+    /**
+     * Reset to the first element
+     *
+     * @see Iterator::rewind()
+     *
+     * @return void
+     */
+    public function rewind()
+    {
+        reset($this->_children);
+    }
 
-	/**
-	 * Checks if the current entry is valid
-	 *
-	 * @see Iterator::valid()
-	 *
-	 * @return boolean
-	 */
-	public function valid()
-	{
-		return (boolean) $this->current();
-	}
+    /**
+     * Checks if the current entry is valid
+     *
+     * @see Iterator::valid()
+     *
+     * @return boolean
+     */
+    public function valid()
+    {
+        return (boolean) $this->current();
+    }
 
-	/**
-	 * Checks if the node has children to move forward to receive them
-	 * using getChildren() if it has children
-	 *
-	 * @see RecursiveIterator::hasChildren()
-	 *
-	 * @return boolean
-	 */
-	public function hasChildren()
-	{
-		return (boolean) $this->current()->hasChildren();
-	}
+    /**
+     * Checks if the node has children to move forward to receive them
+     * using getChildren() if it has children
+     *
+     * @see RecursiveIterator::hasChildren()
+     *
+     * @return boolean
+     */
+    public function hasChildren()
+    {
+        return (boolean) $this->current()->hasChildren();
+    }
 
-	/**
-	 * Returns an new iterator for the children of the current node
-	 *
-	 * @see RecursiveIterator::getChildren()
-	 *
-	 * @return RecursiveIterator
-	 */
-	public function getChildren()
-	{
-		return new self($this->current()->getChildren ());
-	}
+    /**
+     * Returns an new iterator for the children of the current node
+     *
+     * @see RecursiveIterator::getChildren()
+     *
+     * @return RecursiveIterator
+     */
+    public function getChildren()
+    {
+        return new self($this->current()->getChildren());
+    }
 
 }
