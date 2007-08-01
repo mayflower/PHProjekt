@@ -31,13 +31,6 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function setUp()
     {
-        $config = new Zend_Config_Ini('./configuration.ini', 'testing');
-        $this->sharedFixture = Zend_Db::factory($config->database->type, array(
-                                          'username' => $config->database->username,
-                                          'password' => $config->database->password,
-                                          'dbname'   => $config->database->name,
-                                          'host'     => $config->database->host));
-
         $this->_emptyResult = array();
 
         $this->_formResult = array(
