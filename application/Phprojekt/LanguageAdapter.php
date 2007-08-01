@@ -68,7 +68,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         }
 
         /* Collect a new trasnaltion set */
-        if (false === empty($this->_translate[$locale])
+        if (true === empty($this->_translate[$locale])
          && true  === is_readable($data)) {
             /* Get the translation file */
             include_once $data;
@@ -89,5 +89,27 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     public function toString()
     {
         return "Phprojekt";
+    }
+
+    /**
+     * Return if is loaded the lang file
+     *
+     * @param string|Zend_Locale $locale Locale/Language to set,
+     *                                   identical with Locale identifiers
+     *                                   see Zend_Locale for more information
+     *
+     * @return boolean
+     */
+    public function isLoaded($locale)
+    {
+        if (false === isset($this->_translate[$locale])) {
+            return false;
+        }
+
+        if (true === empty($this->_translate[$locale])) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1294,7 +1294,7 @@ $_lang["yes = 1"]  = "yes = 1";
 /* New lang stuff */
 $_lang['Add'] = "Add";
 $_lang['Delete'] = "Delete";
-$_lang['Saved'] = "Saved";
+$_lang['Saved'] = "Savedss";
 $_lang['Deleted'] = "Deleted";
 
 $_lang['id'] = "ID";
