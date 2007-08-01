@@ -1296,8 +1296,10 @@ $_lang['Add'] = "Add";
 $_lang['Delete'] = "Delete";
 $_lang['Saved'] = "Savedss";
 $_lang['Deleted'] = "Deleted";
+$_lang['Is a required field'] = "Is a required field";
 
 $_lang['id'] = "ID";
 $_lang['title'] = "Title";
 $_lang['notes'] = "Description";
+$_lang['priority'] = "Priority";
 ?>

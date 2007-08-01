@@ -50,7 +50,9 @@ class Phprojekt_Language extends Zend_Translate
      */
     public function translate($messageId, $locale = null)
     {
-        $this->loadLangFile($locale);
+        if (null !== $locale) {
+           $this->loadLangFile($locale);
+        }
         return utf8_encode($this->_adapter->translate($messageId, $locale));
     }
 

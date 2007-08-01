@@ -34,6 +34,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     protected $_dbManager = null;
 
     /**
+     * Containt all the errors for one operation
+     *
+     * @var array
+     */
+    protected $_errors = array();
+
+    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -91,8 +98,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
                 if ($validations['isRequired']) {
                     if (empty($value)) {
-                        throw new Phprojekt_Item_Exception($varname . '#'
-                                  . 'is a required field');
+                        $this->addError($varname, 'Is a required field');
                     }
                 }
             }
@@ -111,5 +117,29 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     {
         $var = parent::__get($varname);
         return $var;
+    }
+
+    /**
+     * Collect all the errors in an array for show it later
+     *
+     * @param string $field   Name of the Field with error
+     * @param string $message Message to display for this field
+     */
+    public function addError($field,$message)
+    {
+        $this->_errors[] = array('field'    => $field,
+                                 'message'  => $message);
+    }
+
+    /**
+     * Return the error data and delete it
+     *
+     * @return array
+     */
+    public function getError()
+    {
+        $error         = $this->_errors;
+        $this->_errors = array();
+        return $error;
     }
 }
