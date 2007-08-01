@@ -104,7 +104,7 @@ class IndexController extends Zend_Controller_Action
     {
 
         try {
-            Phprojekt_Auth::isLogguedIn();
+            Phprojekt_Auth::isLoggedIn();
         }
         catch (Phprojekt_Auth_Exception $ae) {
             if ($ae->getCode() == 1) {
