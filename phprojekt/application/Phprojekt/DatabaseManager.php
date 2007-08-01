@@ -76,7 +76,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array        Array with the data of all the fields
      */
-    protected function _getFields($table,$order)
+    protected function _getFields($table, $order)
     {
         $found = 0;
         foreach ($this->_data as $key => $value) {

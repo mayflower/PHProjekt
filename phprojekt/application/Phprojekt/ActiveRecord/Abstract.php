@@ -40,7 +40,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Define the set of allowed characters for classes
      *
      */
-    const CLASS_PATTERN = '[A-Za-z0-9_]';
+    const CLASS_PATTERN = '[A-Za-z0-9_]+';
 
     /**
      * models where this element does belong to,
@@ -290,23 +290,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $className = $this->_relations['hasManyAndBelongsToMany']['classname'];
         $classId   = $this->_relations['hasManyAndBelongsToMany']['id'];
 
-        $tableNames = array();
-
         $foreignKeyName = $this->_translateKeyFormat(get_class($this));
         $myKeyName      = $this->_translateKeyFormat($className);
 
         $foreignTable = $this->_translateClassNameToTable(get_class($this));
         $myTable      = $this->_translateClassNameToTable($className);
-        $tableNames[] = $myTable;
-        $tableNames[] = $foreignTable;
 
-        sort($tableNames);
-        reset($tableNames);
+        $tableName = $this->_translateIntoRelationTableName($className, get_class($this));
 
-        $tableName = sprintf('%s_rel', implode('_', $tableNames));
-
-        $select = $adapter->select();
-        $select->from(array('rel' => $tableName), array());
+        $select = $adapter->select()->from(array('rel' => $tableName));
 
         $select->joinInner(array('my' => $myTable),
                     sprintf("%s = %s",
@@ -376,8 +368,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         if (!array_key_exists($key, $this->_data)) {
-            $className = $this->_getClassNameForRelationship($key,
-                                                             $this->belongsTo);
+            $className = $this->_getClassNameForRelationship($key, $this->belongsTo);
 
             $instance = new $className(array('db' => $this->getAdapter()));
 
@@ -592,17 +583,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected static function _translateClassNameToTable($className)
     {
-        if (preg_match('@' . self::CLASS_PATTERN . '@', $className)) {
-            $match = array();
-            if (preg_match('@(?:.*?_)?([A-Za-z0-9]+)$@', $className, $match)) {
+        $preg = sprintf('(?:%s_)?(%s)$', self::CLASS_PATTERN, self::CLASS_PATTERN);
 
-                $name = preg_replace('@([A-Z])@', '_\\1', $match[1]);
-
-                if ($name{0} == '_') $name = substr($name, 1);
-
-                return strtolower($name);
-            }
+        $match = array();
+        if (preg_match('@' . $preg . '@', $className, $match)) {
+            return $match[1];
         }
+
         throw new Phprojekt_ActiveRecord_Exception('Classname contains '
                                                   .'illegal characters');
 
@@ -618,7 +605,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _translateKeyFormat($className)
     {
         $tableName = $this->_translateClassNameToTable($className, false);
-
+        $tableName{0} = strtolower($tableName{0});
         $keyName = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
 
         if (null !== $this->_log) {
@@ -650,7 +637,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         sort($tableNames);
         reset($tableNames);
 
-        $tableName = sprintf('%s_rel', implode('_', $tableNames));
+        $tableName = sprintf('%sRelation', implode('', $tableNames));
 
         if (null !== $this->_log) {
             $this->_log->debug(sprintf("%s, %s translated to %s",
@@ -760,7 +747,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
              || count($this->hasManyAndBelongsToMany) > 0) {
-
+                /*
+                 * We just delete the data from the relations and do
+                 * not do an lookup for a cascade delete if there is no
+                 * relation anymore
+                 */
                 foreach (array_keys($this->hasManyAndBelongsToMany) as $key) {
                     $className = $this->_getClassNameForRelationship($key,
                                             $this->hasManyAndBelongsToMany);
@@ -774,7 +765,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             }
 
             $tableName = $this->_translateClassNameToTable(get_class($this));
+
             parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id']));
+
             $this->_initDataArray();
             $this->_relations = array();
         }

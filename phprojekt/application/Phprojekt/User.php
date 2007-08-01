@@ -24,20 +24,6 @@
  */
 class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
 {
-
-
-    /**
-     * Get a setting value of the user
-     *
-     * @param string $name of the setting to be get
-     *
-     * @return mixed $value of the setting
-     */
-    public function getSetting(mixed $name)
-    {
-        return $this->$name;
-    }
-
     /**
      * Checks if user is active
      *
@@ -52,7 +38,7 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
      * Searchs an user Id based on the username
      *
      * @param string $username username necessary to find the userId
-     * 
+     *
      * @return integer with the user id value. If the user is not found then function will return false
      */
     public function findIdByUsername($username)
@@ -79,19 +65,5 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
 
         return $tmp->id;
 
-    }
-
-
-    /**
-     * Sets any setting of the user
-     *
-     * @param string $name  of the setting to be changed
-     * @param string $value new value
-     *
-     * @return mixed The value set on the setting
-     */
-    public function setSetting(string $name, string $value)
-    {
-        return $this->$name = $value;
     }
 }
