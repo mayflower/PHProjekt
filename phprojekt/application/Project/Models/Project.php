@@ -81,7 +81,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      *
      * @param array $request $_POST array
      *
-     * @return void
+     * @return string        Message for show after the save
      */
     public function saveData($request)
     {
@@ -95,7 +95,13 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             }
         }
 
-        $this->save();
+        $error = $this->getError();
+        if (empty($error)) {
+            $this->save();
+            return null;
+        } else {
+            return $error;
+        }
     }
 
     /**

@@ -47,8 +47,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
     public function testRequiredFieldSet()
     {
         $item = new PHprojekt_Project(array('db' => $this->sharedFixture));
-        $this->setExpectedException('Exception');
         $item->title = '';
+        $result = array(
+            array('field'    => 'title',
+                  'message'  => 'Is a required field')
+                  );
+        $this->assertEquals($result, $item->getError());
     }
 
     /**
@@ -65,5 +69,38 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $item = new PHprojekt_Project(array('db' => $this->sharedFixture));
         $item->priority = '7';
         $this->assertEquals(7, $item->priority);
+    }
+
+    /**
+     * Test for add errors
+     *
+     */
+    public function testAddError()
+    {
+        $result = array(
+            array('field'    => 'title',
+                  'message'  => 'Is a required field')
+                  );
+        $item = new PHprojekt_Project(array('db' => $this->sharedFixture));
+        $item->addError('title','Is a required field');
+        $this->assertEquals($result, $item->getError());
+    }
+
+    /**
+     * Test for get errors
+     *
+     */
+    public function testGetError()
+    {
+        $result = array(
+            array('field'    => 'title',
+                  'message'  => 'Is a required field')
+                  );
+        $item = new PHprojekt_Project(array('db' => $this->sharedFixture));
+        $item->getError();
+        $this->assertEquals(array(), $item->getError());
+
+        $item->title = '';
+        $this->assertEquals($result, $item->getError());
     }
 }

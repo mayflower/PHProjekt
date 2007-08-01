@@ -1307,9 +1307,10 @@ $_lang['Add'] = "Agregar";
 $_lang['Delete'] = "Borrar";
 $_lang['Saved'] = "Grabado";
 $_lang['Deleted'] = "Borrado";
-$_lang['is a required field'] = "es un campo requerido";
+$_lang['Is a required field'] = "Es un campo requerido";
 
 $_lang['id'] = "ID";
 $_lang['title'] = "Título";
 $_lang['notes'] = "Descripción";
+$_lang['priority'] = "Prioridad";
 ?>
