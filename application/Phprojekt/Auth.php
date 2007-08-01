@@ -70,8 +70,6 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function login($username, $password)
     {
-
-
         $db = Zend_Registry::get('db');
         /* @var $db Zend_Db_Adapter_Abstract */
 
@@ -139,15 +137,12 @@ class Phprojekt_Auth extends Zend_Auth
         $defaultMethod = Phprojekt_Auth::_cryptPassword($defaultMethod);
 
         if ($defaultMethod == $password) {
-
             return true;
-
         }
 
         /* please add other valid methods here (e.g. not crypted password) */
 
         /* none of the methods works */
-
         return false;
     }
 
