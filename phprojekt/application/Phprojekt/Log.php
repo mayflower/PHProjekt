@@ -67,6 +67,14 @@ class Phprojekt_Log extends Zend_Log
      */
     public function log($message, $priority)
     {
+		if ($priority >= Zend_Log::DEBUG) {
+			$btrace  = debug_backtrace();
+			$message = sprintf("%d %s::%s:\n %s\n",
+							   $btrace[3]['line'],
+							   $btrace[3]['class'],
+							   $btrace[3]['function'],
+							   $message);
+		}
         /*
          * Pass the message to all Zend_Log instances saved in _loggers,
          * but they have priority filtering and therefore decide themself

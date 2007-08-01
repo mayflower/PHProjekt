@@ -74,7 +74,6 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');
-        // ...
 
         return $suite;
     }

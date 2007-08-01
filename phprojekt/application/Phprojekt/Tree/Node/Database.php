@@ -140,8 +140,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             if (null !== $rootPath) {
                 $rows = $this->_activeRecord->fetchAll(
                             $database->quoteInto("path LIKE ?", $rootPath . '%')
-                           . ' OR '
-                           .$database->quoteInto("id = ?", $this->id),
+                          . ' OR '
+                          . $database->quoteInto("id = ?", $this->id),
                             'path');
 
                 $this->_index = array();
