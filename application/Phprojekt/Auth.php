@@ -48,9 +48,8 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return boolean true if user is logued in
      */
-    public function isLogguedIn()
+    public function isLoggedIn()
     {
-
         $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
 
         if (!isset($authNamespace->userId) || empty($authNamespace->userId)) {
@@ -66,7 +65,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @param string $username username provided
      * @param stirng $password clean password typed by user
-     * 
+     *
      * @return boolean true if login process was sucessful
      */
     public function login($username, $password)
@@ -129,7 +128,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @param string $string   key uncryted to check if it is the password
      * @param string $password crypted password
-     * 
+     *
      * @return boolean true if the string crypted is equal to provide password
      */
     private function _compareStringWithPassword($string, $password)
@@ -156,7 +155,7 @@ class Phprojekt_Auth extends Zend_Auth
      * String to be crytped
      *
      * @param string $password string to be cripted
-     * 
+     *
      * @return scring crypted password
      */
     private function _cryptPassword($password)
