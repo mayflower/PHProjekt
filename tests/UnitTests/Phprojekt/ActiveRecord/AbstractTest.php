@@ -94,6 +94,12 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
         $this->sharedFixture->rollBack();
 	}
 
+	public function testGetTableName()
+	{
+	   $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
+	   $this->assertEquals('ModuleInstance', $instance->getTableName());
+	}
+
 	/*
 	 *
 	 */
