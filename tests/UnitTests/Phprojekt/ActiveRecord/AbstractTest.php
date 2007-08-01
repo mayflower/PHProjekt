@@ -13,7 +13,7 @@
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
-class Phprojekt_Project extends Phprojekt_ActiveRecord_Abstract
+class Phprojekt_Project extends Phprojekt_Item_Abstract
 {
     public $hasMany = array('instances' => array('classname' => 'Phprojekt_ModuleInstance'));
 }
