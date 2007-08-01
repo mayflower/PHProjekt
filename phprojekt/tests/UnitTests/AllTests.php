@@ -67,6 +67,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
                                           'dbname'   => $config->database->name,
                                           'host'     => $config->database->host));
 
+        Zend_Session::start();
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->sharedFixture = $db;
         $suite->addTest(Default_AllTests::suite());

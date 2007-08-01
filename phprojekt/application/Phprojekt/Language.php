@@ -50,6 +50,25 @@ class Phprojekt_Language extends Zend_Translate
      */
     public function translate($messageId, $locale = null)
     {
+        $this->loadLangFile($locale);
         return utf8_encode($this->_adapter->translate($messageId, $locale));
+    }
+
+    /**
+     * Load another lang file if is needed
+     *
+     * @param string|Zend_Locale $locale Locale/Language to set,
+     *                                   identical with Locale identifiers
+     *                                   see Zend_Locale for more information
+     *
+     * @return void
+     */
+    private function loadLangFile($locale)
+    {
+        if (false === $this->_adapter->isLoaded($locale)) {
+            $data = PHPR_ROOT_PATH . '/languages/' . $locale . '.inc.php';
+
+            $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
+        }
     }
 }

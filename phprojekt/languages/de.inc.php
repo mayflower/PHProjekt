@@ -1308,4 +1308,15 @@ $_lang["Your new password has been stored"]  = "Ihr neues Passwort ist gespeiche
 $_lang["Your settings have been stored"]  = "Ihre Einstellungen wurden gespeichert";
 $_lang["Your token has already been expired."]  = "Ihr token ist bereits abgelaufen";
 $_lang["Zip code"]  = "Postleitzahl";
+
+/* New lang stuff */
+$_lang['Add'] = "Hinzufügen";
+$_lang['Delete'] = "Löschung";
+$_lang['Saved'] = "Gespeichert";
+$_lang['Deleted'] = "Gelöscht";
+$_lang['is a required field'] = "ist erfordert auffangen";
+
+$_lang['id'] = "ID";
+$_lang['title'] = "Titel";
+$_lang['notes'] = "Anmerkungen";
 ?>
