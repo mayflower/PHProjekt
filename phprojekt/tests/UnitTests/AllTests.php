@@ -68,6 +68,9 @@ class AllTests extends PHPUnit_Framework_TestSuite
                                           'host'     => $config->database->host));
 
         Zend_Session::start();
+        $session         = new Zend_Session_Namespace();
+        $session->config = $config;
+
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->sharedFixture = $db;
         $suite->addTest(Default_AllTests::suite());

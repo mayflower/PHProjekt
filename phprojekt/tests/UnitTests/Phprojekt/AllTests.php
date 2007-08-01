@@ -40,6 +40,7 @@ require_once 'DatabaseManagerTest.php';
 require_once 'Item/AbstractTest.php';
 require_once 'LanguageAdapterTest.php';
 require_once 'LanguageTest.php';
+require_once 'LogTest.php';
 
 /**
  * Test suite for the default module
@@ -80,6 +81,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Item_AbstractTest');
         $suite->addTestSuite('Phprojekt_LanguageAdapterTest');
         $suite->addTestSuite('Phprojekt_LanguageTest');
+        $suite->addTestSuite('Phprojekt_LogTest');
 
         return $suite;
     }
