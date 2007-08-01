@@ -127,6 +127,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         }
 
+        $globalConfig = Zend_Registry::get('config');
+
         parent::__construct($config);
 
         $this->_initDataArray();
@@ -283,6 +285,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _fetchHasManyAndBelongsToMany($where = null)
     {
+        $adapter = $this->getAdapter();
+
         $className = $this->_relations['hasManyAndBelongsToMany']['classname'];
         $classId   = $this->_relations['hasManyAndBelongsToMany']['id'];
 
@@ -301,25 +305,38 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $tableName = sprintf('%s_rel', implode('_', $tableNames));
 
-        $select = $this->getAdapter()->select();
-        $select->from(array('rel'     => $tableName), array())
-               ->from(array('foreign' => $foreignTable))
-               ->from(array('my'      => $myTable), array());
+        $select = $adapter->select();
+        $select->from(array('rel' => $tableName), array());
 
-        $select->where(sprintf("my.id = rel.%s", $myKeyName));
-        $select->where(sprintf("foreign.id = rel.%s", $foreignKeyName));
-        $select->where(sprintf("rel.%s = ?", $myKeyName), $classId);
+        $select->joinInner(
+                    array('my' => $myTable),
+                    sprintf("%s = %s",
+                        $adapter->quoteIdentifier("my.id"),
+                        $adapter->quoteIdentifier("rel." . $myKeyName)));
+
+        $select->joinInner(
+                    array('foreign' => $foreignTable),
+                    sprintf("%s = %s",
+                        $adapter->quoteIdentifier("foreign.id"),
+                        $adapter->quoteIdentifier("rel." . $foreignKeyName)));
+
+        $select->where(sprintf("%s = ?",
+                    $adapter->quoteIdentifier("rel." . $myKeyName)),
+                    $classId);
 
         /*
          * somewhat special, we might have a better solution here once.
          * At the moment we asume that the where clause contains the id string,
          * as it is called from find()
          */
-        if (null !== $where)
-            $select->where(str_replace('`id`', 'foreign.id', $where));
+        if (null !== $where) {
+            $select->where(str_replace(
+                        $adapter->quoteIdentifier("id"),
+                        $adapter->quoteIdentifier("foreign.id"), $where));
+        }
 
         if (null !== $this->_log) {
-            $this->_log->debug((string) $select);
+            $this->_log->debug($select->__toString());
         }
 
         $stmt = $this->getAdapter()->query($select);
@@ -445,7 +462,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $tableName = $this->_translateIntoRelationTableName(get_class($this), $className);
 
         $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)",
-                         $tableName, $myKeyName, $foreignKeyName);
+                         $this->getAdapter()->quoteIdentifier($tableName),
+                         $myKeyName, $foreignKeyName);
 
         if (null !== $this->_log) {
             $this->_log->debug($query);
@@ -456,7 +474,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Update an hasMany relation
+     * Update    an hasMany relation
      *
      * @param integer $oldId The old primary id of the record
      * @param integer $newId The new primary id of the record
@@ -472,7 +490,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $columnName = $this->_translateKeyFormat(get_class($this));
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-                         $tableName, $columnName, $columnName);
+                         $this->getAdapter()->quoteIdentifier($tableName),
+                         $this->getAdapter()->quoteIdentifier($columnName),
+                         $this->getAdapter()->quoteIdentifier($columnName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -511,7 +531,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $tableName = $this->_translateIntoRelationTableName(get_class($this), $className);
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-                            $tableName, $myKeyName, $myKeyName);
+                            $this->getAdapter()->quoteIdentifier($tableName),
+                            $myKeyName, $myKeyName);
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -785,7 +806,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $wheres[] = $where;
         }
 
-        $where = (count($wheres) > 0) ? implode(' AND ', $wheres) : null;
+        $where = (is_array($wheres) && count($wheres) > 0) ? implode(' AND ', $wheres) : null;
+
+        if (null !== $this->_log) {
+            $this->_log->debug($where);
+        }
+
         $rows  = parent::fetchAll($where, $order,
                                   $count, $offset);
 
@@ -850,6 +876,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function getTableName()
     {
-        return $this->_translateClassNameToTable($this->_translateClassNameToTable(get_class($this)));
+        return $this->_translateClassNameToTable(
+                        $this->_translateClassNameToTable(get_class($this)));
     }
 }

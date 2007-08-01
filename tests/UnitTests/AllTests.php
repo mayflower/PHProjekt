@@ -89,6 +89,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
     /* default settings */
     $whiteListing = true;
+    $logging      = true;
     $configFile   = DEFAULT_CONFIG_FILE;
     $configSect   = DEFAULT_CONFIG_SECTION;
 
@@ -107,7 +108,11 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
         }
 
         if (array_key_exists('d', $options)) {
-            $whiteListing = ! $whiteListing;
+            $whiteListing = false;
+        }
+
+        if (array_key_exists('l', $options)) {
+            $logging = false;
         }
 
         if (!is_readable($configFile)) {
@@ -131,7 +136,12 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
 
     $config = new Zend_Config_Ini($configFile, $configSect);
-
+    Zend_Registry::set('config', $config);
+    if ($logging) {
+        Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
+        $oLog = new Phprojekt_Log($config);
+        Zend_Registry::set('log', $oLog);
+    }
     if ($whiteListing) {
         /* enable whitelisting for unit tests, these directories are
          * covered for the code coverage even they are not part of unit testing */
@@ -153,6 +163,7 @@ usage:
     -c <file>    use <file> as configuration file, default 'configuration.ini'
     -s <section> <section> is used to read the ini, default 'testing-mysql'
     -d           disable whitelist filtering
+    -l           disable logging
 
 EOF;
     print $doc."\n";
