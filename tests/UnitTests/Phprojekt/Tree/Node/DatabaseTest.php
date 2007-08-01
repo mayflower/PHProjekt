@@ -36,7 +36,6 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      */
     public function setUp()
     {
-        $config = new Zend_Config_Ini('../../configuration.ini', 'testing');
         $this->_treeModel = new Phprojekt_Model_Tree($this->sharedFixture);
     }
 

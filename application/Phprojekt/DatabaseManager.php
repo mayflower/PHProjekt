@@ -64,7 +64,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForForm($table)
     {
-       return $this->_getFields($table, 'formPosition');
+        return $this->_getFields($table, 'formPosition');
     }
 
     /**
@@ -91,7 +91,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         if (empty($this->_dbFields[$order])) {
             $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
 
-            $fieldsRow = $this->fetchAll($where,$order);
+            $fieldsRow = $this->fetchAll($where, $order);
 
             $fields = array();
             foreach ($fieldsRow as $fieldData) {

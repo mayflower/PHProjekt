@@ -36,6 +36,7 @@ class Phprojekt_Language extends Zend_Translate
     public function __construct($locale)
     {
         $data = PHPR_ROOT_PATH . '/languages/' . $locale . '.inc.php';
+
         $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
     }
 
