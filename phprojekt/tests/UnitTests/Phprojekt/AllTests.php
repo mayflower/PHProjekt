@@ -36,7 +36,7 @@ Zend_Loader::registerAutoload();
 require_once 'ActiveRecord/AbstractTest.php';
 require_once 'Tree/Node/DatabaseTest.php';
 require_once 'LoaderTest.php';
-// require_once 'DatabaseManagerTest.php';
+require_once 'DatabaseManagerTest.php';
 
 /**
  * Test suite for the default module
@@ -73,7 +73,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');
         $suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
-     /*   $suite->addTestSuite('Phprojekt_DatabaseManagerTest'); */
+        $suite->addTestSuite('Phprojekt_DatabaseManagerTest'); 
 
         return $suite;
     }
