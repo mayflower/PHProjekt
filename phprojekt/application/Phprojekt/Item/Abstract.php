@@ -41,6 +41,27 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     protected $_oError = null;
 
     /**
+     * History object
+     *
+     * @var Phprojekt_Histoy
+     */
+    protected $_oHistory = null;
+
+    /**
+     * Config for inicializes children objects
+     *
+     * @var array
+     */
+    protected $_config = null;
+
+    /**
+     * History data of the fields
+     *
+     * @var array
+     */
+    public $history = array();
+
+    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -51,6 +72,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
         $this->_dbManager = new Phprojekt_DatabaseManager($config);
         $this->_oError    = new Phprojekt_Error();
+        $this->_oHistory  = new Phprojekt_History($config);
+        $this->_config    = $config;
     }
 
     /**
@@ -101,8 +124,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
                     if (empty($value)) {
                         $this->_oError->addError(array(
                             'field'   => $varname,
-                            'message' => 'Is a required field')
-                            );
+                            'message' => 'Is a required field'));
                     }
                 }
             }
@@ -131,5 +153,39 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function getError()
     {
         return $this->_oError->getError();
+    }
+
+    /**
+     * Extencion of the Abstarct Record for save the history
+     *
+     * @return string An error if exists
+     */
+    public function save()
+    {
+        $error = $this->getError();
+        if (empty($error)) {
+            $id = $this->id;
+            if (!empty($id)) {
+                $this->_oHistory->saveFields($this,'edit');
+                parent::save();
+            } else {
+                parent::save();
+                $this->_oHistory->saveFields($this,'add');
+            }
+            return null;
+        } else {
+            return $error;
+        }
+    }
+
+    /**
+     * Extencion of the Abstarct Record for save the history
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $this->_oHistory->saveFields($this,'delete');
+        parent::delete();
     }
 }

@@ -39,17 +39,19 @@ CREATE TABLE `DatabaseManager` (
 --
 
 DROP TABLE IF EXISTS `History`;
-CREATE TABLE `History` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `userId` int NOT NULL,
-  `dataobjectId` int NOT NULL,
+CREATE TABLE `history` (
+  `id` mediumint(9) NOT NULL auto_increment,
+  `userId` mediumint(9) NOT NULL,
+  `dataobjectId` mediumint(9) NOT NULL,
   `module` varchar(50) NOT NULL,
-  `oldValue` varchar(100) NOT NULL,
-  `newValue` varchar(250) NOT NULL,
+  `field` varchar(255) NOT NULL,
+  `oldValue` varchar(100) default NULL,
+  `newValue` varchar(250) default NULL,
   `action` varchar(50) NOT NULL,
-  PRIMARY KEY  (`id`)
+  `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`),
+  KEY `userId` (`userId`)
 );
-
 CREATE INDEX `History_userId` ON `History`(`userId`);
 
 --
@@ -76,7 +78,7 @@ CREATE TABLE `Project` (
   `parent` int default NULL,
   `path` varchar(25) NOT NULL default '\\',
   `title` varchar(250) NOT NULL,
-  `notes` text NOT NULL,
+  `notes` text default NULL,
   `ownerId` int default NULL,
   `startDate` datetime default NULL,
   `endDate` datetime default NULL,
@@ -149,7 +151,7 @@ CREATE TABLE `UserModuleSetting` (
 
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
-INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,1,NULL,NULL);
 INSERT INTO `Project` (`id`, `parent`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES (1,NULL,'/','Invisible Root','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(2,1,'/1/','Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(3,1,'/1/','Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(4,2,'/1/2/','Sub Project','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL);
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `language`) VALUES (1,'dsp','98c4d1040d0f0747bc165476f9c63149',NULL,NULL,'');
 

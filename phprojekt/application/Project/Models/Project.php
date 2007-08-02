@@ -75,48 +75,4 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
 
         return $formData;
     }
-
-    /**
-     * Save the data into the db
-     *
-     * @param array $request $_POST array
-     *
-     * @return string        Message for show after the save
-     */
-    public function saveData($request)
-    {
-        if (isset($request['id'])) {
-            $id = (int) $request['id'];
-            $this->find($id);
-        }
-        foreach ($request as $k => $v) {
-            if ($this->keyExists($k)) {
-                $this->$k = $v;
-            }
-        }
-
-        $error = $this->getError();
-        if (empty($error)) {
-            $this->save();
-            return null;
-        } else {
-            return $error;
-        }
-    }
-
-    /**
-     * Delete a row
-     *
-     * @param array $request $_POST array
-     *
-     * @return void
-     */
-    public function deleteData($request)
-    {
-        if (isset($request['id'])) {
-            $id = intval($request['id']);
-            $this->find($id);
-            $this->delete();
-        }
-    }
 }

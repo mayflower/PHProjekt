@@ -289,7 +289,11 @@ class IndexController extends Zend_Controller_Action
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
-            $this->oModels->deleteData($request);
+            $id = intval($request['id']);
+            $this->oModels->find($id);
+            if ($this->oModels->count() > 0) {
+                $this->oModels->delete();
+            }
             $this->message = 'Deleted';
             $this->generateOutput();
             $this->render('index');
@@ -339,7 +343,18 @@ class IndexController extends Zend_Controller_Action
     {
         $request = $this->getRequest()->getParams();
 
-        $error = $this->oModels->saveData($request);
+        if (isset($request['id'])) {
+            $id = (int) $request['id'];
+            $this->oModels->find($id);
+        }
+
+        foreach ($request as $k => $v) {
+            if ($this->oModels->keyExists($k)) {
+                $this->oModels->$k = $v;
+            }
+        }
+
+        $error = $this->oModels->save();
         if (empty($error)) {
             $this->message = 'Saved';
         } else {
