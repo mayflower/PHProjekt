@@ -34,11 +34,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     protected $_dbManager = null;
 
     /**
-     * Containt all the errors for one operation
+     * Error object
      *
-     * @var array
+     * @var Phprojekt_Error
      */
-    protected $_errors = array();
+    protected $_oError = null;
 
     /**
      * Initialize new object
@@ -50,6 +50,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($config);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($config);
+        $this->_oError    = new Phprojekt_Error();
     }
 
     /**
@@ -98,7 +99,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
                 if ($validations['isRequired']) {
                     if (empty($value)) {
-                        $this->addError($varname, 'Is a required field');
+                        $this->_oError->addError(array(
+                            'field'   => $varname,
+                            'message' => 'Is a required field')
+                            );
                     }
                 }
             }
@@ -120,28 +124,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Collect all the errors in an array for show it later
-     *
-     * @param string $field   Name of the Field with error
-     * @param string $message Message to display for this field
-     *
-     * @return void
-     */
-    public function addError($field,$message)
-    {
-        $this->_errors[] = array('field'    => $field,
-                                 'message'  => $message);
-    }
-
-    /**
-     * Return the error data and delete it
+     * Return the error data
      *
      * @return array
      */
     public function getError()
     {
-        $error         = $this->_errors;
-        $this->_errors = array();
-        return $error;
+        return $this->_oError->getError();
     }
 }
