@@ -166,11 +166,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         if (empty($error)) {
             $id = $this->id;
             if (!empty($id)) {
-                $this->_oHistory->saveFields($this,'edit');
+                $this->_oHistory->saveFields($this, 'edit');
                 parent::save();
             } else {
                 parent::save();
-                $this->_oHistory->saveFields($this,'add');
+                $this->_oHistory->saveFields($this, 'add');
             }
             return null;
         } else {
@@ -185,7 +185,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function delete()
     {
-        $this->_oHistory->saveFields($this,'delete');
+        $this->_oHistory->saveFields($this, 'delete');
         parent::delete();
     }
 }
