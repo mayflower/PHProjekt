@@ -50,7 +50,7 @@ CREATE TABLE `DatabaseManager` (
 
 LOCK TABLES `DatabaseManager` WRITE;
 /*!40000 ALTER TABLE `DatabaseManager` DISABLE KEYS */;
-INSERT INTO `DatabaseManager` VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `DatabaseManager` VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `DatabaseManager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,17 +59,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `History`;
-CREATE TABLE `History` (
+CREATE TABLE `history` (
   `id` mediumint(9) NOT NULL auto_increment,
   `userId` mediumint(9) NOT NULL,
   `dataobjectId` mediumint(9) NOT NULL,
   `module` varchar(50) NOT NULL,
-  `oldValue` varchar(100) NOT NULL,
-  `newValue` varchar(250) NOT NULL,
+  `field` varchar(255) NOT NULL,
+  `oldValue` varchar(100) default NULL,
+  `newValue` varchar(250) default NULL,
   `action` varchar(50) NOT NULL,
+  `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
-  KEY `userId` (`userId`)
-) ENGINE=InnoDB ;
+  KEY `userId` (`userId`),
+  KEY `History_userId` (`userId`)
+);
 
 --
 -- Table structure for table `ModuleInstance`
@@ -105,7 +108,7 @@ CREATE TABLE `Project` (
   `parent` mediumint(9) default NULL,
   `path` varchar(25) NOT NULL default '\\',
   `title` varchar(250) NOT NULL,
-  `notes` text NOT NULL,
+  `notes` text default NULL,
   `ownerId` mediumint(9) default NULL,
   `startDate` datetime default NULL,
   `endDate` datetime default NULL,
