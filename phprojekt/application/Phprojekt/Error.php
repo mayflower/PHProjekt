@@ -35,10 +35,10 @@ class Phprojekt_Error
 
     /**
      * Collect all the errors in an array for show it later
+     * Use like addError(array('field' => 'title','message' => 'Hello');
+     * So the template can get the array and use each field of them
      *
      * @param array $data Array contain the fields for show
-     *
-     * @uses addError(array('field' => 'title','message' => 'Hello');
      *
      * @return void
      */
