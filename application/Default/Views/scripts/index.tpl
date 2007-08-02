@@ -26,6 +26,17 @@
        vertical-align: top;
      }
 
+     #main td#treeView a:link,
+     #main td#treeView a:visited,
+     #main td#treeView a:active {
+        text-decoration: none;
+     }
+
+     #main td#treeView a:hover {
+        background: #EFEFEF;
+     }
+
+
      table.listView th {
        text-align: left;
        background-color: SlateGray;

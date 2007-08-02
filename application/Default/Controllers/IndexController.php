@@ -49,6 +49,13 @@ class IndexController extends Zend_Controller_Action
     protected $_oFormView = null;
 
     /**
+     * Tree view helper to display fancy trees
+     *
+     * @var Default_Helpers_TreeView
+     */
+    protected $_oTreeView = null;
+
+    /**
      * Set true if is seted the treeView
      *
      * @var boolean
@@ -112,10 +119,15 @@ class IndexController extends Zend_Controller_Action
                 /* user not logged in, display login page */
                 $config = Zend_Registry::get('config');
 
-                $this->_redirect($config->webpath.'/Login/index');
+                $this->_redirect($config->webpath.'/index.php/Login/index');
                 die();
             }
         }
+
+        $db       = Zend_Registry::get('db');
+        $projects = PHprojekt_Loader::getModelFactory('Project','Project', array('db' => $db));
+        $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
+        $tree->setup();
 
         $this->_smarty             = Zend_Registry::get('view');
         $this->_smarty->module     = $this->getRequest()->getModuleName();
@@ -126,6 +138,9 @@ class IndexController extends Zend_Controller_Action
         $this->data['formData']    = $this->oModels->getFormData();
         $this->_oListView          = new Default_Helpers_ListView($this);
         $this->_oFormView          = new Default_Helpers_FormView($this);
+        $this->_oTreeView          = new Default_Helpers_TreeView($tree);
+
+        $this->_oTreeView->makePersistent();
     }
 
     /**
@@ -170,6 +185,19 @@ class IndexController extends Zend_Controller_Action
      */
     public function componentListAction()
     {
+    }
+
+    /**
+     *
+     *
+     */
+    public function toggleNodeAction()
+    {
+        $currentActiveTree = Default_Helpers_TreeView::findPersistant();
+        $currentActiveTree->toogleNode();
+
+        $this->_forward('list', $this->_request->getControllerName(),
+                        $this->_request->getModuleName());
     }
 
     /**
@@ -447,7 +475,7 @@ class IndexController extends Zend_Controller_Action
     {
         switch ($template) {
         case 'tree':
-                return $this->view->render('tree.tpl');
+                return $this->treeView = $this->_oTreeView->renderer($this->_smarty);
             break;
         case 'form':
                 return $this->view->render('form.tpl');
@@ -473,7 +501,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->currentId = $this->getRequest()->getParam('id');
 
         if (!$this->treeViewSeted) {
-            $this->setTreeView($this->_render('tree'));
+            $this->setTreeView();
         }
 
         if (!$this->listViewSeted) {

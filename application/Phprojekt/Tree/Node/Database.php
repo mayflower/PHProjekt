@@ -187,6 +187,16 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
+     * Returns active record used to display the tree
+     *
+     * @return Phprojekt_ActiveRecord_Abstract
+     */
+    public function getActiveRecord()
+    {
+        return $this->_activeRecord;
+    }
+
+    /**
      * Move upstairs until reach the root node and returns them.
      *
      * @return Phprojekt_Tree_Node_Database
