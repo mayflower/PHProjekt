@@ -89,6 +89,7 @@ CREATE TABLE `Project` (
 );
 CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
 
+
 --
 -- Table structure for table `ProjectUserRoleRelation`
 --
@@ -148,4 +149,10 @@ CREATE TABLE `UserModuleSetting` (
 
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
+INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `Project` (`id`, `parent`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES (1,NULL,'/','Invisible Root','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(2,1,'/1/','Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(3,1,'/1/','Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(4,2,'/1/2/','Sub Project','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL);
+INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `language`) VALUES (1,'dsp','98c4d1040d0f0747bc165476f9c63149',NULL,NULL,'');
+
+
 COMMIT;
+
