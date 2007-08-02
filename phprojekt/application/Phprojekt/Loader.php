@@ -213,6 +213,40 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
+     * Returns the name of the model for a given object
+     *
+     * @param Phprojekt_ActiveRecord_Abstract $object An active record
+     *
+     * @return string|boolean
+     */
+    public static function getModelFromObject(Phprojekt_ActiveRecord_Abstract $object)
+    {
+        $pattern = str_replace('_','', Phprojekt_ActiveRecord_Abstract::CLASS_PATTERN);
+        if (preg_match("@_(" . $pattern . ")$@", get_class($object), $match)) {
+            return $match[1];
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the name of the modul for a given object
+     *
+     * @param Phprojekt_ActiveRecord_Abstract $object An active record
+     *
+     * @return string|boolean
+     */
+    public static function getModuleFromObject(Phprojekt_ActiveRecord_Abstract $object)
+    {
+        $pattern = str_replace('_','', Phprojekt_ActiveRecord_Abstract::CLASS_PATTERN);
+        if (preg_match("@^(" . $pattern . ")_@", get_class($object), $match)) {
+            return $match[1];
+        }
+
+        return false;
+    }
+
+    /**
      * Load the class of a view and return an new instance of the class.
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method
