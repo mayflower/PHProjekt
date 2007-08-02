@@ -37,6 +37,7 @@ class Phprojekt_Error
      * Collect all the errors in an array for show it later
      *
      * @param array $data Array contain the fields for show
+     *
      * @uses addError(array('field' => 'title','message' => 'Hello');
      *
      * @return void

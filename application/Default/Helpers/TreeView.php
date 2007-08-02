@@ -156,7 +156,7 @@ class Default_Helpers_TreeView
         $info = array('module' => Phprojekt_Loader::getModuleFromObject($activeRecord),
                       'model'  => Phprojekt_Loader::getModelFromObject($activeRecord),
                       'rootId' => $this->_tree->getRootNode()->id,
-                      'name'   => $this->_name);
+                      'name'   => $this->name);
 
         $session->forest[$treeIdentifier] = $info;
 
