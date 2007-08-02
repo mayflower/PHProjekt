@@ -49,7 +49,7 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function toString()
     {
-        $lang   = new Phprojekt_Language('es');
+        $lang   = new Phprojekt_LanguageAdapter('es');
         $string = $lang->toString();
         $this->assertEqual('Phprojekt',$string);
     }
