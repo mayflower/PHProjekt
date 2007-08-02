@@ -124,6 +124,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $field   Name of the Field with error
      * @param string $message Message to display for this field
+     *
+     * @return void
      */
     public function addError($field,$message)
     {
