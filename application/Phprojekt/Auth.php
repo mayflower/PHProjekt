@@ -7,6 +7,7 @@
  * @version   CVS: $Id$
  * @author    Eduardo Polidor <polidor@mayflower.de>
  * @package   PHProjekt
+ * @subpackage Core
  * @link      http://www.phprojekt.com
  * @since     File available since Release 1.0
  */
@@ -19,6 +20,7 @@
  * @license   http://www.phprojekt.com/license PHProjekt6 License
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */

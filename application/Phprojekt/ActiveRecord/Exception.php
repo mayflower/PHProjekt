@@ -6,6 +6,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
@@ -18,6 +19,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com

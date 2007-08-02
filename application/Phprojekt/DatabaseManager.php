@@ -9,6 +9,7 @@
  * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
@@ -18,6 +19,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
