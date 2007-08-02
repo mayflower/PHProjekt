@@ -6,6 +6,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core Helpers
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
@@ -19,13 +20,12 @@
  * manages a way to save/find trees and their internal status after
  * a page request. Tree status can also be written to backing storage
  * (e.g. databases).
- *
  * !NOTE We might use RecursiveTreeIterator in the future, but I'm not
  * sure if this will work the functionallity we need
  *
- *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core Helpers
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
@@ -70,6 +70,12 @@ class Default_Helpers_TreeView
      */
     protected $_request = null;
 
+    /**
+     * Initialize
+     *
+     * @param Phprojekt_Tree_Node_Database $tree The tree to display
+     * @param string                       $name A name to identify the tree view
+     */
     public function __construct(Phprojekt_Tree_Node_Database $tree = null, $name = null)
     {
         if (null !== $tree) {
@@ -83,7 +89,7 @@ class Default_Helpers_TreeView
     /**
      * Set the tree that should be handled by the view helper
      *
-     * @param Phprojekt_Tree_Node_Database $tree
+     * @param Phprojekt_Tree_Node_Database $tree Set the tree that should be displayed
      *
      * @return void
      */
@@ -105,8 +111,9 @@ class Default_Helpers_TreeView
     /**
      * Renders the tree and returns the rendered output as HTML
      *
-     * @param Default_Helpers_Smarty $smarty
-     * @param string                 $templateFile optional, if given, we try to load this template instead of the default 'tree.tpl'
+     * @param Default_Helpers_Smarty $smarty   An instance of the template engine
+     * @param string                 $template optional, if given, we try to load this
+     *                                         template instead of the default 'tree.tpl'
      *
      * @throws Phprojekt_Tree_Node_Exception if tree was not setup correctly
      *
@@ -188,9 +195,9 @@ class Default_Helpers_TreeView
 
         $treeIdentifier = $request->getParam('tree', null);
         if (array_key_exists($treeIdentifier, (array) $session->forest)) {
-            $treeInfo  = $session->forest[$treeIdentifier];
-            $model     = Phprojekt_Loader::getModelFactory($treeInfo['module'], $treeInfo['model'], array('db' => $db));
-            $tree      = new Phprojekt_Tree_Node_Database($model, $treeInfo['rootId']);
+            $treeInfo = $session->forest[$treeIdentifier];
+            $model    = Phprojekt_Loader::getModelFactory($treeInfo['module'], $treeInfo['model'], array('db' => $db));
+            $tree     = new Phprojekt_Tree_Node_Database($model, $treeInfo['rootId']);
             $tree->setup();
             return new self($tree, $treeInfo['name']);
         }
@@ -214,6 +221,8 @@ class Default_Helpers_TreeView
     /**
      * Toggle on off for a node. If no id is given it tries to figure
      * the tree id out from a standard value.
+     *
+     * @param intenger $id The node id to toggle
      *
      * @throws Exception if given id doesnt exists on tree
      *
@@ -282,15 +291,15 @@ class Default_Helpers_TreeView
             $nodes[] = $parentNode;
         }
 
-        foreach($parentNode->getChildren() as $node) {
+        foreach ($parentNode->getChildren() as $node) {
             /* dirty hack so we dont get into the complete deepth of the iterator */
             if ($node->getDepth() == $parentNode->getDepth()) {
                 continue;
             }
 
-            if (array_key_exists($parentNode->id , $openNodes)) {
+            if (array_key_exists($parentNode->id, $openNodes)) {
                 $nodes[] = $node;
-                $nodes = array_merge($nodes, $this->_calculateOpenNodes($node));
+                $nodes   = array_merge($nodes, $this->_calculateOpenNodes($node));
             }
         }
         return $nodes;
