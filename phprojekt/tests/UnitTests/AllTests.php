@@ -26,11 +26,11 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
+require_once 'PHPUnit/Util/Filter.php';
 
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
 
-require_once 'PHPUnit/Util/Filter.php';
 
 /**
  * AllTests merges all test from the modules
@@ -51,6 +51,14 @@ class AllTests extends PHPUnit_Framework_TestSuite
      */
     public static function main(Zend_Config $config)
     {
+        // for compability with phpunit offer suite() without any parameter.
+        // in that case use defaults
+        if (null === $config) {
+            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION);
+            Zend_Registry::set('config', $config);
+            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
+        }
+
         PHPUnit_TextUI_TestRunner::run(self::suite($config));
     }
 
@@ -59,19 +67,31 @@ class AllTests extends PHPUnit_Framework_TestSuite
      *
      * @return PHPUnit_Framework_TestSuite
      */
-    public static function suite(Zend_Config $config)
+    public static function suite(Zend_Config $config = null)
     {
+        // for compability with phpunit offer suite() without any parameter. 
+        // in that case use defaults
+        if (null === $config) {
+            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION); 
+            Zend_Registry::set('config', $config);
+            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
+        }
         $db = Zend_Db::factory($config->database->type, array(
                                           'username' => $config->database->username,
                                           'password' => $config->database->password,
                                           'dbname'   => $config->database->name,
                                           'host'     => $config->database->host));
-
-        Zend_Session::start();
+        // There are some issues with session handling and unit testing 
+        // that haven't been implemented here yet, do at least some 
+        // exception handling
+        try {
+            Zend_Session::start();
+        } catch (Exception $e) {
+            die(print_r($e)); 
+        }
         $session         = new Zend_Session_Namespace();
         $session->config = $config;
-
-        $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
+        $suite           = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->sharedFixture = $db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
