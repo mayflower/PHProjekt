@@ -39,7 +39,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     public function saveFields($object,$action)
     {
         $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
-        $differences   = $this->getDifferences($object, $action);
+        $differences   = $this->_getDifferences($object, $action);
 
         foreach ($differences as $fieldName => $difference) {
             $history               = clone($this);
@@ -63,7 +63,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array The array with the differences
      */
-    private function getDifferences($object,$action)
+    private function _getDifferences($object,$action)
     {
         $fields = $object->getFieldsForForm($object->getTableName());
         $clone = clone($object);
