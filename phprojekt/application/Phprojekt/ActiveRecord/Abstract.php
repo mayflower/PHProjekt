@@ -197,7 +197,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function __get($varname)
     {
         $varname = trim($varname);
-        $getter = 'get' . strtoupper($varname{0}) . substr($varname, 1);
+        $getter  = 'get' . strtoupper($varname{0}) . substr($varname, 1);
         if (in_array($getter, get_class_methods(get_class()))) {
             return call_user_method($getter, $this);
         } elseif (array_key_exists($varname, $this->hasMany)
@@ -607,9 +607,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _translateKeyFormat($className)
     {
-        $tableName = $this->_translateClassNameToTable($className, false);
+        $tableName    = $this->_translateClassNameToTable($className, false);
         $tableName{0} = strtolower($tableName{0});
-        $keyName = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
+        $keyName      = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
 
         if (null !== $this->_log) {
             $this->_log->debug(sprintf("%s translated to %s",
