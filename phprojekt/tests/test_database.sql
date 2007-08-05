@@ -55,11 +55,11 @@ INSERT INTO `DatabaseManager` VALUES (1,'project','title',1,'title','title','tex
 UNLOCK TABLES;
 
 --
--- Table structure for table `history`
+-- Table structure for table `History`
 --
 
 DROP TABLE IF EXISTS `History`;
-CREATE TABLE `history` (
+CREATE TABLE `History` (
   `id` mediumint(9) NOT NULL auto_increment,
   `userId` mediumint(9) NOT NULL,
   `dataobjectId` mediumint(9) NOT NULL,
