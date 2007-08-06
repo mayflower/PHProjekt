@@ -47,7 +47,7 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
         $session = new Zend_Session_Namespace();
         $log = new Phprojekt_Log($session->config);
 
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Zend_Log_Exception');
         $log->log('TEST','NOTHING');
     }
 
@@ -60,7 +60,7 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
         $session = new Zend_Session_Namespace();
         $log = new Phprojekt_Log($session->config);
 
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Zend_Log_Exception');
         $log->log('TEST',8);
     }
 
