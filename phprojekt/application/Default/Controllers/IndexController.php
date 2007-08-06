@@ -109,7 +109,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-
         try {
             Phprojekt_Auth::isLoggedIn();
         }
@@ -278,29 +277,6 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Deletes a certain item
-     * Form Action
-     *
-     * @return void
-     */
-    public function deleteAction()
-    {
-        $request = $this->getRequest()->getParams();
-        if (!isset($request['id'])) {
-            $this->_forward('display');
-        } else {
-            $id = intval($request['id']);
-            $this->oModels->find($id);
-            if ($this->oModels->count() > 0) {
-                $this->oModels->delete();
-            }
-            $this->message = 'Deleted';
-            $this->generateOutput();
-            $this->render('index');
-        }
-    }
-
-    /**
      * Displays the a single item
      * Form Action
      *
@@ -354,15 +330,38 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
-        $error = $this->oModels->save();
-        if (empty($error)) {
+        if ($this->oModels->recordValidate()) {
+            $this->oModels->save();
             $this->message = 'Saved';
         } else {
-            $this->errors = $error;
+            $this->errors = $this->oModels->getError();
         }
 
         $this->generateOutput();
         $this->render('index');
+    }
+
+    /**
+     * Deletes a certain item
+     * Form Action
+     *
+     * @return void
+     */
+    public function deleteAction()
+    {
+        $request = $this->getRequest()->getParams();
+        if (!isset($request['id'])) {
+            $this->_forward('display');
+        } else {
+            $id = intval($request['id']);
+            $this->oModels->find($id);
+            if ($this->oModels->count() > 0) {
+                $this->oModels->delete();
+            }
+            $this->message = 'Deleted';
+            $this->generateOutput();
+            $this->render('index');
+        }
     }
 
     /**
