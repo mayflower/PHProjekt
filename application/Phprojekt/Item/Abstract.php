@@ -106,30 +106,46 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function __set($varname, $value)
     {
-        /* First look if exists a validateField function */
-        $validatter = 'validate' . ucfirst($varname);
-        if (in_array($validatter, get_class_methods(get_class($this)))) {
-            $value = call_user_method($validatter, $this, $value);
-        } else {
-            /* Validate with the database_manager stuff */
-            $fields = $this->_dbManager->getFieldsForForm($this->_name);
-            if (isset($fields[$varname])) {
-                $validations = $fields[$varname];
+        /* Check for integers */
+        $fields = $this->_dbManager->getFieldsForForm($this->_name);
+        if (isset($fields[$varname])) {
+            $validations = $fields[$varname];
+            if ($validations['isInteger']) {
+                $value = (int) $value;
+            }
+        }
+        parent::__set($varname, $value);
+    }
 
-                if ($validations['isInteger']) {
-                    $value = intval($value);
-                }
+    /**
+     * Return if the values are valid or not
+     *
+     * @param array $request POST values
+     * @return boolean If are valid or not
+     */
+    public function recordValidate()
+    {
+        $validated = true;
+        $data = $this->_data;
+        foreach ($data as $varname => $value) {
+            if ($this->keyExists($varname)) {
+                /* Validate with the database_manager stuff */
+                $fields = $this->_dbManager->getFieldsForForm($this->_name);
+                if (isset($fields[$varname])) {
+                    $validations = $fields[$varname];
 
-                if ($validations['isRequired']) {
-                    if (empty($value)) {
-                        $this->_oError->addError(array(
-                            'field'   => $varname,
-                            'message' => 'Is a required field'));
+                    if ($validations['isRequired']) {
+                        if (empty($value)) {
+                            $validated = false;
+                            $this->_oError->addError(array(
+                                'field'   => $varname,
+                                'message' => 'Is a required field'));
+                        }
                     }
                 }
             }
         }
-        parent::__set($varname, $value);
+        return $validated;
     }
 
     /**
@@ -141,8 +157,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function __get($varname)
     {
-        $var = parent::__get($varname);
-        return $var;
+        /* First look if exists a getField function */
+        $get = 'getField' . ucfirst($varname);
+        if (in_array($get, get_class_methods(get_class($this)))) {
+            $value = call_user_method($get, $this, $value);
+        } else {
+            $value = parent::__get($varname);
+        }
+        return $value;
     }
 
     /**
@@ -164,18 +186,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function save()
     {
-        $error = $this->getError();
-        if (count($error) === 0) {
-            if (null !== $this->id) {
-                $this->_oHistory->saveFields($this, 'edit');
-                parent::save();
-            } else {
-                parent::save();
-                $this->_oHistory->saveFields($this, 'add');
-            }
-            return null;
+        if (null !== $this->id) {
+            $this->_oHistory->saveFields($this, 'edit');
+            parent::save();
         } else {
-            throw new Exception($error);
+            parent::save();
+            $this->_oHistory->saveFields($this, 'add');
         }
     }
 
