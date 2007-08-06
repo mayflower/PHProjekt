@@ -835,6 +835,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $args = func_get_args();
 
         $find = parent::find($args[0]);
+
+        if (false === is_array($find) || count($find) === 0) {
+            return $find;
+        }
+
         $find = $find[0];
 
         /*

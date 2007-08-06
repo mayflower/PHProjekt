@@ -297,7 +297,6 @@ class Default_Helpers_TreeView
             if ($node->getDepth() == $parentNode->getDepth()) {
                 continue;
             }
-
             if (array_key_exists($parentNode->id, $openNodes)) {
                 $nodes[] = $node;
                 $nodes   = array_merge($nodes, $this->_calculateOpenNodes($node));

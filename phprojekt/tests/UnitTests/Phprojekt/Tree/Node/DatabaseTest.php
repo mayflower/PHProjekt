@@ -58,11 +58,27 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      * getNodeByID test
      *
      */
-    public function testGetNodeById()
+    public function testMove()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
-        $tree->setup();
-        $this->assertEquals('Sub Child 1', $tree->getNodeById(5)->name);
+        $this->_treeModel->getAdapter()->beginTransaction();
+        try {
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree->setup();
+
+            $child1 = $tree->getNodeById(4);
+            $child2 = $tree->getNodeById(7);
+            $child1->setParentNode($child2);
+
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree->setup();
+            $this->assertEquals(7, $tree->getNodeById(4)->parentNode->id);
+
+        } catch (Exception $e) {
+            $this->_treeModel->getAdapter()->rollBack();
+            throw $e;
+        }
+
+        $this->_treeModel->getAdapter()->rollBack();
     }
 
     /**
@@ -71,7 +87,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      */
     public function testAppend()
     {
-        $this->_treeModel->getAdapter()->beginTransaction();
+        $this->sharedFixture->beginTransaction();
 
         try {
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
@@ -85,35 +101,13 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
             $this->assertEquals('/2/4/', $new->path);
             $this->assertEquals(4, $new->parent);
         } catch (Exception $e) {
-            $this->_treeModel->getAdapter()->rollBack();
+            $this->sharedFixture->rollBack();
             throw $e;
         }
 
-        $this->_treeModel->getAdapter()->rollBack();
+        $this->sharedFixture->rollBack();
     }
 
-    /**
-     * delete test
-     */
-    public function testDeleteNode()
-    {
-        $this->_treeModel->getAdapter()->beginTransaction();
-
-        try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
-            $tree->setup();
-            $tree->delete();
-            $this->assertNull($tree->id);
-            $this->setExpectedException('Phprojekt_Tree_Node_Exception');
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
-            $tree->setup();
-        } catch (Exception $e) {
-            $this->_treeModel->getAdapter()->rollBack();
-            throw $e;
-        }
-
-        $this->_treeModel->getAdapter()->rollBack();
-    }
 
     /**
      * Test the getModel functionality
@@ -141,5 +135,29 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
 
         $this->assertTrue($tree->isRootNodeForCurrentTree());
         $this->assertFalse($tree->isRootNode());
+    }
+
+
+    /**
+     * delete test
+     */
+    public function testDeleteNode()
+    {
+        $this->sharedFixture->beginTransaction();
+
+        try {
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree->setup();
+            $tree->delete();
+            $this->assertNull($tree->id);
+            $this->setExpectedException('Phprojekt_Tree_Node_Exception');
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree->setup();
+        } catch (Exception $e) {
+            $this->sharedFixture->beginTransaction();
+            throw $e;
+        }
+
+        $this->sharedFixture->beginTransaction();
     }
 }
