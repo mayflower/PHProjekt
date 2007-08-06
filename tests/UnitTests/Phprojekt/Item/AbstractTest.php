@@ -48,10 +48,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $item = new PHprojekt_Project(array('db' => $this->sharedFixture));
         $item->title = '';
+        $item->notes = 'TEST';
         $result = array(
             array('field'    => 'title',
                   'message'  => 'Is a required field')
                   );
+        $item->recordValidate();
         $this->assertEquals($result, $item->getError());
     }
 
@@ -86,6 +88,23 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $this->assertEquals(array(), $item->getError());
 
         $item->title = '';
+        $item->notes = 'TEST';
+        $item->recordValidate();
         $this->assertEquals($result, $item->getError());
+    }
+
+    /**
+     * Test for validations
+     *
+     */
+    public function testRecordValidate()
+    {
+        $item = new PHprojekt_Project(array('db' => $this->sharedFixture));
+        $item->title = '';
+        $this->assertFalse($item->recordValidate());
+
+        $item->title = 'TEST';
+        $item->notes = 'TEST';
+        $this->assertTrue($item->recordValidate());
     }
 }
