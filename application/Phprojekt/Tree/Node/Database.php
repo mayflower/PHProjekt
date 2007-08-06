@@ -287,7 +287,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
             $this->_deleteChildren($this->getChildren());
 
-            unset ($this->_activeRecord);
+            $this->_activeRecord = null;
             $this->_initialize();
 
         } catch (Exception $e) {
@@ -310,9 +310,36 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function setParentNode(Phprojekt_Tree_Node_Database $node)
     {
+        if ($node->id != $this->_activeRecord->parent) {
+            /* update move */
+            $this->_activeRecord->parent = $node->id;
+            $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
+            $node->getActiveRecord()->save();
+        }
+
         $this->_parentNode = $node;
 
         return $this;
+    }
+
+    /**
+     * Rebuild the paths of a subtree
+     *
+     * @param Phprojekt_Tree_Node_Database $node     Node to rebuild
+     * @param string                       $basePath Path of the parent
+     *
+     * @return void
+     */
+    protected function _rebuildPaths(Phprojekt_Tree_Node_Database $node, $basePath)
+    {
+        $node->_activeRecord->path = $basePath;
+
+        foreach ($node->getChildren() as $id => $child) {
+            $node->_children[$id] = $this->_rebuildPaths($child, $basePath . $node->id . self::NODE_SEPARATOR);
+            $this->getRootNode()->_index[$child->id] = $node->_children[$id];
+            $node->_children[$id]->getActiveRecord()->save();
+        }
+        return $node;
     }
 
     /**
@@ -328,7 +355,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         case 'parentNode':
                 return $this->getParentNode();
         default:
-            if (null !== $this->_activeRecord) {
+            if ($this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
                 return $this->_activeRecord->$key;
             }
         }

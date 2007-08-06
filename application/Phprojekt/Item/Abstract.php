@@ -152,20 +152,21 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function getError()
     {
-        return $this->_oError->getError();
+        return (array) $this->_oError->getError();
     }
 
     /**
      * Extencion of the Abstarct Record for save the history
      *
-     * @return string An error if exists
+     * @throws Exception of there is an error
+     *
+     * @return void
      */
     public function save()
     {
         $error = $this->getError();
-        if (empty($error)) {
-            $id = $this->id;
-            if (!empty($id)) {
+        if (count($error) === 0) {
+            if (null === $this->id) {
                 $this->_oHistory->saveFields($this, 'edit');
                 parent::save();
             } else {
@@ -174,7 +175,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
             }
             return null;
         } else {
-            return $error;
+            throw new Exception($error);
         }
     }
 
