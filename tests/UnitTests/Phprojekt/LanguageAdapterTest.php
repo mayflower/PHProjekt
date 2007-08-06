@@ -32,7 +32,7 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testIsLoaded()
     {
-        /* The adapter don´t load the file for it self */
+        /* The adapter donï¿½t load the file for it self */
         $adapter = new Phprojekt_LanguageAdapter('es');
         $this->assertFalse($adapter->isLoaded('es'));
         $this->assertFalse($adapter->isLoaded('de'));
@@ -51,6 +51,6 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $lang   = new Phprojekt_LanguageAdapter('es');
         $string = $lang->toString();
-        $this->assertEqual('Phprojekt',$string);
+        $this->assertEquals('Phprojekt',$string);
     }
 }
