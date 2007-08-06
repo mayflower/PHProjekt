@@ -38,19 +38,23 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      */
     public function saveFields($object, $action)
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
-        $differences   = $this->_getDifferences($object, $action);
+        if (true === is_object($object)) {
+            $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
+            $differences   = $this->_getDifferences($object, $action);
 
-        foreach ($differences as $fieldName => $difference) {
-            $history               = clone($this);
-            $history->userId       = $authNamespace->userId;
-            $history->module       = $object->getTableName();
-            $history->dataobjectId = $object->id;
-            $history->field        = $fieldName;
-            $history->oldValue     = $difference['oldValue'];
-            $history->newValue     = $difference['newValue'];
-            $history->action       = $action;
-            $history->save();
+            foreach ($differences as $fieldName => $difference) {
+                $history               = clone($this);
+                $history->userId       = $authNamespace->userId;
+                $history->module       = $object->getTableName();
+                $history->dataobjectId = $object->id;
+                $history->field        = $fieldName;
+                $history->oldValue     = $difference['oldValue'];
+                $history->newValue     = $difference['newValue'];
+                $history->action       = $action;
+                $history->save();
+            }
+        } else {
+            throw new Zend_Exception('The object do not exist');
         }
     }
 
