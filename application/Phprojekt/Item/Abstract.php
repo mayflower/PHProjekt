@@ -166,7 +166,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     {
         $error = $this->getError();
         if (count($error) === 0) {
-            if (null === $this->id) {
+            if (null !== $this->id) {
                 $this->_oHistory->saveFields($this, 'edit');
                 parent::save();
             } else {

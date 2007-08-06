@@ -42,6 +42,7 @@ require_once 'LanguageAdapterTest.php';
 require_once 'LanguageTest.php';
 require_once 'LogTest.php';
 require_once 'ErrorTest.php';
+require_once 'HistoryTest.php';
 
 /**
  * Test suite for the default module
@@ -84,6 +85,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_LanguageTest');
         $suite->addTestSuite('Phprojekt_LogTest');
         $suite->addTestSuite('Phprojekt_ErrorTest');
+        $suite->addTestSuite('Phprojekt_HistoryTest');
 
         return $suite;
     }
