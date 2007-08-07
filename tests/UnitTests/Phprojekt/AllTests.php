@@ -43,6 +43,7 @@ require_once 'LanguageTest.php';
 require_once 'LogTest.php';
 require_once 'ErrorTest.php';
 require_once 'HistoryTest.php';
+require_once 'Filter/UserFilterTest.php';
 
 /**
  * Test suite for the default module
@@ -86,6 +87,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_LogTest');
         $suite->addTestSuite('Phprojekt_ErrorTest');
         $suite->addTestSuite('Phprojekt_HistoryTest');
+        $suite->addTestSuite('Phprojekt_Filter_UserFilterTest');
 
         return $suite;
     }
