@@ -39,7 +39,7 @@ CREATE TABLE `DatabaseManager` (
 --
 
 DROP TABLE IF EXISTS `History`;
-CREATE TABLE `history` (
+CREATE TABLE `History` (
   `id` mediumint(9) NOT NULL auto_increment,
   `userId` mediumint(9) NOT NULL,
   `dataobjectId` mediumint(9) NOT NULL,
