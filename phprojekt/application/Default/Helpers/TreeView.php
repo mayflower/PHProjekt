@@ -61,7 +61,7 @@ class Default_Helpers_TreeView
      *
      * @var boolean
      */
-    public $displayRootNode = false;
+    public $displayRootNode = true;
 
     /**
      * The request object form the front controller

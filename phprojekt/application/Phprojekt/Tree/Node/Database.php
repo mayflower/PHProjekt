@@ -137,7 +137,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return Phprojekt_Tree_Node_Database
      */
-    public function setup(Phprojekt_Filter_Interface $filter = null, Phprojekt_Compare_Interface $comparer = null)
+    public function setup(Phprojekt_Filter_Abstract $filter = null, Phprojekt_Compare_Interface $comparer = null)
     {
         if (null === $this->_requestedId) {
             throw new Phprojekt_Tree_Node_Exception(
@@ -145,13 +145,17 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                                               . 'treeid in the constructor');
         }
 
-        $database = $this->_activeRecord->getAdapter();
-        $table    = $this->_activeRecord->getTableName();
+        $database = $this->getActiveRecord()->getAdapter();
+        $table    = $this->getActiveRecord()->getTableName();
         $select   = $database->select();
 
         $select->from($table, 'path')
                ->where($database->quoteInto('id = ?', $this->_requestedId))
                ->limit(1);
+
+        if (null !== $filter) {
+            $filter->filter($select, $this->getActiveRecord()->getAdapter());
+        }
 
         $rootPath = $database->fetchOne($select);
 

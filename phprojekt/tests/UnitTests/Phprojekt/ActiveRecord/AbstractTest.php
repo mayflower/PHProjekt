@@ -56,6 +56,10 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
             $user = new Phprojekt_User(array('db' => $this->sharedFixture));
             $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
 
+            if ($users == NULL) {
+                $this->fail ('No user found');
+            }
+
             $david = $users[0];
             $role  = $david->roles->create();
             $role->name       = 'Project Admin';

@@ -166,9 +166,8 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
     $config = new Zend_Config_Ini($configFile, $configSect);
     Zend_Registry::set('config', $config);
     if ($logging) {
-        Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
-        $oLog = new Phprojekt_Log($config);
-        Zend_Registry::set('log', $oLog);
+/*         $oLog = new Phprojekt_Log($config);
+        Zend_Registry::set('log', $oLog); */
     }
     if ($whiteListing) {
         /* enable whitelisting for unit tests, these directories are

@@ -1,6 +1,6 @@
 <?php
 /**
- * Tree class
+ * Filter by for columns that is defined by a user
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -14,7 +14,8 @@
  */
 
 /**
- * Represents an node of a tree and provides iterator abilities.
+ * Represents a where user where clause filter and provides
+ * furthermore chaining abilities from the abstract.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -24,16 +25,8 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
-class Phprojekt_Filter_UserFilter implements Phprojekt_Filter_Interface
+class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
 {
-
-    /**
-     * The next filter in chain
-     *
-     * @var Phprojekt_Filter_UserFilter
-     */
-    protected $_next = null;
-
     /**
      * Holds the actual identifier
      *
@@ -49,61 +42,66 @@ class Phprojekt_Filter_UserFilter implements Phprojekt_Filter_Interface
     protected $_value = null;
 
     /**
-     * Enter description here...
+     * Initialize a new user filter on an active record. It uses the
+     * table name and the database adapter from the Active Record.
      *
-     * @param unknown_type $identifier
+     * @param string $identifier The identifier usually the column to filter
+     * @param mixed  $value      The value to filter
      */
     public function __construct(Phprojekt_ActiveRecord_Abstract $record, $identifier, $value)
     {
         $info = $record->info();
-        $cols = $info['columns'];
+        $cols = $info['cols'];
 
         if (array_key_exists($identifier, $cols)) {
             throw new Exception('Identifier not found');
         }
 
         $this->_identifier = $identifier;
+
+        parent::__construct($record->getAdapter());
     }
 
     /**
-     * Set a value
+     * Set the value for which we are filtering
      *
      * @param mixed $value
      *
      * @return void
      */
-    public function setValue($value) {
+    public function setValue($value)
+    {
         $this->_value = $value;
     }
 
     /**
-     * Filters a select
+     * Filters a select using a simple where clause. This might
+     * get more complex in upcoming versions. After running the filter()
+     * method you can easily run the database query with the modified query.
+     *
+     * @param Zend_Db_Select $select The select to update
      *
      * @return void
      */
-    public function filter(Zend_Db_Select &$select, Zend_Db_Adapter_Abstract $adapter)
+    public function filter(Zend_Db_Select &$select)
     {
         $select->where(sprintf('%s = %s',
-                    $adapter->quote($identifier),
-                    $adapter->quote($value));
+                    $this->_adapter->quote($this->_identifier),
+                    $this->_adapter->quote($this->_value)));
+
         if ($this->_next) {
             $this->_next->filter($select);
         }
     }
 
     /**
-     * Adds a filter to the chain
+     * Backing store pair to safe to database
      *
-     * @param Phprojekt_Filter_Interface $filter
-     *
-     * @return void
+     * @return array
      */
-    public function addFilter(Phprojekt_Filter_Interface $filter)
+    protected function _getBackingStorePair()
     {
-        if (null == $this->_next) {
-            $this->_next = $filter;
-        }
-
-        $this->_next->addFilter($filter);
+        return array('key' => $this->_identifier,
+                     'value' => $this->_value);
     }
 }
