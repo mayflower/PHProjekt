@@ -49,15 +49,11 @@ class AllTests extends PHPUnit_Framework_TestSuite
      * Initialize the TestRunner
      *
      */
-    public static function main(Zend_Config $config)
+    public static function main(Zend_Config $config = null)
     {
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
-        if (null === $config) {
-            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION);
-            Zend_Registry::set('config', $config);
-            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
-        }
+
 
         PHPUnit_TextUI_TestRunner::run(self::suite($config));
     }
@@ -88,13 +84,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
         // There are some issues with session handling and unit testing
         // that haven't been implemented here yet, do at least some
         // exception handling
-        try {
-            Zend_Session::start();
-        } catch (Exception $e) {
-            die(print_r($e));
-        }
-        $session         = new Zend_Session_Namespace();
-        $session->config = $config;
+
+        Zend_Session::start();
 
         $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
         $authNamespace->userId = 1;
