@@ -17,6 +17,41 @@
 /**
  * Simple ActiveRecord implementation based on Zend_Db_Table
  *
+ * Every ActiveRecord object represents a row in a database table.
+ * The name of the table is get by naming conventions based on the class name.
+ * All fields of the table are accessable using the name of the column
+ * as an attribute identifier (e.g. $myRecord->title returns the title column).
+ * There are various ways to influence this behaviour. See __get for more
+ * details.
+ *
+ * Every new instantiated active record is considered a new row and a call
+ * to save() will cause an insert into the database unless a particular
+ * record is received using the find() method or fetchAll().
+ *
+ * Furthermore the ActiveRecord allows you to map database relations using
+ * classes. This is done by providing the $hasMany, $hasManyAndBelongsToMany
+ * and $belongsTo array. Every of these arrays accept an array with an
+ * identifier as key and an array of model, module keys to identify the
+ * class the relation is mapped to. The identifier key is used to access
+ * the relation using attributes. For a more detailed explainations how
+ * Phprojekt implement active record, take a look at the development
+ * documentation
+ *
+ * !NOTE for developers:
+ *   If you have an attribute defined in your class that has the same name
+ *   like an column, the attribute is returned NOT the column. You will
+ *   hide the column
+ * !NOTE for developers:
+ *   If you define the relation attribute name make sure the name doesn't exists
+ *   twice and is unique in ALL $hasMany, $belongsTo, $hasManyAndBelongsToMany.
+ *   If a key exists more often they are exactly evaluted in the above order.
+ *   e.g. if the key exists in hasMany and in belongsTo, you will get the
+ *   hasMany relation.
+ * Naming Convention:
+ *   A class is mapped to the database using the last part (after the last _)
+ *   of the class name
+ *
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
@@ -39,28 +74,42 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     const FOREIGN_KEY_FORMAT = ':tableNameId';
 
     /**
-     * Define the set of allowed characters for classes
+     * Define the set of allowed characters for classes.
      *
      */
     const CLASS_PATTERN = '[A-Za-z0-9_]+';
 
     /**
-     * models where this element does belong to,
-     * for example owner, creator, mandator or similar
+     * Models where this element does belong to,
+     * for example owner, creator, mandator or similar.
      *
      * @var array $belongsTo
      */
     public $belongsTo = array();
 
     /**
-     * Other models that are connected to this model, for example relations
-     *
+     * Other models that are connected to this model.
+     * The entries of this array should have the form
+     *  'IDENTIFIER' => array ('module' => 'MODULENAME',
+     *                         'model'  => 'CLASSNAME');
+     * MODULENAME is the name of the module where to search for the
+     * related model. CLASSNAME is the model name while IDENTIFIER
+     * is the name of the attribute of *this* class, that is used to
+     * access the relation.
+     * @example
+     *  $hasMany = array('usersettings'=> array('module'=>'Users',
+     *                                          'model' =>'UserModuleSetting');
      * @var array $hasMany
      */
     public $hasMany = array();
 
     /**
      * n to m relationship, like user <-> projects
+     *
+     * Works exactly like hasMany but uses an relation table based
+     * on the names of the two involved classes.
+     *
+     * @see $hasMany
      *
      * @var array $hasManyAndBelongsToMany
      */
@@ -69,12 +118,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     /**
      * models that this model just got one of each
      *
+     * @see $hasMany
+     *
      * @var array $hasOne
      */
     public $hasOne = array();
 
     /**
-     * Data array
+     * Data array. This holds actually all our data from the database
+     * and values are passed from there using __get
      *
      * @var array $_data
      */
@@ -91,7 +143,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_relations = array();
 
     /**
-     * Logging object from the global scope
+     * Logging object from the global scope.
+     * Fetched in the constructor.
      *
      * @var Zend_Log
      */
@@ -99,7 +152,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Defines if the id for the entry changed. We have to update
-     * the relations then
+     * the relations then. It might happend that the real id differes
+     * from the storedId e.g. the programmer changed the id of the
+     * record and not yet updated/saved it into the database
      *
      * @var integer
      */
@@ -143,7 +198,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Initialize the data array
+     * Initialize the data array. The data array has empty values
+     * after that, but the keys exist!
      *
      * @return void
      */
@@ -161,7 +217,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Translate our class name to a table name and setup it
+     * Translate our class name to a table name and setup it.
+     * See Naming Conventions for more information.
      *
      * @return void
      */
@@ -185,8 +242,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * 1) look if we got a method getVarname, if it's there, use it
-     * 2) get value for varname from data array
-     * 3) throw exception, if neither of them exists
+     * 2) Look if the attribtename is a defined relation,
+     *    if this is true, the relation object will be initialized and returned
+     * 3) Lookup if the attribute itself has this attribute and return it
+     *    if exists
+     * 4) Get value for varname from data array if exists
+     * 5) throw exception, if neither of them exists
      *
      * @param string $varname Name of the property to be set
      *
@@ -195,7 +256,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function __get($varname)
     {
         $varname = trim($varname);
-        $getter  = 'get' . strtoupper($varname{0}) . substr($varname, 1);
+        $getter  = 'get' . ucfirst($varname);
         if (in_array($getter, get_class_methods(get_class()))) {
             return call_user_method($getter, $this);
         } elseif (array_key_exists($varname, $this->hasMany)
@@ -222,6 +283,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     /**
      * 1) look for method setVarname(value), use it
      * 2) if the attribute varname exists, set it's value
+     * 3) Set the value in the data array
      *
      * @param string $varname Name of the property to be set
      * @param mixed  $value   Value of the property to be set
@@ -245,7 +307,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Initialize the _relations array for 1..n relation
+     * Initialize the _relations array for 1..n relation and initialize
+     * a new object of the relation class and put it into the data array.
      *
      * @param string $key The name of the hasManyAndBelongsToMany relation
      *
@@ -452,7 +515,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)",
                          $this->getAdapter()->quoteIdentifier($tableName),
-                         $myKeyName, $foreignKeyName);
+                         $this->getAdapter()->quoteIdentifier($myKeyName),
+                         $this->getAdapter()->quoteIdentifier($foreignKeyName));
 
         if (null !== $this->_log) {
             $this->_log->debug($query);
@@ -521,7 +585,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
                             $this->getAdapter()->quoteIdentifier($tableName),
-                            $myKeyName, $myKeyName);
+                            $this->getAdapter()->quoteIdentifier($myKeyName),
+                            $this->getAdapter()->quoteIdentifier($myKeyName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -867,7 +932,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Count
+     * Count.
+     * ! NOTE we call the fetchAll of the parent here. So this might not
+     * performe good at the moment
      *
      * @return integer
      */
