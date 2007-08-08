@@ -206,6 +206,9 @@ class Default_Helpers_FormView
      */
     public function formTree($field)
     {
+        $attribs = array();
+        $options = array();
+
         $activeRecord = new $field['formRange']($this->_db);
         $tree = new Phprojekt_Tree_Node_Database($activeRecord,1);
         $tree->setup();

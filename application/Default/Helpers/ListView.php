@@ -45,22 +45,4 @@ class Default_Helpers_ListView
 
         return $data[0];
     }
-
-    /**
-     * Return an array with all the items
-     *
-     * @param array $data The array with data of each field
-     *
-     * @return array An array with all the rows
-     */
-    public function getItems(array $data)
-    {
-        foreach ($data as $id => $fieldData) {
-            if ($id > 0) {
-                $tmp[$id] = $fieldData;
-            }
-        }
-
-        return $data;
-    }
 }

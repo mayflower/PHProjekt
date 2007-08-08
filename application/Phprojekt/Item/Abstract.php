@@ -178,7 +178,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         /* First look if exists a getField function */
         $get = 'getField' . ucfirst($varname);
         if (in_array($get, get_class_methods(get_class($this)))) {
-            $value = call_user_method($get, $this, $value);
+            $value = call_user_method($get, $this);
         } else {
             $value = parent::__get($varname);
         }

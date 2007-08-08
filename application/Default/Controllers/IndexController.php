@@ -328,7 +328,6 @@ class IndexController extends Zend_Controller_Action
 
 
         if (isset($request['id'])) {
-            $id = (int) $request['id'];
             $newNode->setup();
         }
         $parentNode->setup();
@@ -401,7 +400,7 @@ class IndexController extends Zend_Controller_Action
         $this->data['listData'] = $this->oModels->getListData();
 
         $this->titles   = $this->_oListView->getTitles($this->data['listData']);
-        $this->lines    = $this->_oListView->getItems($this->data['listData']);
+        $this->lines    = $this->data['listData'];
         $this->listView = $this->_render('list');
     }
 

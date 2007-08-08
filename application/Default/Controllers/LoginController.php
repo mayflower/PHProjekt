@@ -33,11 +33,9 @@ class LoginController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $config = Zend_Registry::get('config');
         $logger = Zend_Registry::get('log');
 
         $logger->err('Login handler called');
-
 
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
@@ -64,15 +62,14 @@ class LoginController extends Zend_Controller_Action
             $success = Phprojekt_Auth::login($username, $password);
         }
         catch (Phprojekt_Auth_Exception $e) {
-
             $this->view->message  = $e->getMessage();
             $this->view->username = $username;
         }
 
         if ($success) {
+            $config = Zend_Registry::get('config');
             $this->_redirect($config->webpath);
             die();
         }
-
     }
 }
