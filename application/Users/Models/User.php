@@ -24,8 +24,17 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
+class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
 {
+    /**
+     * Has many declrations
+     *
+     * @var array
+     */
+    public $hasMany = array('settings' =>
+                            array('module' => 'Users',
+                                  'model'  => 'UserModuleSetting'));
+
     /**
      * Checks if user is active
      *
@@ -45,7 +54,6 @@ class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
      */
     public function findIdByUsername($username)
     {
-
         $db = Zend_Registry::get('db');
         /* @var $db Zend_Db_Adapter_Abstract */
 
