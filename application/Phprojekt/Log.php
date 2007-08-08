@@ -45,16 +45,20 @@ class Phprojekt_Log extends Zend_Log
     {
         parent::__construct();
 
-        foreach ($config->log as $key => $val) {
-            $constant = "self::".strtoupper($key);
-            if (defined($constant)) {
+        $this->_loggers = array();
 
-                $priority = constant($constant);
-                $logger   = new Zend_Log(
-                                   new Zend_Log_Writer_Stream($val->filename)
-                                   );
-                $logger->addFilter(new Zend_Log_Filter_Priority($priority));
-                $this->_loggers[] = $logger;
+        if (isset($config->log)) {
+    		foreach ($config->log as $key => $val) {
+    		    $constant = "self::".strtoupper($key);
+    		    if (defined($constant)) {
+
+                    $priority = constant($constant);
+                    $logger   = new Zend_Log(
+    				            	new Zend_Log_Writer_Stream($val->filename)
+    					        );
+                    $logger->addFilter(new Zend_Log_Filter_Priority($priority));
+                    $this->_loggers[] = $logger;
+                }
             }
         }
     }

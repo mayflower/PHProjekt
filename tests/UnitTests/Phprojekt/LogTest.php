@@ -31,10 +31,10 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testWrongLog()
     {
-        $session = new Zend_Session_Namespace();
-        $log = new Phprojekt_Log($session->config);
+        $config = Zend_Registry::get('config');
+        $log = new Phprojekt_Log($config);
 
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Zend_Log_Exception');
         $log->nothing('TEST');
     }
 
@@ -44,8 +44,8 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testWrongPriority()
     {
-        $session = new Zend_Session_Namespace();
-        $log = new Phprojekt_Log($session->config);
+        $config = Zend_Registry::get('config');
+        $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
         $log->log('TEST','NOTHING');
@@ -57,8 +57,8 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testBiggestPriority()
     {
-        $session = new Zend_Session_Namespace();
-        $log = new Phprojekt_Log($session->config);
+        $config = Zend_Registry::get('config');
+        $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
         $log->log('TEST',8);
@@ -70,8 +70,8 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testLog()
     {
-        $session = new Zend_Session_Namespace();
-        $log = new Phprojekt_Log($session->config);
+        $config = Zend_Registry::get('config');
+        $log = new Phprojekt_Log($config);
 
         $log->log('TEST',Zend_Log::DEBUG);
         $log->log('TEST',Zend_Log::CRIT);
