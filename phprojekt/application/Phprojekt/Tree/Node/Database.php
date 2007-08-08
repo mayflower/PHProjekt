@@ -317,6 +317,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         if ($node->id != $this->_activeRecord->parent) {
             /* update move */
             $this->_activeRecord->parent = $node->id;
+
             $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
             $node->getActiveRecord()->save();
         }
@@ -340,6 +341,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
         foreach ($node->getChildren() as $id => $child) {
             $node->_children[$id] = $this->_rebuildPaths($child, $basePath . $node->id . self::NODE_SEPARATOR);
+
             $this->getRootNode()->_index[$child->id] = $node->_children[$id];
             $node->_children[$id]->getActiveRecord()->save();
         }

@@ -45,8 +45,9 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
      * Initialize a new user filter on an active record. It uses the
      * table name and the database adapter from the Active Record.
      *
-     * @param string $identifier The identifier usually the column to filter
-     * @param mixed  $value      The value to filter
+     * @param Phprojekt_ActiveRecord_Abstract $record     An active record
+     * @param string                          $identifier The identifier usually the column to filter
+     * @param mixed                           $value      The value to filter
      */
     public function __construct(Phprojekt_ActiveRecord_Abstract $record, $identifier, $value)
     {
@@ -65,7 +66,7 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
     /**
      * Set the value for which we are filtering
      *
-     * @param mixed $value
+     * @param mixed $value The value to filter for
      *
      * @return void
      */
@@ -79,7 +80,7 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
      * get more complex in upcoming versions. After running the filter()
      * method you can easily run the database query with the modified query.
      *
-     * @param Zend_Db_Select $select The select to update
+     * @param Zend_Db_Select &$select The select to update
      *
      * @return void
      */
