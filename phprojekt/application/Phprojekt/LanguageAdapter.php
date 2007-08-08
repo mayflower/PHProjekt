@@ -29,6 +29,13 @@
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /**
+     * Contain all the loaded locates
+     *
+     * @var array
+     */
+    protected $_langLoaded = array();
+
+    /**
      * Generates the adapter
      *
      * @param string             $data    Path to the translation file
@@ -80,6 +87,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             }
 
             $session->translatedStrings = $this->_translate;
+            $this->_langLoaded[$locale] = 1;
         }
     }
 
@@ -104,14 +112,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public function isLoaded($locale)
     {
-        if (false === isset($this->_translate[$locale])) {
+        if (false === isset($this->_langLoaded[$locale])) {
             return false;
+        } else {
+            return true;
         }
-
-        if (true === empty($this->_translate[$locale])) {
-            return false;
-        }
-
-        return true;
     }
 }

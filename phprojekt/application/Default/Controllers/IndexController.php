@@ -135,9 +135,10 @@ class IndexController extends Zend_Controller_Action
         $this->oModels             = $this->getModelsObject();
         $this->data['listData']    = $this->oModels->getListData();
         $this->data['formData']    = $this->oModels->getFormData();
-        $this->_oListView          = new Default_Helpers_ListView($this);
-        $this->_oFormView          = new Default_Helpers_FormView($this);
-        $this->_oTreeView          = new Default_Helpers_TreeView($tree);
+
+        $this->_oListView = new Default_Helpers_ListView($this);
+        $this->_oFormView = Default_Helpers_FormView::getInstance($this->_smarty);
+        $this->_oTreeView = new Default_Helpers_TreeView($tree);
 
         $this->_oTreeView->makePersistent();
     }
@@ -319,23 +320,37 @@ class IndexController extends Zend_Controller_Action
     {
         $request = $this->getRequest()->getParams();
 
+        $parent = (isset($request['parent'])) ? (int) $request['parent'] : 1;
+        $requestedId = (isset($request['id'])) ? (int) $request['id'] : null;
+
+        $parentNode = new Phprojekt_Tree_Node_Database($this->oModels,$parent);
+        $newNode = new Phprojekt_Tree_Node_Database($this->oModels, $requestedId);
+
+
         if (isset($request['id'])) {
             $id = (int) $request['id'];
-            $this->oModels->find($id);
+            $newNode->setup();
         }
+        $parentNode->setup();
 
         foreach ($request as $k => $v) {
-            if ($this->oModels->keyExists($k)) {
-                $this->oModels->$k = $v;
+            if ($newNode->getActiveRecord()->keyExists($k)) {
+                $newNode->$k = $v;
             }
         }
 
-        if ($this->oModels->recordValidate()) {
-            $this->oModels->save();
+        if ($newNode->getActiveRecord()->recordValidate()) {
+            if (null === $requestedId || $newNode->parent !== $parentNode->id)
+                $parentNode->appendNode($newNode);
+            else
+                $newNode->getActiveRecord()->save();
+
             $this->message = 'Saved';
         } else {
-            $this->errors = $this->oModels->getError();
+            $this->errors = $newNode->getActiveRecord()->getError();
         }
+
+        $this->setTreeView();
 
         $this->generateOutput();
         $this->render('index');
@@ -371,6 +386,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function setTreeView()
     {
+        $this->treeViewSeted = true;
         $this->treeView = $this->_render('tree');
     }
 
@@ -381,7 +397,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function setListView()
     {
-        $this->_listViewSeted   = true;
+        $this->listViewSeted    = true;
         $this->data['listData'] = $this->oModels->getListData();
 
         $this->titles   = $this->_oListView->getTitles($this->data['listData']);
@@ -490,7 +506,7 @@ class IndexController extends Zend_Controller_Action
     {
         switch ($template) {
         case 'tree':
-                return $this->treeView = $this->_oTreeView->renderer($this->_smarty);
+                return $this->_oTreeView->renderer($this->_smarty);
             break;
         case 'form':
                 return $this->view->render('form.tpl');
