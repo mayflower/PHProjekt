@@ -232,7 +232,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __set($varname, $value)
     {
-        $setter = 'set' . strtoupper($varname{0}) . substr($varname, 1);
+        $setter = 'set' . ucfirst($varname);
 
         if (in_array($setter, get_class_methods(get_class()))) {
             call_user_method($setter, $this, $value);
@@ -554,10 +554,20 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected static function _getClassNameForRelationship($key, $array)
     {
-        if (is_array($array)
-         && is_array($array[$key])
-         && array_key_exists('classname', $array[$key])) {
+        if (false === is_array($array) || false === is_array($array[$key])) {
+            throw new
+                Phprojekt_ActiveRecord_Exception('Cannot instantiate'
+                                               . '{$className}');
+        }
+
+        $definition = $array[$key];
+
+        if (array_key_exists('classname', $definition)) {
             $className = $array[$key]['classname'];
+        } elseif (array_key_exists('model', $definition)
+               && array_key_exists('module', $definition)) {
+            $className = Phprojekt_Loader::getModel($definition['module'],
+                                                    $definition['model']);
         } else {
             $className = $key;
         }
@@ -714,14 +724,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
              * We have to insert before we update the relations, as we
              * need the new id for the relations (e.g.: n:m relations).
              */
-            $this->insert($data);
-            $this->_data['id'] = $this->getAdapter()->lastInsertId();
-            $this->_storedId   = $this->_data['id'];
-
             if (array_key_exists('hasMany', $this->_relations)) {
                 $foreignKeyName        = $this->_translateKeyFormat($this->_relations['hasMany']['classname']);
-                $data[$foreignKeyName] = $this->_relations['hasMany']['id'];
+                $data[$foreignKeyName] = (int) $this->_relations['hasMany']['id'];
+
+                $this->_data[$foreignKeyName] = $data[$foreignKeyName];
             }
+
+            $this->_data['id'] = $this->insert($data);
+            $this->_storedId   = $this->_data['id'];
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {
                 $this->_insertHasManyAndBelongsToMany();

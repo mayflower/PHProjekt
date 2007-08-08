@@ -235,6 +235,7 @@ CREATE TABLE `UserModuleSetting` (
   `userId` mediumint(9) NOT NULL,
   `keyValue` varchar(250) NOT NULL,
   `value` varchar(250) NOT NULL,
+  `kind` varchar(250) NOT NULL,
   `module` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `userId` (`userId`)

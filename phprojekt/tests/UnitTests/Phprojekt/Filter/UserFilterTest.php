@@ -35,10 +35,23 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Extensions_ExceptionTestCa
      */
     public function testFilter ()
     {
-        $record = new Phprojekt_Tree(array('db' => $this->sharedFixture));#
+        $record = new Phprojekt_Tree(array('db' => $this->sharedFixture));
         $filter = new Phprojekt_Filter_UserFilter($record, 'name', 'Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree->setup($filter);
         $this->assertEquals(0, count($tree->getRootNode()->getChildren()));
+    }
+
+    public function testSaveToFilter()
+    {
+        $user   = Phprojekt_Loader::getModelFactory('Users','User',array('db' => $this->sharedFixture));
+        $user->find(1);
+
+        $record = new Phprojekt_Tree(array('db' => $this->sharedFixture));
+        $filter = new Phprojekt_Filter_UserFilter($record, 'name', 'Root');
+        $tree   = new Phprojekt_Tree_Node_Database($record, 1);
+        $tree->setup($filter);
+
+        $filter->saveToBackingStore($user, 'Test');
     }
 }

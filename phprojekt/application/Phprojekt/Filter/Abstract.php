@@ -30,6 +30,13 @@
 abstract class Phprojekt_Filter_Abstract
 {
     /**
+     * The string to ues as an identifier
+     * for the UserModuleSetting database
+     *
+     */
+    const MODULESETTINGS_IDENTIFIER = 'Filter';
+
+    /**
      * The next filter in chain
      *
      * @var Phprojekt_Filter_UserFilter
@@ -74,15 +81,15 @@ abstract class Phprojekt_Filter_Abstract
     /**
      * Saves the current filter chain to backing store, aka database
      *
-     * @param Phprojekt_User $user
+     * @param Users_Models_User $user
      *
      * @return boolean
      */
-    public function saveToBackingStore (Phprojekt_User $user, $module = null)
+    public function saveToBackingStore ($user, $module = null)
     {
         $record = null;
         $pairs  = array();
-        $entry  = $this->_next;
+        $entry  = $this;
 
         while (null !== $entry) {
             $pairs  = $entry->_getBackingStorePair();
@@ -92,10 +99,11 @@ abstract class Phprojekt_Filter_Abstract
                 throw Exception('No valid backing store pair given');
             }
 
-            $record = Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
-            $record->module = 'filter';
-            $record->key    = $pairs['key'];
-            $record->value  = $pairs['value'];
+            $record = $user->settings->create(); // Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
+            $record->module   = $module;
+            $record->keyValue = $pairs['key'];
+            $record->value    = $pairs['value'];
+            $record->kind     = self::MODULESETTINGS_IDENTIFIER;
             $record->save ();
 
             $entry = $entry->_next;
