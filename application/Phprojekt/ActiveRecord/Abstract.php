@@ -5,9 +5,9 @@
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://phprojekt.com/license PHProjekt 6 License
  * @package    PHProjekt
  * @subpackage Core
- * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
  * @author     David Soria Parra <soria_parra@mayflower.de>
