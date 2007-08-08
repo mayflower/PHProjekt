@@ -76,6 +76,10 @@ class AllTests extends PHPUnit_Framework_TestSuite
             Zend_Registry::set('config', $config);
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
         }
+
+        $oLog = new Phprojekt_Log($config);
+        Zend_Registry::set('log', $oLog);
+
         $db = Zend_Db::factory($config->database->type, array(
                                           'username' => $config->database->username,
                                           'password' => $config->database->password,
@@ -117,7 +121,6 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
     /* default settings */
     $whiteListing = true;
-    $logging      = true;
     $configFile   = DEFAULT_CONFIG_FILE;
     $configSect   = DEFAULT_CONFIG_SECTION;
 
@@ -139,9 +142,6 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
             $whiteListing = false;
         }
 
-        if (array_key_exists('l', $options)) {
-            $logging = false;
-        }
 
         if (!is_readable($configFile)) {
             fprintf(STDERR, "Cannot read %s\nAborted\n", $configFile);
@@ -165,10 +165,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
     $config = new Zend_Config_Ini($configFile, $configSect);
     Zend_Registry::set('config', $config);
-    if ($logging) {
-        $oLog = new Phprojekt_Log($config);
-        Zend_Registry::set('log', $oLog);
-    }
+
     if ($whiteListing) {
         /* enable whitelisting for unit tests, these directories are
          * covered for the code coverage even they are not part of unit testing */
