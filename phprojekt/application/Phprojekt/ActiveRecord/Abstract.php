@@ -129,8 +129,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         }
 
-        $globalConfig = Zend_Registry::get('config');
-
         parent::__construct($config);
 
         $this->_initDataArray();
