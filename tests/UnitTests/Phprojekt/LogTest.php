@@ -55,7 +55,7 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
      * Test wrong priority
      *
      */
-    public function testBigestPriority()
+    public function testBiggestPriority()
     {
         $session = new Zend_Session_Namespace();
         $log = new Phprojekt_Log($session->config);
