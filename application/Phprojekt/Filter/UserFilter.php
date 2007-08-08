@@ -58,7 +58,7 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
         }
 
         $this->_identifier = $identifier;
-
+        $this->_value      = $value;
         parent::__construct($record->getAdapter());
     }
 

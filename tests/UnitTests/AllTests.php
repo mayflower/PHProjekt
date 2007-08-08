@@ -96,7 +96,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $authNamespace->userId = 1;
 
         $suite           = new PHPUnit_Framework_TestSuite('PHPUnit');
-        $suite->sharedFixture = $db;
+        $suite->sharedFixture = &$db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
 
@@ -166,8 +166,8 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
     $config = new Zend_Config_Ini($configFile, $configSect);
     Zend_Registry::set('config', $config);
     if ($logging) {
-/*         $oLog = new Phprojekt_Log($config);
-        Zend_Registry::set('log', $oLog); */
+        $oLog = new Phprojekt_Log($config);
+        Zend_Registry::set('log', $oLog);
     }
     if ($whiteListing) {
         /* enable whitelisting for unit tests, these directories are

@@ -146,6 +146,7 @@ CREATE TABLE `UserModuleSetting` (
   `keyValue` varchar(250) NOT NULL,
   `value` varchar(250) NOT NULL,
   `module` varchar(50) NOT NULL,
+  `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
