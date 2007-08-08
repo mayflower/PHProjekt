@@ -25,15 +25,4 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_Item_Exception extends Exception
-{
-    /**
-     * New instance
-     *
-     * @param string $message Fault string
-     * @param int    $code    Fault code
-     */
-    function __construct($message, $code = null)
-    {
-        parent::__construct($message, $code);
-    }
-}
+{ }
