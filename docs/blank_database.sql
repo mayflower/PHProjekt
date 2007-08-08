@@ -1,6 +1,6 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: phprojekt-mvc-test
+-- Host: localhost    Database: phprojekt-mvc
 -- ------------------------------------------------------
 -- Server version	5.0.38-Ubuntu_0ubuntu1-log
 
@@ -33,6 +33,8 @@ CREATE TABLE `DatabaseManager` (
   `isUnique` int default NULL,
   PRIMARY KEY  (`id`)
 );
+
+INSERT INTO `DatabaseManager` VALUES (1, 'project', 'parent', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project_Models_Project', '1', 1, 'left', 1, 1, '1', 1, 0, 0), (2, 'project', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 2, 'left', 1, 2, '1', 0, 1, 0), (3, 'project', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0), (4, 'project', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0), (5, 'project', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0), (6, 'project', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0), (7, 'project', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0), (8, 'project', 'completePercent', 1, 'completePercent', 'completePercent', 'text', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0), (9, 'project', 'budget', 1, 'budget', 'budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0);
 
 --
 -- Table structure for table `History`
@@ -80,8 +82,8 @@ CREATE TABLE `Project` (
   `title` varchar(250) NOT NULL,
   `notes` text default NULL,
   `ownerId` int default NULL,
-  `startDate` datetime default NULL,
-  `endDate` datetime default NULL,
+  `startDate` date default NULL,
+  `endDate` date default NULL,
   `priority` int default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
   `completePercent` float default '0',
@@ -152,7 +154,6 @@ CREATE TABLE `UserModuleSetting` (
 
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
-INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES (1,'project','title',1,'title','title','text',1,1,'',NULL,'',1,'left',1,1,'',0,1,0),(2,'project','notes',1,'notes','notes','textarea',2,2,'',NULL,'',3,'left',1,2,'1',0,1,0),(3,'project','priority',1,'priority','priority','text',3,1,NULL,NULL,'5',2,NULL,NULL,NULL,NULL,1,NULL,NULL);
 INSERT INTO `Project` (`id`, `parent`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES (1,NULL,'/','Invisible Root','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(2,1,'/1/','Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(3,1,'/1/','Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(4,2,'/1/2/','Sub Project','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL);
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `language`) VALUES (1,'dsp','98c4d1040d0f0747bc165476f9c63149',NULL,NULL,'');
 

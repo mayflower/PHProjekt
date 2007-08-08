@@ -157,9 +157,11 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         $this->setHelperPath(PHPR_LIBRARY_PATH, 'Zend_View_Helper_');
 
         /* why 'this'?
-        * to emulate standard zend view functionality
+        * to emulate standard zend view and form functionality
         * doesn't mess up smarty in any way */
         $this->_smarty->assign_by_ref('view', $this);
+        $form = Default_Helpers_FormView::getInstance($this);
+        $this->_smarty->assign_by_ref('form', $form);
 
         // process the template (and filter the output)
         echo $this->_smarty->fetch(basename($file));

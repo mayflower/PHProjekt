@@ -54,7 +54,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForList($table)
     {
-        return $this->_getFields($table, 'listPosition');
+        $return = array();
+        $fields = $this->_getFields($table, 'listPosition');
+        foreach ($fields as $fieldName => $fieldData) {
+            if ($fieldData['listPosition'] > 0) {
+                $return[$fieldName] = $fieldData;
+            }
+        }
+        return $return;
     }
 
     /**
@@ -66,7 +73,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForForm($table)
     {
-        return $this->_getFields($table, 'formPosition');
+        $return = array();
+        $fields = $this->_getFields($table, 'formPosition');
+        foreach ($fields as $fieldName => $fieldData) {
+            if ($fieldData['formPosition'] > 0) {
+                $return[$fieldName] = $fieldData;
+            }
+        }
+        return $return;
     }
 
     /**
@@ -80,13 +94,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     protected function _getFields($table, $order)
     {
-        $found = 0;
-        foreach ($this->_data as $key => $value) {
-            if ($key == $order) {
-                $found = 1;
-            }
-        }
-        if (!$found) {
+        if (!$this->keyExists($order)) {
             $order = 'id';
         }
 

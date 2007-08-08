@@ -13,13 +13,13 @@
     <table width="100%" align="center">
     {foreach name=fields item=field from=$fields}
     <tr>
-        <td>{$field.formLabel|translate}</td>
-        <td>{$view->formText("`$field.formLabel`", "`$field.value`")}
+        <td valign="top">{$field.formLabel|translate}</td>
+        <td>{$form->generateFormElement("`$field`")}
         {if $field.isRequired}
         <span class="error">*</span>
         {/if}
         </td>
-    <tr>
+    </tr>
     {/foreach}
     </table>
     <br />

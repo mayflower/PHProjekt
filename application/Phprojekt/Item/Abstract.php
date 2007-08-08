@@ -64,15 +64,17 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     /**
      * Initialize new object
      *
-     * @param array $config Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table
      */
-    public function __construct($config)
+    public function __construct($db)
     {
-        parent::__construct($config);
+        parent::__construct($db);
 
-        $this->_dbManager = new Phprojekt_DatabaseManager($config);
+        $this->_dbManager = new Phprojekt_DatabaseManager($db);
         $this->_oError    = new Phprojekt_Error();
-        $this->_oHistory  = new Phprojekt_History($config);
+        $this->_oHistory  = new Phprojekt_History($db);
+
+        $config           = Zend_Registry::get('config');
         $this->_config    = $config;
     }
 
@@ -97,7 +99,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Assign a value to a var using some validations
+     * Assign a value to a var using some validations from the table data
      *
      * @param string $varname Name of the var to assign
      * @param mixed  $value   Value for assign to the var
@@ -106,12 +108,18 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function __set($varname, $value)
     {
-        /* Check for integers */
-        $fields = $this->_dbManager->getFieldsForForm($this->_name);
-        if (isset($fields[$varname])) {
-            $validations = $fields[$varname];
-            if ($validations['isInteger']) {
+        $info = $this->info();
+
+        if (true == isset($info['metadata'][$varname])) {
+
+            $type = $info['metadata'][$varname]['DATA_TYPE'];
+
+            if ($type == 'int') {
                 $value = (int) $value;
+            }
+
+            if ($type == 'float') {
+                $value = Zend_Locale_Format::toFloat($value);
             }
         }
         parent::__set($varname, $value);
@@ -140,6 +148,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
                             $this->_oError->addError(array(
                                 'field'   => $varname,
                                 'message' => 'Is a required field'));
+                        }
+                    }
+
+                    if (($validations['formType'] == 'date') &&
+                        (false === empty($value))) {
+                        if (false === Zend_Date::isDate($value,'yyyy-MM-dd')) {
+                            $validated = false;
+                            $this->_oError->addError(array(
+                                'field'   => $varname,
+                                'message' => 'Invalid format for date'));
                         }
                     }
                 }
