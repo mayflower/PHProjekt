@@ -1,6 +1,6 @@
 <?php
 /**
- * Error class
+ * Simple error class for collect errors and return it
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -14,7 +14,17 @@
  */
 
 /**
- * Error class
+ * The class collect a number of errors in an array and the return it all together.
+ *
+ * For use with templates, you can assign array like:
+ * addError(array('field' => 'title',
+ *                'message' => 'Hello');
+ * So the template can get the array and use the fields "field" and "message".
+ * You can use the class with the array that you want.
+ *
+ * When you get the errors, the array that contain it is deleted.
+ * So you can add errors the times that you want,
+ * but only get the errors one time.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@

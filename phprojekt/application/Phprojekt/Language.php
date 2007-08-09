@@ -1,6 +1,6 @@
 <?php
 /**
- * Language Interface for use the PHProject lang files
+ * Language Interface for use the PHProjekt lang files
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -15,7 +15,10 @@
  */
 
 /**
- * Extend Zend_Translate for add a new adapter
+ * Sinse the Zend use some type of Adapter that can not be used with the
+ * PHProjekt lang files, we create an own Adapter for read these files.
+ *
+ * The class is an extension of the Zend_Translate and call the PHProjekt Adapter.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -29,7 +32,15 @@
 class Phprojekt_Language extends Zend_Translate
 {
     /**
-     * Generates the adapter
+     * Constructor function
+     *
+     * The function is called with a locale string and then
+     * create the PHProjekt adapter for load the translated strings.
+     *
+     * The lang files are in the folder languages with the name:
+     * 'locale.inc.php' where locale is the locale string.
+     *
+     * For example the English translation is in the file: en.inc.php
      *
      * @param string|Zend_Locale $locale Locale/Language to set,
      *                                   identical with Locale identifiers
@@ -45,21 +56,35 @@ class Phprojekt_Language extends Zend_Translate
     /**
      * Translate the given string
      *
-     * @param string $messageId Original to translate
-     * @param string $locale    Locale/language to translate to
+     * The function translate the message
+     * usign the adapter created with the correct locale.
+     * And return the strign using the utf8 encode
+     * for make sence to the codification of the languages strings.
+     *
+     * If you want to translate the message in other languages
+     * that is not the default that are you using,
+     * you can call the function like trnaslate($message,$locale).
+     * This will try to load the file first if is not already laoded
+     * and then return the message in your $locale languauge
+     *
+     * @param string $message Original to translate
+     * @param string $locale  Locale/language to translate to
      *
      * @return string
      */
-    public function translate($messageId, $locale = null)
+    public function translate($message, $locale = null)
     {
         if (null !== $locale) {
             $this->_loadLangFile($locale);
         }
-        return utf8_encode($this->_adapter->translate($messageId, $locale));
+        return utf8_encode($this->_adapter->translate($message, $locale));
     }
 
     /**
      * Load another lang file if is needed
+     *
+     * If the lang file that you want is not loaded,
+     * the function will load it.
      *
      * @param string|Zend_Locale $locale Locale/Language to set,
      *                                   identical with Locale identifiers
