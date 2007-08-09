@@ -54,7 +54,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * @todo "include_once $data" is not a good code.
      *       Maybe must have some checks before include the file
-     *       The "$_lang" name is not corresponding with the Zend style.
      *
      * @param string             $data    Path to the translation file
      * @param string|Zend_Locale $locale  Locale/Language to set,
@@ -86,7 +85,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             /* Get the translation file */
             include_once $data;
 
-            foreach ($_lang as $word => $translation) {
+            foreach ($lang as $word => $translation) {
                 $this->_translate[$locale][$word] = $translation;
             }
 
