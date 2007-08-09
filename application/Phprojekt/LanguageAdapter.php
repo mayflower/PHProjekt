@@ -1,6 +1,6 @@
 <?php
 /**
- * Language Interface for use the PHProject lang files
+ * Language Interface for use the PHProjekt lang files
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -15,7 +15,11 @@
  */
 
 /**
- * Adapter class for use the PHProject lang files
+ * Sinse the Zend use some type of Adapter that can not be used with the
+ * PHProjekt lang files, we create an own Adapter for read these files.
+ *
+ * The class is an extension of the Zend_Translate_Adapter that is an abstract class.
+ * So we only must redefine the functions defined on the Original Adapter.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -29,28 +33,28 @@
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /**
-     * Contain all the loaded locates
+     * Contain all the already loaded locates
      *
      * @var array
      */
     protected $_langLoaded = array();
 
     /**
-     * Generates the adapter
+     * This protected function is for collect the data and create the array translation set.
      *
-     * @param string             $data    Path to the translation file
-     * @param string|Zend_Locale $locale  Locale/Language to set,
-     *                                    identical with Locale identifiers
-     *                                    see Zend_Locale for more information
-     * @param string|array       $options Options for the adaptor
-     */
-    public function __construct($data, $locale = null, array $options = array())
-    {
-        parent::__construct($data, $locale, $options);
-    }
-
-    /**
-     * Get the lang translations for the lang file
+     * In this case the data is readed from the PHProjekt lang files.
+     *
+     * The file contain an array like $_lang[$key] = $value,
+     * where $key is the string to be translated and $value is the translated string.
+     *
+     * Since is not nessesary load the file in each request,
+     * we use sessions for save the langs translations.
+     * And also have an array with the already loaded languages
+     * for not load a same file two times.
+     *
+     * @todo "include_once $data" is not a good code.
+     *       Maybe must have some checks before include the file
+     *       The "$_lang" name is not corresponding with the Zend style.
      *
      * @param string             $data    Path to the translation file
      * @param string|Zend_Locale $locale  Locale/Language to set,
@@ -94,6 +98,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     /**
      * Returns the adapters name
      *
+     * Just a redefined fucntion from the abstarct Adapter
+     *
      * @return string
      */
     public function toString()
@@ -102,7 +108,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return if is loaded the lang file
+     * Return if is loaded the lang file or not.
+     * This is for do not read the same file two times.
      *
      * @param string|Zend_Locale $locale Locale/Language to set,
      *                                   identical with Locale identifiers

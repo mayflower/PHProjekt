@@ -14,7 +14,17 @@
  */
 
 /**
- * History class for save all the fields changes
+ * The class save all the changes of the records.
+ *
+ * When you create a record, the new values are saved.
+ * When you edit a record, the old and new values are saved.
+ * When you delete a record, the old values are saved.
+ *
+ * In each change you can know:
+ * - Who make the change (Wich user)
+ * - When (timestamp)
+ * - Where (Wich module)
+ * - What (Wich action and wich field with old value and new value)
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -28,8 +38,10 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 {
     /**
      * Save each field that is with other value that before
-     * For add actions, the oldValue is empty
-     * For delete actions, the newValue is empty
+     *
+     * For add actions, the oldValue is empty and all the fields are saved
+     * For delete actions, the newValue is empty and all the fields are saved.
+     * For edit action, only the fields with other value that before are saved.
      *
      * @param Phprojekt_Item_Abstract $object The item object
      * @param string                  $action Action (edit/add/delete)
@@ -59,8 +71,14 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get the differences between the actual data and the old data
-     * of one item
+     * Get the differences between the actual data and the old data of one item
+     *
+     * The function will inspect and collect
+     * all the fields that have other value than before.
+     *
+     * For add action, return all the values.
+     * For edit action, return only the fields that have changes.
+     * For delete action, return all the values.
      *
      * @param Phprojekt_Item_Abstract $object The item object
      * @param string                  $action Action (edit/add/delete)
