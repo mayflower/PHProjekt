@@ -16,7 +16,7 @@
  */
 
 /**
- * Phprojekt_Role for PHProjekt 6.0
+ * Phprojekt_Roles for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -27,7 +27,7 @@
  * @since      File available since Release 1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Phprojekt_Role
+class Phprojekt_Roles
 {
     /**
      * Constructor
