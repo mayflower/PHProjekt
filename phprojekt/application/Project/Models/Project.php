@@ -16,6 +16,9 @@
 /**
  * Project model class
  *
+ * The class of each model return the data for show
+ * on the list and the form view
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    http://phprojekt.com/license PHProjekt 6 License
@@ -27,7 +30,7 @@
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
     /**
-     * Get all the projects from the db
+     * Get all the projects for list from the db
      *
      * @return array Array with the rows for render
      */
@@ -53,6 +56,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
 
     /**
      * Get the form fields
+     *
      * If the id is defined will make the edit form
      * if not, will make the add form
      *

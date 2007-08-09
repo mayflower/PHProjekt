@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Controller for PHProjekt 6.0
+ * Default Controller for PHProjekt 6
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -14,7 +14,24 @@
  */
 
 /**
- * Default Controller for PHProjekt 6.0
+ * Default Controller for PHProjekt 6
+ *
+ * The controller will get all the actions
+ * and run the nessesary stuff for each one
+ *
+ * The indexcontroller have all the helper for use:
+ * - Smarty = For make all the templates
+ * - ListView = For correct values on the list view
+ * - FormView = For make different form inputs for each type of field
+ * - TreeView = For make the tree view
+ *
+ * All action do the nessesary job and then call the generateOutput.
+ * This function draw all the views that are not already rendered.
+ * So you in each action you can render one view
+ * and let that the generateOutput render the others.
+ *
+ * The class contain the oModel var for get the module model object
+ * that return all the data for process
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -96,14 +113,21 @@ class IndexController extends Zend_Controller_Action
     /**
      * How many columns will have the form
      *
+     * !NOTE for developers:
+     *      This is not implemented yet
+     *
      * @var integer
      */
     public $formColumns  = 2;
 
     /**
      * Init function
-     * Get the Smarty instance
-     * and the data for list and form
+     *
+     * First check if is a logued user, if not is redirect to the login form.
+     *
+     * The function inicialize all the Helpers,
+     * collect the data from the Model Object for list and form
+     * and inicialited the Project Tree view
      *
      * @return void
      */
@@ -144,6 +168,9 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Standard action
+     * Use the list action
+     *
+     * List Action
      *
      * @return void
      */
@@ -154,6 +181,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Adds a single filter to the current view
+     * And generate the list view again
+     *
      * List Action
      *
      * @return void
@@ -168,6 +197,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Delivers the inner part of the IndexAction using ajax
+     *
      * List Action
      *
      * @return void
@@ -178,6 +208,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Delivers the inner part of the Listaction using ajax
+     *
      * List Action
      *
      * @return void
@@ -188,6 +219,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Toggle a open/close a node
+     *
+     * List Action
      *
      * @return void
      */
@@ -201,7 +234,8 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * List all the data
+     * List all the data using the model for get it
+     *
      * List Action
      *
      * @return void
@@ -216,6 +250,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Remove a filter
+     * And generate the list view again
+     *
      * List Action
      *
      * @return void
@@ -230,6 +266,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Sort the list view
+     * And generate the list view again
+     *
      * List Action
      *
      * @return void
@@ -244,6 +282,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Abandon current changes and return to the default view
+     *
      * Form Action
      *
      * @return void
@@ -258,6 +297,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Ajax part of displayAction
+     *
      * Form Action
      *
      * @return void
@@ -268,6 +308,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Ajaxified part of the edit action
+     *
      * Form Action
      *
      * @return void
@@ -277,7 +318,8 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Displays the a single item
+     * Displays the a single item for add an Item
+     *
      * Form Action
      *
      * @return void
@@ -290,6 +332,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Displays the edit screen for the current item
+     * Use the model module for get the data
+     *
      * Form Action
      *
      * @return void
@@ -311,6 +355,15 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Saves the current item
+     * Save if you are add one or edit one.
+     * Use the model module for get the data
+     *
+     * The save is doit by the tree node.
+     *
+     * !NOTE: You MUST validate the data before save.
+     *
+     * If there is an error, will showit.
+     *
      * Form Action
      *
      * @return void
@@ -320,29 +373,30 @@ class IndexController extends Zend_Controller_Action
         $request = $this->getRequest()->getParams();
 
         $parent = (isset($request['parent'])) ? (int) $request['parent'] : 1;
-        $requestedId = (isset($request['id'])) ? (int) $request['id'] : null;
+        $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
 
-        $parentNode = new Phprojekt_Tree_Node_Database($this->oModels,$parent);
-        $newNode = new Phprojekt_Tree_Node_Database($this->oModels, $requestedId);
+        $parentNode = new Phprojekt_Tree_Node_Database($this->oModels, $parent);
+        $newNode    = new Phprojekt_Tree_Node_Database($this->oModels, $itemid);
 
-
-        if (isset($request['id'])) {
+        if (null !== $itemid) {
             $newNode->setup();
         }
         $parentNode->setup();
 
+        /* Assign the values */
         foreach ($request as $k => $v) {
             if ($newNode->getActiveRecord()->keyExists($k)) {
                 $newNode->$k = $v;
             }
         }
 
+        /* Validate and save if is all ok */
         if ($newNode->getActiveRecord()->recordValidate()) {
-            if (null === $requestedId || $newNode->parent !== $parentNode->id)
+            if (null === $itemid || $newNode->parent !== $parentNode->id) {
                 $parentNode->appendNode($newNode);
-            else
+            } else {
                 $newNode->getActiveRecord()->save();
-
+            }
             $this->message = 'Saved';
         } else {
             $this->errors = $newNode->getActiveRecord()->getError();
@@ -356,6 +410,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Deletes a certain item
+     * And generate the list view again
+     *
      * Form Action
      *
      * @return void
@@ -389,7 +445,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Render the listView
+     * Render the listView using the data from the model
      *
      * @return void
      */
@@ -404,7 +460,9 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Render the formView
+     * Render the formView using the data from the model
+     *
+     * If the function give the id, the values of this item will show.
      *
      * @param integer $id Optional, The id of the row
      *
@@ -435,6 +493,9 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Return true if not have access
+     *
+     * !NOTICE:
+     *      Not implemented yet
      *
      * @return boolean
      */

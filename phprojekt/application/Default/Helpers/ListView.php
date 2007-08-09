@@ -19,7 +19,9 @@
  * The class return the values with some transformations
  * deppends on the type of the field
  *
- * Each type has a function for transform and return the value
+ * Since this class is used by two other class,
+ * must be inizialized only one time and by the class itself,
+ * because that, the constructor are protected.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -176,8 +178,9 @@ class Default_Helpers_ListView
 
     /**
      * Return the selected value from a list of values
+     * The data is parsed like key1#value1|key2#value2 in the formRange value
      * The value is translated before return
-
+     *
      * @param array $field Data of the field from the dbManager
      *
      * @return string XHTML generated
@@ -197,6 +200,7 @@ class Default_Helpers_ListView
 
     /**
      * Return the title of the tree node
+     * For make the data, the range value contain wich activerecord is used
      *
      * @param array $field Data of the field from the dbManager
      *

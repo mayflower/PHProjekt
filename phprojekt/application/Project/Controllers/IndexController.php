@@ -1,6 +1,6 @@
 <?php
 /**
- * Project Module Controller for PHProjekt 6.0
+ * Project Module Controller for PHProjekt 6
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -14,7 +14,15 @@
  */
 
 /**
- * Default Project Module Controller for PHProjekt 6.0
+ * Default Project Module Controller for PHProjekt 6
+ *
+ * For make a indexController for your module
+ * just extend it to the IndexController
+ * and redefine the function getModelsObject
+ * for return the object model that you want
+ *
+ * You can redefine too, the var $formColumns
+ * for make your module with other number than the default
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@

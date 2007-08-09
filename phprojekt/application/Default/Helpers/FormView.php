@@ -18,7 +18,14 @@
 /**
  * Form View helper class
  *
- * This class is for help on the draw of the form
+ * The class return a form element deppend on the formType of the field
+ * with the data from the dbmanager.
+ *
+ * For draw the form element, the class use the Zend_View_Helper
+ *
+ * Since this class is used by two other class,
+ * must be inizialized only one time and by the class itself,
+ * because that, the constructor are protected.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -85,8 +92,11 @@ class Default_Helpers_FormView
     }
 
     /**
-     * Make all the input fields and return and arrar for
-     * use in smarty.
+     * Count the fields and
+     * add the needed empty fields for complete the number of columns
+     *
+     * !NOTICE:
+     *      Is not implemented yet
      *
      * @param array $fields      Array with the data of each field
      * @param int   $formColumns Number of columns to show
@@ -177,6 +187,7 @@ class Default_Helpers_FormView
     /**
      * Generate a select input field
      * The data is parsed like key1#value1|key2#value2
+     * The value is translated before return
      *
      * @param array $field Data of the field from the dbManager
      *
