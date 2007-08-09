@@ -125,6 +125,15 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
+     * Checks if the tree was setup yet, by checking of the node has an id
+     *
+     * @return boolean
+     */
+    public function isSetup() {
+        return null !== $this->id;
+    }
+
+    /**
      * Try to receive a tree/subtree from the database using the
      * active record object to get the name of the tree table.
      * If the requested id is not set using the constructor this method

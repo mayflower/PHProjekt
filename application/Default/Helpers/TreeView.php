@@ -61,7 +61,7 @@ class Default_Helpers_TreeView
      *
      * @var boolean
      */
-    public $displayRootNode = true;
+    public $displayRootNode = false;
 
     /**
      * The request object form the front controller
@@ -121,6 +121,10 @@ class Default_Helpers_TreeView
      */
     public function renderer(Default_Helpers_Smarty $smarty, $template = 'tree.tpl')
     {
+        if (false === $this->_tree->isSetup()) {
+            $this->_tree->setup();
+        }
+
         $smarty->tree = $this->_calculateOpenNodes($this->_tree);
 
         $this->_request = Zend_Controller_Front::getInstance()->getRequest();
@@ -199,7 +203,6 @@ class Default_Helpers_TreeView
             $treeInfo = $session->forest[$treeIdentifier];
             $model    = Phprojekt_Loader::getModelFactory($treeInfo['module'], $treeInfo['model'], array('db' => $db));
             $tree     = new Phprojekt_Tree_Node_Database($model, $treeInfo['rootId']);
-            $tree->setup();
             return new self($tree, $treeInfo['name']);
         }
 
@@ -287,8 +290,7 @@ class Default_Helpers_TreeView
 
         $nodes = array();
 
-        if (true === $parentNode->isRootNode()
-         && true === $this->displayRootNode) {
+        if ($parentNode->isRootNode() && $this->displayRootNode) {
             $nodes[] = $parentNode;
         }
 
@@ -297,7 +299,8 @@ class Default_Helpers_TreeView
             if ($node->getDepth() == $parentNode->getDepth()) {
                 continue;
             }
-            if (array_key_exists($parentNode->id, $openNodes)) {
+            if (array_key_exists($parentNode->id, $openNodes)
+             || ($parentNode->isRootNode() && $this->displayRootNode == false)) {
                 $nodes[] = $node;
                 $nodes   = array_merge($nodes, $this->_calculateOpenNodes($node));
             }
