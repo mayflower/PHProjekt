@@ -193,7 +193,6 @@ class Default_Helpers_FormView
             $options[$key] = $this->_oTranslate->translate($value);
         }
         return $this->_view->formSelect($field['tableField'], $field['value'], $attribs, $options);
-
     }
 
     /**

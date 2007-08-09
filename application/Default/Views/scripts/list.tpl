@@ -8,7 +8,7 @@
 <tr>
     {foreach item=field from=$line}
     <td>
-     <a href="{url action="edit" module=$module id=`$key`}">{$field.value}</a>
+     <a href="{url action="edit" module=$module id=`$key`}">{$list->generateListElement("`$field`")}</a>
     </td>
     {/foreach}
 </tr>

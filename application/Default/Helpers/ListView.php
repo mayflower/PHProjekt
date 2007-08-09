@@ -16,9 +16,10 @@
  */
 
 /**
- * List view helper
+ * The class return the values with some transformations
+ * deppends on the type of the field
  *
- * The class process the info for show the list data
+ * Each type has a function for transform and return the value
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -31,7 +32,61 @@
 class Default_Helpers_ListView
 {
     /**
-     * Return an array with the fields data
+     * Translator
+     *
+     * @var Phprojekt_LanguageAdapter
+     */
+    protected $_oTranslate = null;
+
+    /**
+     * Array with db cofig options
+     *
+     * @var unknown_type
+     */
+    protected $_db = null;
+
+    /**
+     * User configurations
+     *
+     * @var unknown_type
+     */
+    protected $_config = null;
+
+    /**
+     * Instance for create the class only one time
+     *
+     * @var Default_Helpers_ListView Object
+     */
+    protected static $_instance = null;
+
+    /**
+     * Constructor
+     * Only can be created the class by the class it self
+     *
+     * @param Zend_View Object
+     */
+    protected function __construct($view) {
+        $this->_oTranslate = Zend_Registry::get('translate');
+        $this->_db         = Zend_Registry::get('db');
+        $this->_config     = Zend_Registry::get('config');
+    }
+
+    /**
+     * Return this class only one time
+     *
+     * @param Zend_View $view Zend_View Object
+     * @return Default_Helpers_ListView
+     */
+    static public function getInstance($view)
+    {
+        if (null === self::$_instance) {
+            self::$_instance = new self($view);
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * Return only the first row that contain the titles
      *
      * @param array $data The array with data of each field
      *
@@ -39,10 +94,121 @@ class Default_Helpers_ListView
      */
     public function getTitles(array $data)
     {
-        if (empty($data)) {
+        if (true == empty($data)) {
             return $data[0] = array();
         }
 
         return $data[0];
+    }
+
+    /**
+     * Switch between the form types and call the function for each one
+     *
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public function generateListElement($field)
+    {
+        switch ($field['formType']) {
+        default:
+                return $this->listText($field);
+                break;
+        case "textarea":
+                return $this->listTextArea($field);
+                break;
+        case "date":
+                return $this->listDate($field);
+                break;
+        case "selectValues":
+                return $this->listSelectValues($field);
+                break;
+        case "tree":
+                return $this->listTree($field);
+                break;
+        }
+    }
+
+    /**
+     * Return a normal text calue
+     *
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public function listText($field)
+    {
+        return $field['value'];
+    }
+
+    /**
+     * Return a textarea value
+     *
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public function listTextArea($field)
+    {
+        return $field['value'];
+    }
+
+    /**
+     * Return a date value translated to the user locale
+     * Using the value of the config->language
+     *
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public function listDate($field)
+    {
+        if (false === empty($field['value'])) {
+            $localeFormat = new Zend_Locale_Format();
+            $locale = $this->_config->language;
+            $format = $localeFormat->getDateFormat($locale);
+            $date    = new Zend_Date($field['value'], $format, $locale);
+            return $date->get($format);
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Return the selected value from a list of values
+     * The value is translated before return
+
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public function listSelectValues($field)
+    {
+        $string = '';
+        $data = explode('|',$field['formRange']);
+        foreach ($data as $pairValues) {
+            list($key,$value) = split("#",$pairValues);
+            if (true === ($key == $field['value'])) {
+                $string = $this->_oTranslate->translate($value);
+            }
+        }
+        return $string;
+    }
+
+    /**
+     * Return the title of the tree node
+     *
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public function listTree($field)
+    {
+        $activeRecord = new $field['formRange']($this->_db);
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord,1);
+        $tree->setup();
+
+        $node = $tree->getNodeById($field['value']);
+        return $node->title;
     }
 }
