@@ -1,4 +1,4 @@
-<table align="center" width="100%" class="listView">
+<table style="align:center" width="100%" class="listView">
 <tr align="center">
 {foreach name=titles item=field from=$titles}
     <th>{$field.formLabel|translate}</th>
