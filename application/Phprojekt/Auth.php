@@ -52,7 +52,7 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function isLoggedIn()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         if (!isset($authNamespace->userId) || empty($authNamespace->userId)) {
 
@@ -97,7 +97,7 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         /* if the user was found we will save the user information on the session */
-        $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         $authNamespace->userId = $oUser->id;
 
@@ -116,7 +116,7 @@ class Phprojekt_Auth extends Zend_Auth
     public function logout()
     {
 
-        $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         $authNamespace->unsetAll();
 
