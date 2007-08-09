@@ -87,7 +87,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         Zend_Session::start();
 
-        $authNamespace = new Zend_Session_Namespace('PHProjek_Auth');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
 
         $suite           = new PHPUnit_Framework_TestSuite('PHPUnit');
