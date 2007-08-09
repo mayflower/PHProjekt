@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
  <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
    <title>{$phprojekt_version} {$title}</title>
    <style type="text/css">
 {literal}
@@ -56,13 +56,11 @@
  </head>
  <body>
 
- <table align="center" width="100%" id="main">
- <thead>
-  <caption>{$phprojekt_version}</caption>
- </thead>
+ <table style="align:center" width="100%" id="main">
+ <caption>PHProjekt {$phprojekt_version}</caption>
  <tbody>
      <tr>
-        <td rowspan="2" width="20%" id="treeView">{$treeView}</td>
+        <td rowspan="2" style="width:20%" id="treeView">{$treeView}</td>
         <td id="listView">{$listView}</td>
      </tr>
      <tr>

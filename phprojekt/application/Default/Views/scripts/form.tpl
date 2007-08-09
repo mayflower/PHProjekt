@@ -1,6 +1,7 @@
 <br />
 <a href="{url action="display"}">{"Add"|translate}</a>
 <a href="{url action="delete" id=$currentId}">{"Delete"|translate}</a>
+<br /><br />
 {if $message == ''}
 {if $action == 'add'}
     <form method="post" action="{url action='save'} id=''">
@@ -8,9 +9,10 @@
     <form method="post" action="{url action='save' id=$currentId}">
 {/if}
     {foreach name=errors item=error from=$errors}
-    <span class="error">{$error.field|translate}: {$error.message|translate}</span><br />
+    <div class="error">{$error.field|translate}: {$error.message|translate}</div>
     {/foreach}
-    <table width="100%" align="center">
+    <br />
+    <table width="100%" style="align:center">
     {foreach name=fields item=field from=$fields}
     <tr>
         <td valign="top">{$field.formLabel|translate}</td>
@@ -26,6 +28,7 @@
     <input type="submit" value="Send">
     </form>
 {else}
-<center>{$message|translate}</center>
+<div style="text-align:center">{$message|translate}</div>
 <br />
 {/if}
+<br />
