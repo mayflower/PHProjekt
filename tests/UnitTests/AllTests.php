@@ -20,6 +20,22 @@
 define("DEFAULT_CONFIG_FILE", "configuration.ini");
 define("DEFAULT_CONFIG_SECTION", "testing-mysql");
 
+define('PHPR_ROOT_PATH', realpath( dirname(__FILE__) . '/../../') );
+define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
+define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
+define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
+define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
+
+set_include_path('.' . PATH_SEPARATOR
+               . PHPR_LIBRARY_PATH . PATH_SEPARATOR
+               . PHPR_CORE_PATH . PATH_SEPARATOR
+               . get_include_path());
+
+require_once 'Zend/Loader.php';
+require_once 'Phprojekt/Loader.php';
+
+Zend_Loader::registerAutoload('Phprojekt_Loader');
+
 if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'AllTests::main');
 }

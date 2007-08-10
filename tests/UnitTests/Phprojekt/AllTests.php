@@ -17,9 +17,6 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 }
 
 
-define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../../'));
-define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
-define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
