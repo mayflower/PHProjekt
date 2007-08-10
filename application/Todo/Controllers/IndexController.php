@@ -42,6 +42,6 @@ class Todo_IndexController extends IndexController
     {
         $db = Zend_Registry::get('db');
 
-        return Phprojekt_Loader::getModelFactory('Todo', 'Todo', array('db' => $db));
+        return Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $db));
     }
 }

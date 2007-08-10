@@ -52,4 +52,51 @@ class Project_IndexController extends IndexController
 
         return Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
     }
+
+    /**
+     * Save Action
+     *
+     * The save is redefined for use with tree in the project module
+     *
+     * @return void
+     */
+    public function saveAction()
+    {
+        $request = $this->_request->getParams();
+
+        $parent = (isset($request['parent'])) ? (int) $request['parent'] : 1;
+        $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
+
+        $parentNode = new Phprojekt_Tree_Node_Database($this->oModels, $parent);
+        $newNode    = new Phprojekt_Tree_Node_Database($this->oModels, $itemid);
+
+        if (null !== $itemid) {
+            $newNode->setup();
+        }
+        $parentNode->setup();
+
+        /* Assign the values */
+        foreach ($request as $k => $v) {
+            if ($newNode->getActiveRecord()->keyExists($k)) {
+                $newNode->$k = $v;
+            }
+        }
+
+        /* Validate and save if is all ok */
+        if ($newNode->getActiveRecord()->recordValidate()) {
+            if (null === $itemid || $newNode->parent !== $parentNode->id) {
+                $parentNode->appendNode($newNode);
+            } else {
+                $newNode->getActiveRecord()->save();
+            }
+            $this->message = 'Saved';
+        } else {
+            $this->errors = $newNode->getActiveRecord()->getError();
+        }
+
+        $this->setTreeView();
+
+        $this->generateOutput();
+        $this->render('index');
+    }
 }
