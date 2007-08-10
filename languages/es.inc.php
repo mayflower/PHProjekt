@@ -13,6 +13,7 @@ $lang['Deleted'] = "Borrado";
 $lang['Is a required field'] = "Es un campo requerido";
 $lang['Invalid format for date'] = "Formato de fecha inválido";
 
+$lang['Project'] = "Projecto";
 $lang['id'] = "ID";
 $lang['title'] = "Título";
 $lang['notes'] = "Descripción";
@@ -23,6 +24,7 @@ $lang['endDate'] = "Fecha final";
 $lang['currentStatus'] = "Estado actual";
 $lang['completePercent'] = "Porcentaje completado";
 $lang['budget'] = "Presupuesto";
+$lang['Accepted'] = "Aceptado";
 $lang['Offered'] = "Ofrecido";
 $lang['Ordered'] = "Pedido";
 $lang['Working'] = "Trabajando";
