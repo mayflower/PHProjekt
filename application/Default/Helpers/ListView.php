@@ -43,7 +43,7 @@ class Default_Helpers_ListView
     /**
      * Array with db cofig options
      *
-     * @var unknown_type
+     * @var array
      */
     protected $_db = null;
 
@@ -65,9 +65,10 @@ class Default_Helpers_ListView
      * Constructor
      * Only can be created the class by the class it self
      *
-     * @param Zend_View Object
+     * @param Zend_View $view Object
      */
-    protected function __construct($view) {
+    protected function __construct($view) 
+    {
         $this->_oTranslate = Zend_Registry::get('translate');
         $this->_db         = Zend_Registry::get('db');
         $this->_config     = Zend_Registry::get('config');
@@ -77,6 +78,7 @@ class Default_Helpers_ListView
      * Return this class only one time
      *
      * @param Zend_View $view Zend_View Object
+     * 
      * @return Default_Helpers_ListView
      */
     static public function getInstance($view)
@@ -114,20 +116,20 @@ class Default_Helpers_ListView
     {
         switch ($field['formType']) {
         default:
-                return $this->listText($field);
-                break;
+            return $this->listText($field);
+            break;
         case "textarea":
-                return $this->listTextArea($field);
-                break;
+            return $this->listTextArea($field);
+            break;
         case "date":
-                return $this->listDate($field);
-                break;
+            return $this->listDate($field);
+            break;
         case "selectValues":
-                return $this->listSelectValues($field);
-                break;
+            return $this->listSelectValues($field);
+            break;
         case "tree":
-                return $this->listTree($field);
-                break;
+            return $this->listTree($field);
+            break;
         }
     }
 
@@ -165,11 +167,11 @@ class Default_Helpers_ListView
      */
     public function listDate($field)
     {
-        if (false === empty($field['value'])) {
+        if (!empty($field['value'])) {
             $localeFormat = new Zend_Locale_Format();
-            $locale = $this->_config->language;
-            $format = $localeFormat->getDateFormat($locale);
-            $date    = new Zend_Date($field['value'], $format, $locale);
+            $locale       = $this->_config->language;
+            $format       = $localeFormat->getDateFormat($locale);
+            $date         = new Zend_Date($field['value'], $format, $locale);
             return $date->get($format);
         } else {
             return '';
@@ -188,10 +190,10 @@ class Default_Helpers_ListView
     public function listSelectValues($field)
     {
         $string = '';
-        $data = explode('|',$field['formRange']);
+        $data = explode('|', $field['formRange']);
         foreach ($data as $pairValues) {
-            list($key,$value) = split("#",$pairValues);
-            if (true === ($key == $field['value'])) {
+            list($key, $value) = split("#", $pairValues);
+            if ($key == $field['value']) {
                 $string = $this->_oTranslate->translate($value);
             }
         }
@@ -209,7 +211,7 @@ class Default_Helpers_ListView
     public function listTree($field)
     {
         $activeRecord = new $field['formRange']($this->_db);
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord,1);
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
         $node = $tree->getNodeById($field['value']);
