@@ -119,7 +119,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
             }
 
             if ($type == 'float') {
-                $value = Zend_Locale_Format::toFloat($value);
+                $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
             }
         }
         parent::__set($varname, $value);
