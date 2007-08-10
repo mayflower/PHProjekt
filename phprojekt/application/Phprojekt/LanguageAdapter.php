@@ -52,9 +52,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * And also have an array with the already loaded languages
      * for not load a same file two times.
      *
-     * @todo "include_once $data" is not a good code.
-     *       Maybe must have some checks before include the file
-     *
      * @param string             $data    Path to the translation file
      * @param string|Zend_Locale $locale  Locale/Language to set,
      *                                    identical with Locale identifiers
@@ -62,6 +59,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * @param string|array       $options Options for the adaptor
      *
      * @return void
+     * 
+     * @todo "include_once $data" is not a good code.
+     *       Maybe must have some checks before include the file
+     * 
      */
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
