@@ -44,7 +44,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Extensions_ExceptionTestCa
 
     public function testSaveToFilter()
     {
-        $user   = Phprojekt_Loader::getModelFactory('Users','User',array('db' => $this->sharedFixture));
+        $user = Phprojekt_Loader::getModel('Users','User',array('db' => $this->sharedFixture));
         $user->find(1);
 
         $record = new Phprojekt_Tree(array('db' => $this->sharedFixture));

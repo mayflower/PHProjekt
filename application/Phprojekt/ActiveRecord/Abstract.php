@@ -629,7 +629,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $className = $array[$key]['classname'];
         } elseif (array_key_exists('model', $definition)
                && array_key_exists('module', $definition)) {
-            $className = Phprojekt_Loader::getModel($definition['module'],
+            $className = Phprojekt_Loader::getModelClassname($definition['module'],
                                                     $definition['model']);
         } else {
             $className = $key;
