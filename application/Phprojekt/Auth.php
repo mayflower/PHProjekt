@@ -27,24 +27,6 @@
 class Phprojekt_Auth extends Zend_Auth
 {
 
-
-    /**
-     * Create object of type PHProjekt_Auth
-     *
-     */
-    function __construct()
-    {
-    }
-
-    /**
-     * Destruct object
-     *
-     */
-    function __destruct()
-    {
-    }
-
-
     /**
      * Checks if user is loggued in or not. It uses the Zend
      *
