@@ -93,7 +93,7 @@ class Phprojekt_Auth extends Zend_Auth
             }
         }
         catch (Exception $e) {
-            throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
+            throw new Phprojekt_Auth_Exception('Invalid user or password ' . $e->getCode(), 3);
         }
 
         /* if the user was found we will save the user information on the session */
