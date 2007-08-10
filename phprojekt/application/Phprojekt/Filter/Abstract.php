@@ -82,8 +82,8 @@ abstract class Phprojekt_Filter_Abstract
      * Saves the current filter chain to backing store, aka database
      * (so why is it called "backing store", and not "database" ;-) ) 
      * 
-     * @param Users_Models_User $user user for whom this filter is saved
-     * @param mixed $module  module for this filter chain 
+     * @param Users_Models_User $user   user for whom this filter is saved
+     * @param mixed             $module module for this filter chain 
      *
      * @return boolean
      */
