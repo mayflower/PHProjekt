@@ -166,7 +166,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get a value of a var using some validations
+     * Get a value of a var.
+     * Is the var is a float, return the locale float
      *
      * @param string $varname Name of the var to assign
      *
@@ -174,12 +175,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function __get($varname)
     {
-        /* First look if exists a getField function */
-        $get = 'getField' . ucfirst($varname);
-        if (in_array($get, get_class_methods(get_class($this)))) {
-            $value = call_user_method($get, $this);
-        } else {
-            $value = parent::__get($varname);
+        $info = $this->info();
+
+        $value = parent::__get($varname);
+
+        if (true == isset($info['metadata'][$varname])) {
+            $type = $info['metadata'][$varname]['DATA_TYPE'];
+            if ($type == 'float') {
+                $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
+            }
         }
         return $value;
     }
@@ -196,8 +200,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * Extencion of the Abstarct Record for save the history
-     *
-     * @throws Exception of there is an error
      *
      * @return void
      */
