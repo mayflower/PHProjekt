@@ -129,7 +129,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return boolean
      */
-    public function isSetup() {
+    public function isSetup() 
+    {
         return null !== $this->id;
     }
 
