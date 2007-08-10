@@ -128,7 +128,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     /**
      * Return if the values are valid or not
      *
-     * @param array $request POST values
      * @return boolean If are valid or not
      */
     public function recordValidate()
@@ -152,8 +151,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
                     }
 
                     if (($validations['formType'] == 'date') &&
-                        (false === empty($value))) {
-                        if (false === Zend_Date::isDate($value,'yyyy-MM-dd')) {
+                        (!empty($value))) {
+                        if (!Zend_Date::isDate($value, 'yyyy-MM-dd')) {
                             $validated = false;
                             $this->_oError->addError(array(
                                 'field'   => $varname,
