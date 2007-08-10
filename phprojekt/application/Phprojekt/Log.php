@@ -74,19 +74,17 @@ class Phprojekt_Log extends Zend_Log
         $this->_loggers = array();
 
         if (isset($config->log)) {
-    		foreach ($config->log as $key => $val) {
-    		    $constant = "self::".strtoupper($key);
-    		    if (defined($constant)) {
+            foreach ($config->log as $key => $val) {
+                $constant = "self::" . strtoupper($key);
+                if (defined($constant)) {
                     $priority = constant($constant);
-                    $logger   = new Zend_Log(
-    				            	new Zend_Log_Writer_Stream($val->filename)
-    					        );
+                    $logger = new Zend_Log(new Zend_Log_Writer_Stream($val->filename));
                     $logger->addFilter(new Zend_Log_Filter_Priority($priority));
                     $this->_loggers[] = $logger;
-                }
-            }
-        }
-    }
+                } 
+            } 
+        } 
+    } 
 
     /**
      * Write the text into the file.
@@ -105,15 +103,11 @@ class Phprojekt_Log extends Zend_Log
     public function log($message, $priority)
     {
         if ($priority >= Zend_Log::DEBUG) {
-            $btrace  = debug_backtrace();
-            $message = sprintf("%d %s::%s:\n %s\n",
-			                   $btrace[3]['line'],
-                               $btrace[3]['class'],
-                               $btrace[3]['function'],
-                               $message);
-        }
+            $btrace = debug_backtrace();
+            $message = sprintf("%d %s::%s:\n %s\n", $btrace[3]['line'], $btrace[3]['class'], $btrace[3]['function'], $message);
+        } 
         foreach ($this->_loggers as $logger) {
             $logger->log($message, $priority);
-        }
-    }
-}
+        } 
+    } 
+} 
