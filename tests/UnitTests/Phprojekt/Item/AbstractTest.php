@@ -349,10 +349,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1,3';
-        $this->assertEquals('1,30', $item->budget);
+        $tmp = '1.3';
+        $this->assertEquals(Zend_Locale_Format::toFloat($tmp, array('precision' => 2)), $item->budget);
 
         $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1.3';
-        $this->assertEquals('13,00', $item->budget);
+        $tmp = '13.00';
+        $this->assertEquals(Zend_Locale_Format::toFloat($tmp, array('precision' => 2)), $item->budget);
     }
 }
