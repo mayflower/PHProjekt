@@ -247,13 +247,13 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
     }
 
     /**
-     * Test getFields without order
+     * Test getFields without exists order
      *
      */
     public function testGetFields()
     {
         $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm('project');
+        $fields = $db->getFieldsForForm('project','nothing');
         $this->assertEquals(array_keys($this->_formResult), array_keys($fields));
     }
 }
