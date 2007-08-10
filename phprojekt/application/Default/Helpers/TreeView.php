@@ -201,7 +201,7 @@ class Default_Helpers_TreeView
         $treeIdentifier = $request->getParam('tree', null);
         if (array_key_exists($treeIdentifier, (array) $session->forest)) {
             $treeInfo = $session->forest[$treeIdentifier];
-            $model    = Phprojekt_Loader::getModelFactory($treeInfo['module'], $treeInfo['model'], array('db' => $db));
+            $model    = Phprojekt_Loader::getModel($treeInfo['module'], $treeInfo['model'], array('db' => $db));
             $tree     = new Phprojekt_Tree_Node_Database($model, $treeInfo['rootId']);
             return new self($tree, $treeInfo['name']);
         }
