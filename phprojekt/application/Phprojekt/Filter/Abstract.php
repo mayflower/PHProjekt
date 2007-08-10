@@ -54,7 +54,7 @@ abstract class Phprojekt_Filter_Abstract
      * Initialize a new filter using the db adapter to
      * quote values and identifiers.
      *
-     * @param Zend_Db_Adapter_Abstract $abstract
+     * @param Zend_Db_Adapter_Abstract $adapter Db adapter for quoting 
      */
     public function __construct(Zend_Db_Adapter_Abstract $adapter)
     {
@@ -65,7 +65,7 @@ abstract class Phprojekt_Filter_Abstract
      * Adds a filter to the chain. Every filter in the chain is applied
      * if the filter() method is called.
      *
-     * @param Phprojekt_Filter_Interface $filter
+     * @param Phprojekt_Filter_Interface $filter filter to be added 
      *
      * @return void
      */
@@ -80,8 +80,9 @@ abstract class Phprojekt_Filter_Abstract
 
     /**
      * Saves the current filter chain to backing store, aka database
-     *
-     * @param Users_Models_User $user
+     * (so why is it called "backing store", and not "database" ;-) ) 
+     * 
+     * @param Users_Models_User $user user for whom this filter is saved 
      *
      * @return boolean
      */
@@ -112,6 +113,8 @@ abstract class Phprojekt_Filter_Abstract
 
     /**
      * Filters a select
+     * 
+     * @param Zend_Db_Select TODO
      *
      * @return void
      */
