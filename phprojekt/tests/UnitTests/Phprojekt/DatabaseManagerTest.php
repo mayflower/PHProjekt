@@ -245,4 +245,15 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
         $fields = $db->getFieldsForForm('nothing','nothing');
         $this->assertEquals($this->_emptyResult, $fields);
     }
+
+    /**
+     * Test getFields without order
+     *
+     */
+    public function testGetFields()
+    {
+        $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
+        $fields = $db->getFieldsForForm('project');
+        $this->assertEquals(array_keys($this->_formResult), array_keys($fields));
+    }
 }
