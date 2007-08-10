@@ -27,25 +27,17 @@
 class Todo_Models_Todo extends Phprojekt_Item_Abstract
 {
     /**
-     * Get all the Todos from the db
+     * Get all the todo for list from the db
+     * The return array have all the rows that are ActiveRecords itself
      *
      * @return array Array with the rows for render
      */
     public function getListData()
     {
-        $listFields = $this->getFieldsForList('todo');
-        $listData   = array('0' => $listFields);
+        $listData   = array();
 
         foreach ($this->fetchAll() as $row) {
-            foreach ($listFields as $fieldName => $fieldData) {
-                if (!isset($listData[$row->id])) {
-                    $listData[$row->id] = array();
-                }
-                if (in_array($fieldName, array_keys($listFields))) {
-                    $fieldData['value']             = $row->$fieldName;
-                    $listData[$row->id][$fieldName] = $fieldData;
-                }
-            }
+            $listData[] = $row;
         }
 
         return $listData;

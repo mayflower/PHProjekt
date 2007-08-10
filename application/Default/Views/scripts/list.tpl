@@ -6,9 +6,10 @@
 </tr>
 {foreach name=lines item=line key=key from=$lines}
 <tr>
-    {foreach item=field from=$line}
+    {assign var="row" value=$line->getFieldsForList()}
+    {foreach item=field key=fieldname from=$row}
     <td>
-     <a href="{url action="edit" module=$module id=`$key`}">{$list->generateListElement("`$field`")}</a>
+     <a href="{url action="edit" module=$module id=`$line->id`}">{$list->generateListElement("`$field`","`$line->$fieldname`")}</a>
     </td>
     {/foreach}
 </tr>

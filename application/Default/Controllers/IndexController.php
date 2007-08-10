@@ -448,7 +448,7 @@ class IndexController extends Zend_Controller_Action
         $this->listViewSeted    = true;
         $this->data['listData'] = $this->oModels->getListData();
 
-        $this->titles   = $this->_oListView->getTitles($this->data['listData']);
+        $this->titles   = $this->oModels->getFieldsForList($this->oModels->_name);
         $this->lines    = $this->data['listData'];
         $this->listView = $this->_render('list');
     }

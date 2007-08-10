@@ -67,7 +67,8 @@ class Default_Helpers_ListView
      *
      * @param Zend_View $view Object
      */
-    protected function __construct($view) 
+    protected function __construct($view)
+
     {
         $this->_oTranslate = Zend_Registry::get('translate');
         $this->_db         = Zend_Registry::get('db');
@@ -78,7 +79,8 @@ class Default_Helpers_ListView
      * Return this class only one time
      *
      * @param Zend_View $view Zend_View Object
-     * 
+
+     *
      * @return Default_Helpers_ListView
      */
     static public function getInstance($view)
@@ -90,45 +92,30 @@ class Default_Helpers_ListView
     }
 
     /**
-     * Return only the first row that contain the titles
-     *
-     * @param array $data The array with data of each field
-     *
-     * @return array The first row of the fields data
-     */
-    public function getTitles(array $data)
-    {
-        if (true == empty($data)) {
-            return $data[0] = array();
-        }
-
-        return $data[0];
-    }
-
-    /**
      * Switch between the form types and call the function for each one
      *
-     * @param array $field Data of the field from the dbManager
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function generateListElement($field)
+    public function generateListElement($field, $originalValue)
     {
         switch ($field['formType']) {
         default:
-            return $this->listText($field);
+            return $this->listText($field, $originalValue);
             break;
         case "textarea":
-            return $this->listTextArea($field);
+            return $this->listTextArea($field, $originalValue);
             break;
         case "date":
-            return $this->listDate($field);
+            return $this->listDate($field, $originalValue);
             break;
         case "selectValues":
-            return $this->listSelectValues($field);
+            return $this->listSelectValues($field, $originalValue);
             break;
         case "tree":
-            return $this->listTree($field);
+            return $this->listTree($field, $originalValue);
             break;
         }
     }
@@ -136,42 +123,45 @@ class Default_Helpers_ListView
     /**
      * Return a normal text calue
      *
-     * @param array $field Data of the field from the dbManager
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listText($field)
+    public function listText($field, $originalValue)
     {
-        return $field['value'];
+        return $originalValue;
     }
 
     /**
      * Return a textarea value
      *
-     * @param array $field Data of the field from the dbManager
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listTextArea($field)
+    public function listTextArea($field, $originalValue)
     {
-        return $field['value'];
+        return $originalValue;
     }
 
     /**
      * Return a date value translated to the user locale
      * Using the value of the config->language
      *
-     * @param array $field Data of the field from the dbManager
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listDate($field)
+    public function listDate($field, $originalValue)
     {
-        if (!empty($field['value'])) {
+        if (!empty($originalValue)) {
             $localeFormat = new Zend_Locale_Format();
             $locale       = $this->_config->language;
             $format       = $localeFormat->getDateFormat($locale);
-            $date         = new Zend_Date($field['value'], $format, $locale);
+            $date         = new Zend_Date($originalValue, $format, $locale);
             return $date->get($format);
         } else {
             return '';
@@ -183,17 +173,18 @@ class Default_Helpers_ListView
      * The data is parsed like key1#value1|key2#value2 in the formRange value
      * The value is translated before return
      *
-     * @param array $field Data of the field from the dbManager
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listSelectValues($field)
+    public function listSelectValues($field, $originalValue)
     {
         $string = '';
         $data = explode('|', $field['formRange']);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
-            if ($key == $field['value']) {
+            if ($key == $originalValue) {
                 $string = $this->_oTranslate->translate($value);
             }
         }
@@ -204,17 +195,18 @@ class Default_Helpers_ListView
      * Return the title of the tree node
      * For make the data, the range value contain wich activerecord is used
      *
-     * @param array $field Data of the field from the dbManager
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listTree($field)
+    public function listTree($field, $originalValue)
     {
         $activeRecord = new $field['formRange']($this->_db);
         $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
-        $node = $tree->getNodeById($field['value']);
+        $node = $tree->getNodeById($originalValue);
         return $node->title;
     }
 }
