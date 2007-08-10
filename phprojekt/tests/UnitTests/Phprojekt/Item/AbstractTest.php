@@ -338,7 +338,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $this->assertEquals($result, $item->getError());
 
         $item->startDate = '1981-05-12';
-        //$this->assertEquals(array(), $item->getError());
+        $this->assertEquals(array(), $item->getError());
     }
 
     /**
@@ -347,14 +347,9 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testFloat()
     {
+        $locale = Zend_Locale::setLocale('es_AR');
         $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $item->budget = '1,3';
-        $tmp = '1.3';
-        $this->assertEquals(Zend_Locale_Format::toFloat($tmp, array('precision' => 2)), $item->budget);
-
-        $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $item->budget = '1.3';
-        $tmp = '13.00';
-        $this->assertEquals(Zend_Locale_Format::toFloat($tmp, array('precision' => 2)), $item->budget);
+        $item->budget = '1000,30';
+        $item->budget;
     }
 }
