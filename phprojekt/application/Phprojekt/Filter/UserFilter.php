@@ -80,11 +80,11 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
      * get more complex in upcoming versions. After running the filter()
      * method you can easily run the database query with the modified query.
      *
-     * @param Zend_Db_Select &$select The select to update
+     * @param Zend_Db_Select $select The select to update
      *
      * @return void
      */
-    public function filter(Zend_Db_Select &$select)
+    public function filter(Zend_Db_Select $select)
     {
         $select->where(sprintf('%s = %s',
                     $this->_adapter->quote($this->_identifier),
