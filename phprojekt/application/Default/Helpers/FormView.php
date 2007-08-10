@@ -21,11 +21,11 @@
  * The class return a form element deppend on the formType of the field
  * with the data from the dbmanager.
  *
- * For draw the form element, the class use the Zend_View_Helper
+ * For draw the form element, the class uses the Zend_View_Helper
  *
- * Since this class is used by two other class,
- * must be inizialized only one time and by the class itself,
- * because that, the constructor are protected.
+ * Since this class is used by two other classes,
+ * it must be inizialized only one time and by the class itself,
+ * and because of that, the constructor is protected.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -52,9 +52,9 @@ class Default_Helpers_FormView
     protected $_oTranslate = null;
 
     /**
-     * Array with db cofig options
+     * Array with db config options
      *
-     * @var unknown_type
+     * @var array
      */
     protected $_db = null;
 
@@ -69,9 +69,10 @@ class Default_Helpers_FormView
      * Constructor
      * Only can be created the class by the class it self
      *
-     * @param Zend_View Object
+     * @param Zend_View $view View object for form 
      */
-    protected function __construct($view) {
+    protected function __construct($view) 
+    {
         $this->_view       = $view;
         $this->_oTranslate = Zend_Registry::get('translate');
         $this->_db         = Zend_Registry::get('db');
@@ -81,6 +82,7 @@ class Default_Helpers_FormView
      * Return this class only one time
      *
      * @param Zend_View $view Zend_View Object
+     * 
      * @return Default_Helpers_FormView
      */
     static public function getInstance($view)
@@ -129,20 +131,20 @@ class Default_Helpers_FormView
     {
         switch ($field['formType']) {
         default:
-                return $this->formText($field);
-                break;
+            return $this->formText($field);
+            break;
         case "textarea":
-                return $this->formTextArea($field);
-                break;
+            return $this->formTextArea($field);
+            break;
         case "date":
-                return $this->formDate($field);
-                break;
+            return $this->formDate($field);
+            break;
         case "selectValues":
-                return $this->formSelectValues($field);
-                break;
+            return $this->formSelectValues($field);
+            break;
         case "tree":
-                return $this->formTree($field);
-                break;
+            return $this->formTree($field);
+            break;
         }
     }
 
@@ -198,10 +200,10 @@ class Default_Helpers_FormView
         $attribs = array();
         $options = array();
 
-        $data = explode('|',$field['formRange']);
+        $data = explode('|', $field['formRange']);
         foreach ($data as $pairValues) {
-            list($key,$value) = split("#",$pairValues);
-            $options[$key] = $this->_oTranslate->translate($value);
+            list($key, $value) = split("#", $pairValues);
+            $options[$key]     = $this->_oTranslate->translate($value);
         }
         return $this->_view->formSelect($field['tableField'], $field['value'], $attribs, $options);
     }
@@ -220,7 +222,7 @@ class Default_Helpers_FormView
         $options = array();
 
         $activeRecord = new $field['formRange']($this->_db);
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord,1);
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
         foreach ($tree as $node) {
