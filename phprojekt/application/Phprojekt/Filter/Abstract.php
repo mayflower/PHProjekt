@@ -82,7 +82,8 @@ abstract class Phprojekt_Filter_Abstract
      * Saves the current filter chain to backing store, aka database
      * (so why is it called "backing store", and not "database" ;-) ) 
      * 
-     * @param Users_Models_User $user user for whom this filter is saved 
+     * @param Users_Models_User $user user for whom this filter is saved
+     * @param mixed $module  module for this filter chain 
      *
      * @return boolean
      */
@@ -93,19 +94,20 @@ abstract class Phprojekt_Filter_Abstract
         $entry  = $this;
 
         while (null !== $entry) {
-            $pairs  = $entry->_getBackingStorePair();
+            $pairs = $entry->_getBackingStorePair();
 
             if (false === array_key_exists('key', $pairs)
              || false === array_key_exists('value', $pairs)) {
                 throw Exception('No valid backing store pair given');
             }
 
-            $record = $user->settings->create(); // Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
+            // Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
+            $record           = $user->settings->create(); 
             $record->module   = $module;
             $record->keyValue = $pairs['key'];
             $record->value    = $pairs['value'];
             $record->kind     = self::MODULESETTINGS_IDENTIFIER;
-            $record->save ();
+            $record->save();
 
             $entry = $entry->_next;
         }
@@ -114,11 +116,11 @@ abstract class Phprojekt_Filter_Abstract
     /**
      * Filters a select
      * 
-     * @param Zend_Db_Select TODO
+     * @param Zend_Db_Select $select Db select statement to be filter
      *
      * @return void
      */
-    abstract public function filter(Zend_Db_Select &$select);
+    abstract public function filter(Zend_Db_Select $select);
 
     /**
      * Backing store pair to safe to database

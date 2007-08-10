@@ -24,6 +24,6 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_Item_Exception extends Exception 
+class Phprojekt_Item_Exception extends Exception
 {
 }
