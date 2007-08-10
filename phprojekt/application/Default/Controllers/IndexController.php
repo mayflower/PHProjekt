@@ -147,14 +147,19 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
+        /* Check the 'index.php' in the url */
+        if (false === strstr($this->_request->REQUEST_URI, 'index.php')) {
+            $this->_redirect($config->webpath.'/index.php');
+        }
+
         $db       = Zend_Registry::get('db');
         $projects = PHprojekt_Loader::getModelFactory('Project', 'Project', array('db' => $db));
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
         $this->_smarty             = Zend_Registry::get('view');
-        $this->_smarty->module     = $this->getRequest()->getModuleName();
-        $this->_smarty->controller = $this->getRequest()->getControllerName();
-        $this->_smarty->action     = $this->getRequest()->getActionName();
+        $this->_smarty->module     = $this->_request->getModuleName();
+        $this->_smarty->controller = $this->_request->getControllerName();
+        $this->_smarty->action     = $this->_request->getActionName();
         $this->oModels             = $this->getModelsObject();
         $this->data['listData']    = $this->oModels->getListData();
         $this->data['formData']    = $this->oModels->getFormData();
@@ -340,7 +345,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $request = $this->getRequest()->getParams();
+        $request = $this->_request->getParams();
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
@@ -370,7 +375,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function saveAction()
     {
-        $request = $this->getRequest()->getParams();
+        $request = $this->_request->getParams();
 
         $parent = (isset($request['parent'])) ? (int) $request['parent'] : 1;
         $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
@@ -418,7 +423,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-        $request = $this->getRequest()->getParams();
+        $request = $this->_request->getParams();
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
@@ -477,7 +482,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         /* Asign post values */
-        $params   = $this->getRequest()->getParams();
+        $params   = $this->_request->getParams();
         $formData = $this->data['formData'];
         $tmp      = $formData;
         foreach ($formData as $fieldName => $value) {
@@ -588,7 +593,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function generateOutput($id = 0)
     {
-        $this->view->currentId = $this->getRequest()->getParam('id');
+        $this->view->currentId = $this->_request->getParam('id');
 
         if (!$this->treeViewSeted) {
             $this->setTreeView();
