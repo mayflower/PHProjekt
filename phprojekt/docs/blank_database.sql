@@ -34,8 +34,8 @@ CREATE TABLE `DatabaseManager` (
   PRIMARY KEY  (`id`)
 );
 
-INSERT INTO `DatabaseManager` VALUES (1, 'project', 'parent', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project_Models_Project', '1', 1, 'left', 1, 1, '1', 1, 0, 0), (2, 'project', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 2, 'left', 1, 2, '1', 0, 1, 0), (3, 'project', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0), (4, 'project', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0), (5, 'project', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0), (6, 'project', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0), (7, 'project', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0), (8, 'project', 'completePercent', 1, 'completePercent', 'completePercent', 'text', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0), (9, 'project', 'budget', 1, 'budget', 'budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0);
-INSERT INTO `DatabaseManager` VALUES (10, 'todo', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 2, 'left', 1, 2, '1', 0, 1, 0), (11, 'todo', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0), (12, 'todo', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0), (13, 'todo', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0), (14, 'todo', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0), (15, 'todo', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0), (16, 'todo', 'projectId', 1, 'ProjectId', 'projectId', 'text', 8, 1, NULL, NULL, '', 8, 'center', 1, 8, '1', 1, 0, 0);
+INSERT INTO `DatabaseManager` VALUES (1, 'Project', 'parent', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project_Models_Project', '1', 1, 'left', 1, 1, '1', 1, 0, 0), (2, 'Project', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 2, 'left', 1, 2, '1', 0, 1, 0), (3, 'Project', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0), (4, 'Project', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0), (5, 'Project', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0), (6, 'Project', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0), (7, 'Project', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0), (8, 'Project', 'completePercent', 1, 'completePercent', 'completePercent', 'text', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0), (9, 'Project', 'budget', 1, 'budget', 'budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0);
+INSERT INTO `DatabaseManager` VALUES (10, 'Todo', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 2, 'left', 1, 2, '1', 0, 1, 0), (11, 'Todo', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0), (12, 'Todo', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0), (13, 'Todo', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0), (14, 'Todo', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0), (15, 'Todo', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0), (16, 'Todo', 'projectId', 1, 'Project', 'Project', 'tree', 1, 1, NULL, 'Project_Model_Project', '', 1, 'center', 1, 1, '1', 1, 0, 0);
 
 --
 -- Table structure for table `History`
@@ -126,15 +126,15 @@ CREATE TABLE `Role` (
 --
 -- Table structure for table `Todo`
 --
-DROP TABLE IF EXISTS `todo`;
-CREATE TABLE `todo` (
+DROP TABLE IF EXISTS `Todo`;
+CREATE TABLE `Todo` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(250) NOT NULL,
   `notes` text,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
-  `startDate` datetime default NULL,
-  `endDate` datetime default NULL,
+  `startDate` date default NULL,
+  `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
   PRIMARY KEY  (`id`)
