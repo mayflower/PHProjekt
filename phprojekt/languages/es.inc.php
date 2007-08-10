@@ -13,7 +13,7 @@ $lang['Deleted'] = "Borrado";
 $lang['Is a required field'] = "Es un campo requerido";
 $lang['Invalid format for date'] = "Formato de fecha inválido";
 
-$lang['Project'] = "Projecto";
+$lang['project'] = "Projecto";
 $lang['id'] = "ID";
 $lang['title'] = "Título";
 $lang['notes'] = "Descripción";
