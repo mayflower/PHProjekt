@@ -363,8 +363,6 @@ class IndexController extends Zend_Controller_Action
      * Save if you are add one or edit one.
      * Use the model module for get the data
      *
-     * The save is doit by the tree node.
-     *
      * !NOTE: You MUST validate the data before save.
      *
      * If there is an error, will showit.
@@ -377,34 +375,25 @@ class IndexController extends Zend_Controller_Action
     {
         $request = $this->_request->getParams();
 
-        $parent = (isset($request['parent'])) ? (int) $request['parent'] : 1;
         $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
 
-        $parentNode = new Phprojekt_Tree_Node_Database($this->oModels, $parent);
-        $newNode    = new Phprojekt_Tree_Node_Database($this->oModels, $itemid);
-
         if (null !== $itemid) {
-            $newNode->setup();
+            $this->oModels->find($itemid);
         }
-        $parentNode->setup();
 
         /* Assign the values */
         foreach ($request as $k => $v) {
-            if ($newNode->getActiveRecord()->keyExists($k)) {
-                $newNode->$k = $v;
+            if ($this->oModels->keyExists($k)) {
+                $this->oModels->$k = $v;
             }
         }
 
         /* Validate and save if is all ok */
-        if ($newNode->getActiveRecord()->recordValidate()) {
-            if (null === $itemid || $newNode->parent !== $parentNode->id) {
-                $parentNode->appendNode($newNode);
-            } else {
-                $newNode->getActiveRecord()->save();
-            }
+        if ($this->oModels->recordValidate()) {
+            $this->oModels->save();
             $this->message = 'Saved';
         } else {
-            $this->errors = $newNode->getActiveRecord()->getError();
+            $this->errors = $this->oModels->getError();
         }
 
         $this->setTreeView();
