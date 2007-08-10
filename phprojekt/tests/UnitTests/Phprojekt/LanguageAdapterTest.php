@@ -47,7 +47,7 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Extensions_ExceptionTestCase
      * Test name of the class
      *
      */
-    public function toString()
+    public function testToString()
     {
         $lang   = new Phprojekt_LanguageAdapter('es');
         $string = $lang->toString();
