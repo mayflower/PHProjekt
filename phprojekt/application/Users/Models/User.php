@@ -67,9 +67,11 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
             }
         }
         catch (Phprojekt_ActiveRecord_Exception $are) {
+            $this->_log->log($are->getMessage());
             return false;
         }
         catch (Exception $e) {
+            $this->_log->log($e->getMessage());
             return false;
         }
 
