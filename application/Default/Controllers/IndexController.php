@@ -153,7 +153,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         $db       = Zend_Registry::get('db');
-        $projects = PHprojekt_Loader::getModelFactory('Project', 'Project', array('db' => $db));
+        $projects = PHprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
         $this->_smarty             = Zend_Registry::get('view');

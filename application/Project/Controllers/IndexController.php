@@ -50,6 +50,6 @@ class Project_IndexController extends IndexController
     {
         $db = Zend_Registry::get('db');
 
-        return Phprojekt_Loader::getModelFactory('Project', 'Project', array('db' => $db));
+        return Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
     }
 }

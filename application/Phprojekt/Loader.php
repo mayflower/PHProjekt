@@ -168,7 +168,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return string
      */
-    public static function getModel($module, $model)
+    public static function getModelClassname($module, $model)
     {
         return self::_getClass($module, $model, self::MODEL);
     }
@@ -187,7 +187,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return string
      */
-    public static function getView($module, $view)
+    public static function getViewClassname($module, $view)
     {
         return self::_getClass($module, $view, self::VIEW);
     }
@@ -204,9 +204,9 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return Object
      */
-    public static function getModelFactory($module, $model)
+    public static function getModel($module, $model)
     {
-        $name = self::getModel($module, $model);
+        $name = self::getModelClassname($module, $model);
         $args = array_slice(func_get_args(), 2);
 
         return self::_newInstance($name, $args);
@@ -256,9 +256,9 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return Object
      */
-    public static function getViewFactory($module, $view)
+    public static function getView($module, $view)
     {
-        $name = self::getView($module, $view);
+        $name = self::getViewClassname($module, $view);
         $args = array_slice(func_get_args(), 2);
 
         return self::_newInstance($name, $args);
