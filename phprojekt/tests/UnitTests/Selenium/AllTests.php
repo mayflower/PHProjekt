@@ -8,6 +8,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'LoginTest.php';
+require_once 'ProjectTest.php';
 /**
  * Static test suite.
  */
@@ -23,6 +24,7 @@ class Selenium_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Selenium Test Suite');
  
         $suite->addTestSuite('Selenium_LoginTest');
+        $suite->addTestSuite('Selenium_ProjectTest');
  
         return $suite;
     }
