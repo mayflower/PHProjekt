@@ -98,13 +98,13 @@ class Default_Helpers_ListView
     {
         switch ($field['formType']) {
         default:
-            return $this->listText($field, $originalValue);
+            return $this->listText($originalValue);
             break;
         case "textarea":
-            return $this->listTextArea($field, $originalValue);
+            return $this->listTextArea($originalValue);
             break;
         case "date":
-            return $this->listDate($field, $originalValue);
+            return $this->listDate($originalValue);
             break;
         case "selectValues":
             return $this->listSelectValues($field, $originalValue);
@@ -118,12 +118,11 @@ class Default_Helpers_ListView
     /**
      * Return a normal text calue
      *
-     * @param array $field         Data of the field from the dbManager
      * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listText($field, $originalValue)
+    public function listText($originalValue)
     {
         return $originalValue;
     }
@@ -131,12 +130,11 @@ class Default_Helpers_ListView
     /**
      * Return a textarea value
      *
-     * @param array $field         Data of the field from the dbManager
      * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listTextArea($field, $originalValue)
+    public function listTextArea($originalValue)
     {
         return $originalValue;
     }
@@ -145,12 +143,11 @@ class Default_Helpers_ListView
      * Return a date value translated to the user locale
      * Using the value of the config->language
      *
-     * @param array $field         Data of the field from the dbManager
      * @param mix   $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
-    public function listDate($field, $originalValue)
+    public function listDate($originalValue)
     {
         if (!empty($originalValue)) {
             $localeFormat = new Zend_Locale_Format();
