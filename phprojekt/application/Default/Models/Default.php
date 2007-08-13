@@ -27,14 +27,6 @@
 class Default_Models_Default
 {
     /**
-     * Name of the table
-     * Redefine the var for consistence
-     *
-     * @var unknown_type
-     */
-    public $_name = 'Default';
-
-    /**
      * Default module has no fields for list
      * Redefine the function for consistence
      *
@@ -60,6 +52,7 @@ class Default_Models_Default
      * Redefine the function for consistence
      *
      * @param string $table Name of the table for use
+     *
      * @return array
      */
     public function getFieldsForList($table)
