@@ -39,7 +39,16 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     {
         $listData   = array();
 
-        foreach ($this->fetchAll() as $row) {
+        /* Filter the subprojects of the current project */
+        $session = new Zend_Session_Namespace();
+        if (true === isset($session->lastProjectId)) {
+            $projectId = $session->lastProjectId;
+            $where = $this->getAdapter()->quoteInto('parent = ?', $projectId);
+        } else {
+            $where = null;
+        }
+
+        foreach ($this->fetchAll($where) as $row) {
             $listData[] = $row;
         }
 
@@ -69,6 +78,26 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $formData = $tmpData;
         }
 
+        /* Asign the parent value if exists */
+        $session = new Zend_Session_Namespace();
+        if (true === isset($session->lastProjectId)) {
+            $formData['parent']['value'] = $session->lastProjectId;
+        }
+
         return $formData;
+    }
+
+    /**
+     * Return wich submodules use this module
+     *
+     * Per now is just a fix array for test.
+     * This fucntion must return the correct relation between
+     * users - projects - modules
+     *
+     * @return array
+     */
+    public function getSubModules()
+    {
+        return array('Todo');
     }
 }

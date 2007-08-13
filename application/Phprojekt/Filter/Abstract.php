@@ -54,7 +54,7 @@ abstract class Phprojekt_Filter_Abstract
      * Initialize a new filter using the db adapter to
      * quote values and identifiers.
      *
-     * @param Zend_Db_Adapter_Abstract $adapter Db adapter for quoting 
+     * @param Zend_Db_Adapter_Abstract $adapter Db adapter for quoting
      */
     public function __construct(Zend_Db_Adapter_Abstract $adapter)
     {
@@ -65,7 +65,7 @@ abstract class Phprojekt_Filter_Abstract
      * Adds a filter to the chain. Every filter in the chain is applied
      * if the filter() method is called.
      *
-     * @param Phprojekt_Filter_Interface $filter filter to be added 
+     * @param Phprojekt_Filter_Interface $filter filter to be added
      *
      * @return void
      */
@@ -80,14 +80,14 @@ abstract class Phprojekt_Filter_Abstract
 
     /**
      * Saves the current filter chain to backing store, aka database
-     * (so why is it called "backing store", and not "database" ;-) ) 
-     * 
+     * (so why is it called "backing store", and not "database" ;-) )
+     *
      * @param Users_Models_User $user   user for whom this filter is saved
-     * @param mixed             $module module for this filter chain 
+     * @param mixed             $module module for this filter chain
      *
      * @return boolean
      */
-    public function saveToBackingStore ($user, $module = null)
+    public function saveToBackingStore($user, $module = null)
     {
         $record = null;
         $pairs  = array();
@@ -102,7 +102,7 @@ abstract class Phprojekt_Filter_Abstract
             }
 
             // Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
-            $record           = $user->settings->create(); 
+            $record           = $user->settings->create();
             $record->module   = $module;
             $record->keyValue = $pairs['key'];
             $record->value    = $pairs['value'];
@@ -115,7 +115,7 @@ abstract class Phprojekt_Filter_Abstract
 
     /**
      * Filters a select
-     * 
+     *
      * @param Zend_Db_Select $select Db select statement to be filter
      *
      * @return void

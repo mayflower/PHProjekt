@@ -59,4 +59,14 @@ class Default_Models_Default
     {
         return array();
     }
+
+    /**
+     * Return wich submodules use this module
+     *
+     * @return array
+     */
+    public function getSubModules()
+    {
+        return array();
+    }
 }

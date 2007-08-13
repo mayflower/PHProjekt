@@ -169,6 +169,26 @@ class IndexController extends Zend_Controller_Action
         $this->_oTreeView = new Default_Helpers_TreeView($tree);
 
         $this->_oTreeView->makePersistent();
+
+        /* Save the last project id into the session */
+        $request = $this->_request->getParams();
+        $session = new Zend_Session_Namespace();
+        if (true === isset($request['id'])) {
+            if ($this->_request->getModuleName() == 'Project') {
+                if ($this->_request->getActionName() == 'list') {
+                    $session->lastProjectId = $request['id'];
+                    $project = PHprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
+                    $project->find($request['id']);
+                    $session->lastProjectName = $project->title;
+                }
+            }
+        }
+
+        /* Assign the current project id and name to the templae */
+        if (true == isset($session->lastProjectId)) {
+            $this->projectId   = $session->lastProjectId;
+            $this->projectName = $session->lastProjectName;
+        }
     }
 
     /**
@@ -349,11 +369,12 @@ class IndexController extends Zend_Controller_Action
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
-            $id       = intval($request['id']);
-            $formData = $this->oModels->getFormData($id);
+            $itemid   = intval($request['id']);
+            $formData = $this->oModels->getFormData($itemid);
 
+            $this->itemid           = $itemid;
             $this->data['formData'] = $formData;
-            $this->generateOutput($id);
+            $this->generateOutput($itemid);
             $this->render('index');
         }
     }
@@ -396,8 +417,8 @@ class IndexController extends Zend_Controller_Action
             $this->errors = $this->oModels->getError();
         }
 
+        $this->itemid = $itemid;
         $this->setTreeView();
-
         $this->generateOutput();
         $this->render('index');
     }
@@ -416,12 +437,13 @@ class IndexController extends Zend_Controller_Action
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
-            $id = intval($request['id']);
-            $this->oModels->find($id);
+            $itemid = intval($request['id']);
+            $this->oModels->find($itemid);
             if ($this->oModels->count() > 0) {
                 $this->oModels->delete();
             }
             $this->message = 'Deleted';
+            $this->itemid  = $itemid;
             $this->generateOutput();
             $this->render('index');
         }
@@ -595,6 +617,9 @@ class IndexController extends Zend_Controller_Action
         if (!$this->formViewSet) {
             $this->setFormView($id);
         }
+
+        $this->breadcrumb = $this->_request->getModuleName();
+        $this->modules    = $this->oModels->getSubModules();
     }
 
     /**

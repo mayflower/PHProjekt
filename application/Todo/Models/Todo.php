@@ -36,7 +36,16 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
     {
         $listData   = array();
 
-        foreach ($this->fetchAll() as $row) {
+        /* Filter the todos of the current project */
+        $session = new Zend_Session_Namespace();
+        if (true === isset($session->lastProjectId)) {
+            $projectId = $session->lastProjectId;
+            $where = $this->getAdapter()->quoteInto('projectId = ?', $projectId);
+        } else {
+            $where = null;
+        }
+
+        foreach ($this->fetchAll($where) as $row) {
             $listData[] = $row;
         }
 
@@ -65,6 +74,22 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
             $formData = $tmpData;
         }
 
+        /* Asign the porject value if exists */
+        $session = new Zend_Session_Namespace();
+        if (true === isset($session->lastProjectId)) {
+            $formData['projectId']['value'] = $session->lastProjectId;
+        }
+
         return $formData;
+    }
+
+    /**
+     * Return wich submodules use this module
+     *
+     * @return array
+     */
+    public function getSubModules()
+    {
+        return array();
     }
 }

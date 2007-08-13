@@ -2,5 +2,6 @@
  {assign var="depth" value=$node->getDepth()}
  {""|indent:$depth*2:"&nbsp;"}
  <a href="{link_to action="toggleNode" tree=$treeIdentifier treeid=$node->id}">+</a>
- {$node->title}<br />
+ <a href="{link_to action="list" module="Project" id=$node->id}">{$node->title}</a>
+ <br />
 {/foreach}
