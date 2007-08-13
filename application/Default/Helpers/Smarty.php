@@ -164,7 +164,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         $form = Default_Helpers_FormView::getInstance($this);
         $this->_smarty->assign_by_ref('form', $form);
 
-        $list = Default_Helpers_ListView::getInstance($this);
+        $list = Default_Helpers_ListView::getInstance();
         $this->_smarty->assign_by_ref('list', $list);
 
         // process the template (and filter the output)
