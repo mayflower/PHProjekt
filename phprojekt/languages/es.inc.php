@@ -10,6 +10,10 @@ $lang['Add'] = "Agregar";
 $lang['Delete'] = "Borrar";
 $lang['Saved'] = "Grabado";
 $lang['Deleted'] = "Borrado";
+$lang['Display'] = "Agregar";
+$lang['Edit'] = "Editar";
+$lang['Save'] = "Grabar";
+$lang['Delete'] = "Borrar";
 $lang['Is a required field'] = "Es un campo requerido";
 $lang['Invalid format for date'] = "Formato de fecha inválido";
 
