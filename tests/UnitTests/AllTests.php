@@ -17,14 +17,14 @@
  */
 
 /* use command line switches to overwrite this */
-define("DEFAULT_CONFIG_FILE", "configuration.ini");
+define("DEFAULT_CONFIG_FILE",    "configuration.ini");
 define("DEFAULT_CONFIG_SECTION", "testing-mysql");
 
-define('PHPR_ROOT_PATH', realpath( dirname(__FILE__) . '/../../') );
-define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
+define('PHPR_ROOT_PATH',    realpath( dirname(__FILE__) . '/../../') );
+define('PHPR_CORE_PATH',    PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
-define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
-define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
+define('PHPR_CONFIG_FILE',  PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
+define('PHPR_TEMP_PATH',    PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
 
 set_include_path('.' . PATH_SEPARATOR
                . PHPR_LIBRARY_PATH . PATH_SEPARATOR
@@ -46,7 +46,7 @@ require_once 'PHPUnit/Util/Filter.php';
 
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
-
+require_once 'Selenium/AllTests.php'; 
 
 /**
  * AllTests merges all test from the modules
@@ -103,13 +103,14 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         Zend_Session::start();
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace         = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
 
-        $suite           = new PHPUnit_Framework_TestSuite('PHPUnit');
-        $suite->sharedFixture = &$db;
+        $suite                 = new PHPUnit_Framework_TestSuite('PHPUnit');
+        $suite->sharedFixture  = &$db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
+	$suite->addTestSuite(Selenium_AllTests::suite()); 
 
         // add here additional test suites
 
