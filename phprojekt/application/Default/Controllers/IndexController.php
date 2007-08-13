@@ -164,7 +164,7 @@ class IndexController extends Zend_Controller_Action
         $this->data['listData']    = $this->oModels->getListData();
         $this->data['formData']    = $this->oModels->getFormData();
 
-        $this->_oListView = Default_Helpers_ListView::getInstance($this->_smarty);
+        $this->_oListView = Default_Helpers_ListView::getInstance();
         $this->_oFormView = Default_Helpers_FormView::getInstance($this->_smarty);
         $this->_oTreeView = new Default_Helpers_TreeView($tree);
 

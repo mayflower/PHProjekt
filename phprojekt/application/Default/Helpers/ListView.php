@@ -65,10 +65,8 @@ class Default_Helpers_ListView
      * Constructor
      * Only can be created the class by the class it self
      *
-     * @param Zend_View $view Object
      */
-    protected function __construct($view)
-
+    protected function __construct()
     {
         $this->_oTranslate = Zend_Registry::get('translate');
         $this->_db         = Zend_Registry::get('db');
@@ -78,15 +76,12 @@ class Default_Helpers_ListView
     /**
      * Return this class only one time
      *
-     * @param Zend_View $view Zend_View Object
-
-     *
      * @return Default_Helpers_ListView
      */
-    static public function getInstance($view)
+    static public function getInstance()
     {
         if (null === self::$_instance) {
-            self::$_instance = new self($view);
+            self::$_instance = new self();
         }
         return self::$_instance;
     }
