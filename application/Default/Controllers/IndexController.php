@@ -73,14 +73,14 @@ class IndexController extends Zend_Controller_Action
     protected $_oTreeView = null;
 
     /**
-     * Set true if the treeview is set 
+     * Set true if the treeview is set
      *
      * @var boolean
      */
     public $treeViewSet = false;
 
     /**
-     * Set true if the listview is set 
+     * Set true if the listview is set
      *
      * @var boolean
      */
@@ -448,7 +448,7 @@ class IndexController extends Zend_Controller_Action
         $this->listViewSet      = true;
         $this->data['listData'] = $this->oModels->getListData();
 
-        $this->titles   = $this->oModels->getFieldsForList($this->oModels->_name);
+        $this->titles   = $this->oModels->getFieldsForList(get_class($this->oModels));
         $this->lines    = $this->data['listData'];
         $this->listView = $this->_render('list');
     }
