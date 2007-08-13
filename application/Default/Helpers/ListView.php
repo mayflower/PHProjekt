@@ -118,7 +118,7 @@ class Default_Helpers_ListView
     /**
      * Return a normal text calue
      *
-     * @param mix   $originalValue The real value from the database
+     * @param mix $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
@@ -130,7 +130,7 @@ class Default_Helpers_ListView
     /**
      * Return a textarea value
      *
-     * @param mix   $originalValue The real value from the database
+     * @param mix $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
@@ -143,7 +143,7 @@ class Default_Helpers_ListView
      * Return a date value translated to the user locale
      * Using the value of the config->language
      *
-     * @param mix   $originalValue The real value from the database
+     * @param mix $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
