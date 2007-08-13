@@ -73,25 +73,25 @@ class IndexController extends Zend_Controller_Action
     protected $_oTreeView = null;
 
     /**
-     * Set true if is seted the treeView
+     * Set true if the treeview is set 
      *
      * @var boolean
      */
-    public $treeViewSeted = false;
+    public $treeViewSet = false;
 
     /**
-     * Set true if is seted the listView
+     * Set true if the listview is set 
      *
      * @var boolean
      */
-    public $listViewSeted = false;
+    public $listViewSet = false;
 
     /**
-     * Set true if is seted the formView
+     * Set true if the formView is set
      *
      * @var boolean
      */
-    public $formViewSeted = false;
+    public $formViewSet = false;
 
     /**
      * Array with the all the data for render
@@ -434,8 +434,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function setTreeView()
     {
-        $this->treeViewSeted = true;
-        $this->treeView = $this->_render('tree');
+        $this->treeViewSet = true;
+        $this->treeView    = $this->_render('tree');
     }
 
     /**
@@ -445,7 +445,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function setListView()
     {
-        $this->listViewSeted    = true;
+        $this->listViewSet      = true;
         $this->data['listData'] = $this->oModels->getListData();
 
         $this->titles   = $this->oModels->getFieldsForList($this->oModels->_name);
@@ -464,8 +464,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function setFormView($id = 0)
     {
-        $this->formViewSeted = true;
-        $this->columns       = $this->formColumns;
+        $this->formViewSet = true;
+        $this->columns     = $this->formColumns;
         if ($id == 0) {
             $this->data['formData'] = $this->oModels->getFormData($id);
         }
@@ -584,15 +584,15 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->currentId = $this->_request->getParam('id');
 
-        if (!$this->treeViewSeted) {
+        if (!$this->treeViewSet) {
             $this->setTreeView();
         }
 
-        if (!$this->listViewSeted) {
+        if (!$this->listViewSet) {
             $this->setListView();
         }
 
-        if (!$this->formViewSeted) {
+        if (!$this->formViewSet) {
             $this->setFormView($id);
         }
     }
