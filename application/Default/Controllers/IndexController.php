@@ -463,15 +463,54 @@ class IndexController extends Zend_Controller_Action
     /**
      * Render the listView using the data from the model
      *
+     * The paging Helper see the returned rows and calculate the number of pages.
+     * Then, assing to the smarty class the nessesary variables for render the paging.
+     *
+     * The actual page is stored in the session name "projectID + Module".
+     * So each, module have and own session in each project.
+     *
+     * The number of items per page, is from the user configuration.
      * @return void
      */
     public function setListView()
     {
         $this->listViewSet      = true;
-        $this->data['listData'] = $this->oModels->getListData();
+
+        /* Get the last project ID */
+        $session = new Zend_Session_Namespace();
+        if (true === isset($session->lastProjectId)) {
+            $projectId = $session->lastProjectId;
+        } else {
+            $projectId = 0;
+        }
+
+        /* Set the actual page from the request, or from the session */
+        $currentProjectModule = $projectId . $this->_request->getModuleName();
+        $params = $this->_request->getParams();
+        if (true == isset($params['page'])) {
+            $actualPage = (int) $params['page'];
+            $session = new Zend_Session_Namespace($currentProjectModule);
+            $session->actualPage = $actualPage;
+        } else {
+            $session = new Zend_Session_Namespace($currentProjectModule);
+            if (true === isset($session->actualPage)) {
+                $actualPage = $session->actualPage;
+            } else {
+                $actualPage = 0;
+            }
+            $session->actualPage = $actualPage;
+        }
+
+        list($this->data['listData'], $numberOfRows) = $this->oModels->getListData();
 
         $this->titles   = $this->oModels->getFieldsForList(get_class($this->oModels));
         $this->lines    = $this->data['listData'];
+
+        /* Asign paging values for smarty */
+        $config  = Zend_Registry::get('config');
+        $perpage = $config->itemsPerPage;
+        Default_Helpers_Paging::calculatePages($this,$numberOfRows,$perpage,$actualPage);
+
         $this->listView = $this->_render('list');
     }
 
