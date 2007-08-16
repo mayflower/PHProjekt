@@ -29,8 +29,12 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
     /**
      * Get all the todo for list from the db
      * The return array have all the rows that are ActiveRecords itself
+     * and the number of rows without the limits
      *
-     * @return array Array with the rows for render
+     * The pagination is stored in the session name "projectID + Module".
+     * So each, module have and own session in each project.
+     *
+     * @return array Array with the rows for render and the total rows number
      */
     public function getListData()
     {
@@ -40,16 +44,32 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
         $session = new Zend_Session_Namespace();
         if (true === isset($session->lastProjectId)) {
             $projectId = $session->lastProjectId;
-            $where = $this->getAdapter()->quoteInto('projectId = ?', $projectId);
+            $where     = $this->getAdapter()->quoteInto('projectId = ?', $projectId);
         } else {
-            $where = null;
+            $projectId = 0;
+            $where     = null;
         }
 
-        foreach ($this->fetchAll($where) as $row) {
+        /* Limit the query for paging */
+        $session = new Zend_Session_Namespace($projectId . $this->_name);
+        if (true === isset($session->actualPage)) {
+            $actualPage = $session->actualPage;
+        } else {
+            $actualPage = 0;
+        }
+
+        $config = Zend_Registry::get('config');
+        $count  = $config->itemsPerPage;
+
+        $order = 'title';
+
+        foreach ($this->fetchAll($where, $order, $count, $actualPage) as $row) {
             $listData[] = $row;
         }
 
-        return $listData;
+        $howManyRows = count($this->fetchAll($where));
+
+        return array($listData, $howManyRows);
     }
 
     /**
