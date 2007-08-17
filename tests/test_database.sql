@@ -232,6 +232,7 @@ CREATE TABLE `User` (
   `firstname` varchar(250) default NULL,
   `lastname` varchar(250) default NULL,
   `language` varchar(5) NOT NULL,
+  `status` varchar(1) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2;
@@ -242,7 +243,8 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'david','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'de_DE');
+INSERT INTO `User` VALUES (1,'david','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'de_DE','A');
+INSERT INTO `User` VALUES (3,'inactive','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'de_DE','I');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 

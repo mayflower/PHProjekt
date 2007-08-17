@@ -66,6 +66,10 @@ class Phprojekt_Auth extends Zend_Auth
         } else {
             throw new Phprojekt_Auth_Exception('Invalid user or password', 4);
         }
+        
+        if(!$oUser->isActive()) {
+            throw new Phprojekt_Auth_Exception('User Inactive', 5);
+        }
 
 
         try {

@@ -26,7 +26,7 @@ require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
 {
     /**
-     * Test the load function
+     * Test the login function
      *
      * @return void
      */
@@ -131,6 +131,19 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
                 $this->fail($ae->getMessage()." ".$ae->getCode());
             }
         }
+        
+        /* trying a login with a valid user but inactive */
+        try {
+            $tmp = Phprojekt_Auth::login('inactive', 'test');
+            if ($tmp) {
+                $this->fail('An inactive user is able to log in!');
+            }
+        } catch (Phprojekt_Auth_Exception $e) {
+
+            if($ae->getCode() <> 1) {
+                $this->fail($ae->getMessage()." ".$ae->getCode());
+            }
+        }
 
         /* trying a login with a valid user and its password */
         /* This try has to log in the user */
@@ -165,6 +178,5 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
         }
 
     }
-
-
+    
 }
