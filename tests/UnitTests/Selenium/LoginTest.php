@@ -43,7 +43,7 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
      */
     function setUp()
     {
-        $this->_config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION);
+        $this->_config = Zend_Registry::get('config');
         $this->setBrowser('*firefox');
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->_config->webpath);
