@@ -27,9 +27,9 @@ define('PHPR_CONFIG_FILE',  PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuratio
 define('PHPR_TEMP_PATH',    PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
 
 set_include_path('.' . PATH_SEPARATOR
-               . PHPR_LIBRARY_PATH . PATH_SEPARATOR
-               . PHPR_CORE_PATH . PATH_SEPARATOR
-               . get_include_path());
+. PHPR_LIBRARY_PATH . PATH_SEPARATOR
+. PHPR_CORE_PATH . PATH_SEPARATOR
+. get_include_path());
 
 require_once 'Zend/Loader.php';
 require_once 'Phprojekt/Loader.php';
@@ -46,7 +46,7 @@ require_once 'PHPUnit/Util/Filter.php';
 
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
-require_once 'Selenium/AllTests.php'; 
+require_once 'Selenium/AllTests.php';
 
 /**
  * AllTests merges all test from the modules
@@ -93,10 +93,10 @@ class AllTests extends PHPUnit_Framework_TestSuite
         Zend_Registry::set('log', $oLog);
 
         $db = Zend_Db::factory($config->database->type, array(
-                                          'username' => $config->database->username,
-                                          'password' => $config->database->password,
-                                          'dbname'   => $config->database->name,
-                                          'host'     => $config->database->host));
+        'username' => $config->database->username,
+        'password' => $config->database->password,
+        'dbname'   => $config->database->name,
+        'host'     => $config->database->host));
         // There are some issues with session handling and unit testing
         // that haven't been implemented here yet, do at least some
         // exception handling
@@ -110,7 +110,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->sharedFixture  = &$db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
-	$suite->addTestSuite(Selenium_AllTests::suite()); 
+        $suite->addTestSuite(Selenium_AllTests::suite());
 
         // add here additional test suites
 
@@ -119,12 +119,12 @@ class AllTests extends PHPUnit_Framework_TestSuite
 }
 
 /*
- * This is actually our entry point. If we run from the commandline
- * we support several switches to the AllTest file.
- *
- * To see the switches try
- *   php AllTests.php -h
- */
+* This is actually our entry point. If we run from the commandline
+* we support several switches to the AllTest file.
+*
+* To see the switches try
+*   php AllTests.php -h
+*/
 if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
     /* default settings */
@@ -176,7 +176,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
     if ($whiteListing) {
         /* enable whitelisting for unit tests, these directories are
-         * covered for the code coverage even they are not part of unit testing */
+        * covered for the code coverage even they are not part of unit testing */
         PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDirectory . '/application');
     }
 

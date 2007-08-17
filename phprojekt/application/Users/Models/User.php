@@ -42,6 +42,9 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      */
     public function isActive()
     {
+        if (strtoupper($this->status) != 'A') {
+            return false;
+        }
         return true;
     }
 
@@ -78,4 +81,5 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         return $userId;
 
     }
+    
 }
