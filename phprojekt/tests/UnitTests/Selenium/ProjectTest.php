@@ -44,7 +44,7 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
      */
     function setUp()
     {
-        $this->_config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION);
+        $this->_config = Zend_Registry::get('config');
         $this->setBrowser('*firefox');
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->_config->webpath);
@@ -58,24 +58,24 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
     }
-    
+
     function testProjectPage()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+
         try {
             $this->assertTrue($this->isTextPresent("Test Project"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
     }
-    
+
     function testTestProject()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+
         $this->click("link=Test Project");
         $this->waitForPageToLoad("30000");
         try {
@@ -94,12 +94,12 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
             array_push($this->verificationErrors, $e->toString());
         }
     }
-    
+
     function testModifyTestProjectMissingFields()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+
         $this->click("link=Test Project");
         $this->type("title", "Test Project 2");
         $this->click("//input[@value='Send']");
@@ -109,15 +109,15 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        }
-    
+    }
+
     function testModifyTestProjectWrongFormat()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        $this->click("link=Test Project");                
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+        $this->click("link=Test Project");
         $this->type("title", "Test Project 2");
-        
+
         $this->type("startDate", "10.10.2007");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
@@ -126,13 +126,13 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-     }
-    
+    }
+
     function testModifyTestProjectRightFormat()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        $this->click("link=Test Project");                
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+        $this->click("link=Test Project");
         $this->type("title", "Test Project 2");
 
         $this->type("startDate", "2007-10-10");
@@ -144,11 +144,11 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
             array_push($this->verificationErrors, $e->toString());
         }
     }
-    
+
     function testChangeBack()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");           
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
         $this->click("link=Test Project 2");
         $this->waitForPageToLoad("30000");
         $this->type("title", "Test Project");
@@ -158,14 +158,14 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
             $this->assertTrue($this->isTextPresent("Test Project"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
-        }        
+        }
     }
-    
+
     function testAddProject()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+
         $this->click("link=Add");
         $this->waitForPageToLoad("30000");
         $this->type("title", "New Entry to delete");
@@ -180,12 +180,12 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
             array_push($this->verificationErrors, $e->toString());
         }
     }
-    
+
     function testDeleteNewProject()
     {
         $this->login();
-        $this->open("/phprojekt/htdocs/index.php/Project/index");        
-        
+        $this->open("/phprojekt/htdocs/index.php/Project/index");
+
         $this->click("link=New Entry to delete");
         $this->waitForPageToLoad("30000");
         $this->click("link=Delete");
