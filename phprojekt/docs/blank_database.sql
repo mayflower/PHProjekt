@@ -173,6 +173,6 @@ CREATE TABLE `UserModuleSetting` (
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
 INSERT INTO `Project` (`id`, `parent`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES (1,NULL,'/','Invisible Root','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(2,1,'/1/','Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(3,1,'/1/','Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(4,2,'/1/2/','Sub Project','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL);
-INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `language`) VALUES (1,'dsp','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'');
+INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `language`, `status`) VALUES (1,'dsp','b47baec07920fed216d6dbb6442af84f',NULL,NULL,'','A');
 
 COMMIT;
