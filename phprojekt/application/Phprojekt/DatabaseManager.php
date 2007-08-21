@@ -82,10 +82,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     protected function _getFields($table, $order)
     {
-        if (!$this->keyExists($order)) {
-            $order = 'id';
-        }
-
         if (empty($this->_dbFields[$order])) {
             $where     = $this->getAdapter()->quoteInto('tableName = ?', $table);
             $fieldsRow = $this->fetchAll($where, $order);
