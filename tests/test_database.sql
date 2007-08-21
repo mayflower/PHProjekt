@@ -232,7 +232,7 @@ CREATE TABLE `User` (
   `firstname` varchar(250) default NULL,
   `lastname` varchar(250) default NULL,
   `language` varchar(5) NOT NULL,
-  `status` varchar(1) NOT NULL,
+  `status` varchar(1) default 'A',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2;
