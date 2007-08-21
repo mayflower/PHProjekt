@@ -352,4 +352,15 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $item->budget = '1000,30';
         $item->budget;
     }
+
+    /**
+     * Test empty float values
+     *
+     */
+    public function testEmptyFloat()
+    {
+        $locale = Zend_Locale::setLocale('es_AR');
+        $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item->budget = '';
+    }
 }
