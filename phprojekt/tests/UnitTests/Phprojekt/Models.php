@@ -52,6 +52,17 @@ class Phprojekt_Models extends PHPUnit_Extensions_ExceptionTestCase
         foreach ($this->_modules as $key => $moduleName) {
             $module = Phprojekt_Loader::getModel($moduleName, $moduleName, array('db' => $this->sharedFixture));
             if (in_array("getListData", get_class_methods($module))) {
+                /* First call */
+                $module->getListData();
+
+                /* Test the project filter */
+                $session = new Zend_Session_Namespace();
+                $session->lastProjectId = 1;
+                $module->getListData();
+
+                /* Test the paging */
+                $session = new Zend_Session_Namespace(1 . $moduleName);
+                $session->actualPage = 1;
                 $module->getListData();
             } else {
                 $this->fail($moduleNAme .
@@ -69,8 +80,16 @@ class Phprojekt_Models extends PHPUnit_Extensions_ExceptionTestCase
         foreach ($this->_modules as $key => $moduleName) {
             $module = Phprojekt_Loader::getModel($moduleName, $moduleName, array('db' => $this->sharedFixture));
             if (in_array("getFormData", get_class_methods($module))) {
+                /* Add */
                 $module->getFormData();
+
+                /* Edit */
                 $module->getFormData(1);
+
+                /* Test the project filter */
+                $session = new Zend_Session_Namespace();
+                $session->lastProjectId = 1;
+                $module->getFormData();
             } else {
                 $this->fail($moduleName .
                             " not have the getFormData function defined");
