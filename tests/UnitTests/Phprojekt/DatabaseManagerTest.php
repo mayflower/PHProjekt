@@ -215,15 +215,15 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
     public function testGetFieldsForList()
     {
         $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForList('project','listPosition');
+        $fields = $db->getFieldsForList('project');
         $this->assertEquals(array_keys($this->_listResult), array_keys($fields));
 
         /* Second call */
-        $fields_second = $db->getFieldsForList('project','listPosition');
+        $fields_second = $db->getFieldsForList('project');
         $this->assertEquals($fields, $fields_second);
 
         $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForList('nothing','nothing');
+        $fields = $db->getFieldsForList('nothing');
         $this->assertEquals($this->_emptyResult, $fields);
     }
 
@@ -234,26 +234,15 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
     public function testGetFieldsForForm()
     {
         $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm('project','formPosition');
+        $fields = $db->getFieldsForForm('project');
         $this->assertEquals(array_keys($this->_formResult), array_keys($fields));
 
         /* Second call */
-        $fields_second = $db->getFieldsForForm('project','formPosition');
+        $fields_second = $db->getFieldsForForm('project');
         $this->assertEquals($fields, $fields_second);
 
         $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm('nothing','nothing');
+        $fields = $db->getFieldsForForm('nothing');
         $this->assertEquals($this->_emptyResult, $fields);
-    }
-
-    /**
-     * Test getFields without exists order
-     *
-     */
-    public function testGetFields()
-    {
-        $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm('project','nothing');
-        $this->assertEquals(array_keys($this->_formResult), array_keys($fields));
     }
 }
