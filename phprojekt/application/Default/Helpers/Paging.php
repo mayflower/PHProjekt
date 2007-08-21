@@ -71,18 +71,9 @@ class Default_Helpers_Paging
         for ($index = $actualPage; $index < $show ; $index++) {
             $position    = $index * $howManyItemsPerPage;
             $page        = $index + 1;
-            $currentPage = $howManyPages -1;
-
-            if ($currentPage == $index) {
-                $showClass = "page_result_actual";
-			} else {
-			    $showClass = "page_result";
-			}
-
 			$position = $index * $howManyItemsPerPage;
-			$pages[] = array('class'    => $showClass,
-			                 'number'   => $page,
-			                 'position' => $position);
+			$pages[]  = array('number'   => $page,
+			                  'position' => $position);
         }
 
         $oView->nextPage     = $nextPage;
