@@ -71,8 +71,8 @@ class Default_Helpers_Paging
         for ($index = $actualPage; $index < $show ; $index++) {
             $position = $index * $howManyItemsPerPage;
             $page     = $index + 1;
-			$pages[]  = array('number'   => $page,
-			                  'position' => $position);
+            $pages[]  = array('number'   => $page,
+                              'position' => $position);
         }
 
         $oView->nextPage     = $nextPage;
