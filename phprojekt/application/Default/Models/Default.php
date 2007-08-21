@@ -30,7 +30,8 @@ class Default_Models_Default
      * Construct class same as all the modules
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -51,6 +52,18 @@ class Default_Models_Default
      * @return array
      */
     public function getFormData()
+    {
+        return array();
+    }
+
+    /**
+     * Redefine the function for consistence
+     *
+     * @param string $table Name of the table for use
+     *
+     * @return array
+     */
+    public function getFieldsForList($table)
     {
         return array();
     }
