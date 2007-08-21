@@ -34,7 +34,7 @@ class Default_Models_Default
      */
     public function getListData()
     {
-        return array();
+        return array(array(),0);
     }
 
     /**
