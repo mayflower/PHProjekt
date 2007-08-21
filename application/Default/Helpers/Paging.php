@@ -69,9 +69,8 @@ class Default_Helpers_Paging
         }
 
         for ($index = $actualPage; $index < $show ; $index++) {
-            $position    = $index * $howManyItemsPerPage;
-            $page        = $index + 1;
-			$position = $index * $howManyItemsPerPage;
+            $position = $index * $howManyItemsPerPage;
+            $page     = $index + 1;
 			$pages[]  = array('number'   => $page,
 			                  'position' => $position);
         }
