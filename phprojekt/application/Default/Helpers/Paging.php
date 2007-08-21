@@ -68,15 +68,15 @@ class Default_Helpers_Paging
             $show = $total;
         }
 
-        for($index = $actualPage; $index < $show ; $index++) {
+        for ($index = $actualPage; $index < $show ; $index++) {
             $position    = $index * $howManyItemsPerPage;
             $page        = $index + 1;
             $currentPage = $howManyPages -1;
 
-			if ($currentPage == $index) {
+            if ($currentPage == $index) {
                 $showClass = "page_result_actual";
 			} else {
-                $showClass = "page_result";
+			    $showClass = "page_result";
 			}
 
 			$position = $index * $howManyItemsPerPage;
