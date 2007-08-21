@@ -510,7 +510,8 @@ class IndexController extends Zend_Controller_Action
         /* Asign paging values for smarty */
         $config  = Zend_Registry::get('config');
         $perpage = $config->itemsPerPage;
-        Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $actualPage);
+        $paging  = new Default_Helpers_Paging();
+        $paging->calculatePages($this, $numberOfRows, $perpage, $actualPage);
 
         $this->listView = $this->_render('list');
     }
