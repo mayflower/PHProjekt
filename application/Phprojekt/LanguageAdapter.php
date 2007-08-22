@@ -6,7 +6,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    CVS: $Id:
+ * @version    CVS: $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -33,7 +33,7 @@
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /**
-     * Contain all the already loaded locates
+     * Contain all the already loaded locales
      *
      * @var array
      */
@@ -80,15 +80,13 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $session->translatedStrings = array();
         }
 
-        /* Collect a new trasnaltion set */
+        /* Collect a new translation set */
         if (true === empty($this->_translate[$locale])
          && true  === is_readable($data)) {
             /* Get the translation file */
             include_once $data;
 
-            foreach ($lang as $word => $translation) {
-                $this->_translate[$locale][$word] = $translation;
-            }
+            $this->_translate[$locale] = $lang;
 
             $session->translatedStrings = $this->_translate;
             $this->_langLoaded[$locale] = 1;
@@ -98,7 +96,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     /**
      * Returns the adapters name
      *
-     * Just a redefined fucntion from the abstarct Adapter
+     * Just a redefined fucntion from the abstract Adapter
      *
      * @return string
      */
