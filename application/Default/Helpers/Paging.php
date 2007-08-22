@@ -80,5 +80,6 @@ class Default_Helpers_Paging
         $oView->previousPage = $previousPage;
         $oView->pages        = $pages;
         $oView->lastPage     = ($total - 1) * $howManyItemsPerPage;
+        $oView->howManyPages = $howManyPages;
     }
 }
