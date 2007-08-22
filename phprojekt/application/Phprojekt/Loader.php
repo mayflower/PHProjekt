@@ -238,6 +238,7 @@ class Phprojekt_Loader extends Zend_Loader
      */
     public static function getModuleFromObject(Phprojekt_ActiveRecord_Abstract $object)
     {
+        $match = null;
         $pattern = str_replace('_', '', Phprojekt_ActiveRecord_Abstract::CLASS_PATTERN);
         if (preg_match("@^(" . $pattern . ")_@", get_class($object), $match)) {
             return $match[1];
