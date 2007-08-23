@@ -94,26 +94,26 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 
         if ($action == 'edit') {
             foreach ($fields as $fieldName => $fieldData) {
-                $fieldData = null;
                 if ($object->$fieldName != $clone->$fieldName) {
                     $differences[$fieldName] = array(
                             'oldValue' => $clone->$fieldName,
                             'newValue' => $object->$fieldName);
                 }
+                unset($fieldData);
             }
         } else if ($action == 'add') {
             foreach ($fields as $fieldName => $fieldData) {
-                $fieldData = null;
                 $differences[$fieldName] = array(
                     'oldValue' => '',
                     'newValue' => $object->$fieldName);
+                unset($fieldData);
             }
         } else if ($action == 'delete') {
             foreach ($fields as $fieldName => $fieldData) {
-                $fieldData = null;
                 $differences[$fieldName] = array(
                     'oldValue' => $object->$fieldName,
                     'newValue' => '');
+                unset($fieldData);
             }
         } else {
             ;
