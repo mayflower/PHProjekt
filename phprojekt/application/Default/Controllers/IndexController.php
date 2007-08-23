@@ -533,11 +533,11 @@ class IndexController extends Zend_Controller_Action
         }
 
         /* Asign post values */
-        $params   = $this->_request->getParams();
-        $formData = $this->data['formData'];
-        $tmp      = $formData;
-        foreach ($formData as $fieldName => $value) {
-            unset($value);
+        $params     = $this->_request->getParams();
+        $formData   = $this->data['formData'];
+        $tmp        = $formData;
+        $fieldNames = array_keys($formData);
+        foreach ($fieldNames as $fieldName) {
             if (isset($params[$fieldName])) {
                 $tmp[$fieldName]['value'] = $params[$fieldName];
             }
@@ -567,7 +567,7 @@ class IndexController extends Zend_Controller_Action
      * @param string $method Action method
      * @param array  $args   Arguments for the Action
      *
-     * @return Zend_Exception
+     * @return IndexController Action
      */
     public function __call($method, $args)
     {
@@ -578,7 +578,12 @@ class IndexController extends Zend_Controller_Action
             return $this->_forward('index');
         }
 
-        throw new Exception('Invalid method "' . $method . '" called');
+        $arguments = null;
+        foreach ($args as $argument) {
+            $arguments .= $argument;
+        }
+        throw new Exception('Invalid method "'. $method . '" called'
+                            . ' with arguments: ' . $arguments);
     }
 
     /**
