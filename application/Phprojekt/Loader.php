@@ -90,7 +90,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @param string $class The name of the class
      *
-     * @return mixed
+     * @return string|false Class name on success; false on failure
      */
     public static function autoload($class)
     {
@@ -146,13 +146,11 @@ class Phprojekt_Loader extends Zend_Loader
                          . "instead of {$nIdentifier}");
             return $cIdentifier;
         } catch (Zend_Exception $ze) {
-
         }
 
         self::loadClass($nIdentifier, self::$_directories);
         return $nIdentifier;
     }
-
 
     /**
      * Load the class of a model and return the name of the class.
