@@ -65,6 +65,7 @@ class Default_Models_Default
      */
     public function getFieldsForList($table)
     {
+        unset($table);
         return array();
     }
 
