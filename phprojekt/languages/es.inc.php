@@ -54,7 +54,7 @@ $l_text31a = array("por defecto", "15 min.", "30 min.", " 1 hora", " 2 horas", "
 $l_text31b = array(0, 15, 30, 60, 120, 240, 1440);
 $name_day = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
 $name_day2 = array("Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do");
-            
+
 
 //Lang Data
 
@@ -978,7 +978,7 @@ $lang["schedule readable to others"]  = "horario visible a otros";
 $lang["schedule visible but not readable"]  = "horario visible pero no legible";
 $lang["script"]  = "script";
 $lang["Search"]  = "Buscar";
-$lang["Search area"]  = "Área de búsqueda";
+$lang["Search area"]  = "�?rea de búsqueda";
 $lang["Search term"]  = "Término de búsqueda";
 $lang["Seconds to refresh the chat log"]  = "Segundos en que se regenera el historial del chat";
 $lang["Seems that You have a valid database connection!"]  = "Parece que usted tiene una conexión válida a la base de datos";
@@ -1148,7 +1148,7 @@ $lang["Test items"]  = "Probar ítems";
 $lang["Test user password and confirmation are different."]  = "La contraseña y la confirmación del usuario test son diferentes";
 $lang["Text"]  = "Texto";
 $lang["Text length of events will be cut"]  = "La longitud de texto de los eventos será cortada";
-$lang["Textarea"]  = "Área de texto";
+$lang["Textarea"]  = "�?rea de texto";
 $lang["Thanks for installing PHProjekt, please Login"]  = "Gracias por instalar PHProjekt, por favor ingrese sus datos";
 $lang["The Access Rights have been modified"]  = "Los accesos de escritura han sido modificados";
 $lang["The bookmark is deleted"]  = "El favorito ha sido eliminado";

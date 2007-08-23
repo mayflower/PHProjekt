@@ -59,10 +59,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * @param string|array       $options Options for the adaptor
      *
      * @return void
-     * 
+     *
      * @todo "include_once $data" is not a good code.
      *       Maybe must have some checks before include the file
-     * 
+     *
      */
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
@@ -84,7 +84,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         if (true === empty($this->_translate[$locale])
          && true  === is_readable($data)) {
             /* Get the translation file */
-            include_once $data;
+            define('LANG_FILE',$data);
+            include_once LANG_FILE;
 
             $this->_translate[$locale] = $lang;
 

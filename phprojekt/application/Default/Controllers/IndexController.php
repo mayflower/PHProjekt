@@ -537,6 +537,7 @@ class IndexController extends Zend_Controller_Action
         $formData = $this->data['formData'];
         $tmp      = $formData;
         foreach ($formData as $fieldName => $value) {
+            $value = null;
             if (isset($params[$fieldName])) {
                 $tmp[$fieldName]['value'] = $params[$fieldName];
             }
@@ -570,6 +571,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function __call($method, $args)
     {
+        $args = null;
         if ('Action' == substr($method, -6)) {
             /* If the action method was not found,
                forward to the index action */
