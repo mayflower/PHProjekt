@@ -569,9 +569,8 @@ class IndexController extends Zend_Controller_Action
      *
      * @return IndexController Action
      */
-    public function __call($method, $args)
+    public function __call($method, $args = array())
     {
-        unset($args);
         if ('Action' == substr($method, -6)) {
             /* If the action method was not found,
                forward to the index action */
@@ -579,7 +578,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         $arguments = null;
-        if (is_array($args)) {
+        if (false == empty($args)) {
             foreach ($args as $argument) {
                 $arguments .= $argument;
             }

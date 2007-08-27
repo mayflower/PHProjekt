@@ -86,10 +86,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         if (true === empty($this->_translate[$locale])
          && true  === is_readable($data)) {
             /* Get the translation file */
-            if (!defined('LANG_'.$locale)) {
-                define('LANG_'.$locale, $data);
+            $file = 'LANG_'.$locale;
+            if (!defined($file)) {
+                define($file, $data);
             }
-            include_once constant('LANG_'.$locale);
+            include_once constant($file);
 
             $this->_translate[$locale] = $lang;
 
