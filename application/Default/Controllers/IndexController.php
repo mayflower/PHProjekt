@@ -579,8 +579,10 @@ class IndexController extends Zend_Controller_Action
         }
 
         $arguments = null;
-        foreach ($args as $argument) {
-            $arguments .= $argument;
+        if (is_array($args)) {
+            foreach ($args as $argument) {
+                $arguments .= $argument;
+            }
         }
         throw new Exception('Invalid method "'. $method . '" called'
                             . ' with arguments: ' . $arguments);

@@ -53,6 +53,10 @@ class Phprojekt_Roles
      */
     public function addPermissionForModule($module, $right)
     {
+        if (isset($module) && isset($right)) {
+            // apply rights
+        }
+        
         return true;
     }
 
@@ -65,6 +69,9 @@ class Phprojekt_Roles
      */
     public function deletePermissionForModule($module)
     {
+        if (isset($module)) {
+            // delete module permission
+        }
         return true;
     }
 
@@ -87,6 +94,9 @@ class Phprojekt_Roles
      */
     public function getPermissionForModule($module)
     {
+        if (isset($module)) {
+            // get module permission
+        }
         return true;
     }
 

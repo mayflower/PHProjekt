@@ -98,8 +98,14 @@ class Phprojekt_Loader extends Zend_Loader
             self::loadClass($class, self::$_directories);
             return $class;
         } catch (Exception $e) {
+            if (Zend_Registry::isRegistered('log')) {
+                $oLog = Zend_Registry::get('log');
+                $oLog->debug((string) $e->getMessage());
+            }
             return false;
         }
+        
+        return false;
     }
 
     /**
@@ -146,6 +152,10 @@ class Phprojekt_Loader extends Zend_Loader
                          . "instead of {$nIdentifier}");
             return $cIdentifier;
         } catch (Zend_Exception $ze) {
+            if (Zend_Registry::isRegistered('log')) {
+                $oLog = Zend_Registry::get('log');
+                $oLog->debug((string) $ze->getMessage());
+            }
         }
 
         self::loadClass($nIdentifier, self::$_directories);
