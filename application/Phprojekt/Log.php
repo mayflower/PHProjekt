@@ -81,10 +81,10 @@ class Phprojekt_Log extends Zend_Log
                     $logger = new Zend_Log(new Zend_Log_Writer_Stream($val->filename));
                     $logger->addFilter(new Zend_Log_Filter_Priority($priority));
                     $this->_loggers[] = $logger;
-                } 
-            } 
-        } 
-    } 
+                }
+            }
+        }
+    }
 
     /**
      * Write the text into the file.
@@ -104,10 +104,12 @@ class Phprojekt_Log extends Zend_Log
     {
         if ($priority >= Zend_Log::DEBUG) {
             $btrace = debug_backtrace();
-            $message = sprintf("%d %s::%s:\n %s\n", $btrace[3]['line'], $btrace[3]['class'], $btrace[3]['function'], $message);
-        } 
+            if (true == isset($btrace[3]['line'])) {
+                $message = sprintf("%d %s::%s:\n %s\n", $btrace[3]['line'], $btrace[3]['class'], $btrace[3]['function'], $message);
+            }
+        }
         foreach ($this->_loggers as $logger) {
             $logger->log($message, $priority);
-        } 
-    } 
-} 
+        }
+    }
+}

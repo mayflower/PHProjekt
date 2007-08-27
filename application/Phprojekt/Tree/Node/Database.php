@@ -129,8 +129,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return boolean
      */
-    public function isSetup() 
-
+    public function isSetup()
     {
         return null !== $this->id;
     }
@@ -156,7 +155,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                                                 'You have to set a requested '
                                               . 'treeid in the constructor');
         }
-        
+
         if (!is_null($comparer)) {
             // We have to apply the pre sorting comparer
         }
@@ -381,7 +380,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 return $this->_activeRecord->$key;
             }
         }
-        
+
         return null;
     }
 
@@ -529,7 +528,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         if ($this->hasChildren()) {
             return reset($this->_children);
         }
-        
+
         return null;
     }
 }
