@@ -101,6 +101,7 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->open("/phprojekt/htdocs/index.php/Project/index");
 
         $this->click("link=Test Project");
+        $this->waitForPageToLoad("30000");
         $this->type("title", "Test Project 2");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
@@ -116,6 +117,7 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->login();
         $this->open("/phprojekt/htdocs/index.php/Project/index");
         $this->click("link=Test Project");
+        $this->waitForPageToLoad("30000");
         $this->type("title", "Test Project 2");
 
         $this->type("startDate", "10.10.2007");
@@ -133,6 +135,7 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->login();
         $this->open("/phprojekt/htdocs/index.php/Project/index");
         $this->click("link=Test Project");
+        $this->waitForPageToLoad("30000");
         $this->type("title", "Test Project 2");
 
         $this->type("startDate", "2007-10-10");
