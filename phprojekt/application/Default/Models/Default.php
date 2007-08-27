@@ -59,8 +59,6 @@ class Default_Models_Default
     /**
      * Redefine the function for consistence
      *
-     * @param string $table Name of the table for use
-     *
      * @return array
      */
     public function getFieldsForList()
