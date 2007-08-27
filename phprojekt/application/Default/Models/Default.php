@@ -63,7 +63,7 @@ class Default_Models_Default
      *
      * @return array
      */
-    public function getFieldsForList($table)
+    public function getFieldsForList()
     {
         return array();
     }

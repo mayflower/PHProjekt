@@ -130,6 +130,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * @return boolean
      */
     public function isSetup() 
+
     {
         return null !== $this->id;
     }
@@ -144,6 +145,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * @param Phprojekt_Compare_Interface $comparer A comparer doing pre-sorting
      *
      * @throws Phprojekt_Tree_Node_Exception If no id was requested (see constructor)
+     * @todo Apply the the pre-sorting comparer
      *
      * @return Phprojekt_Tree_Node_Database
      */
@@ -153,6 +155,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             throw new Phprojekt_Tree_Node_Exception(
                                                 'You have to set a requested '
                                               . 'treeid in the constructor');
+        }
+        
+        if (!is_null($comparer)) {
+            // We have to apply the pre sorting comparer
         }
 
         $database = $this->getActiveRecord()->getAdapter();
@@ -375,6 +381,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 return $this->_activeRecord->$key;
             }
         }
+        
+        return null;
     }
 
     /**
@@ -521,5 +529,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         if ($this->hasChildren()) {
             return reset($this->_children);
         }
+        
+        return null;
     }
 }
