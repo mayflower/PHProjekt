@@ -175,7 +175,7 @@ CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 INSERT INTO `Project` (`id`, `parent`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES (1,NULL,'/','Invisible Root','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(2,1,'/1/','Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(3,1,'/1/','Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL),(4,2,'/1/2/','Sub Project','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL);
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `language`, `status`) VALUES (1,'dsp','b47baec07920fed216d6dbb6442af84f',NULL,NULL,'','A');
 
-INSERT INTO databaseManager (id,tableName,tableField,formTab,formLabel,formTooltip,formType,formPosition,formColumns,formRegexp,formRange,defaultValue,listPosition,listAlign,listUseFilter,altPosition,status,isInteger,isRequired,isUnique)
+INSERT INTO DatabaseManager (id,tableName,tableField,formTab,formLabel,formTooltip,formType,formPosition,formColumns,formRegexp,formRange,defaultValue,listPosition,listAlign,listUseFilter,altPosition,status,isInteger,isRequired,isUnique)
 VALUES(0,'History','userId',1,'UserId','UserId','userId','1','1',null,null,0,1,'left',1,1,1,1,1,0),
 (0,'History','dataobjectId',1,'DataobjectId','DataobjectId','text','2','1',null,null,0,2,'center',1,2,1,1,1,0),
 (0,'History','module',1,'Module','Module','text','3','1',null,null,'',3,'left',1,3,1,0,1,0),
