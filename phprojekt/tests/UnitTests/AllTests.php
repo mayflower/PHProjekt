@@ -79,11 +79,11 @@ class AllTests extends PHPUnit_Framework_TestSuite
      *
      * @return PHPUnit_Framework_TestSuite
      */
-    public static function suite(Zend_Config $config = null)
+    public static function suite( $config = null)
     {
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
-        if (null === $config) {
+        if (!is_object($config)) {
             $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION);
             Zend_Registry::set('config', $config);
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
