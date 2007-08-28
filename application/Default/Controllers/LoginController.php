@@ -53,6 +53,7 @@ class LoginController extends Zend_Controller_Action
      */
     public function loginAction()
     {
+        $success = null;
         $request  = new Zend_Controller_Request_Http();
         $username = $request->getPost('username');
         $password = $request->getPost('password');

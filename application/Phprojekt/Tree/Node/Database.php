@@ -157,7 +157,13 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         if (!is_null($comparer)) {
+            
             // We have to apply the pre sorting comparer
+            
+            if (Zend_Registry::isRegistered('log')) {
+                $oLog = Zend_Registry::get('log');
+                $oLog->debug('Pre-sorting requested and not implemented yet');
+            }
         }
 
         $database = $this->getActiveRecord()->getAdapter();
