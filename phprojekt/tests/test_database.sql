@@ -77,7 +77,7 @@ CREATE TABLE `History` (
   KEY `History_userId` (`userId`)
 );
 
-INSERT INTO databaseManager (id,tableName,tableField,formTab,formLabel,formTooltip,formType,formPosition,formColumns,formRegexp,formRange,defaultValue,listPosition,listAlign,listUseFilter,altPosition,status,isInteger,isRequired,isUnique)
+INSERT INTO DatabaseManager (id,tableName,tableField,formTab,formLabel,formTooltip,formType,formPosition,formColumns,formRegexp,formRange,defaultValue,listPosition,listAlign,listUseFilter,altPosition,status,isInteger,isRequired,isUnique)
 VALUES(0,'History','userId',1,'UserId','UserId','userId','1','1',null,null,0,1,'left',1,1,1,1,1,0),
 (18,'History','dataobjectId',1,'DataobjectId','DataobjectId','text','2','1',null,null,0,2,'center',1,2,1,1,1,0),
 (19,'History','module',1,'Module','Module','text','3','1',null,null,'',3,'left',1,3,1,0,1,0),
