@@ -180,7 +180,7 @@ class Default_Helpers_ListView
         if (!empty($originalValue)) {
             $localeFormat = new Zend_Locale_Format();
             $locale       = $this->_config->language;
-            list($dateData,$hourData) = split(" ",$originalValue);
+            list($dateData, $hourData) = split(" ", $originalValue);
 
             $formatDate = $localeFormat->getDateFormat($locale);
             $date       = new Zend_Date($dateData, $formatDate, $locale);
