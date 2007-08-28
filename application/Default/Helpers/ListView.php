@@ -208,8 +208,7 @@ class Default_Helpers_ListView
     /**
      * Return the name of an user
      *
-     * @param array $field         Data of the field from the dbManager
-     * @param mix   $originalValue The real value from the database
+     * @param mix $originalValue The real value from the database
      *
      * @return string XHTML generated
      */

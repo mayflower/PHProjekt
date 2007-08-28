@@ -133,7 +133,6 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     public function getHistoryData($object, $itemId)
     {
         $table  = $object->getTableName();
-        $fields = $object->getFieldsForForm($table);
         $where  = $this->getAdapter()->quoteInto('module = ?', $table);
         $where .= $this->getAdapter()->quoteInto('AND dataobjectId = ?', $itemId);
         $order  = 'datetime DESC';
