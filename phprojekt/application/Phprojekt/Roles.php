@@ -55,6 +55,10 @@ class Phprojekt_Roles
     {
         if (isset($module) && isset($right)) {
             // apply rights
+            if (Zend_Registry::isRegistered('log')) {
+                $oLog = Zend_Registry::get('log');
+                $oLog->debug('Add permission requested and not implemented yet');
+            }
         }
         
         return true;
@@ -71,6 +75,10 @@ class Phprojekt_Roles
     {
         if (isset($module)) {
             // delete module permission
+            if (Zend_Registry::isRegistered('log')) {
+                $oLog = Zend_Registry::get('log');
+                $oLog->debug('Delete permission requested and not implemented yet');
+            }
         }
         return true;
     }
@@ -96,6 +104,10 @@ class Phprojekt_Roles
     {
         if (isset($module)) {
             // get module permission
+            if (Zend_Registry::isRegistered('log')) {
+                $oLog = Zend_Registry::get('log');
+                $oLog->debug('Get permission requested and not implemented yet');
+            }
         }
         return true;
     }
