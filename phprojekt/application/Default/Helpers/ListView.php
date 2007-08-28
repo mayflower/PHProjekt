@@ -106,6 +106,9 @@ class Default_Helpers_ListView
         case "date":
             return $this->listDate($originalValue);
             break;
+        case "datetime":
+            return $this->listDateTime($originalValue);
+            break;
         case "selectValues":
             return $this->listSelectValues($field, $originalValue);
             break;
@@ -158,6 +161,32 @@ class Default_Helpers_ListView
             $format       = $localeFormat->getDateFormat($locale);
             $date         = new Zend_Date($originalValue, $format, $locale);
             return $date->get($format);
+        } else {
+            return '';
+        }
+    }
+
+
+    /**
+     * Return a datetime value translated to the user locale
+     * Using the value of the config->language
+     *
+     * @param mix $originalValue The real value from the database
+     *
+     * @return string XHTML generated
+     */
+    public function listDateTime($originalValue)
+    {
+        if (!empty($originalValue)) {
+            $localeFormat = new Zend_Locale_Format();
+            $locale       = $this->_config->language;
+            list($dateData,$hourData) = split(" ",$originalValue);
+
+            $formatDate = $localeFormat->getDateFormat($locale);
+            $date       = new Zend_Date($dateData, $formatDate, $locale);
+            $formatHour = $localeFormat->getTimeFormat($locale);
+            $hour       = new Zend_Date($hourData, $formatHour, $locale);
+            return $date->get($formatDate) . $hour->get($formatHour);
         } else {
             return '';
         }
