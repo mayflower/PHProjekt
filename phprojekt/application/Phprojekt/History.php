@@ -118,4 +118,37 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         }
         return $differences;
     }
+
+    /**
+     * Return the data array with all the changes for a item ID
+     * The data is sorted by date and have all the values stored in the database
+     * The data result is for use with a template
+     * that correct the values for the user.
+     *
+     * @param Phprojekt_Item_Abstract $object The item object
+     * @param int                     $itemId The item ID
+     *
+     * @return array
+     */
+    public function getHistoryData($object, $itemId)
+    {
+        $table  = $object->getTableName();
+        $fields = $object->getFieldsForForm($table);
+        $where  = $this->getAdapter()->quoteInto('module = ?', $table);
+        $where .= $this->getAdapter()->quoteInto('AND dataobjectId = ?', $itemId);
+        $order  = 'datetime DESC';
+        $result = array();
+
+        foreach ($this->fetchAll($where, $order) as $row) {
+            $result[] = array('userId'       => $row->userId,
+                              'module'       => $row->module,
+                              'dataobjectId' => $row->dataobjectId,
+                              'field'        => $row->field,
+                              'oldValue'     => $row->oldValue,
+                              'newValue'     => $row->newValue,
+                              'action'       => $row->action,
+                              'datetime'     => $row->datetime);
+        }
+        return $result;
+    }
 }

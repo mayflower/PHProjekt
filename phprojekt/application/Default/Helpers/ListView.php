@@ -112,6 +112,9 @@ class Default_Helpers_ListView
         case "tree":
             return $this->listTree($field, $originalValue);
             break;
+        case "userId":
+            return $this->listUserId($originalValue);
+            break;
         }
     }
 
@@ -200,5 +203,21 @@ class Default_Helpers_ListView
 
         $node = $tree->getNodeById($originalValue);
         return $node->title;
+    }
+
+    /**
+     * Return the name of an user
+     *
+     * @param array $field         Data of the field from the dbManager
+     * @param mix   $originalValue The real value from the database
+     *
+     * @return string XHTML generated
+     */
+    public function listUserId($originalValue)
+    {
+        $db   = Zend_Registry::get('db');
+        $user = new Users_Models_User(array('db' => $db));
+        $user->find($originalValue);
+        return $user->username;
     }
 }
