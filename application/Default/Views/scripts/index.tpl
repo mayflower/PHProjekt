@@ -73,6 +73,18 @@
   }
   {/literal}
   </style>
+  <script type="text/javascript">
+  {literal}
+  function displayBlock(field) {
+    e = document.getElementById(field);
+    if (e.style.display == 'inline') {
+        e.style.display = 'none';
+    } else {
+        e.style.display = 'inline';
+    }
+  }
+  {/literal}
+  </script>
 </head>
 <body>
 <table width="100%" id="main">

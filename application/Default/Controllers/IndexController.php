@@ -372,6 +372,13 @@ class IndexController extends Zend_Controller_Action
             $itemid   = intval($request['id']);
             $formData = $this->oModels->getFormData($itemid);
 
+            /* History */
+            $db                  = Zend_Registry::get('db');
+            $history             = new Phprojekt_History(array('db' => $db));
+            $this->historyData   = $history->getHistoryData($this->oModels, $itemid);
+            $this->dateFieldData = array('formType' => 'date');
+            $this->userFieldData = array('formType' => 'userId');
+
             $this->itemid           = $itemid;
             $this->data['formData'] = $formData;
             $this->generateOutput($itemid);

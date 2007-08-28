@@ -81,5 +81,4 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         return $userId;
 
     }
-    
 }
