@@ -77,6 +77,16 @@ CREATE TABLE `History` (
   KEY `History_userId` (`userId`)
 );
 
+INSERT INTO databaseManager (id,tableName,tableField,formTab,formLabel,formTooltip,formType,formPosition,formColumns,formRegexp,formRange,defaultValue,listPosition,listAlign,listUseFilter,altPosition,status,isInteger,isRequired,isUnique)
+VALUES(0,'History','userId',1,'UserId','UserId','userId','1','1',null,null,0,1,'left',1,1,1,1,1,0),
+(18,'History','dataobjectId',1,'DataobjectId','DataobjectId','text','2','1',null,null,0,2,'center',1,2,1,1,1,0),
+(19,'History','module',1,'Module','Module','text','3','1',null,null,'',3,'left',1,3,1,0,1,0),
+(20,'History','field',1,'Field','Field','text','4','1',null,null,'',4,'left',1,4,1,0,1,0),
+(21,'History','oldValue',1,'OldValue','OldValue','text','5','1',null,null,'',0,'',0,0,1,0,1,0),
+(22,'History','newValue',1,'NewValue','NewValue','text','6','1',null,null,'',0,'',0,0,1,0,1,0),
+(23,'History','action',1,'Action','Action','text','7','1',null,null,'',7,'left',1,7,1,0,1,0),
+(24,'History','datetime',1,'Datetime','Datetime','datetime','8','1',null,null,'',8,'center',1,8,1,0,1,0);
+
 --
 -- Table structure for table `ModuleInstance`
 --
@@ -224,8 +234,8 @@ LOCK TABLES `Todo` WRITE;
 INSERT INTO `Todo` VALUES (1,'Todo of Test Project','',1,1,'','',0,'working');
 /*!40000 ALTER TABLE `Todo` ENABLE KEYS */;
 UNLOCK TABLES;
- 
- 
+
+
 --
 -- Table structure for table `user`
 --
