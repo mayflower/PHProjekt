@@ -26,6 +26,15 @@
  */
 class History_Models_History extends Phprojekt_Item_Abstract
 {
+    /**
+     * Get all the projects for list from the db
+     * The return array have all the rows that are ActiveRecords itself
+     * and the number of rows without the limits
+     *
+     * The pagination is stored in the session name "0 + Module".
+     *
+     * @return array Array with the rows for render and the total rows number
+     */
     public function getListData()
     {
         $listData  = array();
@@ -76,8 +85,6 @@ class History_Models_History extends Phprojekt_Item_Abstract
 
     /**
      * Get the form fields
-     * If the id is defined will make the edit form
-     * if not, will make the add form
      *
      * @param integer $id Optional, for edit the row
      *
@@ -86,15 +93,6 @@ class History_Models_History extends Phprojekt_Item_Abstract
     public function getFormData($id = 0)
     {
         $formData = $this->getFieldsForForm('todo');
-
-        if ($id > 0) {
-            $this->find($id);
-            foreach ($formData as $fieldName => $fieldData) {
-                $tmpData[$fieldName]          = $fieldData;
-                $tmpData[$fieldName]['value'] = $this->$fieldName;
-            }
-            $formData = $tmpData;
-        }
 
         return $formData;
     }
