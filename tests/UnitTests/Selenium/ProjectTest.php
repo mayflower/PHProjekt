@@ -6,7 +6,7 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
- * @author     Your Name <your.name@mayflower.de>
+ * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
@@ -24,7 +24,7 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     Your Name <your.name@mayflower.de>
+ * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  */
 
 class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
@@ -35,6 +35,15 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
      * @var Zend_Config_Ini
      */
     private $_config;
+
+
+    /**
+     * Collect coverage data at this url
+     *
+     * @var string Url of the coverage php file
+     */
+    protected $coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage.php';
+
 
     /**
      * setup the unit test. Use firefox as a browser and the document

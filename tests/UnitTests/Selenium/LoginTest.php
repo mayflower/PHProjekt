@@ -34,6 +34,13 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
      * @var Zend_Config_Ini
      */
     private $_config;
+
+    /**
+     * Collect coverage data at this url 
+     *
+     * @var string Url of the coverage php file 
+     */
+    protected $coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage.php';
      
     /**
      * setup the unit test. Use firefox as a browser and the document 
