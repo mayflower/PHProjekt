@@ -86,11 +86,9 @@ class History_Models_History extends Phprojekt_Item_Abstract
     /**
      * Get the form fields
      *
-     * @param integer $id Optional, for edit the row
-     *
-     * @return array      Array with the fields for render
+     * @return array Array with the fields for render
      */
-    public function getFormData($id = 0)
+    public function getFormData()
     {
         $formData = $this->getFieldsForForm('todo');
 
