@@ -243,8 +243,7 @@ class Default_Helpers_ListView
      */
     public function listUserId($originalValue)
     {
-        $db   = Zend_Registry::get('db');
-        $user = new Users_Models_User(array('db' => $db));
+        $user = new Users_Models_User($this->_db);
         $user->find($originalValue);
         return $user->username;
     }

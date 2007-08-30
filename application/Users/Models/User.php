@@ -36,6 +36,27 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
                                   'model'  => 'UserModuleSetting'));
 
     /**
+     * Initialize new user
+     * If is seted the user id in the session,
+     * the class will get all the values of these user
+     *
+     * @param array $db Configuration for Zend_Db_Table
+     *
+     * @return void
+     */
+    public function __construct($db)
+    {
+        parent::__construct($db);
+
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        if (true === isset($authNamespace->userId)) {
+            if (true === ($authNamespace->userId > 0)) {
+                $this->find($authNamespace->userId);
+            }
+        }
+    }
+
+    /**
      * Checks if user is active
      *
      * @return boolean id user is active or not
@@ -79,6 +100,24 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         }
 
         return $userId;
+    }
 
+    /**
+     * Found and user using the id and return this class for the new user
+     * If the id is wrong, return the actual user
+     *
+     * @param int $id The user id
+     *
+     * @return Users_Models_User
+     */
+    public function findUserById($id)
+    {
+        if (true === ($id > 0)) {
+            $clone  = clone($this);
+            $clone->find($id);
+            return $clone;
+        } else {
+            return $this;
+        }
     }
 }
