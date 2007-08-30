@@ -38,7 +38,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     /**
      * Public constructor
      *
-     * @param Zend_View $smarty
+     * @param Zend_View $smarty Smarty Object for draw the templates
      *
      * @return void
      */
@@ -80,6 +80,11 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * If not, the text string is using for text mode
      * and the html string is using for html mode
      *
+     * @param string $subject Subject text
+     * @param array  $users   Array with all the id of the users to send the mail
+     * @param string $html    Html of the body
+     * @param string $text    Text of the body
+     *
      * @uses $mail = new Phprojekt_Mail_Notification($smartyObject);
      *       $html = $mail->getHtmlFromTemplate(array('var' => 'value'));
      *       $mail->sendNotification('subject', array(1,2,..), $html);
@@ -90,11 +95,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      *       $html = $mail->getHtmlFromTemplate($data, 'othertemplate');
      *       $mail->sendNotification('subject', array(1,2,..), $html, 'Other Text');
      *
-     * @param string $subject Subject text
-     * @param array  $users   Array with all the id of the users to send the mail
-     * @param string $html    Html of the body
-     * @param string $text    Text of the body
-     *
+
      * @see getHtmlFromTemplate
      *
      * @return void
