@@ -38,7 +38,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     /**
      * Public constructor
      *
-     * @param string $charset
+     * @param Zend_View $smarty
      *
      * @return void
      */
@@ -51,11 +51,11 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     /**
      * Send a notification email in text mode only
      *
-     * @see sendNotification
-     *
      * @param string $subject Subject text
      * @param array  $users   Array with all the id of the users to send the mail
      * @param string $text    Text of the email
+     *
+     * @see sendNotification
      *
      * @return void
      */
@@ -90,12 +90,12 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      *       $html = $mail->getHtmlFromTemplate($data, 'othertemplate');
      *       $mail->sendNotification('subject', array(1,2,..), $html, 'Other Text');
      *
-     * @see getHtmlFromTemplate
-     *
      * @param string $subject Subject text
      * @param array  $users   Array with all the id of the users to send the mail
      * @param string $html    Html of the body
      * @param string $text    Text of the body
+     *
+     * @see getHtmlFromTemplate
      *
      * @return void
      */
