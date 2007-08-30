@@ -1,0 +1,1 @@
+{include file="../../../Default/Views/scripts/mail.tpl"}
