@@ -53,4 +53,16 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Extensions_ExceptionTestCase
         $string = $lang->toString();
         $this->assertEquals('Phprojekt',$string);
     }
+
+    /**
+     * Test all the lang files using the const defined
+     */
+    public function testAllFiles()
+    {
+        $reflect = new ReflectionClass('Phprojekt_LanguageAdapter');
+        $constants = $reflect->getConstants();
+        foreach ($constants as $constant) {
+            $lang = new Phprojekt_LanguageAdapter($constant);
+        }
+    }
 }
