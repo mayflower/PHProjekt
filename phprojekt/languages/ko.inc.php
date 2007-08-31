@@ -385,4 +385,4 @@ $lang["posting (and all comments) with an ID"]  = "ID를 가지고 게시(모든
 $lang["Previous"]  = "이전";
 $lang["print"]  = "인쇄";
 $lang["Priority"]  = "우선순위";
-$lang["priority"]  = "Priorit
+$lang["priority"]  = "Priorit";
