@@ -13,6 +13,9 @@
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
+interface Phprojekt_Compare_Interface {}
+
+
 /**
  * Represents an node of a tree and provides iterator abilities.
  *
