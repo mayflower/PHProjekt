@@ -61,8 +61,9 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $reflect = new ReflectionClass('Phprojekt_LanguageAdapter');
         $constants = $reflect->getConstants();
-        foreach ($constants as $constant) {
-            $lang = new Phprojekt_LanguageAdapter($constant);
+        foreach ($constants as $key => $value) {
+            $value = ereg_replace('.inc.php','',$value);
+            $lang = new Phprojekt_LanguageAdapter($value);
         }
     }
 }
