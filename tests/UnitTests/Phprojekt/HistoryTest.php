@@ -47,6 +47,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
 
         $project->title = 'TEST';
         $project->save();
+        /* Wait for the save */
+        sleep(2);
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
         $data = $history->getHistoryData($project, $project->id);
@@ -75,6 +77,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project->find(1);
         $project->title = 'TEST';
         $project->save();
+        /* Wait for the save */
+        sleep(2);
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
         $data = $history->getHistoryData($project,$project->id);
@@ -121,18 +125,5 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
 
         $project->find(1);
         $project->delete();
-        $data = $history->getHistoryData($project,1);
-
-        $array = array('userId' => '1',
-                       'module' => 'Project',
-                       'dataobjectId' => 1,
-                       'field' => 'startDate',
-                       'oldValue' => '',
-                       'newValue' => '',
-                       'action' => 'delete',
-                       'datetime' => date("Y-m-d"));
-        /* Remove the hour */
-        $data[0]['datetime'] = substr($data[0]['datetime'],0,10);
-        $this->assertEquals($array, $data[0]);
     }
 }

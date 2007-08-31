@@ -33,45 +33,45 @@
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /* Define all the lang files */
-    const LANG_AL = 'al.inc.php';
+    //const LANG_AL = 'al.inc.php';
     const LANG_BG = 'bg.inc.php';
-    const LANG_BR = 'br.inc.php';
-    const LANG_CT = 'ct.inc.php';
-    const LANG_CZ = 'cz.inc.php';
+    //const LANG_BR = 'br.inc.php';
+    //const LANG_CT = 'ct.inc.php';
+    //const LANG_CZ = 'cz.inc.php';
     const LANG_DA = 'da.inc.php';
     const LANG_DE = 'de.inc.php';
-    const LANG_EE = 'ee.inc.php';
-    const LANG_EH = 'eh.inc.php';
+    //const LANG_EE = 'ee.inc.php';
+    //const LANG_EH = 'eh.inc.php';
     const LANG_EN = 'en.inc.php';
     const LANG_ES = 'es.inc.php';
     const LANG_FI = 'fi.inc.php';
     const LANG_FR = 'fr.inc.php';
-    const LANG_GE = 'ge.inc.php';
-    const LANG_GR = 'gr.inc.php';
+    //const LANG_GE = 'ge.inc.php';
+    //const LANG_GR = 'gr.inc.php';
     const LANG_HE = 'he.inc.php';
     const LANG_HU = 'hu.inc.php';
     const LANG_IS = 'is.inc.php';
     const LANG_IT = 'es.inc.php';
-    const LANG_JP = 'jp.inc.php';
+    //const LANG_JP = 'jp.inc.php';
     const LANG_KO = 'ko.inc.php';
     const LANG_LT = 'lt.inc.php';
     const LANG_LV = 'lv.inc.php';
     const LANG_NL = 'nl.inc.php';
-    const LANG_NO = 'no.inc.php';
+    //const LANG_NO = 'no.inc.php';
     const LANG_PL = 'pl.inc.php';
     const LANG_PT = 'pt.inc.php';
     const LANG_RO = 'ro.inc.php';
     const LANG_RU = 'ru.inc.php';
-    const LANG_SE = 'se.inc.php';
-    const LANG_SI = 'si.inc.php';
+    //const LANG_SE = 'se.inc.php';
+    //const LANG_SI = 'si.inc.php';
     const LANG_SK = 'sk.inc.php';
-    const LANG_SP = 'sp.inc.php';
+    //const LANG_SP = 'sp.inc.php';
     const LANG_SV = 'sv.inc.php';
-    const LANG_TH = 'th.inc.php';
+    //const LANG_TH = 'th.inc.php';
     const LANG_TR = 'tr.inc.php';
-    const LANG_TW = 'tw.inc.php';
+    //const LANG_TW = 'tw.inc.php';
     const LANG_UK = 'uk.inc.php';
-    const LANG_ZH = 'zh.inc.php';
+    //const LANG_ZH = 'zh.inc.php';
 
     /**
      * Contain all the already loaded locales
