@@ -101,7 +101,7 @@ CREATE TABLE `ModuleInstance` (
 
 LOCK TABLES `ModuleInstance` WRITE;
 /*!40000 ALTER TABLE `ModuleInstance` DISABLE KEYS */;
-INSERT INTO `ModuleInstance` VALUES (1,1,'Task','Developer Tasks'),(2,1,'Tasks','Project Tasks');
+INSERT INTO `ModuleInstance` VALUES (1,5,'Task','Developer Tasks'),(2,5,'Tasks','Project Tasks');
 /*!40000 ALTER TABLE `ModuleInstance` ENABLE KEYS */;
 UNLOCK TABLES;
 
