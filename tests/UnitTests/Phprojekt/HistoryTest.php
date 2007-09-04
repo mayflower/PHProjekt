@@ -45,8 +45,14 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
 
+        $project->parent = 2;
         $project->title = 'TEST';
+        $project->startDate = '1981-05-12';
+        $project->endDate = '1981-05-12';
+        $project->priority = 1;
         $project->save();
+        Zend_Registry::set('insertedId', $project->id);
+
         /* Wait for the save */
         sleep(2);
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
@@ -55,9 +61,9 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $array = array('userId' => '1',
                        'module' => 'Project',
                        'dataobjectId' => $project->id,
-                       'field' => 'title',
+                       'field' => 'parent',
                        'oldValue' => '',
-                       'newValue' => 'TEST',
+                       'newValue' => '2',
                        'action' => 'add',
                        'datetime' => date("Y-m-d"));
         /* Remove the hour */
@@ -74,7 +80,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $project->find(1);
+        $project->find(5);
         $project->title = 'TEST';
         $project->save();
         /* Wait for the save */
@@ -84,7 +90,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $data = $history->getHistoryData($project,$project->id);
         $array = array('userId' => '1',
                        'module' => 'Project',
-                       'dataobjectId' => 1,
+                       'dataobjectId' => 5,
                        'field' => 'title',
                        'oldValue' => 'Test Project',
                        'newValue' => 'TEST',
@@ -100,10 +106,10 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $data = $history->getHistoryData($project, 1);
+        $data = $history->getHistoryData($project, 5);
         $array = array('userId' => '1',
                        'module' => 'Project',
-                       'dataobjectId' => 1,
+                       'dataobjectId' => 5,
                        'field' => 'title',
                        'oldValue' => 'Test Project',
                        'newValue' => 'TEST',
@@ -123,7 +129,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $project->find(1);
+        $project->find(Zend_Registry::get('insertedId'));
         $project->delete();
     }
 }
