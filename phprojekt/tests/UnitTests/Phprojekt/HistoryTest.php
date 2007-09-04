@@ -88,8 +88,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $project->find(5);
-        $project->title = 'TEST';
+        $project->find(Zend_Registry::get('insertedId'));
+        $project->title = 'EDITED TEST';
         $project->save();
 
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
@@ -97,15 +97,25 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $data = $history->getHistoryData($project,$project->id);
         $array = array('userId' => '1',
                        'module' => 'Project',
-                       'dataobjectId' => 5,
+                       'dataobjectId' => Zend_Registry::get('insertedId'),
                        'field' => 'title',
-                       'oldValue' => 'Test Project',
-                       'newValue' => 'TEST',
+                       'oldValue' => 'TEST',
+                       'newValue' => 'EDITED TEST',
                        'action' => 'edit',
                        'datetime' => date("Y-m-d"));
-        /* Remove the hour */
-        $data[0]['datetime'] = substr($data[0]['datetime'],0,10);
-        $this->assertEquals($array, $data[0]);
+        $found = 0;
+        foreach ($data as $key => $values) {
+            /* Remove the hour */
+            $values['datetime'] = substr($values['datetime'],0,10);
+            $result = array_diff_assoc($values,$array);
+
+            if (empty($result)) {
+                $found = 1;
+            }
+        }
+        if (!$found) {
+            $this->fail('Save edit history error');
+        }
     }
 
     public function testGetHistoryData()
@@ -113,18 +123,28 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $data = $history->getHistoryData($project, 5);
+        $data = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
         $array = array('userId' => '1',
                        'module' => 'Project',
-                       'dataobjectId' => 5,
+                       'dataobjectId' => Zend_Registry::get('insertedId'),
                        'field' => 'title',
-                       'oldValue' => 'Test Project',
-                       'newValue' => 'TEST',
+                       'oldValue' => 'TEST',
+                       'newValue' => 'EDITED TEST',
                        'action' => 'edit',
                        'datetime' => date("Y-m-d"));
-        /* Remove the hour */
-        $data[0]['datetime'] = substr($data[0]['datetime'],0,10);
-        $this->assertEquals($array, $data[0]);
+        $found = 0;
+        foreach ($data as $key => $values) {
+            /* Remove the hour */
+            $values['datetime'] = substr($values['datetime'],0,10);
+            $result = array_diff_assoc($values,$array);
+
+            if (empty($result)) {
+                $found = 1;
+            }
+        }
+        if (!$found) {
+            $this->fail('Get history error');
+        }
     }
 
     /**
@@ -144,8 +164,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $array = array('userId' => '1',
                        'module' => 'Project',
                        'dataobjectId' => Zend_Registry::get('insertedId'),
-                       'field' => 'budget',
-                       'oldValue' => '0,00',
+                       'field' => 'title',
+                       'oldValue' => 'EDITED TEST',
                        'newValue' => '',
                        'action' => 'delete',
                        'datetime' => date("Y-m-d"));
