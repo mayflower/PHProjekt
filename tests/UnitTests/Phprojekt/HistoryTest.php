@@ -50,25 +50,33 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project->startDate = '1981-05-12';
         $project->endDate = '1981-05-12';
         $project->priority = 1;
+        $project->currentStatus = 2;
         $project->save();
         Zend_Registry::set('insertedId', $project->id);
 
-        /* Wait for the save */
-        sleep(2);
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
-
         $data = $history->getHistoryData($project, $project->id);
         $array = array('userId' => '1',
                        'module' => 'Project',
                        'dataobjectId' => $project->id,
-                       'field' => 'parent',
+                       'field' => 'currentStatus',
                        'oldValue' => '',
                        'newValue' => '2',
                        'action' => 'add',
                        'datetime' => date("Y-m-d"));
-        /* Remove the hour */
-        $data[0]['datetime'] = substr($data[0]['datetime'],0,10);
-        $this->assertEquals($array, $data[0]);
+        $found = 0;
+        foreach ($data as $key => $values) {
+            /* Remove the hour */
+            $values['datetime'] = substr($values['datetime'],0,10);
+            $result = array_diff_assoc($values,$array);
+
+            if (empty($result)) {
+                $found = 1;
+            }
+        }
+        if (!$found) {
+            $this->fail('Save add history error');
+        }
     }
 
     /**
@@ -83,8 +91,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
         $project->find(5);
         $project->title = 'TEST';
         $project->save();
-        /* Wait for the save */
-        sleep(2);
+
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
         $data = $history->getHistoryData($project,$project->id);
@@ -131,5 +138,29 @@ class Phprojekt_HistoryTest extends PHPUnit_Extensions_ExceptionTestCase
 
         $project->find(Zend_Registry::get('insertedId'));
         $project->delete();
+
+        $history = new Phprojekt_History(array('db' => $this->sharedFixture));
+        $data = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
+        $array = array('userId' => '1',
+                       'module' => 'Project',
+                       'dataobjectId' => Zend_Registry::get('insertedId'),
+                       'field' => 'budget',
+                       'oldValue' => '0,00',
+                       'newValue' => '',
+                       'action' => 'delete',
+                       'datetime' => date("Y-m-d"));
+        $found = 0;
+        foreach ($data as $key => $values) {
+            /* Remove the hour */
+            $values['datetime'] = substr($values['datetime'],0,10);
+            $result = array_diff_assoc($values,$array);
+
+            if (empty($result)) {
+                $found = 1;
+            }
+        }
+        if (!$found) {
+            $this->fail('Save delete history error');
+        }
     }
 }

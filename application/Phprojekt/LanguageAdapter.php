@@ -49,7 +49,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     const LANG_HE = 'he.inc.php';
     const LANG_HU = 'hu.inc.php';
     const LANG_IS = 'is.inc.php';
-    const LANG_IT = 'es.inc.php';
+    const LANG_IT = 'it.inc.php';
     const LANG_JP = 'jp.inc.php';
     const LANG_KO = 'ko.inc.php';
     const LANG_LT = 'lt.inc.php';
@@ -81,18 +81,17 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * Generates the adapter
      *
      * Convert some PHProject lang shortname to the Zend locale names
-     * @param  string|array        $data      Translation data for this adapter
-     * @param  string|Zend_Locale  $locale    OPTIONAL Locale/Language to set, identical with Locale identifiers
-     *                                        see Zend_Locale for more information
-     * @param  string|array        $options   Options for the adaptor
      *
-     * @throws Zend_Translate_Exception
+     * @param string $data Path to the lang file
+     * @param string $locale PHProjekt locale string
+     *
+     * @return void
      */
-    public function __construct($data, $locale = null, array $options = array())
+    public function __construct($data, $locale = null)
     {
         $locale = $this->_convertToZendLocale($locale);
 
-        parent::__construct($data, $locale, $options);
+        parent::__construct($data, $locale, array());
     }
 
     /**
@@ -143,16 +142,16 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
          && true  === is_readable($data)) {
             /* Get the translation file */
             switch ($locale) {
-            case 'al':
+            case 'sq_AL':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_AL;
                 break;
             case 'bg':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BG;
                 break;
-            case 'br':
+            case 'pt_BR':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BR;
                 break;
-            case 'cz':
+            case 'cs_CZ':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_CZ;
                 break;
             case 'da':
@@ -161,7 +160,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'de':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_DE;
                 break;
-            case 'ee':
+            case 'et_EE':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EE;
                 break;
             default:
@@ -177,10 +176,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'fr':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_FR;
                 break;
-            case 'ge':
+            case 'ka_GE':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_GE;
                 break;
-            case 'gr':
+            case 'el_GR':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_GR;
                 break;
             case 'he':
@@ -195,7 +194,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'it':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_IT;
                 break;
-            case 'jp':
+            case 'ja_JP':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_JP;
                 break;
             case 'ko':
@@ -225,10 +224,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'ru':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_RU;
                 break;
-            case 'se':
+            case 'sv_SE':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SE;
                 break;
-            case 'si':
+            case 'sl_SI':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SI;
                 break;
             case 'sk':
@@ -237,13 +236,13 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'sv':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SV;
                 break;
-            case 'th':
+            case 'th_TH':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TH;
                 break;
             case 'tr':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TR;
                 break;
-            case 'tw':
+            case 'zh_TW':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TW;
                 break;
             case 'uk':
@@ -303,7 +302,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     {
         switch ($locale) {
         case 'al':
-        	return 'sq_AL';
+            return 'sq_AL';
             break;
         case 'br':
             return 'pt_BR';
