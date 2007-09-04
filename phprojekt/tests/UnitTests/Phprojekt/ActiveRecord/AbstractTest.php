@@ -216,17 +216,17 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     public function testHasMany()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $project->find(1);
-        $this->assertEquals(1, $project->id);
+        $project->find(5);
+        $this->assertEquals(5, $project->id);
         $this->assertEquals('Developer Tasks', $project->instances->find(1)->name);
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
         $this->assertEquals(2, $project->instances->count());
-        $this->assertEquals(1, $project->count());
+        $this->assertEquals(5, $project->count());
 
         // same but with fetch all
         $rows = $project->fetchAll();
-        $this->assertEquals(1, $rows[0]->id);
-        $this->assertEquals('Developer Tasks', $rows[0]->instances->find(1)->name);
+        $this->assertEquals(5, $rows[4]->id);
+        $this->assertEquals('Developer Tasks', $rows[4]->instances->find(1)->name);
     }
 
     /**
@@ -250,16 +250,15 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     public function testUpdateHasMany()
     {
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $instance->find(1);
-        $instance->id = 2;
+        $instance->find(5);
+        $instance->id = 10;
         $instance->save();
 
-        $instance->find(2);
+        $instance->find(10);
         $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
-        $this->assertEquals(2, $instance->instances->find(1)->projectId);
+        $this->assertEquals(10, $instance->instances->find(1)->projectId);
 
-        $instance->find(2);
-        $instance->id = 1;
+        $instance->id = 5;
         $instance->save();
     }
 
@@ -299,7 +298,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     public function testSave()
     {
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $instance->find(1);
+        $instance->find(5);
 
         $this->assertEquals('Test Project', $instance->title);
 
@@ -308,13 +307,13 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 
         $instance->save();
 
-        $instance->find(1);
+        $instance->find(5);
         $this->assertEquals('PHPUnit Test Project', $instance->title);
 
         unset ($instance);
 
         $instance = new PHprojekt_Project(array('db' => $this->sharedFixture));
-        $instance->find(1);
+        $instance->find(5);
         $this->assertEquals('PHPUnit Test Project', $instance->title);
 
         $instance->title = 'Test Project';
