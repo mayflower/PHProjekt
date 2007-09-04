@@ -33,45 +33,42 @@
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
     /* Define all the lang files */
-    //const LANG_AL = 'al.inc.php';
+    const LANG_AL = 'al.inc.php';
     const LANG_BG = 'bg.inc.php';
-    //const LANG_BR = 'br.inc.php';
-    //const LANG_CT = 'ct.inc.php';
-    //const LANG_CZ = 'cz.inc.php';
+    const LANG_BR = 'br.inc.php';
+    const LANG_CZ = 'cz.inc.php';
     const LANG_DA = 'da.inc.php';
     const LANG_DE = 'de.inc.php';
-    //const LANG_EE = 'ee.inc.php';
-    //const LANG_EH = 'eh.inc.php';
+    const LANG_EE = 'ee.inc.php';
     const LANG_EN = 'en.inc.php';
     const LANG_ES = 'es.inc.php';
     const LANG_FI = 'fi.inc.php';
     const LANG_FR = 'fr.inc.php';
-    //const LANG_GE = 'ge.inc.php';
-    //const LANG_GR = 'gr.inc.php';
+    const LANG_GE = 'ge.inc.php';
+    const LANG_GR = 'gr.inc.php';
     const LANG_HE = 'he.inc.php';
     const LANG_HU = 'hu.inc.php';
     const LANG_IS = 'is.inc.php';
     const LANG_IT = 'es.inc.php';
-    //const LANG_JP = 'jp.inc.php';
+    const LANG_JP = 'jp.inc.php';
     const LANG_KO = 'ko.inc.php';
     const LANG_LT = 'lt.inc.php';
     const LANG_LV = 'lv.inc.php';
     const LANG_NL = 'nl.inc.php';
-    //const LANG_NO = 'no.inc.php';
+    const LANG_NO = 'no.inc.php';
     const LANG_PL = 'pl.inc.php';
     const LANG_PT = 'pt.inc.php';
     const LANG_RO = 'ro.inc.php';
     const LANG_RU = 'ru.inc.php';
-    //const LANG_SE = 'se.inc.php';
-    //const LANG_SI = 'si.inc.php';
+    const LANG_SE = 'se.inc.php';
+    const LANG_SI = 'si.inc.php';
     const LANG_SK = 'sk.inc.php';
-    //const LANG_SP = 'sp.inc.php';
     const LANG_SV = 'sv.inc.php';
-    //const LANG_TH = 'th.inc.php';
+    const LANG_TH = 'th.inc.php';
     const LANG_TR = 'tr.inc.php';
-    //const LANG_TW = 'tw.inc.php';
+    const LANG_TW = 'tw.inc.php';
     const LANG_UK = 'uk.inc.php';
-    //const LANG_ZH = 'zh.inc.php';
+    const LANG_ZH = 'zh.inc.php';
 
     /**
      * Contain all the already loaded locales
@@ -79,6 +76,24 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * @var array
      */
     protected $_langLoaded = array();
+
+    /**
+     * Generates the adapter
+     *
+     * Convert some PHProject lang shortname to the Zend locale names
+     * @param  string|array        $data      Translation data for this adapter
+     * @param  string|Zend_Locale  $locale    OPTIONAL Locale/Language to set, identical with Locale identifiers
+     *                                        see Zend_Locale for more information
+     * @param  string|array        $options   Options for the adaptor
+     *
+     * @throws Zend_Translate_Exception
+     */
+    public function __construct($data, $locale = null, array $options = array())
+    {
+        $locale = $this->_convertToZendLocale($locale);
+
+        parent::__construct($data, $locale, $options);
+    }
 
     /**
      * This protected function is for collect the data and create the array translation set.
@@ -137,9 +152,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'br':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BR;
                 break;
-            case 'ct':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_CT;
-                break;
             case 'cz':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_CZ;
                 break;
@@ -151,9 +163,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 break;
             case 'ee':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EE;
-                break;
-            case 'EH':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EH;
                 break;
             default:
             case 'en':
@@ -225,9 +234,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'sk':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SK;
                 break;
-            case 'sp':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SP;
-                break;
             case 'sv':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SV;
                 break;
@@ -283,6 +289,54 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             return false;
         } else {
             return true;
+        }
+    }
+
+    /**
+     * Transform the PHProjekt locale shortname to Zend locale shortname.
+     *
+     * @param string $locale PHProjekt locale
+     *
+     * @return string Zend locale
+     */
+    protected function _convertToZendLocale($locale)
+    {
+        switch ($locale) {
+        case 'al':
+        	return 'sq_AL';
+            break;
+        case 'br':
+            return 'pt_BR';
+            break;
+        case 'cz':
+            return 'cs_CZ';
+            break;
+        case 'ee':
+            return 'et_EE';
+            break;
+        case 'ge':
+            return 'ka_GE';
+            break;
+        case 'gr':
+            return 'el_GR';
+            break;
+        case 'jp':
+            return 'ja_JP';
+            break;
+        case 'se':
+            return 'sv_SE';
+            break;
+        case 'si':
+            return 'sl_SI';
+            break;
+        case 'th':
+            return 'th_TH';
+            break;
+        case 'tw':
+            return 'zh_TW';
+            break;
+        default:
+            return $locale;
         }
     }
 }
