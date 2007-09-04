@@ -40,7 +40,7 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
      *
      * @var string Url of the coverage php file 
      */
-    protected $coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage.php';
+    protected $coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage_phprojekt6.php';
      
     /**
      * setup the unit test. Use firefox as a browser and the document 
