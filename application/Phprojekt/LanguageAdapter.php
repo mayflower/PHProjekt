@@ -82,7 +82,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * Convert some PHProject lang shortname to the Zend locale names
      *
-     * @param string $data Path to the lang file
+     * @param string $data   Path to the lang file
      * @param string $locale PHProjekt locale string
      *
      * @return void
