@@ -37,6 +37,28 @@ class Selenium_TodoTest extends PHPUnit_Extensions_SeleniumTestCase
     private $_config;
 
     /**
+     * List of the used Browser
+     *
+     * @var array the used test browser and selenium-rc hosts
+     */
+    public static $browsers = array(
+      array(
+        'name'    => 'Firefox on Linux',
+        'browser' => '*chrome',
+        'host'    => 'localhost',
+        'port'    => 4444,
+        'timeout' => 30000,
+      ),
+      array(
+        'name'    => 'Internet Explorer on Windows Vista',
+        'browser' => '*iexplore',
+        'host'    => 'vistatest.mf-muc.nop',
+        'port'    => 4444,
+        'timeout' => 30000,
+      ),
+    );
+
+    /**
      * Collect coverage data at this url
      *
      * @var string Url of the coverage php file
@@ -52,7 +74,6 @@ class Selenium_TodoTest extends PHPUnit_Extensions_SeleniumTestCase
     function setUp()
     {
         $this->_config = Zend_Registry::get('config');
-        $this->setBrowser('*firefox');
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->_config->webpath);
     }

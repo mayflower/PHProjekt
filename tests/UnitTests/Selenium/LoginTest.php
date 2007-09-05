@@ -36,28 +36,49 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
     private $_config;
 
     /**
-     * Collect coverage data at this url 
+     * List of the used Browser
      *
-     * @var string Url of the coverage php file 
+     * @var array the used test browser and selenium-rc hosts
+     */
+    public static $browsers = array(
+      array(
+        'name'    => 'Firefox on Linux',
+        'browser' => '*chrome',
+        'host'    => 'localhost',
+        'port'    => 4444,
+        'timeout' => 30000,
+      ),
+      array(
+        'name'    => 'Internet Explorer on Windows Vista',
+        'browser' => '*iexplore',
+        'host'    => 'vistatest.mf-muc.nop',
+        'port'    => 4444,
+        'timeout' => 30000,
+      ),
+    );
+
+    /**
+     * Collect coverage data at this url
+     *
+     * @var string Url of the coverage php file
      */
     protected $coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage_phprojekt6.php';
-     
+
     /**
-     * setup the unit test. Use firefox as a browser and the document 
-     * root from the configuration file 
-     * 
-     * @return void 
+     * setup the unit test. Use firefox as a browser and the document
+     * root from the configuration file
+     *
+     * @return void
      */
     function setUp()
     {
         $this->_config = Zend_Registry::get('config');
-        $this->setBrowser('*firefox');
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->_config->webpath);
     }
 
     /**
-     * Test the login method with wrong and correct data 
+     * Test the login method with wrong and correct data
      *
      * @return void
      */
