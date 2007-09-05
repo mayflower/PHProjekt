@@ -49,13 +49,13 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         'port'    => 4444,
         'timeout' => 30000,
       ),
-      array(
+/*      array(
         'name'    => 'Internet Explorer on Windows Vista',
         'browser' => '*iexplore',
         'host'    => 'vistatest.mf-muc.nop',
         'port'    => 4444,
         'timeout' => 30000,
-      ),
+      ), */
     );
 
     /**
