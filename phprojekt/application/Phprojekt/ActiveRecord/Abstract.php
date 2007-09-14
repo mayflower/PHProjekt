@@ -224,7 +224,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _setupTableName()
     {
-        $this->_name = $this->_translateClassNameToTable(get_class($this));
+        $this->_name = $this->getTableName(); // $this->_translateClassNameToTable(get_class($this));
         parent::_setupTableName();
     }
 
@@ -357,10 +357,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $foreignKeyName = $this->_translateKeyFormat(get_class($this));
         $myKeyName      = $this->_translateKeyFormat($className);
 
-        $foreignTable = $this->_translateClassNameToTable(get_class($this));
-        $myTable      = $this->_translateClassNameToTable($className);
+        $foreignTable = $this->getTableName(); // $this->_translateClassNameToTable(get_class($this));
+        $im           = new $className($this->getAdapter());
+        $myTable      = $im->getTableName(); // $className::getClassName();
 
-        $tableName = $this->_translateIntoRelationTableName($className, get_class($this));
+        $tableName = $this->_translateIntoRelationTableName($im, $this);
 
         $select = $adapter->select()->from(array('rel' => $tableName));
 
@@ -479,8 +480,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $className = $this->_getClassNameForRelationship($key,
                                                              $this->hasMany);
 
-            /* @var Phprojekt_ActiveRecord $instance */
             $instance = new $className(array('db' => $this->getAdapter()));
+            /* @var Phprojekt_ActiveRecord $instance */
+
             /*
              * $instance->_relations['simple'] = );
              */
@@ -511,7 +513,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $foreignKeyName = $this->_translateKeyFormat($className);
         $myKeyName      = $this->_translateKeyFormat(get_class($this));
 
-        $tableName = $this->_translateIntoRelationTableName(get_class($this), $className);
+        $im        = new $className($this->getAdapter());
+        $tableName = $this->_translateIntoRelationTableName($this, $im);
 
         $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)",
                          $this->getAdapter()->quoteIdentifier($tableName),
@@ -537,9 +540,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _updateHasMany($oldId, $newId)
     {
         foreach (array_keys($this->hasMany) as $key) {
-            $className = $this->_getClassNameForRelationship($key,
-                                                    $this->hasMany);
-            $tableName  = $this->_translateClassNameToTable($className);
+            $className = $this->_getClassNameForRelationship($key, $this->hasMany);
+
+            $im         = new $className($this->getAdapter());
+            $tableName  = $im->getTableName(); // fassNameToTable($className);
             $columnName = $this->_translateKeyFormat(get_class($this));
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
@@ -579,9 +583,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         foreach ($this->hasManyAndBelongsToMany as $key => $relationInfo) {
             $className = $relationInfo['classname'];
+            $im        = new $className($this->getAdapter());
 
             $myKeyName = $this->_translateKeyFormat(get_class($this));
-            $tableName = $this->_translateIntoRelationTableName(get_class($this), $className);
+            $tableName = $this->_translateIntoRelationTableName($this, $im);
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
                             $this->getAdapter()->quoteIdentifier($tableName),
@@ -629,8 +634,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $className = $array[$key]['classname'];
         } elseif (array_key_exists('model', $definition)
                && array_key_exists('module', $definition)) {
-            $className = Phprojekt_Loader::getModelClassname($definition['module'],
-                                                    $definition['model']);
+            $className = Phprojekt_Loader::getModelClassName($definition['module'],
+                                                             $definition['model']);
         } else {
             $className = $key;
         }
@@ -680,14 +685,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _translateKeyFormat($className)
     {
-        $tableName    = $this->_translateClassNameToTable($className, false);
-        $tableName{0} = strtolower($tableName{0});
-        $keyName      = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
-
+        $im        = new $className($this->getAdapter());
+        $tableName = $im->getTableName(); // $this->_translateClassNameToTable($className, false);
+        $keyName   = str_replace(':tableName',$tableName, self::FOREIGN_KEY_FORMAT);
+        $keyName{0}= strtolower($keyName{0});
         if (null !== $this->_log) {
             $this->_log->debug(sprintf("%s translated to %s",
                                     $className, $keyName));
         }
+
+        unset ($im);
 
         return $keyName;
     }
@@ -702,11 +709,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    protected function _translateIntoRelationTableName($myClassName, $foreignClassName)
+    protected static function _translateIntoRelationTableName(Phprojekt_ActiveRecord_Abstract $myObject,
+                                                              Phprojekt_ActiveRecord_Abstract $foreignObject)
     {
         $tableNames   = array();
-        $myTable      = $this->_translateClassNameToTable($myClassName);
-        $foreignTable = $this->_translateClassNameToTable($foreignClassName);
+        $myTable      = $myObject->getTableName();
+        $foreignTable = $foreignObject->getTableName();
         $tableNames[] = $myTable;
         $tableNames[] = $foreignTable;
 
@@ -715,12 +723,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $tableName = sprintf('%sRelation', implode('', $tableNames));
 
-        if (null !== $this->_log) {
-            $this->_log->debug(sprintf("%s, %s translated to %s",
-                                   $myClassName, $foreignClassName, $tableName));
-        }
-
         return $tableName;
+
     }
 
     /**
@@ -815,7 +819,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         if (array_key_exists('id', $this->_data)) {
             if (array_key_exists('hasMany', $this->_relations)) {
                 $className = $this->_relations['hasMany']['classname'];
-                $tableName = $this->_translateClassNameToTable($className);
+                $im        = new $className($this->getAdapter());
+                $tableName = $im->getTableName();
                 $this->getAdapter()->delete($tableName,
                     $this->getAdapter()->quoteInto(sprintf('%s = ?',
                         $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
@@ -833,15 +838,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                     $className = $this->_getClassNameForRelationship($key,
                                             $this->hasManyAndBelongsToMany);
                     $keyName   = $this->_translateKeyFormat(get_class($this));
-                    $tableName = $this->_translateIntoRelationTableName(get_class($this),
-    																	$className);
+                    $im        = new $className($this->getAdapter());
+                    $tableName = $this->_translateIntoRelationTableName($this, $im);
                     $this->getAdapter()->delete($tableName,
                         $this->getAdapter()->quoteInto(sprintf('%s = ?', $keyName),
                         $this->id));
                 }
             }
-
-            $tableName = $this->_translateClassNameToTable(get_class($this));
 
             parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id']));
 
@@ -950,6 +953,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function getTableName()
     {
-        return $this->_translateClassNameToTable($this->_translateClassNameToTable(get_class($this)));
+        return $this->_translateClassNameToTable(get_class($this));
     }
 }

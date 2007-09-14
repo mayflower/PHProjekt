@@ -61,7 +61,7 @@ class Default_Helpers_TreeView
      *
      * @var boolean
      */
-    public $displayRootNode = false;
+    public $displayRootNode = true;
 
     /**
      * The request object form the front controller
@@ -232,7 +232,7 @@ class Default_Helpers_TreeView
      *
      * @return void
      */
-    public function toogleNode($id = null)
+    public function toggleNode($id = null)
     {
         if (null === $id) {
             $id = (integer) $this->_request->getParam('treeid');
