@@ -60,29 +60,25 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         } else {
             $actualPage = 0;
         }
-        $config = Zend_Registry::get('config');
-        $count  = $config->itemsPerPage;
 
-        $order = 'title';
+        $listData = $this->fetchAll($where, 'title',
+                                     Zend_Registry::get('config')->itemsPerPage,
+                                     $actualPage);
 
-        foreach ($this->fetchAll($where, $order, $count, $actualPage) as $row) {
-            $listData[] = $row;
-        }
+        $count = count($this->fetchAll($where));
 
-        $howManyRows = count($this->fetchAll($where));
-
-        return array($listData, $howManyRows);
+        return array($listData, $count);
     }
 
     /**
      * Get the form fields
      *
-     * If the id is defined will make the edit form
-     * if not, will make the add form
+     * If the id is defined we will make the edit form
+     * if not, we will make the add form
      *
      * @param integer $id Optional, for edit the row
      *
-     * @return array      Array with the fields for render
+     * @return array Array with the fields for render
      */
     public function getFormData($id = 0)
     {

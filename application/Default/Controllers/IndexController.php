@@ -108,7 +108,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @var Phprojekt_Item object
      */
-    public $oModels = '';
+    public $oModels;
 
     /**
      * How many columns will have the form
@@ -133,6 +133,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
+        $config = Zend_Registry::get('config');
         try {
             Phprojekt_Auth::isLoggedIn();
         }
@@ -140,7 +141,6 @@ class IndexController extends Zend_Controller_Action
             if ($ae->getCode() == 1) {
 
                 /* user not logged in, display login page */
-                $config = Zend_Registry::get('config');
 
                 $this->_redirect($config->webpath.'/index.php/Login/index');
                 die();
@@ -153,7 +153,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         $db       = Zend_Registry::get('db');
-        $projects = PHprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
+        $projects = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
         $this->_smarty             = Zend_Registry::get('view');
@@ -252,7 +252,7 @@ class IndexController extends Zend_Controller_Action
     public function toggleNodeAction()
     {
         $currentActiveTree = Default_Helpers_TreeView::findPersistant();
-        $currentActiveTree->toogleNode();
+        $currentActiveTree->toggleNode();
 
         $this->_forward('list', $this->_request->getControllerName(),
                         $this->_request->getModuleName());
@@ -393,7 +393,7 @@ class IndexController extends Zend_Controller_Action
      *
      * !NOTE: You MUST validate the data before save.
      *
-     * If there is an error, will showit.
+     * If there is an error, we show it.
      *
      * Form Action
      *
@@ -539,7 +539,7 @@ class IndexController extends Zend_Controller_Action
             $this->data['formData'] = $this->oModels->getFormData($id);
         }
 
-        /* Asign post values */
+        /* Assign post values */
         $params     = $this->_request->getParams();
         $formData   = $this->data['formData'];
         $tmp        = $formData;
