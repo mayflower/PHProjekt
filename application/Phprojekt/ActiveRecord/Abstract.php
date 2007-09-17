@@ -851,6 +851,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->_initDataArray();
             $this->_relations = array();
         }
+
+        return $this;
     }
 
     /**
