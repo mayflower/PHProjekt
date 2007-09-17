@@ -56,21 +56,21 @@ class IndexController extends Zend_Controller_Action
      * @var Default_Helpers_ListView
      *
      */
-    protected $_oListView = null;
+    protected $_oListView;
 
     /**
      * Helper for form view
      *
      * @var Default_Helpers_FormView
      */
-    protected $_oFormView = null;
+    protected $_oFormView;
 
     /**
      * Tree view helper to display fancy trees
      *
      * @var Default_Helpers_TreeView
      */
-    protected $_oTreeView = null;
+    protected $_oTreeView;
 
     /**
      * Set true if the treeview is set
@@ -145,11 +145,6 @@ class IndexController extends Zend_Controller_Action
                 $this->_redirect($config->webpath.'/index.php/Login/index');
                 die();
             }
-        }
-
-        /* Check the 'index.php' in the url */
-        if (false === strstr($this->_request->REQUEST_URI, 'index.php')) {
-            $this->_redirect($config->webpath.'/index.php');
         }
 
         $db       = Zend_Registry::get('db');
