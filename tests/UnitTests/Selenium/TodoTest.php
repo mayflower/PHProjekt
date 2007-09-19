@@ -73,6 +73,7 @@ class Selenium_TodoTest extends PHPUnit_Extensions_SeleniumTestCase
      */
     function setUp()
     {
+        $this->setAutoStop(false); 
         $this->_config = Zend_Registry::get('config');
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->_config->webpath);
