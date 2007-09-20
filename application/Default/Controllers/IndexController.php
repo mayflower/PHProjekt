@@ -118,7 +118,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @var integer
      */
-    public $formColumns  = 2;
+    const FORM_COLUMNS = 2;
 
     /**
      * Init function
@@ -529,7 +529,7 @@ class IndexController extends Zend_Controller_Action
     public function setFormView($id = 0)
     {
         $this->formViewSet = true;
-        $this->columns     = $this->formColumns;
+        $this->columns     = IndexController::FORM_COLUMNS;
         if ($id == 0) {
             $this->data['formData'] = $this->oModels->getFormData($id);
         }
@@ -546,7 +546,7 @@ class IndexController extends Zend_Controller_Action
         }
         $this->data['formData'] = $tmp;
 
-        $this->fields   = $this->_oFormView->makeColumns($this->data['formData'], $this->formColumns);
+        $this->fields   = $this->_oFormView->makeColumns($this->data['formData'], IndexController::FORM_COLUMNS);
         $this->formView = $this->_render('form');
     }
 

@@ -69,9 +69,10 @@ class Default_Helpers_FormView
      * Constructor
      * Only can be created the class by the class it self
      *
-     * @param Zend_View $view View object for form 
+     * @param Zend_View $view View object for form
      */
-    protected function __construct($view) 
+    protected function __construct($view)
+
     {
         $this->_view       = $view;
         $this->_oTranslate = Zend_Registry::get('translate');
@@ -82,7 +83,8 @@ class Default_Helpers_FormView
      * Return this class only one time
      *
      * @param Zend_View $view Zend_View Object
-     * 
+
+     *
      * @return Default_Helpers_FormView
      */
     static public function getInstance($view)
@@ -144,6 +146,9 @@ class Default_Helpers_FormView
             break;
         case "tree":
             return $this->formTree($field);
+            break;
+        case "space":
+            return null;
             break;
         }
     }
