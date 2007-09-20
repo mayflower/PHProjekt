@@ -55,15 +55,15 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
 
         /* Limit the query for paging */
         $session = new Zend_Session_Namespace($projectId . $this->_name);
-        if (true === isset($session->actualPage)) {
-            $actualPage = $session->actualPage;
+        if (true === isset($session->currentPage)) {
+            $currentPage = $session->currentPage;
         } else {
-            $actualPage = 0;
+            $currentPage = 0;
         }
 
         $listData = $this->fetchAll($where, 'title',
                                      Zend_Registry::get('config')->itemsPerPage,
-                                     $actualPage);
+                                     $currentPage);
 
         $count = count($this->fetchAll($where));
 

@@ -43,10 +43,10 @@ class History_Models_History extends Phprojekt_Item_Abstract
 
         /* Limit the query for paging */
         $session = new Zend_Session_Namespace($projectId . $this->_name);
-        if (true === isset($session->actualPage)) {
-            $actualPage = $session->actualPage;
+        if (true === isset($session->currentPage)) {
+            $currentPage = $session->currentPage;
         } else {
-            $actualPage = 0;
+            $currentPage = 0;
         }
 
         $config = Zend_Registry::get('config');
@@ -63,7 +63,7 @@ class History_Models_History extends Phprojekt_Item_Abstract
             if ($datetime != $row->datetime) {
                 $datetime = $row->datetime;
                 /* Ommit the items before the actual page */
-                if ($index < $actualPage) {
+                if ($index < $currentPage) {
                     $howManyRows++;
                 } else {
                     if (($numberOfRows < $count)) {
