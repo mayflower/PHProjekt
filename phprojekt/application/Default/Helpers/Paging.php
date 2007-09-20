@@ -40,14 +40,14 @@ class Default_Helpers_Paging
      * Calculate the number of pages to show and assign the nessesary variables
      * to the smarty object for render it.
      *
-     * @param object $oView               Smarty object
+     * @param object $view                Smarty object
      * @param int    $howManyRows         How many rows have the list view
      * @param int    $howManyItemsPerPage How many itemes will be showed in each page
      * @param int    $page                Actual page
      *
      * @return void
      */
-    public function calculatePages($oView, $howManyRows, $howManyItemsPerPage, $page)
+    public function calculatePages($view, $howManyRows, $howManyItemsPerPage, $page)
     {
         $pages        = array();
         $previousPage = $page - $howManyItemsPerPage;
@@ -75,11 +75,11 @@ class Default_Helpers_Paging
                               'position' => $position);
         }
 
-        $oView->nextPage     = $nextPage;
-        $oView->howManyRows  = $howManyRows;
-        $oView->previousPage = $previousPage;
-        $oView->pages        = $pages;
-        $oView->lastPage     = ($total - 1) * $howManyItemsPerPage;
-        $oView->howManyPages = $howManyPages;
+        $view->nextPage     = $nextPage;
+        $view->howManyRows  = $howManyRows;
+        $view->previousPage = $previousPage;
+        $view->pages        = $pages;
+        $view->lastPage     = ($total - 1) * $howManyItemsPerPage;
+        $view->howManyPages = $howManyPages;
     }
 }

@@ -687,7 +687,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $im        = new $className($this->getAdapter());
         $tableName = $im->getTableName(); // $this->_translateClassNameToTable($className, false);
-        $keyName   = str_replace(':tableName',$tableName, self::FOREIGN_KEY_FORMAT);
+        $keyName   = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
         $keyName{0}= strtolower($keyName{0});
         if (null !== $this->_log) {
             $this->_log->debug(sprintf("%s translated to %s",
@@ -704,8 +704,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Its always {CLASS1}_{CLASS2}_rel while the classes are sorted
      * in alphabetic order.
      *
-     * @param string $myClassName      Own class name
-     * @param string $foreignClassName Foreign class name
+     * @param string $myObject      Own class
+     * @param string $foreignObject Foreign class
      *
      * @return string
      */

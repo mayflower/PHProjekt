@@ -57,7 +57,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     public function __construct($compilePath = null)
     {
         Zend_Loader::loadFile('Smarty.class.php',
-        PHPR_LIBRARY_PATH.DIRECTORY_SEPARATOR.'Smarty');
+        PHPR_LIBRARY_PATH . DIRECTORY_SEPARATOR . 'Smarty');
 
         $this->_smarty = new Smarty();
         $this->caching = false;

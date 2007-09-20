@@ -13,8 +13,9 @@
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
-interface Phprojekt_Compare_Interface {}
-
+interface Phprojekt_Compare_Interface
+{
+}
 
 /**
  * Represents an node of a tree and provides iterator abilities.
@@ -164,8 +165,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             // We have to apply the pre sorting comparer
 
             if (Zend_Registry::isRegistered('log')) {
-                $oLog = Zend_Registry::get('log');
-                $oLog->debug('Pre-sorting requested and not implemented yet');
+                $log = Zend_Registry::get('log');
+                $log->debug('Pre-sorting requested and not implemented yet');
             }
         }
 

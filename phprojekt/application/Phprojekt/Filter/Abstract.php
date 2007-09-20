@@ -14,7 +14,8 @@
  * @since      File available since Release 1.0
  */
 
-interface Phprojekt_Filter_Interface {
+interface Phprojekt_Filter_Interface
+{
 }
 
 /**

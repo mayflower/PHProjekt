@@ -38,7 +38,7 @@ class Default_Helpers_ListView
      *
      * @var Phprojekt_LanguageAdapter
      */
-    protected $_oTranslate = null;
+    protected $_translate = null;
 
     /**
      * Array with db cofig options
@@ -68,7 +68,7 @@ class Default_Helpers_ListView
      */
     protected function __construct()
     {
-        $this->_oTranslate = Zend_Registry::get('translate');
+        $this->_translate  = Zend_Registry::get('translate');
         $this->_db         = Zend_Registry::get('db');
         $this->_config     = Zend_Registry::get('config');
     }
@@ -209,7 +209,7 @@ class Default_Helpers_ListView
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
             if ($key == $originalValue) {
-                $string = $this->_oTranslate->translate($value);
+                $string = $this->_translate->translate($value);
             }
         }
         return $string;

@@ -57,24 +57,23 @@ class Phprojekt_Auth extends Zend_Auth
         $db = Zend_Registry::get('db');
         /* @var $db Zend_Db_Adapter_Abstract */
 
-        $oUser = Phprojekt_Loader::getModel('Users', 'User', (array ('db' => $db)));
+        $user = Phprojekt_Loader::getModel('Users', 'User', (array ('db' => $db)));
 
-        $userId = $oUser->findIdByUsername($username);
+        $userId = $user->findIdByUsername($username);
 
         if ($userId > 0) {
-            $oUser->find($userId);
+            $user->find($userId);
         } else {
             throw new Phprojekt_Auth_Exception('Invalid user or password', 4);
         }
-        
-        if (!$oUser->isActive()) {
+
+        if (!$user->isActive()) {
             throw new Phprojekt_Auth_Exception('User Inactive', 5);
         }
 
-
         try {
             /* the password does not match with password provided */
-            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$oUser->password)) {
+            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$user->password)) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
         }
@@ -84,14 +83,10 @@ class Phprojekt_Auth extends Zend_Auth
 
         /* if the user was found we will save the user information on the session */
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-
-        $authNamespace->userId = $oUser->id;
-
+        $authNamespace->userId = $user->id;
 
         /* please, put any extra info of user to be saved on session here */
-
         return true;
-
     }
 
     /**
@@ -101,11 +96,8 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function logout()
     {
-
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-
         $authNamespace->unsetAll();
-
         return true;
     }
 
@@ -119,7 +111,6 @@ class Phprojekt_Auth extends Zend_Auth
      */
     private function _compareStringWithPassword($string, $password)
     {
-
         /* one of the methods to check the password */
         $defaultMethod = 'phprojektmd5'.$string;
         $defaultMethod = Phprojekt_Auth::_cryptPassword($defaultMethod);
@@ -129,7 +120,6 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         /* please add other valid methods here (e.g. not crypted password) */
-
         /* none of the methods works */
         return false;
     }

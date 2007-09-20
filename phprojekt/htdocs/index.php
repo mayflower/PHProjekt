@@ -52,8 +52,8 @@ Zend_Registry::set('db', $db);
  * Where priority can be emerg,alert,crit,err,warn,notice,info,debug
  */
 Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
-$oLog = new Phprojekt_Log($config);
-Zend_Registry::set('log', $oLog);
+$log = new Phprojekt_Log($config);
+Zend_Registry::set('log', $log);
 
 /**
  * Configure the ViewRenderer Helper
@@ -61,20 +61,20 @@ Zend_Registry::set('log', $oLog);
  */
 Zend_Loader::loadClass('Default_Helpers_Smarty', PHPR_CORE_PATH);
 
-$oView = new Default_Helpers_Smarty(PHPR_TEMP_PATH . DIRECTORY_SEPARATOR . 'templates_c');
+$view = new Default_Helpers_Smarty(PHPR_TEMP_PATH . DIRECTORY_SEPARATOR . 'templates_c');
 
-$oViewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($oView);
-$oViewRenderer->setViewBasePathSpec(':moduleDir/Views')
+$viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
+$viewRenderer->setViewBasePathSpec(':moduleDir/Views')
               ->setViewScriptPathSpec(':action.:suffix')
               ->setViewScriptPathNoControllerSpec(':action.:suffix')
               ->setViewSuffix('tpl');
-Zend_Controller_Action_HelperBroker::addHelper($oViewRenderer);
-Zend_Registry::set('view', $oView);
+Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
+Zend_Registry::set('view', $view);
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-$oTranslate = new Phprojekt_Language($config->language);
-Zend_Registry::set('translate', $oTranslate);
+$translate = new Phprojekt_Language($config->language);
+Zend_Registry::set('translate', $translate);
 
 /* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();

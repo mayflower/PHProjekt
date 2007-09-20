@@ -99,12 +99,12 @@ class Phprojekt_Loader extends Zend_Loader
             return $class;
         } catch (Exception $e) {
             if (Zend_Registry::isRegistered('log')) {
-                $oLog = Zend_Registry::get('log');
-                $oLog->debug((string) $e->getMessage());
+                $log = Zend_Registry::get('log');
+                $log->debug((string) $e->getMessage());
             }
             return false;
         }
-        
+
         return false;
     }
 
@@ -153,8 +153,8 @@ class Phprojekt_Loader extends Zend_Loader
             return $cIdentifier;
         } catch (Zend_Exception $ze) {
             if (Zend_Registry::isRegistered('log')) {
-                $oLog = Zend_Registry::get('log');
-                $oLog->debug((string) $ze->getMessage());
+                $log = Zend_Registry::get('log');
+                $log->debug((string) $ze->getMessage());
             }
         }
 
