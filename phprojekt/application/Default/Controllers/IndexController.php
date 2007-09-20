@@ -491,17 +491,17 @@ class IndexController extends Zend_Controller_Action
         $currentProjectModule = $projectId . $this->_request->getModuleName();
         $params = $this->_request->getParams();
         if (true == isset($params['page'])) {
-            $actualPage = (int) $params['page'];
+            $currentPage = (int) $params['page'];
             $session = new Zend_Session_Namespace($currentProjectModule);
-            $session->actualPage = $actualPage;
+            $session->currentPage = $currentPage;
         } else {
             $session = new Zend_Session_Namespace($currentProjectModule);
-            if (true === isset($session->actualPage)) {
-                $actualPage = $session->actualPage;
+            if (true === isset($session->currentPage)) {
+                $currentPage = $session->currentPage;
             } else {
-                $actualPage = 0;
+                $currentPage = 0;
             }
-            $session->actualPage = $actualPage;
+            $session->currentPage = $currentPage;
         }
 
         list($this->data['listData'], $numberOfRows) = $this->oModels->getListData();
@@ -512,7 +512,7 @@ class IndexController extends Zend_Controller_Action
         /* Asign paging values for smarty */
         $config  = Zend_Registry::get('config');
         $perpage = $config->itemsPerPage;
-        Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $actualPage);
+        Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $currentPage);
 
         $this->listView = $this->_render('list');
     }

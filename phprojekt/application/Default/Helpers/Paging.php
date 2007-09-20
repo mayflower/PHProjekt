@@ -57,18 +57,18 @@ class Default_Helpers_Paging
 
         /* First page */
         if ($page != 0) {
-            $actualPage = ceil($page/$howManyItemsPerPage);
+            $currentPage = ceil($page/$howManyItemsPerPage);
         } else {
-            $actualPage = 0;
+            $currentPage = 0;
         }
 
         /* Last page (only show 10) */
-        $show = $actualPage + 10;
+        $show = $currentPage + 10;
         if ($show > $total) {
             $show = $total;
         }
 
-        for ($index = $actualPage; $index < $show ; $index++) {
+        for ($index = $currentPage; $index < $show ; $index++) {
             $position = $index * $howManyItemsPerPage;
             $page     = $index + 1;
             $pages[]  = array('number'   => $page,

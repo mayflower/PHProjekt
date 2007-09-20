@@ -62,7 +62,7 @@ class Phprojekt_Models extends PHPUnit_Extensions_ExceptionTestCase
 
                 /* Test the paging */
                 $session = new Zend_Session_Namespace(1 . $moduleName);
-                $session->actualPage = 1;
+                $session->currentPage = 1;
                 $module->getListData();
             } else {
                 $this->fail($moduleNAme .
