@@ -31,7 +31,7 @@ class Todo_IndexController extends IndexController
      *
      * @var integer
      */
-    public $formColumns  = 1;
+    const FORM_COLUMNS = 1;
 
     /**
      * Init the Module object

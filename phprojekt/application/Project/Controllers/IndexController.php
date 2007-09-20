@@ -21,7 +21,7 @@
  * and redefine the function getModelsObject
  * for return the object model that you want
  *
- * You can redefine too, the var $formColumns
+ * You can redefine too, the var FORM_COLUMNS
  * for make your module with other number than the default
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
@@ -39,7 +39,7 @@ class Project_IndexController extends IndexController
      *
      * @var integer
      */
-    public $formColumns  = 1;
+    const FORM_COLUMNS = 1;
 
     /**
      * Init the Module object
