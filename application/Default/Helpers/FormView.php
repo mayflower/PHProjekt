@@ -49,7 +49,7 @@ class Default_Helpers_FormView
      *
      * @var Phprojekt_LanguageAdapter
      */
-    protected $_oTranslate = null;
+    protected $_translate = null;
 
     /**
      * Array with db config options
@@ -72,10 +72,9 @@ class Default_Helpers_FormView
      * @param Zend_View $view View object for form
      */
     protected function __construct($view)
-
     {
         $this->_view       = $view;
-        $this->_oTranslate = Zend_Registry::get('translate');
+        $this->_translate  = Zend_Registry::get('translate');
         $this->_db         = Zend_Registry::get('db');
     }
 
@@ -208,7 +207,7 @@ class Default_Helpers_FormView
         $data = explode('|', $field['formRange']);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
-            $options[$key]     = $this->_oTranslate->translate($value);
+            $options[$key]     = $this->_translate->translate($value);
         }
         return $this->_view->formSelect($field['tableField'], $field['value'], $attribs, $options);
     }
@@ -233,7 +232,8 @@ class Default_Helpers_FormView
         foreach ($tree as $node) {
             $key   = $node->id;
             $value = str_repeat('....', $node->getDepth()) . $node->title;
-            $options[$key] = $this->_oTranslate->translate($value);
+
+            $options[$key] = $this->_translate->translate($value);
         }
         return $this->_view->formSelect($field['tableField'], $field['value'], $attribs, $options);
     }

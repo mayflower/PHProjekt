@@ -56,21 +56,21 @@ class IndexController extends Zend_Controller_Action
      * @var Default_Helpers_ListView
      *
      */
-    protected $_oListView;
+    protected $_listView;
 
     /**
      * Helper for form view
      *
      * @var Default_Helpers_FormView
      */
-    protected $_oFormView;
+    protected $_formView;
 
     /**
      * Tree view helper to display fancy trees
      *
      * @var Default_Helpers_TreeView
      */
-    protected $_oTreeView;
+    protected $_treeView;
 
     /**
      * Set true if the treeview is set
@@ -108,7 +108,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @var Phprojekt_Item object
      */
-    public $oModels;
+    public $models;
 
     /**
      * How many columns will have the form
@@ -155,15 +155,15 @@ class IndexController extends Zend_Controller_Action
         $this->_smarty->module     = $this->_request->getModuleName();
         $this->_smarty->controller = $this->_request->getControllerName();
         $this->_smarty->action     = $this->_request->getActionName();
-        $this->oModels             = $this->getModelsObject();
-        $this->data['listData']    = $this->oModels->getListData();
-        $this->data['formData']    = $this->oModels->getFormData();
+        $this->models              = $this->getModelsObject();
+        $this->data['listData']    = $this->models->getListData();
+        $this->data['formData']    = $this->models->getFormData();
 
-        $this->_oListView = Default_Helpers_ListView::getInstance();
-        $this->_oFormView = Default_Helpers_FormView::getInstance($this->_smarty);
-        $this->_oTreeView = new Default_Helpers_TreeView($tree);
+        $this->_listView = Default_Helpers_ListView::getInstance();
+        $this->_formView = Default_Helpers_FormView::getInstance($this->_smarty);
+        $this->_treeView = new Default_Helpers_TreeView($tree);
 
-        $this->_oTreeView->makePersistent();
+        $this->_treeView->makePersistent();
 
         /* Save the last project id into the session */
         $request = $this->_request->getParams();
@@ -365,12 +365,12 @@ class IndexController extends Zend_Controller_Action
             $this->_forward('display');
         } else {
             $itemid   = intval($request['id']);
-            $formData = $this->oModels->getFormData($itemid);
+            $formData = $this->models->getFormData($itemid);
 
             /* History */
             $db                  = Zend_Registry::get('db');
             $history             = new Phprojekt_History(array('db' => $db));
-            $this->historyData   = $history->getHistoryData($this->oModels, $itemid);
+            $this->historyData   = $history->getHistoryData($this->models, $itemid);
             $this->dateFieldData = array('formType' => 'datetime');
             $this->userFieldData = array('formType' => 'userId');
 
@@ -401,22 +401,22 @@ class IndexController extends Zend_Controller_Action
         $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
 
         if (null !== $itemid) {
-            $this->oModels->find($itemid);
+            $this->models->find($itemid);
         }
 
         /* Assign the values */
         foreach ($request as $k => $v) {
-            if ($this->oModels->keyExists($k)) {
-                $this->oModels->$k = $v;
+            if ($this->models->keyExists($k)) {
+                $this->models->$k = $v;
             }
         }
 
         /* Validate and save if is all ok */
-        if ($this->oModels->recordValidate()) {
-            $this->oModels->save();
+        if ($this->models->recordValidate()) {
+            $this->models->save();
             $this->message = 'Saved';
         } else {
-            $this->errors = $this->oModels->getError();
+            $this->errors = $this->models->getError();
         }
 
         $this->itemid = $itemid;
@@ -440,9 +440,9 @@ class IndexController extends Zend_Controller_Action
             $this->_forward('display');
         } else {
             $itemid = intval($request['id']);
-            $this->oModels->find($itemid);
-            if ($this->oModels->count() > 0) {
-                $this->oModels->delete();
+            $this->models->find($itemid);
+            if ($this->models->count() > 0) {
+                $this->models->delete();
             }
             $this->message = 'Deleted';
             $this->itemid  = $itemid;
@@ -504,9 +504,9 @@ class IndexController extends Zend_Controller_Action
             $session->currentPage = $currentPage;
         }
 
-        list($this->data['listData'], $numberOfRows) = $this->oModels->getListData();
+        list($this->data['listData'], $numberOfRows) = $this->models->getListData();
 
-        $this->titles   = $this->oModels->getFieldsForList(get_class($this->oModels));
+        $this->titles   = $this->models->getFieldsForList(get_class($this->models));
         $this->lines    = $this->data['listData'];
 
         /* Asign paging values for smarty */
@@ -531,7 +531,7 @@ class IndexController extends Zend_Controller_Action
         $this->formViewSet = true;
         $this->columns     = IndexController::FORM_COLUMNS;
         if ($id == 0) {
-            $this->data['formData'] = $this->oModels->getFormData($id);
+            $this->data['formData'] = $this->models->getFormData($id);
         }
 
         /* Assign post values */
@@ -546,7 +546,7 @@ class IndexController extends Zend_Controller_Action
         }
         $this->data['formData'] = $tmp;
 
-        $this->fields   = $this->_oFormView->makeColumns($this->data['formData'], IndexController::FORM_COLUMNS);
+        $this->fields   = $this->_formView->makeColumns($this->data['formData'], IndexController::FORM_COLUMNS);
         $this->formView = $this->_render('form');
     }
 
@@ -631,7 +631,7 @@ class IndexController extends Zend_Controller_Action
     {
         switch ($template) {
         case 'tree':
-                return $this->_oTreeView->renderer($this->_smarty);
+                return $this->_treeView->renderer($this->_smarty);
             break;
         case 'form':
                 return $this->view->render('form.tpl');
@@ -669,7 +669,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         $this->breadcrumb = $this->_request->getModuleName();
-        $this->modules    = $this->oModels->getSubModules();
+        $this->modules    = $this->models->getSubModules();
     }
 
     /**
@@ -680,7 +680,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function getModelsObject()
     {
-        $oModels = new Default_Models_Default();
-        return $oModels;
+        $models = new Default_Models_Default();
+        return $models;
     }
 }

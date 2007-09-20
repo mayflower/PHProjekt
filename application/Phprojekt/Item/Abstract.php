@@ -38,14 +38,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @var Phprojekt_Error
      */
-    protected $_oError = null;
+    protected $_error = null;
 
     /**
      * History object
      *
      * @var Phprojekt_Histoy
      */
-    protected $_oHistory = null;
+    protected $_history = null;
 
     /**
      * Config for inicializes children objects
@@ -71,8 +71,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($db);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($db);
-        $this->_oError    = new Phprojekt_Error();
-        $this->_oHistory  = new Phprojekt_History($db);
+        $this->_error     = new Phprojekt_Error();
+        $this->_history   = new Phprojekt_History($db);
 
         $config           = Zend_Registry::get('config');
         $this->_config    = $config;
@@ -148,7 +148,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
                     if ($validations['isRequired']) {
                         if (empty($value)) {
                             $validated = false;
-                            $this->_oError->addError(array(
+                            $this->_error->addError(array(
                                 'field'   => $varname,
                                 'message' => 'Is a required field'));
                         }
@@ -158,7 +158,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
                         (!empty($value))) {
                         if (!Zend_Date::isDate($value, 'yyyy-MM-dd')) {
                             $validated = false;
-                            $this->_oError->addError(array(
+                            $this->_error->addError(array(
                                 'field'   => $varname,
                                 'message' => 'Invalid format for date'));
                         }
@@ -199,7 +199,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function getError()
     {
-        return (array) $this->_oError->getError();
+        return (array) $this->_error->getError();
     }
 
     /**
@@ -210,11 +210,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function save()
     {
         if (null !== $this->id) {
-            $this->_oHistory->saveFields($this, 'edit');
+            $this->_history->saveFields($this, 'edit');
             parent::save();
         } else {
             parent::save();
-            $this->_oHistory->saveFields($this, 'add');
+            $this->_history->saveFields($this, 'add');
         }
     }
 
@@ -225,7 +225,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function delete()
     {
-        $this->_oHistory->saveFields($this, 'delete');
+        $this->_history->saveFields($this, 'delete');
         parent::delete();
     }
 }

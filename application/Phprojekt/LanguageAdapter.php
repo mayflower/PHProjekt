@@ -163,10 +163,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             case 'et_EE':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EE;
                 break;
-            default:
-            case 'en':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EN;
-                break;
             case 'es':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_ES;
                 break;
@@ -250,6 +246,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 break;
             case 'zh':
                 include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_ZH;
+                break;
+            default:
+            case 'en':
+                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EN;
                 break;
             }
 

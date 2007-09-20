@@ -102,7 +102,7 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
      */
     protected function _getBackingStorePair()
     {
-        return array('key' => $this->_identifier,
+        return array('key'   => $this->_identifier,
                      'value' => $this->_value);
     }
 }

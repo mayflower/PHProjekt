@@ -67,8 +67,8 @@ class Project_IndexController extends IndexController
         $parent = (isset($request['parent'])) ? (int) $request['parent'] : 1;
         $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
 
-        $parentNode = new Phprojekt_Tree_Node_Database($this->oModels, $parent);
-        $newNode    = new Phprojekt_Tree_Node_Database($this->oModels, $itemid);
+        $parentNode = new Phprojekt_Tree_Node_Database($this->models, $parent);
+        $newNode    = new Phprojekt_Tree_Node_Database($this->models, $itemid);
 
         if (null !== $itemid) {
             $newNode->setup();
