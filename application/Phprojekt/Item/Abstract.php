@@ -251,7 +251,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
            the default is projectId */
         $info = $this->info();
         $parentField = 'projectId';
-        if (true === in_array('parent',$info['cols'])) {
+        if (true === in_array('parent', $info['cols'])) {
             $parentField = 'parent';
         }
 
@@ -308,7 +308,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
         /* Asign the porject value if exists */
         $info = $this->info();
-        if (true === in_array('projectId',$info['cols'])) {
+        if (true === in_array('projectId', $info['cols'])) {
             $session = new Zend_Session_Namespace();
             if (isset($session->lastProjectId)) {
                 $formData['projectId']['value'] = $session->lastProjectId;
