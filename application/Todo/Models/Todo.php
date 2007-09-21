@@ -42,7 +42,7 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
 
         /* Filter the todos of the current project */
         $session = new Zend_Session_Namespace();
-        if (true === isset($session->lastProjectId)) {
+        if (isset($session->lastProjectId)) {
             $projectId = $session->lastProjectId;
             $where     = $this->getAdapter()->quoteInto('projectId = ?', $projectId);
         } else {
@@ -96,7 +96,7 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
 
         /* Asign the porject value if exists */
         $session = new Zend_Session_Namespace();
-        if (true === isset($session->lastProjectId)) {
+        if (isset($session->lastProjectId)) {
             $formData['projectId']['value'] = $session->lastProjectId;
         }
 

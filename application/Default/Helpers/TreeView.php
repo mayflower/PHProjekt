@@ -20,8 +20,7 @@
  * manages a way to save/find trees and their internal status after
  * a page request. Tree status can also be written to backing storage
  * (e.g. databases).
- * !NOTE We might use RecursiveTreeIterator in the future, but I'm not
- * sure if this will work the functionallity we need
+ * @todo Maybe use RecursiveTreeIterator in the future, but I'm not sure if this will work the functionallity we need
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
