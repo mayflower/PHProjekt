@@ -37,11 +37,11 @@
  * Phprojekt implement active record, take a look at the development
  * documentation
  *
- * !NOTE for developers:
+ * NOTE for developers:
  *   If you have an attribute defined in your class that has the same name
  *   like an column, the attribute is returned NOT the column. You will
  *   hide the column
- * !NOTE for developers:
+ * NOTE for developers:
  *   If you define the relation attribute name make sure the name doesn't exists
  *   twice and is unique in ALL $hasMany, $belongsTo, $hasManyAndBelongsToMany.
  *   If a key exists more often they are exactly evaluted in the above order.
@@ -148,7 +148,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @var Zend_Log
      */
-    protected $_log = null;
+    protected $_log;
 
     /**
      * Defines if the id for the entry changed. We have to update
@@ -158,17 +158,21 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @var integer
      */
-    protected $_storedId = null;
+    protected $_storedId;
 
     /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
         if (Zend_Registry::isRegistered('log')) {
             $this->_log = Zend_Registry::get('log');
+        }
+
+        if (null === $config) {
+            $config = array('db' => Zend_Registry::get('db'));
         }
 
         if (!is_array($config)) {

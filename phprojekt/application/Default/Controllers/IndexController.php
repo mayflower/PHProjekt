@@ -113,8 +113,7 @@ class IndexController extends Zend_Controller_Action
     /**
      * How many columns will have the form
      *
-     * !NOTE for developers:
-     *      This is not implemented yet
+     * @todo Not implemented yet
      *
      * @var integer
      */
@@ -166,9 +165,11 @@ class IndexController extends Zend_Controller_Action
         $this->_treeView->makePersistent();
 
         /* Save the last project id into the session */
+
+        /* @todo: Sanitize ID / Request parameter */
         $request = $this->_request->getParams();
         $session = new Zend_Session_Namespace();
-        if (true === isset($request['id'])) {
+        if (isset($request['id'])) {
             if ($this->_request->getModuleName() == 'Project') {
                 if ($this->_request->getActionName() == 'list') {
                     $session->lastProjectId = $request['id'];
@@ -180,7 +181,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         /* Assign the current project id and name to the templae */
-        if (true == isset($session->lastProjectId)) {
+        if (isset($session->lastProjectId)) {
             $this->projectId   = $session->lastProjectId;
             $this->projectName = $session->lastProjectName;
         }
@@ -262,7 +263,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function listAction()
     {
-        $this->setListView();
         $this->message = '&nbsp;';
         $this->generateOutput();
         $this->render('index');
@@ -278,7 +278,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function removeFilterAction()
     {
-        $this->setListView();
         $this->message = 'Filter Removed';
         $this->generateOutput();
         $this->render('index');
@@ -294,7 +293,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function sortAction()
     {
-        $this->setListView();
         $this->message = '&nbsp;';
         $this->generateOutput();
         $this->render('index');
@@ -310,7 +308,6 @@ class IndexController extends Zend_Controller_Action
     public function cancelAction()
     {
         $this->msg = '&nbsp;';
-        $this->setFormView();
         $this->generateOutput();
         $this->render('index');
     }
@@ -364,8 +361,9 @@ class IndexController extends Zend_Controller_Action
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
-            $itemid   = intval($request['id']);
-            $formData = $this->models->getFormData($itemid);
+            $itemid   = (int) $request['id'];
+            $formData = $this->oModels->getFormData($itemid);
+
 
             /* History */
             $db                  = Zend_Registry::get('db');
@@ -386,7 +384,7 @@ class IndexController extends Zend_Controller_Action
      * Save if you are add one or edit one.
      * Use the model module for get the data
      *
-     * !NOTE: You MUST validate the data before save.
+     * NOTE: You MUST validate the data before save.
      *
      * If there is an error, we show it.
      *
@@ -420,7 +418,6 @@ class IndexController extends Zend_Controller_Action
         }
 
         $this->itemid = $itemid;
-        $this->setTreeView();
         $this->generateOutput();
         $this->render('index');
     }
@@ -439,11 +436,10 @@ class IndexController extends Zend_Controller_Action
         if (!isset($request['id'])) {
             $this->_forward('display');
         } else {
-            $itemid = intval($request['id']);
-            $this->models->find($itemid);
-            if ($this->models->count() > 0) {
-                $this->models->delete();
-            }
+
+            $itemid = (int) $request['id'];
+            $this->oModels->find($itemid)->delete();
+
             $this->message = 'Deleted';
             $this->itemid  = $itemid;
             $this->generateOutput();
@@ -548,45 +544,6 @@ class IndexController extends Zend_Controller_Action
 
         $this->fields   = $this->_formView->makeColumns($this->data['formData'], IndexController::FORM_COLUMNS);
         $this->formView = $this->_render('form');
-    }
-
-    /**
-     * Return true if not have access
-     *
-     * !NOTICE:
-     *      Not implemented yet
-     *
-     * @return boolean
-     */
-    public function accessDenied()
-    {
-        return false;
-    }
-
-    /**
-     * If the Action not exists, call indexAction
-     *
-     * @param string $method Action method
-     * @param array  $args   Arguments for the Action
-     *
-     * @return IndexController Action
-     */
-    public function __call($method, $args = array())
-    {
-        if ('Action' == substr($method, -6)) {
-            /* If the action method was not found,
-               forward to the index action */
-            return $this->_forward('index');
-        }
-
-        $arguments = null;
-        if (false == empty($args)) {
-            foreach ($args as $argument) {
-                $arguments .= $argument;
-            }
-        }
-        throw new Exception('Invalid method "'. $method . '" called'
-                            . ' with arguments: ' . $arguments);
     }
 
     /**
