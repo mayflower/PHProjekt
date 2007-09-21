@@ -77,5 +77,4 @@ class Phprojekt_LogTest extends PHPUnit_Extensions_ExceptionTestCase
         $log->log('TEST',Zend_Log::CRIT);
         $log->log('TEST',Zend_Log::INFO);
     }
-
 }

@@ -42,7 +42,6 @@ require_once 'ErrorTest.php';
 require_once 'HistoryTest.php';
 require_once 'Filter/UserFilterTest.php';
 require_once 'AuthTest.php';
-require_once 'Models.php';
 
 /**
  * Test suite for the default module
@@ -88,7 +87,6 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_ErrorTest');
         $suite->addTestSuite('Phprojekt_Filter_UserFilterTest');
         $suite->addTestSuite('Phprojekt_AuthTest');
-        $suite->addTestSuite('Phprojekt_Models');
 
         return $suite;
     }

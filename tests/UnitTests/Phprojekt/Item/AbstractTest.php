@@ -539,4 +539,112 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '';
     }
+
+    /**
+     * Check the getListData function for project (using parent)
+     *
+     */
+    public function testGetListDataProject()
+    {
+        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+
+        /* First call */
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 3);
+
+        /* Test the project filter */
+        $pageNamespace = new Zend_Session_Namespace();
+        $pageNamespace->lastProjectId = 2;
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 2);
+
+        /* Test the paging */
+        $pageNamespace = new Zend_Session_Namespace(2 . 'Project');
+        $pageNamespace->currentPage = 100;
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 0);
+
+        $pageNamespace->currentPage = 1;
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 1);
+    }
+
+    /**
+     * Check the getListData function for default modules (using projectId)
+     *
+     */
+    public function testGetListData()
+    {
+        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
+
+        /* First call */
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 0);
+
+        /* Test the project filter */
+        $pageNamespace = new Zend_Session_Namespace();
+        $pageNamespace->lastProjectId = 1;
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 1);
+
+        /* Test the paging */
+        $pageNamespace = new Zend_Session_Namespace(1 . 'Todo');
+        $pageNamespace->currentPage = 100;
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 0);
+
+        $pageNamespace->currentPage = 0;
+        $array = $module->getListData();
+        $this->assertEquals(count($array[0]), 1);
+    }
+
+    /**
+     * Check the getFormData function for project
+     *
+     */
+    public function testGetFormDataProject()
+    {
+        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+
+        /* Add */
+        $array = $module->getFormData();
+        $this->assertEquals(array_keys($this->_formResult), array_keys($array));
+
+        /* Edit */
+        $module->getFormData(1);
+    }
+
+    /**
+     * Check the getFormData function for default modules
+     *
+     */
+    public function testGetFormData()
+    {
+        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
+
+        /* Test the project filter */
+        $session = new Zend_Session_Namespace();
+        $session->lastProjectId = 1;
+        $array = $module->getFormData();
+        $this->assertEquals($array['projectId']['value'], 1);
+
+        $session->lastProjectId = 100;
+        $array = $module->getFormData();
+        $this->assertEquals($array['projectId']['value'], 100);
+    }
+
+    /**
+     * Check the getSubModules function
+     *
+     */
+    public function testSubModules()
+    {
+        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+        $array = $module->getSubModules();
+        $this->assertEquals(array('Todo'),$array);
+
+        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
+        $array = $module->getSubModules();
+        $this->assertEquals(array(),$array);
+    }
 }

@@ -247,14 +247,21 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         $where       = null;
         $currentPage = 0;
 
-        /* If the model has projectId, filter it to the current projectId */
-        if (isset($this->_data['projectId'])) {
-            /* Filter the items of the current project */
-            $session = new Zend_Session_Namespace();
-            if (isset($session->lastProjectId)) {
-                $projectId = $session->lastProjectId;
-                $where     = $this->getAdapter()->quoteInto('projectId = ?', $projectId);
-            }
+        /* Get the field to filter the current project
+           the default is projectId */
+        $info = $this->info();
+        $parentField = 'projectId';
+        if (true === in_array('parent',$info['cols'])) {
+            $parentField = 'parent';
+        }
+
+        /* Filter the items of the current project */
+        $session = new Zend_Session_Namespace();
+        if (isset($session->lastProjectId)) {
+            $projectId   = $session->lastProjectId;
+            $parentField = $this->getAdapter()->quoteIdentifier($parentField);
+
+            $where = sprintf("%s = %d", $parentField, $projectId);
         }
 
         /* Limit the query for paging */
@@ -300,7 +307,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         }
 
         /* Asign the porject value if exists */
-        if (isset($this->_data['projectId'])) {
+        $info = $this->info();
+        if (true === in_array('projectId',$info['cols'])) {
             $session = new Zend_Session_Namespace();
             if (isset($session->lastProjectId)) {
                 $formData['projectId']['value'] = $session->lastProjectId;
