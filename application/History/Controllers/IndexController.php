@@ -59,7 +59,7 @@ class History_IndexController extends IndexController
      */
     public function displayAction()
     {
-        $this->_forward('list');
+        $this->forward('list');
     }
 
     /**
@@ -69,7 +69,7 @@ class History_IndexController extends IndexController
      */
     public function editAction()
     {
-        $this->_forward('list');
+        $this->forward('list');
     }
 
     /**
@@ -79,7 +79,7 @@ class History_IndexController extends IndexController
      */
     public function saveAction()
     {
-        $this->_forward('list');
+        $this->forward('list');
     }
 
     /**
@@ -89,6 +89,6 @@ class History_IndexController extends IndexController
      */
     public function deleteAction()
     {
-        $this->_forward('list');
+        $this->forward('list');
     }
 }

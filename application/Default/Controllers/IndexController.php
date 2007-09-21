@@ -25,7 +25,8 @@
  * - FormView = For make different form inputs for each type of field
  * - TreeView = For make the tree view
  *
- * All action do the nessesary job and then call the generateOutput.
+ * All action do the nessesary job and then call the generateOutput
+ * by postDispatch()
  * This function draw all the views that are not already rendered.
  * So you in each action you can render one view
  * and let that the generateOutput render the others.
@@ -87,13 +88,6 @@ class IndexController extends Zend_Controller_Action
     public $listViewSet = false;
 
     /**
-     * Set true if the formView is set
-     *
-     * @var boolean
-     */
-    public $formViewSet = false;
-
-    /**
      * Array with the all the data for render
      * 'listData' => All the data for list
      * 'formData' => All the data for form
@@ -133,6 +127,9 @@ class IndexController extends Zend_Controller_Action
     public function init()
     {
         $config = Zend_Registry::get('config');
+        Zend_Registry::set('currentItemId', 0);
+        Zend_Registry::set('canRender', true);
+
         try {
             Phprojekt_Auth::isLoggedIn();
         }
@@ -197,12 +194,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_forward('list');
+        $this->forward('list');
     }
 
     /**
      * Adds a single filter to the current view
-     * And generate the list view again
      *
      * List Action
      *
@@ -212,8 +208,6 @@ class IndexController extends Zend_Controller_Action
     {
         $this->setListView();
         $this->message = 'Filter Added';
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
@@ -250,7 +244,7 @@ class IndexController extends Zend_Controller_Action
         $currentActiveTree = Default_Helpers_TreeView::findPersistant();
         $currentActiveTree->toggleNode();
 
-        $this->_forward('list', $this->_request->getControllerName(),
+        $this->forward('list', $this->_request->getControllerName(),
                         $this->_request->getModuleName());
     }
 
@@ -264,13 +258,10 @@ class IndexController extends Zend_Controller_Action
     public function listAction()
     {
         $this->message = '&nbsp;';
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
      * Remove a filter
-     * And generate the list view again
      *
      * List Action
      *
@@ -279,13 +270,10 @@ class IndexController extends Zend_Controller_Action
     public function removeFilterAction()
     {
         $this->message = 'Filter Removed';
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
      * Sort the list view
-     * And generate the list view again
      *
      * List Action
      *
@@ -294,8 +282,6 @@ class IndexController extends Zend_Controller_Action
     public function sortAction()
     {
         $this->message = '&nbsp;';
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
@@ -308,8 +294,6 @@ class IndexController extends Zend_Controller_Action
     public function cancelAction()
     {
         $this->msg = '&nbsp;';
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
@@ -343,8 +327,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function displayAction()
     {
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
@@ -359,7 +341,7 @@ class IndexController extends Zend_Controller_Action
     {
         $request = $this->_request->getParams();
         if (!isset($request['id'])) {
-            $this->_forward('display');
+            $this->forward('display');
         } else {
             $itemid   = (int) $request['id'];
             $formData = $this->models->getFormData($itemid);
@@ -374,8 +356,8 @@ class IndexController extends Zend_Controller_Action
 
             $this->itemid           = $itemid;
             $this->data['formData'] = $formData;
-            $this->generateOutput($itemid);
-            $this->render('index');
+
+            Zend_Registry::set('currentItemId', $itemid);
         }
     }
 
@@ -418,13 +400,10 @@ class IndexController extends Zend_Controller_Action
         }
 
         $this->itemid = $itemid;
-        $this->generateOutput();
-        $this->render('index');
     }
 
     /**
      * Deletes a certain item
-     * And generate the list view again
      *
      * Form Action
      *
@@ -434,16 +413,13 @@ class IndexController extends Zend_Controller_Action
     {
         $request = $this->_request->getParams();
         if (!isset($request['id'])) {
-            $this->_forward('display');
+            $this->forward('display');
         } else {
-
             $itemid = (int) $request['id'];
             $this->models->find($itemid)->delete();
 
             $this->message = 'Deleted';
             $this->itemid  = $itemid;
-            $this->generateOutput();
-            $this->render('index');
         }
     }
 
@@ -639,5 +615,49 @@ class IndexController extends Zend_Controller_Action
     {
         $models = new Default_Models_Default();
         return $models;
+    }
+
+    /**
+     * Redefine the postDispatch function
+     * After all action, this functions is called
+     *
+     * The function will call the generateOuput and render for show the layout
+     *
+     * Is disable only if you set the canRender to false,
+     * for example, the canRender is seted to false before each _forward,
+     * for no draw nothing, forward the action and then draw the correct layout
+     *
+     * @return void
+     */
+    public function postDispatch()
+    {
+        $canRender = Zend_Registry::get('canRender');
+        if (true === $canRender) {
+            $currentItemId = Zend_Registry::get('currentItemId');
+            if (true === ($currentItemId > 0)) {
+                $this->generateOutput($currentItemId);
+            } else {
+                $this->generateOutput($currentItemId);
+            }
+            $this->render('index');
+            $this->outputSet = true;
+        }
+    }
+
+    /**
+     * The function will call the Zend _forward function
+     * But set first the canRender to false for no draw nothing
+     *
+     * @param string $action     The new action to display
+     * @param string $controller The new controller to display
+     * @param string $module     The new module to display
+     * @param array $params      The params for the new request
+     *
+     * @return void
+     */
+    public function forward($action, $controller = null, $module = null, array $params = null)
+    {
+        Zend_Registry::set('canRender', false);
+        $this->_forward($action, $controller, $module, $params);
     }
 }
