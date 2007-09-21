@@ -30,7 +30,7 @@
  * So you in each action you can render one view
  * and let that the generateOutput render the others.
  *
- * The class contain the oModel var for get the module model object
+ * The class contain the model var for get the module model object
  * that return all the data for process
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
@@ -362,7 +362,7 @@ class IndexController extends Zend_Controller_Action
             $this->_forward('display');
         } else {
             $itemid   = (int) $request['id'];
-            $formData = $this->oModels->getFormData($itemid);
+            $formData = $this->models->getFormData($itemid);
 
 
             /* History */
@@ -438,7 +438,7 @@ class IndexController extends Zend_Controller_Action
         } else {
 
             $itemid = (int) $request['id'];
-            $this->oModels->find($itemid)->delete();
+            $this->models->find($itemid)->delete();
 
             $this->message = 'Deleted';
             $this->itemid  = $itemid;

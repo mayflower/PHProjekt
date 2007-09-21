@@ -82,26 +82,4 @@ class History_Models_History extends Phprojekt_Item_Abstract
 
         return array($listData, $howManyRows);
     }
-
-    /**
-     * Get the form fields
-     *
-     * @return array Array with the fields for render
-     */
-    public function getFormData()
-    {
-        $formData = $this->getFieldsForForm('todo');
-
-        return $formData;
-    }
-
-    /**
-     * Return wich submodules use this module
-     *
-     * @return array
-     */
-    public function getSubModules()
-    {
-        return array();
-    }
 }

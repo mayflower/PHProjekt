@@ -228,4 +228,95 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         $this->_history->saveFields($this, 'delete');
         parent::delete();
     }
+
+    /**
+     * Get all the todo for list from the db
+     * The return array have all the rows that are ActiveRecords itself
+     * and the number of rows without the limits
+     *
+     * The pagination is stored in the session name "projectID + Module".
+     * So each, module have and own session in each project.
+     *
+     * @return array Array with the rows for render and the total rows number
+     */
+    public function getListData()
+    {
+        $listData   = array();
+
+        $projectId   = 0;
+        $where       = null;
+        $currentPage = 0;
+
+        /* If the model has projectId, filter it to the current projectId */
+        if (isset($this->_data['projectId'])) {
+            /* Filter the items of the current project */
+            $session = new Zend_Session_Namespace();
+            if (isset($session->lastProjectId)) {
+                $projectId = $session->lastProjectId;
+                $where     = $this->getAdapter()->quoteInto('projectId = ?', $projectId);
+            }
+        }
+
+        /* Limit the query for paging */
+        $session = new Zend_Session_Namespace($projectId . $this->_name);
+        if (true === isset($session->currentPage)) {
+            $currentPage = $session->currentPage;
+        }
+
+        $config = Zend_Registry::get('config');
+        $count  = $config->itemsPerPage;
+
+        $order = 'id';
+
+        foreach ($this->fetchAll($where, $order, $count, $currentPage) as $row) {
+            $listData[] = $row;
+        }
+
+        $howManyRows = count($this->fetchAll($where));
+
+        return array($listData, $howManyRows);
+    }
+
+    /**
+     * Get the form fields
+     * If the id is defined will make the edit form
+     * if not, will make the add form
+     *
+     * @param integer $id Optional, for edit the row
+     *
+     * @return array Array with the fields for render
+     */
+    public function getFormData($id = 0)
+    {
+        $formData = $this->getFieldsForForm($this->getTableName());
+
+        if ($id > 0) {
+            $this->find($id);
+            foreach ($formData as $fieldName => $fieldData) {
+                $tmpData[$fieldName]          = $fieldData;
+                $tmpData[$fieldName]['value'] = $this->$fieldName;
+            }
+            $formData = $tmpData;
+        }
+
+        /* Asign the porject value if exists */
+        if (isset($this->_data['projectId'])) {
+            $session = new Zend_Session_Namespace();
+            if (isset($session->lastProjectId)) {
+                $formData['projectId']['value'] = $session->lastProjectId;
+            }
+        }
+
+        return $formData;
+    }
+
+    /**
+     * Return wich submodules use this module
+     *
+     * @return array
+     */
+    public function getSubModules()
+    {
+        return array();
+    }
 }
