@@ -95,8 +95,5 @@ class Project_IndexController extends IndexController
         }
 
         $this->setTreeView();
-
-        $this->generateOutput();
-        $this->render('index');
     }
 }
