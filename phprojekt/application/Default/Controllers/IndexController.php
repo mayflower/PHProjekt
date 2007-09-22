@@ -651,7 +651,7 @@ class IndexController extends Zend_Controller_Action
      * @param string $action     The new action to display
      * @param string $controller The new controller to display
      * @param string $module     The new module to display
-     * @param array $params      The params for the new request
+     * @param array  $params     The params for the new request
      *
      * @return void
      */
