@@ -599,41 +599,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
     }
 
     /**
-     * Check the getFormData function for project
-     *
-     */
-    public function testGetFormDataProject()
-    {
-        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-
-        /* Add */
-        $array = $module->getFormData();
-        $this->assertEquals(array_keys($this->_formResult), array_keys($array));
-
-        /* Edit */
-        $module->getFormData(1);
-    }
-
-    /**
-     * Check the getFormData function for default modules
-     *
-     */
-    public function testGetFormData()
-    {
-        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
-
-        /* Test the project filter */
-        $session = new Zend_Session_Namespace();
-        $session->lastProjectId = 1;
-        $array = $module->getFormData();
-        $this->assertEquals($array['projectId']['value'], 1);
-
-        $session->lastProjectId = 100;
-        $array = $module->getFormData();
-        $this->assertEquals($array['projectId']['value'], 100);
-    }
-
-    /**
      * Check the getSubModules function
      *
      */

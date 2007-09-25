@@ -90,12 +90,11 @@ class IndexController extends Zend_Controller_Action
     /**
      * Array with the all the data for render
      * 'listData' => All the data for list
-     * 'formData' => All the data for form
      * 'treeData' => All the data for trees
      *
      * @var array
      */
-    public $data = array('listData','formData','treeData');
+    public $data = array('listData','treeData');
 
     /**
      * Object model with all the specific data
@@ -103,6 +102,20 @@ class IndexController extends Zend_Controller_Action
      * @var Phprojekt_Item object
      */
     public $models;
+
+    /**
+     * Current item ID
+     *
+     * @var int
+     */
+    protected $_itemid = 0;
+
+    /**
+     * Current params request
+     *
+     * @var array
+     */
+    protected $_params = array();
 
     /**
      * How many columns will have the form
@@ -127,7 +140,6 @@ class IndexController extends Zend_Controller_Action
     public function init()
     {
         $config = Zend_Registry::get('config');
-        Zend_Registry::set('currentItemId', 0);
         Zend_Registry::set('canRender', true);
 
         try {
@@ -137,8 +149,7 @@ class IndexController extends Zend_Controller_Action
             if ($ae->getCode() == 1) {
 
                 /* user not logged in, display login page */
-
-                $this->_redirect($config->webpath.'/index.php/Login/index');
+                $this->_redirect($config->webpath.'index.php/Login/index');
                 die();
             }
         }
@@ -153,7 +164,6 @@ class IndexController extends Zend_Controller_Action
         $this->_smarty->action     = $this->_request->getActionName();
         $this->models              = $this->getModelsObject();
         $this->data['listData']    = $this->models->getListData();
-        $this->data['formData']    = $this->models->getFormData();
 
         $this->_listView = Default_Helpers_ListView::getInstance();
         $this->_formView = Default_Helpers_FormView::getInstance($this->_smarty);
@@ -161,17 +171,25 @@ class IndexController extends Zend_Controller_Action
 
         $this->_treeView->makePersistent();
 
-        /* Save the last project id into the session */
+        /* Get the current item id */
+        $this->_params = $this->_request->getParams();
+        if (true === isset($this->_params['id'])) {
+            $this->_itemid = (int) $this->_params['id'];
+        }
 
+        /* For smarty */
+        $this->params = $this->_params;
+        $this->itemid = $this->_itemid;
+
+        /* Save the last project id into the session */
         /* @todo: Sanitize ID / Request parameter */
-        $request = $this->_request->getParams();
         $session = new Zend_Session_Namespace();
-        if (isset($request['id'])) {
+        if (true === ($this->_itemid > 0)) {
             if ($this->_request->getModuleName() == 'Project') {
                 if ($this->_request->getActionName() == 'list') {
-                    $session->lastProjectId = $request['id'];
+                    $session->lastProjectId = $this->_itemid;
                     $project = PHprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
-                    $project->find($request['id']);
+                    $project->find($this->_itemid);
                     $session->lastProjectName = $project->title;
                 }
             }
@@ -339,25 +357,15 @@ class IndexController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $request = $this->_request->getParams();
-        if (!isset($request['id'])) {
+        if ($this->_itemid < 1) {
             $this->forward('display');
         } else {
-            $itemid   = (int) $request['id'];
-            $formData = $this->models->getFormData($itemid);
-
-
             /* History */
             $db                  = Zend_Registry::get('db');
             $history             = new Phprojekt_History(array('db' => $db));
-            $this->historyData   = $history->getHistoryData($this->models, $itemid);
+            $this->historyData   = $history->getHistoryData($this->models, $this->_itemid);
             $this->dateFieldData = array('formType' => 'datetime');
             $this->userFieldData = array('formType' => 'userId');
-
-            $this->itemid           = $itemid;
-            $this->data['formData'] = $formData;
-
-            Zend_Registry::set('currentItemId', $itemid);
         }
     }
 
@@ -376,16 +384,12 @@ class IndexController extends Zend_Controller_Action
      */
     public function saveAction()
     {
-        $request = $this->_request->getParams();
-
-        $itemid = (isset($request['id'])) ? (int) $request['id'] : null;
-
-        if (null !== $itemid) {
-            $this->models->find($itemid);
+        if (null !== $this->_itemid) {
+            $this->models->find($this->_itemid);
         }
 
         /* Assign the values */
-        foreach ($request as $k => $v) {
+        foreach ($this->_params as $k => $v) {
             if ($this->models->keyExists($k)) {
                 $this->models->$k = $v;
             }
@@ -398,8 +402,6 @@ class IndexController extends Zend_Controller_Action
         } else {
             $this->errors = $this->models->getError();
         }
-
-        $this->itemid = $itemid;
     }
 
     /**
@@ -411,15 +413,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-        $request = $this->_request->getParams();
-        if (!isset($request['id'])) {
+        if ($this->_itemid < 1) {
             $this->forward('display');
         } else {
-            $itemid = (int) $request['id'];
-            $this->models->find($itemid)->delete();
-
+            $this->models->find($this->_itemid)->delete();
             $this->message = 'Deleted';
-            $this->itemid  = $itemid;
         }
     }
 
@@ -461,9 +459,8 @@ class IndexController extends Zend_Controller_Action
 
         /* Set the actual page from the request, or from the session */
         $currentProjectModule = $projectId . $this->_request->getModuleName();
-        $params = $this->_request->getParams();
-        if (true == isset($params['page'])) {
-            $currentPage = (int) $params['page'];
+        if (true == isset($this->_params['page'])) {
+            $currentPage = (int) $this->_params['page'];
             $session = new Zend_Session_Namespace($currentProjectModule);
             $session->currentPage = $currentPage;
         } else {
@@ -498,28 +495,12 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function setFormView($id = 0)
+    public function setFormView()
     {
         $this->formViewSet = true;
         $this->columns     = IndexController::FORM_COLUMNS;
-        if ($id == 0) {
-            $this->data['formData'] = $this->models->getFormData($id);
-        }
-
-        /* Assign post values */
-        $params     = $this->_request->getParams();
-        $formData   = $this->data['formData'];
-        $tmp        = $formData;
-        $fieldNames = array_keys($formData);
-        foreach ($fieldNames as $fieldName) {
-            if (isset($params[$fieldName])) {
-                $tmp[$fieldName]['value'] = $params[$fieldName];
-            }
-        }
-        $this->data['formData'] = $tmp;
-
-        $this->fields   = $this->_formView->makeColumns($this->data['formData'], IndexController::FORM_COLUMNS);
-        $this->formView = $this->_render('form');
+        $this->model       = $this->models;
+        $this->formView    = $this->_render('form');
     }
 
     /**
@@ -585,10 +566,8 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function generateOutput($id = 0)
+    public function generateOutput()
     {
-        $this->view->currentId = $this->_request->getParam('id');
-
         if (!$this->treeViewSet) {
             $this->setTreeView();
         }
@@ -598,7 +577,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         if (!$this->formViewSet) {
-            $this->setFormView($id);
+            $this->setFormView();
         }
 
         $this->breadcrumb = $this->_request->getModuleName();
@@ -633,12 +612,7 @@ class IndexController extends Zend_Controller_Action
     {
         $canRender = Zend_Registry::get('canRender');
         if (true === $canRender) {
-            $currentItemId = Zend_Registry::get('currentItemId');
-            if (true === ($currentItemId > 0)) {
-                $this->generateOutput($currentItemId);
-            } else {
-                $this->generateOutput($currentItemId);
-            }
+            $this->generateOutput();
             $this->render('index');
             $this->outputSet = true;
         }

@@ -124,32 +124,84 @@ class Default_Helpers_FormView
     /**
      * Switch between the form types and call the function for each one
      *
-     * @param array $field Data of the field from the dbManager
+     * @param Phprojekt_Item_Abstract $models Object model
+     * @param array                   $params $_REQUEST array
      *
-     * @return string XHTML generated
+     * @return array Data with label, XHTML output and isRequired per field
      */
-    public function generateFormElement($field)
+    public function generateFormElement($models, $params)
     {
-        switch ($field['formType']) {
-        default:
-            return $this->formText($field);
-            break;
-        case "textarea":
-            return $this->formTextArea($field);
-            break;
-        case "date":
-            return $this->formDate($field);
-            break;
-        case "selectValues":
-            return $this->formSelectValues($field);
-            break;
-        case "tree":
-            return $this->formTree($field);
-            break;
-        case "space":
-            return null;
-            break;
+        $output = array();
+
+        /* Get the Item ID */
+        if (true === isset($params['id'])) {
+            $itemid = (int) $params['id'];
+        } else {
+            $itemid = 0;
         }
+
+        $fields = $models->getFieldsForForm($models->getTableName());
+
+        if ($itemid > 0) {
+            $models->find($itemid);
+        }
+
+        /* Get the parent field, by default id projectId */
+        $info = $models->info();
+        $parentField = 'projectId';
+        if (true === in_array('parent', $info['cols'])) {
+            $parentField = 'parent';
+        }
+
+        foreach ($fields as $fieldName => $field) {
+            /* Label */
+            $tmpOutput['label'] = $this->_translate->translate($field['formLabel']);
+
+            /* Assign post values or current values */
+            if (true === isset($params[$fieldName])) {
+                $field['value'] = $params[$fieldName];
+            } else {
+                $field['value'] = $models->$fieldName;
+            }
+
+            /* Asign the porject value if exists */
+            if ($fieldName == $parentField) {
+                $session = new Zend_Session_Namespace();
+                if (isset($session->lastProjectId)) {
+                    $field['value'] = $session->lastProjectId;
+                }
+            }
+
+            /* Draw the field */
+            switch ($field['formType']) {
+            default:
+                $tmpOutput['output'] = $this->formText($field);
+                break;
+            case "textarea":
+                $tmpOutput['output'] = $this->formTextArea($field);
+                break;
+            case "date":
+                $tmpOutput['output'] = $this->formDate($field);
+                break;
+            case "selectValues":
+                $tmpOutput['output'] = $this->formSelectValues($field);
+                break;
+            case "tree":
+                $tmpOutput['output'] = $this->formTree($field);
+                break;
+            case "space":
+                $tmpOutput['output'] = null;
+                break;
+            }
+
+            /* Required Field */
+            $tmpOutput['isRequired'] = $field['isRequired'];
+
+            $output[] = $tmpOutput;
+            unset($tmpOutput);
+        }
+
+        return $output;
     }
 
     /**
