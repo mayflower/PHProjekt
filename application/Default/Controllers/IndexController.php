@@ -491,8 +491,6 @@ class IndexController extends Zend_Controller_Action
      *
      * If the function give the id, the values of this item will show.
      *
-     * @param integer $id Optional, The id of the row
-     *
      * @return void
      */
     public function setFormView()
@@ -561,8 +559,6 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Render all the views that are not already renders
-     *
-     * @param integer $id The id of the row
      *
      * @return void
      */
