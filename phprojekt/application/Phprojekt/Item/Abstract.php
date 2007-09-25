@@ -285,45 +285,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get the form fields
-     * If the id is defined will make the edit form
-     * if not, will make the add form
-     *
-     * @param integer $id Optional, for edit the row
-     *
-     * @return array Array with the fields for render
-     */
-    public function getFormData($id = 0)
-    {
-        $formData = $this->getFieldsForForm($this->getTableName());
-
-        if ($id > 0) {
-            $this->find($id);
-            foreach ($formData as $fieldName => $fieldData) {
-                $tmpData[$fieldName]          = $fieldData;
-                $tmpData[$fieldName]['value'] = $this->$fieldName;
-            }
-            $formData = $tmpData;
-        }
-
-        /* Asign the porject value if exists
-           the default field is projectId */
-        $info = $this->info();
-        $parentField = 'projectId';
-        if (true === in_array('parent', $info['cols'])) {
-            $parentField = 'parent';
-        }
-        if (true === in_array($parentField, $info['cols'])) {
-            $session = new Zend_Session_Namespace();
-            if (isset($session->lastProjectId)) {
-                $formData[$parentField]['value'] = $session->lastProjectId;
-            }
-        }
-
-        return $formData;
-    }
-
-    /**
      * Return wich submodules use this module
      *
      * @return array

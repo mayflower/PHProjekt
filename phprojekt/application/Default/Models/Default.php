@@ -46,17 +46,6 @@ class Default_Models_Default
     }
 
     /**
-     * Default module has no fields for form
-     * Redefine the function for consistence
-     *
-     * @return array
-     */
-    public function getFormData()
-    {
-        return array();
-    }
-
-    /**
      * Redefine the function for consistence
      *
      * @return array

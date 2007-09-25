@@ -1,23 +1,24 @@
 <br />
 <a href="{url action="display"}">{"Add"|translate}</a>
-<a href="{url action="delete" id=$currentId}">{"Delete"|translate}</a>
+<a href="{url action="delete" id=$itemid}">{"Delete"|translate}</a>
 <br />
 <br />
 {if $message == ''}
   {if $action == 'add'}
   <form method="post" action="{url action='save'} id=''">
   {else}
-  <form method="post" action="{url action='save' id=$currentId}">
+  <form method="post" action="{url action='save' id=$itemid}">
   {/if}
   {foreach name=errors item=error from=$errors}
   <div class="error">{$error.field|translate}: {$error.message|translate}</div>
   {/foreach}
   <br />
   <table width="100%">
-  {foreach name=fields item=field from=$fields}
+  {assign var="fields" value=$form->generateFormElement("`$model`", "`$params`")}
+  {foreach name=field item=field from=$fields}
   <tr>
-    <td valign="top">{$field.formLabel|translate}</td>
-    <td>{$form->generateFormElement("`$field`")}
+    <td valign="top">{$field.label}</td>
+    <td>{$field.output}
     {if $field.isRequired}
     <span class="error">*</span>
     {/if}
