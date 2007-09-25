@@ -72,7 +72,7 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
      */
     function setUp()
     {
-        $this->setAutoStop(false); 
+        $this->setAutoStop(false);
         $this->_config = Zend_Registry::get('config');
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->_config->webpath);
@@ -151,7 +151,7 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
 
-        $this->assertEquals($this->_config->webpath , $this->getLocation());
+        $this->assertEquals($this->_config->webpath . 'index.php' , $this->getLocation());
 
     }
 }
