@@ -550,23 +550,23 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
 
         /* First call */
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 3);
+        $this->assertEquals(3, count($array[0]));
 
         /* Test the project filter */
         $pageNamespace = new Zend_Session_Namespace();
         $pageNamespace->lastProjectId = 2;
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 2);
+        $this->assertEquals(2, count($array[0]));
 
         /* Test the paging */
         $pageNamespace = new Zend_Session_Namespace(2 . 'Project');
         $pageNamespace->currentPage = 100;
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 0);
+        $this->assertEquals(0, count($array[0]));
 
         $pageNamespace->currentPage = 1;
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 1);
+        $this->assertEquals(1, count($array[0]));
     }
 
     /**
@@ -579,23 +579,23 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
 
         /* First call */
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 0);
+        $this->assertEquals(0, count($array[0]));
 
         /* Test the project filter */
         $pageNamespace = new Zend_Session_Namespace();
         $pageNamespace->lastProjectId = 1;
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 1);
+        $this->assertEquals(1, count($array[0]));
 
         /* Test the paging */
         $pageNamespace = new Zend_Session_Namespace(1 . 'Todo');
         $pageNamespace->currentPage = 100;
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 0);
+        $this->assertEquals(count(0, $array[0]));
 
         $pageNamespace->currentPage = 0;
         $array = $module->getListData();
-        $this->assertEquals(count($array[0]), 1);
+        $this->assertEquals(1, count($array[0]));
     }
 
     /**

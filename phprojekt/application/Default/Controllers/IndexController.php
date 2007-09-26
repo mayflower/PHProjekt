@@ -67,27 +67,6 @@ class IndexController extends Zend_Controller_Action
     protected $_formView;
 
     /**
-     * Tree view helper to display fancy trees
-     *
-     * @var Default_Helpers_TreeView
-     */
-    protected $_treeView;
-
-    /**
-     * Set true if the treeview is set
-     *
-     * @var boolean
-     */
-    public $treeViewSet = false;
-
-    /**
-     * Set true if the listview is set
-     *
-     * @var boolean
-     */
-    public $listViewSet = false;
-
-    /**
      * Array with the all the data for render
      * 'listData' => All the data for list
      * 'treeData' => All the data for trees
@@ -178,13 +157,13 @@ class IndexController extends Zend_Controller_Action
         }
 
         /* For smarty */
-        $this->params = $this->_params;
-        $this->itemid = $this->_itemid;
+        $this->_smarty->params = $this->_params;
+        $this->_smarty->itemid = $this->_itemid;
 
         /* Save the last project id into the session */
         /* @todo: Sanitize ID / Request parameter */
         $session = new Zend_Session_Namespace();
-        if (true === ($this->_itemid > 0)) {
+        if ($this->_itemid > 0) {
             if ($this->_request->getModuleName() == 'Project') {
                 if ($this->_request->getActionName() == 'list') {
                     $session->lastProjectId = $this->_itemid;
@@ -197,8 +176,8 @@ class IndexController extends Zend_Controller_Action
 
         /* Assign the current project id and name to the templae */
         if (isset($session->lastProjectId)) {
-            $this->projectId   = $session->lastProjectId;
-            $this->projectName = $session->lastProjectName;
+            $this->_smarty->projectId   = $session->lastProjectId;
+            $this->_smarty->projectName = $session->lastProjectName;
         }
     }
 
@@ -428,8 +407,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function setTreeView()
     {
-        $this->treeViewSet = true;
-        $this->treeView    = $this->_render('tree');
+        $this->_smarty->treeView = $this->_render('tree');
     }
 
     /**
@@ -447,8 +425,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function setListView()
     {
-        $this->listViewSet      = true;
-
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
         if (true === isset($session->lastProjectId)) {
@@ -475,15 +451,15 @@ class IndexController extends Zend_Controller_Action
 
         list($this->data['listData'], $numberOfRows) = $this->models->getListData();
 
-        $this->titles   = $this->models->getFieldsForList(get_class($this->models));
-        $this->lines    = $this->data['listData'];
+        $this->_smarty->titles   = $this->models->getFieldsForList(get_class($this->models));
+        $this->_smarty->lines    = $this->data['listData'];
 
         /* Asign paging values for smarty */
         $config  = Zend_Registry::get('config');
         $perpage = $config->itemsPerPage;
         Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $currentPage);
 
-        $this->listView = $this->_render('list');
+        $this->_smarty->listView = $this->_render('list');
     }
 
     /**
@@ -495,42 +471,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function setFormView()
     {
-        $this->formViewSet = true;
-        $this->columns     = IndexController::FORM_COLUMNS;
-        $this->model       = $this->models;
-        $this->formView    = $this->_render('form');
+        $this->_smarty->columns     = IndexController::FORM_COLUMNS;
+        $this->_smarty->model       = $this->models;
+        $this->_smarty->formView    = $this->_render('form');
     }
 
-    /**
-     * Set a value into the smarty object for render it
-     *
-     * @param string $name  Name of the value for render
-     * @param mix    $value Value for the var
-     *
-     * @return void
-     */
-    public function __set($name,$value)
-    {
-        if (!empty($name)) {
-            $this->_smarty->$name = $value;
-        }
-    }
-
-    /**
-     * Get a value from the smarty object
-     *
-     * @param string $name Name of the value
-     *
-     * @return mix The value of the var
-     */
-    public function __get($name)
-    {
-        if (isset($this->_smarty->$name)) {
-            return $this->_smarty->$name;
-        } else {
-            return null;
-        }
-    }
 
     /**
      * Render a template
@@ -546,7 +491,11 @@ class IndexController extends Zend_Controller_Action
                 return $this->_treeView->renderer($this->_smarty);
             break;
         case 'form':
-                return $this->view->render('form.tpl');
+                if (null !== $this->models) {
+                    return $this->view->render('form.tpl');
+                } else {
+                    return "";
+                }
             break;
         case 'list':
                 return $this->view->render('list.tpl');
@@ -564,20 +513,20 @@ class IndexController extends Zend_Controller_Action
      */
     public function generateOutput()
     {
-        if (!$this->treeViewSet) {
+        if (null === $this->_smarty->treeView) {
             $this->setTreeView();
         }
 
-        if (!$this->listViewSet) {
+        if (null === $this->_smarty->listView) {
             $this->setListView();
         }
 
-        if (!$this->formViewSet) {
+        if (null === $this->_smarty->formView) {
             $this->setFormView();
         }
 
-        $this->breadcrumb = $this->_request->getModuleName();
-        $this->modules    = $this->models->getSubModules();
+        $this->_smarty->breadcrumb = $this->_request->getModuleName();
+        $this->_smarty->modules    = $this->models->getSubModules();
     }
 
     /**
@@ -588,8 +537,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function getModelsObject()
     {
-        $models = new Default_Models_Default();
-        return $models;
+        return Phprojekt_Loader::getModel('Default', 'Default');
     }
 
     /**

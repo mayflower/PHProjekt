@@ -66,7 +66,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @param array $db Configuration for Zend_Db_Table
      */
-    public function __construct($db)
+    public function __construct($db = null)
     {
         parent::__construct($db);
 

@@ -104,7 +104,8 @@ class Phprojekt_Log extends Zend_Log
     {
         if ($priority >= Zend_Log::DEBUG) {
             $btrace = debug_backtrace();
-            if (true == isset($btrace[3]['line'])) {
+            if (isset($btrace[3])) {
+                if (!isset($btrace[3]['line'])) $btrace[3]['line'] = '';
                 $message = sprintf("%d %s::%s:\n %s\n", $btrace[3]['line'], $btrace[3]['class'], $btrace[3]['function'], $message);
             }
         }
