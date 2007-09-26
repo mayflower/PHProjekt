@@ -149,11 +149,11 @@ class Default_Helpers_FormView
         /* Get the parent field, by default id projectId */
         $info = $models->info();
         $parentField = 'projectId';
-        if (true === in_array('parent', $info['cols'])) {
+        if (is_array($info) && in_array('parent', $info['cols'])) {
             $parentField = 'parent';
         }
 
-        foreach ($fields as $fieldName => $field) {
+        foreach ((array) $fields as $fieldName => $field) {
             /* Label */
             $tmpOutput['label'] = $this->_translate->translate($field['formLabel']);
 

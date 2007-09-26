@@ -27,41 +27,16 @@
 class Default_Models_Default
 {
     /**
-     * Construct class same as all the modules
-     *
+     * Some magic. The index controller code always has an instance of
+     * an model. If no other model is specified, the index controller uses
+     * this default model. As the index controller expect the model to be an
+     * active record and this default model cannot be used as an active record,
+     * as no database table exists for this model, all the calls to the
+     * active record provided methods will fail.
+     * To avoid this, we just suck all the calls and don't spit warnings
      */
-    public function __construct()
+    public function __call($call, $args)
     {
-    }
 
-    /**
-     * Default module has no fields for list
-     * Redefine the function for consistence
-     *
-     * @return array
-     */
-    public function getListData()
-    {
-        return array(array(),0);
-    }
-
-    /**
-     * Redefine the function for consistence
-     *
-     * @return array
-     */
-    public function getFieldsForList()
-    {
-        return array();
-    }
-
-    /**
-     * Return wich submodules use this module
-     *
-     * @return array
-     */
-    public function getSubModules()
-    {
-        return array();
     }
 }
