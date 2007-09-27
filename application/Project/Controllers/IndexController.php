@@ -54,6 +54,28 @@ class Project_IndexController extends IndexController
     }
 
     /**
+     * We store the id of the shown project in the session, as other modules
+     * and the indexcontroller might depend on that to define the current active
+     * object
+     *
+     */
+    public function listAction ()
+    {
+        $db = Zend_Registry::get('db');
+        /* Save the last project id into the session */
+        /* @todo: Sanitize ID / Request parameter */
+        $session = new Zend_Session_Namespace();
+        if ($this->_itemid > 0) {
+            $session->lastProjectId = $this->_itemid;
+            $project = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
+            $project->find($this->_itemid);
+            $session->lastProjectName = $project->title;
+        }
+
+        parent::listAction();
+    }
+
+    /**
      * Save Action
      *
      * The save is redefined for use with tree in the project module

@@ -123,7 +123,11 @@ class Phprojekt_Loader extends Zend_Loader
          * to an array is not possible without reflection.
          */
         $class = new ReflectionClass($name);
-        return $class->newInstanceArgs($args);
+        if (null !== $class->getConstructor()) {
+            return $class->newInstanceArgs($args);
+        } else {
+            return $class->newInstance();
+        }
     }
 
     /**
