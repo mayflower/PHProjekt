@@ -591,7 +591,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $pageNamespace = new Zend_Session_Namespace(1 . 'Todo');
         $pageNamespace->currentPage = 100;
         $array = $module->getListData();
-        $this->assertEquals(count(0, $array[0]));
+        $this->assertEquals(0, count($array[0]));
 
         $pageNamespace->currentPage = 0;
         $array = $module->getListData();
