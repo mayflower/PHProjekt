@@ -67,6 +67,14 @@ class IndexController extends Zend_Controller_Action
     protected $_formView;
 
     /**
+     * Decide if we are able to render. On forwards we don't want to render,
+     * so we just bypass the postDispatch
+     *
+     * @var boolean
+     */
+    protected $_canRender = true;
+
+    /**
      * Array with the all the data for render
      * 'listData' => All the data for list
      * 'treeData' => All the data for trees
@@ -159,26 +167,6 @@ class IndexController extends Zend_Controller_Action
         /* For smarty */
         $this->_smarty->params = $this->_params;
         $this->_smarty->itemid = $this->_itemid;
-
-        /* Save the last project id into the session */
-        /* @todo: Sanitize ID / Request parameter */
-        $session = new Zend_Session_Namespace();
-        if ($this->_itemid > 0) {
-            if ($this->_request->getModuleName() == 'Project') {
-                if ($this->_request->getActionName() == 'list') {
-                    $session->lastProjectId = $this->_itemid;
-                    $project = PHprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
-                    $project->find($this->_itemid);
-                    $session->lastProjectName = $project->title;
-                }
-            }
-        }
-
-        /* Assign the current project id and name to the templae */
-        if (isset($session->lastProjectId)) {
-            $this->_smarty->projectId   = $session->lastProjectId;
-            $this->_smarty->projectName = $session->lastProjectName;
-        }
     }
 
     /**
@@ -427,6 +415,12 @@ class IndexController extends Zend_Controller_Action
     {
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
+
+        if (isset($session->lastProjectId)) {
+            $this->_smarty->projectId   = $session->lastProjectId;
+            $this->_smarty->projectName = $session->lastProjectName;
+        }
+
         if (true === isset($session->lastProjectId)) {
             $projectId = $session->lastProjectId;
         } else {
@@ -436,8 +430,8 @@ class IndexController extends Zend_Controller_Action
         /* Set the actual page from the request, or from the session */
         $currentProjectModule = $projectId . $this->_request->getModuleName();
         if (true == isset($this->_params['page'])) {
-            $currentPage = (int) $this->_params['page'];
-            $session = new Zend_Session_Namespace($currentProjectModule);
+            $currentPage          = (int) $this->_params['page'];
+            $session              = new Zend_Session_Namespace($currentProjectModule);
             $session->currentPage = $currentPage;
         } else {
             $session = new Zend_Session_Namespace($currentProjectModule);
@@ -471,9 +465,9 @@ class IndexController extends Zend_Controller_Action
      */
     public function setFormView()
     {
-        $this->_smarty->columns     = IndexController::FORM_COLUMNS;
-        $this->_smarty->model       = $this->models;
-        $this->_smarty->formView    = $this->_render('form');
+        $this->_smarty->columns  = IndexController::FORM_COLUMNS;
+        $this->_smarty->model    = $this->models;
+        $this->_smarty->formView = $this->_render('form');
     }
 
 
@@ -554,8 +548,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function postDispatch()
     {
-        $canRender = Zend_Registry::get('canRender');
-        if (true === $canRender) {
+        if (true === $this->_canRender) {
             $this->generateOutput();
             $this->render('index');
             $this->outputSet = true;
@@ -575,7 +568,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function forward($action, $controller = null, $module = null, array $params = null)
     {
-        Zend_Registry::set('canRender', false);
+        $this->_canRender = false;
         $this->_forward($action, $controller, $module, $params);
     }
 }
