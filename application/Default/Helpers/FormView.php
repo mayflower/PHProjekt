@@ -140,7 +140,7 @@ class Default_Helpers_FormView
             $itemid = 0;
         }
 
-        $fields = $models->getFieldsForForm($models->getTableName());
+        $fields = (array) $models->getFieldsForForm($models->getTableName());
 
         if ($itemid > 0) {
             $models->find($itemid);
@@ -153,7 +153,7 @@ class Default_Helpers_FormView
             $parentField = 'parent';
         }
 
-        foreach ((array) $fields as $fieldName => $field) {
+        foreach ($fields as $fieldName => $field) {
             /* Label */
             $tmpOutput['label'] = $this->_translate->translate($field['formLabel']);
 

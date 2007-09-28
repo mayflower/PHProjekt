@@ -485,11 +485,11 @@ class IndexController extends Zend_Controller_Action
                 return $this->_treeView->renderer($this->_smarty);
             break;
         case 'form':
-                if (null !== $this->models) {
-                    return $this->view->render('form.tpl');
-                } else {
-                    return "";
-                }
+            if (null !== $this->models) {
+                return $this->view->render('form.tpl');
+            } else {
+                return "";
+            }
             break;
         case 'list':
                 return $this->view->render('list.tpl');
