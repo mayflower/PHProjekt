@@ -137,36 +137,89 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function recordValidate()
     {
         $validated = true;
-        $data = $this->_data;
+        $data      = $this->_data;
+        $fields    = $this->_dbManager->getFieldsForForm($this->_name);
+
         foreach ($data as $varname => $value) {
             if ($this->keyExists($varname)) {
                 /* Validate with the database_manager stuff */
-                $fields = $this->_dbManager->getFieldsForForm($this->_name);
                 if (isset($fields[$varname])) {
                     $validations = $fields[$varname];
 
                     if ($validations['isRequired']) {
-                        if (empty($value)) {
+                        $error = $this->validateIsRequired($value);
+                        if (null != $error) {
                             $validated = false;
                             $this->_error->addError(array(
                                 'field'   => $varname,
-                                'message' => 'Is a required field'));
+                                'message' => $error));
                         }
                     }
 
-                    if (($validations['formType'] == 'date') &&
-                        (!empty($value))) {
-                        if (!Zend_Date::isDate($value, 'yyyy-MM-dd')) {
+                    if ($validations['formType'] == 'date') {
+                        $error = $this->validateDate($value);
+                        if (null != $error) {
                             $validated = false;
                             $this->_error->addError(array(
                                 'field'   => $varname,
-                                'message' => 'Invalid format for date'));
+                                'message' => $error));
+                        }
+                    }
+
+                    /* Validate an special fieldName */
+                    $validater  = 'validate' . ucfirst($varname);
+                    if ( ($validater != 'validateIsRequired') &&
+                         ($validater != 'validateDate')) {
+                        if (in_array($validater, get_class_methods($this))) {
+                            $error = call_user_method($validater, $this, $value);
+                            if (null != $error) {
+                                $validated = false;
+                                $this->_error->addError(array(
+                                    'field'   => $varname,
+                                    'message' => $error));
+                            }
                         }
                     }
                 }
             }
         }
         return $validated;
+    }
+
+    /**
+     * Validate date values
+     * return the msg error if exists
+     *
+     * @param string $value The date value to check
+     *
+     * @return string Error string or null
+     */
+    public function validateDate($value)
+    {
+        $error = null;
+        if (!empty($value)) {
+            if (!Zend_Date::isDate($value, 'yyyy-MM-dd')) {
+                $error = 'Invalid format for date';
+            }
+        }
+        return $error;
+    }
+
+    /**
+     * Validate required fields
+     * return the msg error if exists
+     *
+     * @param mix $value The value to check
+     *
+     * @return string Error string or null
+     */
+    public function validateIsRequired($value)
+    {
+        $error = null;
+        if (empty($value)) {
+            $error = 'Is a required field';
+        }
+        return $error;
     }
 
     /**

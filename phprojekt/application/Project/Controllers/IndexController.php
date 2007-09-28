@@ -90,9 +90,9 @@ class Project_IndexController extends IndexController
             } else {
                 $newNode->getActiveRecord()->save();
             }
-            $this->message = 'Saved';
+            $this->_smarty->message = 'Saved';
         } else {
-            $this->errors = $newNode->getActiveRecord()->getError();
+            $this->_smarty->errors = $newNode->getActiveRecord()->getError();
         }
     }
 }
