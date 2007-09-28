@@ -42,19 +42,16 @@ class Default_Models_Default
      */
     public function __call($method, $args)
     {
-        if ('Action' == substr($method, -6)) {
-            /* If the action method was not found,
-            forward to the index action */
-            return $this->_forward('index');
-        }
-
         $arguments = null;
         if (false == empty($args)) {
             foreach ($args as $argument) {
                 $arguments .= $argument;
             }
         }
-        throw new Exception('Invalid method "'. $method . '" called'
-                            . ' with arguments: ' . $arguments);
+        if (Zend_Registry::isRegistered('log')) {
+            $log = Zend_Registry::get('log');
+            $log->debug('Invalid method "'. $method . '" called'
+                        . ' with arguments: ' . $arguments);
+        }
     }
 }
