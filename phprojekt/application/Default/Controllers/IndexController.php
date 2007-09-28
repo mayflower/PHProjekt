@@ -192,7 +192,7 @@ class IndexController extends Zend_Controller_Action
     public function addFilterAction()
     {
         $this->setListView();
-        $this->message = 'Filter Added';
+        $this->_smarty->message = 'Filter Added';
     }
 
     /**
@@ -242,7 +242,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function listAction()
     {
-        $this->message = '&nbsp;';
+        $this->_smarty->message = '&nbsp;';
     }
 
     /**
@@ -254,7 +254,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function removeFilterAction()
     {
-        $this->message = 'Filter Removed';
+        $this->_smarty->message = 'Filter Removed';
     }
 
     /**
@@ -266,7 +266,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function sortAction()
     {
-        $this->message = '&nbsp;';
+        $this->_smarty->message = '&nbsp;';
     }
 
     /**
@@ -278,7 +278,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function cancelAction()
     {
-        $this->msg = '&nbsp;';
+        $this->_smarty->message = '&nbsp;';
     }
 
     /**
@@ -330,9 +330,9 @@ class IndexController extends Zend_Controller_Action
             /* History */
             $db                  = Zend_Registry::get('db');
             $history             = new Phprojekt_History(array('db' => $db));
-            $this->historyData   = $history->getHistoryData($this->models, $this->_itemid);
-            $this->dateFieldData = array('formType' => 'datetime');
-            $this->userFieldData = array('formType' => 'userId');
+            $this->_smarty->historyData   = $history->getHistoryData($this->models, $this->_itemid);
+            $this->_smarty->dateFieldData = array('formType' => 'datetime');
+            $this->_smarty->userFieldData = array('formType' => 'userId');
         }
     }
 
@@ -365,9 +365,9 @@ class IndexController extends Zend_Controller_Action
         /* Validate and save if is all ok */
         if ($this->models->recordValidate()) {
             $this->models->save();
-            $this->message = 'Saved';
+            $this->_smarty->message = 'Saved';
         } else {
-            $this->errors = $this->models->getError();
+            $this->_smarty->errors = $this->models->getError();
         }
     }
 
@@ -384,7 +384,7 @@ class IndexController extends Zend_Controller_Action
             $this->forward('display');
         } else {
             $this->models->find($this->_itemid)->delete();
-            $this->message = 'Deleted';
+            $this->_smarty->message = 'Deleted';
         }
     }
 
@@ -451,7 +451,10 @@ class IndexController extends Zend_Controller_Action
         /* Asign paging values for smarty */
         $config  = Zend_Registry::get('config');
         $perpage = $config->itemsPerPage;
-        Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $currentPage);
+        $pageingData = Default_Helpers_Paging::calculatePages($numberOfRows, $perpage, $currentPage);
+        foreach ($pageingData as $key => $value) {
+            $this->_smarty->$key = $value;
+        }
 
         $this->_smarty->listView = $this->_render('list');
     }
