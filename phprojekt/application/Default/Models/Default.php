@@ -34,9 +34,27 @@ class Default_Models_Default
      * as no database table exists for this model, all the calls to the
      * active record provided methods will fail.
      * To avoid this, we just suck all the calls and don't spit warnings
+     *
+     * @param string $method Action method
+     * @param array  $args   Arguments for the Action
+     *
+     * @return IndexController Action
      */
-    public function __call($call, $args)
+    public function __call($method, $args)
     {
+        if ('Action' == substr($method, -6)) {
+            /* If the action method was not found,
+            forward to the index action */
+            return $this->_forward('index');
+        }
 
+        $arguments = null;
+        if (false == empty($args)) {
+            foreach ($args as $argument) {
+                $arguments .= $argument;
+            }
+        }
+        throw new Exception('Invalid method "'. $method . '" called'
+                            . ' with arguments: ' . $arguments);
     }
 }
