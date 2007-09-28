@@ -35,25 +35,6 @@
 class Project_IndexController extends IndexController
 {
     /**
-     * How many columns will have the form
-     *
-     * @var integer
-     */
-    const FORM_COLUMNS = 1;
-
-    /**
-     * Init the Module object
-     *
-     * @return Zend_Item object
-     */
-    public function getModelsObject()
-    {
-        $db = Zend_Registry::get('db');
-
-        return Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
-    }
-
-    /**
      * We store the id of the shown project in the session, as other modules
      * and the indexcontroller might depend on that to define the current active
      * object

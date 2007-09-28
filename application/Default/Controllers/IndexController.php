@@ -111,7 +111,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @var integer
      */
-    const FORM_COLUMNS = 2;
+    const FORM_COLUMNS = 1;
 
     /**
      * Init function
@@ -531,7 +531,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function getModelsObject()
     {
-        return Phprojekt_Loader::getModel('Default', 'Default');
+        $modelName = $this->_request->getModuleName();
+        $db        = Zend_Registry::get('db');
+
+        return Phprojekt_Loader::getModel($modelName, $modelName, array('db' => $db));
     }
 
     /**

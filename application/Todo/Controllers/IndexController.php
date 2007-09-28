@@ -26,22 +26,4 @@
  */
 class Todo_IndexController extends IndexController
 {
-    /**
-     * How many columns will have the form
-     *
-     * @var integer
-     */
-    const FORM_COLUMNS = 1;
-
-    /**
-     * Init the Module object
-     *
-     * @return Zend_Item object
-     */
-    public function getModelsObject()
-    {
-        $db = Zend_Registry::get('db');
-
-        return Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $db));
-    }
 }
