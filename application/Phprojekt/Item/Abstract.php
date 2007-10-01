@@ -326,12 +326,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         $config = Zend_Registry::get('config');
         $count  = $config->itemsPerPage;
 
-        $order = 'id';
-
-        foreach ($this->fetchAll($where, $order, $count, $currentPage) as $row) {
+        foreach ($this->fetchAll($where, 'id', $count, $currentPage) as $row) {
             $listData[] = $row;
         }
 
+        /* @todo check if this is necessary, costs performance */
         $howManyRows = count($this->fetchAll($where));
 
         return array($listData, $howManyRows);

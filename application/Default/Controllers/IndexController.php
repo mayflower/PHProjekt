@@ -88,7 +88,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @var Phprojekt_Item object
      */
-    public $models;
+    protected $_model;
 
     /**
      * Current item ID
@@ -111,7 +111,28 @@ class IndexController extends Zend_Controller_Action
      *
      * @var integer
      */
-    const FORM_COLUMNS = 1;
+    const FORM_COLUMNS = 2;
+
+    /**
+     * Identifies the tree view
+     *
+     * @see _render();
+     */
+    const TREE_VIEW = 0;
+
+    /**
+     * Identifies the form view
+     *
+     * @see _render();
+     */
+    const FORM_VIEW = 1;
+
+    /**
+     * Identifies the tree view
+     *
+     * @see _render();
+     */
+    const LIST_VIEW = 2;
 
     /**
      * Init function
@@ -146,21 +167,18 @@ class IndexController extends Zend_Controller_Action
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
         $this->_smarty             = Zend_Registry::get('view');
-        $this->_smarty->module     = $this->_request->getModuleName();
-        $this->_smarty->controller = $this->_request->getControllerName();
-        $this->_smarty->action     = $this->_request->getActionName();
-        $this->models              = $this->getModelsObject();
-        $this->data['listData']    = $this->models->getListData();
+
+        $this->_model              = $this->getModelObject();
+        $this->data['listData']    = $this->_model->getListData();
 
         $this->_listView = Default_Helpers_ListView::getInstance();
-        $this->_formView = Default_Helpers_FormView::getInstance($this->_smarty);
         $this->_treeView = new Default_Helpers_TreeView($tree);
 
         $this->_treeView->makePersistent();
 
         /* Get the current item id */
         $this->_params = $this->_request->getParams();
-        if (true === isset($this->_params['id'])) {
+        if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
 
@@ -328,9 +346,9 @@ class IndexController extends Zend_Controller_Action
             $this->forward('display');
         } else {
             /* History */
-            $db                  = Zend_Registry::get('db');
-            $history             = new Phprojekt_History(array('db' => $db));
-            $this->_smarty->historyData   = $history->getHistoryData($this->models, $this->_itemid);
+            $db                           = Zend_Registry::get('db');
+            $history                      = new Phprojekt_History(array('db' => $db));
+            $this->_smarty->historyData   = $history->getHistoryData($this->_model, $this->_itemid);
             $this->_smarty->dateFieldData = array('formType' => 'datetime');
             $this->_smarty->userFieldData = array('formType' => 'userId');
         }
@@ -352,22 +370,20 @@ class IndexController extends Zend_Controller_Action
     public function saveAction()
     {
         if (null !== $this->_itemid) {
-            $this->models->find($this->_itemid);
+            $this->_model->find($this->_itemid);
         }
 
-        /* Assign the values */
         foreach ($this->_params as $k => $v) {
-            if ($this->models->keyExists($k)) {
-                $this->models->$k = $v;
+            if ($this->_model->keyExists($k)) {
+                $this->_model->$k = $v;
             }
         }
 
-        /* Validate and save if is all ok */
-        if ($this->models->recordValidate()) {
-            $this->models->save();
+        if ($this->_model->recordValidate()) {
+            $this->_model->save();
             $this->_smarty->message = 'Saved';
         } else {
-            $this->_smarty->errors = $this->models->getError();
+            $this->_smarty->errors = $this->_model->getError();
         }
     }
 
@@ -383,7 +399,7 @@ class IndexController extends Zend_Controller_Action
         if ($this->_itemid < 1) {
             $this->forward('display');
         } else {
-            $this->models->find($this->_itemid)->delete();
+            $this->_model->find($this->_itemid)->delete();
             $this->_smarty->message = 'Deleted';
         }
     }
@@ -393,9 +409,9 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function setTreeView()
+    protected function _setTreeView()
     {
-        $this->_smarty->treeView = $this->_render('tree');
+        $this->_smarty->treeView = $this->_render(self::TREE_VIEW);
     }
 
     /**
@@ -411,7 +427,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function setListView()
+    protected function _setListView()
     {
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
@@ -443,20 +459,17 @@ class IndexController extends Zend_Controller_Action
             $session->currentPage = $currentPage;
         }
 
-        list($this->data['listData'], $numberOfRows) = $this->models->getListData();
+        list($listData, $numberOfRows) = $this->_model->getListData();
 
-        $this->_smarty->titles   = $this->models->getFieldsForList(get_class($this->models));
-        $this->_smarty->lines    = $this->data['listData'];
+        $this->_smarty->titles   = $this->_model->getFieldsForList();
+        $this->_smarty->lines    = $listData;
 
         /* Asign paging values for smarty */
         $config  = Zend_Registry::get('config');
         $perpage = $config->itemsPerPage;
-        $pageingData = Default_Helpers_Paging::calculatePages($numberOfRows, $perpage, $currentPage);
-        foreach ($pageingData as $key => $value) {
-            $this->_smarty->$key = $value;
-        }
+        Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $currentPage);
 
-        $this->_smarty->listView = $this->_render('list');
+        $this->_smarty->listView = $this->_render(self::LIST_VIEW);
     }
 
     /**
@@ -466,13 +479,12 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function setFormView()
+    protected function _setFormView()
     {
         $this->_smarty->columns  = IndexController::FORM_COLUMNS;
-        $this->_smarty->model    = $this->models;
-        $this->_smarty->formView = $this->_render('form');
+        $this->_smarty->model    = $this->_model;
+        $this->_smarty->formView = $this->_render(self::FORM_VIEW);
     }
-
 
     /**
      * Render a template
@@ -484,17 +496,13 @@ class IndexController extends Zend_Controller_Action
     protected function _render($template)
     {
         switch ($template) {
-        case 'tree':
+        case self::TREE_VIEW:
                 return $this->_treeView->renderer($this->_smarty);
             break;
-        case 'form':
-            if (null !== $this->models) {
+        case self::FORM_VIEW:
                 return $this->view->render('form.tpl');
-            } else {
-                return "";
-            }
             break;
-        case 'list':
+        case self::LIST_VIEW:
                 return $this->view->render('list.tpl');
             break;
         default:
@@ -508,22 +516,27 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function generateOutput()
+    protected function _generateOutput()
     {
+        $this->_smarty->module     = $this->_request->getModuleName();
+        $this->_smarty->controller = $this->_request->getControllerName();
+        $this->_smarty->action     = $this->_request->getActionName();
+        $this->_smarty->breadcrumb = $this->_request->getModuleName();
+        $this->_smarty->modules    = $this->_model->getSubModules();
+
         if (null === $this->_smarty->treeView) {
-            $this->setTreeView();
+            $this->_setTreeView();
         }
 
         if (null === $this->_smarty->listView) {
-            $this->setListView();
+            $this->_setListView();
         }
 
         if (null === $this->_smarty->formView) {
-            $this->setFormView();
+            $this->_setFormView();
         }
 
-        $this->_smarty->breadcrumb = $this->_request->getModuleName();
-        $this->_smarty->modules    = $this->models->getSubModules();
+        $this->render('index');
     }
 
     /**
@@ -532,12 +545,15 @@ class IndexController extends Zend_Controller_Action
      *
      * @return array All the fields for list
      */
-    public function getModelsObject()
+    public function getModelObject()
     {
-        $modelName = $this->_request->getModuleName();
-        $db        = Zend_Registry::get('db');
+        $class = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(),
+                                            $this->getRequest()->getModuleName());
+        if (null === $class) {
+            $class = Phprojekt_Language::getModel('Default', 'Default');
+        }
 
-        return Phprojekt_Loader::getModel($modelName, $modelName, array('db' => $db));
+        return $class;
     }
 
     /**
@@ -555,9 +571,7 @@ class IndexController extends Zend_Controller_Action
     public function postDispatch()
     {
         if (true === $this->_canRender) {
-            $this->generateOutput();
-            $this->render('index');
-            $this->outputSet = true;
+            $this->_generateOutput();
         }
     }
 
