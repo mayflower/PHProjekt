@@ -35,11 +35,17 @@
 class Project_IndexController extends IndexController
 {
     /**
+     * How many columns will have the form
+     *
+     * @var integer
+     */
+    const FORM_COLUMNS = 1;
+
+    /**
      * We store the id of the shown project in the session, as other modules
      * and the indexcontroller might depend on that to define the current active
      * object
      *
-     * @return void
      */
     public function listAction ()
     {
@@ -48,9 +54,9 @@ class Project_IndexController extends IndexController
         /* @todo: Sanitize ID / Request parameter */
         $session = new Zend_Session_Namespace();
         if ($this->_itemid > 0) {
-            $session->lastProjectId = $this->_itemid;
             $project = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
             $project->find($this->_itemid);
+            $session->lastProjectId   = $this->_itemid;
             $session->lastProjectName = $project->title;
         }
 
@@ -68,8 +74,8 @@ class Project_IndexController extends IndexController
     {
         $parent = (isset($this->_params['parent'])) ? (int) $this->_params['parent'] : 1;
 
-        $parentNode = new Phprojekt_Tree_Node_Database($this->models, $parent);
-        $newNode    = new Phprojekt_Tree_Node_Database($this->models, $this->_itemid);
+        $parentNode = new Phprojekt_Tree_Node_Database($this->_model, $parent);
+        $newNode    = new Phprojekt_Tree_Node_Database($this->_model, $this->_itemid);
 
         if (null !== $this->_itemid) {
             $newNode->setup();
@@ -90,9 +96,10 @@ class Project_IndexController extends IndexController
             } else {
                 $newNode->getActiveRecord()->save();
             }
-            $this->_smarty->message = 'Saved';
+            $this->message = 'Saved';
         } else {
-            $this->_smarty->errors = $newNode->getActiveRecord()->getError();
+            $this->errors = $newNode->getActiveRecord()->getError();
         }
+
     }
 }
