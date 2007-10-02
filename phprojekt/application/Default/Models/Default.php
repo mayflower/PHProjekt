@@ -42,16 +42,5 @@ class Default_Models_Default
      */
     public function __call($method, $args)
     {
-        $arguments = null;
-        if (false == empty($args)) {
-            foreach ($args as $argument) {
-                $arguments .= $argument;
-            }
-        }
-        if (Zend_Registry::isRegistered('log')) {
-            $log = Zend_Registry::get('log');
-            $log->debug('Invalid method "'. $method . '" called'
-                        . ' with arguments: ' . $arguments);
-        }
     }
 }

@@ -57,11 +57,31 @@
 class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Array with the data of each fields
+     * Cache
      *
      * @var array
      */
     protected $_dbFields = array();
+
+    protected $_model;
+
+    const FORM_ORDER = 'formPosition';
+    const LIST_ORDER = 'listPosition';
+
+    const COLUMN_NAME = 'tableField';
+    const COLUMN_TITLE = 'formLabel';
+
+    /**
+     * Initialize a new Database Manager and configurate it with a model
+     *
+     * @param Phprojekt_Item_Abstract $model
+     */
+    public function __construct(Phprojekt_Item_Abstract $model, $db = null)
+    {
+        parent::__construct($db);
+
+        $this->_model = $model;
+    }
 
     /**
      * Get all the fields from the databaseManager
@@ -80,22 +100,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array        Array with the data of all the fields
      */
-    protected function _getFields($table, $order)
+    protected function _getFields($order)
     {
-        if (empty($this->_dbFields[$order])) {
-            $where     = $this->getAdapter()->quoteInto('tableName = ?', $table);
-            $fieldsRow = $this->fetchAll($where, $order);
+        $table = $this->_model->getTableName();
 
-            $fields = array();
-            foreach ($fieldsRow as $fieldData) {
-                $tmp = array();
-                foreach ($fieldData->_data as $fieldName => $fieldValue) {
-                    $tmp[$fieldName] = $fieldValue;
-                }
-                $fields[$fieldData->tableField] = $tmp;
-            }
-            $this->_dbFields[$order] = $fields;
+        if (empty($this->_dbFields[$order])) {
+            $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
+
+            $this->_dbFields[$order] = $this->fetchAll($where, $order);
         }
+
         return $this->_dbFields[$order];
     }
 
@@ -108,16 +122,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array        Array with the data of the list fields
      */
-    public function getFieldsForList($table)
+    public function getFieldsForList()
     {
         $return = array();
-        $fields = $this->_getFields($table, 'listPosition');
-        foreach ($fields as $fieldName => $fieldData) {
-            if ($fieldData['listPosition'] > 0) {
-                $return[$fieldName] = $fieldData;
-            }
-        }
-        return $return;
+        return $this->_getFields(self::LIST_ORDER);
     }
 
     /**
@@ -129,15 +137,44 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array        Array with the data of the form field
      */
-    public function getFieldsForForm($table)
+    public function getFieldsForForm()
     {
         $return = array();
-        $fields = $this->_getFields($table, 'formPosition');
-        foreach ($fields as $fieldName => $fieldData) {
-            if ($fieldData['formPosition'] > 0) {
-                $return[$fieldName] = $fieldData;
+        return $this->_getFields(self::FORM_ORDER);
+    }
+
+    /**
+     * Create a primitive mapping to an array. This is not pretty nice, but
+     * for this version a reasonable solution
+     *
+     * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
+     *
+     * @param Phprojekt_Item_Abstract $model
+     * @param string                  $order
+     * @param string                  $column
+     *
+     * @return array
+     */
+    public function getInfo($order, $column)
+    {
+        switch ($order) {
+            case self::LIST_ORDER:
+                $fields = $this->getFieldsForList();
+                break;
+            case self::FORM_ORDER:
+                $fields = $this->getFieldsForForm();
+                break;
+            default:
+                throw new Exception('No valid $order parameter give');
+        }
+
+        $result = array();
+        foreach ($fields as $field) {
+            if (array_key_exists($column, $field)) {
+                $result[] = $field[$column];
             }
         }
-        return $return;
+
+        return $result;
     }
 }

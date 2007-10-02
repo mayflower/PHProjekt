@@ -92,31 +92,34 @@ class Default_Helpers_ListView
      * @param array $field         Data of the field from the dbManager
      * @param mix   $originalValue The real value from the database
      *
+     * @deprecated
      * @return string XHTML generated
      */
-    public function generateListElement($field, $originalValue)
+    public static function generateListElement($field, $originalValue)
     {
+        $instance = self::getInstance();
+
         switch ($field['formType']) {
         default:
-            return $this->listText($originalValue);
+            return $instance->listText($originalValue);
             break;
         case "textarea":
-            return $this->listTextArea($originalValue);
+            return $instance->listTextArea($originalValue);
             break;
         case "date":
-            return $this->listDate($originalValue);
+            return $instance->listDate($originalValue);
             break;
         case "datetime":
-            return $this->listDateTime($originalValue);
+            return $instance->listDateTime($originalValue);
             break;
         case "selectValues":
-            return $this->listSelectValues($field, $originalValue);
+            return $instance->listSelectValues($field, $originalValue);
             break;
         case "tree":
-            return $this->listTree($field, $originalValue);
+            return $instance->listTree($field, $originalValue);
             break;
         case "userId":
-            return $this->listUserId($originalValue);
+            return $instance->listUserId($originalValue);
             break;
         }
     }
@@ -205,7 +208,7 @@ class Default_Helpers_ListView
     public function listSelectValues($field, $originalValue)
     {
         $string = '';
-        $data = explode('|', $field['formRange']);
+        $data   = explode('|', $field['formRange']);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
             if ($key == $originalValue) {
@@ -227,7 +230,7 @@ class Default_Helpers_ListView
     public function listTree($field, $originalValue)
     {
         $activeRecord = new $field['formRange']($this->_db);
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
         $node = $tree->getNodeById($originalValue);

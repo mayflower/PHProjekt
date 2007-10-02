@@ -86,7 +86,7 @@ class IndexController extends Zend_Controller_Action
     /**
      * Object model with all the specific data
      *
-     * @var Phprojekt_Item object
+     * @var Phprojekt_Item
      */
     protected $_model;
 
@@ -166,14 +166,10 @@ class IndexController extends Zend_Controller_Action
         $projects = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
-        $this->_smarty             = Zend_Registry::get('view');
+        $this->_smarty = Zend_Registry::get('view');
+        $this->_model  = $this->getModelObject();
 
-        $this->_model              = $this->getModelObject();
-        $this->data['listData']    = $this->_model->getListData();
-
-        $this->_listView = Default_Helpers_ListView::getInstance();
         $this->_treeView = new Default_Helpers_TreeView($tree);
-
         $this->_treeView->makePersistent();
 
         /* Get the current item id */
@@ -429,45 +425,7 @@ class IndexController extends Zend_Controller_Action
      */
     protected function _setListView()
     {
-        /* Get the last project ID */
-        $session = new Zend_Session_Namespace();
-
-        if (isset($session->lastProjectId)) {
-            $this->_smarty->projectId   = $session->lastProjectId;
-            $this->_smarty->projectName = $session->lastProjectName;
-        }
-
-        if (true === isset($session->lastProjectId)) {
-            $projectId = $session->lastProjectId;
-        } else {
-            $projectId = 0;
-        }
-
-        /* Set the actual page from the request, or from the session */
-        $currentProjectModule = $projectId . $this->_request->getModuleName();
-        if (true == isset($this->_params['page'])) {
-            $currentPage          = (int) $this->_params['page'];
-            $session              = new Zend_Session_Namespace($currentProjectModule);
-            $session->currentPage = $currentPage;
-        } else {
-            $session = new Zend_Session_Namespace($currentProjectModule);
-            if (true === isset($session->currentPage)) {
-                $currentPage = $session->currentPage;
-            } else {
-                $currentPage = 0;
-            }
-            $session->currentPage = $currentPage;
-        }
-
-        list($listData, $numberOfRows) = $this->_model->getListData();
-
-        $this->_smarty->titles   = $this->_model->getFieldsForList();
-        $this->_smarty->lines    = $listData;
-
-        /* Asign paging values for smarty */
-        $config  = Zend_Registry::get('config');
-        $perpage = $config->itemsPerPage;
-        Default_Helpers_Paging::calculatePages($this, $numberOfRows, $perpage, $currentPage);
+        $this->_smarty->assign_by_ref('records', $this->_model->fetchAll());
 
         $this->_smarty->listView = $this->_render(self::LIST_VIEW);
     }
@@ -518,6 +476,15 @@ class IndexController extends Zend_Controller_Action
      */
     protected function _generateOutput()
     {
+        /* Get the last project ID */
+        $session = new Zend_Session_Namespace();
+
+        if (isset($session->lastProjectId)) {
+            $this->_smarty->projectId   = $session->lastProjectId;
+            $this->_smarty->projectName = $session->lastProjectName;
+        }
+
+        $this->_smarty->list       = Default_Helpers_ListView::getInstance();
         $this->_smarty->module     = $this->_request->getModuleName();
         $this->_smarty->controller = $this->_request->getControllerName();
         $this->_smarty->action     = $this->_request->getActionName();
