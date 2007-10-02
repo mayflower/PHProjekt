@@ -69,10 +69,16 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         /**
          * Register various helper functions
          */
-        $this->_smarty->register_function('url', array($this, 'urlHelper'));
-        $this->_smarty->register_function('link_to', array($this, 'urlHelper'));
+        $this->_smarty->register_modifier('titles',
+                                          array($this, 'listElementTitles'));
+        $this->_smarty->register_function('list_element',
+                                          array($this, 'generateListElement'));
+        $this->_smarty->register_function('url',
+                                          array($this, 'urlHelper'));
+        $this->_smarty->register_function('link_to',
+                                          array($this, 'urlHelper'));
         $this->_smarty->register_modifier('translate',
-                                         array($this, 'translateModifier'));
+                                          array($this, 'translateModifier'));
     }
 
     /**
@@ -96,6 +102,18 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         } else {
             $this->_smarty->assign($key, $value);
         }
+    }
+
+    /**
+     * Assign an external value by ref. This makes possible to bind
+     * arrays and objects to a variable
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function assign_by_ref($key, &$value)
+    {
+        $this->_smarty->assign_by_ref($key, $value);
     }
 
     /**
@@ -176,7 +194,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      *
      * @param array $array Helper array for building urls
      *
-     * @return array
+     * @return string
      */
     public function urlHelper($array)
     {
@@ -202,12 +220,50 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      *
      * @param string $string Input text to be translated
      *
-     * @return array
+     * @return string
      */
     public function translateModifier($string)
     {
         $translator = Zend_Registry::get('translate');
         /* @var $translator Zend_Translate_Adapter */
         return $translator->translate($string);
+    }
+
+    /**
+     * Wrapper for the generation of list elements?
+     *
+     * @return string
+     */
+    public function generateListElement($arguments)
+    {
+        if (array_key_exists('field', $arguments)
+         && array_key_exists('value', $arguments)) {
+            return Default_Helpers_ListView::generateListElement($arguments['field'], $arguments['value']);
+        }
+
+        return '';
+    }
+
+    /**
+     * Wrapper for the
+     *
+     * @param unknown_type $records
+     * @return unknown
+     */
+    public function listElementTitles($records)
+    {
+        if (is_array($records)) {
+            $record = current($records);
+        } else {
+            $record = $records;
+        }
+
+        if ($record instanceof Phprojekt_Item_Abstract) {
+            /* @var Phprojekt_Item_Abstract $record */
+            return $record->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
+                                                             Phprojekt_DatabaseManager::COLUMN_TITLE);
+        }
+
+        return false;
     }
 }

@@ -35,7 +35,7 @@
 class Project_IndexController extends IndexController
 {
     /**
-     * How many columns will have the form
+     * Define the amount of columns into which the form is rendered
      *
      * @var integer
      */

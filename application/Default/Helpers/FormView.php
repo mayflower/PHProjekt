@@ -153,18 +153,18 @@ class Default_Helpers_FormView
             $parentField = 'parent';
         }
 
-        foreach ($fields as $fieldName => $field) {
+        foreach ($fields as  $field) {
             /* Label */
-            $tmpOutput['label'] = $this->_translate->translate($field['formLabel']);
+            /* $fieldName = $field->tableField;
+            $tmpOutput['label'] = $this->_translate->translate($field->formLabel);
 
-            /* Assign post values or current values */
+
             if (true === isset($params[$fieldName])) {
                 $field['value'] = $params[$fieldName];
             } else {
-                $field['value'] = $models->$fieldName;
+                $field->value = $models->$fieldName;
             }
 
-            /* Asign the porject value if exists */
             if ($fieldName == $parentField) {
                 $session = new Zend_Session_Namespace();
                 if (isset($session->lastProjectId)) {
@@ -172,7 +172,6 @@ class Default_Helpers_FormView
                 }
             }
 
-            /* Draw the field */
             switch ($field['formType']) {
             default:
                 $tmpOutput['output'] = $this->formText($field);
@@ -194,11 +193,11 @@ class Default_Helpers_FormView
                 break;
             }
 
-            /* Required Field */
             $tmpOutput['isRequired'] = $field['isRequired'];
 
             $output[] = $tmpOutput;
             unset($tmpOutput);
+            */
         }
 
         return $output;

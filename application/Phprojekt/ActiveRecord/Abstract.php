@@ -61,7 +61,7 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
+abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract implements Iterator
 {
     /**
      * The format for the foreign key.
@@ -161,6 +161,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_storedId;
 
     /**
+     * A list of the actual columns accessable through this active record object.
+     * This is not similar to the keys of the _data array, as this might hold
+     * also belongs, etc stuff. Furthermore we need something with an internal
+     * pointer as this is used by the iterator implementation.
+     */
+    protected $_colInfo;
+
+    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -190,6 +198,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         parent::__construct($config);
 
+        $info           = $this->info();
+        $this->_colInfo = $info['cols'];
+
         $this->_initDataArray();
     }
 
@@ -199,6 +210,67 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     function __destruct()
     {
+    }
+
+    /**
+     * Iterator implementation.
+     * Returns the current element from the data array.
+     *
+     * @see Iterator::current()
+     *
+     * @return mixed
+     */
+    public function current ()
+    {
+        return $this->_data[$this->key()];
+    }
+
+    /**
+     * Returns the name of the current field
+     *
+     * @see Iterator::key()
+     *
+     * @return string
+     */
+    public function key()
+    {
+        return current($this->_colInfo);
+    }
+
+    /**
+     * Moves the internal iterator pointer one forward, befor
+     * recieving the element with current()
+     *
+     * @see Iterator::next()
+     */
+    public function next ()
+    {
+        next($this->_colInfo);
+    }
+
+    /**
+     * Reset the internal pointer. As our iterator is just a wrapper
+     * over the _data array, we just reset the internal array pointer of
+     * _data
+     *
+     * @see Iterator::rewind()
+     */
+    public function rewind()
+    {
+        reset($this->_colInfo);
+    }
+
+    /**
+     * Checks if there is a current element after a next or rewind call.
+     * We just check if the internal array pointer is null or not.
+     *
+     * @see Iterator::valid()
+     *
+     * @return boolean
+     */
+    public function valid()
+    {
+        return false !== current($this->_colInfo);
     }
 
     /**
@@ -214,8 +286,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
          * __set makes a lookup on the _data keys to validate if
          * a column exists on the activerecord
          */
-        $information = $this->info();
-        foreach ($information['cols'] as $col) {
+        foreach ($this->_colInfo as $col) {
             $this->_data[$col] = null;
         }
     }
@@ -228,7 +299,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _setupTableName()
     {
-        $this->_name = $this->getTableName(); // $this->_translateClassNameToTable(get_class($this));
+        $this->_name = $this->getTableName();
         parent::_setupTableName();
     }
 
@@ -626,7 +697,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected static function _getClassNameForRelationship($key, $array)
     {
-        if (false === is_array($array) || false === is_array($array[$key])) {
+        if (!is_array($array) || !is_array($array[$key])) {
             throw new
                 Phprojekt_ActiveRecord_Exception('Cannot instantiate'
                                                . '{$className}');

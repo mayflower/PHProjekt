@@ -9,7 +9,7 @@
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavao Solt <solt@mayflower.de>
  * @since      File available since Release 1.0
  */
 
@@ -22,7 +22,7 @@
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavao Solt <solt@mayflower.de>
  */
 abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 {
@@ -70,32 +70,45 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     {
         parent::__construct($db);
 
-        $this->_dbManager = new Phprojekt_DatabaseManager($db);
+        $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
         $this->_error     = new Phprojekt_Error();
         $this->_history   = new Phprojekt_History($db);
 
-        $config           = Zend_Registry::get('config');
-        $this->_config    = $config;
+        $config        = Zend_Registry::get('config');
+        $this->_config = $config;
+
+        $this->_colInfo = $this->_dbManager->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
+                                                     Phprojekt_DatabaseManager::COLUMN_NAME);
+    }
+
+    /**
+     * Returns the database manager instance used by this phprojekt item
+     *
+     * @return Phprojekt_DatabaseManager
+     */
+    public function getDatabaseManager()
+    {
+        return $this->_dbManager;
     }
 
     /**
      * Get the field for list view from the databae_manager
      *
-     * @return array Array with the data of the fields for make the list
+     * @return array Array with the data of the fields to create the list
      */
     public function getFieldsForList()
     {
-        return $this->_dbManager->getFieldsForList($this->_name);
+        return $this->_dbManager->getFieldsForList($this);
     }
 
     /**
      * Get the field for the form view from the databae_manager
      *
-     * @return array Array with the data of the fields for make the form
+     * @return array Array with the data of the fields to create the form
      */
     public function getFieldsForForm()
     {
-        return $this->_dbManager->getFieldsForForm($this->_name);
+        return $this->_dbManager->getFieldsForForm($this);
     }
 
     /**
@@ -280,60 +293,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     {
         $this->_history->saveFields($this, 'delete');
         parent::delete();
-    }
-
-    /**
-     * Get all the todo for list from the db
-     * The return array have all the rows that are ActiveRecords itself
-     * and the number of rows without the limits
-     *
-     * The pagination is stored in the session name "projectID + Module".
-     * So each, module have and own session in each project.
-     *
-     * @return array Array with the rows for render and the total rows number
-     */
-    public function getListData()
-    {
-        $listData   = array();
-
-        $projectId   = 0;
-        $where       = null;
-        $currentPage = 0;
-
-        /* Get the field to filter the current project
-           the default is projectId */
-        $info = $this->info();
-        $parentField = 'projectId';
-        if (true === in_array('parent', $info['cols'])) {
-            $parentField = 'parent';
-        }
-
-        /* Filter the items of the current project */
-        $session = new Zend_Session_Namespace();
-        if (isset($session->lastProjectId)) {
-            $projectId   = $session->lastProjectId;
-            $parentField = $this->getAdapter()->quoteIdentifier($parentField);
-
-            $where = sprintf("%s = %d", $parentField, $projectId);
-        }
-
-        /* Limit the query for paging */
-        $session = new Zend_Session_Namespace($projectId . $this->_name);
-        if (true === isset($session->currentPage)) {
-            $currentPage = $session->currentPage;
-        }
-
-        $config = Zend_Registry::get('config');
-        $count  = $config->itemsPerPage;
-
-        foreach ($this->fetchAll($where, 'id', $count, $currentPage) as $row) {
-            $listData[] = $row;
-        }
-
-        /* @todo check if this is necessary, costs performance */
-        $howManyRows = count($this->fetchAll($where));
-
-        return array($listData, $howManyRows);
     }
 
     /**
