@@ -24,19 +24,19 @@
  *
  * @return array
  */
-function smartyModifierTitles($records)
+function smarty_modifier_titles($records)
 {
-        if (is_array($records)) {
-            $record = current($records);
-        } else {
-            $record = $records;
-        }
+    if (is_array($records)) {
+        $record = current($records);
+    } else {
+        $record = $records;
+    }
 
-        if ($record instanceof Phprojekt_Item_Abstract) {
-            /* @var Phprojekt_Item_Abstract $record */
-            return $record->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
-                                                          Phprojekt_DatabaseManager::COLUMN_TITLE);
-        }
+    if ($record instanceof Phprojekt_Item_Abstract) {
+        /* @var Phprojekt_Item_Abstract $record */
+        return $record->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
+                                                      Phprojekt_DatabaseManager::COLUMN_TITLE);
+    }
 
-        return false;
+    return false;
 }
