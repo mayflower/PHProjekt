@@ -69,12 +69,11 @@ $viewRenderer->setViewBasePathSpec(':moduleDir/Views')
               ->setViewScriptPathNoControllerSpec(':action.:suffix')
               ->setViewSuffix('tpl');
 Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
-Zend_Registry::set('view', $view);
+
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
 $translate = new Phprojekt_Language($config->language);
-Zend_Registry::set('translate', $translate);
 
 /* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();
@@ -87,10 +86,28 @@ foreach (scandir(PHPR_CORE_PATH) as $module)
 {
     $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
 
-    if (is_dir($dir) && is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
+    if (is_dir(!$dir)) {
+        continue;
+    }
+
+    if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
         $front->addModuleDirectory($dir);
     }
+
+    $helperPath      = $dir . DIRECTORY_SEPARATOR . 'Helpers';
+    $smartPluginPath = $helperPath . DIRECTORY_SEPARATOR . 'Smarty';
+
+    if (is_dir($helperPath)) {
+        Zend_Controller_Action_HelperBroker::addPath($helperPath);
+    }
+
+    if(is_dir($smartPluginPath)) {
+        $view->getEngine()->plugins_dir[] = $smartPluginPath;
+    }
 }
+
+Zend_Registry::set('view', $view);
+Zend_Registry::set('translate', $translate);
 
 $front->setModuleControllerDirectoryName('Controllers');
 $front->addModuleDirectory(PHPR_CORE_PATH);

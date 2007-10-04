@@ -5,7 +5,7 @@
  * This class implements the Zend_View_Abstract interface
  * for interaction with smarty
  *
- * LICENSE: Licensed under the terms of the GNU Publice License
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -69,16 +69,12 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         /**
          * Register various helper functions
          */
-        $this->_smarty->register_modifier('titles',
-                                          array($this, 'listElementTitles'));
-        $this->_smarty->register_function('list_element',
+        $this->_smarty->register_function('form_element',
                                           array($this, 'generateListElement'));
         $this->_smarty->register_function('url',
                                           array($this, 'urlHelper'));
         $this->_smarty->register_function('link_to',
                                           array($this, 'urlHelper'));
-        $this->_smarty->register_modifier('translate',
-                                          array($this, 'translateModifier'));
     }
 
     /**
@@ -139,6 +135,16 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     public function __get($key)
     {
         return $this->_smarty->get_template_vars($key);
+    }
+
+    /**
+     * Return the smarty template engine object
+     *
+     * @return Smarty
+     */
+    public function getEngine()
+    {
+        return $this->_smarty;
     }
 
     /**
@@ -216,54 +222,13 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     }
 
     /**
-     * Translate all the string with " |translate"
+     * Generate a form element
      *
-     * @param string $string Input text to be translated
-     *
-     * @return string
+     * @param array $arguments
      */
-    public function translateModifier($string)
+    public function generateFormElement($arguments)
     {
-        $translator = Zend_Registry::get('translate');
-        /* @var $translator Zend_Translate_Adapter */
-        return $translator->translate($string);
+
     }
 
-    /**
-     * Wrapper for the generation of list elements?
-     *
-     * @return string
-     */
-    public function generateListElement($arguments)
-    {
-        if (array_key_exists('field', $arguments)
-         && array_key_exists('value', $arguments)) {
-            return Default_Helpers_ListView::generateListElement($arguments['field'], $arguments['value']);
-        }
-
-        return '';
-    }
-
-    /**
-     * Wrapper for the
-     *
-     * @param unknown_type $records
-     * @return unknown
-     */
-    public function listElementTitles($records)
-    {
-        if (is_array($records)) {
-            $record = current($records);
-        } else {
-            $record = $records;
-        }
-
-        if ($record instanceof Phprojekt_Item_Abstract) {
-            /* @var Phprojekt_Item_Abstract $record */
-            return $record->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
-                                                             Phprojekt_DatabaseManager::COLUMN_TITLE);
-        }
-
-        return false;
-    }
 }

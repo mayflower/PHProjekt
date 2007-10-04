@@ -4,7 +4,7 @@
  *
  * This class is for help on the draw of the list view
  *
- * LICENSE: Licensed under the terms of the GNU Publice License
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
