@@ -22,7 +22,7 @@
  *
  * @return array
  */
-function smartyFunctionListElement($arguments)
+function smarty_function_list_element($arguments)
 {
     if (array_key_exists('field', $arguments)
         && array_key_exists('value', $arguments)) {

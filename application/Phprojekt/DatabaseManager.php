@@ -122,7 +122,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForList()
     {
-        $return = array();
         return $this->_getFields(self::LIST_ORDER);
     }
 
@@ -135,7 +134,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForForm()
     {
-        $return = array();
         return $this->_getFields(self::FORM_ORDER);
     }
 
@@ -143,9 +141,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      * Create a primitive mapping to an array. This is not pretty nice, but
      * for this version a reasonable solution
      *
-     * @param Phprojekt_Item_Abstract $model  Phprojekt_Item_Abstract
-     * @param string                  $order  Order field
-     * @param string                  $column Column
+     * @param string $order  Order field
+     * @param string $column Column
      *
      * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
      *
@@ -156,10 +153,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         switch ($order) {
         case self::LIST_ORDER:
                 $fields = $this->getFieldsForList();
-                break;
+            break;
         case self::FORM_ORDER:
                 $fields = $this->getFieldsForForm();
-                break;
+            break;
         default:
                 throw new Exception('No valid $order parameter give');
         }
