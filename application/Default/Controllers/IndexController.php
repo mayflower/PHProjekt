@@ -425,7 +425,7 @@ class IndexController extends Zend_Controller_Action
      */
     protected function _setListView()
     {
-        $this->_smarty->assign_by_ref('records', $this->_model->fetchAll());
+        $this->_smarty->assignByRef('records', $this->_model->fetchAll());
         $this->_smarty->listView = $this->_render(self::LIST_VIEW);
     }
 

@@ -82,8 +82,7 @@ $front->setDispatcher(new Phprojekt_Dispatcher());
 $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
 $front->setDefaultModule('Default');
 
-foreach (scandir(PHPR_CORE_PATH) as $module)
-{
+foreach (scandir(PHPR_CORE_PATH) as $module) {
     $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
 
     if (is_dir(!$dir)) {

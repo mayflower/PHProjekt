@@ -20,11 +20,11 @@
  * You can use this function to iterate over the titles of a list befor
  * displaying it.
  *
- * @param array $records
+ * @param array $records All the record to draw
  *
  * @return array
  */
-function smarty_modifier_titles($records)
+function smartyModifierTitles($records)
 {
         if (is_array($records)) {
             $record = current($records);

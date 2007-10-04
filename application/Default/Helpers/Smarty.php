@@ -104,10 +104,12 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * Assign an external value by ref. This makes possible to bind
      * arrays and objects to a variable
      *
-     * @param string $key
-     * @param mixed  $value
+     * @param string $key   Name of the parameter
+     * @param mixed  $value Object to assign
+     *
+     * @return void
      */
-    public function assign_by_ref($key, &$value)
+    public function assignByRef($key, &$value)
     {
         $this->_smarty->assign_by_ref($key, $value);
     }
@@ -224,11 +226,11 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     /**
      * Generate a form element
      *
-     * @param array $arguments
+     * @param array $arguments Arguments
+     *
+     * @return void
      */
     public function generateFormElement($arguments)
     {
-
     }
-
 }

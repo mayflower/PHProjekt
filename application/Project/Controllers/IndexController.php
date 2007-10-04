@@ -46,6 +46,7 @@ class Project_IndexController extends IndexController
      * and the indexcontroller might depend on that to define the current active
      * object
      *
+     * @return void
      */
     public function listAction ()
     {
