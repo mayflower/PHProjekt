@@ -2,7 +2,7 @@
 /**
  * Project model class
  *
- * LICENSE: Licensed under the terms of the GNU Publice License
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt

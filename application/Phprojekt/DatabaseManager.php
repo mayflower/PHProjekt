@@ -167,11 +167,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
             default:
                 throw new Exception('No valid $order parameter give');
         }
-
         $result = array();
         foreach ($fields as $field) {
-            if (array_key_exists($column, $field)) {
-                $result[] = $field[$column];
+            if ($field->keyExists($column)) {
+                $result[] = $field->$column;
             }
         }
 

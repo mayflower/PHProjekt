@@ -4,7 +4,7 @@
  *
  * This class is for help on the draw of the form
  *
- * LICENSE: Licensed under the terms of the GNU Publice License
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -79,10 +79,9 @@ class Default_Helpers_FormView
     }
 
     /**
-     * Return this class only one time
+     * Singleton pattern
      *
      * @param Zend_View $view Zend_View Object
-
      *
      * @return Default_Helpers_FormView
      */
@@ -97,9 +96,6 @@ class Default_Helpers_FormView
     /**
      * Count the fields and
      * add the needed empty fields for complete the number of columns
-     *
-     * !NOTICE:
-     *      Is not implemented yet
      *
      * @param array $fields      Array with the data of each field
      * @param int   $formColumns Number of columns to show
