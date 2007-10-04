@@ -242,6 +242,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
      * recieving the element with current()
      *
      * @see Iterator::next()
+     *
+     * @return string
      */
     public function next ()
     {
@@ -254,6 +256,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
      * _data
      *
      * @see Iterator::rewind()
+     *
+     * @return string
      */
     public function rewind()
     {

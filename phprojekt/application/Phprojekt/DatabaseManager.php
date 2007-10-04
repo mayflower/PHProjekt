@@ -74,7 +74,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     /**
      * Initialize a new Database Manager and configurate it with a model
      *
-     * @param Phprojekt_Item_Abstract $model
+     * @param Phprojekt_Item_Abstract $model Phprojekt_Item_Abstract
+     * @param array                   $db    Db configurations
      */
     public function __construct(Phprojekt_Item_Abstract $model, $db = null)
     {
@@ -95,7 +96,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      * if not, get the new order fields and save it too.
      * This is for make the querry to the database only one time and not for each request.
      *
-     * @param string $table The table name of the module
      * @param string $order Sort string
      *
      * @return array        Array with the data of all the fields
@@ -118,9 +118,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * The fields with listPosition below 0 are not return.
      *
-     * @param string $table The table name of the module
-     *
-     * @return array        Array with the data of the list fields
+     * @return array Array with the data of the list fields
      */
     public function getFieldsForList()
     {
@@ -133,9 +131,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * The fields with formPosition below 0 are not return.
      *
-     * @param string $table The table name of the module
-     *
-     * @return array        Array with the data of the form field
+     * @return array Array with the data of the form field
      */
     public function getFieldsForForm()
     {
@@ -147,24 +143,24 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      * Create a primitive mapping to an array. This is not pretty nice, but
      * for this version a reasonable solution
      *
-     * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
+     * @param Phprojekt_Item_Abstract $model  Phprojekt_Item_Abstract
+     * @param string                  $order  Order field
+     * @param string                  $column Column
      *
-     * @param Phprojekt_Item_Abstract $model
-     * @param string                  $order
-     * @param string                  $column
+     * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
      *
      * @return array
      */
     public function getInfo($order, $column)
     {
         switch ($order) {
-            case self::LIST_ORDER:
+        case self::LIST_ORDER:
                 $fields = $this->getFieldsForList();
                 break;
-            case self::FORM_ORDER:
+        case self::FORM_ORDER:
                 $fields = $this->getFieldsForForm();
                 break;
-            default:
+        default:
                 throw new Exception('No valid $order parameter give');
         }
         $result = array();

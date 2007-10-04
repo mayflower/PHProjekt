@@ -18,11 +18,11 @@
  * Generate a list element and do all necessary converts, etc.
  * The function requires the parameter "field" and "value" to be passed.
  *
- * @param array $arguments
+ * @param array $arguments Array with the field and value parameters
  *
  * @return array
  */
-function smarty_function_list_element($arguments)
+function smartyFunctionListElement($arguments)
 {
     if (array_key_exists('field', $arguments)
         && array_key_exists('value', $arguments)) {

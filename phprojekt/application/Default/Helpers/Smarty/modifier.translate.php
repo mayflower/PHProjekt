@@ -22,7 +22,7 @@
  *
  * @return string $string
  */
-function smarty_modifier_translate($string)
+function smartyModifierTranslate($string)
 {
     $translator = Zend_Registry::get('translate');
     /* @var $translator Zend_Translate_Adapter */
