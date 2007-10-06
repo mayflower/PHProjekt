@@ -35,88 +35,8 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Helpers_FormView
+final class Default_Helpers_FormView
 {
-    /**
-     * View Object for render
-     *
-     * @var Zend_View Object
-     */
-    protected $_view = null;
-
-    /**
-     * Translator
-     *
-     * @var Phprojekt_LanguageAdapter
-     */
-    protected $_translate = null;
-
-    /**
-     * Array with db config options
-     *
-     * @var array
-     */
-    protected $_db = null;
-
-    /**
-     * Instance for create the class only one time
-     *
-     * @var Default_Helpers_FormView Object
-     */
-    protected static $_instance = null;
-
-    /**
-     * Constructor
-     * Only can be created the class by the class it self
-     *
-     * @param Zend_View $view View object for form
-     */
-    protected function __construct($view)
-    {
-        $this->_view       = $view;
-        $this->_translate  = Zend_Registry::get('translate');
-        $this->_db         = Zend_Registry::get('db');
-    }
-
-    /**
-     * Singleton pattern
-     *
-     * @param Zend_View $view Zend_View Object
-     *
-     * @return Default_Helpers_FormView
-     */
-    static public function getInstance($view)
-    {
-        if (null === self::$_instance) {
-            self::$_instance = new self($view);
-        }
-        return self::$_instance;
-    }
-
-    /**
-     * Count the fields and
-     * add the needed empty fields for complete the number of columns
-     *
-     * @param array $fields      Array with the data of each field
-     * @param int   $formColumns Number of columns to show
-     *
-     * @return array             The data for show in the template
-     */
-    public function makeColumns($fields, $formColumns)
-    {
-        $countFields = count($fields);
-        $modFields   = $countFields % $formColumns;
-        if ($modFields != 0) {
-            for ($index = $modFields; $index < $formColumns; $index++) {
-                $fields[] = array('formType'  => 'space',
-                                  'formLabel' => '&nbsp',
-                                  'value'     => '&nbsp;');
-            }
-        }
-
-        return $fields;
-    }
-
     /**
      * Switch between the form types and call the function for each one
      *
@@ -125,78 +45,22 @@ class Default_Helpers_FormView
      *
      * @return array Data with label, XHTML output and isRequired per field
      */
-    public function generateFormElement($models, $params)
+    public static function generateFormElement(Phprojekt_DatabaseManager_Field $field)
     {
-        $output = array();
-
-        /* Get the Item ID */
-        if (true === isset($params['id'])) {
-            $itemid = (int) $params['id'];
-        } else {
-            $itemid = 0;
-        }
-
-        $fields = (array) $models->getFieldsForForm($models->getTableName());
-
-        if ($itemid > 0) {
-            $models->find($itemid);
-        }
-
-        /* Get the parent field, by default id projectId */
-        $info = $models->info();
-        $parentField = 'projectId';
-        if (is_array($info) && in_array('parent', $info['cols'])) {
-            $parentField = 'parent';
-        }
-
-        foreach ($fields as  $field) {
-            /* Label */
-            /* $fieldName = $field->tableField;
-            $tmpOutput['label'] = $this->_translate->translate($field->formLabel);
-
-
-            if (true === isset($params[$fieldName])) {
-                $field['value'] = $params[$fieldName];
-            } else {
-                $field->value = $models->$fieldName;
-            }
-
-            if ($fieldName == $parentField) {
-                $session = new Zend_Session_Namespace();
-                if (isset($session->lastProjectId)) {
-                    $field['value'] = $session->lastProjectId;
-                }
-            }
-
-            switch ($field['formType']) {
-            default:
-                $tmpOutput['output'] = $this->formText($field);
-                break;
+        switch ($field->formType) {
             case "textarea":
-                $tmpOutput['output'] = $this->formTextArea($field);
-                break;
+                return self::formTextArea($field);
             case "date":
-                $tmpOutput['output'] = $this->formDate($field);
-                break;
+                return self::formDate($field);
             case "selectValues":
-                $tmpOutput['output'] = $this->formSelectValues($field);
-                break;
+                return self::formSelectValues($field);
             case "tree":
-                $tmpOutput['output'] = $this->formTree($field);
-                break;
+                return self::formTree($field);
             case "space":
-                $tmpOutput['output'] = null;
-                break;
-            }
-
-            $tmpOutput['isRequired'] = $field['isRequired'];
-
-            $output[] = $tmpOutput;
-            unset($tmpOutput);
-            */
+                return '';
+            default:
+                return self::formText($field);
         }
-
-        return $output;
     }
 
     /**
@@ -206,9 +70,9 @@ class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public function formText($field)
+    public static function formText(Phprojekt_DatabaseManager_Field $field)
     {
-        return $this->_view->formText($field['formLabel'], $field['value']);
+        return Zend_Registry::get('view')->formText($field->tableField, $field->value);
     }
 
     /**
@@ -218,11 +82,10 @@ class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public function formTextArea($field)
+    public static function formTextArea(Phprojekt_DatabaseManager_Field $field)
     {
-        $options = array('cols' => 30,
-                         'rows' => 3);
-        return $this->_view->formTextarea($field['tableField'], $field['value'], $options);
+        return Zend_Registry::get('view')->formTextarea($field->tableField, $field->value,
+                                                        array('cols' => 30, 'rows' => 3));
     }
 
     /**
@@ -232,9 +95,9 @@ class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public function formDate($field)
+    public static function formDate(Phprojekt_DatabaseManager_Field $field)
     {
-        return $this->_view->formText($field['tableField'], $field['value']);
+        return Zend_Registry::get('view')->formText($field->tableField, $field->value);
     }
 
     /**
@@ -242,21 +105,23 @@ class Default_Helpers_FormView
      * The data is parsed like key1#value1|key2#value2
      * The value is translated before return
      *
+     * @todo (Maybe) Move this into the field object itself
      * @param array $field Data of the field from the dbManager
      *
      * @return string XHTML generated
      */
-    public function formSelectValues($field)
+    public static function formSelectValues(Phprojekt_DatabaseManager_Field $field)
     {
         $attribs = array();
         $options = array();
 
-        $data = explode('|', $field['formRange']);
+        $data = explode('|', $field->formRange);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
-            $options[$key]     = $this->_translate->translate($value);
+            $options[$key]     = Zend_Registry::get('translate')->translate($value);
         }
-        return $this->_view->formSelect($field['tableField'], $field['value'], $attribs, $options);
+
+        return Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
     }
 
     /**
@@ -267,12 +132,12 @@ class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public function formTree($field)
+    public static function formTree($field)
     {
         $attribs = array();
         $options = array();
 
-        $activeRecord = new $field['formRange']($this->_db);
+        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
@@ -280,8 +145,8 @@ class Default_Helpers_FormView
             $key   = $node->id;
             $value = str_repeat('....', $node->getDepth()) . $node->title;
 
-            $options[$key] = $this->_translate->translate($value);
+            $options[$key] = Zend_Registry::get('translate')->translate($value);
         }
-        return $this->_view->formSelect($field['tableField'], $field['value'], $attribs, $options);
+        return Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
     }
 }
