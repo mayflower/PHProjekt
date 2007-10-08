@@ -65,6 +65,10 @@ class LoginController extends Zend_Controller_Action
                 die();
             }
         }
+        catch (Phprojekt_Auth_UserNotLoggedInException $e) {
+            $this->view->message  = $e->getMessage();
+            $this->view->username = $username;
+        }
         catch (Phprojekt_Auth_Exception $e) {
             $this->view->message  = $e->getMessage();
             $this->view->username = $username;

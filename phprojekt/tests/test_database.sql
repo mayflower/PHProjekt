@@ -255,7 +255,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'david','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'soria_parra@mayflower.de','de_DE','A');
+INSERT INTO `User` VALUES (1,'david','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'test@example.com','de_DE','A');
 INSERT INTO `User` VALUES (3,'inactive','156c3239dbfa5c5222b51514e9d12948',NULL,NULL, '', 'de_DE','I');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;

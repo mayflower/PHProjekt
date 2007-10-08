@@ -41,11 +41,10 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('The user is not logged in!');
             }
-        } catch (Phprojekt_Auth_Exception $ae) {
-
-            if($ae->getCode() <> 1) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
+            
                 $this->fail($ae->getMessage());
-            }
+            
         }
 
         /* trying a login with an invalid user */
@@ -60,11 +59,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An invalid user is able to log in!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
 
         /* trying a login with a valid user and invalid password */
@@ -73,11 +70,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An user is able to log in with an invalid password!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
 
         /* trying a login with a valid password and invalid user */
@@ -86,11 +81,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An invalid user is able to log in using a valid password!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
 
         /* trying a login with a empty user and a valid password */
@@ -99,11 +92,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An empty user is able to log in!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
 
         /* trying a login with a valid user and a empty password */
@@ -112,11 +103,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An user is able to log in without password!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
 
         /* trying a login with a valid user and the md5 value on the database */
@@ -125,11 +114,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An user is able to log in with the crypted password string!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
         
         /* trying a login with a valid user but inactive */
@@ -138,11 +125,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('An inactive user is able to log in!');
             }
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage()." ".$ae->getCode());
-            }
         }
 
         /* trying a login with a valid user and its password */
@@ -150,7 +135,7 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
         try {
             $tmp = Phprojekt_Auth::login('david', 'test');
 
-        } catch (Phprojekt_Auth_Exception $e) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $e) {
 
             $this->fail($ae->getMessage()." ".$ae->getCode());
         }
@@ -170,11 +155,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             if ($tmp) {
                 $this->fail('The user is still logged in after logout!');
             }
-        } catch (Phprojekt_Auth_Exception $ae) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
 
-            if($ae->getCode() <> 1) {
                 $this->fail($ae->getMessage());
-            }
         }
 
     }
