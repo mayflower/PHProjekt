@@ -5,7 +5,7 @@
 {/foreach}
 </tr>
 
-{foreach item=record from=$records}
+{foreach item=record from=$records|list_ordering}
 <tr>
   {foreach item=field key=fieldname from=$record}
   <td>

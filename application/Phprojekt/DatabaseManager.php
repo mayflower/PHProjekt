@@ -1,6 +1,6 @@
 <?php
 /**
- * Database manager interfase
+ * Database manager interface
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -63,6 +63,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     protected $_dbFields = array();
 
+    /**
+     * The model to fetch the infos from
+     *
+     * @var Phprojekt_Item_Abstract
+     */
     protected $_model;
 
     const FORM_ORDER = 'formPosition';
@@ -82,6 +87,39 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($db);
 
         $this->_model = $model;
+        $this->setColumnOrdering(self::LIST_ORDER);
+    }
+
+    /**
+     * Set the ordering of the associated model. Valid values are
+     * Phprojekt_DatabaseManager::LIST_ORDER
+     * Phprojekt_DatabaseManager::FORM_ORDER
+     *
+     * @param string $order
+     *
+     * @return void
+     */
+    public function setColumnOrdering($order)
+    {
+        switch ($order) {
+            case self::FORM_ORDER:
+            case self::LIST_ORDER:
+                /* colinfo in the model are used to iterate over the fields */
+                $this->_model->_colInfo = $this->getInfo($order, Phprojekt_DatabaseManager::COLUMN_NAME);
+                break;
+            default:
+                throw new InvalidArgumentException();
+        }
+    }
+
+    /**
+     * Return the associated model
+     *
+     * @return Phprojekt_Item_Abstract
+     */
+    public function getModel()
+    {
+        return $this->_model;
     }
 
     /**
@@ -104,13 +142,27 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     {
         $table = $this->_model->getTableName();
 
-        if (empty($this->_dbFields[$order])) {
+        //if (empty($this->_dbFields[$order])) {
             $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
-
             $this->_dbFields[$order] = $this->fetchAll($where, $order);
-        }
+        //}
 
         return $this->_dbFields[$order];
+    }
+
+    /**
+     * Find a special fieldname
+     *
+     * @param string $fieldname
+     *
+     * @return Zend_Db_Rowset
+     */
+    public function find($fieldname)
+    {
+        $table = $this->_model->getTableName();
+        return parent::fetchRow($this->_db->quoteInto('tableName = ?', $table)
+                                . ' AND '
+                                . $this->_db->quoteInto('tableField = ?', $fieldname));
     }
 
     /**
@@ -151,14 +203,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     public function getInfo($order, $column)
     {
         switch ($order) {
-        case self::LIST_ORDER:
-                $fields = $this->getFieldsForList();
-            break;
-        case self::FORM_ORDER:
-                $fields = $this->getFieldsForForm();
-            break;
-        default:
-                throw new Exception('No valid $order parameter give');
+            case self::LIST_ORDER:
+                    $fields = $this->getFieldsForList();
+                    break;
+            case self::FORM_ORDER:
+                    $fields = $this->getFieldsForForm();
+                    break;
+            default:
+                    throw new Exception('No valid $order parameter give');
         }
         $result = array();
         foreach ($fields as $field) {

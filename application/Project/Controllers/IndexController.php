@@ -73,10 +73,12 @@ class Project_IndexController extends IndexController
      */
     public function saveAction()
     {
+        $model = $this->getModelObject()->find($this->_itemid);
+
         $parent = (isset($this->_params['parent'])) ? (int) $this->_params['parent'] : 1;
 
-        $parentNode = new Phprojekt_Tree_Node_Database($this->_model, $parent);
-        $newNode    = new Phprojekt_Tree_Node_Database($this->_model, $this->_itemid);
+        $parentNode = new Phprojekt_Tree_Node_Database($model, $parent);
+        $newNode    = new Phprojekt_Tree_Node_Database($model, $this->_itemid);
 
         if (null !== $this->_itemid) {
             $newNode->setup();
