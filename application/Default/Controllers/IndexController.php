@@ -95,14 +95,13 @@ class IndexController extends Zend_Controller_Action
         try {
             Phprojekt_Auth::isLoggedIn();
         }
-        catch (Phprojekt_Auth_Exception $ae) {
-            if ($ae->getCode() == 1) {
-
+        catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
+                
                 /* user not logged in, display login page */
                 $this->_redirect(Zend_Registry::get('config')->webpath.'index.php/Login/index');
                 die();
-            }
         }
+        
 
         $db       = Zend_Registry::get('db');
         $projects = Phprojekt_Loader::getModel('Project', 'Project');

@@ -38,7 +38,7 @@ class Phprojekt_Auth extends Zend_Auth
 
         if (!isset($authNamespace->userId) || empty($authNamespace->userId)) {
 
-            throw new Phprojekt_Auth_Exception('User not logged in', 1);
+            throw new Phprojekt_Auth_UserNotLoggedInException('User not logged in', 1);
         }
 
         return true;
