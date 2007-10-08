@@ -31,28 +31,14 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Helpers_ListView
+class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
 {
     /**
-     * Translator
+     * The model to render
      *
-     * @var Phprojekt_LanguageAdapter
+     * @var Phprojekt_Abstract_Item
      */
-    protected $_translate = null;
-
-    /**
-     * Array with db cofig options
-     *
-     * @var array
-     */
-    protected $_db = null;
-
-    /**
-     * User configurations
-     *
-     * @var unknown_type
-     */
-    protected $_config = null;
+    protected $_model;
 
     /**
      * Instance for create the class only one time
@@ -62,20 +48,11 @@ class Default_Helpers_ListView
     protected static $_instance = null;
 
     /**
-     * Constructor
-     * Only can be created the class by the class it self
-     *
-     */
-    protected function __construct()
-    {
-    }
-
-    /**
      * Return this class only one time
      *
      * @return Default_Helpers_ListView
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (null === self::$_instance) {
             self::$_instance = new self();
@@ -84,37 +61,73 @@ class Default_Helpers_ListView
     }
 
     /**
+     * Set the model, which is rendered
+     *
+     * @param Phprojekt_Item_Abstract $model Model to render
+     */
+    public function setModel(Phprojekt_Item_Abstract $model)
+    {
+        $this->_model = $model;
+    }
+
+    /**
+     * Return the model that is rendered
+     *
+     * @return Phprojekt_Item_Abstract
+     */
+    public function &getModel()
+    {
+        return $this->_model;
+    }
+
+    /**
+     * Render the content of the list view and return it
+     *
+     * @return string
+     */
+    public function render()
+    {
+        if (null === $this->getModel()) {
+            return '';
+        }
+
+        $view = Zend_Registry::get('view');
+        $view->assignByRef('records', $this->getModel()->fetchAll());
+
+        return $view->render('list.tpl');
+    }
+
+    /**
      * Switch between the form types and call the function for each one
      *
      * @param array $field         Data of the field from the dbManager
      * @param mix   $originalValue The real value from the database
      *
-     * @deprecated
      * @return string XHTML generated
      */
     public static function generateListElement($field, $originalValue)
     {
         switch ($field['formType']) {
         default:
-            return self::listText($originalValue);
+            return self::text($originalValue);
             break;
         case "textarea":
-            return self::listTextArea($originalValue);
+            return self::textArea($originalValue);
             break;
         case "date":
-            return self::listDate($originalValue);
+            return self::date($originalValue);
             break;
         case "datetime":
-            return self::listDateTime($originalValue);
+            return self::dateTime($originalValue);
             break;
         case "selectValues":
-            return self::listSelectValues($field, $originalValue);
+            return self::selectValues($field, $originalValue);
             break;
         case "tree":
-            return self::listTree($field, $originalValue);
+            return self::tree($field, $originalValue);
             break;
         case "userId":
-            return self::listUserId($originalValue);
+            return self::userId($originalValue);
             break;
         }
     }
@@ -126,7 +139,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listText($originalValue)
+    public static function text($originalValue)
     {
         return $originalValue;
     }
@@ -138,7 +151,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listTextArea($originalValue)
+    public static function textArea($originalValue)
     {
         return $originalValue;
     }
@@ -151,7 +164,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listDate($originalValue)
+    public static function date($originalValue)
     {
         if (!empty($originalValue)) {
             $locale       = Zend_Registry::get('config')->language;
@@ -173,7 +186,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listDateTime($originalValue)
+    public static function dateTime($originalValue)
     {
         if (!empty($originalValue)) {
             $localeFormat = new Zend_Locale_Format();
@@ -200,7 +213,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listSelectValues($field, $originalValue)
+    public static function selectValues($field, $originalValue)
     {
         $string = '';
         $data   = explode('|', $field['formRange']);
@@ -224,7 +237,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listTree($field, $originalValue)
+    public static function tree($field, $originalValue)
     {
         $activeRecord = Phprojekt_Loader::getModel($field['formRange']);
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
@@ -241,7 +254,7 @@ class Default_Helpers_ListView
      *
      * @return string XHTML generated
      */
-    public static function listUserId($originalValue)
+    public static function userId($originalValue)
     {
         $user = Phprojekt_Loader::getModel('User', 'User');
         $user->find($originalValue);

@@ -35,8 +35,70 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-final class Default_Helpers_FormView
+class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
 {
+    /**
+     * The model to render
+     *
+     * @var Phprojekt_Abstract_Item
+     */
+    protected $_model;
+
+    /**
+     * Instance for create the class only one time
+     *
+     * @var Default_Helpers_ListView Object
+     */
+    protected static $_instance = null;
+
+    /**
+     * Return this class only one time
+     *
+     * @return Default_Helpers_ListView
+     */
+    public static function getInstance()
+    {
+        if (null === self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * Set the model, which is rendered
+     *
+     * @param Phprojekt_Item_Abstract $model Model to render
+     */
+    public function setModel(Phprojekt_Item_Abstract $model)
+    {
+        $this->_model = $model;
+    }
+
+    /**
+     * Return the model that is rendered
+     *
+     * @return Phprojekt_Item_Abstract
+     */
+    public function &getModel()
+    {
+        return $this->_model;
+    }
+
+    /**
+     * Render the content of the list view and return it
+     *
+     * @return string
+     */
+    public function render()
+    {
+        if (null === $this->getModel()) {
+            return '';
+        }
+
+        $view = Zend_Registry::get('view');
+        $view->record = $this->getModel();
+        return $view->render('form.tpl');
+    }
     /**
      * Switch between the form types and call the function for each one
      *
@@ -49,17 +111,17 @@ final class Default_Helpers_FormView
     {
         switch ($field->formType) {
             case "textarea":
-                return self::formTextArea($field);
+                return self::textArea($field);
             case "date":
-                return self::formDate($field);
+                return self::date($field);
             case "selectValues":
-                return self::formSelectValues($field);
+                return self::selectValues($field);
             case "tree":
-                return self::formTree($field);
+                return self::tree($field);
             case "space":
                 return '';
             default:
-                return self::formText($field);
+                return self::text($field);
         }
     }
 
@@ -70,7 +132,7 @@ final class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public static function formText(Phprojekt_DatabaseManager_Field $field)
+    public static function text(Phprojekt_DatabaseManager_Field $field)
     {
         return Zend_Registry::get('view')->formText($field->tableField, $field->value);
     }
@@ -82,7 +144,7 @@ final class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public static function formTextArea(Phprojekt_DatabaseManager_Field $field)
+    public static function textArea(Phprojekt_DatabaseManager_Field $field)
     {
         return Zend_Registry::get('view')->formTextarea($field->tableField, $field->value,
                                                         array('cols' => 30, 'rows' => 3));
@@ -95,7 +157,7 @@ final class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public static function formDate(Phprojekt_DatabaseManager_Field $field)
+    public static function date(Phprojekt_DatabaseManager_Field $field)
     {
         return Zend_Registry::get('view')->formText($field->tableField, $field->value);
     }
@@ -110,7 +172,7 @@ final class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public static function formSelectValues(Phprojekt_DatabaseManager_Field $field)
+    public static function selectValues(Phprojekt_DatabaseManager_Field $field)
     {
         $attribs = array();
         $options = array();
@@ -132,7 +194,7 @@ final class Default_Helpers_FormView
      *
      * @return string XHTML generated
      */
-    public static function formTree($field)
+    public static function tree($field)
     {
         $attribs = array();
         $options = array();
