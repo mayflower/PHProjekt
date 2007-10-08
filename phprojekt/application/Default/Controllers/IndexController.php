@@ -45,26 +45,10 @@
 class IndexController extends Zend_Controller_Action
 {
     /**
-     * Smarty object
-     *
-     * @var Smarty
-     */
-    protected $_smarty;
-
-    /**
-     * Helper for list view
-     *
-     * @var Default_Helpers_ListView
+     * The treeview helper. Not the renderer.
      *
      */
-    protected $_listView;
-
-    /**
-     * Helper for form view
-     *
-     * @var Default_Helpers_FormView
-     */
-    protected $_formView;
+    private $_treeView;
 
     /**
      * Decide if we are able to render. On forwards we don't want to render,
@@ -73,15 +57,6 @@ class IndexController extends Zend_Controller_Action
      * @var boolean
      */
     protected $_canRender = true;
-
-    /**
-     * Array with the all the data for render
-     * 'listData' => All the data for list
-     * 'treeData' => All the data for trees
-     *
-     * @var array
-     */
-    public $data = array('listData','treeData');
 
     /**
      * Object model with all the specific data
@@ -105,36 +80,6 @@ class IndexController extends Zend_Controller_Action
     protected $_params = array();
 
     /**
-     * How many columns will have the form
-     *
-     * @todo Not implemented yet
-     *
-     * @var integer
-     */
-    const FORM_COLUMNS = 2;
-
-    /**
-     * Identifies the tree view
-     *
-     * @see _render();
-     */
-    const TREE_VIEW = 0;
-
-    /**
-     * Identifies the form view
-     *
-     * @see _render();
-     */
-    const FORM_VIEW = 1;
-
-    /**
-     * Identifies the tree view
-     *
-     * @see _render();
-     */
-    const LIST_VIEW = 2;
-
-    /**
      * Init function
      *
      * First check if is a logued user, if not is redirect to the login form.
@@ -147,9 +92,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-        $config = Zend_Registry::get('config');
-        Zend_Registry::set('canRender', true);
-
         try {
             Phprojekt_Auth::isLoggedIn();
         }
@@ -157,16 +99,15 @@ class IndexController extends Zend_Controller_Action
             if ($ae->getCode() == 1) {
 
                 /* user not logged in, display login page */
-                $this->_redirect($config->webpath.'index.php/Login/index');
+                $this->_redirect(Zend_Registry::get('config')->webpath.'index.php/Login/index');
                 die();
             }
         }
 
         $db       = Zend_Registry::get('db');
-        $projects = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
+        $projects = Phprojekt_Loader::getModel('Project', 'Project');
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
-        $this->_smarty = Zend_Registry::get('view');
         $this->_model  = $this->getModelObject();
 
         $this->_treeView = new Default_Helpers_TreeView($tree);
@@ -178,9 +119,42 @@ class IndexController extends Zend_Controller_Action
             $this->_itemid = (int) $this->_params['id'];
         }
 
-        /* For smarty */
-        $this->_smarty->params = $this->_params;
-        $this->_smarty->itemid = $this->_itemid;
+    }
+
+    public function getTreeView()
+    {
+        return $this->_treeView;
+    }
+
+    /**
+     * Return the list form render helper.
+     *
+     * @return Phprojekt_RenderHelper
+     */
+    public function getFormView()
+    {
+        $instance = Default_Helpers_FormViewRenderer::getInstance();
+
+        if (null !== $this->getModelObject() && $this->_itemid > 0) {
+            $instance->setModel($this->getModelObject()->find($this->_itemid));
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Return the list view render helper.
+     *
+     * @return Phprojekt_RenderHelper
+     */
+    public function getListView()
+    {
+        $instance = Default_Helpers_ListViewRenderer::getInstance();
+        if (null !== $this->getModelObject()) {
+            $instance->setModel($this->getModelObject());
+        }
+
+        return $instance;
     }
 
     /**
@@ -194,19 +168,6 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->forward('list');
-    }
-
-    /**
-     * Adds a single filter to the current view
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function addFilterAction()
-    {
-        $this->setListView();
-        $this->_smarty->message = 'Filter Added';
     }
 
     /**
@@ -232,74 +193,11 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Toggle a open/close a node
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function toggleNodeAction()
-    {
-        $currentActiveTree = Default_Helpers_TreeView::findPersistant();
-        $currentActiveTree->toggleNode();
-
-        $this->forward('list', $this->_request->getControllerName(),
-                        $this->_request->getModuleName());
-    }
-
-    /**
-     * List all the data using the model for get it
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function listAction()
-    {
-        $this->_smarty->message = '&nbsp;';
-    }
-
-    /**
-     * Remove a filter
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function removeFilterAction()
-    {
-        $this->_smarty->message = 'Filter Removed';
-    }
-
-    /**
-     * Sort the list view
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function sortAction()
-    {
-        $this->_smarty->message = '&nbsp;';
-    }
-
-    /**
-     * Abandon current changes and return to the default view
-     *
-     * Form Action
-     *
-     * @return void
-     */
-    public function cancelAction()
-    {
-        $this->_smarty->message = '&nbsp;';
-    }
-
-    /**
      * Ajax part of displayAction
      *
      * Form Action
      *
+     * @todo Not implemented yet
      * @return void
      */
     public function componentDisplayAction()
@@ -311,9 +209,48 @@ class IndexController extends Zend_Controller_Action
      *
      * Form Action
      *
+     * @todo Not implemented yet
      * @return void
      */
     public function componentEditAction()
+    {
+    }
+    /**
+     * Toggle a open/close a node
+     *
+     * List Action
+     *
+     * @return void
+     */
+    public function toggleNodeAction()
+    {
+        $currentActiveTree = Default_Helpers_TreeView::findPersistant();
+        $currentActiveTree->toggleNode();
+
+        $this->forward('list', $this->getRequest()->getControllerName(),
+                        $this->getRequest()->getModuleName());
+    }
+
+    /**
+     * List all the data using the model for get it
+     *
+     * List Action
+     *
+     * @return void
+     */
+    public function listAction()
+    {
+        /* do nothing, default behaviour */
+    }
+
+    /**
+     * Abandon current changes and return to the default view
+     *
+     * Form Action
+     *
+     * @return void
+     */
+    public function cancelAction()
     {
     }
 
@@ -342,9 +279,11 @@ class IndexController extends Zend_Controller_Action
             $this->forward('display');
         } else {
             /* History */
+            // $this->getFormView()->getModel()->find($this->_itemid);
+
             $db                           = Zend_Registry::get('db');
             $history                      = new Phprojekt_History(array('db' => $db));
-            $this->_smarty->historyData   = $history->getHistoryData($this->_model, $this->_itemid);
+            $this->_smarty->historyData   = $history->getHistoryData($this->getModelObject(), $this->_itemid);
             $this->_smarty->dateFieldData = array('formType' => 'datetime');
             $this->_smarty->userFieldData = array('formType' => 'userId');
         }
@@ -377,9 +316,9 @@ class IndexController extends Zend_Controller_Action
 
         if ($this->_model->recordValidate()) {
             $this->_model->save();
-            $this->_smarty->message = 'Saved';
+            $this->view->getEngine()->message = 'Saved';
         } else {
-            $this->_smarty->errors = $this->_model->getError();
+            $this->view->getEngine()->errors = $this->_model->getError();
         }
     }
 
@@ -396,53 +335,20 @@ class IndexController extends Zend_Controller_Action
             $this->forward('display');
         } else {
             $this->_model->find($this->_itemid)->delete();
-            $this->_smarty->message = 'Deleted';
+            $this->view->getEngine()->message = 'Deleted';
         }
     }
 
-    /**
-     * Render the tree view
-     *
-     * @return void
-     */
-    protected function _setTreeView()
-    {
-        $this->_smarty->treeView = $this->_render(self::TREE_VIEW);
-    }
-
-    /**
-     * Render the listView using the data from the model
-     *
-     * The paging Helper see the returned rows and calculate the number of pages.
-     * Then, assing to the smarty class the nessesary variables for render the paging.
-     *
-     * The actual page is stored in the session name "projectID + Module".
-     * So each, module have and own session in each project.
-     *
-     * The number of items per page, is from the user configuration.
-     *
-     * @return void
-     */
-    protected function _setListView()
-    {
-        $this->_smarty->assignByRef('records', $this->_model->fetchAll());
-        $this->_smarty->listView = $this->_render(self::LIST_VIEW);
-    }
-
-    /**
-     * Render the formView using the data from the model
-     *
-     * If the function give the id, the values of this item will show.
-     *
-     * @return void
-     */
-    protected function _setFormView()
-    {
-        $this->_smarty->columns  = IndexController::FORM_COLUMNS;
-        $this->_smarty->model    = $this->_model;
-        $this->_smarty->formView = $this->_render(self::FORM_VIEW);
-    }
-
+//    /**
+//     * Render the tree view
+//     *
+//     * @return void
+//     */
+//    protected function _setTreeView()
+//    {
+//        $this->view->getEngine()->treeView = $this->getTreeView()->renderer($this->view->getEngine());
+//    }
+//
     /**
      * Render a template
      *
@@ -450,23 +356,23 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    protected function _render($template)
-    {
-        switch ($template) {
-        case self::TREE_VIEW:
-                return $this->_treeView->renderer($this->_smarty);
-            break;
-        case self::FORM_VIEW:
-                return $this->view->render('form.tpl');
-            break;
-        case self::LIST_VIEW:
-                return $this->view->render('list.tpl');
-            break;
-        default:
-                return $this->view->render($template . '.tpl');
-            break;
-        }
-    }
+//    protected function _render($template)
+//    {
+//        switch ($template) {
+//        case self::TREE_VIEW:
+//                return $this->_treeView->renderer($this->_smarty);
+//            break;
+//        case self::FORM_VIEW:
+//                return $this->view->render('form.tpl');
+//            break;
+//        case self::LIST_VIEW:
+//                return $this->view->
+//            break;
+//        default:
+//                return $this->view->render($template . '.tpl');
+//            break;
+//        }
+//    }
 
     /**
      * Render all the views that are not already renders
@@ -479,28 +385,21 @@ class IndexController extends Zend_Controller_Action
         $session = new Zend_Session_Namespace();
 
         if (isset($session->lastProjectId)) {
-            $this->_smarty->projectId   = $session->lastProjectId;
-            $this->_smarty->projectName = $session->lastProjectName;
+            $this->view->projectId   = $session->lastProjectId;
+            $this->view->projectName = $session->lastProjectName;
         }
 
-        $this->_smarty->list       = Default_Helpers_ListView::getInstance();
-        $this->_smarty->module     = $this->_request->getModuleName();
-        $this->_smarty->controller = $this->_request->getControllerName();
-        $this->_smarty->action     = $this->_request->getActionName();
-        $this->_smarty->breadcrumb = $this->_request->getModuleName();
-        $this->_smarty->modules    = $this->_model->getSubModules();
+        $this->view->params     = $this->_params;
+        $this->view->itemid     = $this->_itemid;
+        $this->view->module     = $this->getRequest()->getModuleName();
+        $this->view->controller = $this->getRequest()->getControllerName();
+        $this->view->action     = $this->getRequest()->getActionName();
+        $this->view->breadcrumb = $this->getRequest()->getModuleName();
+        $this->view->modules    = $this->_model->getSubModules();
 
-        if (null === $this->_smarty->treeView) {
-            $this->_setTreeView();
-        }
-
-        if (null === $this->_smarty->listView) {
-            $this->_setListView();
-        }
-
-        if (null === $this->_smarty->formView) {
-            $this->_setFormView();
-        }
+        $this->view->treeView = $this->getTreeView()->render();
+        $this->view->listView = $this->getListView()->render();
+        $this->view->formView = $this->getFormView()->render();
 
         $this->render('index');
     }
@@ -513,13 +412,17 @@ class IndexController extends Zend_Controller_Action
      */
     public function getModelObject()
     {
-        $class = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(),
-                                            $this->getRequest()->getModuleName());
-        if (null === $class) {
-            $class = Phprojekt_Language::getModel('Default', 'Default');
+        static $object = null;
+
+        if (null === $object) {
+            $object = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(),
+                                                 $this->getRequest()->getModuleName());
+            if (null === $object) {
+                $object = Phprojekt_Language::getModel('Default', 'Default');
+            }
         }
 
-        return $class;
+        return $object;
     }
 
     /**

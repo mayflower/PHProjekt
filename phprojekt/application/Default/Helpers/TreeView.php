@@ -38,7 +38,7 @@ class Default_Helpers_TreeView
      * about nodes
      *
      */
-    const SESSION_NAMESPACE = 'Phprojekt_Tree';
+    const SESSION_NAMESPACE = 'Tree';
 
     /**
      * The tree that should be displayed
@@ -118,8 +118,12 @@ class Default_Helpers_TreeView
      *
      * @return string
      */
-    public function renderer(Default_Helpers_Smarty $smarty, $template = 'tree.tpl')
+    public function render($smarty = null, $template = 'tree.tpl')
     {
+        if (null === $smarty) {
+            $smarty = Zend_Registry::get('view');
+        }
+
         if (false === $this->_tree->isSetup()) {
             $this->_tree->setup();
         }
@@ -144,7 +148,7 @@ class Default_Helpers_TreeView
      */
     public function makePersistent()
     {
-        $session = new Zend_Session_Namespace('Tree');
+        $session = new Zend_Session_Namespace(self::SESSION_NAMESPACE);
 
         $activeRecord   = $this->_tree->getActiveRecord();
         $treeIdentifier = $this->getIdentifier();
@@ -194,14 +198,14 @@ class Default_Helpers_TreeView
     {
         $db      = Zend_Registry::get('db');
         $request = Zend_Controller_Front::getInstance()->getRequest();
-        $session = new Zend_Session_Namespace('Tree');
+        $session = new Zend_Session_Namespace(self::SESSION_NAMESPACE);
         /* @var $request Zend_Controller_Request_Abstract  */
 
         $treeIdentifier = $request->getParam('tree', null);
         if (array_key_exists($treeIdentifier, (array) $session->forest)) {
             $treeInfo = $session->forest[$treeIdentifier];
             $model    = Phprojekt_Loader::getModel($treeInfo['module'], $treeInfo['model'], array('db' => $db));
-            $tree     = new Phprojekt_Tree_Node_Database($model, $treeInfo['rootId']);
+            $tree     = new Phprojekt_Tree_Node_Database($model, $treeInfo['rootId'], false);
             return new self($tree, $treeInfo['name']);
         }
 

@@ -10,25 +10,26 @@
   <form method="post" action="{url action='save' id=$itemid}">
   {/if}
   {foreach name=errors item=error from=$errors}
-  <div class="error">{$error.field|translate}: {$error.message|translate}</div>
+  <div class="error">{$error.message|translate}</div>
   {/foreach}
   <br />
-  <table width="100%">
-  {assign var="fields" value=$form->generateFormElement("`$model`", "`$params`")}
-  {foreach name=field item=field from=$fields}
-  <tr>
-    <td valign="top">{$field.label}</td>
-    <td>{$field.output}
-    {if $field.isRequired}
-    <span class="error">*</span>
-    {/if}
+
+  <input type="hidden" name="id" value="{$record->id}" />
+  <table width="90%">
+  {foreach item=field from=$record|form_ordering}
+   <tr>
+    <td width="25%">{$field->formLabel|translate}</td>
+    <td>
+     {form_element field=$field}
+     {if $field->isRequired}<span class="error">*</span>{/if}
     </td>
-  </tr>
+   </tr>
   {/foreach}
+  <tr>
+    <td></td>
+    <td><input type="submit" value="{"Save"|translate}" /></td>
+  </tr>
   </table>
-  <br />
-  <input type="submit" value="Send">
-  </form>
 
   {foreach name=history item=history from=$historyData}
   {if $smarty.foreach.history.first}

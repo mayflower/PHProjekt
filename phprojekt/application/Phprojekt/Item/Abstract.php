@@ -76,9 +76,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
 
         $config        = Zend_Registry::get('config');
         $this->_config = $config;
-
-        $this->_colInfo = $this->_dbManager->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
-                                                     Phprojekt_DatabaseManager::COLUMN_NAME);
     }
 
     /**
@@ -92,23 +89,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get the field for list view from the databae_manager
+     * Enter description here...
      *
-     * @return array Array with the data of the fields to create the list
      */
-    public function getFieldsForList()
+    public function current()
     {
-        return $this->_dbManager->getFieldsForList($this);
-    }
-
-    /**
-     * Get the field for the form view from the databae_manager
-     *
-     * @return array Array with the data of the fields to create the form
-     */
-    public function getFieldsForForm()
-    {
-        return $this->_dbManager->getFieldsForForm($this);
+        return new Phprojekt_DatabaseManager_Field($this->getDatabaseManager(),
+                                                   $this->key(),
+                                                   parent::current());
     }
 
     /**

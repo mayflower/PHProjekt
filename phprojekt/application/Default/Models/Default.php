@@ -24,8 +24,11 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Models_Default
+class Default_Models_Default extends Phprojekt_Item_Abstract
 {
+    public function __construct(){}
+    public function fetchAll() {}
+    public function find(){}
     /**
      * Some magic. The index controller code always has an instance of
      * an model. If no other model is specified, the index controller uses

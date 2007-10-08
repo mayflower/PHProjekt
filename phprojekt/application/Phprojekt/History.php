@@ -85,16 +85,15 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array The array with the differences
      */
-    private function _getDifferences($object, $action)
+    private function _getDifferences(Phprojekt_Item_Abstract $object, $action)
     {
-        $fields = $object->getFieldsForForm($object->getTableName());
+        $fields = $object->getDatabaseManager()->getFieldsForForm();
         $clone  = clone($object);
         $clone->find($object->id);
         $differences = array();
-        $fieldNames  = array_keys($fields);
-
         if ($action == 'edit') {
-            foreach ($fieldNames as $fieldName) {
+            foreach ($fields as $value) {
+                $fieldName = $value->tableField;
                 if ($object->$fieldName != $clone->$fieldName) {
                     $differences[$fieldName] = array(
                             'oldValue' => $clone->$fieldName,

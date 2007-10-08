@@ -190,9 +190,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         if (!array_key_exists('db', $config)
          || !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
              throw new
-               Phprojekt_ActiveRecord_Exception('ActiveRecord class must '
-                                              . 'be initialized using a valid '
-                                              . 'Zend_Db_Adapter_Abstract');
+               Phprojekt_ActiveRecord_Exception("ActiveRecord class must "
+                                              . "be initialized using a valid "
+                                              . "Zend_Db_Adapter_Abstract");
 
         }
 
@@ -508,7 +508,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!array_key_exists($key, $this->belongsTo)) {
             throw new
-             Phprojekt_ActiveRecord_Exception('BelongsTo {$key} doesnot exist');
+             Phprojekt_ActiveRecord_Exception("BelongsTo {$key} doesnot exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
@@ -544,7 +544,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!array_key_exists($key, $this->hasMany)) {
             throw new
-               Phprojekt_ActiveRecord_Exception('HasMany {$key} doesnot exist');
+               Phprojekt_ActiveRecord_Exception("HasMany {$key} doesnot exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
@@ -703,8 +703,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!is_array($array) || !is_array($array[$key])) {
             throw new
-                Phprojekt_ActiveRecord_Exception('Cannot instantiate'
-                                               . '{$className}');
+                Phprojekt_ActiveRecord_Exception("Cannot instantiate"
+                                               . "{$className}");
         }
 
         $definition = $array[$key];
@@ -721,8 +721,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
 
         if (!class_exists($className, true)) {
             throw new
-                Phprojekt_ActiveRecord_Exception('Cannot instantiate'
-                                               . '{$className}');
+                Phprojekt_ActiveRecord_Exception("Cannot instantiate"
+                                               . "{$className}");
         }
 
         return $className;
@@ -750,8 +750,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
             return $match[1];
         }
 
-        throw new Phprojekt_ActiveRecord_Exception('Classname contains '
-                                                  .'illegal characters');
+        throw new Phprojekt_ActiveRecord_Exception("Classname contains "
+                                                  ."illegal characters");
 
     }
 

@@ -161,9 +161,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         if (!is_null($comparer)) {
-
             // We have to apply the pre sorting comparer
-
             if (Zend_Registry::isRegistered('log')) {
                 $log = Zend_Registry::get('log');
                 $log->debug('Pre-sorting requested and not implemented yet');
@@ -252,7 +250,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function appendNode(Phprojekt_Tree_Node_Database $node)
     {
         if (null !== $node->_activeRecord) {
-
             if (null === $node->id) {
                 $node->_activeRecord->parent = $this->id;
                 $node->_activeRecord->path   = sprintf('%s%s%s',

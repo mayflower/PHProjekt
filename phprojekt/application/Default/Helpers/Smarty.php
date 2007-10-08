@@ -69,8 +69,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         /**
          * Register various helper functions
          */
-        $this->_smarty->register_function('form_element',
-                                          array($this, 'generateListElement'));
         $this->_smarty->register_function('url',
                                           array($this, 'urlHelper'));
         $this->_smarty->register_function('link_to',
@@ -186,12 +184,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         * to emulate standard zend view, list and form functionality
         * doesn't mess up smarty in any way */
         $this->_smarty->assign_by_ref('view', $this);
-
-        $form = Default_Helpers_FormView::getInstance($this);
-        $this->_smarty->assign_by_ref('form', $form);
-
-        $list = Default_Helpers_ListView::getInstance();
-        $this->_smarty->assign_by_ref('list', $list);
 
         // process the template (and filter the output)
         echo $this->_smarty->fetch(basename($file));

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>{$phprojekt_version} {$title}</title>
+  <title>Phprojekt {$phprojekt_version}</title>
   <style type="text/css">
   {literal}
   body {
