@@ -26,9 +26,22 @@
  */
 class Default_Models_Default extends Phprojekt_Item_Abstract
 {
-    public function __construct(){}
+
+    /**
+     * Default fetchall - needs to be implemented
+     *
+     * @return void
+     */
     public function fetchAll() {}
+
+
+    /**
+     * Default find - needs to be implemented
+     *
+     * @return void
+     */
     public function find(){}
+
     /**
      * Some magic. The index controller code always has an instance of
      * an model. If no other model is specified, the index controller uses

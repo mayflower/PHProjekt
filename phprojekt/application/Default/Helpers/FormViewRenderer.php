@@ -68,6 +68,8 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      * Set the model, which is rendered
      *
      * @param Phprojekt_Item_Abstract $model Model to render
+     *
+     * @return void
      */
     public function setModel(Phprojekt_Item_Abstract $model)
     {
@@ -102,8 +104,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
     /**
      * Switch between the form types and call the function for each one
      *
-     * @param Phprojekt_Item_Abstract $models Object model
-     * @param array                   $params $_REQUEST array
+     * @param Phprojekt_DatabaseManager_Field $field Object model
      *
      * @return array Data with label, XHTML output and isRequired per field
      */
@@ -168,6 +169,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      * The value is translated before return
      *
      * @todo (Maybe) Move this into the field object itself
+     *
      * @param array $field Data of the field from the dbManager
      *
      * @return string XHTML generated
