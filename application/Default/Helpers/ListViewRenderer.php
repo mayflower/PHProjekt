@@ -64,6 +64,8 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      * Set the model, which is rendered
      *
      * @param Phprojekt_Item_Abstract $model Model to render
+     *
+     * @return void
      */
     public function setModel(Phprojekt_Item_Abstract $model)
     {
@@ -108,27 +110,27 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
     public static function generateListElement($field, $originalValue)
     {
         switch ($field['formType']) {
-        default:
-            return self::text($originalValue);
-            break;
-        case "textarea":
-            return self::textArea($originalValue);
-            break;
-        case "date":
-            return self::date($originalValue);
-            break;
-        case "datetime":
-            return self::dateTime($originalValue);
-            break;
-        case "selectValues":
-            return self::selectValues($field, $originalValue);
-            break;
-        case "tree":
-            return self::tree($field, $originalValue);
-            break;
-        case "userId":
-            return self::userId($originalValue);
-            break;
+            default:
+                return self::text($originalValue);
+                break;
+            case "textarea":
+                return self::textArea($originalValue);
+                break;
+            case "date":
+                return self::date($originalValue);
+                break;
+            case "datetime":
+                return self::dateTime($originalValue);
+                break;
+            case "selectValues":
+                return self::selectValues($field, $originalValue);
+                break;
+            case "tree":
+                return self::tree($field, $originalValue);
+                break;
+            case "userId":
+                return self::userId($originalValue);
+                break;
         }
     }
 
@@ -233,7 +235,7 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      * @todo Don't put class names into formRange
      *
      * @param array $field         Data of the field from the dbManager
-     * @param mixed  $originalValue The real value from the database
+     * @param mixed $originalValue The real value from the database
      *
      * @return string XHTML generated
      */
