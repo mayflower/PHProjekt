@@ -125,7 +125,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 
         $options = array_merge($this->_options, $options);
         if (true === $options['clear'] ||
-            false === isset($this->_translate[$locale])) {
+        false === isset($this->_translate[$locale])) {
             $this->_translate[$locale] = array();
         }
 
@@ -139,118 +139,118 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 
         /* Collect a new translation set */
         if (true === empty($this->_translate[$locale])
-         && true  === is_readable($data)) {
+        && true  === is_readable($data)) {
             /* Get the translation file */
             switch ($locale) {
-            case 'sq_AL':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_AL;
-                break;
-            case 'bg':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BG;
-                break;
-            case 'pt_BR':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BR;
-                break;
-            case 'cs_CZ':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_CZ;
-                break;
-            case 'da':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_DA;
-                break;
-            case 'de':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_DE;
-                break;
-            case 'et_EE':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EE;
-                break;
-            case 'es':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_ES;
-                break;
-            case 'fi':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_FI;
-                break;
-            case 'fr':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_FR;
-                break;
-            case 'ka_GE':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_GE;
-                break;
-            case 'el_GR':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_GR;
-                break;
-            case 'he':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_HE;
-                break;
-            case 'hu':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_HU;
-                break;
-            case 'is':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_IS;
-                break;
-            case 'it':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_IT;
-                break;
-            case 'ja_JP':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_JP;
-                break;
-            case 'ko':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_KO;
-                break;
-            case 'lt':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_LT;
-                break;
-            case 'lv':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_LV;
-                break;
-            case 'nl':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_NL;
-                break;
-            case 'no':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_NO;
-                break;
-            case 'pl':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_PL;
-                break;
-            case 'pt':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_PT;
-                break;
-            case 'ro':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_RO;
-                break;
-            case 'ru':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_RU;
-                break;
-            case 'sv_SE':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SE;
-                break;
-            case 'sl_SI':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SI;
-                break;
-            case 'sk':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SK;
-                break;
-            case 'sv':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SV;
-                break;
-            case 'th_TH':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TH;
-                break;
-            case 'tr':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TR;
-                break;
-            case 'zh_TW':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TW;
-                break;
-            case 'uk':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_UK;
-                break;
-            case 'zh':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_ZH;
-                break;
-            default:
-            case 'en':
-                include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EN;
-                break;
+                case 'sq_AL':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_AL;
+                    break;
+                case 'bg':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BG;
+                    break;
+                case 'pt_BR':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_BR;
+                    break;
+                case 'cs_CZ':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_CZ;
+                    break;
+                case 'da':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_DA;
+                    break;
+                case 'de':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_DE;
+                    break;
+                case 'et_EE':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EE;
+                    break;
+                case 'es':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_ES;
+                    break;
+                case 'fi':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_FI;
+                    break;
+                case 'fr':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_FR;
+                    break;
+                case 'ka_GE':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_GE;
+                    break;
+                case 'el_GR':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_GR;
+                    break;
+                case 'he':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_HE;
+                    break;
+                case 'hu':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_HU;
+                    break;
+                case 'is':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_IS;
+                    break;
+                case 'it':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_IT;
+                    break;
+                case 'ja_JP':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_JP;
+                    break;
+                case 'ko':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_KO;
+                    break;
+                case 'lt':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_LT;
+                    break;
+                case 'lv':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_LV;
+                    break;
+                case 'nl':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_NL;
+                    break;
+                case 'no':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_NO;
+                    break;
+                case 'pl':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_PL;
+                    break;
+                case 'pt':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_PT;
+                    break;
+                case 'ro':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_RO;
+                    break;
+                case 'ru':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_RU;
+                    break;
+                case 'sv_SE':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SE;
+                    break;
+                case 'sl_SI':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SI;
+                    break;
+                case 'sk':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SK;
+                    break;
+                case 'sv':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_SV;
+                    break;
+                case 'th_TH':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TH;
+                    break;
+                case 'tr':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TR;
+                    break;
+                case 'zh_TW':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_TW;
+                    break;
+                case 'uk':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_UK;
+                    break;
+                case 'zh':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_ZH;
+                    break;
+                default:
+                case 'en':
+                    include_once PHPR_ROOT_PATH . '/languages/'. self::LANG_EN;
+                    break;
             }
 
             $this->_translate[$locale] = $lang;
@@ -301,41 +301,41 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     protected function _convertToZendLocale($locale)
     {
         switch ($locale) {
-        case 'al':
-            return 'sq_AL';
-            break;
-        case 'br':
-            return 'pt_BR';
-            break;
-        case 'cz':
-            return 'cs_CZ';
-            break;
-        case 'ee':
-            return 'et_EE';
-            break;
-        case 'ge':
-            return 'ka_GE';
-            break;
-        case 'gr':
-            return 'el_GR';
-            break;
-        case 'jp':
-            return 'ja_JP';
-            break;
-        case 'se':
-            return 'sv_SE';
-            break;
-        case 'si':
-            return 'sl_SI';
-            break;
-        case 'th':
-            return 'th_TH';
-            break;
-        case 'tw':
-            return 'zh_TW';
-            break;
-        default:
-            return $locale;
+            case 'al':
+                return 'sq_AL';
+                break;
+            case 'br':
+                return 'pt_BR';
+                break;
+            case 'cz':
+                return 'cs_CZ';
+                break;
+            case 'ee':
+                return 'et_EE';
+                break;
+            case 'ge':
+                return 'ka_GE';
+                break;
+            case 'gr':
+                return 'el_GR';
+                break;
+            case 'jp':
+                return 'ja_JP';
+                break;
+            case 'se':
+                return 'sv_SE';
+                break;
+            case 'si':
+                return 'sl_SI';
+                break;
+            case 'th':
+                return 'th_TH';
+                break;
+            case 'tw':
+                return 'zh_TW';
+                break;
+            default:
+                return $locale;
         }
     }
 }
