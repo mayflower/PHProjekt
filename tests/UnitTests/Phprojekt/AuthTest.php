@@ -153,6 +153,9 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
         /* logged in needs to be true */
         $this->assertTrue(Phprojekt_Auth::isLoggedIn());
 
+        /* Check ID */
+
+
         /* trying to logout */
         $this->assertTrue(Phprojekt_Auth::logout());
 
@@ -164,5 +167,17 @@ class Phprojekt_AuthTest extends PHPUnit_Extensions_ExceptionTestCase
             return ;
         }
         $this->fail('The user is still logged in after logout!');
+    }
+
+    /**
+     * Test found user by id
+     */
+    public function testUserId() {
+        $user = Phprojekt_Loader::getModel('Users', 'User', (array ('db' => $this->sharedFixture)));
+        $clone = $user->findUserById(1);
+        $this->assertEquals('david', $clone->username);
+
+        $clone = $user->findUserById(0);
+        $this->assertEquals('', $clone->username);
     }
 }
