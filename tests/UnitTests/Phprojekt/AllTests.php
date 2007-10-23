@@ -30,8 +30,8 @@ set_include_path('.' . PATH_SEPARATOR
 require_once 'Zend/Loader.php';
 Zend_Loader::registerAutoload();
 
-//require_once 'ActiveRecord/AbstractTest.php';
-//require_once 'Tree/Node/DatabaseTest.php';
+require_once 'ActiveRecord/AbstractTest.php';
+require_once 'Tree/Node/DatabaseTest.php';
 require_once 'LoaderTest.php';
 require_once 'DatabaseManagerTest.php';
 require_once 'Item/AbstractTest.php';
@@ -41,8 +41,8 @@ require_once 'LogTest.php';
 require_once 'ErrorTest.php';
 require_once 'HistoryTest.php';
 require_once 'Filter/UserFilterTest.php';
-//require_once 'Mail/NotificationTest.php';
-//require_once 'DispatcherTest.php';
+require_once 'Mail/NotificationTest.php';
+require_once 'DispatcherTest.php';
 require_once 'AuthTest.php';
 
 /**

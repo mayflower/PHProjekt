@@ -84,13 +84,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 		try {
 			$project = new Phprojekt_Project(array('db' => $this->sharedFixture));
 			$project->title = 'Hello World Project to delete';
+			$project->startDate = '1981-05-12';
+			$project->endDate = '1981-05-12';
+			$project->priority = 1;
 			$project->path = '/';
 			$project->save();
 
 			$this->assertNotNull($project->id);
+			$id = $project->id;
 			$project->delete();
 
-			$this->assertNull($project->id);
+			$project->find($id);
+			$this->assertNull($project->title);
         } catch (Exception $e) {
             $this->sharedFixture->rollBack();
             $this->fail($e->getMessage());
@@ -252,6 +257,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
         $instance->id = 10;
+        $instance->notes = '';
         $instance->save();
 
         $instance->find(10);
