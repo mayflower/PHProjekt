@@ -34,346 +34,12 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
         $this->_emptyResult = array();
 
         $this->_formResult = array(
-                        'parent' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'title' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'notes'     => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'startDate' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'endDate' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'priority'  => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'currentStatus' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'completePercent' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'budget' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => '')
-                            );
+                        'parent','title','notes','startDate','endDate',
+                        'priority','currentStatus','completePercent','budget');
 
         $this->_listResult = array(
-                        'title' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'parent' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'startDate' => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'endDate'     => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'priority'     => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'currentStatus'     => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => ''),
-                        'completePercent'     => array(
-                                'id'                => '',
-                                'tableName'         => '',
-                                'tablefield'        => '',
-                                'formTab'           => '',
-                                'formLabel'         => '',
-                                'formTooltip'       => '',
-                                'formType'          => '',
-                                'formPosition'      => '',
-                                'formColumns'       => '',
-                                'formRegexp'        => '',
-                                'formRange'         => '',
-                                'defaultValue'      => '',
-                                'listPosition'      => '',
-                                'listAlign'         => '',
-                                'listUseFilter'     => '',
-                                'altPosition'       => '',
-                                'status'            => '',
-                                'isInteger'         => '',
-                                'isRequired'        => '',
-                                'isUnique'          => '')
-                            );
+                        'title','parent','startDate','endDate','priority',
+                        'currentStatus','completePercent');
     }
 
     /**
@@ -382,17 +48,14 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testGetFieldsForList()
     {
-        $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForList('project');
-        $this->assertEquals(array_keys($this->_listResult), array_keys($fields));
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
+        $fields = $db->getFieldsForList();
 
-        /* Second call */
-        $fields_second = $db->getFieldsForList('project');
-        $this->assertEquals($fields, $fields_second);
-
-        $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForList('nothing');
-        $this->assertEquals($this->_emptyResult, $fields);
+        foreach ($fields as $key => $field) {
+            $result[$field->tableField]['tableField'] = $field->tableField;
+        }
+        $this->assertEquals($this->_listResult, array_keys($result));
     }
 
     /**
@@ -401,16 +64,13 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testGetFieldsForForm()
     {
-        $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm('project');
-        $this->assertEquals(array_keys($this->_formResult), array_keys($fields));
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
+        $fields = $db->getFieldsForForm();
 
-        /* Second call */
-        $fields_second = $db->getFieldsForForm('project');
-        $this->assertEquals($fields, $fields_second);
-
-        $db     = new Phprojekt_DatabaseManager(array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm('nothing');
-        $this->assertEquals($this->_emptyResult, $fields);
+        foreach ($fields as $key => $field) {
+            $result[$field->tableField]['tableField'] = $field->tableField;
+        }
+        $this->assertEquals($this->_formResult, array_keys($result));
     }
 }
