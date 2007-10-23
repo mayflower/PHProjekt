@@ -9,8 +9,8 @@
   {else}
   <form method="post" action="{url action='save' id=$itemid}">
   {/if}
-  {foreach name=errors item=error from=$errors}
-  <div class="error">{$error.message|translate}</div>
+  {foreach name=error item=error from=$errors}
+  <div class="error">{$error.field|translate}: {$error.message|translate}</div>
   {/foreach}
   <br />
 

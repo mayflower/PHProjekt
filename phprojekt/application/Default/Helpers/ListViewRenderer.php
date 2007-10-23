@@ -94,7 +94,20 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
         }
 
         $view = Zend_Registry::get('view');
-        $view->assignByRef('records', $this->getModel()->fetchAll());
+
+        /* Filter the current project id if exists */
+        $session = new Zend_Session_Namespace();
+        if (isset($session->lastProjectId)) {
+            if ($view->module == 'Project') {
+                $where = $this->getModel()->getAdapter()->quoteInto('parent = ?', $session->lastProjectId);
+            } else {
+                $where = $this->getModel()->getAdapter()->quoteInto('projectId = ?', $session->lastProjectId);
+            }
+        } else {
+            $where = '';
+        }
+
+        $view->assignByRef('records', $this->getModel()->fetchAll($where));
 
         return $view->render('list.tpl');
     }

@@ -93,12 +93,12 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      */
     public function render()
     {
-        if (null === $this->getModel()) {
-            return '';
-        }
-
         $view = Zend_Registry::get('view');
-        $view->record = $this->getModel();
+        if (null === $this->getModel()) {
+            $view->message = '&nbsp;';
+        } else {
+            $view->record = $this->getModel();
+        }
         return $view->render('form.tpl');
     }
     /**

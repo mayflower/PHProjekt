@@ -101,13 +101,15 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         } else if ($action == 'add') {
-            foreach ($fieldNames as $fieldName) {
+            foreach ($fields as $value) {
+                $fieldName = $value->tableField;
                 $differences[$fieldName] = array(
                     'oldValue' => '',
                     'newValue' => $object->$fieldName);
             }
         } else if ($action == 'delete') {
-            foreach ($fieldNames as $fieldName) {
+            foreach ($fields as $value) {
+                $fieldName = $value->tableField;
                 $differences[$fieldName] = array(
                     'oldValue' => $object->$fieldName,
                     'newValue' => '');

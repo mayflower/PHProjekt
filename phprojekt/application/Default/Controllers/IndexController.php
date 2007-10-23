@@ -45,25 +45,17 @@
 class IndexController extends Zend_Controller_Action
 {
     /**
+     * Boolean var for render or not
+     *
+     * @var boolean
+     */
+    private $_canRender = true;
+
+    /**
      * The treeview helper. Not the renderer.
      *
      */
     private $_treeView;
-
-    /**
-     * Decide if we are able to render. On forwards we don't want to render,
-     * so we just bypass the postDispatch
-     *
-     * @var boolean
-     */
-    protected $_canRender = true;
-
-    /**
-     * Object model with all the specific data
-     *
-     * @var Phprojekt_Item
-     */
-    protected $_model;
 
     /**
      * Current item ID
@@ -96,18 +88,14 @@ class IndexController extends Zend_Controller_Action
             Phprojekt_Auth::isLoggedIn();
         }
         catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
-
-                /* user not logged in, display login page */
-                $this->_redirect(Zend_Registry::get('config')->webpath.'index.php/Login/index');
-                die();
+            /* user not logged in, display login page */
+            $this->_redirect(Zend_Registry::get('config')->webpath.'index.php/Login/index');
+            die();
         }
-
 
         $db       = Zend_Registry::get('db');
         $projects = Phprojekt_Loader::getModel('Project', 'Project');
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
-
-        $this->_model  = $this->getModelObject();
 
         $this->_treeView = new Default_Helpers_TreeView($tree);
         $this->_treeView->makePersistent();
@@ -117,7 +105,6 @@ class IndexController extends Zend_Controller_Action
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
-
     }
 
     /**
@@ -139,8 +126,23 @@ class IndexController extends Zend_Controller_Action
     {
         $instance = Default_Helpers_FormViewRenderer::getInstance();
 
-        if (null !== $this->getModelObject() && $this->_itemid > 0) {
-            $instance->setModel($this->getModelObject()->find($this->_itemid));
+        $action = $this->_request->getActionName();
+
+        switch ($action) {
+            case 'default':
+            case 'list':
+                break;
+            case 'display':
+            case 'save':
+                if (null !== $this->getModelObject()) {
+                    $instance->setModel($this->getModelObject());
+                }
+                break;
+            case 'edit':
+                if ($this->_itemid > 0) {
+                    $instance->setModel($this->getModelObject()->find($this->_itemid));
+                }
+                break;
         }
 
         return $instance;
@@ -309,20 +311,20 @@ class IndexController extends Zend_Controller_Action
     public function saveAction()
     {
         if (null !== $this->_itemid) {
-            $this->_model->find($this->_itemid);
+            $this->getModelObject()->find($this->_itemid);
         }
 
         foreach ($this->_params as $k => $v) {
-            if ($this->_model->keyExists($k)) {
-                $this->_model->$k = $v;
+            if ($this->getModelObject()->keyExists($k)) {
+                $this->getModelObject()->$k = $v;
             }
         }
 
-        if ($this->_model->recordValidate()) {
-            $this->_model->save();
-            $this->view->getEngine()->message = 'Saved';
+        if ($this->getModelObject()->recordValidate()) {
+            $this->getModelObject()->save();
+            $this->view->message = 'Saved';
         } else {
-            $this->view->getEngine()->errors = $this->_model->getError();
+            $this->view->errors = $this->getModelObject()->getError();
         }
     }
 
@@ -338,8 +340,8 @@ class IndexController extends Zend_Controller_Action
         if ($this->_itemid < 1) {
             $this->forward('display');
         } else {
-            $this->_model->find($this->_itemid)->delete();
-            $this->view->getEngine()->message = 'Deleted';
+            $this->getModelObject()->find($this->_itemid)->delete();
+            $this->view->message = 'Deleted';
         }
     }
 
@@ -399,7 +401,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->controller = $this->getRequest()->getControllerName();
         $this->view->action     = $this->getRequest()->getActionName();
         $this->view->breadcrumb = $this->getRequest()->getModuleName();
-        $this->view->modules    = $this->_model->getSubModules();
+        $this->view->modules    = $this->getModelObject()->getSubModules();
 
         $this->view->treeView = $this->getTreeView()->render();
         $this->view->listView = $this->getListView()->render();

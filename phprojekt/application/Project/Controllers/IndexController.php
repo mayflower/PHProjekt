@@ -73,7 +73,11 @@ class Project_IndexController extends IndexController
      */
     public function saveAction()
     {
-        $model = $this->getModelObject()->find($this->_itemid);
+        if ($this->_itemid > 0) {
+            $model = $this->getModelObject()->find($this->_itemid);
+        } else {
+            $model = $this->getModelObject();
+        }
 
         $parent = (isset($this->_params['parent'])) ? (int) $this->_params['parent'] : 1;
 
@@ -99,10 +103,10 @@ class Project_IndexController extends IndexController
             } else {
                 $newNode->getActiveRecord()->save();
             }
-            $this->message = 'Saved';
+            $this->view->message = 'Saved';
         } else {
-            $this->errors = $newNode->getActiveRecord()->getError();
-        }
 
+            $this->view->errors = $newNode->getActiveRecord()->getError();
+        }
     }
 }

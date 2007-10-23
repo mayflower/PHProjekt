@@ -139,46 +139,50 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     {
         $validated = true;
         $data      = $this->_data;
-        $fields    = $this->_dbManager->getFieldsForForm($this->_name);
+        $fields    = $this->_dbManager->getFieldsForForm();
+
 
         foreach ($data as $varname => $value) {
             if ($this->keyExists($varname)) {
                 /* Validate with the database_manager stuff */
-                if (isset($fields[$varname])) {
-                    $validations = $fields[$varname];
+                foreach ($fields as $key => $field) {
+                    if ($field->tableField == $varname) {
+                        $validations = $field;
 
-                    if ($validations['isRequired']) {
-                        $error = $this->validateIsRequired($value);
-                        if (null != $error) {
-                            $validated = false;
-                            $this->_error->addError(array(
-                                'field'   => $varname,
-                                'message' => $error));
-                        }
-                    }
-
-                    if ($validations['formType'] == 'date') {
-                        $error = $this->validateDate($value);
-                        if (null != $error) {
-                            $validated = false;
-                            $this->_error->addError(array(
-                                'field'   => $varname,
-                                'message' => $error));
-                        }
-                    }
-
-                    /* Validate an special fieldName */
-                    $validater  = 'validate' . ucfirst($varname);
-                    if ( ($validater != 'validateIsRequired') &&
-                         ($validater != 'validateDate')) {
-                        if (in_array($validater, get_class_methods($this))) {
-                            $error = call_user_method($validater, $this, $value);
+                        if ($validations->isRequired) {
+                            $error = $this->validateIsRequired($value);
                             if (null != $error) {
                                 $validated = false;
                                 $this->_error->addError(array(
                                     'field'   => $varname,
                                     'message' => $error));
                             }
+                        }
+
+                        if ($validations->formType == 'date') {
+                            $error = $this->validateDate($value);
+                            if (null != $error) {
+                                $validated = false;
+                                $this->_error->addError(array(
+                                    'field'   => $varname,
+                                    'message' => $error));
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                /* Validate an special fieldName */
+                $validater  = 'validate' . ucfirst($varname);
+                if ( ($validater != 'validateIsRequired') &&
+                    ($validater != 'validateDate')) {
+                    if (in_array($validater, get_class_methods($this))) {
+                        $error = call_user_method($validater, $this, $value);
+                        if (null != $error) {
+                            $validated = false;
+                            $this->_error->addError(array(
+                                'field'   => $varname,
+                                'message' => $error));
                         }
                     }
                 }

@@ -37,7 +37,6 @@ class Phprojekt_Auth extends Zend_Auth
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         if (!isset($authNamespace->userId) || empty($authNamespace->userId)) {
-
             throw new Phprojekt_Auth_UserNotLoggedInException('User not logged in', 1);
         }
 
