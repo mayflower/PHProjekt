@@ -87,7 +87,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($db);
 
         $this->_model = $model;
-        $this->setColumnOrdering(self::LIST_ORDER);
+        $this->setColumnOrdering(self::FORM_ORDER);
     }
 
     /**
@@ -142,11 +142,18 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     {
         $table = $this->_model->getTableName();
 
-        if (null !== $order) {
-            $where = $this->getAdapter()->quoteInto('tableName = ? AND '. $order .' >  0', $table);
-        } else {
-            $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
+        switch ($order) {
+            case self::FORM_ORDER:
+                $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::FORM_ORDER .' > 0', $table);
+                break;
+            case self::LIST_ORDER:
+                $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::LIST_ORDER .' > 0', $table);
+                break;
+            default:
+                $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
+                break;
         }
+
         $this->_dbFields[$order] = $this->fetchAll($where, $order);
 
         return $this->_dbFields[$order];
@@ -204,7 +211,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getInfo($order, $column)
     {
-        $fields = $this->_getFields();
+        $fields = $this->_getFields($order);
 
         $result = array();
         foreach ($fields as $field) {

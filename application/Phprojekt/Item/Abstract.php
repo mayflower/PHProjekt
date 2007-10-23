@@ -145,7 +145,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         foreach ($data as $varname => $value) {
             if ($this->keyExists($varname)) {
                 /* Validate with the database_manager stuff */
-                foreach ($fields as $key => $field) {
+                foreach ($fields as $field) {
                     if ($field->tableField == $varname) {
                         $validations = $field;
 

@@ -89,8 +89,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
         }
 
-        $oLog = new Phprojekt_Log($config);
-        Zend_Registry::set('log', $oLog);
+        $log = new Phprojekt_Log($config);
+        Zend_Registry::set('log', $log);
 
         $db = Zend_Db::factory($config->database->type, array(
         'username' => $config->database->username,
@@ -110,7 +110,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->sharedFixture  = &$db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
-        $suite->addTestSuite(Selenium_AllTests::suite());
+        //$suite->addTestSuite(Selenium_AllTests::suite());
 
         // add here additional test suites
 

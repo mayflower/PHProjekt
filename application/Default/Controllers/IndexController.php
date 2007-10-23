@@ -93,7 +93,6 @@ class IndexController extends Zend_Controller_Action
             die();
         }
 
-        $db       = Zend_Registry::get('db');
         $projects = Phprojekt_Loader::getModel('Project', 'Project');
         $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
 
