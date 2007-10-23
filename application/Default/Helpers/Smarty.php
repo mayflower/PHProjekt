@@ -60,7 +60,7 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         PHPR_LIBRARY_PATH . DIRECTORY_SEPARATOR . 'Smarty');
 
         $this->_smarty = new Smarty();
-        $this->caching = false;
+        $this->_smarty->force_compile = true;
 
         if (null !== $compilePath) {
             $this->templateCompiledDir = $compilePath;
@@ -224,5 +224,40 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      */
     public function generateFormElement($arguments)
     {
+    }
+
+    /**
+     * Finds a view script from the available directories.
+     * If there are not a script, the default script is used
+     *
+     * @param $name string The base name of the script.
+     * @return string The path to the script to render
+     */
+    protected function _script($name)
+    {
+
+        $this->_smarty->clear_cache($name);
+        $paths = $this->getAllPaths();
+        if (0 == count($paths['script'])) {
+            require_once 'Zend/View/Exception.php';
+            throw new Zend_View_Exception('no view script directory set; unable to determine location for view script',
+                $this);
+        }
+
+        foreach ($paths['script']as $dir) {
+            if (is_readable($dir . $name)) {
+                return $dir . $name;
+            }
+        }
+
+        $defaultDir = PHPR_CORE_PATH
+                    . DIRECTORY_SEPARATOR
+                    . 'Default'
+                    . DIRECTORY_SEPARATOR
+                    . 'Views'
+                    . DIRECTORY_SEPARATOR
+                    . 'scripts'
+                    . DIRECTORY_SEPARATOR;
+        return $defaultDir . $name;
     }
 }

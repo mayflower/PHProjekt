@@ -138,14 +138,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array        Array with the data of all the fields
      */
-    protected function _getFields($order)
+    protected function _getFields($order = null)
     {
         $table = $this->_model->getTableName();
 
-        //if (empty($this->_dbFields[$order])) {
+        if (null !== $order) {
+            $where = $this->getAdapter()->quoteInto('tableName = ? AND '. $order .' >  0', $table);
+        } else {
             $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
-            $this->_dbFields[$order] = $this->fetchAll($where, $order);
-        //}
+        }
+        $this->_dbFields[$order] = $this->fetchAll($where, $order);
 
         return $this->_dbFields[$order];
     }
@@ -202,16 +204,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getInfo($order, $column)
     {
-        switch ($order) {
-            case self::LIST_ORDER:
-                    $fields = $this->getFieldsForList();
-                    break;
-            case self::FORM_ORDER:
-                    $fields = $this->getFieldsForForm();
-                    break;
-            default:
-                    throw new Exception('No valid $order parameter give');
-        }
+        $fields = $this->_getFields();
+
         $result = array();
         foreach ($fields as $field) {
             if ($field->keyExists($column)) {
