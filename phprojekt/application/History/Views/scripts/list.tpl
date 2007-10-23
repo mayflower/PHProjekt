@@ -1,15 +1,16 @@
 <table width="100%" class="listView">
 <tr align="center">
-{foreach name=titles item=field from=$titles}
-  <th>{$field.formLabel|translate}</th>
+{foreach item=title from=$records|@titles}
+  <th>{$title}</th>
 {/foreach}
 </tr>
-{foreach name=lines item=line key=key from=$lines}
+{foreach item=record from=$records|list_ordering}
 <tr>
-  {assign var="row" value=$line->getFieldsForList()}
-  {foreach item=field key=fieldname from=$row}
+  {foreach item=field key=fieldname from=$record}
   <td>
-  {$list->generateListElement("`$field`","`$line->$fieldname`")|translate}
+  <a href="{url action="edit" module=$module id=`$record->id`}">
+   {list_element field=`$fieldname` value=`$field`}
+  </a>
   </td>
   {/foreach}
 </tr>

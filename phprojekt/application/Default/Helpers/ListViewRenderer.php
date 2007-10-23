@@ -100,11 +100,13 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
         if (isset($session->lastProjectId)) {
             if ($view->module == 'Project') {
                 $where = $this->getModel()->getAdapter()->quoteInto('parent = ?', $session->lastProjectId);
+            } else if ($view->module == 'History') {
+                $where = null;
             } else {
                 $where = $this->getModel()->getAdapter()->quoteInto('projectId = ?', $session->lastProjectId);
             }
         } else {
-            $where = '';
+            $where = null;
         }
 
         $view->assignByRef('records', $this->getModel()->fetchAll($where));

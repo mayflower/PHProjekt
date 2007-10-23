@@ -703,8 +703,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!is_array($array) || !is_array($array[$key])) {
             throw new
-                Phprojekt_ActiveRecord_Exception("Cannot instantiate"
-                                               . "{$className}");
+                Phprojekt_ActiveRecord_Exception("The second parameter"
+                                               . "must be an array");
         }
 
         $definition = $array[$key];

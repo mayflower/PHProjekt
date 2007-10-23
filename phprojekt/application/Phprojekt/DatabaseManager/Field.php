@@ -52,6 +52,8 @@ class Phprojekt_DatabaseManager_Field
         if (isset($this->_metadata->$name)) {
             return $this->_metadata->$name;
         }
+
+        return null;
     }
 
     public function __toString()
