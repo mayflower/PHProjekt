@@ -246,7 +246,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
         $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
 
         $instance->find(1);
-        $this->assertEquals('Test Project', $instance->project->title);
+        $this->assertEquals(2, $instance->count());
     }
 
     /**
