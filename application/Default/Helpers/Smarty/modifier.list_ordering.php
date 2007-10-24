@@ -23,13 +23,13 @@
 function smarty_modifier_list_ordering($records)
 {
     if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract ) {
-        $records->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::LIST_ORDER);
+        $records->_colInfo = $records->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::LIST_ORDER);
         return $records;
     } else if (is_array($records)) {
         foreach($records as &$record) {
             /* @var Phprojekt_Item_Abstract $record */
             if ($record instanceof Phprojekt_Item_Abstract) {
-                $record->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::LIST_ORDER);
+                $record->_colInfo = $record->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::LIST_ORDER);
             }
         }
         return $records;
