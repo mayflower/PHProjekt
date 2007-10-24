@@ -104,8 +104,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         switch ($order) {
             case self::FORM_ORDER:
             case self::LIST_ORDER:
-                /* colinfo in the model are used to iterate over the fields */
-                $this->_model->_colInfo = $this->getInfo($order, Phprojekt_DatabaseManager::COLUMN_NAME);
+                /* Return the value for assing to colInfo */
+                /* colInfo in the model are used to iterate over the fields */
+                return $this->getInfo($order, Phprojekt_DatabaseManager::COLUMN_NAME);
                 break;
             default:
                 throw new InvalidArgumentException();
