@@ -673,6 +673,39 @@ If you want to see if it worked, just go into your PHProjekt.
  are stored in the WorkingHours table.
 \end_layout
 
+\begin_layout Paragraph
+Naming Conventions
+\end_layout
+
+\begin_layout Standard
+Active Record uses some special naming conventions.
+ Make sure that you follow these.
+\end_layout
+
+\begin_layout Enumerate
+The last part of the class name is the exact name of the database table
+ that is mapped.
+ It's also 
+\emph on
+case-sensitive
+\emph default
+.
+ 
+\newline
+MyModule_Models_Foo is mapped to the database table named Foo.
+\newline
+MyModule_Models_ba
+r is mapped to the database table named bar.
+\end_layout
+
+\begin_layout Enumerate
+Database tables must contain a primary key called 
+\emph on
+id
+\emph default
+.
+\end_layout
+
 \begin_layout Subsection
 View: Templates
 \end_layout
@@ -784,6 +817,10 @@ Advanced module development
 
 \begin_layout Section
 Helpers
+\end_layout
+
+\begin_layout Section
+Hooks
 \end_layout
 
 \begin_layout Chapter
