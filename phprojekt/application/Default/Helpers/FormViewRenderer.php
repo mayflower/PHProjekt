@@ -71,15 +71,17 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return void
      */
-    public function setModel(Phprojekt_Item_Abstract $model)
+    public function setModel( $model)
     {
-        $this->_model = $model;
+        if ($model instanceof Phprojekt_IModel) {
+            $this->_model = $model;
+        }
     }
 
     /**
      * Return the model that is rendered
      *
-     * @return Phprojekt_Item_Abstract
+     * @return array
      */
     public function &getModel()
     {

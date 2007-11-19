@@ -67,15 +67,19 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      *
      * @return void
      */
-    public function setModel(Phprojekt_Item_Abstract $model)
+    public function setModel($model)
     {
-        $this->_model = $model;
+        if (is_array($model)) {
+            $this->_model = $model;
+        } else if ($model instanceof Phprojekt_IModel) {
+            $this->_model = array($model);
+        }
     }
 
     /**
      * Return the model that is rendered
      *
-     * @return Phprojekt_Item_Abstract
+     * @return array
      */
     public function &getModel()
     {
@@ -89,27 +93,13 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      */
     public function render()
     {
-        if (null === $this->getModel()) {
+        if (null === $this->getModel() || count($this->getModel()) == 0) {
             return '';
         }
 
         $view = Zend_Registry::get('view');
 
-        /* Filter the current project id if exists */
-        $session = new Zend_Session_Namespace();
-        if (isset($session->lastProjectId)) {
-            if ($view->module == 'Project') {
-                $where = $this->getModel()->getAdapter()->quoteInto('parent = ?', $session->lastProjectId);
-            } else if ($view->module == 'History') {
-                $where = null;
-            } else {
-                $where = $this->getModel()->getAdapter()->quoteInto('projectId = ?', $session->lastProjectId);
-            }
-        } else {
-            $where = null;
-        }
-
-        $view->assignByRef('records', $this->getModel()->fetchAll($where));
+        $view->records = $this->getModel();
 
         return $view->render('list.tpl');
     }

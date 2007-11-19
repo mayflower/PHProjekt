@@ -94,7 +94,7 @@
       <td rowspan="2" style="width:20%" id="treeView">{$treeView}</td>
       <td id="listView">
       <div id="breadcrumb">
-      <a href="{url action="list" module="Project" id="$projectId"}">{$projectName}</a>&nbsp;
+      <a href="{url action="list" module="Project" nodeId="$projectId"}">{$projectName}</a>&nbsp;
       {if ($breadcrumb != 'Project')}
       /&nbsp;<a href="{url action="list" module="$breadcrumb"}">{$breadcrumb|translate}</a>
       {/if}

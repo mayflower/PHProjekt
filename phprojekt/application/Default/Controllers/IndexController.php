@@ -155,7 +155,7 @@ class IndexController extends Zend_Controller_Action
     public function getListView()
     {
         $instance = Default_Helpers_ListViewRenderer::getInstance();
-        if (null !== $this->getModelObject()) {
+        if (null !== $this->getModelObject() && null === $instance->getModel()) {
             $instance->setModel($this->getModelObject());
         }
 
@@ -344,41 +344,6 @@ class IndexController extends Zend_Controller_Action
         }
     }
 
-//    /**
-//     * Render the tree view
-//     *
-//     * @return void
-//     */
-//    protected function _setTreeView()
-//    {
-//        $this->view->getEngine()->treeView = $this->getTreeView()->renderer($this->view->getEngine());
-//    }
-//
-    /**
-     * Render a template
-     *
-     * @param string $template Which var of the index.tpl
-     *
-     * @return void
-     */
-//    protected function _render($template)
-//    {
-//        switch ($template) {
-//        case self::TREE_VIEW:
-//                return $this->_treeView->renderer($this->_smarty);
-//            break;
-//        case self::FORM_VIEW:
-//                return $this->view->render('form.tpl');
-//            break;
-//        case self::LIST_VIEW:
-//                return $this->view->
-//            break;
-//        default:
-//                return $this->view->render($template . '.tpl');
-//            break;
-//        }
-//    }
-
     /**
      * Render all the views that are not already renders
      *
@@ -389,9 +354,9 @@ class IndexController extends Zend_Controller_Action
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
 
-        if (isset($session->lastProjectId)) {
-            $this->view->projectId   = $session->lastProjectId;
-            $this->view->projectName = $session->lastProjectName;
+        if (isset($session->currentProjectId)) {
+            $this->view->projectId   = $session->currentProjectId;
+            $this->view->projectName = $session->currentProjectName;
         }
 
         $this->view->params     = $this->_params;
