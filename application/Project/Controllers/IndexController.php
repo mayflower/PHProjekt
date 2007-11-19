@@ -42,6 +42,23 @@ class Project_IndexController extends IndexController
     const FORM_COLUMNS = 1;
 
     /**
+     * Set various session data.
+     * @todo Check if we have to move this part of the code, as lastProjectId
+     *       is used everywhere.
+     *
+     */
+    public function init () {
+        parent::init();
+        $session = new Zend_Session_Namespace();
+        $project = $this->getModelObject();
+        if ($this->getRequest()->getParam('nodeId', 0) > 0) {
+            $project->find($this->getRequest()->getParam('nodeId'));
+            $session->currentProjectId   = $this->getRequest()->getParam('nodeId', 0);
+            $session->currentProjectName = $project->title;
+        }
+    }
+
+    /**
      * We store the id of the shown project in the session, as other modules
      * and the indexcontroller might depend on that to define the current active
      * object
@@ -54,12 +71,14 @@ class Project_IndexController extends IndexController
         /* Save the last project id into the session */
         /* @todo: Sanitize ID / Request parameter */
         $session = new Zend_Session_Namespace();
-        if ($this->_itemid > 0) {
-            $project = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $db));
-            $project->find($this->_itemid);
-            $session->lastProjectId   = $this->_itemid;
-            $session->lastProjectName = $project->title;
+        $project = $this->getModelObject();
+
+        $where = null;
+        if (isset($session->currentProjectId)) {
+            $where = $db->quoteInto('parent = ?', $session->currentProjectId);
         }
+
+        $this->getListView()->setModel($project->fetchAll($where));
 
         parent::listAction();
     }
@@ -73,8 +92,9 @@ class Project_IndexController extends IndexController
      */
     public function saveAction()
     {
-        if ($this->_itemid > 0) {
-            $model = $this->getModelObject()->find($this->_itemid);
+        if ($this->getRequest()->getParam('id', 0) > 0) {
+            $model = $this->getModelObject()->find(
+                            $this->getRequest()->getParam('id'));
         } else {
             $model = $this->getModelObject();
         }
@@ -82,9 +102,9 @@ class Project_IndexController extends IndexController
         $parent = (isset($this->_params['parent'])) ? (int) $this->_params['parent'] : 1;
 
         $parentNode = new Phprojekt_Tree_Node_Database($model, $parent);
-        $newNode    = new Phprojekt_Tree_Node_Database($model, $this->_itemid);
+        $newNode    = new Phprojekt_Tree_Node_Database($model, $this->getRequest()->getParam('id'));
 
-        if (null !== $this->_itemid) {
+        if (null !== $this->getRequest()->getParam('id')) {
             $newNode->setup();
         }
         $parentNode->setup();
@@ -98,7 +118,7 @@ class Project_IndexController extends IndexController
 
         /* Validate and save if is all ok */
         if ($newNode->getActiveRecord()->recordValidate()) {
-            if (null === $this->_itemid || $newNode->parent !== $parentNode->id) {
+            if (null === $this->getRequest()->getParam('id') || $newNode->parent !== $parentNode->id) {
                 $parentNode->appendNode($newNode);
             } else {
                 $newNode->getActiveRecord()->save();
@@ -108,5 +128,11 @@ class Project_IndexController extends IndexController
 
             $this->view->errors = $newNode->getActiveRecord()->getError();
         }
+    }
+
+
+    public function editAction() {
+        $this->listAction();
+        parent::editAction();
     }
 }

@@ -39,7 +39,7 @@ interface Phprojekt_RenderHelper
      *
      * @param Phprojekt_Abstract_Item $model The activerecord
      */
-    public function setModel(Phprojekt_Item_Abstract $model);
+    public function setModel($model);
 
     /**
      * Render the part.
