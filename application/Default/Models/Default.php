@@ -24,7 +24,7 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Models_Default extends Phprojekt_Item_Abstract
+class Default_Models_Default implements Phprojekt_IModel
 {
 
     public function __construct() {}
@@ -58,7 +58,7 @@ class Default_Models_Default extends Phprojekt_Item_Abstract
      *
      * @return IndexController Action
      */
-    public function __call($method, $args)
-    {
-    }
+    public function save() {}
+
+    public function getSubModules() {}
 }
