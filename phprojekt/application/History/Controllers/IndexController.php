@@ -47,7 +47,7 @@ class History_IndexController extends IndexController
     {
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
-        $session->lastProjectId = 0;
+        $session->currentProjectId = 0;
 
         parent::setListView();
     }

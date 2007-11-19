@@ -24,7 +24,7 @@
  * @since      File available since Release 1.0
  * @author     Gustavao Solt <solt@mayflower.de>
  */
-abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
+abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_IModel
 {
     /**
      * Represents the database_manager class
