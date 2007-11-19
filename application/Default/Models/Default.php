@@ -27,6 +27,8 @@
 class Default_Models_Default extends Phprojekt_Item_Abstract
 {
 
+    public function __construct() {}
+
     /**
      * Default fetchall - needs to be implemented
      *
