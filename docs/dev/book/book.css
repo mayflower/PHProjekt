@@ -1,0 +1,93 @@
+/* 
+ normal elements
+ */
+body {
+  font-family: Helvetica, Verdana, sans;
+  margin: 0px;
+}
+
+hr {
+  color: #D75C00;
+  border: 1px solid;
+}
+
+/*
+ special docbook classes
+ */
+.navheader,
+.navfooter {
+  font-family: sans;
+  font-size: 12px; 
+  background: #EFEFEF;
+}
+
+.navheader {
+  padding-top: 5px;
+}
+
+.navfooter {
+  padding-bottom: 5px;
+  border-bottom: 1px solid black;
+}
+
+.footnotes {
+  font-size: 10px;
+}
+
+.book .toc {
+  background-color: white;
+  border: 0px;
+}
+
+.toc {
+  background-color: #F0F0F0;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  padding: 5px;
+  margin-right: 0;
+}
+
+body > .book,
+body > .chapter,
+body > .sect1,
+body > .sect2,
+body > .sect3,
+body > .sect4 {
+  align: justify;
+  margin-right: 30%;
+  margin-left: 25px;
+}
+
+.screen {
+  border: 1px solid black;
+  font-family: monospace;
+  padding: 10px;
+  padding-left: 30px;
+}
+
+.author {
+  font-weight: normal;
+  font-size: 12px;
+  padding-left: 1em;
+}
+
+.authorgroup {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.authorgroup h3 {
+  padding-left: 5px;
+  margin-bottom: 0px;
+}
+
+/* 
+ pseudo elements
+ */
+a:link,
+a:visited,
+a:active {
+  text-decoration: none;
+  color: #D75C00;
+}
+

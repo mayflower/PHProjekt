@@ -1,0 +1,794 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass docbook-book
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+PHProjekt 6.x Developer Documentation
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Standard
+Ist es möglich tabellen anzulegen und anzuzeigen OHNE etwas in den DB Manager
+ einzufügen?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Introduction
+\end_layout
+
+\begin_layout Standard
+PHProjekt is a web based groupware application that helps you in managing
+ project, tasks, contacts and other data.
+ It is written in PHP and distributed under the GNU Public License (GPL).
+ PHProjekt was originally developed by Albrecht Günther in 1999 and is developed
+ by the Mayflower GmbH since version 5.0.
+ With the beginning of the PHProjekt 6.0 development cycle the complete project
+ was rewritten.
+ 
+\end_layout
+
+\begin_layout Standard
+The following documentation gives you an idea about the internals of PHProjekt
+ 6.0.
+ It will introduce the MVC based application design, the module concept
+ and the active record pattern, which helps you to receive data from a database
+ backend, as well as several other techniques used in PHProjekt 6.0.
+ 
+\end_layout
+
+\begin_layout Standard
+It's considered as the official developer documentation, but not as the
+ introduction to the PHProjekt API internals.
+\end_layout
+
+\begin_layout Section
+Who should read this documentation
+\end_layout
+
+\begin_layout Standard
+PHProjekt 6.0 aims to provide a simple to use rapid development framework
+ that makes it easy to extend PHProjekt with your self-written code.
+ Furthermore, the application features several ways to extend it without
+ writing any code.
+\end_layout
+
+\begin_layout Standard
+The following documentation is written for developers who want to have full
+ access to the provided API.
+ It's written for PHP developers who want to extend PHProjekt with self-written
+ code.
+ Therefore it gives you an depth introduction about the concepts used in
+ PHProjekt 6.0.
+ 
+\end_layout
+
+\begin_layout Standard
+If you want to customize the PHProjekt internals yourself, please consider
+ to take a look at the 
+\emph on
+PHProjekt Internals Documentation
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+To extend PHProjekt 6.0 with self-written code, you should know object oriented
+ concepts as well as database design.
+ You should furthermore know the basic concepts of Zend Framework, but we
+ will try to provide most of the needed information.
+\end_layout
+
+\begin_layout Section
+API Version
+\end_layout
+
+\begin_layout Standard
+The following tutorial was written during the initial development cycle
+ of PHProjekt 6.0.
+ In general it refers to PHProjekt 6.0 API.
+ If you use a newer version of PHProjekt 6, the API might be different.
+ Please look at the PHProjekt developer homepage to see if there are newer
+ versions of this tutorial or look for the API changes since version 6.0.
+\end_layout
+
+\begin_layout Chapter
+Basic concepts
+\end_layout
+
+\begin_layout Standard
+Starting from version 6.0, PHProjekt provides an flexible rapid development
+ framework that allows you to easily extend the application with your own
+ code.
+ 
+\end_layout
+
+\begin_layout Standard
+In general PHProjekt 6.0 is divided into multiple modules that provide certain
+ features.
+ A module might be e.g.
+ the task modules which provides the user the possibility to manage tasks.
+ Other modules are e.g.
+ the contact or the calendar module.
+ 
+\end_layout
+
+\begin_layout Standard
+Every module is splitted into a model, a controller and a view part.
+ This design pattern is called MVC.
+ 
+\end_layout
+
+\begin_layout Standard
+To get data from a module, you will usually use the active record pattern,
+ which helps you with mapping database tables into PHP objects.
+ 
+\end_layout
+
+\begin_layout Section
+MVC
+\end_layout
+
+\begin_layout Standard
+PHProjekt 6.0 is written using a so called 
+\emph on
+Model-View-Controller
+\emph default
+ concept (MVC).
+ This concept, in general, splits an application into a model part, a view
+ part and a controller part.
+ PHProjekt uses the 
+\begin_inset LatexCommand htmlurl
+name "Zend Framework"
+target "http://framework.zend.com"
+
+\end_inset
+
+ to provide a MVC framework.
+\end_layout
+
+\begin_layout Subsection
+Model
+\end_layout
+
+\begin_layout Standard
+The model part receives data from a datasource.
+ Usually the datasource is a database connection.
+ The model part must take care that the data from the database is received
+ and mapped into an PHP object (an instance of a class).
+ In the application all data is manipulated using this objects.
+ No direct SQL statements are executed outside the model part
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Except for the core API.
+ Core classes are also allowed to do a query themself.
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+A model might also map other data into objects.
+ For example a web service.
+\end_layout
+
+\begin_layout Subsection
+Controller
+\end_layout
+
+\begin_layout Standard
+The controller combines the model and the view part of a module.
+ It receives the actions from a user, e.g.
+ updating a dataset, and then receiving the data using the model, manipulating
+ it and display the result using the view.
+ It 
+\emph on
+controls 
+\emph default
+all other parts.
+\end_layout
+
+\begin_layout Subsection
+View
+\end_layout
+
+\begin_layout Standard
+The view part renderes the data from a module.
+ E.g it takes data for a list view and then does the rendering of the list.
+ The output format is usually HTML.
+ The data is provided by the controller.
+ Usually the controller is just the a template rendering engine that takes
+ the data and render it using a template.
+\end_layout
+
+\begin_layout Section
+Modules
+\end_layout
+
+\begin_layout Standard
+Modules are a core part of PHProjekt.
+ They constist of a set of features, that are related to each other.
+ E.g.
+ managing tasks or managing appointments are combined into a module.
+ Modules have a 
+\emph on
+specific
+\emph default
+ 
+\emph on
+directory layou
+\emph default
+t.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Every module is displayed on a per-project base
+\emph default
+.
+ This means, that a e.g.
+ the task module is displayed if you click on a project at the project tree.
+ Therefore data saved by a model is usually related to a project id, but
+ need't to.
+\end_layout
+
+\begin_layout Standard
+PHProjekt provides a 
+\emph on
+default module
+\emph default
+.
+ Every module in PHProjekt uses those parts of the default module automaticly,
+ that are not overwritten by own written code.
+\end_layout
+
+\begin_layout Subsection
+Structure of a module
+\end_layout
+
+\begin_layout Standard
+Every module is a directory located in the 
+\emph on
+application/ 
+\emph default
+directory.
+ The directory name is usually the module name, but must not.
+ The module directory has three subdirectories.
+ The 
+\emph on
+Views/ 
+\emph default
+directory, the 
+\emph on
+Models/ 
+\emph default
+directory and the 
+\emph on
+Controllers/
+\emph default
+ directory.
+ 
+\emph on
+Please notice that directory names are case-sensitiv.
+
+\emph default
+ 
+\end_layout
+
+\begin_layout Code
+/application
+\end_layout
+
+\begin_layout Code
+  /MyModule
+\end_layout
+
+\begin_layout Code
+    /Controllers
+\end_layout
+
+\begin_layout Code
+    /Models
+\end_layout
+
+\begin_layout Code
+    /Views
+\end_layout
+
+\begin_layout Subsection
+The default module
+\end_layout
+
+\begin_layout Section
+Database Abstraction
+\end_layout
+
+\begin_layout Chapter
+Writing a own module
+\end_layout
+
+\begin_layout Standard
+In the following chapter, we want to start writing code.
+ We are going to write a mechanism to track our daily working hours.
+ 
+\end_layout
+
+\begin_layout Standard
+We just want to have a button.
+ If we click on the button, we start tracking the time.
+ If we click another time, we stop tracking the time.
+ Furthermore we want to display how many hours we worked this month and
+ we want to select project to book our time on, before we start tracking.
+\end_layout
+
+\begin_layout Standard
+We use the a SQL database to store our data.
+ In particular we are going to use MySQL syntax.
+ We also use 
+\begin_inset LatexCommand htmlurl
+name "Smarty"
+target "http://smarty.php.net"
+
+\end_inset
+
+ templates to display our calculated times.
+\end_layout
+
+\begin_layout Standard
+Our first step will be the creation of a database table that stores our
+ data.
+ After that we start creating the necessary directory structure for a module.
+ Then we start writing code by creating a mapping from our database table
+ into PHP.
+ If we finished with that, we are going to design our frontend and then
+ putting all together in the controller - catching the users actions.
+\end_layout
+
+\begin_layout Standard
+Before we start, please consider to read the 
+\emph on
+Zend Coding Guidelines
+\emph default
+ first.
+ We are using some shortcuts that you should probably avoid in your module
+ (we will left out a lot of the necessary documentation headers).
+\end_layout
+
+\begin_layout Section
+Database table and Database Manager
+\end_layout
+
+\begin_layout Standard
+The first thing that has to be done is creating our database tables.
+ We use our favorite tool to create the following table
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+We are using foreign keys here.
+ If you use MySQL, make sure that PHProjekt was installed using InnoDB tables
+ and that you create the example table using InnoDB (if necessary specifiy
+ ENGINE=InnoDB)
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Code
+CREATE TABLE `WorkingHours` (
+\end_layout
+
+\begin_layout Code
+  `id`        INT NOT NULL AUTO_INCREMENT,
+\end_layout
+
+\begin_layout Code
+  `startDate` DATETIME NOT NULL,
+\end_layout
+
+\begin_layout Code
+  `endDate`   DATETIME NOT NULL,
+\end_layout
+
+\begin_layout Code
+  `projectId` INT,
+\end_layout
+
+\begin_layout Code
+  PRIMARY KEY(id),
+\end_layout
+
+\begin_layout Code
+  FOREIGN KEY(projectId)   -- don't use this part if you don't use mysql
+ with innodb
+\end_layout
+
+\begin_layout Code
+   REFERENCES project(id) 
+\end_layout
+
+\begin_layout Code
+    ON DELETE SET NULL
+\end_layout
+
+\begin_layout Code
+);
+\end_layout
+
+\begin_layout Standard
+Thats everthing we need from our database.
+ Let's pass over and create our necessary files.
+\end_layout
+
+\begin_layout Section
+Create directories and files
+\end_layout
+
+\begin_layout Standard
+After we setup our database table, we have to create the module directory.
+ We switch into the 
+\emph on
+application/
+\emph default
+ directory of PHProjekt and create a directory called 
+\emph on
+WorkingHours/
+\emph default
+.
+ Furthermore we create the directories 
+\emph on
+View/
+\emph default
+, 
+\emph on
+Controllers/ 
+\emph default
+and 
+\emph on
+Models/
+\emph default
+.
+\end_layout
+
+\begin_layout Code
+/application
+\end_layout
+
+\begin_layout Code
+  /WorkingHours
+\end_layout
+
+\begin_layout Code
+    /Controllers
+\end_layout
+
+\begin_layout Code
+    /Models
+\end_layout
+
+\begin_layout Code
+    /Views
+\end_layout
+
+\begin_layout Standard
+This layout is necessary.
+ PHProjekt uses a MVC pattern and the names of the subdirectories cannot
+ be changed.
+ Make sure that 
+\emph on
+Controllers
+\emph default
+/, 
+\emph on
+Models/
+\emph default
+ and 
+\emph on
+Views/
+\emph default
+ start with an uppercase letter.
+ The directory access (correct: on 
+\emph on
+most
+\emph default
+ of the operating systems, but not all) is case-sensitiv.
+ 
+\end_layout
+
+\begin_layout Subsection
+Model: Mapping
+\end_layout
+
+\begin_layout Standard
+Since we have our database table and our directory structure ready, we need
+ a way to communicate with our database.
+ We are using the 
+\emph on
+Active Record Pattern
+\emph default
+ provided by the PHProjekt Core API to access the table data.
+ 
+\end_layout
+
+\begin_layout Standard
+Active Record is a way to automaticly map a database table into an (PHP)
+ object.
+ It provides you all the necessary methods to receive, manipulate and store
+ data without even touching any SQL statements.
+ We just have to follow some naming conventions.
+ The first naming convention was allready done, by choosing the name of
+ our database table.
+ If you remember, we used 
+\emph on
+WorkingHours
+\emph default
+.
+ The class we have to create to map our database will have the same name,
+ as well as the file containing the class.
+ 
+\end_layout
+
+\begin_layout Standard
+So let's start by creating the 
+\emph on
+WorkingHours.php
+\emph default
+ in our 
+\emph on
+Models/
+\emph default
+ directory.
+\end_layout
+
+\begin_layout Code
+Filename: application/WorkingHours/Models/WorkingHours.php
+\end_layout
+
+\begin_layout Code
+
+\end_layout
+
+\begin_layout Code
+<?php
+\end_layout
+
+\begin_layout Code
+/** 
+\end_layout
+
+\begin_layout Code
+ * Map our database table using active record 
+\end_layout
+
+\begin_layout Code
+ *
+\end_layout
+
+\begin_layout Code
+ * @copyright 2007 PHProjekt development team
+\end_layout
+
+\begin_layout Code
+ */
+\end_layout
+
+\begin_layout Code
+class WorkingHours_Models_WorkingHours extends PHProjekt_Item_Abstract {
+\end_layout
+
+\begin_layout Code
+}
+\end_layout
+
+\begin_layout Standard
+You may wonder, why we use such a long class name.
+ It's necessary to prefix the class with the filepath using underscores
+ instead of slashes.
+ Without that the autoloader function won't find our class.
+ 
+\end_layout
+
+\begin_layout Standard
+You also may have noticed that we extend from the 
+\emph on
+PHProjekt_Item_Abstract
+\emph default
+ class.
+ This class provides all our Active Record methods and does the actual mapping.
+ The core API offers also the 
+\emph on
+PHProjekt_ActiveRecord_Abstract
+\emph default
+ class.
+ Unlike the PHProjekt_ActiveRecord_Abstract class, the PHProjekt_Item_Abstract
+ class supports writing a history log as well as it makes some validation.
+ We strongly recommend to use the 
+\emph on
+PHProjekt_Item_Abstract
+\emph default
+ class.
+\end_layout
+
+\begin_layout Standard
+That's everything we have to do in our model.
+ No SQL or anything else.
+ Just save the file.
+ Our database access is complete.
+ Active Record will do the job.
+\end_layout
+
+\begin_layout Standard
+If you want to see if it worked, just go into your PHProjekt.
+ The module should exist and you should be able to see a list of items that
+ are stored in the WorkingHours table.
+\end_layout
+
+\begin_layout Subsection
+View: Templates
+\end_layout
+
+\begin_layout Section
+Tools
+\end_layout
+
+\begin_layout Standard
+If you are on a Linux or U*NIX system, you can use a bash script that comes
+ with PHProjekt.
+ It is called 
+\emph on
+scaffold
+\emph default
+.
+ You will find it in the 
+\emph on
+tools/
+\emph default
+ directory of PHProjekt.
+ Just go into the 
+\emph on
+application/
+\emph default
+ directory and type: 
+\end_layout
+
+\begin_layout Code
+$ cd /path/to/phprojekt
+\end_layout
+
+\begin_layout Code
+$ cd application
+\end_layout
+
+\begin_layout Code
+//...
+ now we are in the application directory let's start scaffolding
+\end_layout
+
+\begin_layout Code
+$ ../tools/scaffold WorkingHours
+\end_layout
+
+\begin_layout Code
+Initialize PHProjekt 6 module: WorkingHours
+\end_layout
+
+\begin_layout Code
+Create directory structure
+\end_layout
+
+\begin_layout Code
+        WorkingHours/
+\end_layout
+
+\begin_layout Code
+        => WorkingHours/Controllers/
+\end_layout
+
+\begin_layout Code
+        => WorkingHours/Models/
+\end_layout
+
+\begin_layout Code
+        => WorkingHours/Views/
+\end_layout
+
+\begin_layout Code
+        => WorkingHours/Views/scripts
+\end_layout
+
+\begin_layout Code
+Create empty model file
+\end_layout
+
+\begin_layout Code
+        => WorkingHours/Models/WorkingHours.php
+\end_layout
+
+\begin_layout Code
+Create empty controller file
+\end_layout
+
+\begin_layout Code
+        => WorkingHours/Controllers/IndexController.php
+\end_layout
+
+\begin_layout Code
+Finished successul
+\end_layout
+
+\begin_layout Standard
+Thats all.
+ You will find the complete directory structure as well as stub files for
+ all the necessary files.
+ For example, our database mapping is allready finished.
+ Just look into 
+\emph on
+WorkingHours/Models/WorkingHours.php
+\emph default
+.
+\end_layout
+
+\begin_layout Chapter
+Advanced module development
+\end_layout
+
+\begin_layout Section
+Helpers
+\end_layout
+
+\begin_layout Chapter
+Tools
+\end_layout
+
+\end_body
+\end_document
