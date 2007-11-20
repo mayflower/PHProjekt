@@ -167,8 +167,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return Zend_Db_Rowset
      */
-    public function find($fieldname)
+    public function find()
     {
+		$fieldname = func_get_arg(0);
+
         $table = $this->_model->getTableName();
         return parent::fetchRow($this->_db->quoteInto('tableName = ?', $table)
                                 . ' AND '

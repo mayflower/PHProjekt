@@ -53,6 +53,12 @@ class Phprojekt_Loader extends Zend_Loader
     protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH);
 
     /**
+     * Define the set of allowed characters for classes.
+     *
+     */
+    const CLASS_PATTERN = '[A-Za-z0-9_]+';
+
+    /**
      * Load a class
      *
      * @param string       $class Name of the class
@@ -227,14 +233,14 @@ class Phprojekt_Loader extends Zend_Loader
     /**
      * Returns the name of the model for a given object
      *
-     * @param Phprojekt_ActiveRecord_Abstract $object An active record
+     * @param Phprojekt_Model_Interface $object An active record
      *
      * @return string|boolean
      */
-    public static function getModelFromObject(Phprojekt_ActiveRecord_Abstract $object)
+    public static function getModelFromObject(Phprojekt_Model_Interface $object)
     {
         $match = null;
-        $pattern = str_replace('_', '', Phprojekt_ActiveRecord_Abstract::CLASS_PATTERN);
+        $pattern = str_replace('_', '', self::CLASS_PATTERN);
         if (preg_match("@_(" . $pattern . ")$@", get_class($object), $match)) {
             return $match[1];
         }
@@ -249,10 +255,10 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return string|boolean
      */
-    public static function getModuleFromObject(Phprojekt_ActiveRecord_Abstract $object)
+    public static function getModuleFromObject(Phprojekt_Model_Interface $object)
     {
         $match = null;
-        $pattern = str_replace('_', '', Phprojekt_ActiveRecord_Abstract::CLASS_PATTERN);
+        $pattern = str_replace('_', '', self::CLASS_PATTERN);
         if (preg_match("@^(" . $pattern . ")_@", get_class($object), $match)) {
             return $match[1];
         }
