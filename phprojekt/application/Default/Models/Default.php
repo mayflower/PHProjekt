@@ -24,10 +24,47 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Default_Models_Default implements Phprojekt_IModel
+class Default_Models_Default implements Phprojekt_Model_Interface
 {
 
     public function __construct() {}
+
+	/**
+	 * Empty iterator implementation as a model must be iteratable
+	 * @see Iterator::next()
+	 */
+	public function next() 
+	{ }
+
+	/**
+	 * Empty iterator implementation as a model must be iteratable
+	 * @see Iterator::rewind()
+	 */
+	public function rewind()
+	{ }
+
+	/**
+	 * Empty iterator implementation as a model must be iteratable
+	 * @see Iterator::current()
+	 */
+	public function current()
+	{ }
+
+	/**
+	 * Empty iterator implementation as a model must be iteratable
+	 * @see Iterator::valid()
+	 */
+	public function valid() 
+	{ 
+		return false;
+	}
+
+	/**
+	 * Empty iterator implementation as a model must be iteratable
+	 * @see Iterator::key()
+	 */
+	public function key () 
+	{ }
 
     /**
      * Default fetchall - needs to be implemented

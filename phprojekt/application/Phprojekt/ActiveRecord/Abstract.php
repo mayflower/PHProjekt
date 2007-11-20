@@ -61,7 +61,7 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract implements Iterator
+abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract implements Phprojekt_Model_Interface
 {
     /**
      * The format for the foreign key.
@@ -72,12 +72,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
      *
      */
     const FOREIGN_KEY_FORMAT = ':tableNameId';
-
-    /**
-     * Define the set of allowed characters for classes.
-     *
-     */
-    const CLASS_PATTERN = '[A-Za-z0-9_]+';
 
     /**
      * Models where this element does belong to,
@@ -743,7 +737,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
      */
     protected static function _translateClassNameToTable($className)
     {
-        $preg = sprintf('(?:%s_)?(%s)$', self::CLASS_PATTERN, self::CLASS_PATTERN);
+        $preg = sprintf('(?:%s_)?(%s)$', Phprojekt_Loader::CLASS_PATTERN, Phprojekt_Loader::CLASS_PATTERN);
 
         $match = array();
         if (preg_match('@' . $preg . '@', $className, $match)) {
