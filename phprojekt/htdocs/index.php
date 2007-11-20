@@ -31,9 +31,14 @@ Zend_Loader::registerAutoload('Phprojekt_Loader');
 Zend_Session::start();
 
 /* Read the config file, but only the production setting */
-$config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION);
+$config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION, true);
 Zend_Registry::set('config', $config);
-define('PHPR_ROOT_WEB_PATH',$config->webpath . 'index.php/');
+
+if (substr($config->webpath, -1) != '/') { 
+	$config->webpath.= '/';
+}
+
+define('PHPR_ROOT_WEB_PATH', $config->webpath . 'index.php/');
 
 /* Make the connection to the DB*/
 // require_once 'Zend/Db.php';
