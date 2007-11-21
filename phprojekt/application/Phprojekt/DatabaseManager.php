@@ -70,8 +70,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     protected $_model;
 
-    const FORM_ORDER = 'formPosition';
-    const LIST_ORDER = 'listPosition';
+    const FORM_ORDER   = 'formPosition';
+    const LIST_ORDER   = 'listPosition';
+    const FILTER_ORDER = 'listUseFilter';
 
     const COLUMN_NAME = 'tableField';
     const COLUMN_TITLE = 'formLabel';
@@ -104,6 +105,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         switch ($order) {
             case self::FORM_ORDER:
             case self::LIST_ORDER:
+            case self::FILTER_ORDER:
                 /* Return the value for assing to colInfo */
                 /* colInfo in the model are used to iterate over the fields */
                 return $this->getInfo($order, Phprojekt_DatabaseManager::COLUMN_NAME);
@@ -150,6 +152,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
             case self::LIST_ORDER:
                 $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::LIST_ORDER .' > 0', $table);
                 break;
+            case self::FILTER_ORDER:
+                $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::FILTER_ORDER .' > 0', $table);
+                break;
+
             default:
                 $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
                 break;
@@ -199,6 +205,18 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     public function getFieldsForForm()
     {
         return $this->_getFields(self::FORM_ORDER);
+    }
+
+    /**
+     * Get the field data sorted with the listUseFilter value
+     *
+     * The fields with listUseFilter below 0 are not return.
+     *
+     * @return array Array with the data of the list fields
+     */
+    public function getFieldsForFilter()
+    {
+        return $this->_getFields(self::FILTER_ORDER);
     }
 
     /**

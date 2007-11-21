@@ -13,7 +13,6 @@
  * @since      File available since Release 1.0
  */
 
-
 /**
  * Generate a list element and do all necessary converts, etc.
  * The function requires the parameter "field" and "value" to be passed.

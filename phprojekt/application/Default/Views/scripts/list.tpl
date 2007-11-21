@@ -1,7 +1,7 @@
 <table width="100%" class="listView">
 <tr align="center">
 {foreach item=title from=$records|@titles}
-  <th>{$title}</th>
+  <th>{$title|translate}</th>
 {/foreach}
 </tr>
 

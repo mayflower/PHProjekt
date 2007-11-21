@@ -34,7 +34,7 @@ Zend_Session::start();
 $config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION, true);
 Zend_Registry::set('config', $config);
 
-if (substr($config->webpath, -1) != '/') { 
+if (substr($config->webpath, -1) != '/') {
 	$config->webpath.= '/';
 }
 

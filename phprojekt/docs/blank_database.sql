@@ -186,4 +186,13 @@ VALUES(0,'History','userId',1,'UserId','UserId','userId','1','1',null,null,0,1,'
 (0,'History','action',1,'Action','Action','text','7','1',null,null,'',7,'left',1,7,1,0,1,0),
 (0,'History','datetime',1,'Datetime','Datetime','datetime','8','1',null,null,'',8,'center',1,8,1,0,1,0);
 
+DROP TABLE IF EXISTS `searchWords`;
+CREATE TABLE `searchWords` (
+  `module` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `word` varchar(255) NOT NULL,
+  `crc32` int(11) NOT NULL,
+  PRIMARY KEY  (`itemId`,`module`,`crc32`)
+);
+
 COMMIT;

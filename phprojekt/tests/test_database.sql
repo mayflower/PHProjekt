@@ -303,8 +303,17 @@ LOCK TABLES `Tree` WRITE;
 INSERT INTO `Tree` VALUES (2,NULL,'/','Root'),(3,2,'/2/','Child 1'),(4,2,'/2/','Child 2'),(5,4,'/2/4/','Sub Child 1'),(6,4,'/2/4/','Sub Child 2'),(7,2,'/2/','Child 3');
 /*!40000 ALTER TABLE `Tree` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+DROP TABLE IF EXISTS `searchWords`;
+CREATE TABLE `searchWords` (
+  `module` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `word` varchar(255) NOT NULL,
+  `crc32` int(11) NOT NULL,
+  PRIMARY KEY  (`itemId`,`module`,`crc32`)
+);
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
