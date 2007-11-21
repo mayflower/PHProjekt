@@ -98,4 +98,6 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     public function save() {}
 
     public function getSubModules() {}
+
+    public function getFieldsForFilter() {}
 }

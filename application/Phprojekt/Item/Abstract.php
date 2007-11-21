@@ -55,6 +55,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     protected $_config = null;
 
     /**
+     * Full text Search object
+     *
+     * @var Phprojekt_SearchWords
+     */
+    protected $_search = null;
+
+    /**
      * History data of the fields
      *
      * @var array
@@ -73,6 +80,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
         $this->_error     = new Phprojekt_Error();
         $this->_history   = new Phprojekt_History($db);
+        $this->_search    = new Phprojekt_SearchWords($db);
 
         $config        = Zend_Registry::get('config');
         $this->_config = $config;
@@ -267,13 +275,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function save()
     {
-        if (null !== $this->id) {
+        if ($this->id > 0) {
             $this->_history->saveFields($this, 'edit');
             parent::save();
         } else {
             parent::save();
             $this->_history->saveFields($this, 'add');
         }
+        $this->_search->indexObjectItem($this);
     }
 
     /**
@@ -284,6 +293,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function delete()
     {
         $this->_history->saveFields($this, 'delete');
+        $this->_search->deleteObjectItem($this);
         parent::delete();
     }
 
@@ -295,5 +305,17 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public function getSubModules()
     {
         return array();
+    }
+
+    /**
+     * Return the fields that can be filtered
+     *
+     * This function must be here for be overwrited by the default module
+     *
+     * @return array
+     */
+    public function getFieldsForFilter()
+    {
+        return $this->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER, Phprojekt_DatabaseManager::COLUMN_TITLE);
     }
 }

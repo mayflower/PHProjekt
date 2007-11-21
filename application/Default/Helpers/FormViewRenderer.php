@@ -73,7 +73,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      */
     public function setModel( $model)
     {
-        if ($model instanceof Phprojekt_IModel) {
+        if ($model instanceof Phprojekt_Model_Interface) {
             $this->_model = $model;
         }
     }
@@ -123,8 +123,10 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
                 return self::tree($field);
             case "space":
                 return '';
-            default:
+            case "text":
                 return self::text($field);
+            default:
+                return '';
         }
     }
 
@@ -213,6 +215,15 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
 
             $options[$key] = Zend_Registry::get('translate')->translate($value);
         }
+
+        // Default value for these special system fields
+        if ($field->tableField == 'projectId' || $field->tableField == 'parent') {
+            $session = new Zend_Session_Namespace();
+            if (isset($session->currentProjectId)) {
+                $field->value = (int) $session->currentProjectId;
+            }
+        }
+
         return Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
     }
 }

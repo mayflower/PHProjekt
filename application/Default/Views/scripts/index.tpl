@@ -109,6 +109,7 @@
         {/if}
       {/foreach}
       </div>
+      {$filterView}
       {$listView}
       </td>
     </tr>

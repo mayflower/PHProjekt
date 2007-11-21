@@ -871,7 +871,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
                 $this->_data[$foreignKeyName] = $data[$foreignKeyName];
             }
 
-            $this->_data['id'] = $this->insert($data);
+            $this->insert($data);
+            $this->_data['id'] = $this->_db->lastInsertId();
             $this->_storedId   = $this->_data['id'];
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {

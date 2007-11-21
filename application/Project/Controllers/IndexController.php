@@ -73,14 +73,11 @@ class Project_IndexController extends IndexController
         $session = new Zend_Session_Namespace();
         $project = $this->getModelObject();
 
-        $where = null;
         if (isset($session->currentProjectId)) {
-            $where = $db->quoteInto('parent = ?', $session->currentProjectId);
+            $this->addWhere($db->quoteInto('parent = ?', $session->currentProjectId));
         }
 
-        $this->getListView()->setModel($project->fetchAll($where));
-
-        parent::listAction();
+        $this->getListView()->setModel($project->fetchAll($this->getWhere()));
     }
 
     /**
@@ -128,11 +125,7 @@ class Project_IndexController extends IndexController
 
             $this->view->errors = $newNode->getActiveRecord()->getError();
         }
-    }
 
-
-    public function editAction() {
         $this->listAction();
-        parent::editAction();
     }
 }

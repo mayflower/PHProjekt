@@ -97,6 +97,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         'password' => $config->database->password,
         'dbname'   => $config->database->name,
         'host'     => $config->database->host));
+        Zend_Registry::set('db', $db);
         // There are some issues with session handling and unit testing
         // that haven't been implemented here yet, do at least some
         // exception handling
