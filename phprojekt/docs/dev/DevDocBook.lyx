@@ -218,6 +218,21 @@ A model might also map other data into objects.
  For example a web service.
 \end_layout
 
+\begin_layout Subsubsection
+PHProjekts iplementation
+\end_layout
+
+\begin_layout Standard
+Every model in PHProjekt is derived from 
+\emph on
+PHProjekt_Interface_Model 
+\emph default
+and must implement the required methods (Please look at the API documentation
+ for detailed information).
+ If the model should provide a database access, instead of implementing
+ the interface directly you should better 
+\end_layout
+
 \begin_layout Subsection
 Controller
 \end_layout
@@ -234,6 +249,10 @@ controls
 all other parts.
 \end_layout
 
+\begin_layout Subsubsection
+PHProjekts iplementation
+\end_layout
+
 \begin_layout Subsection
 View
 \end_layout
@@ -243,8 +262,10 @@ The view part renderes the data from a module.
  E.g it takes data for a list view and then does the rendering of the list.
  The output format is usually HTML.
  The data is provided by the controller.
- Usually the controller is just the a template rendering engine that takes
- the data and render it using a template.
+\end_layout
+
+\begin_layout Subsubsection
+PHProjekts iplementation
 \end_layout
 
 \begin_layout Section
@@ -341,6 +362,90 @@ Please notice that directory names are case-sensitiv.
 
 \begin_layout Code
     /Views
+\end_layout
+
+\begin_layout Standard
+The controller classes, derived from the IndexController class, are located
+ in the 
+\emph on
+Controller/
+\emph default
+ directory.
+ They start with a name and end with the suffix 
+\emph on
+Controller
+\emph default
+.
+ A valid controller name would be e.g.: 
+\emph on
+IndexController
+\emph default
+ or 
+\emph on
+FormController
+\emph default
+.
+ If nothing else is specified, the dispatcher class will always call the
+ 
+\emph on
+IndexController.
+
+\emph default
+ See chapter 
+\begin_inset LatexCommand ref
+reference "sec:Mapping-of-controllers"
+
+\end_inset
+
+ for further details about calling controllers.
+ 
+\end_layout
+
+\begin_layout Standard
+The model classes are located in 
+\emph on
+Models/
+\emph default
+.
+ They must have the format 
+\emph on
+Modulename
+\emph default
+_Models_
+\emph on
+Modelname
+\emph default
+.
+ A valid model name would be e.g.: 
+\emph on
+WorkingHours_Models_WorkingHour
+\emph default
+ or 
+\emph on
+Files_Models_Directory
+\emph default
+.
+ Every model must inherite the 
+\emph on
+Phprojekt_Interface_Model
+\emph default
+ class.
+\end_layout
+
+\begin_layout Standard
+In the views diretory you can place PHP files that render output.
+ The doesn't matter.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Mapping of controllers
+\begin_inset LatexCommand label
+name "sec:Mapping-of-controllers"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
