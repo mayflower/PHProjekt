@@ -225,7 +225,7 @@ PHProjekts iplementation
 \begin_layout Standard
 Every model in PHProjekt is derived from 
 \emph on
-PHProjekt_Interface_Model 
+Phprojekt_Model_Interface 
 \emph default
 and must implement the required methods (Please look at the API documentation
  for detailed information).
@@ -427,7 +427,7 @@ Files_Models_Directory
 .
  Every model must inherite the 
 \emph on
-Phprojekt_Interface_Model
+Phprojekt_Model_Interface
 \emph default
  class.
 \end_layout
