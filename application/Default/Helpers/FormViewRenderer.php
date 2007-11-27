@@ -255,7 +255,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         $result = $stmt->fetchAll();
 
         $options[''] = '';
-        foreach ($result as $tmp => $values) {
+        foreach ($result as $values) {
             $value = $values[$field->tableField];
             $options[$value] = Zend_Registry::get('translate')->translate($value);
         }

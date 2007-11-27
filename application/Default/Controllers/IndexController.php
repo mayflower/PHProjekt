@@ -277,7 +277,7 @@ class IndexController extends Zend_Controller_Action
         $filters = (!empty($session->filters)) ? $session->filters : array();
 
         $found = false;
-        foreach ($filters as $tmp => $filter) {
+        foreach ($filters as $filter) {
             if ((strcmp($filter['field'], $newFilter['field'])== 0) &&
                 (strcmp($filter['rule'], $newFilter['rule'])== 0) &&
                 (strcmp($filter['text'], $newFilter['text'])== 0)) {
@@ -345,7 +345,7 @@ class IndexController extends Zend_Controller_Action
 
         $filters = (!empty($session->filters)) ? $session->filters : array();
 
-        foreach ($filters as $tmp => $filter) {
+        foreach ($filters as $filter) {
             $this->_where[] = $this->_applyFilter($filter['field'], $filter['rule'], $filter['text']);
         }
 
@@ -517,7 +517,11 @@ class IndexController extends Zend_Controller_Action
         foreach ($this->_params as $k => $v) {
             // Check for addOne fields
             if (strstr($k, '_new')) {
-                $k = ereg_replace('_new', '', $k);
+                $tmpk = ereg_replace('_new', '', $k);
+                if (!isset($this->_params[$tmpk])
+                    || empty($this->_params[$tmpk])) {
+                    $k = $tmpk;
+                }
             }
             if ($this->getModelObject()->keyExists($k)) {
                 $this->getModelObject()->$k = $v;

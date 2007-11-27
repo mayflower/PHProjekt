@@ -216,17 +216,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
     }
 
     /**
-     * Generate a form element
-     *
-     * @param array $arguments Arguments
-     *
-     * @return void
-     */
-    public function generateFormElement($arguments)
-    {
-    }
-
-    /**
      * Finds a view script from the available directories.
      * If there are not a script, the default script is used
      *
@@ -235,7 +224,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      */
     protected function _script($name)
     {
-
         $this->_smarty->clear_cache($name);
         $paths = $this->getAllPaths();
         if (0 == count($paths['script'])) {
