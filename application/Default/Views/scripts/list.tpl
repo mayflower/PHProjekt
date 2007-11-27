@@ -7,10 +7,10 @@
 
 {foreach item=record from=$records|@list_ordering}
 <tr>
-  {foreach item=field key=fieldname from=$record}
+  {foreach item=field from=$record}
   <td>
   <a href="{url action="edit" module=$module id=`$record->id`}">
-   {list_element field=`$fieldname` value=`$field`}
+   {list_element field=`$field`}
   </a>
   </td>
   {/foreach}

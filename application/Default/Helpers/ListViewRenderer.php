@@ -107,14 +107,15 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
     /**
      * Switch between the form types and call the function for each one
      *
-     * @param array $field         Data of the field from the dbManager
-     * @param mix   $originalValue The real value from the database
+     * @param array $field Data of the field from the dbManager
      *
      * @return string XHTML generated
      */
-    public static function generateListElement($field, $originalValue)
+    public static function generateListElement($field)
     {
-        switch ($field['formType']) {
+        $originalValue = $field->value;
+
+        switch ($field->formType) {
             default:
                 return self::text($originalValue);
                 break;
@@ -223,7 +224,7 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
     public static function selectValues($field, $originalValue)
     {
         $string = '';
-        $data   = explode('|', $field['formRange']);
+        $data   = explode('|', $field->formRange);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
             if ($key == $originalValue) {
@@ -246,7 +247,7 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      */
     public static function tree($field, $originalValue)
     {
-        $activeRecord = Phprojekt_Loader::getModel($field['formRange']);
+        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 

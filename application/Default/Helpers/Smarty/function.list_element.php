@@ -23,9 +23,8 @@
  */
 function smarty_function_list_element($arguments)
 {
-    if (array_key_exists('field', $arguments)
-        && array_key_exists('value', $arguments)) {
-        return Default_Helpers_ListViewRenderer::generateListElement($arguments['field'], $arguments['value']);
+    if (array_key_exists('field', $arguments)) {
+        return Default_Helpers_ListViewRenderer::generateListElement($arguments['field']);
     }
 
     return '';

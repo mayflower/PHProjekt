@@ -606,7 +606,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
         $array = $module->getSubModules();
-        $this->assertEquals(array('Todo'),$array);
+        $this->assertEquals(array('Todo','Note'),$array);
 
         $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
         $array = $module->getSubModules();
