@@ -316,6 +316,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForFilter()
     {
-        return $this->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER, Phprojekt_DatabaseManager::COLUMN_TITLE);
+        return $this->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER, Phprojekt_DatabaseManager::COLUMN_NAME);
     }
 }

@@ -74,7 +74,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
     const LIST_ORDER   = 'listPosition';
     const FILTER_ORDER = 'listUseFilter';
 
-    const COLUMN_NAME = 'tableField';
+    const COLUMN_NAME  = 'tableField';
     const COLUMN_TITLE = 'formLabel';
 
     /**
