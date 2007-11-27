@@ -125,6 +125,8 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
                 return '';
             case "text":
                 return self::text($field);
+            case "selectSqlAddOne":
+                return self::selectSqlAddOne($field);
             default:
                 return '';
         }
@@ -225,5 +227,43 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         }
 
         return Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
+    }
+
+    /**
+     * Generate a select input field and a text field
+     * The data is parsed by a distinct select sql and a text field for add one new
+     * The '_new' is added to th field name for identify it.
+     *
+     * The value is translated before return
+     *
+     * @param array $field Data of the field from the dbManager
+     *
+     * @return string XHTML generated
+     */
+    public static function selectSqlAddOne(Phprojekt_DatabaseManager_Field $field)
+    {
+        $attribs = array();
+        $options = array();
+
+        // Get the distinct fields from the table
+        $db = Zend_Registry::get('db');
+        $select = $db->select()
+                  ->distinct()
+                  ->from($field->tableName, $field->tableField)
+                  ->where($field->tableField . " != ''");
+        $stmt = $db->query($select);
+        $result = $stmt->fetchAll();
+
+        $options[''] = '';
+        foreach ($result as $tmp => $values) {
+            $value = $values[$field->tableField];
+            $options[$value] = Zend_Registry::get('translate')->translate($value);
+        }
+
+        $select = Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
+        $text   = Zend_Registry::get('view')->formText($field->tableField.'_new', '');
+
+        // Return the select and a text field
+        return $select.'&nbsp;'.Zend_Registry::get('translate')->translate('or New').'&nbsp;'.$text;
     }
 }

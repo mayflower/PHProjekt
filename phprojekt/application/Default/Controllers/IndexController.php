@@ -111,6 +111,10 @@ class IndexController extends Zend_Controller_Action
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
+
+        /* Add the ownerId as param */
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $this->_params['ownerId'] = $authNamespace->userId;
     }
 
     /**
@@ -511,6 +515,10 @@ class IndexController extends Zend_Controller_Action
         }
 
         foreach ($this->_params as $k => $v) {
+            // Check for addOne fields
+            if (strstr($k, '_new')) {
+                $k = ereg_replace('_new', '', $k);
+            }
             if ($this->getModelObject()->keyExists($k)) {
                 $this->getModelObject()->$k = $v;
             }
@@ -541,6 +549,8 @@ class IndexController extends Zend_Controller_Action
             $this->getModelObject()->find($this->_itemid)->delete();
             $this->view->message = 'Deleted';
         }
+
+        $this->listAction();
     }
 
     /**

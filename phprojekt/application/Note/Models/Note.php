@@ -1,8 +1,8 @@
 <?php
 /**
- * Project model class
+ * Note model class
  *
- * LICENSE: Licensed under the terms of the PHProjekt 6 License
+ * LICENSE: Licensed under the terms of the GNU Publice License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -14,10 +14,7 @@
  */
 
 /**
- * Project model class
- *
- * The class of each model return the data for show
- * on the list and the form view
+ * Note model class
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -27,19 +24,6 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Project_Models_Project extends Phprojekt_Item_Abstract
+class Note_Models_Note extends Phprojekt_Item_Abstract
 {
-    /**
-     * Return wich submodules use this module
-     *
-     * Per now is just a fix array for test.
-     * This fucntion must return the correct relation between
-     * users - projects - modules
-     *
-     * @return array
-     */
-    public function getSubModules()
-    {
-        return array('Todo', 'Note');
-    }
 }
