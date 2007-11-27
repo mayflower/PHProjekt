@@ -124,7 +124,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     {
         $result = array();
         $words = $this->_getWordsFromText($words);
-        foreach ($words as $key => $word) {
+        foreach ($words as $word) {
             $crc32 = crc32($word);
             $where = array();
             $where[] = 'crc32 = '. $this->getAdapter()->quote($crc32);
@@ -158,7 +158,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                     case 'OR':
                         foreach ($tmpResult as $tmp => $data) {
                             $found = false;
-                            foreach ($result as $tmp2 => $values) {
+                            foreach ($result as $values) {
                                 if (($data['module'] == $values['module']) &&
                                     ($data['itemId'] == $values['itemId'])){
                                         $found = true;
@@ -227,7 +227,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     private function _index($module, $itemId, $data)
     {
         $array = $this->_getWordsFromText($data);
-        foreach ($array as $key => $word) {
+        foreach ($array as $word) {
             $crc32 = crc32($word);
             if (!$this->_exists($module, $itemId, $crc32)) {
                 $this->_save($module, $itemId, $crc32, $word);
@@ -250,7 +250,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     private function _indexFile($module, $itemId, $file)
     {
         $array = $this->_getWordsFromFile($file, $this->_getFileType($file));
-        foreach ($array as $key => $word) {
+        foreach ($array as $word) {
             $crc32 = crc32($word);
             if (!$this->_exists($module, $itemId, $crc32)) {
                 $this->_save($module, $itemId, $crc32, $word);
