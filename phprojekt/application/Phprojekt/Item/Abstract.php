@@ -69,6 +69,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     public $history = array();
 
     /**
+     * Filter class for clean the input
+     */
+    private $_clean = null;
+
+    /**
      * Initialize new object
      *
      * @param array $db Configuration for Zend_Db_Table
@@ -81,6 +86,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         $this->_error     = new Phprojekt_Error();
         $this->_history   = new Phprojekt_History($db);
         $this->_search    = new Phprojekt_SearchWords($db);
+        $this->_clean     = new Phprojekt_InputFilter($this->getXssFilters());
 
         $config        = Zend_Registry::get('config');
         $this->_config = $config;
@@ -119,6 +125,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
     {
         $info = $this->info();
 
+        /* Clean the value use the InputFilter */
+        $value = $this->_clean->process($value);
+
         if (true == isset($info['metadata'][$varname])) {
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];
@@ -148,7 +157,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
         $validated = true;
         $data      = $this->_data;
         $fields    = $this->_dbManager->getFieldsForForm();
-
 
         foreach ($data as $varname => $value) {
             if ($this->keyExists($varname)) {
@@ -197,6 +205,31 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
             }
         }
         return $validated;
+    }
+
+    /**
+     * Configuration for the InputFilter class
+     * Each module can rewrite this class for
+     * allow or denied some tags or atributes
+     *
+     * @see InputFilter class
+     *
+     * @return array
+     */
+    public function getXssFilters()
+    {
+        $filter = array('tagsArray'    => array(),
+                        'attrArray'    => array(),
+                        'tagsMethod'   => 0,
+                        'attrMethod'   => 0,
+                        'xssAuto'      => 1,
+                        'tagBlacklist' => array('applet', 'body', 'bgsound', 'base', 'basefont',
+                                                'embed', 'frame', 'frameset', 'head', 'html', 'id',
+                                                'iframe', 'ilayer', 'layer', 'link', 'meta', 'name',
+                                                'object', 'script', 'style', 'title', 'xml'),
+                        'attrBlacklist' => array('action', 'background', 'codebase', 'dynsrc', 'lowsrc'));
+
+        return $filter;
     }
 
     /**
