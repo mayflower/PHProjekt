@@ -156,8 +156,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null === $this->_requestedId) {
             throw new Phprojekt_Tree_Node_Exception(
-                                                'You have to set a requested '
-                                              . 'treeid in the constructor');
+            'You have to set a requested '
+            . 'treeid in the constructor');
         }
 
         if (!is_null($comparer)) {
@@ -173,8 +173,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $select   = $database->select();
 
         $select->from($table, 'path')
-               ->where($database->quoteInto('id = ?', $this->_requestedId))
-               ->limit(1);
+        ->where($database->quoteInto('id = ?', $this->_requestedId))
+        ->limit(1);
 
         if (null !== $filter) {
             $filter->filter($select, $this->getActiveRecord()->getAdapter());
@@ -184,29 +184,31 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
         if (null === $rootPath) {
             throw
-              new Phprojekt_Tree_Node_Exception('Requested node not found');
+            new Phprojekt_Tree_Node_Exception('Requested node not found');
         }
 
         $where = sprintf("%s OR %s",
-                    $database->quoteInto("path LIKE ?", $rootPath . '%'),
-                    $database->quoteInto("id = ?", $this->id));
+        $database->quoteInto("path LIKE ?", $rootPath . '%'),
+        $database->quoteInto("id = ?", $this->id));
 
         $rows = $this->_activeRecord->fetchAll($where, 'path');
-
         $this->_index = array();
         foreach ($rows as $record) {
             $node = null;
+            $rights = new Phprojekt_RoleRights($record->id, 'Project');
+            $right =  $rights->hasRight('read') ? true : $rights->hasRight('write');
+            if ($right) {
+                if ($record->id == $this->_requestedId) {
+                    $node                = $this;
+                    $this->_activeRecord = $record;
+                } elseif (array_key_exists($record->parent, $this->_index)) {
+                    $node = new Phprojekt_Tree_Node_Database($record);
+                    $this->_index[$node->parent]->appendNode($node);
+                }
 
-            if ($record->id == $this->_requestedId) {
-                $node                = $this;
-                $this->_activeRecord = $record;
-            } elseif (array_key_exists($record->parent, $this->_index)) {
-                $node = new Phprojekt_Tree_Node_Database($record);
-                $this->_index[$node->parent]->appendNode($node);
-            }
-
-            if (null !== $node) {
-                $this->_index[$node->id] = $node;
+                if (null !== $node) {
+                    $this->_index[$node->id] = $node;
+                }
             }
         }
 
@@ -253,9 +255,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             if (null === $node->id) {
                 $node->_activeRecord->parent = $this->id;
                 $node->_activeRecord->path   = sprintf('%s%s%s',
-                                                        $this->path,
-                                                        $this->id,
-                                                        self::NODE_SEPARATOR);
+                $this->path,
+                $this->id,
+                self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
             }
 
@@ -266,7 +268,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         throw new Phprojekt_Tree_Node_Exception('Only nodes with a valid '
-                                              . 'active record can be added');
+        . 'active record can be added');
     }
 
     /**
@@ -300,7 +302,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null === $this->id) {
             throw new Phprojekt_Tree_Node_Exception('Node not received or stored'
-                                                   .' from/to the database yet');
+            .' from/to the database yet');
         }
 
         $table    = $this->_activeRecord->getTableName();
@@ -309,7 +311,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         try {
             $database->beginTransaction();
             $database->delete($table,
-                              $database->quoteInto('path LIKE ?', $this->path . '%'));
+            $database->quoteInto('path LIKE ?', $this->path . '%'));
 
             $this->_deleteChildren($this->getChildren());
 
@@ -380,12 +382,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function __get($key)
     {
         switch ($key) {
-        case 'parentNode':
+            case 'parentNode':
                 return $this->getParentNode();
-        default:
-            if ($this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
-                return $this->_activeRecord->$key;
-            }
+            default:
+                if ($this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
+                    return $this->_activeRecord->$key;
+                }
         }
 
         return null;
@@ -473,7 +475,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function getIterator ()
     {
         return new RecursiveIteratorIterator(new Phprojekt_Tree_Node_Iterator($this),
-                                             RecursiveIteratorIterator::SELF_FIRST);
+        RecursiveIteratorIterator::SELF_FIRST);
     }
 
     /**
@@ -496,11 +498,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function getDepth()
     {
         /*
-         * We need to count the tree path ourself and NOT call getDepth on the
-         * root node, as if we can be the tree and we will call us into a loop
-         */
+        * We need to count the tree path ourself and NOT call getDepth on the
+        * root node, as if we can be the tree and we will call us into a loop
+        */
         return substr_count($this->path, self::NODE_SEPARATOR)
-               - substr_count($this->getRootNode()->path, self::NODE_SEPARATOR);
+        - substr_count($this->getRootNode()->path, self::NODE_SEPARATOR);
     }
 
     /**

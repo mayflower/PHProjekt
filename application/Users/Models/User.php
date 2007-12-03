@@ -32,8 +32,13 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      * @var array
      */
     public $hasMany = array('settings' =>
-                            array('module' => 'Users',
-                                  'model'  => 'UserModuleSetting'));
+    array('module' => 'Users',
+    'model'  => 'UserModuleSetting'));
+
+    public $hasManyAndBelongsToMany = array('groups' =>
+    array(
+    'module' => 'Groups',
+    'model'  => 'Groups'));
 
     /**
      * Initialize new user
@@ -74,7 +79,8 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $username username necessary to find the userId
      *
-     * @return integer with the user id value. If the user is not found then function will return false
+     * @return integer with the user id value. If the user is not found then 
+     * function will return false
      */
     public function findIdByUsername($username)
     {

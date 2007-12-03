@@ -1,6 +1,8 @@
 <br />
+{if write == true}
 <a href="{url action="display"}">{"Add"|translate}</a>
 <a href="{url action="delete" id=$itemid}">{"Delete"|translate}</a>
+ {/if}
 <br />
 <br />
 {if $message == ''}

@@ -112,23 +112,31 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      */
     public static function generateFormElement(Phprojekt_DatabaseManager_Field $field)
     {
-        switch ($field->formType) {
-            case "textarea":
-                return self::textArea($field);
-            case "date":
-                return self::date($field);
-            case "selectValues":
-                return self::selectValues($field);
-            case "tree":
-                return self::tree($field);
-            case "space":
-                return '';
-            case "text":
-                return self::text($field);
-            case "selectSqlAddOne":
-                return self::selectSqlAddOne($field);
+        $right=$field->right;
+        switch($right){
+            case'write':
+            case'admin':
+                switch ($field->formType) {
+                    case "textarea":
+                        return self::textArea($field);
+                    case "date":
+                        return self::date($field);
+                    case "selectValues":
+                        return self::selectValues($field);
+                    case "tree":
+                        return self::tree($field);
+                    case "space":
+                        return '';
+                    case "selectSqlAddOne":
+                        return self::selectSqlAddOne($field);
+                    default:
+                        return self::text($field);
+                }
+                break;
+            case'read':
+                return $field->value;
             default:
-                return '';
+                return'';
         }
     }
 
@@ -154,7 +162,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
     public static function textArea(Phprojekt_DatabaseManager_Field $field)
     {
         return Zend_Registry::get('view')->formTextarea($field->tableField, $field->value,
-                                                        array('cols' => 30, 'rows' => 3));
+        array('cols' => 30, 'rows' => 3));
     }
 
     /**
@@ -248,9 +256,9 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         // Get the distinct fields from the table
         $db = Zend_Registry::get('db');
         $select = $db->select()
-                  ->distinct()
-                  ->from($field->tableName, $field->tableField)
-                  ->where($field->tableField . " != ''");
+        ->distinct()
+        ->from($field->tableName, $field->tableField)
+        ->where($field->tableField . " != ''");
         $stmt = $db->query($select);
         $result = $stmt->fetchAll();
 

@@ -40,6 +40,21 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function getSubModules()
     {
-        return array('Todo', 'Note');
+        //select all sobmodules with read rights from  db
+        $session = new Zend_Session_Namespace();
+        $allModulesArray= array('Todo','Timecard');
+        $modulesArray = array();
+        $rights = new Phprojekt_RoleRights($session->currentProjectId, 
+                                            'Project');
+        foreach ($allModulesArray as $module) {
+            $right = $rights->hasRight('write', $module);
+            if ($right) {
+                $modulesArray[]=$module;
+            }
+        }
+
+        return $modulesArray;
+
     }
+
 }
