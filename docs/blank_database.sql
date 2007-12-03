@@ -213,7 +213,7 @@ INSERT INTO `DatabaseManager` VALUES (0, 'Note', 'category', 1, 'category', 'cat
 DROP TABLE IF EXISTS `Groups`;
 CREATE TABLE `Groups` (
   `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 );
 INSERT INTO `Groups` (`id`, `name`) VALUES 
