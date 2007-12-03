@@ -87,6 +87,7 @@
   </script>
 </head>
 <body>
+<a href="{url action="logout" module="Login"}">Logout</a>
 <table width="100%" id="main">
   <caption>PHProjekt {$phprojekt_version}</caption>
   <tbody>

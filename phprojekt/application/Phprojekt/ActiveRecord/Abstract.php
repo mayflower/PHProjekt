@@ -182,11 +182,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         }
 
         if (!array_key_exists('db', $config)
-         || !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
-             throw new
-               Phprojekt_ActiveRecord_Exception("ActiveRecord class must "
-                                              . "be initialized using a valid "
-                                              . "Zend_Db_Adapter_Abstract");
+        || !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
+            throw new
+            Phprojekt_ActiveRecord_Exception("ActiveRecord class must "
+            . "be initialized using a valid "
+            . "Zend_Db_Adapter_Abstract");
 
         }
 
@@ -280,10 +280,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     protected function _initDataArray()
     {
         /*
-         * We have to fill our data array with the colum names, as
-         * __set makes a lookup on the _data keys to validate if
-         * a column exists on the activerecord
-         */
+        * We have to fill our data array with the colum names, as
+        * __set makes a lookup on the _data keys to validate if
+        * a column exists on the activerecord
+        */
         foreach ($this->_colInfo as $col) {
             $this->_data[$col] = null;
         }
@@ -333,20 +333,20 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         if (in_array($getter, get_class_methods(get_class()))) {
             return call_user_method($getter, $this);
         } elseif (array_key_exists($varname, $this->hasMany)
-               && array_key_exists('id', $this->_data)) {
+        && array_key_exists('id', $this->_data)) {
             return $this->_hasMany($varname);
         } elseif (array_key_exists($varname, $this->belongsTo)
-               && array_key_exists('id', $this->_data)) {
+        && array_key_exists('id', $this->_data)) {
             return $this->_belongsTo($varname);
         } elseif (array_key_exists($varname, $this->hasManyAndBelongsToMany)
-               && array_key_exists('id', $this->_data)) {
+        && array_key_exists('id', $this->_data)) {
             return $this->_hasManyAndBelongsToMany($varname);
         } elseif (array_key_exists($varname, get_object_vars($this))) {
             return $this->$varname;
         } elseif (array_key_exists($varname, $this->_data)) {
             return $this->_data[$varname];
         } elseif (array_key_exists('hasManyAndBelongsToMany', $this->_relations) &&
-               get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
+        get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
             return $this->_relations['hasManyAndBelongsToMany']['id'];
         } else {
             throw new Exception("{$varname} does not exist");
@@ -375,7 +375,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
             $this->_data[$varname] = $value;
         } else {
             throw
-               new Phprojekt_ActiveRecord_Exception("{$varname} doesnot exist");
+            new Phprojekt_ActiveRecord_Exception("{$varname} doesnot exist");
         }
     }
 
@@ -391,14 +391,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!array_key_exists($key, $this->_data)) {
             $className = $this->_getClassNameForRelationship($key,
-                                                $this->hasManyAndBelongsToMany);
+            $this->hasManyAndBelongsToMany);
 
             $instance = new $className(array('db' => $this->getAdapter()));
 
             $instance->_relations['hasManyAndBelongsToMany'] =
-                    array('id'       => $this->id,
-                         'classname' => get_class($this),
-                         'refclass'  => $className); // needed for __get
+            array('id'       => $this->id,
+            'classname' => get_class($this),
+            'refclass'  => $className); // needed for __get
 
             $this->_data[$key] = $instance;
         }
@@ -439,27 +439,27 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         $select = $adapter->select()->from(array('rel' => $tableName));
 
         $select->joinInner(array('my' => $myTable),
-                    sprintf("%s = %s",
-                        $adapter->quoteIdentifier("my.id"),
-                        $adapter->quoteIdentifier("rel." . $myKeyName)));
+        sprintf("%s = %s",
+        $adapter->quoteIdentifier("my.id"),
+        $adapter->quoteIdentifier("rel." . $myKeyName)));
 
         $select->joinInner(array('foreign' => $foreignTable),
-                    sprintf("%s = %s",
-                        $adapter->quoteIdentifier("foreign.id"),
-                        $adapter->quoteIdentifier("rel." . $foreignKeyName)));
-
-        $select->where(sprintf("%s = ?",
-                    $adapter->quoteIdentifier("rel." . $myKeyName)),
-                    $classId);
-
+        sprintf("%s = %s",
+        $adapter->quoteIdentifier("foreign.id"),
+        $adapter->quoteIdentifier("rel." . $foreignKeyName)));
+        if (isset($classId)) {
+            $select->where(sprintf("%s = ?",
+            $adapter->quoteIdentifier("rel." . $myKeyName)),
+            $classId);
+        }
         /*
-         * somewhat special, we might have a better solution here once.
-         * At the moment we asume that the where clause contains the id string,
-         * as it is called from find()
-         */
+        * somewhat special, we might have a better solution here once.
+        * At the moment we asume that the where clause contains the id string,
+        * as it is called from find()
+        */
         if (null !== $where) {
             $select->where(str_replace($adapter->quoteIdentifier("id"),
-                        $adapter->quoteIdentifier("foreign.id"), $where));
+            $adapter->quoteIdentifier("foreign.id"), $where));
         }
 
         if (null !== $this->_log) {
@@ -484,7 +484,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     protected function _fetch($where = null, $order = null, $count = null, $offset = null)
     {
         if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
-         && is_array($this->_relations['hasManyAndBelongsToMany'])) {
+        && is_array($this->_relations['hasManyAndBelongsToMany'])) {
             return $this->_fetchHasManyAndBelongsToMany($where);
         } else {
             return parent::_fetch($where, $order, $count, $offset);
@@ -502,7 +502,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!array_key_exists($key, $this->belongsTo)) {
             throw new
-             Phprojekt_ActiveRecord_Exception("BelongsTo {$key} doesnot exist");
+            Phprojekt_ActiveRecord_Exception("BelongsTo {$key} doesnot exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
@@ -538,31 +538,31 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!array_key_exists($key, $this->hasMany)) {
             throw new
-               Phprojekt_ActiveRecord_Exception("HasMany {$key} doesnot exist");
+            Phprojekt_ActiveRecord_Exception("HasMany {$key} doesnot exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
             /*
-             * There is no object in the data array yet, so we have to
-             * create a new instance with all the necessary relation information
-             * This is done by passing a simple where clause to the object.
-             * We also do a guess on the real class name. Either there is a
-             * 'classname' key in the hasMany array or we use the provided key
-             * itself.
-             */
+            * There is no object in the data array yet, so we have to
+            * create a new instance with all the necessary relation information
+            * This is done by passing a simple where clause to the object.
+            * We also do a guess on the real class name. Either there is a
+            * 'classname' key in the hasMany array or we use the provided key
+            * itself.
+            */
             $className = $this->_getClassNameForRelationship($key,
-                                                             $this->hasMany);
+            $this->hasMany);
 
             $instance = new $className(array('db' => $this->getAdapter()));
             /* @var Phprojekt_ActiveRecord $instance */
 
             /*
-             * $instance->_relations['simple'] = );
-             */
+            * $instance->_relations['simple'] = );
+            */
             $instance->_relations['hasMany'] =
-                                        array('id'       => $this->id,
-                                             'classname' => get_class($this),
-                                             'refclass'  => $className);
+            array('id'       => $this->id,
+            'classname' => get_class($this),
+            'refclass'  => $className);
 
             $instance->_storedId = $instance->_data['id'];
 
@@ -590,9 +590,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         $tableName = $this->_translateIntoRelationTableName($this, $im);
 
         $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)",
-                         $this->getAdapter()->quoteIdentifier($tableName),
-                         $this->getAdapter()->quoteIdentifier($myKeyName),
-                         $this->getAdapter()->quoteIdentifier($foreignKeyName));
+        $this->getAdapter()->quoteIdentifier($tableName),
+        $this->getAdapter()->quoteIdentifier($myKeyName),
+        $this->getAdapter()->quoteIdentifier($foreignKeyName));
 
         if (null !== $this->_log) {
             $this->_log->debug($query);
@@ -620,9 +620,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
             $columnName = $this->_translateKeyFormat(get_class($this));
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-                         $this->getAdapter()->quoteIdentifier($tableName),
-                         $this->getAdapter()->quoteIdentifier($columnName),
-                         $this->getAdapter()->quoteIdentifier($columnName));
+            $this->getAdapter()->quoteIdentifier($tableName),
+            $this->getAdapter()->quoteIdentifier($columnName),
+            $this->getAdapter()->quoteIdentifier($columnName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -633,8 +633,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
             $stmt->execute(array($newId, $oldId));
 
             /*
-             * Manually update. Not nice, but effective.
-             */
+            * Manually update. Not nice, but effective.
+            */
             if (array_key_exists($key, $this->_data)) {
                 foreach ($this->_data[$key] as $instance) {
                     $instance->_data[$columnName] = $newId;
@@ -662,9 +662,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
             $tableName = $this->_translateIntoRelationTableName($this, $im);
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-                            $this->getAdapter()->quoteIdentifier($tableName),
-                            $this->getAdapter()->quoteIdentifier($myKeyName),
-                            $this->getAdapter()->quoteIdentifier($myKeyName));
+            $this->getAdapter()->quoteIdentifier($tableName),
+            $this->getAdapter()->quoteIdentifier($myKeyName),
+            $this->getAdapter()->quoteIdentifier($myKeyName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -675,8 +675,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
             $stmt->execute(array($newId, $oldId));
 
             /*
-             * Manually update. Not nice, but effective.
-             */
+            * Manually update. Not nice, but effective.
+            */
             if (array_key_exists($key, $this->_data)) {
                 foreach ($this->_data[$key] as $instance) {
                     $instance->_data[$myKeyName] = $newId;
@@ -697,8 +697,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
     {
         if (!is_array($array) || !is_array($array[$key])) {
             throw new
-                Phprojekt_ActiveRecord_Exception("The second parameter"
-                                               . "must be an array");
+            Phprojekt_ActiveRecord_Exception("The second parameter"
+            . "must be an array");
         }
 
         $definition = $array[$key];
@@ -706,17 +706,17 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         if (array_key_exists('classname', $definition)) {
             $className = $array[$key]['classname'];
         } elseif (array_key_exists('model', $definition)
-               && array_key_exists('module', $definition)) {
+        && array_key_exists('module', $definition)) {
             $className = Phprojekt_Loader::getModelClassName($definition['module'],
-                                                             $definition['model']);
+            $definition['model']);
         } else {
             $className = $key;
         }
 
         if (!class_exists($className, true)) {
             throw new
-                Phprojekt_ActiveRecord_Exception("Cannot instantiate"
-                                               . "{$className}");
+            Phprojekt_ActiveRecord_Exception("Cannot instantiate"
+            . "{$className}");
         }
 
         return $className;
@@ -745,7 +745,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         }
 
         throw new Phprojekt_ActiveRecord_Exception("Classname contains "
-                                                  ."illegal characters");
+        ."illegal characters");
 
     }
 
@@ -764,7 +764,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         $keyName{0}= strtolower($keyName{0});
         if (null !== $this->_log) {
             $this->_log->debug(sprintf("%s translated to %s",
-                                    $className, $keyName));
+            $className, $keyName));
         }
 
         unset ($im);
@@ -783,7 +783,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
      * @return string
      */
     protected static function _translateIntoRelationTableName(Phprojekt_ActiveRecord_Abstract $myObject,
-                                                              Phprojekt_ActiveRecord_Abstract $foreignObject)
+    Phprojekt_ActiveRecord_Abstract $foreignObject)
     {
         $tableNames   = array();
         $myTable      = $myObject->getTableName();
@@ -841,29 +841,29 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         }
 
         /*
-         * If we have a storedId, the item was received from the databas
-         * and therefore should exist on the database, so we trigger an update.
-         * Otherwise we create the entry.
-         */
+        * If we have a storedId, the item was received from the databas
+        * and therefore should exist on the database, so we trigger an update.
+        * Otherwise we create the entry.
+        */
         if (null !== $this->_storedId) {
             $this->update($data,
-                $this->getAdapter()->quoteInto('id = ?', $this->_storedId));
+            $this->getAdapter()->quoteInto('id = ?', $this->_storedId));
 
             if ($this->id !== $this->_storedId
-             && count($this->hasMany) > 0) {
-                 $this->_updateHasMany($this->_storedId, $this->id);
+            && count($this->hasMany) > 0) {
+                $this->_updateHasMany($this->_storedId, $this->id);
             }
 
             if ($this->id !== $this->_storedId
-             && count($this->hasManyAndBelongsToMany) > 0) {
-                 $this->_updateHasManyAndBelongsToMany($this->_storedId,
-                                                        $this->id);
+            && count($this->hasManyAndBelongsToMany) > 0) {
+                $this->_updateHasManyAndBelongsToMany($this->_storedId,
+                $this->id);
             }
         } else {
             /*
-             * We have to insert before we update the relations, as we
-             * need the new id for the relations (e.g.: n:m relations).
-             */
+            * We have to insert before we update the relations, as we
+            * need the new id for the relations (e.g.: n:m relations).
+            */
             if (array_key_exists('hasMany', $this->_relations)) {
                 $foreignKeyName        = $this->_translateKeyFormat($this->_relations['hasMany']['classname']);
                 $data[$foreignKeyName] = (int) $this->_relations['hasMany']['id'];
@@ -896,27 +896,27 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
                 $im        = new $className($this->getAdapter());
                 $tableName = $im->getTableName();
                 $this->getAdapter()->delete($tableName,
-                    $this->getAdapter()->quoteInto(sprintf('%s = ?',
-                        $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
-                        $this->id));
+                $this->getAdapter()->quoteInto(sprintf('%s = ?',
+                $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
+                $this->id));
             }
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
-             || count($this->hasManyAndBelongsToMany) > 0) {
+            || count($this->hasManyAndBelongsToMany) > 0) {
                 /*
-                 * We just delete the data from the relations and do
-                 * not do an lookup for a cascade delete if there is no
-                 * relation anymore
-                 */
+                * We just delete the data from the relations and do
+                * not do an lookup for a cascade delete if there is no
+                * relation anymore
+                */
                 foreach (array_keys($this->hasManyAndBelongsToMany) as $key) {
                     $className = $this->_getClassNameForRelationship($key,
-                                            $this->hasManyAndBelongsToMany);
+                    $this->hasManyAndBelongsToMany);
                     $keyName   = $this->_translateKeyFormat(get_class($this));
                     $im        = new $className($this->getAdapter());
                     $tableName = $this->_translateIntoRelationTableName($this, $im);
                     $this->getAdapter()->delete($tableName,
-                        $this->getAdapter()->quoteInto(sprintf('%s = ?', $keyName),
-                        $this->id));
+                    $this->getAdapter()->quoteInto(sprintf('%s = ?', $keyName),
+                    $this->id));
                 }
             }
 
@@ -940,13 +940,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
      * @return Zend_Db_Table_Rowset
      */
     public function fetchAll($where = null, $order = null,
-                             $count = null, $offset = null)
+    $count = null, $offset = null)
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
             $wheres[] = $this->getAdapter()->quoteInto(sprintf('%s = ?',
-                                $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
-                                $this->_relations['hasMany']['id']);
+            $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
+            $this->_relations['hasMany']['id']);
         }
         if (null !== $where) {
             $wheres[] = $where;
@@ -959,7 +959,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         }
 
         $rows = parent::fetchAll($where, $order,
-                                 $count, $offset);
+        $count, $offset);
 
         $result = array();
         foreach ($rows as $row) {
@@ -996,9 +996,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract im
         $find = $find[0];
 
         /*
-         * reset data as all our relatios, etc stuff has to
-         * deal with a new id
-         */
+        * reset data as all our relatios, etc stuff has to
+        * deal with a new id
+        */
         $this->_data     = array();
         $this->_storedId = null;
 

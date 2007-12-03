@@ -74,4 +74,13 @@ class LoginController extends Zend_Controller_Action
             $this->view->username = $username;
         }
     }
+    
+    /**
+     * logout action
+     */
+    public function logoutAction()
+    {
+        Phprojekt_Auth::logout();
+    }
+
 }

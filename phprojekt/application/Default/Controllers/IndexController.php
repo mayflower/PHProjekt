@@ -158,6 +158,7 @@ class IndexController extends Zend_Controller_Action
                 } else if (null !== $this->getModelObject()) {
                     $instance->setModel($this->getModelObject());
                 }
+                break;
         }
 
         return $instance;
@@ -225,8 +226,8 @@ class IndexController extends Zend_Controller_Action
     public function addFilterAction()
     {
         $newFilter = array('field' => $this->_params['filterField'],
-                           'rule'  => $this->_params['filterRule'],
-                           'text'  => $this->_params['filterText']);
+        'rule'  => $this->_params['filterRule'],
+        'text'  => $this->_params['filterText']);
         $this->addFilter($newFilter);
 
         $this->forward('list');
@@ -258,7 +259,7 @@ class IndexController extends Zend_Controller_Action
         $session = new Zend_Session_Namespace();
         $id      = (int) $session->currentProjectId;
         $index = $this->getRequest()->getModuleName()
-               . $id;
+        . $id;
         return new Zend_Session_Namespace($index);
     }
 
@@ -279,8 +280,8 @@ class IndexController extends Zend_Controller_Action
         $found = false;
         foreach ($filters as $filter) {
             if ((strcmp($filter['field'], $newFilter['field'])== 0) &&
-                (strcmp($filter['rule'], $newFilter['rule'])== 0) &&
-                (strcmp($filter['text'], $newFilter['text'])== 0)) {
+            (strcmp($filter['rule'], $newFilter['rule'])== 0) &&
+            (strcmp($filter['text'], $newFilter['text'])== 0)) {
                 $found = true;
             }
         }
@@ -414,7 +415,7 @@ class IndexController extends Zend_Controller_Action
         $currentActiveTree->toggleNode();
 
         $this->forward('list', $this->getRequest()->getControllerName(),
-                        $this->getRequest()->getModuleName());
+        $this->getRequest()->getModuleName());
     }
 
     /**
@@ -519,7 +520,7 @@ class IndexController extends Zend_Controller_Action
             if (strstr($k, '_new')) {
                 $tmpk = ereg_replace('_new', '', $k);
                 if (!isset($this->_params[$tmpk])
-                    || empty($this->_params[$tmpk])) {
+                || empty($this->_params[$tmpk])) {
                     $k = $tmpk;
                 }
             }
@@ -570,6 +571,10 @@ class IndexController extends Zend_Controller_Action
         if (isset($session->currentProjectId)) {
             $this->view->projectId   = $session->currentProjectId;
             $this->view->projectName = $session->currentProjectName;
+            $rights = new Phprojekt_RoleRights(null, $session->currentProjectId,
+                          $this->getRequest()->getModuleName());
+            $write = $rights->hasRight('write');
+            $read =  $rights->hasRight('read') ? true : $write;
 
         }
 
@@ -580,6 +585,8 @@ class IndexController extends Zend_Controller_Action
         $this->view->action     = $this->getRequest()->getActionName();
         $this->view->breadcrumb = $this->getRequest()->getModuleName();
         $this->view->modules    = $this->getModelObject()->getSubModules();
+        $this->write            = $write;
+        $this->read             = $read;
 
         $this->view->filterView = $this->getFilterView()->render();
         $this->view->treeView   = $this->getTreeView()->render();
@@ -601,7 +608,7 @@ class IndexController extends Zend_Controller_Action
 
         if (null === $object) {
             $object = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(),
-                                                 $this->getRequest()->getModuleName());
+            $this->getRequest()->getModuleName());
             if (null === $object) {
                 $object = Phprojekt_Language::getModel('Default', 'Default');
             }
@@ -659,31 +666,31 @@ class IndexController extends Zend_Controller_Action
     {
         $db = Zend_Registry::get('db');
         switch ($rule) {
-        case 'begins':
+            case 'begins':
                 $w = $field." LIKE ".$db->quote("$text%");
                 break;
-        case 'ends':
+            case 'ends':
                 $w = $field." LIKE ".$db->quote("%$text");
                 break;
-        case 'exact':
+            case 'exact':
                 $w = $field." = ".$db->quote($text);
                 break;
-        case 'mayor':
+            case 'mayor':
                 $w = $field." > ".$db->quote($text);
                 break;
-        case 'mayorequal':
+            case 'mayorequal':
                 $w = $field." >= ".$db->quote($text);
                 break;
-        case 'minorequal':
+            case 'minorequal':
                 $w = $field." <= ".$db->quote($text);
                 break;
-        case 'minor':
+            case 'minor':
                 $w = $field." < ".$db->quote($text);
                 break;
-        case 'not like':
+            case 'not like':
                 $w = $field." NOT LIKE ".$db->quote("%$text%");
                 break;
-         default:
+            default:
                 $w = $field." LIKE ".$db->quote("%$text%");
                 break;
         }
