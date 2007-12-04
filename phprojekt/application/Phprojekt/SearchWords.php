@@ -82,7 +82,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
 
         $data = $this->_getObjectDataToIndex($object);
         foreach ($data as $key => $value) {
-            $type = $object->getDatabaseManager()->find($key);
+            $type = $object->getInformation()->find($key);
             if (isset($type->formType) && $type->formType == 'file') {
                 $this->_indexFile($module, $itemId, $value);
             } else {
@@ -408,8 +408,8 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                          "'&Uuml;'", "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
         $replace = array (" ", " ", " ", " ", " ",
                           " ", " ", " ", " ", " ",
-                          "ä", "ö", "ü", "Ä", "Ö",
-                          "Ü", "ß",  " ", " ", " ", " ");
+                          "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½",
+                          "ï¿½", "ï¿½",  " ", " ", " ", " ");
 		$string = preg_replace($search,$replace,strip_tags($string));
 
 		return $string;
