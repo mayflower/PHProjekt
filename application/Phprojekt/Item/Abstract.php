@@ -378,10 +378,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $groupwhere[] = $this ->getAdapter()->quoteInto('?', $groupId);
         }
         $in = (count($groupwhere) > 0) ? implode(',', $groupwhere) : null;
-        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?', 
-                                                    $groups->getUser()).
-        $groupwheres .= ($in) ? ' OR `read` IN ('.$in.')  OR `write` IN ('.$in.
-                        ')  OR `admin` IN ('.$in.'))' :')';
+        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?',  $groups->getUser()).
+        $groupwheres.= ($in) ? ' OR `read` IN ('.$in.')  OR `write` IN ('.$in.')  OR `admin` IN ('.$in.'))' :')';
         $wheres[] = $groupwheres;
         if (null !== $where) {
             $wheres[] = $where;

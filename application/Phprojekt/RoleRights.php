@@ -40,12 +40,12 @@ class Phprojekt_RoleRights
      * Id of user
      * @var int
      */
-    protected $_user =0;
+    protected $_user = 0;
     /**
      * Id of Project the item belongs to
      * @var int
      */
-    protected $_project =0;
+    protected $_project = 0;
     /**
      * role of user for current item
      * @var string
@@ -60,13 +60,13 @@ class Phprojekt_RoleRights
     /**
      * Constructor
      */
-    public function __construct($project,$module,$id=0,$user=0)
+    public function __construct($project, $module, $id=0, $user=0)
     {
         $this->setId($id);
-        $this->setmodule($module);
+        $this->setModule($module);
         $this->setUser($user);
-        $this->setproject($project);
-        $this->setacl();
+        $this->setProject($project);
+        $this->setAcl();
         $this->setUserRole();
     }
 
@@ -77,17 +77,21 @@ class Phprojekt_RoleRights
 	 * @param string $module
 	 * @return boolean
 	 */
-    public function hasRight($right,$module=null){
-        if($module!=null)$this->setmodule($module);
-        $role = $this->getUserRole();
-        $acl = $this->getacl();
-        if ($module === null) {
-            $module = $this->getmodule();
+    public function hasRight($right, $module=null)
+    {
+        if ($module != null) {
+            $this->setModule($module);
         }
-        try{
+        
+        $role = $this->getUserRole();
+        $acl  = $this->getAcl();
+        if (null === $module) {
+            $module = $this->getModule();
+        }
+        try {
             return $acl->isAllowed($role, $module, $right);
         }
-        catch(Zend_Acl_Exception $e){
+        catch(Zend_Acl_Exception $e) {
             return false;
         }
     }
@@ -96,7 +100,8 @@ class Phprojekt_RoleRights
      * Setter for item id
      * @package int $id
      */
-    private function setId($id){
+    private function setId($id)
+    {
         $this->_id = $id;
     }
 
@@ -105,7 +110,8 @@ class Phprojekt_RoleRights
      *
      * @return int $_id
      */
-    public function getId(){
+    public function getId()
+    {
         return $this->_id;
     }
 
@@ -114,7 +120,8 @@ class Phprojekt_RoleRights
      * a project this is the id of item itself)
      * @param int $project
      */
-    private function setproject($project){
+    private function setProject($project)
+    {
         if ($this->getId() > 0 and $this->getmodule() == 'Project') {
             $this->_project = $this->getId();
         } else {
@@ -126,7 +133,8 @@ class Phprojekt_RoleRights
      *
      * @return int $_project
      */
-    function getproject(){
+    
+    public function getProject(){
         return $this->_project;
     }
 
@@ -134,7 +142,8 @@ class Phprojekt_RoleRights
      * sets the module
      * @param string module
      */
-    private function setmodule($module){
+    private function setModule($module)
+    {
         $this->_module = $module;
     }
 
@@ -143,7 +152,8 @@ class Phprojekt_RoleRights
      *
      * @return string $module
      */
-    public function getmodule(){
+    public function getModule()
+    {
         return $this->_module;
     }
 
@@ -151,12 +161,13 @@ class Phprojekt_RoleRights
      * Setter for User
      * @param int $user
      */
-    private function setUser($user){
+    private function setUser($user)
+    {
         if ($user != 0) {
             $this->_user = $user;
         } else {
             $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-            $this->_user = $authNamespace->userId;
+            $this->_user   = $authNamespace->userId;
         }
     }
 
@@ -164,22 +175,25 @@ class Phprojekt_RoleRights
     * getter for User
     * @return int $_user
     */
-    public function getUser(){
+    public function getUser()
+    {
         return $this->_user;
     }
 
     /**
      * Setter for acl
      */
-    private function setacl(){
-        $this->_acl =Phprojekt_Acl::getInstance();
+    private function setAcl()
+    {
+        $this->_acl = Phprojekt_Acl::getInstance();
     }
 
     /**
      * getter for user
      * @return Phprojekt_Acl $_acl
      */
-    public function getacl(){
+    public function getAcl()
+    {
         return $this->_acl;
     }
 
@@ -187,28 +201,28 @@ class Phprojekt_RoleRights
      * Setter for UserRole
      * the Role of ther user is fetched from the db
      */
-    private function setUserRole(){
+    private function setUserRole()
+   {
         $db = Zend_Registry::get('db');
         $sql = 'SELECT role.id
-					   FROM	projectuserrolerelation as rel
-					   LEFT JOIN role
-					   ON rel.roleId=role.ID
+					   FROM	ProjectUserRoleRelation as rel
+					   LEFT JOIN Role as role
+					   ON rel.roleId = role.ID
 					   WHERE userId='.(int)$this->getUser()
         .' AND projectId='.(int)$this->getproject();
-
 
         $roles = $db->fetchRow($sql);
         if (!$roles['id']) {
             $sqlParent = 'SELECT parent
-					   FROM	project
-					   WHERE ID ='.(int)$this->getproject();
-            $parent= $db->fetchCol($sqlParent);
-            if (isset($parent[0]) && ($parent[0] > 0)) {
+					   FROM	Project
+					   WHERE ID ='.(int) $this->getProject();
+            $parent = $db->fetchCol($sqlParent);
+            if ($parent[0] > 0) {
                 $this->_project = $parent[0];
                 $this->setUserRole();
             }
         } else {
-            $this->_role=$roles['id'];
+            $this->_role = $roles['id'];
         }
     }
     /**
@@ -217,7 +231,8 @@ class Phprojekt_RoleRights
      *
      * @return string $_role
      */
-    public function getUserRole(){
+    public function getUserRole()
+    {
         return $this->_role;
     }
 }

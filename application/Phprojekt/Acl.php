@@ -81,9 +81,9 @@ class Phprojekt_Acl extends Zend_Acl
     private function setRoles()
     {
         $db = Zend_Registry::get('db');
-        $sql = 'SELECT  role.id, parent
-						FROM role
-						ORDER BY role.parent ASC';
+        $sql = 'SELECT  id, parent
+						FROM Role
+						ORDER BY parent ASC';
         $roles= $db->fetchAll($sql);
         $this->_roles=$roles;
     }
@@ -123,7 +123,7 @@ class Phprojekt_Acl extends Zend_Acl
     {
         $db = Zend_Registry::get('db');
         $sql = 'SELECT  id, roleId, module, permission
-                        FROM roleModulePermissions
+                        FROM RoleModulePermissions    
                         ORDER BY roleId,module ASC';
         $rights = $db->fetchAll($sql);
         $this->_rights = $rights;
