@@ -34,8 +34,7 @@ function smarty_modifier_titles($records)
 
     if ($record instanceof Phprojekt_Item_Abstract) {
         /* @var Phprojekt_Item_Abstract $record */
-        return $record->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER,
-                                                      Phprojekt_DatabaseManager::COLUMN_TITLE);
+        return $record->getInformation()->getTitles(MODELINFO_ORD_LIST);
     }
 
     return false;

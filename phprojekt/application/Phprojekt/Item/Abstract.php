@@ -24,7 +24,7 @@
  * @since      File available since Release 1.0
  * @author     Gustavao Solt <solt@mayflower.de>
  */
-abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
+abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
      * Represents the database_manager class
@@ -99,7 +99,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      *
      * @return Phprojekt_DatabaseManager
      */
-    public function getDatabaseManager()
+    public function getInformation()
     {
         return $this->_dbManager;
     }
@@ -110,7 +110,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function current()
     {
-        return new Phprojekt_DatabaseManager_Field($this->getDatabaseManager(),
+        return new Phprojekt_DatabaseManager_Field($this->getInformation(),
                                                    $this->key(),
                                                    parent::current());
     }
@@ -351,7 +351,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract
      */
     public function getFieldsForFilter()
     {
-        return $this->getDatabaseManager()->getInfo(Phprojekt_DatabaseManager::LIST_ORDER, Phprojekt_DatabaseManager::COLUMN_NAME);
+        return $this->getInformation()->getInfo(MODELINFO_ORD_LIST, Phprojekt_DatabaseManager::COLUMN_NAME);
     }
     
     

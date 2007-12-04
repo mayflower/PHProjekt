@@ -22,17 +22,18 @@
  */
 function smarty_modifier_form_ordering($records)
 {
-    if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract ) {
+    return $records;
+    /*
+    if (!is_array($records) && $records instanceof Phprojekt_Model_Interface ) {
         $records->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::FORM_ORDER);
         return $records;
     } else {
         foreach($records as &$record) {
-            /* @var Phprojekt_Item_Abstract $record */
             if ($record instanceof Phprojekt_Item_Abstract) {
                 $record->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::FORM_ORDER);
             }
         }
 
         return $records;
-    }
+    }*/
 }
