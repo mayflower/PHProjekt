@@ -3,8 +3,6 @@
  * Represent a field in an active record and hold additional information from
  * the DatabaseManager
  *
- * LICENSE: Licensed under the terms of the PHProjekt 6 License
- *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id:
@@ -16,16 +14,16 @@
  */
 
 /**
- * Enter description here...
+ * Represent a field in an active record and hold additional information from
+ * the DatabaseManager
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @version    Release: @package_version@
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
- * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_DatabaseManager_Field
 {
