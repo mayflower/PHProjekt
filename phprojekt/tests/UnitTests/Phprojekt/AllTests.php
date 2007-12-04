@@ -78,8 +78,8 @@ class Phprojekt_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
-        $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');
         $suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
+        $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');
         $suite->addTestSuite('Phprojekt_HistoryTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');

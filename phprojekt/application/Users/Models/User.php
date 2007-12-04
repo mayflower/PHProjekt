@@ -37,6 +37,7 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
 
     public $hasManyAndBelongsToMany = array('groups' =>
     array(
+    'classname' => 'Groups_Models_Groups',
     'module' => 'Groups',
     'model'  => 'Groups'));
 
@@ -79,7 +80,7 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      *
      * @param string $username username necessary to find the userId
      *
-     * @return integer with the user id value. If the user is not found then 
+     * @return integer with the user id value. If the user is not found then
      * function will return false
      */
     public function findIdByUsername($username)

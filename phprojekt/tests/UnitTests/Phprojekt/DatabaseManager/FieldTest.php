@@ -52,5 +52,4 @@ class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Extensions_ExceptionTe
                                                    'testvalue');
         echo $dbField;
     }
-
 }

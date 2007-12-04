@@ -23,14 +23,9 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
     public $belongsTo = array('project' => array('classname' => 'Phprojekt_Project'));
 }
 
-class Phprojekt_User extends Phprojekt_ActiveRecord_Abstract
+class Phprojekt_Groups extends Phprojekt_ActiveRecord_Abstract
 {
-    public $hasManyAndBelongsToMany = array('roles' => array('classname'=> 'Phprojekt_Role'));
-}
-
-class Phprojekt_Role extends Phprojekt_ActiveRecord_Abstract
-{
-    public $hasManyAndBelongsToMany = array('users' => array('classname'=> 'Phprojekt_User'));
+    public $hasManyAndBelongsToMany = array('users' => array('classname'=> 'Users_Models_User'));
 }
 
 /**
@@ -53,7 +48,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     {
         $this->sharedFixture->beginTransaction();
         try {
-            $user = new Phprojekt_User(array('db' => $this->sharedFixture));
+            $user = new Users_Models_User(array('db' => $this->sharedFixture));
             $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
 
             if ($users == NULL) {
@@ -61,13 +56,11 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
             }
 
             $david = $users[0];
-            $role  = $david->roles->create();
-            $role->name       = 'Project Admin';
-            $role->module     = 'Test Module';
-            $role->permission = 'Write';
-            $role->save();
+            $group  = $david->groups->create();
+            $group->name       = 'TEST GROUP';
+            $group->save();
 
-            $this->assertNotNull($role->id);
+            $this->assertNotNull($group->id);
         } catch (Exception $e) {
             $this->sharedFixture->rollBack();
             $this->fail($e->getMessage().$e->getTraceAsString());
@@ -116,25 +109,22 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 	{
 		$this->sharedFixture->beginTransaction();
 		try {
-			$user = new Phprojekt_User(array('db' => $this->sharedFixture));
+			$user = new Users_Models_User(array('db' => $this->sharedFixture));
 			$user->username = 'Foo';
 			$user->password = md5('Bar');
 			$user->language = 'en_GB';
 			$user->save();
 
-			$role = $user->roles->create();
-			$role->name       = 'Test';
-			$role->module     = 'Tasks';
-			$role->permission = 'Write';
-
-			$role->save();
+			$group = $user->groups->create();
+			$group->name       = 'Test';
+			$group->save();
 
 			$this->assertNotNull($user->id);
-			$this->assertEquals(1, $user->roles->count());
+			$this->assertEquals(3, $user->groups->count());
 
 			$user->delete();
 
-			$this->assertEquals(0, $user->roles->count());
+			$this->assertEquals(0, $user->groups->count());
 			$this->assertNull($user->id);
         } catch (Exception $e) {
             $this->sharedFixture->rollBack();
@@ -170,7 +160,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     {
         $this->sharedFixture->beginTransaction();
         try {
-            $user = new Phprojekt_User(array('db'=>$this->sharedFixture));
+            $user = new Users_Models_User(array('db'=>$this->sharedFixture));
             $user->username  = 'gustavo';
             $user->password  = md5('gustavo');
             $user->firstname = 'Gustavo';
@@ -178,7 +168,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
             $user->language  = 'es_AR';
             $user->save();
 
-            $gustavo = new Phprojekt_User(array('db' => $this->sharedFixture));
+            $gustavo = new Users_Models_User(array('db' => $this->sharedFixture));
             $gustavo->find($user->id);
             $this->assertEquals('gustavo', $gustavo->username);
         } catch (Exception $e) {
@@ -195,20 +185,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
      */
     public function testHasManyAndBelongsToMany()
     {
-        $user = new Phprojekt_User(array('db' => $this->sharedFixture));
+        $user = new Users_Models_User(array('db' => $this->sharedFixture));
         $user->find(1);
-        $roles = $user->roles->fetchAll();
-        $this->assertEquals('Senior Developer', $user->roles->find(2)->name);
-        $this->assertEquals('Developer', $roles[0]->name);
-        $this->assertEquals('Senior Developer', $roles[1]->name);
-        $this->assertEquals(2, $user->roles->count());
+        $group = $user->groups->fetchAll();
+        $this->assertEquals('default', $user->groups->find(1)->name);
+        $this->assertEquals('ninasgruppe', $group[1]->name);
+        $this->assertEquals(2, $user->groups->count());
 
-        $role = new Phprojekt_Role(array('db' => $this->sharedFixture));
-        $role->find(1);
-        $users = $role->users->fetchAll();
+        $group = new Phprojekt_Groups(array('db' => $this->sharedFixture));
+        $group->find(1);
+        $users = $group->users->fetchAll();
         $this->assertEquals('david', $users[0]->username);
-        $this->assertEquals(1, $role->users->count());
-
+        $this->assertEquals(1, $group->users->count());
     }
 
     /**
@@ -226,12 +214,12 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
         $this->assertEquals('Developer Tasks', $project->instances->find(1)->name);
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
         $this->assertEquals(2, $project->instances->count());
-        $this->assertEquals(5, $project->count());
+        $this->assertEquals(7, $project->count());
 
         // same but with fetch all
         $rows = $project->fetchAll();
-        $this->assertEquals(5, $rows[4]->id);
-        $this->assertEquals('Developer Tasks', $rows[4]->instances->find(1)->name);
+        $this->assertEquals(5, $rows[3]->id);
+        $this->assertEquals('Developer Tasks', $rows[3]->instances->find(1)->name);
     }
 
     /**
@@ -275,15 +263,15 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
     {
         $this->sharedFixture->beginTransaction();
         try {
-            $user = new Phprojekt_User(array('db' => $this->sharedFixture));
+            $user = new Users_Models_User(array('db' => $this->sharedFixture));
             $user->find(1);
             $user->id = 2;
             $user->username = 'dsp';
             $user->save();
 
-            $roles = $user->roles->fetchAll();
-            $this->assertEquals(2, $roles[0]->userId);
-            $this->assertEquals('Senior Developer', $roles[1]->name);
+            $groups = $user->groups->fetchAll();
+            $this->assertEquals(2, $groups[0]->userId);
+            $this->assertEquals('ninatest', $groups[1]->name);
 
             $user->find(2);
             $user->id = 1;
@@ -318,7 +306,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTe
 
         unset ($instance);
 
-        $instance = new PHprojekt_Project(array('db' => $this->sharedFixture));
+        $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
         $this->assertEquals('PHPUnit Test Project', $instance->title);
 

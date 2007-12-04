@@ -469,36 +469,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
         $this->assertTrue($item->recordValidate());
     }
 
-    /**
-     * Test getFieldsForList
-     *
-     */
-//    public function testGetFieldsForList()
-//    {
-//        $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
-//        $fields = $item->getFieldsForList('project');
-//        $this->assertEquals(array_keys($this->_listResult), array_keys($fields));
-//
-//        /* Second call */
-//        $fields_second = $item->getFieldsForList('project');
-//        $this->assertEquals($fields, $fields_second);
-//    }
-
-    /**
-     * Test getFieldsForForm
-     *
-     */
-//    public function testGetFieldsForForm()
-//    {
-//        $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
-//        $fields = $item->getFieldsForForm('project');
-//        $this->assertEquals(array_keys($this->_formResult), array_keys($fields));
-//
-//        /* Second call */
-//        $fields_second = $item->getFieldsForForm('project');
-//        $this->assertEquals($fields, $fields_second);
-//    }
-
     public function testDate()
     {
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
@@ -541,72 +511,17 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
     }
 
     /**
-     * Check the getListData function for project (using parent)
-     *
-     */
-//    public function testGetListDataProject()
-//    {
-//        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-//
-//        /* First call */
-//        $array = $module->getListData();
-//        $this->assertEquals(3, count($array[0]));
-//
-//        /* Test the project filter */
-//        $pageNamespace = new Zend_Session_Namespace();
-//        $pageNamespace->lastProjectId = 2;
-//        $array = $module->getListData();
-//        $this->assertEquals(2, count($array[0]));
-//
-//        /* Test the paging */
-//        $pageNamespace = new Zend_Session_Namespace(2 . 'Project');
-//        $pageNamespace->currentPage = 100;
-//        $array = $module->getListData();
-//        $this->assertEquals(0, count($array[0]));
-//
-//        $pageNamespace->currentPage = 1;
-//        $array = $module->getListData();
-//        $this->assertEquals(1, count($array[0]));
-//    }
-
-    /**
-     * Check the getListData function for default modules (using projectId)
-     *
-     */
-//    public function testGetListData()
-//    {
-//        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
-//
-//        /* First call */
-//        $array = $module->getListData();
-//        $this->assertEquals(0, count($array[0]));
-//
-//        /* Test the project filter */
-//        $pageNamespace = new Zend_Session_Namespace();
-//        $pageNamespace->lastProjectId = 1;
-//        $array = $module->getListData();
-//        $this->assertEquals(1, count($array[0]));
-//
-//        /* Test the paging */
-//        $pageNamespace = new Zend_Session_Namespace(1 . 'Todo');
-//        $pageNamespace->currentPage = 100;
-//        $array = $module->getListData();
-//        $this->assertEquals(0, count($array[0]));
-//
-//        $pageNamespace->currentPage = 0;
-//        $array = $module->getListData();
-//        $this->assertEquals(1, count($array[0]));
-//    }
-
-    /**
      * Check the getSubModules function
      *
      */
     public function testSubModules()
     {
+        $session = new Zend_Session_Namespace();
+        $session->currentProjectId = 1;
+
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
         $array = $module->getSubModules();
-        $this->assertEquals(array('Todo','Note'),$array);
+        $this->assertEquals(array('0' => 'Todo', '1' => 'Note'),$array);
 
         $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
         $array = $module->getSubModules();

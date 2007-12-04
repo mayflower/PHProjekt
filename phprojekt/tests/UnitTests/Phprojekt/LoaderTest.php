@@ -40,15 +40,11 @@ class Phprojekt_LoaderTest extends PHPUnit_Extensions_ExceptionTestCase
      */
     public function testGetModel()
     {
-        /*
         $name = Phprojekt_Loader::getModel('Project', 'Project');
-        $this->assertEquals('Project_Models_Project', $name);
+
+        $this->assertEquals('Project_Models_Project', get_class($name));
 
         $instance = new $name(array('db'=>$this->sharedFixture));
         $this->assertNotNull($instance);
-
-        $instance = Phprojekt_Loader::getModelFactory('Project', 'Project',
-                        array('db'=>$this->sharedFixture));
-        $this->assertNotNull($instance); */
     }
 }

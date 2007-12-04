@@ -13,9 +13,6 @@
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
-class Phprojekt_Model_Tree extends Phprojekt_ActiveRecord_Abstract
-{ }
-
 /**
  * Tests for Database Nodes
  *
@@ -36,7 +33,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      */
     public function setUp()
     {
-        $this->_treeModel = new Phprojekt_Model_Tree($this->sharedFixture);
+        $this->_treeModel = new Phprojekt_Project($this->sharedFixture);
     }
 
     /**
@@ -45,13 +42,13 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      */
     public function testSetup()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
         $tree->setup();
 
         $this->assertEquals('/', $tree->path);
-        $this->assertEquals('Root', $tree->name);
+        $this->assertEquals('Invisible Root', $tree->title);
         $this->assertNotNull($tree->id);
-        $this->assertEquals(3, count($tree->getChildren()));
+        $this->assertEquals(1, count($tree->getChildren()));
     }
 
     /**
@@ -62,16 +59,16 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
     {
         $this->_treeModel->getAdapter()->beginTransaction();
         try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
 
             $child1 = $tree->getNodeById(4);
-            $child2 = $tree->getNodeById(7);
+            $child2 = $tree->getNodeById(5);
             $child1->setParentNode($child2);
 
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
-            $this->assertEquals(7, $tree->getNodeById(4)->parentNode->id);
+            $this->assertEquals(5, $tree->getNodeById(4)->parentNode->id);
 
         } catch (Exception $e) {
             $this->_treeModel->getAdapter()->rollBack();
@@ -90,15 +87,15 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
         $this->sharedFixture->beginTransaction();
 
         try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
 
             $new = new Phprojekt_Tree_Node_Database($this->_treeModel);
 
-            $new->name = 'Hello World';
+            $new->title = 'Hello World';
 
             $tree->getNodeById(4)->appendNode($new);
-            $this->assertEquals('/2/4/', $new->path);
+            $this->assertEquals('/1/2/4/', $new->path);
             $this->assertEquals(4, $new->parent);
         } catch (Exception $e) {
             $this->sharedFixture->rollBack();
@@ -115,7 +112,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
      */
     public function testRootNode()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
         $tree->setup();
         $this->assertEquals($tree->id, $tree->getRootNode()->id);
     }
@@ -131,7 +128,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
 
         $this->assertEquals(2, count($tree->getChildren()));
         $this->assertNull($tree->getNodeById(2));
-        $this->assertEquals('Child 2', $tree->name);
+        $this->assertEquals('Sub Project', $tree->title);
 
         $this->assertTrue($tree->isRootNodeForCurrentTree());
         $this->assertFalse($tree->isRootNode());
@@ -146,12 +143,12 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
         $this->sharedFixture->beginTransaction();
 
         try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
             $tree->delete();
             $this->assertNull($tree->id);
             $this->setExpectedException('Phprojekt_Tree_Node_Exception');
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 2);
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
         } catch (Exception $e) {
             $this->sharedFixture->beginTransaction();
