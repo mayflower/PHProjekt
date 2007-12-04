@@ -29,6 +29,16 @@
 interface Phprojekt_Model_Interface extends Iterator
 {
 	/**
+	 * Returns an object that implements the model information interface
+	 * and that provides detailed information about the fields and their
+	 * types. For database objects implementing Phprojekt_Item this
+	 * ModelInformation implementation is usually the DatabaseManager
+	 *
+	 * @return Phprojekt_ModelInformation_Interface
+	 */
+	public function getInformation();
+
+	/**
 	 * Find a dataset, usually by an id. If the record is found
 	 * the current object is filled with the data and returns itself.
 	 *
