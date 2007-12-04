@@ -265,7 +265,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Add a filter into the session array
-     * only if the filter don´t exists
+     * only if the filter donï¿½t exists
      *
      * @param array $newFilter Filter data
      *
@@ -320,7 +320,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Add a string into the where clause
-     * but don´t keep it into the session
+     * but donï¿½t keep it into the session
      *
      * @param string $string SQL where clause
      *
@@ -471,6 +471,18 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Example for json convert.
+     * 
+     * @todo remove if not longer necessary
+     * @return void
+     */
+    public function jsonListAction() 
+    {   
+        echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
+        exit;
+    }
+    
+    /**
      * Displays the edit screen for the current item
      * Use the model module for get the data
      *
@@ -600,7 +612,7 @@ class IndexController extends Zend_Controller_Action
      * Get the model object
      * This function must be redefined in each module
      *
-     * @return array All the fields for list
+     * @return Phprojekt_Model_Interface
      */
     public function getModelObject()
     {

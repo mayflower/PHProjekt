@@ -29,6 +29,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     public function __construct() {}
 
+    public function getInformation() {
+    }
+    
 	/**
 	 * Empty iterator implementation as a model must be iteratable
 	 * @see Iterator::next()
@@ -72,7 +75,6 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      * @return void
      */
     public function fetchAll() {}
-
 
     /**
      * Default find - needs to be implemented

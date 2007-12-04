@@ -54,7 +54,7 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
+class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_ModelInformation_Interface
 {
     /**
      * Cache
@@ -70,13 +70,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     protected $_model;
 
-    const FORM_ORDER   = 'formPosition';
-    const LIST_ORDER   = 'listPosition';
-    const FILTER_ORDER = 'listUseFilter';
-
-    const COLUMN_NAME  = 'tableField';
+    const COLUMN_NAME = 'tableField';
     const COLUMN_TITLE = 'formLabel';
 
+	/*
+     * we have to do the mapping, cause the constants that are passed
+     * are just integers.
+     * 
+     * @var array
+     */
+    private $_mapping = array (MODELINFO_ORD_FORM   => 'formPosition',
+                               MODELINFO_ORD_LIST   => 'listPosition',
+                               MODELINFO_ORD_FILTER => 'listUseFilter');
+    
     /**
      * Initialize a new Database Manager and configurate it with a model
      *
@@ -88,31 +94,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($db);
 
         $this->_model = $model;
-        $this->setColumnOrdering(self::FORM_ORDER);
-    }
-
-    /**
-     * Set the ordering of the associated model. Valid values are
-     * Phprojekt_DatabaseManager::LIST_ORDER
-     * Phprojekt_DatabaseManager::FORM_ORDER
-     *
-     * @param string $order
-     *
-     * @return void
-     */
-    public function setColumnOrdering($order)
-    {
-        switch ($order) {
-            case self::FORM_ORDER:
-            case self::LIST_ORDER:
-            case self::FILTER_ORDER:
-                /* Return the value for assing to colInfo */
-                /* colInfo in the model are used to iterate over the fields */
-                return $this->getInfo($order, Phprojekt_DatabaseManager::COLUMN_NAME);
-                break;
-            default:
-                throw new InvalidArgumentException();
-        }
     }
 
     /**
@@ -141,29 +122,27 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array        Array with the data of all the fields
      */
-    protected function _getFields($order = null)
+    protected function _getFields($order)
     {
         $table = $this->_model->getTableName();
 
+        if (!in_array($order, $this->_mapping)) {
+            return array();
+        }
+        
         switch ($order) {
-            case self::FORM_ORDER:
-                $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::FORM_ORDER .' > 0', $table);
+            case MODELINFO_ORD_FORM:
+            case MODELINFO_ORD_LIST:
+            case MODELINFO_ORD_FILTER:
+                $where = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
                 break;
-            case self::LIST_ORDER:
-                $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::LIST_ORDER .' > 0', $table);
-                break;
-            case self::FILTER_ORDER:
-                $where = $this->getAdapter()->quoteInto('tableName = ? AND ' . self::FILTER_ORDER .' > 0', $table);
-                break;
-
             default:
                 $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
                 break;
         }
 
-        $this->_dbFields[$order] = $this->fetchAll($where, $order);
+        return $this->fetchAll($where, $this->_mapping[$order]);
 
-        return $this->_dbFields[$order];
     }
 
     /**
@@ -182,42 +161,30 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
                                 . ' AND '
                                 . $this->_db->quoteInto('tableField = ?', $fieldname));
     }
-
+    
     /**
-     * Get the field data sorted with the lisPosition value
-     *
-     * The fields with listPosition below 0 are not return.
-     *
-     * @return array Array with the data of the list fields
+     * Return an array of field information. 
+     * @return array
      */
-    public function getFieldsForList()
-    {
-        return $this->_getFields(self::LIST_ORDER);
-    }
-
-    /**
-     * Get the field data sorted with the formPosition value
-     *
-     * The fields with formPosition below 0 are not return.
-     *
-     * @return array Array with the data of the form field
-     */
-    public function getFieldsForForm()
-    {
-        return $this->_getFields(self::FORM_ORDER);
-    }
-
-    /**
-     * Get the field data sorted with the listUseFilter value
-     *
-     * The fields with listUseFilter below 0 are not return.
-     *
-     * @return array Array with the data of the list fields
-     */
-    public function getFieldsForFilter()
-    {
-        return $this->_getFields(self::FILTER_ORDER);
-    }
+	public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT) 
+	{        
+	    $i = 0;
+	    
+	    $converted = array();
+	    $fields    = $this->_getFields($this->_mapping[$ordering]);
+	    /* the db manager handles field different than the encoder/output layer expect */
+	    foreach ($fields as $field) {
+	        $converted[] = array ('key'      => $field->tableField,
+	                              'label'    => $field->formLabel,
+	                              'hint'     => $field->formTooltip,
+	                              'order'    => $i++,
+	                              'position' => $field->formPosition,
+	                              'fieldset' => '',
+	                              'readOnly' => false);
+	    }
+	    
+	    return $converted;
+	}
 
     /**
      * Create a primitive mapping to an array. This is not pretty nice, but
@@ -232,7 +199,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
      */
     public function getInfo($order, $column)
     {
-        $fields = $this->_getFields($order);
+        $fields = $this->_getFields($this->_mapping[$order]);
 
         $result = array();
         foreach ($fields as $field) {
@@ -241,6 +208,23 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract
             }
         }
 
+        return $result;
+    }
+    
+    /**
+     * Return an array with titles to simplify things
+     * 
+     * @param  int   an ordering constant (MODELINFO_ORD_FORM, etc)
+     * @return array
+     */
+    public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
+    {
+        $result = array();
+    
+        foreach ($this->_getFields($ordering) as $field) {
+            $result[] = $field->formLabel;
+        }
+        
         return $result;
     }
 }

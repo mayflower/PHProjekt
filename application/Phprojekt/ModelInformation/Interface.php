@@ -15,6 +15,31 @@
  */
 
 /**
+ * The fields given by the ModelInformation interface
+ * are used by a list view and therefore ordered in that way
+ */
+define('MODELINFO_ORD_LIST', 1);
+
+/**
+ * The fields given by the ModelInformation interface
+ * are used by a form and therefore ordered in that way
+ */
+define('MODELINFO_ORD_FORM', 2);
+
+/**
+ * The fields given by the ModelInformation interface
+ * are used by a filter and therefore ordered in that way
+ */
+define('MODELINFO_ORD_FILTER', 3);
+
+/**
+ * The fields given by the ModelInformation interface
+ * are used by something undeclared, therefore we ust a
+ * default value.
+ */
+define('MODELINFO_ORD_DEFAULT', MODELINFO_ORD_LIST);
+
+/**
  * Convert a model into a json structure.
  * This is usally done by a controller to send data to the client.
  * The Phprojekt_Convert_Json takes care that a apporpriate structure
@@ -31,5 +56,19 @@
  */
 interface Phprojekt_ModelInformation_Interface 
 {
-	public 
+
+    /**
+     * A shortcut to get a list of titles from a model information
+     * 
+     * @return array
+     */
+    public function getTitles($ordering = MODELINFO_ORD_DEFAULT);
+    
+    /**
+     * Return an array of field information. 
+     * See /docs/Documentation of the detailed exchange format.odt
+     * 
+     * @return array
+     */
+     public function getFieldDefinition();
 }
