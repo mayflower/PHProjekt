@@ -106,11 +106,11 @@ abstract class Phprojekt_Filter_Abstract
             }
 
             // Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
-            $record           = $user->settings->create();
-            $record->module   = $module;
-            $record->keyValue = $pairs['key'];
-            $record->value    = $pairs['value'];
-            $record->kind     = self::MODULESETTINGS_IDENTIFIER;
+            $record             = $user->settings->create();
+            $record->module     = $module;
+            $record->keyValue   = $pairs['key'];
+            $record->value      = $pairs['value'];
+            $record->identifier = self::MODULESETTINGS_IDENTIFIER;
             $record->save();
 
             $entry = $entry->_next;

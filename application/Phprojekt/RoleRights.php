@@ -4,7 +4,7 @@
  *
  * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version    
+ * @version
  * @author    Nina Schmitt <schmitt@mayflower.de>
  * @package   PHProjekt
  * @subpackage Core
@@ -56,7 +56,7 @@ class Phprojekt_RoleRights
      * @var Phprojekt_Acl
      */
     protected $_acl = array();
-    
+
     /**
      * Constructor
      */
@@ -99,18 +99,18 @@ class Phprojekt_RoleRights
     private function setId($id){
         $this->_id = $id;
     }
-    
+
     /**
      * Getter for Id
-     * 
+     *
      * @return int $_id
      */
     public function getId(){
         return $this->_id;
     }
-    
+
     /**
-     * sets the project the item belongs to (if item itsel is 
+     * sets the project the item belongs to (if item itsel is
      * a project this is the id of item itself)
      * @param int $project
      */
@@ -129,15 +129,15 @@ class Phprojekt_RoleRights
     function getproject(){
         return $this->_project;
     }
-    
+
     /**
-     * sets the module 
+     * sets the module
      * @param string module
      */
     private function setmodule($module){
         $this->_module = $module;
     }
-    
+
     /**
      * returns module
      *
@@ -146,7 +146,7 @@ class Phprojekt_RoleRights
     public function getmodule(){
         return $this->_module;
     }
-    
+
     /**
      * Setter for User
      * @param int $user
@@ -159,7 +159,7 @@ class Phprojekt_RoleRights
             $this->_user = $authNamespace->userId;
         }
     }
-    
+
    /**
     * getter for User
     * @return int $_user
@@ -167,14 +167,14 @@ class Phprojekt_RoleRights
     public function getUser(){
         return $this->_user;
     }
-    
+
     /**
      * Setter for acl
      */
     private function setacl(){
         $this->_acl =Phprojekt_Acl::getInstance();
     }
-    
+
     /**
      * getter for user
      * @return Phprojekt_Acl $_acl
@@ -182,7 +182,7 @@ class Phprojekt_RoleRights
     public function getacl(){
         return $this->_acl;
     }
-    
+
     /**
      * Setter for UserRole
      * the Role of ther user is fetched from the db
@@ -203,7 +203,7 @@ class Phprojekt_RoleRights
 					   FROM	project
 					   WHERE ID ='.(int)$this->getproject();
             $parent= $db->fetchCol($sqlParent);
-            if ($parent[0] > 0) {
+            if (isset($parent[0]) && ($parent[0] > 0)) {
                 $this->_project = $parent[0];
                 $this->setUserRole();
             }
@@ -214,11 +214,10 @@ class Phprojekt_RoleRights
     /**
      * getter for UserRole
      * returns UserRole for item
-     * 
+     *
      * @return string $_role
      */
     public function getUserRole(){
         return $this->_role;
     }
-
 }

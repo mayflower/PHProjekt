@@ -42,9 +42,9 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     {
         //select all sobmodules with read rights from  db
         $session = new Zend_Session_Namespace();
-        $allModulesArray= array('Todo','Timecard');
+        $allModulesArray= array('Todo','Note','Timecard');
         $modulesArray = array();
-        $rights = new Phprojekt_RoleRights($session->currentProjectId, 
+        $rights = new Phprojekt_RoleRights($session->currentProjectId,
                                             'Project');
         foreach ($allModulesArray as $module) {
             $right = $rights->hasRight('write', $module);

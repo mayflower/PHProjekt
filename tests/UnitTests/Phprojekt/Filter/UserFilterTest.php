@@ -13,10 +13,6 @@
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
-class Phprojekt_Tree extends Phprojekt_Item_Abstract
-{
-}
-
 /**
  * Tests for Filter
  *
@@ -35,11 +31,14 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Extensions_ExceptionTestCa
      */
     public function testFilter ()
     {
-        $record = new Phprojekt_Tree(array('db' => $this->sharedFixture));
-        $filter = new Phprojekt_Filter_UserFilter($record, 'name', 'Root');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace->userId = 1;
+
+        $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisible Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree->setup($filter);
-        $this->assertEquals(0, count($tree->getRootNode()->getChildren()));
+        $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
     }
 
     public function testSaveToFilter()
@@ -47,11 +46,11 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Extensions_ExceptionTestCa
         $user = Phprojekt_Loader::getModel('Users','User',array('db' => $this->sharedFixture));
         $user->find(1);
 
-        $record = new Phprojekt_Tree(array('db' => $this->sharedFixture));
-        $filter = new Phprojekt_Filter_UserFilter($record, 'name', 'Root');
+        $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisble Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree->setup($filter);
 
-        $filter->saveToBackingStore($user, 'Test');
+        $filter->saveToBackingStore($user, 'Project');
     }
 }
