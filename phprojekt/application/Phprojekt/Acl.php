@@ -4,7 +4,7 @@
  *
  * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version
+ * @version   
  * @author    Nina Schmitt <schmitt@mayflower.de>
  * @package   PHProjekt
  * @subpackage Core
@@ -32,17 +32,6 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private static $_instance = null;
 
-    /**
-	 * All roles from Database
-	 * @var array
-	 */
-    protected $_roles = array();
-
-    /**
-	 * All rights from Database
-	 * @var array
-	 */
-    protected $_rights = array();
 
     /**
      * Return this class only one time
@@ -65,88 +54,39 @@ class Phprojekt_Acl extends Zend_Acl
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $this->userID = $authNamespace->userID;
         //first construct roles
-        $this->setRoles();
-        $this->registerRoles();
+        $this->_registerRoles();
         //than get rights and assign them to roles and ressources
-        $this->setRights();
-        $this->assignRights();
-    }
+        $this->_registerRights();
 
-    /**
-    * This function fetches all roles from DB
-    *
-    * @param unknown_type $db
-    *
-    */
-    private function setRoles()
-    {
-        $db = Zend_Registry::get('db');
-        $sql = 'SELECT  id, parent
-						FROM Role
-						ORDER BY parent ASC';
-        $roles= $db->fetchAll($sql);
-        $this->_roles=$roles;
-    }
-
-    /**
-	 * This function returns all roles
-	 *
-	 */
-    public function getRoles()
-    {
-
-        return $this->_roles;
     }
 
     /**
      * This function adds all Roles to Zend_Acl
      *
      */
-    private function registerRoles()
+    private function _registerRoles()
     {
-        $roles = $this->getRoles();
-
-        foreach ($roles as $r) {
-            if ($r['parent'] < 1) {
-                $r['parent'] = null;
+        $role = Phprojekt_Loader::getModel('Role', 'Role');
+        foreach ($role->fetchAll() as $r) {
+            if ($r->parent < 1) {
+                $r->parent = null;
             }
-            $this->addRole(new Zend_Acl_Role($r['id']), $r['parent']);
+            $this->addRole(new Zend_Acl_Role($r->id), $r->parent);
         }
-    }
 
-    /**
-	 * This function fetches all rights from DB
-	 * and saves it in $_rights;
-	 *
-	 */
-    private function setRights()
-    {
-        $db = Zend_Registry::get('db');
-        $sql = 'SELECT  id, roleId, module, permission
-                        FROM RoleModulePermissions    
-                        ORDER BY roleId,module ASC';
-        $rights = $db->fetchAll($sql);
-        $this->_rights = $rights;
-    }
-
-    /**
-     * this function returns current rights
-     * @return  array $_rights
-     */
-    public function getRights()
-    {
-        return $this->_rights;
     }
 
     /**
      * this function assigns all rights to Zend_Acls
      */
-    private function assignRights()
+    private function _registerRights()
     {
-        foreach ($this->getRights() as $right) {
-            if (!$this->has($right['module'])) {
-                $this->add(new Zend_Acl_Resource($right['module']));
-                $this->allow($right['roleId'], $right['module'], $right['permission']);
+        $role = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
+        $order=array(0=>'roleId',1=>'module ASC');
+        foreach ($role->fetchAll(null, $order) as $right) {
+            if (!$this->has($right->module)) {
+                $this->add(new Zend_Acl_Resource($right->module));
+                $this->allow($right->roleId, $right->module, $right->permission);
             }
         }
     }

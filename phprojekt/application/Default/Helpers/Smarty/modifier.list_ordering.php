@@ -16,24 +16,27 @@
 /**
  * Set the list mode
  *
- * @param array $records
+ * @param array $records Array with the records
  *
  * @return array
  */
 function smarty_modifier_list_ordering($records)
 {
-    return $records;
-   /* if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract ) {
-        $records->_colInfo = $records->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::LIST_ORDER);
+    if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract && $records->getRights() <> '') {
         return $records;
     } else if (is_array($records)) {
-        foreach($records as &$record) {
+        $allowedRecords=array();
+        foreach ($records as &$record) {
+            /* @var Phprojekt_Item_Abstract $record */
             if ($record instanceof Phprojekt_Item_Abstract) {
-                $record->_colInfo = $record->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::LIST_ORDER);
+                if ($record->getRights() <> '') {
+                    $allowedRecords[]=$record;
+                }
             }
         }
-        return $records;
-    }*/
+        return $allowedRecords;
+    }
 
     return '';
 }
+
