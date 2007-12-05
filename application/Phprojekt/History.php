@@ -87,13 +87,13 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      */
     private function _getDifferences(Phprojekt_Item_Abstract $object, $action)
     {
-        $fields = $object->getInformation()->getFieldsForForm();
+        $fields = $object->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
         $clone  = clone($object);
         $clone->find($object->id);
         $differences = array();
         if ($action == 'edit') {
             foreach ($fields as $value) {
-                $fieldName = $value->tableField;
+                $fieldName = $value['key'];
                 if ($object->$fieldName != $clone->$fieldName) {
                     $differences[$fieldName] = array(
                             'oldValue' => $clone->$fieldName,
@@ -102,14 +102,14 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             }
         } else if ($action == 'add') {
             foreach ($fields as $value) {
-                $fieldName = $value->tableField;
+                $fieldName = $value['key'];
                 $differences[$fieldName] = array(
                     'oldValue' => '',
                     'newValue' => $object->$fieldName);
             }
         } else if ($action == 'delete') {
             foreach ($fields as $value) {
-                $fieldName = $value->tableField;
+                $fieldName = $value['key'];
                 $differences[$fieldName] = array(
                     'oldValue' => $object->$fieldName,
                     'newValue' => '');

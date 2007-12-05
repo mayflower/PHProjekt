@@ -50,10 +50,10 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForList();
+        $fields = $db->getFieldDefinition(1);
 
         foreach ($fields as $key => $field) {
-            $result[$field->tableField]['tableField'] = $field->tableField;
+            $result[$field['key']] = $field['key'];
         }
         $this->assertEquals($this->_listResult, array_keys($result));
     }
@@ -66,10 +66,10 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields = $db->getFieldsForForm();
+        $fields = $db->getFieldDefinition(2);
 
         foreach ($fields as $key => $field) {
-            $result[$field->tableField]['tableField'] = $field->tableField;
+            $result[$field['key']] = $field['key'];
         }
         $this->assertEquals($this->_formResult, array_keys($result));
     }

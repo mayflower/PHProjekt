@@ -110,32 +110,33 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return array Data with label, XHTML output and isRequired per field
      */
-    public static function generateFormElement(Phprojekt_DatabaseManager_Field $field)
+    public static function generateFormElement($field)
     {
-        $right=$field->right;
+        $right = $field['right'];
+
         switch($right){
-            case'write':
-            case'admin':
-                switch ($field->formType) {
-                    case "textarea":
+        case'write':
+        case'admin':
+                switch ($field['type']) {
+                case "textarea":
                         return self::textArea($field);
-                    case "date":
+                case "date":
                         return self::date($field);
-                    case "selectValues":
+                case "selectValues":
                         return self::selectValues($field);
-                    case "tree":
+                case "tree":
                         return self::tree($field);
-                    case "space":
+                case "space":
                         return '';
-                    case "selectSqlAddOne":
+                case "selectSqlAddOne":
                         return self::selectSqlAddOne($field);
-                    default:
+                default:
                         return self::text($field);
                 }
                 break;
-            case'read':
-                return $field->value;
-            default:
+        case'read':
+                return $field['value'];
+        default:
                 return'';
         }
     }
@@ -147,9 +148,9 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string XHTML generated
      */
-    public static function text(Phprojekt_DatabaseManager_Field $field)
+    public static function text($field)
     {
-        return Zend_Registry::get('view')->formText($field->tableField, $field->value);
+        return Zend_Registry::get('view')->formText($field['key'], $field['value']);
     }
 
     /**
@@ -159,9 +160,9 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string XHTML generated
      */
-    public static function textArea(Phprojekt_DatabaseManager_Field $field)
+    public static function textArea($field)
     {
-        return Zend_Registry::get('view')->formTextarea($field->tableField, $field->value,
+        return Zend_Registry::get('view')->formTextarea($field['key'], $field['value'],
         array('cols' => 30, 'rows' => 3));
     }
 
@@ -172,9 +173,9 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string XHTML generated
      */
-    public static function date(Phprojekt_DatabaseManager_Field $field)
+    public static function date($field)
     {
-        return Zend_Registry::get('view')->formText($field->tableField, $field->value);
+        return Zend_Registry::get('view')->formText($field['key'], $field['value']);
     }
 
     /**
@@ -188,18 +189,18 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string XHTML generated
      */
-    public static function selectValues(Phprojekt_DatabaseManager_Field $field)
+    public static function selectValues($field)
     {
         $attribs = array();
         $options = array();
 
-        $data = explode('|', $field->formRange);
+        $data = explode('|', $field['range']);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
             $options[$key]     = Zend_Registry::get('translate')->translate($value);
         }
 
-        return Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
+        return Zend_Registry::get('view')->formSelect($field['key'], $field['value'], $attribs, $options);
     }
 
     /**
@@ -215,7 +216,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         $attribs = array();
         $options = array();
 
-        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
+        $activeRecord = Phprojekt_Loader::getModel($field['range'], $field['range']);
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
@@ -227,14 +228,14 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         }
 
         // Default value for these special system fields
-        if ($field->tableField == 'projectId' || $field->tableField == 'parent') {
+        if ($field['key'] == 'projectId' || $field['key'] == 'parent') {
             $session = new Zend_Session_Namespace();
             if (isset($session->currentProjectId)) {
-                $field->value = (int) $session->currentProjectId;
+                $field['value'] = (int) $session->currentProjectId;
             }
         }
 
-        return Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
+        return Zend_Registry::get('view')->formSelect($field['key'], $field['value'], $attribs, $options);
     }
 
     /**
@@ -248,7 +249,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string XHTML generated
      */
-    public static function selectSqlAddOne(Phprojekt_DatabaseManager_Field $field)
+    public static function selectSqlAddOne($field)
     {
         $attribs = array();
         $options = array();
@@ -256,20 +257,20 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         // Get the distinct fields from the table
         $db = Zend_Registry::get('db');
         $select = $db->select()
-        ->distinct()
-        ->from($field->tableName, $field->tableField)
-        ->where($field->tableField . " != ''");
+            ->distinct()
+            ->from($field['range'], $field['key'])
+            ->where($field['key'] . " != ''");
         $stmt = $db->query($select);
         $result = $stmt->fetchAll();
 
         $options[''] = '';
         foreach ($result as $values) {
-            $value = $values[$field->tableField];
+            $value = $values[$field['key']];
             $options[$value] = Zend_Registry::get('translate')->translate($value);
         }
 
-        $select = Zend_Registry::get('view')->formSelect($field->tableField, $field->value, $attribs, $options);
-        $text   = Zend_Registry::get('view')->formText($field->tableField.'_new', '');
+        $select = Zend_Registry::get('view')->formSelect($field['key'], $field['value'], $attribs, $options);
+        $text   = Zend_Registry::get('view')->formText($field['key'].'_new', '');
 
         // Return the select and a text field
         return $select.'&nbsp;'.Zend_Registry::get('translate')->translate('or New').'&nbsp;'.$text;

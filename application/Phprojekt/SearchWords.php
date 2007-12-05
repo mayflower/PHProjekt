@@ -437,13 +437,16 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
 	 */
 	private function _stripStops($var)
 	{
+	    $searchStopWords = array();
 	    $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
                 . 'Phprojekt' . DIRECTORY_SEPARATOR
-                  . 'stopwords.txt';
-        $_temp = file($file);
-        $searchStopWords = array();
-        if (!empty($_temp[0])) {
-            $searchStopWords = explode(" ", $_temp[0]);
+                . 'stopwords.txt';
+        if (file_exists($file)) {
+            $_temp = file($file);
+            $searchStopWords = array();
+            if (!empty($_temp[0])) {
+                $searchStopWords = explode(" ", $_temp[0]);
+            }
         }
         return(!in_array(strtoupper($var), $searchStopWords));
 	}

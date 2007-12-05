@@ -70,19 +70,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected $_model;
 
-    const COLUMN_NAME = 'tableField';
+    const COLUMN_NAME  = 'tableField';
     const COLUMN_TITLE = 'formLabel';
 
 	/*
      * we have to do the mapping, cause the constants that are passed
      * are just integers.
-     * 
+     *
      * @var array
      */
     private $_mapping = array (MODELINFO_ORD_FORM   => 'formPosition',
                                MODELINFO_ORD_LIST   => 'listPosition',
                                MODELINFO_ORD_FILTER => 'listUseFilter');
-    
+
     /**
      * Initialize a new Database Manager and configurate it with a model
      *
@@ -124,25 +124,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _getFields($order)
     {
-        $table = $this->_model->getTableName();
+        $result = array();
+        if (!empty($this->_dbFields[$order])) {
+            $result = $this->_dbFields[$order];
+        } else {
+            $table = $this->_model->getTableName();
 
-        if (!in_array($order, $this->_mapping)) {
-            return array();
-        }
-        
-        switch ($order) {
-            case MODELINFO_ORD_FORM:
-            case MODELINFO_ORD_LIST:
-            case MODELINFO_ORD_FILTER:
+            if (in_array($order, $this->_mapping)) {
                 $where = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
-                break;
-            default:
-                $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
-                break;
+                $result = $this->fetchAll($where, $order);
+                $this->_dbFields[$order] = $result;
+            }
         }
-
-        return $this->fetchAll($where, $this->_mapping[$order]);
-
+        return $result;
     }
 
     /**
@@ -161,28 +155,32 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                 . ' AND '
                                 . $this->_db->quoteInto('tableField = ?', $fieldname));
     }
-    
+
     /**
-     * Return an array of field information. 
+     * Return an array of field information.
      * @return array
      */
-	public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT) 
-	{        
+	public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT)
+	{
 	    $i = 0;
-	    
+
 	    $converted = array();
 	    $fields    = $this->_getFields($this->_mapping[$ordering]);
 	    /* the db manager handles field different than the encoder/output layer expect */
 	    foreach ($fields as $field) {
 	        $converted[] = array ('key'      => $field->tableField,
 	                              'label'    => $field->formLabel,
+	                              'type'     => $field->formType,
 	                              'hint'     => $field->formTooltip,
 	                              'order'    => $i++,
 	                              'position' => $field->formPosition,
 	                              'fieldset' => '',
+	                              'range'    => $field->formRange,
+	                              'required' => $field->isRequired,
+	                              'right'    => $this->getModel()->getRights(),
 	                              'readOnly' => false);
 	    }
-	    
+
 	    return $converted;
 	}
 
@@ -210,21 +208,21 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         return $result;
     }
-    
+
     /**
      * Return an array with titles to simplify things
-     * 
+     *
      * @param  int   an ordering constant (MODELINFO_ORD_FORM, etc)
      * @return array
      */
     public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
     {
         $result = array();
-    
-        foreach ($this->_getFields($ordering) as $field) {
+
+        foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
             $result[] = $field->formLabel;
         }
-        
+
         return $result;
     }
 }

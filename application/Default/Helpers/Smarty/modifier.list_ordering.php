@@ -22,21 +22,32 @@
  */
 function smarty_modifier_list_ordering($records)
 {
+    $allowedRecords = array();
     if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract && $records->getRights() <> '') {
-        return $records;
+        $fields = $records->getInformation()->getFieldDefinition(MODELINFO_ORD_LIST);
+        $result = array();
+        foreach ($fields as $field) {
+            $field['value'] = $records->$field['key'];
+            $result[] = $field;
+        }
+        $allowedRecords = $result;
     } else if (is_array($records)) {
-        $allowedRecords=array();
         foreach ($records as &$record) {
             /* @var Phprojekt_Item_Abstract $record */
             if ($record instanceof Phprojekt_Item_Abstract) {
                 if ($record->getRights() <> '') {
-                    $allowedRecords[]=$record;
+                    $fields = $record->getInformation()->getFieldDefinition(MODELINFO_ORD_LIST);
+                    $result = array();
+                    foreach ($fields as $field) {
+                        $field['value'] = $record->$field['key'];
+                        $result[] = $field;
+                    }
+                    $allowedRecords[$record->id] = $result;
                 }
             }
         }
-        return $allowedRecords;
     }
 
-    return '';
+    return $allowedRecords;
 }
 

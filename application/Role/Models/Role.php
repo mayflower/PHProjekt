@@ -31,12 +31,10 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    public $hasManyAndBelongsToMany = array('users' =>
-    array('module' => 'Users',
-    'model'  => 'User'),
-    'projects'=>
-    array('module' => 'Project',
-    'model'  => 'Rproject'));
+    public $hasManyAndBelongsToMany = array('users' => array('module' => 'Users',
+                                                             'model'  => 'User'),
+                                                             'projects'=> array('module' => 'Project',
+                                                                                'model'  => 'Rproject'));
 
     /**
      * Id of user
@@ -46,8 +44,15 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
 
 
     /**
+     * Keep the found project roles in cache
+     *
+     * @var array
+     */
+    private $_projectRoles = array();
+
+    /**
      * Constructor for Groups
-     * 
+     *
      * @param Zend_Db $db database
      */
     public function __construct($db = null)
@@ -58,35 +63,38 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
     /**
      * getter for UserRole
      * returns UserRole for item
-     * 
+     *
      * @param int $user    user ID
      * @param int $project project ID
-     * 
+     *
      * @return string $_role current role
      */
-    public function fetchUserRole($user,$project){
-        $db = Zend_Registry::get('db');
-        $select = $db->select()->from(array('rel' => 'ProjectUserRoleRelation'));
-        $select->joinInner(array('role' => 'Role'),
-        sprintf("%s = %s",
-        $db->quoteIdentifier("role.id"),
-        $db->quoteIdentifier("rel.roleId")));
-        $select->where($db->quoteInto('userId = ?', $user));
-        $select->where($db->quoteInto('projectId = ?', $project));
-        $stmt = $db->query($select);
-        $roles = $stmt->fetchObject();
-        if (!$roles->id) {
-            $projectdata = Phprojekt_Loader::getModel('Project', 'Project');
-            $projects = $projectdata->fetchAll();
-            $parent = $projectdata->find($project);
-            if ($parent->parent > 0) {
-                $role = $this->fetchUserRole($user, $parent->parent);
-            }
+    public function fetchUserRole($user,$project)
+    {
+        $role = 0;
+        if (isset($this->_projectRoles[$user][$project])) {
+            $role = $this->_projectRoles[$user][$project];
         } else {
-            $role=$roles->id;
+            $db = Zend_Registry::get('db');
+            $select = $db->select()
+                ->from(array('rel' => 'ProjectUserRoleRelation'))
+                ->joinInner(array('role' => 'Role'), sprintf("%s = %s", $db->quoteIdentifier("role.id"), $db->quoteIdentifier("rel.roleId")))
+                ->where($db->quoteInto('userId = ?', $user))
+                ->where($db->quoteInto('projectId = ?', $project));
+            $stmt  = $db->query($select);
+            $roles = $stmt->fetchAll();
+            if (!isset($roles[0]['id'])) {
+                $projectObject = Phprojekt_Loader::getModel('Project', 'Project');
+                $parent = $projectObject->find($project);
+                if (null != $parent && $parent->parent > 0) {
+                    $role = $this->fetchUserRole($user, $parent->parent);
+                    $this->_projectRoles[$user][$project] = $role;
+                }
+            } else {
+                $role = $roles[0]['id'];
+                $this->_projectRoles[$user][$project] = $role;
+            }
         }
         return $role;
     }
-
-
 }

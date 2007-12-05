@@ -472,16 +472,16 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Example for json convert.
-     * 
+     *
      * @todo remove if not longer necessary
      * @return void
      */
-    public function jsonListAction() 
-    {   
+    public function jsonListAction()
+    {
         echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
         exit;
     }
-    
+
     /**
      * Displays the edit screen for the current item
      * Use the model module for get the data
@@ -580,6 +580,8 @@ class IndexController extends Zend_Controller_Action
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
 
+        $write = true;
+        $read  = true;
         if (isset($session->currentProjectId)) {
             $this->view->projectId   = $session->currentProjectId;
             $this->view->projectName = $session->currentProjectName;
@@ -587,7 +589,6 @@ class IndexController extends Zend_Controller_Action
                           $this->getRequest()->getModuleName());
             $write = $rights->hasRight('write');
             $read =  $rights->hasRight('read') ? true : $write;
-
         }
 
         $this->view->params     = $this->_params;

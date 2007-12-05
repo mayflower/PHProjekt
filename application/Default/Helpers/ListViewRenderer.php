@@ -113,9 +113,9 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      */
     public static function generateListElement($field)
     {
-        $originalValue = $field->value;
+        $originalValue = $field['value'];
 
-        switch ($field->formType) {
+        switch ($field['type']) {
             default:
                 return self::text($originalValue);
                 break;
@@ -224,7 +224,7 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
     public static function selectValues($field, $originalValue)
     {
         $string = '';
-        $data   = explode('|', $field->formRange);
+        $data   = explode('|', $field['range']);
         foreach ($data as $pairValues) {
             list($key, $value) = split("#", $pairValues);
             if ($key == $originalValue) {
@@ -247,7 +247,7 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      */
     public static function tree($field, $originalValue)
     {
-        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
+        $activeRecord = Phprojekt_Loader::getModel($field['range'], $field['range']);
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
 
