@@ -45,11 +45,12 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $allModulesArray= array('Todo','Note','Timecard');
         $modulesArray = array();
         $rights = new Phprojekt_RoleRights($session->currentProjectId,
-                                            'Project');
+        'Project');
         foreach ($allModulesArray as $module) {
-            $right = $rights->hasRight('write', $module);
+            $right =  $rights->hasRight('read', $module) ? true :
+            $rights->hasRight('write', $module);
             if ($right) {
-                $modulesArray[]=$module;
+                $modulesArray[] = $module;
             }
         }
 

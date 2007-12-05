@@ -61,8 +61,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     protected $_search = null;
     
-    private static $_right = null;
-
     /**
      * History data of the fields
      *
@@ -378,7 +376,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $groupwhere[] = $this ->getAdapter()->quoteInto('?', $groupId);
         }
         $in = (count($groupwhere) > 0) ? implode(',', $groupwhere) : null;
-        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?',  $groups->getUser()).
+        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?', $groups->getUser()).
         $groupwheres.= ($in) ? ' OR `read` IN ('.$in.')  OR `write` IN ('.$in.')  OR `admin` IN ('.$in.'))' :')';
         $wheres[] = $groupwheres;
         if (null !== $where) {
@@ -392,75 +390,76 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     
     /**
      * Returns the right the user has on a Phprojekt item
-     * @return string
+     * 
+     * @return string $right
      */
     public function getRights()
     {
-        if (self::$_right === null) {
-            $right = '';
-            $itemright = '';
-            if ($this->_data['id']>0) {
-                $groups = Phprojekt_Loader::getModel('Groups', 'Groups');
-                if ($this->_data['read']) {
-                    if ($groups->isUserInGroup($this->_data['read'])) {
-                        $itemright = 'read';
-                    }
+        $right = '';
+        $itemright = '';
+        if ($this->_data['id']>0) {
+            $groups = Phprojekt_Loader::getModel('Groups', 'Groups');
+            if ($this->_data['read']) {
+                if ($groups->isUserInGroup($this->_data['read'])) {
+                    $itemright = 'read';
                 }
-                if ($this->_data['write']) {
-                    if ($groups->isUserInGroup($this->_data['write'])) {
-                        $itemright = 'write';
-                    }
-                }
-                if ($this->_data['admin']) {
-                    if ($groups->isUserInGroup($this->_data['admin'])) {
-                        $itemright = 'admin';
-                    }
-                }
-                $class = $this->getTableName();
-                switch ($class) {
-                    case'Project':
-                        $relfield=$this->_data['parent'];
-                        break;
-                    default:
-                        $relfield=$this->_data['projectId'];
-                        break;
-                }
-                $rolerights = new Phprojekt_RoleRights($relfield, $class, 
-                                                        $this->_data['id']);
-                $rolerightread = $rolerights->hasRight('read');
-                $rolerightwrite = $rolerights->hasRight('write');
-                switch ($itemright) {
-                    case'read':
-                        if ($rolerightread or $rolerightwrite) {
-                            $right = 'read';
-                        }
-                        break;
-                    case'write':
-                        if ($rolerightread ) {
-                            $right = 'read';
-                        }
-                        if ($rolerightwrite) {
-                            $right ='write';
-                        }
-                        break;
-                    case'admin':
-                        if ($rolerightread ) {
-                            $right = 'read';
-                        }
-                        if ($rolerightwrite) {
-                            $right = 'admin';
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                self::$_right = $right;
-
-            } else {
-                return 'write';
             }
+            if ($this->_data['write']) {
+                if ($groups->isUserInGroup($this->_data['write'])) {
+                    $itemright = 'write';
+                }
+            }
+            if ($this->_data['admin']) {
+                if ($groups->isUserInGroup($this->_data['admin'])) {
+                    $itemright = 'admin';
+                }
+            }
+            if ($this->_data['ownerId'] == $groups->getUser()) {
+                $itemright = 'admin';
+            }
+            $class = $this->getTableName();
+            switch ($class) {
+                case'Project':
+                    $relfield=$this->_data['parent'];
+                    break;
+                default:
+                    $relfield=$this->_data['projectId'];
+                    break;
+            }
+            $rolerights = new Phprojekt_RoleRights($relfield, $class,
+            $this->_data['id']);
+            $rolerightread = $rolerights->hasRight('read');
+            $rolerightwrite = $rolerights->hasRight('write');
+            switch ($itemright) {
+                case'read':
+                    if ($rolerightread or $rolerightwrite) {
+                        $right = 'read';
+                    }
+                    break;
+                case'write':
+                    if ($rolerightread ) {
+                        $right = 'read';
+                    }
+                    if ($rolerightwrite) {
+                        $right ='write';
+                    }
+                    break;
+                case'admin':
+                    if ($rolerightread ) {
+                        $right = 'read';
+                    }
+                    if ($rolerightwrite) {
+                        $right = 'admin';
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return $right;
+
+        } else {
+            return 'write';
         }
-        return self::$_right;
     }
 
 }
