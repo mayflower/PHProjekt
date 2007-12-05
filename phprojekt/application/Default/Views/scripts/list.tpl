@@ -5,11 +5,11 @@
 {/foreach}
 </tr>
 
-{foreach item=record from=$records|@list_ordering}
+{foreach key=id item=record from=$records|@list_ordering}
 <tr>
   {foreach item=field from=$record}
   <td>
-  <a href="{url action="edit" module=$module id=`$record->id`}">
+  <a href="{url action="edit" module=$module id=`$id`}">
    {list_element field=`$field`}
   </a>
   </td>

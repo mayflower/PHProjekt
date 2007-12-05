@@ -23,8 +23,7 @@
  */
 function smarty_function_form_element($arguments)
 {
-    if (array_key_exists('field', $arguments)
-     && $arguments['field'] instanceof Phprojekt_DatabaseManager_Field ) {
+    if (array_key_exists('field', $arguments)) {
         return Default_Helpers_FormViewRenderer::generateFormElement($arguments['field']);
     }
 

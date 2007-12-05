@@ -22,18 +22,31 @@
  */
 function smarty_modifier_form_ordering($records)
 {
-    return $records;
-    /*
-    if (!is_array($records) && $records instanceof Phprojekt_Model_Interface ) {
-        $records->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::FORM_ORDER);
-        return $records;
-    } else {
-        foreach($records as &$record) {
+    $allowedRecords = array();
+    if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract && $records->getRights() <> '') {
+        $fields = $records->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
+        $result = array();
+        foreach ($fields as $field) {
+            $field['value'] = $records->$field['key'];
+            $result[] = $field;
+        }
+        $allowedRecords = $result;
+    } else if (is_array($records)) {
+        foreach ($records as &$record) {
+            /* @var Phprojekt_Item_Abstract $record */
             if ($record instanceof Phprojekt_Item_Abstract) {
-                $record->getDatabaseManager()->setColumnOrdering(Phprojekt_DatabaseManager::FORM_ORDER);
+                if ($record->getRights() <> '') {
+                    $fields = $record->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
+                    $result = array();
+                    foreach ($fields as $field) {
+                        $field['value'] = $record->$field['key'];
+                        $result[] = $field;
+                    }
+                    $allowedRecords[] = $result;
+                }
             }
         }
+    }
 
-        return $records;
-    }*/
+    return $allowedRecords;
 }

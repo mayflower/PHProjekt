@@ -60,7 +60,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @var Phprojekt_SearchWords
      */
     protected $_search = null;
-    
+
     /**
      * History data of the fields
      *
@@ -156,16 +156,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $validated = true;
         $data      = $this->_data;
-        $fields    = $this->_dbManager->getFieldsForForm();
+        $fields    = $this->_dbManager->getFieldDefinition(MODELINFO_ORD_FORM);
 
         foreach ($data as $varname => $value) {
             if ($this->keyExists($varname)) {
                 /* Validate with the database_manager stuff */
                 foreach ($fields as $field) {
-                    if ($field->tableField == $varname) {
+                    if ($field['key'] == $varname) {
                         $validations = $field;
 
-                        if ($validations->isRequired) {
+                        if ($validations['required']) {
                             $error = $this->validateIsRequired($value);
                             if (null != $error) {
                                 $validated = false;
@@ -175,7 +175,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                             }
                         }
 
-                        if ($validations->formType == 'date') {
+                        if ($validations['type'] == 'date') {
                             $error = $this->validateDate($value);
                             if (null != $error) {
                                 $validated = false;
@@ -351,8 +351,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         return $this->getInformation()->getInfo(MODELINFO_ORD_LIST, Phprojekt_DatabaseManager::COLUMN_NAME);
     }
-    
-    
+
+
     /**
      * Rewrites parent fetchAll, so that only records with read access are shown
      *
@@ -382,15 +382,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         if (null !== $where) {
             $wheres[] = $where;
         }
-        $where = (is_array($wheres) && count($wheres) > 0) ? 
+        $where = (is_array($wheres) && count($wheres) > 0) ?
                     implode(' AND ', $wheres) : null;
         return parent::fetchAll($where, $order,
         $count, $offset);
     }
-    
+
     /**
      * Returns the right the user has on a Phprojekt item
-     * 
+     *
      * @return string $right
      */
     public function getRights()

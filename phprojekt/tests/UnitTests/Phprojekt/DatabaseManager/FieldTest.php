@@ -32,7 +32,7 @@ class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Extensions_ExceptionTe
     public function testGetField()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $dbField = new Phprojekt_DatabaseManager_Field($project->getDatabaseManager(),
+        $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(),
                                                    'title',
                                                    '');
 
@@ -47,7 +47,7 @@ class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Extensions_ExceptionTe
     public function testToString()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $dbField = new Phprojekt_DatabaseManager_Field($project->getDatabaseManager(),
+        $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(),
                                                    'parent',
                                                    'testvalue');
         echo $dbField;

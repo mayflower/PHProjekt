@@ -20,10 +20,10 @@
   <table width="90%">
   {foreach item=field from=$record|form_ordering}
    <tr>
-    <td width="25%">{$field->formLabel|translate}</td>
+    <td width="25%">{$field.label|translate}</td>
     <td>
      {form_element field=$field}
-     {if $field->isRequired}<span class="error">*</span>{/if}
+     {if $field.required}<span class="error">*</span>{/if}
     </td>
    </tr>
   {/foreach}
