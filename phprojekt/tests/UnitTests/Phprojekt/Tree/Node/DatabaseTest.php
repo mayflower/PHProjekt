@@ -32,7 +32,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->_treeModel = new Phprojekt_Project($this->sharedFixture);
+        $this->_treeModel = new Project_Models_Project($this->sharedFixture);
     }
 
     /**
