@@ -38,7 +38,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     public function __construct($config = array())
     {
-        $this->_name = 'searchWords';
+        $this->_name = 'SearchWords';
 
         if (null === $config) {
             $config = array('db' => Zend_Registry::get('db'));
