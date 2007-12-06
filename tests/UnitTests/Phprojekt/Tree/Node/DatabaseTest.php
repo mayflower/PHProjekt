@@ -56,7 +56,6 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testMove()
     {
-        $this->_treeModel->getAdapter()->beginTransaction();
         try {
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
@@ -70,11 +69,8 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(5, $tree->getNodeById(4)->parentNode->id);
 
         } catch (Exception $e) {
-            $this->_treeModel->getAdapter()->rollBack();
             throw $e;
         }
-
-        $this->_treeModel->getAdapter()->rollBack();
     }
 
     /**
@@ -83,8 +79,6 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testAppend()
     {
-        $this->_treeModel->getAdapter()->beginTransaction();
-
         try {
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
@@ -93,15 +87,12 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
 
             $new->title = 'Hello World';
 
-            $tree->getNodeById(4)->appendNode($new);
-            $this->assertEquals('/1/2/4/', $new->path);
-            $this->assertEquals(4, $new->parent);
+            $tree->getNodeById(5)->appendNode($new);
+            $this->assertEquals('/1/2/5/', $new->path);
+            $this->assertEquals(5, $new->parent);
         } catch (Exception $e) {
-            $this->sharedFixture->rollBack();
             throw $e;
         }
-
-        $this->_treeModel->getAdapter()->rollBack();
     }
 
 
@@ -138,8 +129,6 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteNode()
     {
-        $this->_treeModel->getAdapter()->beginTransaction();
-
         try {
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
             $tree->setup();
@@ -149,10 +138,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, $tree->id);
             $tree->setup();
         } catch (Exception $e) {
-            $this->sharedFixture->beginTransaction();
             throw $e;
         }
-
-        $this->_treeModel->getAdapter()->beginTransaction();
     }
 }
