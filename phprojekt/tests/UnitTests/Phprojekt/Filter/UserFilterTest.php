@@ -11,7 +11,6 @@
  * @since      File available since Release 1.0
 */
 require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
 /**
  * Tests for Filter
@@ -23,7 +22,7 @@ require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_Filter_UserFilterTest extends PHPUnit_Extensions_ExceptionTestCase
+class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test the filtering

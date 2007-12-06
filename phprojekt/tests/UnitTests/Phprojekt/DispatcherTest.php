@@ -11,7 +11,6 @@
  * @since      File available since Release 1.0
 */
 require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
 /**
  * Tests Dispatcher class
@@ -23,7 +22,7 @@ require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
  * @since      File available since Release 1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Phprojekt_DispatcherTest extends PHPUnit_Extensions_ExceptionTestCase
+class Phprojekt_DispatcherTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test formatControllerName
@@ -31,13 +30,13 @@ class Phprojekt_DispatcherTest extends PHPUnit_Extensions_ExceptionTestCase
     public function testFormatControllerName()
     {
         /*  Initialization */
-        
+
         $dispatcher = new Phprojekt_Dispatcher();
 
         /* Check regular name */
         $controllerName = $dispatcher->formatControllerName('Phprojekt_Notification');
         $this->assertEquals($controllerName,'PhprojektNotification');
-        
+
         /* Check name with irregular chars */
         $controllerName = $dispatcher->formatControllerName('Phprojekt_Notification()');
         $this->assertEquals($controllerName,'PhprojektNotification');
