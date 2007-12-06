@@ -83,7 +83,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testAppend()
     {
-        $this->sharedFixture->beginTransaction();
+        $this->_treeModel->getAdapter()->beginTransaction();
 
         try {
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
@@ -101,7 +101,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
             throw $e;
         }
 
-        $this->sharedFixture->rollBack();
+        $this->_treeModel->getAdapter()->rollBack();
     }
 
 
@@ -133,13 +133,12 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($tree->isRootNode());
     }
 
-
     /**
      * delete test
      */
     public function testDeleteNode()
     {
-        $this->sharedFixture->beginTransaction();
+        $this->_treeModel->getAdapter()->beginTransaction();
 
         try {
             $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
@@ -154,6 +153,6 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
             throw $e;
         }
 
-        $this->sharedFixture->beginTransaction();
+        $this->_treeModel->getAdapter()->beginTransaction();
     }
 }
