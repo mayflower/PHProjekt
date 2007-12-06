@@ -86,11 +86,11 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_LanguageTest');
         $suite->addTestSuite('Phprojekt_LogTest');
         $suite->addTestSuite('Phprojekt_ErrorTest');
-        $suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
         $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');
         $suite->addTestSuite('Phprojekt_HistoryTest');
         $suite->addTestSuite('Phprojekt_Filter_UserFilterTest');
-        $suite->addTestSuite('Phprojekt_AuthTest');
+        #$suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
+        #$suite->addTestSuite('Phprojekt_AuthTest');
 
         return $suite;
     }
