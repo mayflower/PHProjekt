@@ -44,9 +44,9 @@ CREATE TABLE `DatabaseManager` (
 );
 
 
--- 
+--
 -- Table structure for table `Groups`
--- 
+--
 DROP TABLE IF EXISTS `Groups`;
 CREATE TABLE `Groups` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -55,9 +55,9 @@ CREATE TABLE `Groups` (
 );
 
 
--- 
+--
 -- Table structure for table `GroupsUserRelation`
--- 
+--
 DROP TABLE IF EXISTS `GroupsUserRelation`;
 CREATE TABLE `GroupsUserRelation` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -155,7 +155,7 @@ CREATE TABLE `Role` (
 
 --
 -- Table structure for table `RoleModulePermissions`
--- 
+--
 DROP TABLE IF EXISTS `RoleModulePermissions`;
 CREATE TABLE `RoleModulePermissions` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -218,7 +218,7 @@ CREATE TABLE `UserModuleSetting` (
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 );
-CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);	 
+CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
 
 --
@@ -264,7 +264,7 @@ DROP TABLE IF EXISTS `Tree`;
 
 LOCK TABLES `DatabaseManager` WRITE;
 /*!40000 ALTER TABLE `DatabaseManager` DISABLE KEYS */;
-INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES 
+INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (1, 'Project', 'parent', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
 (2, 'Project', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (3, 'Project', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
@@ -282,7 +282,7 @@ INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLa
 (14, 'Todo', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0),
 (15, 'Todo', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
 (16, 'Todo', 'projectId', 1, 'project', 'project', 'tree', 1, 1, NULL, 'Project', '', 2, 'center', 1, 1, '1', 1, 0, 0),
-			 
+
 (17, 'History', 'userId', 1, 'UserId', 'UserId', 'userId', '1', '1', NULL, NULL, 0, 1, 'left', 1, 1, 1, 1, 1, 0),
 (18, 'History', 'dataobjectId', 1, 'DataobjectId', 'DataobjectId', 'text', '2', '1', NULL, NULL, 0, 2, 'center', 1, 2, 1, 1, 1, 0),
 (19, 'History', 'module', 1, 'Module', 'Module', 'text', '3', '1', NULL, NULL, '', 3, 'left', 1, 3, 1, 0, 1, 0),
@@ -332,7 +332,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `GroupsUserRelation` WRITE;
 /*!40000 ALTER TABLE `GroupsUserRelation` DISABLE KEYS */;
-INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES 
+INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 1);
@@ -345,23 +345,23 @@ INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
 (1, 'admin', 0);
 /*!40000 ALTER TABLE `Role` ENABLE KEYS */;
 UNLOCK TABLES;
-										   
+
 LOCK TABLES `ProjectUserRoleRelation` WRITE;
 /*!40000 ALTER TABLE `ProjectUserRoleRelation` DISABLE KEYS */;
-INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES 
+INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES
 (1, 1, 1);
 /*!40000 ALTER TABLE `ProjectUserRoleRelation` ENABLE KEYS */;
 UNLOCK TABLES;
-				   
+
 LOCK TABLES `RoleModulePermissions` WRITE;
 /*!40000 ALTER TABLE `RoleModulePermissions` DISABLE KEYS */;
-INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `module`, `permission`) VALUES 
+INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `module`, `permission`) VALUES
 (1, 1, 'Project', 'write'),
 (2, 1, 'Todo', 'write'),
 (3, 1, 'Note', 'write');
 /*!40000 ALTER TABLE `RoleModulePermissions` ENABLE KEYS */;
 UNLOCK TABLES;
-												
+
 LOCK TABLES `Todo` WRITE;
 /*!40000 ALTER TABLE `Todo` DISABLE KEYS */;
 INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`, `read`, `write`, `admin`) VALUES
@@ -373,7 +373,7 @@ LOCK TABLES `ModuleInstance` WRITE;
 /*!40000 ALTER TABLE `ModuleInstance` DISABLE KEYS */;
 INSERT INTO `ModuleInstance` VALUES
 (1,5,'Task','Developer Tasks'),
-(2,5,'Tasks','Project Tasks');										 
+(2,5,'Tasks','Project Tasks');
 /*!40000 ALTER TABLE `ModuleInstance` ENABLE KEYS */;
 UNLOCK TABLES;
 

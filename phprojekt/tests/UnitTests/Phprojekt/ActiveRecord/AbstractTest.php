@@ -184,6 +184,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testHasManyAndBelongsToMany()
     {
+        $this->sharedFixture->beginTransaction();
         $user = new Users_Models_User(array('db' => $this->sharedFixture));
         $user->find(1);
         $group = $user->groups->fetchAll();
@@ -196,6 +197,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $users = $group->users->fetchAll();
         $this->assertEquals('david', $users[0]->username);
         $this->assertEquals(1, $group->users->count());
+        $this->sharedFixture->rollBack();
     }
 
     /**
@@ -241,6 +243,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateHasMany()
     {
+        $this->sharedFixture->beginTransaction();
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
         $instance->id = 10;
@@ -253,6 +256,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 
         $instance->id = 5;
         $instance->save();
+        $this->sharedFixture->rollBack();
     }
 
     /**
@@ -281,6 +285,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $this->sharedFixture->rollBack();
             $this->fail($e->getMessage());
         }
+        $this->sharedFixture->rollBack();
     }
 
     /**
@@ -290,6 +295,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testSave()
     {
+        $this->sharedFixture->beginTransaction();
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
 
@@ -311,6 +317,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 
         $instance->title = 'Test Project';
         $instance->save();
+        $this->sharedFixture->rollBack();
     }
 
     /**
