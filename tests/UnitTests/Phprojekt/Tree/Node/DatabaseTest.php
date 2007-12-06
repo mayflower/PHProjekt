@@ -11,7 +11,6 @@
  * @since      File available since Release 1.0
 */
 require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
 /**
  * Tests for Database Nodes
@@ -23,7 +22,7 @@ require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestCase
+class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
 {
     private $_treeModel;
 
@@ -148,7 +147,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Extensions_ExceptionTestC
             $tree->delete();
             $this->assertNull($tree->id);
             $this->setExpectedException('Phprojekt_Tree_Node_Exception');
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
+            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, $tree->id);
             $tree->setup();
         } catch (Exception $e) {
             $this->sharedFixture->beginTransaction();

@@ -10,8 +10,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
 */
-require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 
 class Phprojekt_Project extends Phprojekt_Item_Abstract
 {
@@ -38,7 +37,7 @@ class Phprojekt_Groups extends Phprojekt_ActiveRecord_Abstract
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Extensions_ExceptionTestCase
+class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 {
 
     /**

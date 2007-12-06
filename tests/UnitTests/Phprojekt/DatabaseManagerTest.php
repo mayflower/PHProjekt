@@ -11,7 +11,6 @@
  * @since      File available since Release 1.0
 */
 require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 
 /**
  * Tests for database manager
@@ -23,7 +22,7 @@ require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_DatabaseManagerTest extends PHPUnit_Extensions_ExceptionTestCase
+class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * setUp method for PHPUnit. We use a shared db connection
