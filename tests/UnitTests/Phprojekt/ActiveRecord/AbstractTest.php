@@ -22,11 +22,6 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
     public $belongsTo = array('project' => array('classname' => 'Phprojekt_Project'));
 }
 
-class Phprojekt_Groups extends Phprojekt_ActiveRecord_Abstract
-{
-    public $hasManyAndBelongsToMany = array('users' => array('classname'=> 'Users_Models_User'));
-}
-
 /**
  * Tests for active records
  *
@@ -200,11 +195,14 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $user = new Users_Models_User(array('db' => $this->sharedFixture));
         $user->find(1);
         $group = $user->groups->fetchAll();
+        foreach ($group as $g) {
+            echo $g->name;
+        }
         $this->assertEquals('default', $user->groups->find(1)->name);
         $this->assertEquals('ninasgruppe', $group[1]->name);
         $this->assertEquals(2, $user->groups->count());
 
-        $group = new Phprojekt_Groups(array('db' => $this->sharedFixture));
+        $group = new Groups_Models_Groups(array('db' => $this->sharedFixture));
         $group->find(1);
         $users = $group->users->fetchAll();
         $this->assertEquals('david', $users[0]->username);
@@ -226,6 +224,10 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(5, $project->id);
         $this->assertEquals('Developer Tasks', $project->instances->find(1)->name);
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
+
+        for ($i = 1; $i < $project->instances->count()+1; $i++ ){
+            echo $project->instances->find($i)->name;
+        }
         $this->assertEquals(2, $project->instances->count());
         $this->assertEquals(7, $project->count());
 
@@ -255,7 +257,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateHasMany()
     {
-        $this->sharedFixture->beginTransaction();
+        //$this->sharedFixture->beginTransaction();
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
         $instance->id = 10;
@@ -268,7 +270,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 
         $instance->id = 5;
         $instance->save();
-        $this->sharedFixture->rollBack();
+        //$this->sharedFixture->rollBack();
     }
 
     /**
