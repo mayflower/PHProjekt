@@ -107,7 +107,12 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 	public function testDeleteHasManyAndBelongsToMany()
 	{
 		$this->sharedFixture->beginTransaction();
+	    $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $keepUser = $authNamespace->userId;
+
 		try {
+            $authNamespace->userId = 0;
+
 			$user = new Users_Models_User(array('db' => $this->sharedFixture));
 			$user->username = 'Foo';
 			$user->password = md5('Bar');
@@ -119,16 +124,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 			$group->save();
 
 			$this->assertNotNull($user->id);
-			$this->assertEquals(3, $user->groups->count());
+			$this->assertEquals(1, $user->groups->count());
 
 			$user->delete();
 
 			$this->assertEquals(0, $user->groups->count());
 			$this->assertNull($user->id);
         } catch (Exception $e) {
+            $authNamespace->userId = $keepUser;
             $this->sharedFixture->rollBack();
             $this->fail($e->getMessage());
         }
+        $authNamespace->userId = $keepUser;
         $this->sharedFixture->rollBack();
 	}
 
@@ -158,7 +165,10 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testCreateUser()
     {
         $this->sharedFixture->beginTransaction();
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $keepUser = $authNamespace->userId;
         try {
+            $authNamespace->userId = 0;
             $user = new Users_Models_User(array('db'=>$this->sharedFixture));
             $user->username  = 'gustavo';
             $user->password  = md5('gustavo');
@@ -171,9 +181,11 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $gustavo->find($user->id);
             $this->assertEquals('gustavo', $gustavo->username);
         } catch (Exception $e) {
+            $authNamespace->userId = $keepUser;
             $this->sharedFixture->rollBack();
             $this->fail($e->getMessage());
         }
+        $authNamespace->userId = $keepUser;
         $this->sharedFixture->rollBack();
     }
 
