@@ -4,7 +4,7 @@
  *
  * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   
+ * @version
  * @author    Nina Schmitt <schmitt@mayflower.de>
  * @package   PHProjekt
  * @subpackage Core
@@ -52,17 +52,17 @@ class Phprojekt_Acl extends Zend_Acl
     private function __construct()
     {
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $this->userID = $authNamespace->userID;
+        $this->userID  = $authNamespace->userID;
         //first construct roles
         $this->_registerRoles();
         //than get rights and assign them to roles and ressources
         $this->_registerRights();
-
     }
 
     /**
      * This function adds all Roles to Zend_Acl
      *
+     * @return void
      */
     private function _registerRoles()
     {
@@ -73,16 +73,18 @@ class Phprojekt_Acl extends Zend_Acl
             }
             $this->addRole(new Zend_Acl_Role($r->id), $r->parent);
         }
-
     }
 
     /**
-     * this function assigns all rights to Zend_Acls
+     * This function assigns all rights to Zend_Acls
+     *
+     * @return void
      */
     private function _registerRights()
     {
-        $role = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
-        $order=array(0=>'roleId',1=>'module ASC');
+        $role  = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
+        $order = array(0 => 'roleId',
+                       1 => 'module ASC');
         foreach ($role->fetchAll(null, $order) as $right) {
             if (!$this->has($right->module)) {
                 $this->add(new Zend_Acl_Resource($right->module));

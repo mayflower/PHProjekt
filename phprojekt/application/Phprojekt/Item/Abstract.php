@@ -105,6 +105,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Enter description here...
      *
+     * @return Phprojekt_DatabaseManager_Field
      */
     public function current()
     {

@@ -336,6 +336,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 break;
             default:
                 return $locale;
+                break;
         }
     }
 }

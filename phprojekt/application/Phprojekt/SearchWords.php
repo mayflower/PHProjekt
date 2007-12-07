@@ -39,7 +39,6 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     public function __construct($config = array())
     {
         $this->_name = 'SearchWords';
-
         if (null === $config) {
             $config = array('db' => Zend_Registry::get('db'));
         }
@@ -48,15 +47,13 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
             $config = array('db' => $config);
         }
 
-        if (!array_key_exists('db', $config)
-         || !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
-             throw new
-               Phprojekt_ActiveRecord_Exception("SearchWords class must "
-                                              . "be initialized using a valid "
-                                              . "Zend_Db_Adapter_Abstract");
+        if (!array_key_exists('db', $config) ||
+            !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
+            throw new Phprojekt_ActiveRecord_Exception("SearchWords class must "
+                                                     . "be initialized using a valid "
+                                                     . "Zend_Db_Adapter_Abstract");
 
         }
-
         parent::__construct($config);
     }
 
@@ -125,15 +122,16 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
         $result = array();
         $words = $this->_getWordsFromText($words);
         foreach ($words as $word) {
-            $crc32 = crc32($word);
-            $where = array();
-            $where[] = 'crc32 = '. $this->getAdapter()->quote($crc32);
+            $crc32     = crc32($word);
+            $where     = array();
+            $where[]   = 'crc32 = '. $this->getAdapter()->quote($crc32);
             $tmpResult = $this->fetchAll($where)->toArray();
 
             foreach ($tmpResult as $tmp => $values) {
                 unset($tmpResult[$tmp]['word']);
                 unset($tmpResult[$tmp]['crc32']);
             }
+
             if (empty($result)) {
                 $result = $tmpResult;
             } else {
@@ -145,11 +143,10 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                             foreach ($tmpResult as $tmp2 => $data) {
                                 if (($data['module'] == $values['module']) &&
                                     ($data['itemId'] == $values['itemId'])){
-                                        $found = true;
-                                        break;
+                                    $found = true;
+                                    break;
                                 }
                             }
-
                             if (!$found) {
                                 unset($result[$tmp]);
                             }
@@ -161,11 +158,10 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                             foreach ($result as $values) {
                                 if (($data['module'] == $values['module']) &&
                                     ($data['itemId'] == $values['itemId'])){
-                                        $found = true;
-                                        break;
+                                    $found = true;
+                                    break;
                                 }
                             }
-
                             if (!$found) {
                                 $result[] = $data;
                             }
@@ -180,7 +176,6 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
         foreach ($result as $tmp => $data) {
             $foundResults[$data['module']][] = $data['itemId'];
         }
-
         return $foundResults;
     }
 
@@ -208,7 +203,6 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                 $data[$field] = $object->$field;
             }
         }
-
         return $data;
     }
 
@@ -264,7 +258,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      * @param string  $module The module to store
      * @param integer $itemId The item ID
      * @param integer $crc32  The crc32 number of the word
-
+     *
      * @return boolean
      */
     private function _exists($module, $itemId, $crc32)
@@ -279,17 +273,17 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     }
 
     /**
-	 * Get the FileType by its extension
-	 *
-	 * @param string $filename The name of the file
-	 *
-	 * @return string
-	 */
-	function _getFileType($filename) {
-		return(strtoupper(array_pop(explode(".",$filename))));
-	}
+     * Get the FileType by its extension
+     *
+     * @param string $filename The name of the file
+     *
+     * @return string
+     */
+    function _getFileType($filename) {
+        return(strtoupper(array_pop(explode(".",$filename))));
+    }
 
-	/**
+    /**
      * Get all the words from a file into an array
      *
      * @param string $file     The name of the file
@@ -363,7 +357,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     private function _getWordsFromText($string)
     {
-		return $this->_stringToArray($string);
+        return $this->_stringToArray($string);
     }
 
     /**
@@ -375,34 +369,29 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     private function _stringToArray($string) {
         // Clean up the string
-		$string = $this->_cleanupstring($string);
-
-		// Split the string into an array
+        $string = $this->_cleanupstring($string);
+        // Split the string into an array
         $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
-
         // strip off short words
         $tempArray = array_filter($tempArray, array($this, "_stripShortsWords"));
-
         // strip off stop words
         $tempArray = array_filter($tempArray, array($this, "_stripStops"));
-
         return $tempArray;
     }
 
-	/**
-	 * Clean Up a string for search or index
-	 *
+    /**
+     * Clean Up a string for search or index
+     *
      * @param string $string The string for cleanup
-	 *
-	 * @return string
-	 */
+     *
+     * @return string
+     */
     private function _cleanupString($string)
     {
-    	// Clean up HTML
-    	$string = preg_replace('#\W+#msiU', ' ', strtoupper(strtr(strip_tags($string), array_flip(get_html_translation_table (HTML_ENTITIES)))));
-
-		// Translate bad
-    	$search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i", "'&(gt|#62);'i", "'&(nbsp|#160);'i",
+        // Clean up HTML
+        $string = preg_replace('#\W+#msiU', ' ', strtoupper(strtr(strip_tags($string), array_flip(get_html_translation_table (HTML_ENTITIES)))));
+        // Translate bad
+        $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i", "'&(gt|#62);'i", "'&(nbsp|#160);'i",
                          "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i", "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
                          "'&auml;'", "'&ouml;'", "'&uuml;'", "'&Auml;'", "'&Ouml;'",
                          "'&Uuml;'", "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
@@ -410,35 +399,34 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                           " ", " ", " ", " ", " ",
                           "�", "�", "�", "�", "�",
                           "�", "�",  " ", " ", " ", " ");
-		$string = preg_replace($search,$replace,strip_tags($string));
-
-		return $string;
+        $string = preg_replace($search,$replace,strip_tags($string));
+        return $string;
     }
 
     /**
-	 * Remove the short words from the index
-	 *
-	 * @param array $var String to check
-	 *
-	 * @return boolean
-	 */
-	private function _stripShortsWords($var)
-	{
-	    return(strlen($var) > 2);
-	}
+     * Remove the short words from the index
+     *
+     * @param array $var String to check
+     *
+     * @return boolean
+     */
+    private function _stripShortsWords($var)
+    {
+        return(strlen($var) > 2);
+    }
 
     /**
-	 * Remove the StopWords from the index
-	 * using the stopwords.txt file
-	 *
-	 * @param array $var String to check
-	 *
-	 * @return boolean
-	 */
-	private function _stripStops($var)
-	{
-	    $searchStopWords = array();
-	    $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
+     * Remove the StopWords from the index
+     * using the stopwords.txt file
+     *
+     * @param array $var String to check
+     *
+     * @return boolean
+     */
+    private function _stripStops($var)
+    {
+        $searchStopWords = array();
+        $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
                 . 'Phprojekt' . DIRECTORY_SEPARATOR
                 . 'stopwords.txt';
         if (file_exists($file)) {
@@ -449,5 +437,5 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
             }
         }
         return(!in_array(strtoupper($var), $searchStopWords));
-	}
+    }
 }

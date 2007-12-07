@@ -1,17 +1,17 @@
 <?php
 /**
- * Convert a model into a json structure. 
+ * Convert a model into a json structure.
  * This is usually done by a controller to send data to the
  * client
  *
- * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   CVS: $Id$
- * @author    David Soria Parra <soria_parra@mayflower.de>
- * @package   PHProjekt
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @version    CVS: $Id$
+ * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 1.0
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
 
 /**
@@ -54,20 +54,21 @@ define('MODELINFO_ORD_DEFAULT', MODELINFO_ORD_LIST);
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-interface Phprojekt_ModelInformation_Interface 
+interface Phprojekt_ModelInformation_Interface
 {
-
     /**
      * A shortcut to get a list of titles from a model information
-     * 
+     *
+     * @param integer $ordering Set the column order of the titles
+     *
      * @return array
      */
     public function getTitles($ordering = MODELINFO_ORD_DEFAULT);
-    
+
     /**
-     * Return an array of field information. 
+     * Return an array of field information.
      * See /docs/Documentation of the detailed exchange format.odt
-     * 
+     *
      * @return array
      */
      public function getFieldDefinition();

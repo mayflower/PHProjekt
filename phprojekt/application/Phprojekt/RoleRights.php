@@ -4,7 +4,7 @@
  *
  * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version
+ * @version   CVS: $Id:
  * @author    Nina Schmitt <schmitt@mayflower.de>
  * @package   PHProjekt
  * @subpackage Core
@@ -17,7 +17,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license   http://www.phprojekt.com/license PHProjekt6 License
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
  * @author     Nina Schmitt <schmitt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -31,26 +31,31 @@ class Phprojekt_RoleRights
      * @var int
      */
     protected $_id = 0;
+
     /**
      * name of current module
      * @var string
      */
     protected $_module='';
+
     /**
      * Id of user
      * @var int
      */
     protected $_user = 0;
+
     /**
      * Id of Project the item belongs to
      * @var int
      */
     protected $_project = 0;
+
     /**
      * role of user for current item
      * @var string
      */
     protected $_role ='';
+
     /**
      * Zend acls
      * @var Phprojekt_Acl
@@ -59,11 +64,11 @@ class Phprojekt_RoleRights
 
     /**
      * Constructor
-     * 
-     * @param int    $project project ID
-     * @param string $module  current module
-     * @param int    $id      current ID
-     * @param int    $user    current user  
+     *
+     * @param integer $project Project ID
+     * @param string  $module  Current module
+     * @param integer $id      Current ID
+     * @param integer $user    Current user
      */
     public function __construct($project, $module, $id=0, $user=0)
     {
@@ -75,13 +80,12 @@ class Phprojekt_RoleRights
         $this->_setUserRole();
     }
 
-
     /**
      * checks whether user has a certain right on an item
-     * 
-     * @param string $right  name of right
-     * @param string $module name of module
-     * 
+     *
+     * @param string $right  Name of right
+     * @param string $module Name of module
+     *
      * @return boolean
      */
     public function hasRight($right, $module=null)
@@ -105,8 +109,10 @@ class Phprojekt_RoleRights
 
     /**
      * Setter for item id
-     * 
-     * @param int $id current id
+     *
+     * @param integer $id current id
+     *
+     * @return void
      */
     private function _setId($id)
     {
@@ -116,7 +122,7 @@ class Phprojekt_RoleRights
     /**
      * Getter for Id
      *
-     * @return int $_id current id
+     * @return integer $_id Current id
      */
     public function getId()
     {
@@ -124,10 +130,12 @@ class Phprojekt_RoleRights
     }
 
     /**
-     * sets the project the item belongs to (if item itsel is
+     * Sets the project the item belongs to (if item itsel is
      * a project this is the id of item itself)
-     * 
-     * @param int $project current project
+     *
+     * @param integer $project Current project
+     *
+     * @return void
      */
     private function _setProject($project)
     {
@@ -137,20 +145,23 @@ class Phprojekt_RoleRights
             $this->_project = $project;
         }
     }
-    /**
-     * returns projects
-     *
-     * @return int $_project current project
-     */
 
-    public function getProject(){
+    /**
+     * Returns projects
+     *
+     * @return integer $_project Current project
+     */
+    public function getProject()
+    {
         return $this->_project;
     }
 
     /**
-     * sets the module
-     * 
-     * @param string $module current module
+     * Sets the module
+     *
+     * @param string $module Current module
+     *
+     * @return void
      */
     private function _setModule($module)
     {
@@ -158,9 +169,9 @@ class Phprojekt_RoleRights
     }
 
     /**
-     * returns module
+     * Returns module
      *
-     * @return string $module current module
+     * @return string $module Current module
      */
     public function getModule()
     {
@@ -169,8 +180,10 @@ class Phprojekt_RoleRights
 
     /**
      * Setter for User
-     * 
-     * @param int $user current user
+     *
+     * @param integer $user Current user
+     *
+     * @return void
      */
     private function _setUser($user)
     {
@@ -183,9 +196,9 @@ class Phprojekt_RoleRights
     }
 
     /**
-     * getter for User
-     * 
-     * @return int $_user current user
+     * Getter for User
+     *
+     * @return integer $_user Current user
      */
     public function getUser()
     {
@@ -194,6 +207,8 @@ class Phprojekt_RoleRights
 
     /**
      * Setter for acl
+     *
+     * @return void
      */
     private function _setAcl()
     {
@@ -201,8 +216,8 @@ class Phprojekt_RoleRights
     }
 
     /**
-     * getter for user
-     * 
+     * Getter for user
+     *
      * @return Phprojekt_Acl $_acl Acls for session
      */
     public function getAcl()
@@ -213,14 +228,17 @@ class Phprojekt_RoleRights
     /**
      * Setter for UserRole
      * the Role of ther user is fetched from the db
+     *
+     * @return array
      */
-    private function _setUserRole(){
-        $role = Phprojekt_Loader::getModel('Role', 'Role');
-        $this->_role=$role->fetchUserRole($this->getUser(), $this->getProject());
+    private function _setUserRole()
+    {
+        $role        = Phprojekt_Loader::getModel('Role', 'Role');
+        $this->_role = $role->fetchUserRole($this->getUser(), $this->getProject());
     }
-    
+
     /**
-     * getter for UserRole
+     * Getter for UserRole
      * returns UserRole for item
      *
      * @return string $_role

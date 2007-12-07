@@ -38,12 +38,15 @@ interface Phprojekt_RenderHelper
      * Set a model that should be rendered.
      *
      * @param Phprojekt_Abstract_Item $model The activerecord
+     *
+     * @return void
      */
     public function setModel($model);
 
     /**
      * Render the part.
      *
+     * @return void
      */
     public function render();
 

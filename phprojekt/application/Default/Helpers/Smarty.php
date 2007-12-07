@@ -102,8 +102,8 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * Assign an external value by ref. This makes possible to bind
      * arrays and objects to a variable
      *
-     * @param string $key   Name of the parameter
-     * @param mixed  $value Object to assign
+     * @param string $key    Name of the parameter
+     * @param mixed  &$value Object to assign
      *
      * @return void
      */
@@ -219,7 +219,8 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
      * Finds a view script from the available directories.
      * If there are not a script, the default script is used
      *
-     * @param $name string The base name of the script.
+     * @param string $name string The base name of the script.
+     *
      * @return string The path to the script to render
      */
     protected function _script($name)

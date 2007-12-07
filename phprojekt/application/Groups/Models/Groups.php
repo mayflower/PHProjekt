@@ -37,7 +37,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * user
-     * @var int $_user
+     * @var integer $_user
      */
     private $_user = null;
 
@@ -45,7 +45,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      * Constructor for Groups
      *
      * @param Zend_Db $db     database
-     * @param int     $userId Id of user
+     * @param integer $userId Id of user
      */
     public function __construct($db = null, $userId=null)
     {
@@ -54,11 +54,14 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * setter for user
+     * Setter for user
      *
-     * @param int $user Id of user
+     * @param integer $user Id of user
+     *
+     * @return void
      */
-    private function _setUser($user){
+    private function _setUser($user)
+    {
         if ($user != 0) {
             $this->_user= $user;
         } else {
@@ -68,9 +71,9 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * getter for current user
+     * Getter for current user
      *
-     * @return int $_user Id of user
+     * @return integer $_user Id of user
      */
     public function getUser()
     {
@@ -78,9 +81,9 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * checks whether user is in Group
+     * Checks whether user is in Group
      *
-     * @param int $group Id of group
+     * @param integer $group Id of group
      *
      * @return boolean
      */
@@ -106,7 +109,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * returns all groups user belongs to
+     * Returns all groups user belongs to
      *
      * @return array $group Id of group;
      */

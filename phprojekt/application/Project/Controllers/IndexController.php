@@ -43,11 +43,13 @@ class Project_IndexController extends IndexController
 
     /**
      * Set various session data.
+     *
      * @todo Check if we have to move this part of the code, as lastProjectId
      *       is used everywhere.
      *
+     * @return void
      */
-    public function init () {
+    public function init() {
         parent::init();
         $session = new Zend_Session_Namespace();
         $project = $this->getModelObject();
@@ -65,7 +67,7 @@ class Project_IndexController extends IndexController
      *
      * @return void
      */
-    public function listAction ()
+    public function listAction()
     {
         $db = Zend_Registry::get('db');
         /* Save the last project id into the session */
