@@ -31,15 +31,17 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    public $hasMany = array('settings' =>
-    array('module' => 'Users',
-    'model'  => 'UserModuleSetting'));
+    public $hasMany = array('settings' => array('module' => 'Users',
+                                                'model'  => 'UserModuleSetting'));
 
-    public $hasManyAndBelongsToMany = array('groups' =>
-    array(
-    'classname' => 'Groups_Models_Groups',
-    'module' => 'Groups',
-    'model'  => 'Groups'));
+    /**
+     * Has many and belongs to many declrations
+     *
+     * @var array
+     */
+    public $hasManyAndBelongsToMany = array('groups' => array('classname' => 'Groups_Models_Groups',
+                                                              'module'    => 'Groups',
+                                                              'model'     => 'Groups'));
 
     /**
      * Initialize new user

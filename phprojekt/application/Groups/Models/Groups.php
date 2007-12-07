@@ -72,7 +72,8 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      *
      * @return int $_user Id of user
      */
-    public function getUser(){
+    public function getUser()
+    {
         return $this->_user;
     }
 
@@ -83,32 +84,25 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      *
      * @return boolean
      */
-    public function isUserInGroup($group){
-        try{
-            $currentgroup = $this->find($group);
-            $where = $currentgroup ->getAdapter()->quoteInto('userId = ?',
-            $this->getUser());
-            $users = $currentgroup->_hasManyAndBelongsToMany('users');
+    public function isUserInGroup($group)
+    {
+        // Keep the user-group relation in the session for optimize the query
+        $groupNamespace = new Zend_Session_Namespace('UserInGroup_'.$this->getUser().'_'.$group);
+        if (isset($groupNamespace->isInGroup)) {
+            $isInGroup = $groupNamespace->isInGroup;
+        } else {
+            $currentGroup = $this->find($group);
+            $where = $currentGroup->getAdapter()->quoteInto('userId = ?', $this->getUser());
+            $users = $currentGroup->_hasManyAndBelongsToMany('users');
             $tmp = current((array)$users->_fetchHasManyAndBelongsToMany($where));
-            try {
-                if ($tmp['userId'] == $this->getUser()) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if ($tmp['userId'] == $this->getUser()) {
+                $isInGroup = $groupNamespace->isInGroup = true;
+            } else {
+                $isInGroup = $groupNamespace->isInGroup = false;
             }
-            catch (Phprojekt_ActiveRecord_Exception $e) {
-                $this->_log->log($e->getMessage());
-                return false;
-            }
-
+            return $groupNamespace->isInGroup;
         }
-        catch (Exception $e) {
-
-            $this->_log->log($e->getMessage());
-        }
-
-        return false;
+        return $isInGroup;
     }
 
     /**
@@ -116,13 +110,21 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array $group Id of group;
      */
-    public function getUserGroups(){
-        $groups = array();
-        $where = $this->getAdapter()->quoteInto('userId = ?', $this->getUser());
-        $users = $this->_hasManyAndBelongsToMany('users');
-        $tmp = $users->_fetchHasManyAndBelongsToMany($where);
-        foreach ($tmp as $row) {
-            $groups[] = $row['groupsId'];
+    public function getUserGroups()
+    {
+        // Keep the user-group relation in the session for optimize the query
+        $groupNamespace = new Zend_Session_Namespace('UserGroups_'.$this->getUser());
+        if (isset($groupNamespace->groups)) {
+            $groups = $groupNamespace->groups;
+        } else {
+            $groups = array();
+            $where = $this->getAdapter()->quoteInto('userId = ?', $this->getUser());
+            $users = $this->_hasManyAndBelongsToMany('users');
+            $tmp   = $users->_fetchHasManyAndBelongsToMany($where);
+            foreach ($tmp as $row) {
+                $groups[] = $row['groupsId'];
+            }
+            $groupNamespace->groups = $groups;
         }
         return $groups;
     }

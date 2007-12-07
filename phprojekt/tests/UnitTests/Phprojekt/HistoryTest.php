@@ -45,6 +45,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
 
         $project->parent = 2;
+        $project->path = '/1/';
         $project->title = 'TEST';
         $project->startDate = '1981-05-12';
         $project->endDate = '1981-05-12';

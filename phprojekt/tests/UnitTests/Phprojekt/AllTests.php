@@ -45,6 +45,7 @@ require_once 'Filter/UserFilterTest.php';
 require_once 'Mail/NotificationTest.php';
 require_once 'DispatcherTest.php';
 require_once 'AuthTest.php';
+require_once 'GroupTest.php';
 
 /**
  * Test suite for the default module
@@ -78,6 +79,7 @@ class Phprojekt_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
+        $suite->addTestSuite('Phprojekt_GroupTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');
         $suite->addTestSuite('Phprojekt_DatabaseManager_FieldTest');

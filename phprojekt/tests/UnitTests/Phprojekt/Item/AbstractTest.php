@@ -12,6 +12,18 @@
 */
 require_once 'PHPUnit/Framework.php';
 
+class Customized_Project extends Project_Models_Project
+{
+    public function validatePriority($value)
+    {
+        if ($value > 0) {
+            return null;
+        } else {
+            return 'Bad priority';
+        }
+    }
+}
+
 /**
  * Tests for items
  *
@@ -466,8 +478,20 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->endDate = '1981-05-12';
         $item->priority = 1;
         $this->assertTrue($item->recordValidate());
+
+        $item = new Customized_Project(array('db' => $this->sharedFixture));
+        $item->title = 'TEST';
+        $item->notes = 'TEST';
+        $item->startDate = '1981-05-12';
+        $item->endDate = '1981-05-12';
+        $item->priority = 0;
+        $this->assertFalse($item->recordValidate());
     }
 
+    /**
+     * Test date field
+     *
+     */
     public function testDate()
     {
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
@@ -525,5 +549,20 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
         $array = $module->getSubModules();
         $this->assertEquals(array(),$array);
+
+        $module = Phprojekt_Loader::getModel('Note', 'Note', array('db' => $this->sharedFixture));
+        $array = $module->getSubModules();
+        $this->assertEquals(array(),$array);
+    }
+
+    /**
+     * test filters data
+     *
+     */
+    public function testGetFieldsForFilter()
+    {
+        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+        $array = $module->getFieldsForFilter();
+        $this->assertEquals(array_keys($this->_listResult), $array);
     }
 }

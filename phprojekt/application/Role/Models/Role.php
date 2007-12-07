@@ -72,8 +72,10 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
     public function fetchUserRole($user,$project)
     {
         $role = 0;
-        if (isset($this->_projectRoles[$user][$project])) {
-            $role = $this->_projectRoles[$user][$project];
+        // Keep the roles in the session for optimize the query
+        $roleNamespace = new Zend_Session_Namespace('UserRole_'.$user.'_'.$project);
+        if (isset($roleNamespace->role) && !empty($roleNamespace->role)) {
+            $role = $roleNamespace->role;
         } else {
             $db = Zend_Registry::get('db');
             $select = $db->select()
@@ -88,11 +90,11 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
                 $parent = $projectObject->find($project);
                 if (null != $parent && $parent->parent > 0) {
                     $role = $this->fetchUserRole($user, $parent->parent);
-                    $this->_projectRoles[$user][$project] = $role;
+                    $roleNamespace->role = $role;
                 }
             } else {
                 $role = $roles[0]['id'];
-                $this->_projectRoles[$user][$project] = $role;
+                $roleNamespace->role = $role;
             }
         }
         return $role;
