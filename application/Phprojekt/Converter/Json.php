@@ -34,10 +34,12 @@ class Phprojekt_Converter_Json
     /**
      * Convert a model or a model information into a json stream
      *
-     * @param Phprojekt_Interface_Model|Phprojekt_Interface_ModelInformation $model
+     * @param Phprojekt_Interface_Model|Phprojekt_Interface_ModelInformation $model Model
+     * @param integer                                                        $order Order
+     *
      * @return string
      */
-    public static function convert($models, $order=MODELINFO_ORD_DEFAULT)
+    public static function convert($models, $order = MODELINFO_ORD_DEFAULT)
     {
         $model = current((array) $models);
         if (! $model instanceof Phprojekt_Model_Interface) {

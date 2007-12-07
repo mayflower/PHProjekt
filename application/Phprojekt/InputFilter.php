@@ -132,22 +132,22 @@ class Phprojekt_InputFilter
         $this->_xssAuto       = (isset($config['xssAuto'])) ? $config['xssAuto'] : 1;
         $this->_tagBlacklist  = (isset($config['tagBlacklist'])) ? $config['tagBlacklist'] : array();
         $this->_attrBlacklist = (isset($config['attrBlacklist'])) ? $config['attrBlacklist'] : array();
-	}
+    }
 
-	/**
-	 * Processes for XSS and specified bad code.
-	 *
-	 * Process an array of strings or a simple string
-	 * filtering element for XSS and other bad code.
-	 *
-	 * @param mixed $source Input string/array-of-string to be 'cleaned'
-	 *
-	 * @return String Cleaned version of input parameter
-	 */
+    /**
+     * Processes for XSS and specified bad code.
+     *
+     * Process an array of strings or a simple string
+     * filtering element for XSS and other bad code.
+     *
+     * @param mixed $source Input string/array-of-string to be 'cleaned'
+     *
+     * @return String Cleaned version of input parameter
+     */
     public function process($source)
     {
         if (is_array($source)) {
-            foreach($source as $key => $value) {
+            foreach ($source as $key => $value) {
                 if (is_string($value)) {
                     $source[$key] = $this->_remove($this->_decode($value));
                 }
@@ -175,15 +175,15 @@ class Phprojekt_InputFilter
             $loopCounter++;
         }
         return $source;
-	}
+    }
 
-	/**
-	 * Strip a string of certain tags
-	 *
-	 * @param string $source Input string to be cleaned
-	 *
-	 * @return string Cleaned version of input parameter
-	 */
+    /**
+     * Strip a string of certain tags
+     *
+     * @param string $source Input string to be cleaned
+     *
+     * @return string Cleaned version of input parameter
+     */
     protected function _filterTags($source)
     {
         $preTag       = NULL;
@@ -233,9 +233,9 @@ class Phprojekt_InputFilter
             }
 
             /*
-			 * excludes all "non-regular" tagnames
-			 * OR no tagname OR remove if xssauto is on and tag is blacklisted
-			 */
+             * excludes all "non-regular" tagnames
+             * OR no tagname OR remove if xssauto is on and tag is blacklisted
+             */
             if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName))||
                 (!$tagName) ||
                 ((in_array(strtolower($tagName), $this->_tagBlacklist)) &&
@@ -328,35 +328,35 @@ class Phprojekt_InputFilter
                  ((in_array(strtolower($attrSubSet[0]), $this->_attrBlacklist)) ||
                   (substr($attrSubSet[0], 0, 2) == 'on')))) {
                 continue;
-			}
+            }
 
-			/* xss attr value filtering */
-			if ($attrSubSet[1]) {
-			    /* strips unicode, hex, etc */
-			    $attrSubSet[1] = str_replace('&#', '', $attrSubSet[1]);
-			    /* strip normal newline within attr value  */
-			    $attrSubSet[1] = preg_replace('/\s+/', '', $attrSubSet[1]);
-			    /* strip double quotes */
-			    $attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
-			    /* [requested feature] convert single quotes from either
-			     * side to doubles (Single quotes
-			     * shouldn't be used to pad attr value) */
-			    if ((substr($attrSubSet[1], 0, 1) == "'") &&
-			        (substr($attrSubSet[1], (strlen($attrSubSet[1]) - 1), 1) == "'")) {
+            /* xss attr value filtering */
+            if ($attrSubSet[1]) {
+                /* strips unicode, hex, etc */
+                $attrSubSet[1] = str_replace('&#', '', $attrSubSet[1]);
+                /* strip normal newline within attr value  */
+                $attrSubSet[1] = preg_replace('/\s+/', '', $attrSubSet[1]);
+                /* strip double quotes */
+                $attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
+                /* [requested feature] convert single quotes from either
+                 * side to doubles (Single quotes
+                 * shouldn't be used to pad attr value) */
+                if ((substr($attrSubSet[1], 0, 1) == "'") &&
+                    (substr($attrSubSet[1], (strlen($attrSubSet[1]) - 1), 1) == "'")) {
                     $attrSubSet[1] = substr($attrSubSet[1], 1, (strlen($attrSubSet[1]) - 2));
-			    }
-			    /* strip slashes */
-			    $attrSubSet[1] = stripslashes($attrSubSet[1]);
-			}
+                }
+                /* strip slashes */
+                $attrSubSet[1] = stripslashes($attrSubSet[1]);
+            }
 
-			/* auto strip attr's with "javascript: */
-			if (((strpos(strtolower($attrSubSet[1]), 'expression') !== false) &&
-			    (strtolower($attrSubSet[0]) == 'style')) ||
-			    (strpos(strtolower($attrSubSet[1]), 'javascript:') !== false) ||
-			    (strpos(strtolower($attrSubSet[1]), 'behaviour:') !== false) ||
-			    (strpos(strtolower($attrSubSet[1]), 'vbscript:') !== false) ||
-			    (strpos(strtolower($attrSubSet[1]), 'mocha:') !== false) ||
-			    (strpos(strtolower($attrSubSet[1]), 'livescript:') !== false)) {
+            /* auto strip attr's with "javascript: */
+            if (((strpos(strtolower($attrSubSet[1]), 'expression') !== false) &&
+                 (strtolower($attrSubSet[0]) == 'style')) ||
+                (strpos(strtolower($attrSubSet[1]), 'javascript:') !== false) ||
+                (strpos(strtolower($attrSubSet[1]), 'behaviour:') !== false) ||
+                (strpos(strtolower($attrSubSet[1]), 'vbscript:') !== false) ||
+                (strpos(strtolower($attrSubSet[1]), 'mocha:') !== false) ||
+                (strpos(strtolower($attrSubSet[1]), 'livescript:') !== false)) {
                 continue;
             }
 

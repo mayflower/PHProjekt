@@ -26,65 +26,74 @@
  */
 class Default_Models_Default implements Phprojekt_Model_Interface
 {
-
+    /**
+     * Construct class
+     *
+     */
     public function __construct()
     {
     }
 
+    /**
+     * Information about the fields
+     * @see Phprojekt_Item_Abstract
+     *
+     * @return void
+     */
     public function getInformation()
     {
     }
 
-	/**
-	 * Empty iterator implementation as a model must be iteratable
-	 * @see Iterator::next()
-	 *
-	 * @return void
-	 */
-	public function next()
-	{
-	}
+    /**
+     * Empty iterator implementation as a model must be iteratable
+     * @see Iterator::next()
+     *
+     * @return void
+     */
+    public function next()
+    {
+    }
 
-	/**
-	 * Empty iterator implementation as a model must be iteratable
-	 * @see Iterator::rewind()
-	 *
-	 * @return void
-	 */
-	public function rewind()
-	{
-	}
+    /**
+     * Empty iterator implementation as a model must be iteratable
+     * @see Iterator::rewind()
+     *
+     * @return void
+     */
+    public function rewind()
+    {
+    }
 
-	/**
-	 * Empty iterator implementation as a model must be iteratable
-	 * @see Iterator::current()
-	 *
-	 * @return void
-	 */
-	public function current()
-	{
-	}
+    /**
+     * Empty iterator implementation as a model must be iteratable
+     * @see Iterator::current()
+     *
+     * @return void
+     */
+    public function current()
+    {
+    }
 
-	/**
-	 * Empty iterator implementation as a model must be iteratable
-	 * @see Iterator::valid()
-	 *
-	 * @return void
-	 */
-	public function valid()
-	{
-		return false;
-	}
+    /**
+     * Empty iterator implementation as a model must be iteratable
+     * @see Iterator::valid()
+     *
+     * @return void
+     */
+    public function valid()
+    {
+        return false;
+    }
 
-	/**
-	 * Empty iterator implementation as a model must be iteratable
-	 * @see Iterator::key()
-	 *
-	 * @return void
-	 */
-	public function key ()
-	{
-	}
+    /**
+     * Empty iterator implementation as a model must be iteratable
+     * @see Iterator::key()
+     *
+     * @return void
+     */
+    public function key ()
+    {
+    }
 
     /**
      * Default fetchall - needs to be implemented

@@ -28,4 +28,3 @@ function smarty_modifier_translate($string)
     /* @var $translator Zend_Translate_Adapter */
     return $translator->translate($string);
 }
-?>

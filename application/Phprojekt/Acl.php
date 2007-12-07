@@ -2,14 +2,14 @@
 /**
  * User class for PHProjekt 6.0
  *
- * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version
- * @author    Nina Schmitt <schmitt@mayflower.de>
- * @package   PHProjekt
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @version    CVS: $Id:
+ * @author     Nina Schmitt <schmitt@mayflower.de>
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 1.0
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
 
 /**
@@ -17,7 +17,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license   http://www.phprojekt.com/license PHProjekt6 License
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
  * @author     Nina Schmitt <schmitt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core

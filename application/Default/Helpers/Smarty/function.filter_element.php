@@ -31,4 +31,3 @@ function smarty_function_filter_element($arguments)
 
     return '';
 }
-?>

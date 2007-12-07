@@ -50,4 +50,3 @@ function smarty_modifier_form_ordering($records)
 
     return $allowedRecords;
 }
-?>
