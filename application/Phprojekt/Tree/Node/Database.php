@@ -112,23 +112,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Initialize a new root node
-     *
-     * @return Phprojekt_Tree_Node_Database
-     */
-    public function create()
-    {
-        $this->_activeRecord         = clone $this->_activeRecord;
-        $this->_activeRecord->path   = self::NODE_SEPARATOR;
-        $this->_activeRecord->parent = null;
-        $this->_activeRecord->save();
-
-        $this->_requestedId = $this->id;
-
-        return $this;
-    }
-
-    /**
      * Checks if the tree was setup yet, by checking of the node has an id
      *
      * @return boolean
@@ -266,9 +249,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
             return $this;
         }
-
-        throw new Phprojekt_Tree_Node_Exception('Only nodes with a valid '
-        . 'active record can be added');
     }
 
     /**
@@ -305,25 +285,17 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             .' from/to the database yet');
         }
 
+        if ($this->id == 1)  {
+            throw new Phprojekt_Tree_Node_Exception('You can not delete the Invisible Root');
+        }
+
         $table    = $this->_activeRecord->getTableName();
         $database = $this->_activeRecord->getAdapter();
         /* @var $database Zend_Db_Adapter_Abstract */
-        try {
-            $database->beginTransaction();
-            $database->delete($table,
-            $database->quoteInto('path LIKE ?', $this->path . '%'));
-
-            $this->_deleteChildren($this->getChildren());
-
-            $this->_activeRecord = null;
-            $this->_initialize();
-
-        } catch (Exception $e) {
-            $database->rollBack();
-            throw $e;
-        }
-
-        $database->commit();
+        $database->delete($table, $database->quoteInto('path LIKE ?', $this->path . '%'));
+        $this->_deleteChildren($this->getChildren());
+        $this->_activeRecord = null;
+        $this->_initialize();
     }
 
     /**
@@ -437,8 +409,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             if (array_key_exists($id, $this->_index)) {
                 return $this->_index[$id];
             }
-        } else {
-            return $this->getRootNode()->_getFromIndex($id);
         }
 
         return null;

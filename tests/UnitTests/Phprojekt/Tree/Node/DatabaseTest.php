@@ -24,96 +24,114 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
 {
-    private $_treeModel;
+    private $_tree;
+    private $_model;
 
     /**
-     * setUp method for PHPUnit. We use a shared db connection
-     *
+     * initialite
      */
     public function setUp()
     {
-        $this->_treeModel = new Project_Models_Project($this->sharedFixture);
+        $this->_model = new Project_Models_Project($this->sharedFixture);
+        $this->_tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
+        $this->_tree->setup();
     }
 
     /**
-     * Test the getModel functionality
-     *
+     * setup
      */
     public function testSetup()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
-        $tree->setup();
-
-        $this->assertEquals('/', $tree->path);
-        $this->assertEquals('Invisible Root', $tree->title);
-        $this->assertNotNull($tree->id);
-        $this->assertEquals(1, count($tree->getChildren()));
+        $this->assertEquals('/', $this->_tree->path);
+        $this->assertEquals('Invisible Root', $this->_tree->title);
+        $this->assertNotNull($this->_tree->id);
+        $this->assertEquals(1, count($this->_tree->getChildren()));
+        $this->assertNotNull($this->_tree->isSetup());
     }
 
     /**
-     * getNodeByID test
-     *
+     * iterator
+     */
+    public function testIterator()
+    {
+        $iterator = $this->_tree->getIterator();
+        $this->assertTrue($iterator instanceof RecursiveIteratorIterator);
+    }
+
+    /**
+     * depth
+     */
+    public function testGetDepth()
+    {
+        $this->assertEquals(0, $this->_tree->getDepth());
+        $node = $this->_tree->getNodeById(2);
+        $this->assertEquals(1, $node->getDepth());
+        $node = $this->_tree->getNodeById(5);
+        $this->assertEquals(2, $node->getDepth());
+    }
+
+    /**
+     * childrens
+     */
+    public function testGetFirstChild()
+    {
+        $child = $this->_tree->getFirstChild();
+        $this->assertEquals('Project 1', $child->title);
+
+        $node = $this->_tree->getNodeById(2);
+        $child = $node->getFirstChild();
+        $this->assertEquals('Sub Project', $child->title);
+
+        $node = $this->_tree->getNodeById(4);
+        $child = $node->getFirstChild();
+        $this->assertEquals('Sub Sub Project 1', $child->title);
+
+        $node = $this->_tree->getNodeById(7);
+        $child = $node->getFirstChild();
+        $this->assertNull($child);
+    }
+
+    /**
+     * move tree
      */
     public function testMove()
     {
-        try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
-            $tree->setup();
+        $child1 = $this->_tree->getNodeById(4);
+        $child2 = $this->_tree->getNodeById(5);
+        $child1->setParentNode($child2);
 
-            $child1 = $tree->getNodeById(4);
-            $child2 = $tree->getNodeById(5);
-            $child1->setParentNode($child2);
-
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
-            $tree->setup();
-            $this->assertEquals(5, $tree->getNodeById(4)->parentNode->id);
-
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
+        $tree->setup();
+        $this->assertEquals(5, $tree->getNodeById(4)->parentNode->id);
     }
 
     /**
-     * Test append
-     *
+     * append
      */
     public function testAppend()
     {
-        try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
-            $tree->setup();
+        $new = new Phprojekt_Tree_Node_Database($this->_model);
+        $new->title = 'Hello World';
 
-            $new = new Phprojekt_Tree_Node_Database($this->_treeModel);
-
-            $new->title = 'Hello World';
-
-            $tree->getNodeById(5)->appendNode($new);
-            $this->assertEquals('/1/2/5/', $new->path);
-            $this->assertEquals(5, $new->parent);
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $this->_tree->getNodeById(5)->appendNode($new);
+        $this->assertEquals('/1/2/5/', $new->path);
+        $this->assertEquals(5, $new->parent);
     }
 
-
     /**
-     * Test the getModel functionality
-     *
+     * rootNode
      */
     public function testRootNode()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
-        $tree->setup();
-        $this->assertEquals($tree->id, $tree->getRootNode()->id);
+        $this->assertEquals($this->_tree->id, $this->_tree->getRootNode()->id);
     }
 
     /**
-     * Enter description here...
-     *
+     * subtree test
      */
     public function testGetSubtree()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 4);
+        $tree = new Phprojekt_Tree_Node_Database($this->_model, 4);
         $tree->setup();
 
         $this->assertEquals(2, count($tree->getChildren()));
@@ -125,20 +143,27 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * delete test
+     * delete test node
      */
     public function testDeleteNode()
     {
-        try {
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, 1);
-            $tree->setup();
-            $tree->delete();
-            $this->assertNull($tree->id);
-            $this->setExpectedException('Phprojekt_Tree_Node_Exception');
-            $tree = new Phprojekt_Tree_Node_Database($this->_treeModel, $tree->id);
-            $tree->setup();
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $tree = new Phprojekt_Tree_Node_Database($this->_model, 5);
+        $tree->setup();
+        $this->assertEquals(1, count($tree->getChildren()));
+        $tree->delete();
+        $this->assertNull($tree->id);
+        $this->assertEquals(0, count($tree->getChildren()));
+
+        $this->setExpectedException('Phprojekt_Tree_Node_Exception');
+        $tree->delete();
+    }
+
+    /**
+     * delete test root node
+     */
+    public function testDeleteRoot()
+    {
+        $this->setExpectedException('Phprojekt_Tree_Node_Exception');
+        $this->_tree->delete();
     }
 }
