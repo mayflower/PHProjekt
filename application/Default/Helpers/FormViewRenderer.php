@@ -115,28 +115,28 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         $right = $field['right'];
 
         switch($right){
-        case'write':
-        case'admin':
+            case'write':
+            case'admin':
                 switch ($field['type']) {
-                case "textarea":
+                    case "textarea":
                         return self::textArea($field);
-                case "date":
+                    case "date":
                         return self::date($field);
-                case "selectValues":
+                    case "selectValues":
                         return self::selectValues($field);
-                case "tree":
+                    case "tree":
                         return self::tree($field);
-                case "space":
+                    case "space":
                         return '';
-                case "selectSqlAddOne":
+                    case "selectSqlAddOne":
                         return self::selectSqlAddOne($field);
-                default:
+                    default:
                         return self::text($field);
                 }
                 break;
-        case'read':
+            case'read':
                 return $field['value'];
-        default:
+            default:
                 return'';
         }
     }

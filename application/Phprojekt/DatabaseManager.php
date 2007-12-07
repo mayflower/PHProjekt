@@ -73,8 +73,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     const COLUMN_NAME  = 'tableField';
     const COLUMN_TITLE = 'formLabel';
 
-	/*
-     * we have to do the mapping, cause the constants that are passed
+    /**
+     * We have to do the mapping, cause the constants that are passed
      * are just integers.
      *
      * @var array
@@ -92,7 +92,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function __construct(Phprojekt_Item_Abstract $model, $db = null)
     {
         parent::__construct($db);
-
         $this->_model = $model;
     }
 
@@ -142,15 +141,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Find a special fieldname
      *
-     * @param string $fieldname
-     *
      * @return Zend_Db_Rowset
      */
     public function find()
     {
-		$fieldname = func_get_arg(0);
-
-        $table = $this->_model->getTableName();
+        $fieldname = func_get_arg(0);
+        $table     = $this->_model->getTableName();
         return parent::fetchRow($this->_db->quoteInto('tableName = ?', $table)
                                 . ' AND '
                                 . $this->_db->quoteInto('tableField = ?', $fieldname));
@@ -158,71 +154,70 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
     /**
      * Return an array of field information.
+     *
+     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     *
      * @return array
      */
-	public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT)
-	{
-	    $i = 0;
+    public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT)
+    {
+        $i = 0;
 
-	    $converted = array();
-	    $fields    = $this->_getFields($this->_mapping[$ordering]);
-	    /* the db manager handles field different than the encoder/output layer expect */
-	    foreach ($fields as $field) {
-	        $converted[] = array ('key'      => $field->tableField,
-	                              'label'    => $field->formLabel,
-	                              'type'     => $field->formType,
-	                              'hint'     => $field->formTooltip,
-	                              'order'    => $i++,
-	                              'position' => $field->formPosition,
-	                              'fieldset' => '',
-	                              'range'    => $field->formRange,
-	                              'required' => $field->isRequired,
-	                              'right'    => $this->getModel()->getRights(),
-	                              'readOnly' => false);
-	    }
-
-	    return $converted;
-	}
+        $converted = array();
+        $fields    = $this->_getFields($this->_mapping[$ordering]);
+        /* the db manager handles field different than the encoder/output layer expect */
+        foreach ($fields as $field) {
+            $converted[] = array ('key'      => $field->tableField,
+                                  'label'    => $field->formLabel,
+                                  'type'     => $field->formType,
+                                  'hint'     => $field->formTooltip,
+                                  'order'    => $i++,
+                                  'position' => $field->formPosition,
+                                  'fieldset' => '',
+                                  'range'    => $field->formRange,
+                                  'required' => $field->isRequired,
+                                  'right'    => $this->getModel()->getRights(),
+                                  'readOnly' => false);
+        }
+        return $converted;
+    }
 
     /**
      * Create a primitive mapping to an array. This is not pretty nice, but
      * for this version a reasonable solution
      *
-     * @param string $order  Order field
-     * @param string $column Column
-     *
      * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
+     *
+     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param string  $column   Column
      *
      * @return array
      */
     public function getInfo($order, $column)
     {
         $fields = $this->_getFields($this->_mapping[$order]);
-
         $result = array();
         foreach ($fields as $field) {
             if ($field->keyExists($column)) {
                 $result[] = $field->$column;
             }
         }
-
         return $result;
     }
 
     /**
      * Return an array with titles to simplify things
      *
-     * @param  int   an ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     *
      * @return array
      */
     public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
     {
         $result = array();
-
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
             $result[] = $field->formLabel;
         }
-
         return $result;
     }
 }

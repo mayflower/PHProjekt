@@ -2,14 +2,14 @@
  /**
  * A generic interface to interact with models.
  *
- * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   CVS: $Id$
- * @author    Eduardo Polidor <polidor@mayflower.de>
- * @package   PHProjekt
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @version    CVS: $Id$
+ * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 1.0
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
 
 /**
@@ -19,7 +19,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license   http://www.phprojekt.com/license PHProjekt6 License
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -28,7 +28,7 @@
  */
 interface Phprojekt_Model_Interface extends Iterator
 {
-	/**
+    /**
 	 * Returns an object that implements the model information interface
 	 * and that provides detailed information about the fields and their
 	 * types. For database objects implementing Phprojekt_Item this
@@ -38,27 +38,27 @@ interface Phprojekt_Model_Interface extends Iterator
 	 */
 	public function getInformation();
 
-	/**
-	 * Find a dataset, usually by an id. If the record is found
-	 * the current object is filled with the data and returns itself.
-	 *
-	 * @retrn Phprojekt_Model_Interface
-	 */
+    /**
+     * Find a dataset, usually by an id. If the record is found
+     * the current object is filled with the data and returns itself.
+     *
+     * @retrn Phprojekt_Model_Interface
+     */
     public function find();
 
-	/**
-	 * Fetch a set of records. Depending on the implementation
-	 * it might be possible to limit the fetch by e.g. providing a where clause.
-	 * A model _neednot_ to implement a limiting mechanism.
-	 * 
-	 * @return array
-	 */
+    /**
+     * Fetch a set of records. Depending on the implementation
+     * it might be possible to limit the fetch by e.g. providing a where clause.
+     * A model _neednot_ to implement a limiting mechanism.
+     *
+     * @return array
+     */
     public function fetchAll();
 
-	/**
-	 * Save the current object to the backend
-	 *
-	 * @return void
-	 */
+    /**
+     * Save the current object to the backend
+     *
+     * @return void
+     */
     public function save();
 }

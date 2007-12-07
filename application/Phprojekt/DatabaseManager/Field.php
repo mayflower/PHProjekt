@@ -35,9 +35,9 @@ class Phprojekt_DatabaseManager_Field
     /**
      * Initialise a new object
      *
-     * @param Phprojekt_DatabaseManager $dbm
-     * @param string                    $name
-     * @param mixed                     $value
+     * @param Phprojekt_DatabaseManager $dbm   DatabaseManager Object
+     * @param string                    $name  Name of the field
+     * @param mixed                     $value Value of the field
      */
     public function __construct(Phprojekt_DatabaseManager $dbm, $name, $value)
     {
@@ -46,6 +46,13 @@ class Phprojekt_DatabaseManager_Field
         $this->right = $dbm->getModel()->getRights();
     }
 
+    /**
+     * Get a value
+     *
+     * @param string $name Name of the field
+     *
+     * @return mix
+     */
     public function __get($name)
     {
         if (isset($this->_metadata->$name)) {
@@ -55,6 +62,11 @@ class Phprojekt_DatabaseManager_Field
         return null;
     }
 
+    /**
+     * Function to print this class
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->value;

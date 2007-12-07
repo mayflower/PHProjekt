@@ -186,7 +186,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function getFilterView()
     {
-        $session = $this->getCurrentSessionModule();
+        $session = $this->_getCurrentSessionModule();
 
         $instance = Default_Helpers_FilterViewRenderer::getInstance();
         $filters  = $instance->getModel();
@@ -254,7 +254,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return Zend_Session_Namespace
      */
-    private function getCurrentSessionModule()
+    private function _getCurrentSessionModule()
     {
         $session = new Zend_Session_Namespace();
         $id      = (int) $session->currentProjectId;
@@ -273,7 +273,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function addFilter($newFilter)
     {
-        $session = $this->getCurrentSessionModule();
+        $session = $this->_getCurrentSessionModule();
 
         $filters = (!empty($session->filters)) ? $session->filters : array();
 
@@ -303,7 +303,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function deleteFilter($id)
     {
-        $session = $this->getCurrentSessionModule();
+        $session = $this->_getCurrentSessionModule();
 
         $filters = (!empty($session->filters)) ? $session->filters : array();
 
@@ -338,7 +338,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function getWhere()
     {
-        $session = $this->getCurrentSessionModule();
+        $session = $this->_getCurrentSessionModule();
 
         if (empty($this->_where)) {
             $this->_where = (!empty($session->where)) ? $session->where : array();

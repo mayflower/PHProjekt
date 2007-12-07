@@ -39,3 +39,4 @@ function smarty_modifier_titles($records)
 
     return false;
 }
+?>

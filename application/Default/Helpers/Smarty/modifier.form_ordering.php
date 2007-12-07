@@ -16,7 +16,7 @@
 /**
  * Set the form mode
  *
- * @param array $records
+ * @param array $records The row for make the form
  *
  * @return array
  */
@@ -50,3 +50,4 @@ function smarty_modifier_form_ordering($records)
 
     return $allowedRecords;
 }
+?>

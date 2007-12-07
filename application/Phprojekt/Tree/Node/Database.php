@@ -285,7 +285,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             .' from/to the database yet');
         }
 
-        if ($this->id == 1)  {
+        if ($this->id == 1) {
             throw new Phprojekt_Tree_Node_Exception('You can not delete the Invisible Root');
         }
 
@@ -356,10 +356,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         switch ($key) {
             case 'parentNode':
                 return $this->getParentNode();
+                break;
             default:
                 if ($this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
                     return $this->_activeRecord->$key;
                 }
+                break;
         }
 
         return null;

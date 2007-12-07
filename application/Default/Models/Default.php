@@ -27,61 +27,82 @@
 class Default_Models_Default implements Phprojekt_Model_Interface
 {
 
-    public function __construct() {}
-
-    public function getInformation() {
+    public function __construct()
+    {
     }
-    
+
+    public function getInformation()
+    {
+    }
+
 	/**
 	 * Empty iterator implementation as a model must be iteratable
 	 * @see Iterator::next()
+	 *
+	 * @return void
 	 */
-	public function next() 
-	{ }
+	public function next()
+	{
+	}
 
 	/**
 	 * Empty iterator implementation as a model must be iteratable
 	 * @see Iterator::rewind()
+	 *
+	 * @return void
 	 */
 	public function rewind()
-	{ }
+	{
+	}
 
 	/**
 	 * Empty iterator implementation as a model must be iteratable
 	 * @see Iterator::current()
+	 *
+	 * @return void
 	 */
 	public function current()
-	{ }
+	{
+	}
 
 	/**
 	 * Empty iterator implementation as a model must be iteratable
 	 * @see Iterator::valid()
+	 *
+	 * @return void
 	 */
-	public function valid() 
-	{ 
+	public function valid()
+	{
 		return false;
 	}
 
 	/**
 	 * Empty iterator implementation as a model must be iteratable
 	 * @see Iterator::key()
+	 *
+	 * @return void
 	 */
-	public function key () 
-	{ }
+	public function key ()
+	{
+	}
 
     /**
      * Default fetchall - needs to be implemented
      *
      * @return void
      */
-    public function fetchAll() {}
+    public function fetchAll()
+    {
+    }
 
     /**
      * Default find - needs to be implemented
      *
      * @return void
      */
-    public function find(){}
+    public function find()
+    {
+    }
 
     /**
      * Some magic. The index controller code always has an instance of
@@ -92,14 +113,27 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      * active record provided methods will fail.
      * To avoid this, we just suck all the calls and don't spit warnings
      *
-     * @param string $method Action method
-     * @param array  $args   Arguments for the Action
-     *
-     * @return IndexController Action
+     * @return void
      */
-    public function save() {}
+    public function save()
+    {
+    }
 
-    public function getSubModules() {}
+    /**
+     * @see save
+     *
+     * @return void
+     */
+    public function getSubModules()
+    {
+    }
 
-    public function getFieldsForFilter() {}
+    /**
+     * @see save
+     *
+     * @return void
+     */
+    public function getFieldsForFilter()
+    {
+    }
 }
