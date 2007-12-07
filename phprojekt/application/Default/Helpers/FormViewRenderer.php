@@ -120,24 +120,33 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
                 switch ($field['type']) {
                     case "textarea":
                         return self::textArea($field);
+                        break;
                     case "date":
                         return self::date($field);
+                        break;
                     case "selectValues":
                         return self::selectValues($field);
+                        break;
                     case "tree":
                         return self::tree($field);
+                        break;
                     case "space":
                         return '';
+                        break;
                     case "selectSqlAddOne":
                         return self::selectSqlAddOne($field);
+                        break;
                     default:
                         return self::text($field);
+                        break;
                 }
                 break;
             case'read':
                 return $field['value'];
+                break;
             default:
                 return'';
+                break;
         }
     }
 
@@ -183,9 +192,9 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      * The data is parsed like key1#value1|key2#value2
      * The value is translated before return
      *
-     * @todo (Maybe) Move this into the field object itself
-     *
      * @param array $field Data of the field from the dbManager
+     *
+     * @todo (Maybe) Move this into the field object itself
      *
      * @return string XHTML generated
      */

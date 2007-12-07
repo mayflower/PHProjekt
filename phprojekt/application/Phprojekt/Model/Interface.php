@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * A generic interface to interact with models.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
@@ -36,7 +36,7 @@ interface Phprojekt_Model_Interface extends Iterator
 	 *
 	 * @return Phprojekt_ModelInformation_Interface
 	 */
-	public function getInformation();
+    public function getInformation();
 
     /**
      * Find a dataset, usually by an id. If the record is found

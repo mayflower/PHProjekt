@@ -238,10 +238,10 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      * Return the title of the tree node
      * For make the data, the range value contain wich activerecord is used
      *
-     * @todo Don't put class names into formRange
-     *
      * @param array $field         Data of the field from the dbManager
      * @param mixed $originalValue The real value from the database
+     *
+     * @todo Don't put class names into formRange
      *
      * @return string XHTML generated
      */

@@ -228,7 +228,6 @@ class Default_Helpers_Smarty extends Zend_View_Abstract
         $this->_smarty->clear_cache($name);
         $paths = $this->getAllPaths();
         if (0 == count($paths['script'])) {
-            require_once 'Zend/View/Exception.php';
             throw new Zend_View_Exception('no view script directory set; unable to determine location for view script',
                 $this);
         }

@@ -107,13 +107,14 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      * Do the search itself
      * The operator work like: and => the item must contain all the words.
      *                         or  => the item can contain any word.
+     *
+     * @param string $words    Some words separated by space
+     * @param string $operator Operator AND/OR
+     *
      * @uses:
      *      $db = Zend_Registry::get('db');
      *      $search = new Phprojekt_SearchWords(array('db' => $db));
      *      $search->search('text1 text2 text3','OR');
-     *
-     * @param string $words    Some words separated by space
-     * @param string $operator Operator AND/OR
      *
      * @return array
      */
@@ -140,9 +141,9 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                     case 'AND':
                         foreach ($result as $tmp => $values) {
                             $found = false;
-                            foreach ($tmpResult as $tmp2 => $data) {
+                            foreach ($tmpResult as $data) {
                                 if (($data['module'] == $values['module']) &&
-                                    ($data['itemId'] == $values['itemId'])){
+                                    ($data['itemId'] == $values['itemId'])) {
                                     $found = true;
                                     break;
                                 }
@@ -157,7 +158,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                             $found = false;
                             foreach ($result as $values) {
                                 if (($data['module'] == $values['module']) &&
-                                    ($data['itemId'] == $values['itemId'])){
+                                    ($data['itemId'] == $values['itemId'])) {
                                     $found = true;
                                     break;
                                 }
@@ -279,8 +280,8 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    function _getFileType($filename) {
-        return(strtoupper(array_pop(explode(".",$filename))));
+    private function _getFileType($filename) {
+        return(strtoupper(array_pop(explode(".", $filename))));
     }
 
     /**
@@ -389,7 +390,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     private function _cleanupString($string)
     {
         // Clean up HTML
-        $string = preg_replace('#\W+#msiU', ' ', strtoupper(strtr(strip_tags($string), array_flip(get_html_translation_table (HTML_ENTITIES)))));
+        $string = preg_replace('#\W+#msiU', ' ', strtoupper(strtr(strip_tags($string), array_flip(get_html_translation_table(HTML_ENTITIES)))));
         // Translate bad
         $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i", "'&(gt|#62);'i", "'&(nbsp|#160);'i",
                          "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i", "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
@@ -399,7 +400,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                           " ", " ", " ", " ", " ",
                           "�", "�", "�", "�", "�",
                           "�", "�",  " ", " ", " ", " ");
-        $string = preg_replace($search,$replace,strip_tags($string));
+        $string = preg_replace($search, $replace, strip_tags($string));
         return $string;
     }
 

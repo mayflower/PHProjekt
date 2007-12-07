@@ -92,8 +92,7 @@ class Project_IndexController extends IndexController
     public function saveAction()
     {
         if ($this->getRequest()->getParam('id', 0) > 0) {
-            $model = $this->getModelObject()->find(
-                            $this->getRequest()->getParam('id'));
+            $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
         } else {
             $model = $this->getModelObject();
         }

@@ -29,4 +29,3 @@ function smarty_function_list_element($arguments)
 
     return '';
 }
-?>

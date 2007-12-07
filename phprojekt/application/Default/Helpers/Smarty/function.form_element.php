@@ -27,4 +27,3 @@ function smarty_function_form_element($arguments)
     }
     return '';
 }
-?>
