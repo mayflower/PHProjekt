@@ -54,7 +54,7 @@ class Phprojekt_Converter_Json
 	     */
 	    foreach ($models as $cmodel) {
 	        foreach ($cmodel as $key => $value) {
-    	        $datas[] = array($key => (string) $value);
+    	        $datas[$key] = (string) $value;
 	        }    
 	    }
 	    
