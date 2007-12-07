@@ -34,8 +34,8 @@ class Phprojekt_Converter_Json
     /**
      * Convert a model or a model information into a json stream
      *
-     * @param Phprojekt_Interface_Model|Phprojekt_Interface_ModelInformation $model Model
-     * @param integer                                                        $order Order
+     * @param Phprojekt_Interface_Model|Phprojekt_Interface_ModelInformation $models Model
+     * @param integer                                                        $order  Order
      *
      * @return string
      */

@@ -36,6 +36,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     /**
      * Information about the fields
+     *
      * @see Phprojekt_Item_Abstract
      *
      * @return void
@@ -46,6 +47,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     /**
      * Empty iterator implementation as a model must be iteratable
+     *
      * @see Iterator::next()
      *
      * @return void
@@ -56,6 +58,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     /**
      * Empty iterator implementation as a model must be iteratable
+     *
      * @see Iterator::rewind()
      *
      * @return void
@@ -66,6 +69,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     /**
      * Empty iterator implementation as a model must be iteratable
+     *
      * @see Iterator::current()
      *
      * @return void
@@ -76,6 +80,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     /**
      * Empty iterator implementation as a model must be iteratable
+     *
      * @see Iterator::valid()
      *
      * @return void
@@ -87,6 +92,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
 
     /**
      * Empty iterator implementation as a model must be iteratable
+     *
      * @see Iterator::key()
      *
      * @return void

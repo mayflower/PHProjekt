@@ -185,10 +185,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Create a primitive mapping to an array. This is not pretty nice, but
      * for this version a reasonable solution
-     * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
      *
      * @param integer $order  An ordering constant (MODELINFO_ORD_FORM, etc)
      * @param string  $column Column
+     *
+     * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
      *
      * @return array
      */
