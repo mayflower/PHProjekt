@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
-<book>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<!-- XML file was created by LyX 1.5.1
+  See http://www.lyx.org/ for more information -->
+<book lang="en_US">
 <bookinfo>
 <title>PHProjekt 6.x Developer Documentation</title>
-<authorgroup><author><firstname>David</firstname><surname>Soria Parra (PHProjekt development team)</surname></author></authorgroup></bookinfo><chapter>
+</bookinfo><chapter>
 <title>Introduction</title>
 <para>PHProjekt is a web based groupware application that helps you in managing project, tasks, contacts and other data. It is written in PHP and distributed under the GNU Public License (GPL). PHProjekt was originally developed by Albrecht Günther in 1999 and is developed by the Mayflower GmbH since version 5.0. With the beginning of the PHProjekt 6.0 development cycle the complete project was rewritten. </para>
 <para>The following documentation gives you an idea about the internals of PHProjekt 6.0. It will introduce the MVC based application design, the module concept and the active record pattern, which helps you to receive data from a database backend, as well as several other techniques used in PHProjekt 6.0. </para>
@@ -21,26 +24,42 @@
 <para>Every module is splitted into a model, a controller and a view part. This design pattern is called MVC. </para>
 <para>To get data from a module, you will usually use the active record pattern, which helps you with mapping database tables into PHP objects. </para><sect1>
 <title>MVC</title>
-<para>PHProjekt 6.0 is written using a so called <emphasis>Model-View-Controller</emphasis> concept (MVC). This concept, in general, splits an application into a model part, a view part and a controller part. PHProjekt uses the <ulink>Zend Framework</ulink> to provide a MVC framework.</para><sect2>
+<para>PHProjekt 6.0 is written using a so called <emphasis>Model-View-Controller</emphasis> concept (MVC). This concept, in general, splits an application into a model part, a view part and a controller part. PHProjekt uses the <ulink url="http://framework.zend.com">Zend Framework</ulink> to provide a MVC framework.</para><sect2>
 <title>Model</title>
 <para>The model part receives data from a datasource. Usually the datasource is a database connection. The model part must take care that the data from the database is received and mapped into an PHP object (an instance of a class). In the application all data is manipulated using this objects. No direct SQL statements are executed outside the model part<footnote><para>Except for the core API. Core classes are also allowed to do a query themself.</para></footnote>. </para>
-<para>A model might also map other data into objects. For example a web service.</para></sect2><sect2>
+<para>A model might also map other data into objects. For example a web service.</para><sect3>
+<title>PHProjekts iplementation</title>
+<para>Every model in PHProjekt is derived from <emphasis>Phprojekt_Model_Interface </emphasis>and must implement the required methods (Please look at the API documentation for detailed information). If the model should provide a database access, instead of implementing the interface directly you should better </para></sect3></sect2><sect2>
 <title>Controller</title>
-<para>The controller combines the model and the view part of a module. It receives the actions from a user, e.g. updating a dataset, and then receiving the data using the model, manipulating it and display the result using the view. It <emphasis>controls </emphasis>all other parts.</para></sect2><sect2>
+<para>The controller combines the model and the view part of a module. It receives the actions from a user, e.g. updating a dataset, and then receiving the data using the model, manipulating it and display the result using the view. It <emphasis>controls </emphasis>all other parts.</para><sect3>
+<title>PHProjekts iplementation</title>
+</sect3></sect2><sect2>
 <title>View</title>
-<para>The view part renderes the data from a module. E.g it takes data for a list view and then does the rendering of the list. The output format is usually HTML. The data is provided by the controller. Usually the controller is just the a template rendering engine that takes the data and render it using a template.</para></sect2></sect1><sect1>
+<para>The view part renderes the data from a module. E.g it takes data for a list view and then does the rendering of the list. The output format is usually HTML. The data is provided by the controller.</para><sect3>
+<title>PHProjekts iplementation</title>
+</sect3></sect2></sect1><sect1>
 <title>Modules</title>
 <para>Modules are a core part of PHProjekt. They constist of a set of features, that are related to each other. E.g. managing tasks or managing appointments are combined into a module. Modules have a <emphasis>specific</emphasis> <emphasis>directory layou</emphasis>t. </para>
 <para><emphasis>Every module is displayed on a per-project base</emphasis>. This means, that a e.g. the task module is displayed if you click on a project at the project tree. Therefore data saved by a model is usually related to a project id, but need't to.</para>
 <para>PHProjekt provides a <emphasis>default module</emphasis>. Every module in PHProjekt uses those parts of the default module automaticly, that are not overwritten by own written code.</para><sect2>
 <title>Structure of a module</title>
 <para>Every module is a directory located in the <emphasis>application/ </emphasis>directory. The directory name is usually the module name, but must not. The module directory has three subdirectories. The <emphasis>Views/ </emphasis>directory, the <emphasis>Models/ </emphasis>directory and the <emphasis>Controllers/</emphasis> directory. <emphasis>Please notice that directory names are case-sensitiv.</emphasis> </para><screen>
-/application
+<![CDATA[/application
   /MyModule
     /Controllers
     /Models
     /Views
-</screen></sect2><sect2>
+]]></screen><para>The controller classes, derived from the IndexController class, are located in the <emphasis>Controller/</emphasis> directory. They start with a name and end with the suffix <emphasis>Controller</emphasis>. A valid controller name would be e.g.: <emphasis>IndexController</emphasis> or <emphasis>FormController</emphasis>. If nothing else is specified, the dispatcher class will always call the <emphasis>IndexController.</emphasis> See chapter <xref linkend="sec:Mapping-of-controllers" /> for further details about calling controllers. </para>
+<para>The model classes are located in <emphasis>Models/</emphasis>. They must have the format <emphasis>Modulename</emphasis>_Models_<emphasis>Modelname</emphasis>. A valid model name would be e.g.: <emphasis>WorkingHours_Models_WorkingHour</emphasis> or <emphasis>Files_Models_Directory</emphasis>. Every model must inherite the <emphasis>Phprojekt_Model_Interface</emphasis> class.</para>
+<para>In the <emphasis>Views/ </emphasis>diretory you can place PHP files that render output. Usually you are layouting the JavaScript components there, but the developer is free and responsable to do what ever he wants there, as long as there is no business logic there.</para><sect3 id='sec:Mapping-of-controllers' >
+<title>Mapping of controllers<!-- anchor id="sec:Mapping-of-controllers" --></title>
+<para>The decision, which controller and which method of this controller is called, is made by the Zend Dispatcher. This class maps a url e.g. http://example.com/index/list/1 to an controller. If you want to know, how the dispatcher works, and which mappings it provides, please read the Zend Framework Documentation<footnote><para><ulink url="http://framework.zend.com">http://framework.zend.com</ulink></para></footnote>. PHProjekt uses a special way of mapping.</para>
+<para>As an example, the url: http://myphprojekt.com/index.php/Projects/index/list is mapped to the IndexController of the Project module. The class will be instantiated by the dispatcher and then the listAction() method will be called. Therefore the first part, after the index.php, in this case <emphasis>Projects</emphasis> is the name of the module thats called. The second part of the url, is the controller name. The <emphasis>index</emphasis> will refer to a <emphasis>IndexController</emphasis> class, as <emphasis>foo</emphasis> would refer to <emphasis>FooController</emphasis>. As you can see, the suffix <emphasis>Controller</emphasis> is appended. The last part is the name of the method thats called. The string &ldquo;Action&rdquo; is appended to the given name. In our case not the method <emphasis>list()</emphasis> is called, but the method <emphasis>listAction()</emphasis> is called. Every additional part, seperated by an /, would be mapped into the post variables array and therefore can be access through $_POST or (better) the Zend_Request object. </para>
+<para>So the url http://myprojekt.com/index.php/Projects/index/list/id/2/ will be have the request array </para><screen>
+<![CDATA[array(
+     "id" => 2
+     )
+]]></screen></sect3></sect2><sect2>
 <title>The default module</title>
 </sect2></sect1><sect1>
 <title>Database Abstraction</title>
@@ -48,12 +67,12 @@
 <title>Writing a own module</title>
 <para>In the following chapter, we want to start writing code. We are going to write a mechanism to track our daily working hours. </para>
 <para>We just want to have a button. If we click on the button, we start tracking the time. If we click another time, we stop tracking the time. Furthermore we want to display how many hours we worked this month and we want to select project to book our time on, before we start tracking.</para>
-<para>We use the a SQL database to store our data. In particular we are going to use MySQL syntax. We also use <ulink>Smarty</ulink> templates to display our calculated times.</para>
+<para>We use the a SQL database to store our data. In particular we are going to use MySQL syntax. We also use <ulink url="http://smarty.php.net">Smarty</ulink> templates to display our calculated times.</para>
 <para>Our first step will be the creation of a database table that stores our data. After that we start creating the necessary directory structure for a module. Then we start writing code by creating a mapping from our database table into PHP. If we finished with that, we are going to design our frontend and then putting all together in the controller - catching the users actions.</para>
 <para>Before we start, please consider to read the <emphasis>Zend Coding Guidelines</emphasis> first. We are using some shortcuts that you should probably avoid in your module (we will left out a lot of the necessary documentation headers).</para><sect1>
 <title>Database table and Database Manager</title>
 <para>The first thing that has to be done is creating our database tables. We use our favorite tool to create the following table<footnote><para>We are using foreign keys here. If you use MySQL, make sure that PHProjekt was installed using InnoDB tables and that you create the example table using InnoDB (if necessary specifiy ENGINE=InnoDB)</para></footnote>:</para><screen>
-CREATE TABLE `WorkingHours` (
+<![CDATA[CREATE TABLE `WorkingHours` (
   `id`        INT NOT NULL AUTO_INCREMENT,
   `startDate` DATETIME NOT NULL,
   `endDate`   DATETIME NOT NULL,
@@ -63,22 +82,22 @@ CREATE TABLE `WorkingHours` (
    REFERENCES project(id) 
     ON DELETE SET NULL
 );
-</screen><para>Thats everthing we need from our database. Let's pass over and create our necessary files.</para></sect1><sect1>
+]]></screen><para>Thats everthing we need from our database. Let's pass over and create our necessary files.</para></sect1><sect1>
 <title>Create directories and files</title>
 <para>After we setup our database table, we have to create the module directory. We switch into the <emphasis>application/</emphasis> directory of PHProjekt and create a directory called <emphasis>WorkingHours/</emphasis>. Furthermore we create the directories <emphasis>View/</emphasis>, <emphasis>Controllers/ </emphasis>and <emphasis>Models/</emphasis>.</para><screen>
-/application
+<![CDATA[/application
   /WorkingHours
     /Controllers
     /Models
     /Views
-</screen><para>This layout is necessary. PHProjekt uses a MVC pattern and the names of the subdirectories cannot be changed. Make sure that <emphasis>Controllers</emphasis>/, <emphasis>Models/</emphasis> and <emphasis>Views/</emphasis> start with an uppercase letter. The directory access (correct: on <emphasis>most</emphasis> of the operating systems, but not all) is case-sensitiv. </para><sect2>
+]]></screen><para>This layout is necessary. PHProjekt uses a MVC pattern and the names of the subdirectories cannot be changed. Make sure that <emphasis>Controllers</emphasis>/, <emphasis>Models/</emphasis> and <emphasis>Views/</emphasis> start with an uppercase letter. The directory access (correct: on <emphasis>most</emphasis> of the operating systems, but not all) is case-sensitiv. </para><sect2>
 <title>Model: Mapping</title>
 <para>Since we have our database table and our directory structure ready, we need a way to communicate with our database. We are using the <emphasis>Active Record Pattern</emphasis> provided by the PHProjekt Core API to access the table data. </para>
 <para>Active Record is a way to automaticly map a database table into an (PHP) object. It provides you all the necessary methods to receive, manipulate and store data without even touching any SQL statements. We just have to follow some naming conventions. The first naming convention was allready done, by choosing the name of our database table. If you remember, we used <emphasis>WorkingHours</emphasis>. The class we have to create to map our database will have the same name, as well as the file containing the class. </para>
 <para>So let's start by creating the <emphasis>WorkingHours.php</emphasis> in our <emphasis>Models/</emphasis> directory.</para><screen>
-Filename: application/WorkingHours/Models/WorkingHours.php
+<![CDATA[Filename: application/WorkingHours/Models/WorkingHours.php
 
-&lt;?php
+<?php
 /** 
  * Map our database table using active record 
  *
@@ -86,34 +105,41 @@ Filename: application/WorkingHours/Models/WorkingHours.php
  */
 class WorkingHours_Models_WorkingHours extends PHProjekt_Item_Abstract {
 }
-</screen><para>You may wonder, why we use such a long class name. It's necessary to prefix the class with the filepath using underscores instead of slashes. Without that the autoloader function won't find our class. </para>
+]]></screen><para>You may wonder, why we use such a long class name. It's necessary to prefix the class with the filepath using underscores instead of slashes. Without that the autoloader function won't find our class. </para>
 <para>You also may have noticed that we extend from the <emphasis>PHProjekt_Item_Abstract</emphasis> class. This class provides all our Active Record methods and does the actual mapping. The core API offers also the <emphasis>PHProjekt_ActiveRecord_Abstract</emphasis> class. Unlike the PHProjekt_ActiveRecord_Abstract class, the PHProjekt_Item_Abstract class supports writing a history log as well as it makes some validation. We strongly recommend to use the <emphasis>PHProjekt_Item_Abstract</emphasis> class.</para>
 <para>That's everything we have to do in our model. No SQL or anything else. Just save the file. Our database access is complete. Active Record will do the job.</para>
-<para>If you want to see if it worked, just go into your PHProjekt. The module should exist and you should be able to see a list of items that are stored in the WorkingHours table.</para></sect2><sect2>
+<para>If you want to see if it worked, just go into your PHProjekt. The module should exist and you should be able to see a list of items that are stored in the WorkingHours table.</para><sect4>
+<title>Naming Conventions</title>
+<para>Active Record uses some special naming conventions. Make sure that you follow these.</para><orderedlist>
+<listitem><para>The last part of the class name is the exact name of the database table that is mapped. It's also <emphasis>case-sensitive</emphasis>. 
+MyModule_Models_Foo is mapped to the database table named Foo.
+MyModule_Models_bar is mapped to the database table named bar.</para></listitem><listitem><para>Database tables must contain a primary key called <emphasis>id</emphasis>.</para></listitem></orderedlist></sect4></sect2><sect2>
 <title>View: Templates</title>
 </sect2></sect1><sect1>
 <title>Tools</title>
 <para>If you are on a Linux or U*NIX system, you can use a bash script that comes with PHProjekt. It is called <emphasis>scaffold</emphasis>. You will find it in the <emphasis>tools/</emphasis> directory of PHProjekt. Just go into the <emphasis>application/</emphasis> directory and type: </para><screen>
-$ cd /path/to/phprojekt
+<![CDATA[$ cd /path/to/phprojekt
 $ cd application
 //... now we are in the application directory let's start scaffolding
 $ ../tools/scaffold WorkingHours
 Initialize PHProjekt 6 module: WorkingHours
 Create directory structure
         WorkingHours/
-        =&gt; WorkingHours/Controllers/
-        =&gt; WorkingHours/Models/
-        =&gt; WorkingHours/Views/
-        =&gt; WorkingHours/Views/scripts
+        => WorkingHours/Controllers/
+        => WorkingHours/Models/
+        => WorkingHours/Views/
+        => WorkingHours/Views/scripts
 Create empty model file
-        =&gt; WorkingHours/Models/WorkingHours.php
+        => WorkingHours/Models/WorkingHours.php
 Create empty controller file
-        =&gt; WorkingHours/Controllers/IndexController.php
+        => WorkingHours/Controllers/IndexController.php
 Finished successul
-</screen><para>Thats all. You will find the complete directory structure as well as stub files for all the necessary files. For example, our database mapping is allready finished. Just look into <emphasis>WorkingHours/Models/WorkingHours.php</emphasis>.</para></sect1></chapter><chapter>
+]]></screen><para>Thats all. You will find the complete directory structure as well as stub files for all the necessary files. For example, our database mapping is allready finished. Just look into <emphasis>WorkingHours/Models/WorkingHours.php</emphasis>.</para></sect1></chapter><chapter>
 <title>Advanced module development</title>
 <sect1>
 <title>Helpers</title>
+</sect1><sect1>
+<title>Hooks</title>
 </sect1></chapter><chapter>
 <title>Tools</title>
 </chapter></book>

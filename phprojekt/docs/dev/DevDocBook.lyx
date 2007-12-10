@@ -433,9 +433,14 @@ Phprojekt_Model_Interface
 \end_layout
 
 \begin_layout Standard
-In the views diretory you can place PHP files that render output.
- The doesn't matter.
- 
+In the 
+\emph on
+Views/ 
+\emph default
+diretory you can place PHP files that render output.
+ Usually you are layouting the JavaScript components there, but the developer
+ is free and responsable to do what ever he wants there, as long as there
+ is no business logic there.
 \end_layout
 
 \begin_layout Subsubsection
@@ -446,6 +451,107 @@ name "sec:Mapping-of-controllers"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The decision, which controller and which method of this controller is called,
+ is made by the Zend Dispatcher.
+ This class maps a url e.g.
+ http://example.com/index/list/1 to an controller.
+ If you want to know, how the dispatcher works, and which mappings it provides,
+ please read the Zend Framework Documentation
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+\begin_inset LatexCommand url
+name "http://framework.zend.com"
+target "http://framework.zend.com"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ PHProjekt uses a special way of mapping.
+\end_layout
+
+\begin_layout Standard
+As an example, the url: http://myphprojekt.com/index.php/Projects/index/list
+ is mapped to the IndexController of the Project module.
+ The class will be instantiated by the dispatcher and then the listAction()
+ method will be called.
+ Therefore the first part, after the index.php, in this case 
+\emph on
+Projects
+\emph default
+ is the name of the module thats called.
+ The second part of the url, is the controller name.
+ The 
+\emph on
+index
+\emph default
+ will refer to a 
+\emph on
+IndexController
+\emph default
+ class, as 
+\emph on
+foo
+\emph default
+ would refer to 
+\emph on
+FooController
+\emph default
+.
+ As you can see, the suffix 
+\emph on
+Controller
+\emph default
+ is appended.
+ The last part is the name of the method thats called.
+ The string 
+\begin_inset Quotes eld
+\end_inset
+
+Action
+\begin_inset Quotes erd
+\end_inset
+
+ is appended to the given name.
+ In our case not the method 
+\emph on
+list()
+\emph default
+ is called, but the method 
+\emph on
+listAction()
+\emph default
+ is called.
+ Every additional part, seperated by an /, would be mapped into the post
+ variables array and therefore can be access through $_POST or (better)
+ the Zend_Request object.
+ 
+\end_layout
+
+\begin_layout Standard
+So the url http://myprojekt.com/index.php/Projects/index/list/id/2/ will be
+ have the request array 
+\end_layout
+
+\begin_layout Code
+array(
+\end_layout
+
+\begin_layout Code
+     "id" => 2
+\end_layout
+
+\begin_layout Code
+     )
 \end_layout
 
 \begin_layout Subsection
