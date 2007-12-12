@@ -565,4 +565,19 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $array = $module->getFieldsForFilter();
         $this->assertEquals(array_keys($this->_listResult), $array);
     }
+    
+    /**
+     * test getrights function
+     */
+    public function testGetRights(){
+        $session = new Zend_Session_Namespace();
+        $session->currentProjectId = 1;
+
+        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+        $this->assertEquals('write',$module->getRights());
+
+        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
+        $this->assertEquals('write',$module->getRights());
+         
+     }
 }
