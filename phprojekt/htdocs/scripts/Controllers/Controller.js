@@ -20,11 +20,13 @@ dojo.declare('Controller', null,
      * The constructor initialise a new view- object and calls the method that is responsible for
      * receiving the data from the server. 
      * 
+     * 
+     * @param {String} path 
      */
-	constructor : function ()
+	constructor : function (path)
     {	
 		this.View = new View()
-		this.getDataFromServer();
+		this.getDataFromServer(path);
     },
 	
 	/**
@@ -32,15 +34,13 @@ dojo.declare('Controller', null,
 	 * The received data will be stored in the model.
 	 * 
 	 * @return void
-	 * 
-	 * TODO: remove the hardcoded way to get the data from the server
 	 */
-	getDataFromServer : function () {		
+	getDataFromServer : function (path) {		
 		self = this;
 		dojo.xhrPost
 		(
 			{
-				url         :   'http://localhost/phprojekt6/htdocs/index.php/Todo/index/jsonList/',
+				url         :   path + '/index.php/Todo/index/jsonList/',
 				handleAs    :   'json',
 				timeout     :   5000,
 				load        :   function(response) {
