@@ -3,12 +3,6 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Phprojekt {$phprojekt_version}</title>
-	<style type="text/css">
-		/* dojo.css holds basic sizing and usage, tundra.css holds specific coloring and styling for the tundra theme */
-		/* This are the default colors of the widgets */
-		@import "{$webPath}/scripts/dojo1.0/dijit/themes/tundra/tundra.css";
-		@import "{$webPath}/scripts/dojo1.0/dojo/resources/dojo.css";	
-	</style>
   <style type="text/css">
   {literal}
   body {
@@ -77,51 +71,22 @@
     color: White;
     text-decoration: none;
   }
-  
-  #tableFormView {
-	border-spacing: 10px;
-  }
-  
-  #tableFormView td {
-  	background-color: white;
-  }
-  {/literal}  
+  {/literal}
   </style>
-	<script type="text/javascript" src="{$webPath}/scripts/dojo1.0/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true"></script>
-	<script type="text/javascript" src="{$webPath}/scripts/Controllers/Controller.js"></script>
-	<script type="text/javascript" src="{$webPath}/scripts/Models/Model.js"></script>
-	<script type="text/javascript" src="{$webPath}/scripts/Views/View.js"></script>
-	<script type="text/javascript">
-		dojo.require("dojo.parser");
-		dojo.require("dijit.form.DateTextBox");
-		dojo.require("dijit.form.ComboBox");
-		dojo.require("dijit.form.ValidationTextBox");
-		dojo.require("dijit.form.Textarea");
-	</script>
   <script type="text/javascript">
-  var path = '{$webPath}';	
   {literal}
-	var controller;	
-	dojo.addOnLoad(function () {			
-		controller = new Controller(path);
-	});	
-	
-	function displayListAction(id) {
-		controller.displayListAction(id);
-	}
-				  
-	function displayBlock(field) {
-		e = document.getElementById(field);
-		if (e.style.display == 'inline') {
-		    e.style.display = 'none';
-		} else {
-		    e.style.display = 'inline';
-		}
-  	}
+  function displayBlock(field) {
+    e = document.getElementById(field);
+    if (e.style.display == 'inline') {
+        e.style.display = 'none';
+    } else {
+        e.style.display = 'inline';
+    }
+  }
   {/literal}
   </script>
 </head>
-<body class="tundra">
+<body>
 <a href="{url action="logout" module="Login"}">Logout</a>
 <table width="100%" id="main">
   <caption>PHProjekt {$phprojekt_version}</caption>
@@ -139,8 +104,7 @@
       <br />
       <div id="tabView">
       {foreach name=itemModule item=itemModule from=$modules}
-	     <a href="javascript: displayListAction({$projectId});">{$itemModule|translate}</a>
-<!--     <a href="{url action="list" module=$itemModule}">{$itemModule|translate}</a> -->
+        <a href="{url action="list" module=$itemModule}">{$itemModule|translate}</a>
         {if $smarty.foreach.itemModule.iteration == $smarty.foreach.itemModule.last }
         <br /><br />
         {/if}
