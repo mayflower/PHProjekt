@@ -45,7 +45,10 @@ require_once 'Filter/UserFilterTest.php';
 require_once 'Mail/NotificationTest.php';
 require_once 'DispatcherTest.php';
 require_once 'AuthTest.php';
+require_once 'AclTest.php';
+require_once 'RoleRightsTest.php';
 require_once 'GroupTest.php';
+require_once 'RoleTest.php';
 
 /**
  * Test suite for the default module
@@ -93,6 +96,9 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Filter_UserFilterTest');
         $suite->addTestSuite('Phprojekt_Tree_Node_DatabaseTest');
         $suite->addTestSuite('Phprojekt_AuthTest');
+        $suite->addTestSuite('Phprojekt_AclTest');
+        $suite->addTestSuite('Phprojekt_RoleRightsTest');
+        $suite->addTestSuite('Phprojekt_RoleTest');
 
         return $suite;
     }
