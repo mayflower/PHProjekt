@@ -98,11 +98,12 @@
 		dojo.require("dijit.form.ValidationTextBox");
 		dojo.require("dijit.form.Textarea");
 	</script>
-	<script type="text/javascript">
-	{literal}	
+  <script type="text/javascript">
+  var path = '{$webPath}';	
+  {literal}
 	var controller;	
 	dojo.addOnLoad(function () {			
-		controller = new Controller();
+		controller = new Controller(path);
 	});	
 	
 	function displayListAction(id) {
