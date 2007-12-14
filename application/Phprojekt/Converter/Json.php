@@ -30,33 +30,33 @@
  */
 class Phprojekt_Converter_Json
 {
-	/**
-	 * Convert a model or a model information into a json stream
-	 * 
-	 * @param Phprojekt_Interface_Model|Phprojekt_Interface_ModelInformation $model
-	 * @return string 
-	 */
-	public static function convert ($models, $order = MODELINFO_ORD_DEFAULT)
-	{
-		$model = current((array) $models);
-		if (! $model instanceof Phprojekt_Model_Interface) {
-			throw new InvalidArgumentException();
-		}
-		$information = $model->getInformation();
-		/* we can check the returned array, but at the moment we just pass it */
-		$datas = array();
-		$data  = array();
-		/*
+    /**
+     * Convert a model or a model information into a json stream
+     * 
+     * @param Phprojekt_Interface_Model|Phprojekt_Interface_ModelInformation $model
+     * @return string 
+     */
+    public static function convert ($models, $order = MODELINFO_ORD_DEFAULT)
+    {
+        $model = current((array) $models);
+        if (! $model instanceof Phprojekt_Model_Interface) {
+            throw new InvalidArgumentException();
+        }
+        $information = $model->getInformation();
+        /* we can check the returned array, but at the moment we just pass it */
+        $datas = array();
+        $data = array();
+        /*
 		 * we have to do this ugly convert, because Zend_Json_Encoder doesnot check
 		 * if a value in an array is an object
 		 */
-		foreach ($models as $cmodel) {
-			foreach ($cmodel as $key => $value) {
-				$data[$key] = (string) $value;
-			}
-			$datas[] = $data;
-		}
-		$data = array('metadata' => $information->getFieldDefinition($order) , 'data' => $datas);
-		return Zend_Json_Encoder::encode($data);
-	}
+        foreach ($models as $cmodel) {
+            foreach ($cmodel as $key => $value) {
+                $data[$key] = (string) $value;
+            }
+            $datas[] = $data;
+        }
+        $data = array('metadata' => $information->getFieldDefinition($order) , 'data' => $datas);
+        return Zend_Json_Encoder::encode($data);
+    }
 }
