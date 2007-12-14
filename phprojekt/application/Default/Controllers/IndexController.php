@@ -12,7 +12,6 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-
 /**
  * Default Controller for PHProjekt 6
  *
@@ -50,34 +49,29 @@ class IndexController extends Zend_Controller_Action
      * @var boolean
      */
     private $_canRender = true;
-
     /**
      * The treeview helper. Not the renderer.
      *
      */
     private $_treeView;
-
     /**
      * SQL where
      *
      * @var array
      */
     private $_where = array();
-
     /**
      * Current item ID
      *
      * @var int
      */
     protected $_itemid = 0;
-
     /**
      * Current params request
      *
      * @var array
      */
     protected $_params = array();
-
     /**
      * Init function
      *
@@ -89,55 +83,46 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function init()
+    public function init ()
     {
         try {
             Phprojekt_Auth::isLoggedIn();
-        }
-        catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
             /* user not logged in, display login page */
-            $this->_redirect(Zend_Registry::get('config')->webpath.'index.php/Login/index');
+            $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
             die();
         }
-
         $projects = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree     = new Phprojekt_Tree_Node_Database($projects, 1);
-
+        $tree = new Phprojekt_Tree_Node_Database($projects, 1);
         $this->_treeView = new Default_Helpers_TreeView($tree);
         $this->_treeView->makePersistent();
-
         /* Get the current item id */
         $this->_params = $this->_request->getParams();
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
-
         /* Add the ownerId as param */
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $this->_params['ownerId'] = $authNamespace->userId;
     }
-
     /**
      * Returns the current treeview
      *
      * @return Default_Helpers_TreeView
      */
-    public function getTreeView()
+    public function getTreeView ()
     {
         return $this->_treeView;
     }
-
     /**
      * Return the list form render helper.
      *
      * @return Phprojekt_RenderHelper
      */
-    public function getFormView()
+    public function getFormView ()
     {
         $instance = Default_Helpers_FormViewRenderer::getInstance();
-
         $action = $this->_request->getActionName();
-
         switch ($action) {
             case 'default':
             case 'list':
@@ -160,39 +145,33 @@ class IndexController extends Zend_Controller_Action
                 }
                 break;
         }
-
         return $instance;
     }
-
     /**
      * Return the list view render helper.
      *
      * @return Phprojekt_RenderHelper
      */
-    public function getListView()
+    public function getListView ()
     {
         $instance = Default_Helpers_ListViewRenderer::getInstance();
         if (null !== $this->getModelObject() && null === $instance->getModel()) {
             $instance->setModel($this->getModelObject());
         }
-
         return $instance;
     }
-
     /**
      * Return the filter view render helper.
      *
      * @return Phprojekt_RenderHelper
      */
-    public function getFilterView()
+    public function getFilterView ()
     {
         $session = $this->_getCurrentSessionModule();
-
         $instance = Default_Helpers_FilterViewRenderer::getInstance();
-        $filters  = $instance->getModel();
-        $fields   = $instance->getFields();
-
-        if (!empty($session->filters) && empty($filters)) {
+        $filters = $instance->getModel();
+        $fields = $instance->getFields();
+        if (! empty($session->filters) && empty($filters)) {
             $instance->setModel($session->filters);
         }
         if (empty($fields)) {
@@ -201,7 +180,6 @@ class IndexController extends Zend_Controller_Action
         }
         return $instance;
     }
-
     /**
      * Standard action
      * Use the list action
@@ -210,11 +188,10 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function indexAction()
+    public function indexAction ()
     {
         $this->forward('list');
     }
-
     /**
      * Add a Filter
      * Save the POST values from the filter into the session where
@@ -223,16 +200,12 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function addFilterAction()
+    public function addFilterAction ()
     {
-        $newFilter = array('field' => $this->_params['filterField'],
-        'rule'  => $this->_params['filterRule'],
-        'text'  => $this->_params['filterText']);
+        $newFilter = array('field' => $this->_params['filterField'] , 'rule' => $this->_params['filterRule'] , 'text' => $this->_params['filterText']);
         $this->addFilter($newFilter);
-
         $this->forward('list');
     }
-
     /**
      * Delete a Filter
      *
@@ -240,29 +213,24 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function deleteFilterAction()
+    public function deleteFilterAction ()
     {
         $id = (int) $this->_params['filterId'];
-
         $this->deleteFilter($id);
-
         $this->forward('list');
     }
-
     /**
      * Set the name of the session with the module and the id
      *
      * @return Zend_Session_Namespace
      */
-    private function _getCurrentSessionModule()
+    private function _getCurrentSessionModule ()
     {
         $session = new Zend_Session_Namespace();
-        $id      = (int) $session->currentProjectId;
-        $index = $this->getRequest()->getModuleName()
-        . $id;
+        $id = (int) $session->currentProjectId;
+        $index = $this->getRequest()->getModuleName() . $id;
         return new Zend_Session_Namespace($index);
     }
-
     /**
      * Add a filter into the session array
      * only if the filter don�t exists
@@ -271,29 +239,23 @@ class IndexController extends Zend_Controller_Action
      *
      * @return array All the filters
      */
-    public function addFilter($newFilter)
+    public function addFilter ($newFilter)
     {
         $session = $this->_getCurrentSessionModule();
-
-        $filters = (!empty($session->filters)) ? $session->filters : array();
-
+        $filters = (! empty($session->filters)) ? $session->filters : array();
         $found = false;
         foreach ($filters as $filter) {
-            if ((strcmp($filter['field'], $newFilter['field'])== 0) &&
-            (strcmp($filter['rule'], $newFilter['rule'])== 0) &&
-            (strcmp($filter['text'], $newFilter['text'])== 0)) {
+            if ((strcmp($filter['field'], $newFilter['field']) == 0) && (strcmp($filter['rule'], $newFilter['rule']) == 0) && (strcmp($filter['text'], $newFilter['text']) == 0)) {
                 $found = true;
             }
         }
-
-        if (!$found) {
+        if (! $found) {
             $newFilter['id'] = count($filters);
-            $filters[]       = $newFilter;;
+            $filters[] = $newFilter;
+            ;
         }
-
         $session->filters = $filters;
     }
-
     /**
      * Delete a filter with the parsed id
      *
@@ -301,12 +263,10 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function deleteFilter($id)
+    public function deleteFilter ($id)
     {
         $session = $this->_getCurrentSessionModule();
-
-        $filters = (!empty($session->filters)) ? $session->filters : array();
-
+        $filters = (! empty($session->filters)) ? $session->filters : array();
         if ($id == "-1") {
             $filters = array();
         } else {
@@ -314,10 +274,8 @@ class IndexController extends Zend_Controller_Action
                 unset($filters[$id]);
             }
         }
-
         $session->filters = $filters;
     }
-
     /**
      * Add a string into the where clause
      * but don�t keep it into the session
@@ -326,37 +284,31 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function addWhere($string)
+    public function addWhere ($string)
     {
         $this->_where[] = $string;
     }
-
     /**
      * Return the saved where clause
      *
      * @return string SQL where clause
      */
-    public function getWhere()
+    public function getWhere ()
     {
         $session = $this->_getCurrentSessionModule();
-
         if (empty($this->_where)) {
-            $this->_where = (!empty($session->where)) ? $session->where : array();
+            $this->_where = (! empty($session->where)) ? $session->where : array();
         }
-
-        $filters = (!empty($session->filters)) ? $session->filters : array();
-
+        $filters = (! empty($session->filters)) ? $session->filters : array();
         foreach ($filters as $filter) {
             $this->_where[] = $this->_applyFilter($filter['field'], $filter['rule'], $filter['text']);
         }
-
-        if (!empty($this->_where)) {
+        if (! empty($this->_where)) {
             return implode(' AND ', $this->_where);
         } else {
             return null;
         }
     }
-
     /**
      * Delivers the inner part of the IndexAction using ajax
      *
@@ -364,10 +316,8 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function componentIndexAction()
-    {
-    }
-
+    public function componentIndexAction ()
+    {}
     /**
      * Delivers the inner part of the Listaction using ajax
      *
@@ -375,10 +325,8 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function componentListAction()
-    {
-    }
-
+    public function componentListAction ()
+    {}
     /**
      * Ajax part of displayAction
      *
@@ -387,10 +335,8 @@ class IndexController extends Zend_Controller_Action
      * @todo Not implemented yet
      * @return void
      */
-    public function componentDisplayAction()
-    {
-    }
-
+    public function componentDisplayAction ()
+    {}
     /**
      * Ajaxified part of the edit action
      *
@@ -399,9 +345,8 @@ class IndexController extends Zend_Controller_Action
      * @todo Not implemented yet
      * @return void
      */
-    public function componentEditAction()
-    {
-    }
+    public function componentEditAction ()
+    {}
     /**
      * Toggle a open/close a node
      *
@@ -409,15 +354,12 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function toggleNodeAction()
+    public function toggleNodeAction ()
     {
         $currentActiveTree = Default_Helpers_TreeView::findPersistant();
         $currentActiveTree->toggleNode();
-
-        $this->forward('list', $this->getRequest()->getControllerName(),
-        $this->getRequest()->getModuleName());
+        $this->forward('list', $this->getRequest()->getControllerName(), $this->getRequest()->getModuleName());
     }
-
     /**
      * List all the data using the model for get it
      * We store the id of the shown project in the session, as other modules
@@ -430,23 +372,20 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function listAction()
+    public function listAction ()
     {
         $db = Zend_Registry::get('db');
         /* Save the last project id into the session */
         /* @todo: Sanitize ID / Request parameter */
         $session = new Zend_Session_Namespace();
-
         if (isset($session->currentProjectId)) {
             $projectId = $session->currentProjectId;
         } else {
             $projectId = 0;
         }
         $this->addWhere($db->quoteInto('projectId = ?', $projectId));
-
         $this->getListView()->setModel($this->getModelObject()->fetchAll($this->getWhere()));
     }
-
     /**
      * Abandon current changes and return to the default view
      *
@@ -454,10 +393,8 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function cancelAction()
-    {
-    }
-
+    public function cancelAction ()
+    {}
     /**
      * Displays the a single item for add an Item
      *
@@ -465,23 +402,21 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function displayAction()
+    public function displayAction ()
     {
         $this->listAction();
     }
-
     /**
      * Example for json convert.
      *
      * @todo remove if not longer necessary
      * @return void
      */
-    public function jsonListAction()
+    public function jsonListAction ()
     {
         echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
-        exit;
+        exit();
     }
-
     /**
      * Displays the edit screen for the current item
      * Use the model module for get the data
@@ -490,24 +425,21 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function editAction()
+    public function editAction ()
     {
         $this->listAction();
-
         if ($this->_itemid < 1) {
             $this->forward('display');
         } else {
             /* History */
             // $this->getFormView()->getModel()->find($this->_itemid);
-
-            $db                           = Zend_Registry::get('db');
-            $history                      = new Phprojekt_History(array('db' => $db));
-            $this->_smarty->historyData   = $history->getHistoryData($this->getModelObject(), $this->_itemid);
+            $db = Zend_Registry::get('db');
+            $history = new Phprojekt_History(array('db' => $db));
+            $this->_smarty->historyData = $history->getHistoryData($this->getModelObject(), $this->_itemid);
             $this->_smarty->dateFieldData = array('formType' => 'datetime');
             $this->_smarty->userFieldData = array('formType' => 'userId');
         }
     }
-
     /**
      * Saves the current item
      * Save if you are add one or edit one.
@@ -521,18 +453,16 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function saveAction()
+    public function saveAction ()
     {
         if (null !== $this->_itemid) {
             $this->getModelObject()->find($this->_itemid);
         }
-
         foreach ($this->_params as $k => $v) {
             // Check for addOne fields
             if (strstr($k, '_new')) {
                 $tmpk = ereg_replace('_new', '', $k);
-                if (!isset($this->_params[$tmpk])
-                || empty($this->_params[$tmpk])) {
+                if (! isset($this->_params[$tmpk]) || empty($this->_params[$tmpk])) {
                     $k = $tmpk;
                 }
             }
@@ -540,17 +470,14 @@ class IndexController extends Zend_Controller_Action
                 $this->getModelObject()->$k = $v;
             }
         }
-
         if ($this->getModelObject()->recordValidate()) {
             $this->getModelObject()->save();
             $this->view->message = 'Saved';
         } else {
             $this->view->errors = $this->getModelObject()->getError();
         }
-
         $this->listAction();
     }
-
     /**
      * Deletes a certain item
      *
@@ -558,7 +485,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function deleteAction()
+    public function deleteAction ()
     {
         if ($this->_itemid < 1) {
             $this->forward('display');
@@ -566,70 +493,58 @@ class IndexController extends Zend_Controller_Action
             $this->getModelObject()->find($this->_itemid)->delete();
             $this->view->message = 'Deleted';
         }
-
         $this->listAction();
     }
-
     /**
      * Render all the views that are not already renders
      *
      * @return void
      */
-    protected function _generateOutput()
+    protected function _generateOutput ()
     {
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
-
         $write = true;
-        $read  = true;
+        $read = true;
         if (isset($session->currentProjectId)) {
-            $this->view->projectId   = $session->currentProjectId;
+            $this->view->projectId = $session->currentProjectId;
             $this->view->projectName = $session->currentProjectName;
-            $rights = new Phprojekt_RoleRights(null, $session->currentProjectId,
-                          $this->getRequest()->getModuleName());
+            $rights = new Phprojekt_RoleRights(null, $session->currentProjectId, $this->getRequest()->getModuleName());
             $write = $rights->hasRight('write');
-            $read =  $rights->hasRight('read') ? true : $write;
+            $read = $rights->hasRight('read') ? true : $write;
         }
-
-        $this->view->params     = $this->_params;
-        $this->view->itemid     = $this->_itemid;
-        $this->view->module     = $this->getRequest()->getModuleName();
+        $this->view->params = $this->_params;
+        $this->view->itemid = $this->_itemid;
+        $this->view->module = $this->getRequest()->getModuleName();
         $this->view->controller = $this->getRequest()->getControllerName();
-        $this->view->action     = $this->getRequest()->getActionName();
+        $this->view->action = $this->getRequest()->getActionName();
         $this->view->breadcrumb = $this->getRequest()->getModuleName();
-        $this->view->modules    = $this->getModelObject()->getSubModules();
-        $this->write            = $write;
-        $this->read             = $read;
-
+        $this->view->modules = $this->getModelObject()->getSubModules();
+        $this->write = $write;
+        $this->read = $read;
         $this->view->filterView = $this->getFilterView()->render();
-        $this->view->treeView   = $this->getTreeView()->render();
-        $this->view->listView   = $this->getListView()->render();
-        $this->view->formView   = $this->getFormView()->render();
-
+        $this->view->treeView = $this->getTreeView()->render();
+        $this->view->listView = $this->getListView()->render();
+        $this->view->formView = $this->getFormView()->render();
         $this->render('index');
     }
-
     /**
      * Get the model object
      * This function must be redefined in each module
      *
      * @return Phprojekt_Model_Interface
      */
-    public function getModelObject()
+    public function getModelObject ()
     {
         static $object = null;
-
         if (null === $object) {
-            $object = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(),
-            $this->getRequest()->getModuleName());
+            $object = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(), $this->getRequest()->getModuleName());
             if (null === $object) {
                 $object = Phprojekt_Language::getModel('Default', 'Default');
             }
         }
-
         return $object;
     }
-
     /**
      * Redefine the postDispatch function
      * After all action, this functions is called
@@ -642,13 +557,12 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function postDispatch()
+    public function postDispatch ()
     {
         if (true === $this->_canRender) {
             $this->_generateOutput();
         }
     }
-
     /**
      * The function will call the Zend _forward function
      * But set first the canRender to false for no draw nothing
@@ -660,12 +574,11 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function forward($action, $controller = null, $module = null, array $params = null)
+    public function forward ($action, $controller = null, $module = null, array $params = null)
     {
         $this->_canRender = false;
         $this->_forward($action, $controller, $module, $params);
     }
-
     /**
      * Make the SQL where clause
      *
@@ -675,39 +588,38 @@ class IndexController extends Zend_Controller_Action
      *
      * @return string SQL where clause
      */
-    private function _applyFilter($field, $rule, $text)
+    private function _applyFilter ($field, $rule, $text)
     {
         $db = Zend_Registry::get('db');
         switch ($rule) {
             case 'begins':
-                $w = $field." LIKE ".$db->quote("$text%");
+                $w = $field . " LIKE " . $db->quote("$text%");
                 break;
             case 'ends':
-                $w = $field." LIKE ".$db->quote("%$text");
+                $w = $field . " LIKE " . $db->quote("%$text");
                 break;
             case 'exact':
-                $w = $field." = ".$db->quote($text);
+                $w = $field . " = " . $db->quote($text);
                 break;
             case 'mayor':
-                $w = $field." > ".$db->quote($text);
+                $w = $field . " > " . $db->quote($text);
                 break;
             case 'mayorequal':
-                $w = $field." >= ".$db->quote($text);
+                $w = $field . " >= " . $db->quote($text);
                 break;
             case 'minorequal':
-                $w = $field." <= ".$db->quote($text);
+                $w = $field . " <= " . $db->quote($text);
                 break;
             case 'minor':
-                $w = $field." < ".$db->quote($text);
+                $w = $field . " < " . $db->quote($text);
                 break;
             case 'not like':
-                $w = $field." NOT LIKE ".$db->quote("%$text%");
+                $w = $field . " NOT LIKE " . $db->quote("%$text%");
                 break;
             default:
-                $w = $field." LIKE ".$db->quote("%$text%");
+                $w = $field . " LIKE " . $db->quote("%$text%");
                 break;
         }
-
         return $w;
     }
 }
