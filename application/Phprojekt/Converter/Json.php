@@ -43,9 +43,11 @@ class Phprojekt_Converter_Json
             throw new InvalidArgumentException();
         }
         $information = $model->getInformation();
+        
         /* we can check the returned array, but at the moment we just pass it */
         $datas = array();
-        $data = array();
+        $data  = array();
+        
         /*
 		 * we have to do this ugly convert, because Zend_Json_Encoder doesnot check
 		 * if a value in an array is an object
@@ -56,6 +58,7 @@ class Phprojekt_Converter_Json
             }
             $datas[] = $data;
         }
+        
         $data = array('metadata' => $information->getFieldDefinition($order) , 'data' => $datas);
         return Zend_Json_Encoder::encode($data);
     }

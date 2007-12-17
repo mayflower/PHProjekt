@@ -96,14 +96,16 @@ class IndexController extends Zend_Controller_Action
         $tree = new Phprojekt_Tree_Node_Database($projects, 1);
         $this->_treeView = new Default_Helpers_TreeView($tree);
         $this->_treeView->makePersistent();
+        
         /* Get the current item id */
         $this->_params = $this->_request->getParams();
+        
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
+        
         /* Add the ownerId as param */
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $this->_params['ownerId'] = $authNamespace->userId;
     }
     /**
      * Returns the current treeview

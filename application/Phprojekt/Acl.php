@@ -30,9 +30,8 @@ class Phprojekt_Acl extends Zend_Acl
      * Singleton instance
      * @var PHProjekt_Acl
      */
-    private static $_instance = null;
-
-
+    protected static $_instance = null;
+	
     /**
      * Return this class only one time
      *
@@ -52,7 +51,6 @@ class Phprojekt_Acl extends Zend_Acl
     private function __construct()
     {
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $this->userID  = $authNamespace->userID;
         //first construct roles
         $this->_registerRoles();
         //than get rights and assign them to roles and ressources
@@ -66,12 +64,12 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function _registerRoles()
     {
-        $role = Phprojekt_Loader::getModel('Role', 'Role');
-        foreach ($role->fetchAll() as $r) {
-            if ($r->parent < 1) {
-                $r->parent = null;
+        $roles = Phprojekt_Loader::getModel('Role', 'Role');
+        foreach ($roles->fetchAll() as $role) {
+            if ($role->parent < 1) {
+                $role->parent = null;
             }
-            $this->addRole(new Zend_Acl_Role($r->id), $r->parent);
+            $this->addRole(new Zend_Acl_Role($role->id), $role->parent);
         }
     }
 

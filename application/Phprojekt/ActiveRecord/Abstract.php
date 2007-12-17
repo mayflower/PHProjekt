@@ -939,14 +939,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null,
-    $count = null, $offset = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null)
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
-            $wheres[] = $this->getAdapter()->quoteInto(sprintf('%s = ?',
-            $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
-            $this->_relations['hasMany']['id']);
+            $wheres[] = $this->getAdapter()->quoteInto(
+            				sprintf('%s = ?',
+								$this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
+            				$this->_relations['hasMany']['id']);
         }
         if (null !== $where) {
             $wheres[] = $where;

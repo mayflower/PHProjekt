@@ -39,7 +39,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      * user
      * @var integer $_user
      */
-    private $_user = null;
+    private $_userId = null;
 
     /**
      * Constructor for Groups
@@ -47,39 +47,24 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      * @param Zend_Db $db     database
      * @param integer $userId Id of user
      */
-    public function __construct($db = null, $userId=null)
+    public function __construct()
     {
-        parent::__construct($db);
-        $this->_setUser($userId);
+        parent::__construct();
+        
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $this->_userId = $authNamespace->userId;
     }
-
+    
     /**
-     * Setter for user
+     * Returns the user id thats checked
      *
-     * @param integer $user Id of user
-     *
-     * @return void
+     * @return integer
      */
-    private function _setUser($user)
+    public function getUserId()
     {
-        if ($user != 0) {
-            $this->_user= $user;
-        } else {
-            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-            $this->_user = $authNamespace->userId;
-        }
+    	return $this->_userId;
     }
-
-    /**
-     * Getter for current user
-     *
-     * @return integer $_user Id of user
-     */
-    public function getUser()
-    {
-        return $this->_user;
-    }
-
+    
     /**
      * Checks whether user is in Group
      *
@@ -90,22 +75,24 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     public function isUserInGroup($group)
     {
         // Keep the user-group relation in the session for optimize the query
-        $groupNamespace = new Zend_Session_Namespace('UserInGroup_'.$this->getUser().'_'.$group);
+        $groupNamespace = new Zend_Session_Namespace('UserInGroup_'.$this->_userId.'_'.$group);
         if (isset($groupNamespace->isInGroup)) {
-            $isInGroup = $groupNamespace->isInGroup;
-        } else {
-            $currentGroup = $this->find($group);
-            $where = $currentGroup->getAdapter()->quoteInto('userId = ?', $this->getUser());
-            $users = $currentGroup->_hasManyAndBelongsToMany('users');
-            $tmp = current((array)$users->_fetchHasManyAndBelongsToMany($where));
-            if ($tmp['userId'] == $this->getUser()) {
-                $isInGroup = $groupNamespace->isInGroup = true;
-            } else {
-                $isInGroup = $groupNamespace->isInGroup = false;
-            }
             return $groupNamespace->isInGroup;
+        } 
+        
+        $currentGroup = $this->find($group);
+        
+        $where = $currentGroup->getAdapter()->quoteInto('userId = ?', $this->_userId);
+        $users = $currentGroup->_hasManyAndBelongsToMany('users');
+        
+        /* @todo don't use internal functions */
+        $tmp = current((array)$users->_fetchHasManyAndBelongsToMany($where));
+        if ($tmp->userId == $this->getUserId()) {
+             $groupNamespace->isInGroup = true;
+        } else {
+             $groupNamespace->isInGroup = false;
         }
-        return $isInGroup;
+        return $groupNamespace->isInGroup;
     }
 
     /**
@@ -116,16 +103,17 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     public function getUserGroups()
     {
         // Keep the user-group relation in the session for optimize the query
-        $groupNamespace = new Zend_Session_Namespace('UserGroups_'.$this->getUser());
+        $groupNamespace = new Zend_Session_Namespace('UserGroups_'.$this->_userId);
         if (isset($groupNamespace->groups)) {
             $groups = $groupNamespace->groups;
         } else {
             $groups = array();
-            $where = $this->getAdapter()->quoteInto('userId = ?', $this->getUser());
-            $users = $this->_hasManyAndBelongsToMany('users');
-            $tmp   = $users->_fetchHasManyAndBelongsToMany($where);
+            $where  = $this->getAdapter()->quoteInto('userId = ?', $this->_userId);
+            $users  = $this->_hasManyAndBelongsToMany('users');
+            /* @todo don't use internal functions */
+            $tmp    = $users->_fetchHasManyAndBelongsToMany($where);
             foreach ($tmp as $row) {
-                $groups[] = $row['groupsId'];
+                $groups[] = $row->groupsId;
             }
             $groupNamespace->groups = $groups;
         }

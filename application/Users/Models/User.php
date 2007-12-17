@@ -25,7 +25,7 @@
  * @since      File available since Release 1.0
  */
 class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
-{
+{	
     /**
      * Has many declrations
      *
@@ -57,8 +57,8 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         parent::__construct($db);
 
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        if (true === isset($authNamespace->userId)) {
-            if (true === ($authNamespace->userId > 0)) {
+        if (isset($authNamespace->userId)) {
+            if ($authNamespace->userId > 0) {
                 $this->find($authNamespace->userId);
             }
         }
@@ -90,25 +90,18 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         $db = Zend_Registry::get('db');
         /* @var $db Zend_Db_Adapter_Abstract */
 
-        $tmp = current((array)$this->fetchAll($db->quoteInto("username = ?", $username)));
-
         try {
-            if (is_object($tmp)) {
-                $userId = $tmp->id;
-            } else {
-                return false;
-            }
+        	$users  = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
+            return $users[0]->id;
         }
         catch (Phprojekt_ActiveRecord_Exception $are) {
-            $this->_log->log($are->getMessage());
-            return false;
+            $this->_log->warn($are->getMessage());
         }
         catch (Exception $e) {
-            $this->_log->log($e->getMessage());
-            return false;
+            $this->_log->warn($e->getMessage());
         }
 
-        return $userId;
+        return false;
     }
 
     /**
@@ -121,8 +114,8 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      */
     public function findUserById($id)
     {
-        if (true === ($id > 0)) {
-            $clone  = clone($this);
+        if ($id > 0) {
+            $clone = clone($this);
             $clone->find($id);
             return $clone;
         } else {

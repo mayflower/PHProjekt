@@ -34,8 +34,8 @@ class LoginController extends Zend_Controller_Action
     public function indexAction()
     {
         $logger = Zend_Registry::get('log');
-
-        $logger->err('Login handler called');
+        
+        $logger->debug('Login handler called');
 
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();

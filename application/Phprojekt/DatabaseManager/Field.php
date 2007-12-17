@@ -41,9 +41,9 @@ class Phprojekt_DatabaseManager_Field
      */
     public function __construct(Phprojekt_DatabaseManager $dbm, $name, $value)
     {
-        $this->value = (string) $value;
+        $this->value     = (string) $value;
         $this->_metadata = $dbm->find($name);
-        $this->right = $dbm->getModel()->getRights();
+        $this->right     = $dbm->getModel()->getRights();
     }
 
     /**
