@@ -156,8 +156,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $select   = $database->select();
 
         $select->from($table, 'path')
-        ->where($database->quoteInto('id = ?', $this->_requestedId))
-        ->limit(1);
+               ->where($database->quoteInto('id = ?', $this->_requestedId))
+               ->limit(1);
 
         if (null !== $filter) {
             $filter->filter($select, $this->getActiveRecord()->getAdapter());
@@ -170,16 +170,15 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             new Phprojekt_Tree_Node_Exception('Requested node not found');
         }
 
-        $where = sprintf("%s OR %s",
-        $database->quoteInto("path LIKE ?", $rootPath . '%'),
-        $database->quoteInto("id = ?", $this->id));
+        $where = sprintf("%s OR %s", $database->quoteInto("path LIKE ?", $rootPath . '%'), 
+                                     $database->quoteInto("id = ?", $this->id));
 
         $rows = $this->_activeRecord->fetchAll($where, 'path');
         $this->_index = array();
         foreach ($rows as $record) {
-            $node = null;
+            $node   = null;
             $rights = new Phprojekt_RoleRights($record->id, 'Project');
-            $right =  $rights->hasRight('read') ? true : $rights->hasRight('write');
+            $right  =  $rights->hasRight('read') ? true : $rights->hasRight('write');
             if ($right) {
                 if ($record->id == $this->_requestedId) {
                     $node                = $this;
@@ -237,9 +236,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         if (null !== $node->_activeRecord) {
             if (null === $node->id) {
                 $node->_activeRecord->parent = $this->id;
-                $node->_activeRecord->path   = sprintf('%s%s%s',
-                $this->path,
-                $this->id,
+                $node->_activeRecord->path   = sprintf('%s%s%s', $this->path, $this->id,
                 self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
             }

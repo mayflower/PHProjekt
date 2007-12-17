@@ -1,6 +1,6 @@
 <?php
 /**
- * A item, with database manager support
+ * An item, with database manager support
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -14,7 +14,7 @@
  */
 
 /**
- * A item, with database manager support
+ * An item, with database manager support
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
@@ -71,7 +71,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Filter class for clean the input
      */
-    private $_clean = null;
+    protected $_clean = null;
 
     /**
      * Initialize new object
@@ -129,7 +129,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         /* Clean the value use the InputFilter */
         $value = $this->_clean->process($value);
 
-        if (true == isset($info['metadata'][$varname])) {
+        if (isset($info['metadata'][$varname])) {
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];
 
@@ -138,7 +138,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             }
 
             if ($type == 'float') {
-                if (false === empty($value)) {
+                if (empty($value)) {
                     $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
                 } else {
                     $value = 0;
@@ -364,29 +364,34 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null,
-    $count = null, $offset = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null)
     {
         //only fetch records with read access
-        $wheres = array();
-        $groupwhere = array();
+        $wheres      = array();
+        $groupwhere  = array();
         $groupwheres ='';
-        $groups = Phprojekt_Loader::getModel('Groups', 'Groups');
-        $usergroups = $groups->getUserGroups();
+        $groups      = Phprojekt_Loader::getModel('Groups', 'Groups');
+        $usergroups  = $groups->getUserGroups();
+        
         foreach ($usergroups as $groupId) {
             $groupwhere[] = $this ->getAdapter()->quoteInto('?', $groupId);
         }
+        
         $in = (count($groupwhere) > 0) ? implode(',', $groupwhere) : null;
-        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?', $groups->getUser()).
+        
+        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?', $groups->getUserId()).
         $groupwheres.= ($in) ? ' OR `read` IN ('.$in.')  OR `write` IN ('.$in.')  OR `admin` IN ('.$in.'))' :')';
+        
         $wheres[] = $groupwheres;
+        
         if (null !== $where) {
             $wheres[] = $where;
         }
+        
         $where = (is_array($wheres) && count($wheres) > 0) ?
                     implode(' AND ', $wheres) : null;
-        return parent::fetchAll($where, $order,
-        $count, $offset);
+                    
+        return parent::fetchAll($where, $order, $count, $offset);
     }
 
     /**
@@ -396,26 +401,26 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getRights()
     {
-        $right = '';
+        $right     = '';
         $itemright = '';
         if ($this->_data['id']>0) {
             $groups = Phprojekt_Loader::getModel('Groups', 'Groups');
-            if ($this->_data['read']) {
+            if ($this->read) {
                 if ($groups->isUserInGroup($this->_data['read'])) {
                     $itemright = 'read';
                 }
             }
-            if ($this->_data['write']) {
+            if ($this->write) {
                 if ($groups->isUserInGroup($this->_data['write'])) {
                     $itemright = 'write';
                 }
             }
-            if ($this->_data['admin']) {
+            if ($this->admin) {
                 if ($groups->isUserInGroup($this->_data['admin'])) {
                     $itemright = 'admin';
                 }
             }
-            if ($this->_data['ownerId'] == $groups->getUser()) {
+            if ($this->ownerId == $groups->getUserId()) {
                 $itemright = 'admin';
             }
             $class = $this->getTableName();
@@ -427,13 +432,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $relfield=$this->_data['projectId'];
                     break;
             }
-            $rolerights = new Phprojekt_RoleRights($relfield, $class,
-            $this->_data['id']);
-            $rolerightread = $rolerights->hasRight('read');
+            $rolerights     = new Phprojekt_RoleRights($relfield, $class, $this->_data['id']);
+            $rolerightread  = $rolerights->hasRight('read');
             $rolerightwrite = $rolerights->hasRight('write');
             switch ($itemright) {
                 case'read':
-                    if ($rolerightread or $rolerightwrite) {
+                    if ($rolerightread || $rolerightwrite) {
                         $right = 'read';
                     }
                     break;
