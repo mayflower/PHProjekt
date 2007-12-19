@@ -49,29 +49,34 @@ class IndexController extends Zend_Controller_Action
      * @var boolean
      */
     private $_canRender = true;
+
     /**
      * The treeview helper. Not the renderer.
      *
      */
     private $_treeView;
+
     /**
      * SQL where
      *
      * @var array
      */
     private $_where = array();
+
     /**
      * Current item ID
      *
      * @var int
      */
     protected $_itemid = 0;
+
     /**
      * Current params request
      *
      * @var array
      */
     protected $_params = array();
+
     /**
      * Init function
      *
@@ -96,17 +101,18 @@ class IndexController extends Zend_Controller_Action
         $tree = new Phprojekt_Tree_Node_Database($projects, 1);
         $this->_treeView = new Default_Helpers_TreeView($tree);
         $this->_treeView->makePersistent();
-        
+
         /* Get the current item id */
         $this->_params = $this->_request->getParams();
-        
+
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
-        
+
         /* Add the ownerId as param */
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
     }
+
     /**
      * Returns the current treeview
      *
@@ -116,6 +122,7 @@ class IndexController extends Zend_Controller_Action
     {
         return $this->_treeView;
     }
+
     /**
      * Return the list form render helper.
      *
@@ -149,6 +156,7 @@ class IndexController extends Zend_Controller_Action
         }
         return $instance;
     }
+
     /**
      * Return the list view render helper.
      *
@@ -162,6 +170,7 @@ class IndexController extends Zend_Controller_Action
         }
         return $instance;
     }
+
     /**
      * Return the filter view render helper.
      *
@@ -182,6 +191,7 @@ class IndexController extends Zend_Controller_Action
         }
         return $instance;
     }
+
     /**
      * Standard action
      * Use the list action
@@ -194,6 +204,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->forward('list');
     }
+
     /**
      * Add a Filter
      * Save the POST values from the filter into the session where
@@ -208,6 +219,7 @@ class IndexController extends Zend_Controller_Action
         $this->addFilter($newFilter);
         $this->forward('list');
     }
+
     /**
      * Delete a Filter
      *
@@ -221,6 +233,7 @@ class IndexController extends Zend_Controller_Action
         $this->deleteFilter($id);
         $this->forward('list');
     }
+
     /**
      * Set the name of the session with the module and the id
      *
@@ -233,6 +246,7 @@ class IndexController extends Zend_Controller_Action
         $index = $this->getRequest()->getModuleName() . $id;
         return new Zend_Session_Namespace($index);
     }
+
     /**
      * Add a filter into the session array
      * only if the filter don�t exists
@@ -258,6 +272,7 @@ class IndexController extends Zend_Controller_Action
         }
         $session->filters = $filters;
     }
+
     /**
      * Delete a filter with the parsed id
      *
@@ -278,6 +293,7 @@ class IndexController extends Zend_Controller_Action
         }
         $session->filters = $filters;
     }
+
     /**
      * Add a string into the where clause
      * but don�t keep it into the session
@@ -290,6 +306,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->_where[] = $string;
     }
+
     /**
      * Return the saved where clause
      *
@@ -311,6 +328,7 @@ class IndexController extends Zend_Controller_Action
             return null;
         }
     }
+
     /**
      * Delivers the inner part of the IndexAction using ajax
      *
@@ -319,7 +337,10 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function componentIndexAction ()
-    {}
+    {
+
+    }
+
     /**
      * Delivers the inner part of the Listaction using ajax
      *
@@ -328,7 +349,10 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function componentListAction ()
-    {}
+    {
+
+    }
+
     /**
      * Ajax part of displayAction
      *
@@ -338,7 +362,10 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function componentDisplayAction ()
-    {}
+    {
+
+    }
+
     /**
      * Ajaxified part of the edit action
      *
@@ -348,7 +375,10 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function componentEditAction ()
-    {}
+    {
+
+    }
+
     /**
      * Toggle a open/close a node
      *
@@ -362,6 +392,7 @@ class IndexController extends Zend_Controller_Action
         $currentActiveTree->toggleNode();
         $this->forward('list', $this->getRequest()->getControllerName(), $this->getRequest()->getModuleName());
     }
+
     /**
      * List all the data using the model for get it
      * We store the id of the shown project in the session, as other modules
@@ -388,6 +419,7 @@ class IndexController extends Zend_Controller_Action
         $this->addWhere($db->quoteInto('projectId = ?', $projectId));
         $this->getListView()->setModel($this->getModelObject()->fetchAll($this->getWhere()));
     }
+
     /**
      * Abandon current changes and return to the default view
      *
@@ -396,7 +428,10 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function cancelAction ()
-    {}
+    {
+
+    }
+
     /**
      * Displays the a single item for add an Item
      *
@@ -408,6 +443,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->listAction();
     }
+
     /**
      * Example for json convert.
      *
@@ -419,6 +455,7 @@ class IndexController extends Zend_Controller_Action
         echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
         exit();
     }
+
     /**
      * Displays the edit screen for the current item
      * Use the model module for get the data
@@ -442,6 +479,7 @@ class IndexController extends Zend_Controller_Action
             $this->_smarty->userFieldData = array('formType' => 'userId');
         }
     }
+
     /**
      * Saves the current item
      * Save if you are add one or edit one.
@@ -480,6 +518,7 @@ class IndexController extends Zend_Controller_Action
         }
         $this->listAction();
     }
+
     /**
      * Deletes a certain item
      *
@@ -497,6 +536,7 @@ class IndexController extends Zend_Controller_Action
         }
         $this->listAction();
     }
+
     /**
      * Render all the views that are not already renders
      *
@@ -530,6 +570,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->formView = $this->getFormView()->render();
         $this->render('index');
     }
+
     /**
      * Get the model object
      * This function must be redefined in each module
@@ -547,6 +588,7 @@ class IndexController extends Zend_Controller_Action
         }
         return $object;
     }
+
     /**
      * Redefine the postDispatch function
      * After all action, this functions is called
@@ -565,6 +607,7 @@ class IndexController extends Zend_Controller_Action
             $this->_generateOutput();
         }
     }
+
     /**
      * The function will call the Zend _forward function
      * But set first the canRender to false for no draw nothing
@@ -581,6 +624,7 @@ class IndexController extends Zend_Controller_Action
         $this->_canRender = false;
         $this->_forward($action, $controller, $module, $params);
     }
+
     /**
      * Make the SQL where clause
      *

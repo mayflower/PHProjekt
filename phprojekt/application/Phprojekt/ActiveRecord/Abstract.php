@@ -943,10 +943,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
-            $wheres[] = $this->getAdapter()->quoteInto(
-            				sprintf('%s = ?',
-								$this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
-            				$this->_relations['hasMany']['id']);
+            $sqlString = sprintf('%s = ?', $this->_translateKeyFormat($this->_relations['hasMany']['classname']));
+            $wheres[]  = $this->getAdapter()->quoteInto($sqlString, $this->_relations['hasMany']['id']);
         }
         if (null !== $where) {
             $wheres[] = $where;

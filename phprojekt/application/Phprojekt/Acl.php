@@ -31,7 +31,7 @@ class Phprojekt_Acl extends Zend_Acl
      * @var PHProjekt_Acl
      */
     protected static $_instance = null;
-	
+
     /**
      * Return this class only one time
      *

@@ -64,8 +64,8 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
      * getter for UserRole
      * returns UserRole for item
      *
-     * @param int $user    user ID
-     * @param int $project project ID
+     * @param int $userId    user ID
+     * @param int $projectId project ID
      *
      * @return string $_role current role
      */

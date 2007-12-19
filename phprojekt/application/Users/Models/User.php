@@ -25,7 +25,7 @@
  * @since      File available since Release 1.0
  */
 class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
-{	
+{
     /**
      * Has many declrations
      *
@@ -91,7 +91,7 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         /* @var $db Zend_Db_Adapter_Abstract */
 
         try {
-        	$users  = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
+            $users  = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
             return $users[0]->id;
         }
         catch (Phprojekt_ActiveRecord_Exception $are) {

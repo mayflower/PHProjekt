@@ -24,4 +24,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class History_Models_History extends Phprojekt_Item_Abstract
-{ }
+{
+
+}
