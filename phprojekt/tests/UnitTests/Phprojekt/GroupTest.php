@@ -33,12 +33,8 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $user = $authNamespace->userId;
 
         $group = new Groups_Models_Groups($this->sharedFixture);
-        $groupUser = $group->getUser();
+        $groupUser = $group->getUserId();
         $this->assertEquals($user, $groupUser);
-
-        $group = new Groups_Models_Groups($this->sharedFixture, 3);
-        $groupUser = $group->getUser();
-        $this->assertEquals(3, $groupUser);
     }
 
     /**
@@ -59,7 +55,12 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $group = new Groups_Models_Groups($this->sharedFixture);
         $this->assertEquals(2, count($group->getUserGroups()));
 
-        $group = new Groups_Models_Groups($this->sharedFixture, 3);
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $keepUser = $authNamespace->userId;
+
+        $authNamespace->userId = 3;
+        $group = new Groups_Models_Groups($this->sharedFixture);
         $this->assertEquals(0, count($group->getUserGroups()));
+        $authNamespace->userId = $keepUser;
     }
 }

@@ -138,7 +138,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             }
 
             if ($type == 'float') {
-                if (empty($value)) {
+                if (!empty($value)) {
                     $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
                 } else {
                     $value = 0;
@@ -372,25 +372,25 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $groupwheres ='';
         $groups      = Phprojekt_Loader::getModel('Groups', 'Groups');
         $usergroups  = $groups->getUserGroups();
-        
+
         foreach ($usergroups as $groupId) {
             $groupwhere[] = $this ->getAdapter()->quoteInto('?', $groupId);
         }
-        
+
         $in = (count($groupwhere) > 0) ? implode(',', $groupwhere) : null;
-        
+
         $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?', $groups->getUserId()).
         $groupwheres.= ($in) ? ' OR `read` IN ('.$in.')  OR `write` IN ('.$in.')  OR `admin` IN ('.$in.'))' :')';
-        
+
         $wheres[] = $groupwheres;
-        
+
         if (null !== $where) {
             $wheres[] = $where;
         }
-        
+
         $where = (is_array($wheres) && count($wheres) > 0) ?
                     implode(' AND ', $wheres) : null;
-                    
+
         return parent::fetchAll($where, $order, $count, $offset);
     }
 

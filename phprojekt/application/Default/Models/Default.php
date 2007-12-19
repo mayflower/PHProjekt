@@ -135,6 +135,8 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
+     * Get the submodules
+     *
      * @see save
      *
      * @return void
@@ -144,6 +146,8 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
+     * Fields to use in the filters
+     *
      * @see save
      *
      * @return void

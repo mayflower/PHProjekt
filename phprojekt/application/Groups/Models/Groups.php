@@ -50,11 +50,11 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     public function __construct()
     {
         parent::__construct();
-        
+
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $this->_userId = $authNamespace->userId;
     }
-    
+
     /**
      * Returns the user id thats checked
      *
@@ -64,7 +64,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     {
     	return $this->_userId;
     }
-    
+
     /**
      * Checks whether user is in Group
      *
@@ -78,16 +78,16 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
         $groupNamespace = new Zend_Session_Namespace('UserInGroup_'.$this->_userId.'_'.$group);
         if (isset($groupNamespace->isInGroup)) {
             return $groupNamespace->isInGroup;
-        } 
-        
+        }
+
         $currentGroup = $this->find($group);
-        
+
         $where = $currentGroup->getAdapter()->quoteInto('userId = ?', $this->_userId);
         $users = $currentGroup->_hasManyAndBelongsToMany('users');
-        
+
         /* @todo don't use internal functions */
         $tmp = current((array)$users->_fetchHasManyAndBelongsToMany($where));
-        if ($tmp->userId == $this->getUserId()) {
+        if ($tmp['userId'] == $this->getUserId()) {
              $groupNamespace->isInGroup = true;
         } else {
              $groupNamespace->isInGroup = false;
@@ -113,7 +113,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
             /* @todo don't use internal functions */
             $tmp    = $users->_fetchHasManyAndBelongsToMany($where);
             foreach ($tmp as $row) {
-                $groups[] = $row->groupsId;
+                $groups[] = $row['groupsId'];
             }
             $groupNamespace->groups = $groups;
         }
