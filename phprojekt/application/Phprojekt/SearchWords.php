@@ -29,6 +29,8 @@
  */
 class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
 {
+	protected $_name = 'SearchWords';
+	
     /**
      * Chaneg the tablename for use with the Zend db class
      *
@@ -38,7 +40,6 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     public function __construct($config = array())
     {
-        $this->_name = 'SearchWords';
         if (null === $config) {
             $config = array('db' => Zend_Registry::get('db'));
         }
@@ -264,13 +265,8 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     private function _exists($module, $itemId, $crc32)
     {
-        $clone = clone($this);
-        $result = $clone->find($module, $itemId, $crc32)->toArray();
-        if (empty($result)) {
-            return false;
-        } else {
-            return true;
-        }
+        // $clone = clone($this);
+        return ($this->find($module, $itemId, $crc32)->count() > 0);
     }
 
     /**
