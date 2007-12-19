@@ -41,7 +41,7 @@ CREATE TABLE `DatabaseManager` (
   `isRequired` int(4) default NULL,
   `isUnique` int(11) default NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB;
 
 
 --
@@ -52,7 +52,7 @@ CREATE TABLE `Groups` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255),
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB;
 
 
 --
@@ -64,7 +64,7 @@ CREATE TABLE `GroupsUserRelation` (
   `groupsId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB;
 
 
 --
@@ -83,7 +83,7 @@ CREATE TABLE `History` (
   `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   KEY `userId` (`userId`)
-);
+) ENGINE=InnoDB;
 CREATE INDEX `History_userId` ON `History`(`userId`);
 
 
@@ -97,7 +97,7 @@ CREATE TABLE `ModuleInstance` (
   `module` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB;
 CREATE INDEX `ModuleInstance_userId` ON `ModuleInstance`(`projectId`);
 
 
@@ -123,7 +123,7 @@ CREATE TABLE `Project` (
   `write` int(11) default NULL,
   `admin` int(11) default NULL,
   PRIMARY KEY(`id`)
-);
+) ENGINE=InnoDB;
 CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
 
 
@@ -135,7 +135,7 @@ CREATE TABLE `ProjectUserRoleRelation` (
   `projectId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `roleId` int(11) NOT NULL
-);
+) ENGINE=InnoDB;
 CREATE INDEX `ProjectUserRoleRelation_projectId` ON `ProjectUserRoleRelation`(`projectId`);
 CREATE INDEX `ProjectUserRoleRelation_userId` ON `ProjectUserRoleRelation`(`userId`);
 CREATE INDEX `ProjectUserRoleRelation_roleId` ON `ProjectUserRoleRelation`(`roleId`);
@@ -150,7 +150,7 @@ CREATE TABLE `Role` (
   `name` varchar(255) NOT NULL,
   `parent` int(11) default NULL,
   PRIMARY KEY(`id`)
-);
+) ENGINE=InnoDB;
 
 
 --
@@ -163,7 +163,7 @@ CREATE TABLE `RoleModulePermissions` (
   `module` varchar(255) NOT NULL,
   `permission` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB;
 
 
 --
@@ -184,7 +184,7 @@ CREATE TABLE `Todo` (
   `write` int(11) default NULL,
   `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
- );
+ ) ENGINE=InnoDB;
 
 
 --
@@ -202,7 +202,7 @@ CREATE TABLE `User` (
   `status` varchar(1) default 'A',
   PRIMARY KEY  (`id`),
   UNIQUE(`username`)
-);
+) ENGINE=InnoDB;
 
 
 --
@@ -217,7 +217,7 @@ CREATE TABLE `UserModuleSetting` (
   `module` varchar(50) NOT NULL,
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB;
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
 
@@ -229,9 +229,9 @@ CREATE TABLE `SearchWords` (
   `module` varchar(255) NOT NULL,
   `itemId` int(11) NOT NULL,
   `word` varchar(255) NOT NULL,
-  `crc32` int(11) NOT NULL,
-  PRIMARY KEY  (`itemId`,`module`,`crc32`)
-);
+  `crc32` bigint NOT NULL,
+  PRIMARY KEY(`itemId`,`module`,`crc32`)
+) ENGINE=InnoDB;
 
 
 --
@@ -249,7 +249,7 @@ CREATE TABLE `Note` (
   `write` int(11) default NULL,
   `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB;
 
 
 --
