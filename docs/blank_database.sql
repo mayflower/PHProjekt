@@ -225,7 +225,7 @@ CREATE TABLE `SearchWords` (
   `module` varchar(255) NOT NULL,
   `itemId` int(11) NOT NULL,
   `word` varchar(255) NOT NULL,
-  `crc32` int(11) NOT NULL,
+  `crc32` bigint NOT NULL,
   PRIMARY KEY  (`itemId`,`module`,`crc32`)
 );
 	  	
