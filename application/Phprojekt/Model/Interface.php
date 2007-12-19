@@ -42,7 +42,7 @@ interface Phprojekt_Model_Interface extends Iterator
      * Find a dataset, usually by an id. If the record is found
      * the current object is filled with the data and returns itself.
      *
-     * @retrn Phprojekt_Model_Interface
+     * @return Phprojekt_Model_Interface
      */
     public function find();
 
