@@ -73,28 +73,31 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
     {
         $role = 0;
         // Keep the roles in the session for optimize the query
-        $roleNamespace = new Zend_Session_Namespace('UserRole_'.$userId.'_'.$projectId);
-        if (isset($roleNamespace->role) && !empty($roleNamespace->role)) {
-            $role = $roleNamespace->role;
-        } else {
-            $db     = Zend_Registry::get('db');
-            $select = $db->select()
+        if (isset($userId) && isset($projectId)) {
+            $roleNamespace = new Zend_Session_Namespace('UserRole_'.$userId);
+
+            if (isset($roleNamespace->$projectId) && !empty($roleNamespace->$projectId)) {
+                $role = $roleNamespace->$projectId;
+            } else {
+                $db     = Zend_Registry::get('db');
+                $select = $db->select()
                 ->from(array('rel' => 'ProjectUserRoleRelation'))
                 ->joinInner(array('role' => 'Role'), sprintf("%s = %s", $db->quoteIdentifier("role.id"), $db->quoteIdentifier("rel.roleId")))
-                ->where($db->quoteInto('userId = ?', $userId))
-                ->where($db->quoteInto('projectId = ?', $projectId));
-            $stmt  = $db->query($select);
-            $roles = $stmt->fetchAll();
-            if (!isset($roles[0]['id'])) {
-                $projectObject = Phprojekt_Loader::getModel('Project', 'Project');
-                $parent        = $projectObject->find($projectId);
-                if (null != $parent && $parent->parent > 0) {
-                    $role = $this->fetchUserRole($userId, $parent->parent);
-                    $roleNamespace->role = $role;
+                ->where($db->quoteInto('userId = ?', $userId));
+                $stmt  = $db->query($select);
+                $allroles = $stmt->fetchAll();
+                foreach ($allroles as $roles) {
+                    $role = $roles['id'];
+                    $roleNamespace->$roles['projectId'] = $role;
                 }
-            } else {
-                $role = $roles[0]['id'];
-                $roleNamespace->role = $role;
+                if (!$roleNamespace-> $projectId) {
+                    $projectObject = Phprojekt_Loader::getModel('Project', 'Project');
+                    $parent = $projectObject->find($projectId);
+                    if (null != $parent && $parent->parent > 0) {
+                        $role = $this->fetchUserRole($userId, $parent->parent);
+                        $roleNamespace-> $projectId = $role;
+                    }
+                }
             }
         }
         return $role;
