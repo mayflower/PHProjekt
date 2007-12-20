@@ -403,6 +403,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $right     = '';
         $itemright = '';
+        $class = $this->getTableName();
         if ($this->_data['id']>0) {
             $groups = Phprojekt_Loader::getModel('Groups', 'Groups');
             if ($this->read) {
@@ -423,7 +424,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             if ($this->ownerId == $groups->getUserId()) {
                 $itemright = 'admin';
             }
-            $class = $this->getTableName();
             switch ($class) {
                 case'Project':
                     $relfield=$this->_data['parent'];
@@ -432,39 +432,40 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $relfield=$this->_data['projectId'];
                     break;
             }
-            $rolerights     = new Phprojekt_RoleRights($relfield, $class, $this->_data['id']);
-            $rolerightread  = $rolerights->hasRight('read');
-            $rolerightwrite = $rolerights->hasRight('write');
-            switch ($itemright) {
-                case'read':
-                    if ($rolerightread || $rolerightwrite) {
-                        $right = 'read';
-                    }
-                    break;
-                case'write':
-                    if ($rolerightread ) {
-                        $right = 'read';
-                    }
-                    if ($rolerightwrite) {
-                        $right ='write';
-                    }
-                    break;
-                case'admin':
-                    if ($rolerightread ) {
-                        $right = 'read';
-                    }
-                    if ($rolerightwrite) {
-                        $right = 'admin';
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return $right;
 
         } else {
-            return 'write';
+            $itemright='write';
+            $session        = new Zend_Session_Namespace();
+            $relfield       = (int) $session->currentProjectId;
         }
+        $rolerights     = new Phprojekt_RoleRights($relfield, $class, $this->_data['id']);
+        $rolerightread  = $rolerights->hasRight('read');
+        $rolerightwrite = $rolerights->hasRight('write');
+        switch ($itemright) {
+            case'read':
+                if ($rolerightread || $rolerightwrite) {
+                    $right = 'read';
+                }
+                break;
+            case'write':
+                if ($rolerightread ) {
+                    $right = 'read';
+                }
+                if ($rolerightwrite) {
+                    $right ='write';
+                }
+                break;
+            case'admin':
+                if ($rolerightread ) {
+                    $right = 'read';
+                }
+                if ($rolerightwrite) {
+                    $right = 'admin';
+                }
+                break;
+            default:
+                break;
+        }
+        return $right;
     }
-
 }
