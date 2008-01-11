@@ -133,26 +133,19 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     public function save()
     {
     }
-
+    
     /**
-     * Get the submodules
+     * Get rights.
      *
-     * @see save
-     *
-     * @return void
+     * @return string
      */
-    public function getSubModules()
+    public function getRights()
     {
+        return 'read';
     }
-
-    /**
-     * Fields to use in the filters
-     *
-     * @see save
-     *
-     * @return void
-     */
+    
     public function getFieldsForFilter()
     {
+        return array();
     }
 }

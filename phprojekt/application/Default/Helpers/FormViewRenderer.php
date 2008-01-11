@@ -114,7 +114,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
     {
         $right = $field['right'];
 
-        switch($right){
+        switch($right){ /* @todo: fix rights */
             case'write':
             case'admin':
                 switch ($field['type']) {
