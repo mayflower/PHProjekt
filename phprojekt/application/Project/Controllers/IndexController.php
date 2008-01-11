@@ -58,6 +58,8 @@ class Project_IndexController extends IndexController
             $session->currentProjectId   = $this->getRequest()->getParam('nodeId', 0);
             $session->currentProjectName = $project->title;
         }
+        
+        $this->_submodules = $this->_getSubmodules();
     }
 
     /**
@@ -128,5 +130,29 @@ class Project_IndexController extends IndexController
         }
 
         $this->listAction();
+    }
+    
+    /**
+     * Get a list of submodules and check for the users right on them
+     *
+     * @return array
+     */
+    protected function _getSubmodules()
+    {
+        //select all sobmodules with read rights from  db
+        $session = new Zend_Session_Namespace();
+                
+        $modulesArray    = array();
+        $allModulesArray = array('Todo','Note','Timecard');
+
+        $rights = new Phprojekt_RoleRights($session->currentProjectId, 'Project');
+        foreach ($allModulesArray as $module) {
+            $right = $rights->hasRight('read', $module) ? true : $rights->hasRight('write', $module);
+            if ($right) {
+                $modulesArray[] = $module;
+            }
+        }
+
+        return $modulesArray;
     }
 }

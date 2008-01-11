@@ -29,33 +29,5 @@
  */
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
-    /**
-     * Return wich submodules use this module
-     *
-     * Per now is just a fix array for test.
-     * This fucntion must return the correct relation between
-     * users - projects - modules
-     *
-     * @return array
-     */
-    public function getSubModules()
-    {
-        //select all sobmodules with read rights from  db
-        $session = new Zend_Session_Namespace();
-        $allModulesArray= array('Todo','Note','Timecard');
-        $modulesArray = array();
-        $rights = new Phprojekt_RoleRights($session->currentProjectId,
-        'Project');
-        foreach ($allModulesArray as $module) {
-            $right =  $rights->hasRight('read', $module) ? true :
-            $rights->hasRight('write', $module);
-            if ($right) {
-                $modulesArray[] = $module;
-            }
-        }
-
-        return $modulesArray;
-
-    }
 
 }
