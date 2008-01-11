@@ -42,6 +42,13 @@ class Project_IndexController extends IndexController
     const FORM_COLUMNS = 1;
 
     /**
+     * a list of submodules
+     *
+     * @var array
+     */
+    protected $_submodules = array();
+    
+    /**
      * Set various session data.
      *
      * @todo Check if we have to move this part of the code, as lastProjectId

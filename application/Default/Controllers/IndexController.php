@@ -78,6 +78,12 @@ class IndexController extends Zend_Controller_Action
     protected $_params = array();
 
     /**
+     * Submodules
+     *
+     * @var array
+     */
+    protected $_submodules = array();
+    /**
      * Init function
      *
      * First check if is a logued user, if not is redirect to the login form.
@@ -561,7 +567,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->controller = $this->getRequest()->getControllerName();
         $this->view->action = $this->getRequest()->getActionName();
         $this->view->breadcrumb = $this->getRequest()->getModuleName();
-        $this->view->modules = $this->getModelObject()->getSubModules();
+        $this->view->modules = $this->_submodules;
         $this->write = $write;
         $this->read = $read;
         $this->view->filterView = $this->getFilterView()->render();
