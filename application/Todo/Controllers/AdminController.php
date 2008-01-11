@@ -1,4 +1,4 @@
-<<?php
+<?php
 /**
  * Administration for the todo module
  *
@@ -27,5 +27,5 @@
 class Todo_AdminController extends AdminController
 {
 	public static $name = 'Todo Administration';
-	public static $_configuration = array();
+	public static $configuration = array();
 }

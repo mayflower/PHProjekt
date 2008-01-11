@@ -1,5 +1,31 @@
 <?php
+/**
+ * A default module that can be feed with a array and provides
+ * all necessary methods from that
+ *
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
+ *
+ * @copyright  2007, 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @version    CVS: $Id:
+ * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ */
 
+/**
+ * A default module that can be feed with a array and provides
+ * all necessary methods from that
+ *
+ * @copyright  2007, 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @version    Release: @package_version@
+ * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @package    PHProjekt
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ * @author     David Soria Parra <soria_parra@mayflower.de>
+ */
 class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_Interface 
 {
     protected $_formFields;
@@ -16,7 +42,12 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 								'required' => false,
 								'right'    => 'write',
 								'readOnly' => false);
-    
+    /**
+     * Initialize
+     *
+     * @param array $listFields array with field definitions
+     * @param array $formFields array with field definitions
+     */
     public function __construct($listFields = null, $formFields = null) 
     {
         if (!is_array($formFields) && !is_array($listFields)) {
@@ -35,7 +66,10 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
     
     /**
-     * @return unknown
+     * Return a sorted array that should be used
+     * to display the form view
+     * 
+     * @return array
      */
     public function getFormFields ()
     {
@@ -43,7 +77,10 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
     
     /**
-     * @return unknown
+     * Return a sorted array that should be used
+     * to display the list view
+     * 
+     * @return array
      */
     public function getListFields ()
     {
@@ -51,7 +88,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
     
     /**
-     * @param unknown_type $_formFields
+     * Sets a fields definitions for the form view
      */
     public function setFormFields (array $formFields)
     {
@@ -67,7 +104,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
     
     /**
-     * @param unknown_type $_listFields
+     * Sets a fields definitions for the list view
+     * 
+     * @param array $_listFields
      */
     public function setListFields (array $listFields)
     {
@@ -83,6 +122,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
     
     /**
+     * Returns a the necessary field definitions based on the ordering
+     * const that's given
+     * 
      * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
      *
      * @return array
@@ -101,6 +143,8 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
     
     /**
+     * Return an array containing all titles
+     * 
      * @see Phprojekt_ModelInformation_Interface::getTitles()
      *
      * @param integer $ordering
