@@ -23,7 +23,7 @@
 function smarty_modifier_form_ordering($records)
 {
     $allowedRecords = array();
-    if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract && $records->getRights() <> '') {
+    if (!is_array($records) && $records instanceof Phprojekt_Model_Interface && $records->getRights() != '') {
         $fields = $records->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
         $result = array();
         foreach ($fields as $field) {
@@ -34,8 +34,8 @@ function smarty_modifier_form_ordering($records)
     } else if (is_array($records)) {
         foreach ($records as &$record) {
             /* @var Phprojekt_Item_Abstract $record */
-            if ($record instanceof Phprojekt_Item_Abstract) {
-                if ($record->getRights() <> '') {
+            if ($record instanceof Phprojekt_Model_Interface) {
+                if ($record->getRights() != '') { /* @todo fix rights */
                     $fields = $record->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
                     $result = array();
                     foreach ($fields as $field) {

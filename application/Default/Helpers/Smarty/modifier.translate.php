@@ -24,7 +24,11 @@
  */
 function smarty_modifier_translate($string)
 {
-    $translator = Zend_Registry::get('translate');
-    /* @var $translator Zend_Translate_Adapter */
-    return $translator->translate($string);
+	if (!empty($string)) {
+	    $translator = Zend_Registry::get('translate');
+    	/* @var $translator Zend_Translate_Adapter */
+    	return $translator->translate($string);
+	}
+	
+	return '';
 }

@@ -58,7 +58,8 @@ interface Phprojekt_ModelInformation_Interface
 {
     /**
      * A shortcut to get a list of titles from a model information
-     *
+     * Note: this method should return an empty array if necessary
+     * 
      * @param integer $ordering Set the column order of the titles
      *
      * @return array
