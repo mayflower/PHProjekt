@@ -61,4 +61,11 @@ interface Phprojekt_Model_Interface extends Iterator
      * @return void
      */
     public function save();
+    
+    /**
+     * Get rights
+     *
+     * @return array
+     */
+    public function getRights();
 }
