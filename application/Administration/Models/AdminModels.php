@@ -103,7 +103,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * This method is case sensitive. It returns TRUE
      * on success otherwise FALSE
      *
-     * @paramt string $name Name of the module to be removed from the ignore list
+     * @param string $name Name of the module to be removed from the ignore list
      *
      * @return boolean
      */

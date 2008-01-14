@@ -131,9 +131,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      * Returns a the necessary field definitions based on the ordering
      * const that's given
      *
-     * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
-     *
      * @param integer $ordering Type of order
+     *
+     * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
      *
      * @return array
      */
@@ -153,9 +153,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Return an array containing all titles
      *
-     * @see Phprojekt_ModelInformation_Interface::getTitles()
-     *
      * @param integer $ordering Type of order
+     *
+     * @see Phprojekt_ModelInformation_Interface::getTitles()
      *
      * @return array
      */
