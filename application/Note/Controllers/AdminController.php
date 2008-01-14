@@ -1,4 +1,4 @@
-<<?php
+<?php
 /**
  * Administration for the notes module
  *
