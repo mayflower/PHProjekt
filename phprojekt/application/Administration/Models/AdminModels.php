@@ -71,6 +71,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     /**
      * Returns the merged configuration between
      *
+     * @return void
      */
     public function getConfiguration()
     {
@@ -83,7 +84,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * fetchAll() but it can be received using find().
      * Returns TRUE on success otherwise FALSE;
      *
-     * @param string $name
+     * @param string $name Name of the module to be ignored
      *
      * @return boolean
      */
@@ -102,7 +103,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * This method is case sensitive. It returns TRUE
      * on success otherwise FALSE
      *
-     * @paramt string $name
+     * @paramt string $name Name of the module to be removed from the ignore list
      *
      * @return boolean
      */
@@ -117,6 +118,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     }
 
     /**
+     * Re-writed function
+     *
      * @see Phprojekt_Model_Interface::fetchAll()
      *
      * @return array
@@ -148,7 +151,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     /**
      * We only implement read only properties
      *
-     * @param  string  $name
+     * @param string $name Name of the var to get
+     *
      * @return mixed
      */
     public function __get($name)
@@ -164,6 +168,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     }
 
     /**
+     * Re-writed function
+     *
      * @see Phprojekt_Model_Interface::find()
      *
      * @return Phprojekt_Model_Interface
@@ -189,6 +195,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     }
 
     /**
+     * Re-writed function
+     *
      * @see Phprojekt_Model_Interface::getInformation()
      *
      * @return Phprojekt_ModelInformation_Interface
@@ -199,14 +207,22 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     }
 
     /**
+     * Re-writed function
+     *
      * @see Phprojekt_Model_Interface::save()
      *
+     * @return void
      */
     public function save()
     {
         // we don't save admin modules
     }
 
+    /**
+     * Get the rigths
+     *
+     * @return string
+     */
     public function getRights()
     {
         return 'write';
