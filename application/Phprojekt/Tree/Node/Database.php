@@ -13,10 +13,6 @@
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
-interface Phprojekt_Compare_Interface
-{
-}
-
 /**
  * Represents an node of a tree and provides iterator abilities.
  *
@@ -170,7 +166,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             new Phprojekt_Tree_Node_Exception('Requested node not found');
         }
 
-        $where = sprintf("%s OR %s", $database->quoteInto("path LIKE ?", $rootPath . '%'), 
+        $where = sprintf("%s OR %s", $database->quoteInto("path LIKE ?", $rootPath . '%'),
                                      $database->quoteInto("id = ?", $this->id));
 
         $rows = $this->_activeRecord->fetchAll($where, 'path');

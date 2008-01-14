@@ -14,10 +14,6 @@
  * @since      File available since Release 1.0
  */
 
-interface Phprojekt_Filter_Interface
-{
-}
-
 /**
  * Filter provide a easy, chainable way to do pre filtering for databases.
  * It does the pre filtering by modifing a select statement.

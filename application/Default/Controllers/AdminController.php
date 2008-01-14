@@ -46,6 +46,7 @@ abstract class AdminController extends IndexController
     /**
      * Initialize
      *
+     * @return void
      */
     public function init()
     {
@@ -102,7 +103,7 @@ abstract class AdminController extends IndexController
         /* delete existing entries and rewrite the complete configuration */
         $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->getRequest()->getModuleName()));
 
-        foreach($this->_configuration as $config) {
+        foreach ($this->_configuration as $config) {
             $value = $this->getRequest()->getParam($config['key'], null);
             $model = clone $model;
             $model->module = $this->getRequest()->getModuleName();

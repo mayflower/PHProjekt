@@ -89,6 +89,10 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 
     /**
      * Sets a fields definitions for the form view
+     *
+     * @param array $formFields All the field´s data for the form
+     *
+     * @return void
      */
     public function setFormFields (array $formFields)
     {
@@ -106,7 +110,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Sets a fields definitions for the list view
      *
-     * @param array $_listFields
+     * @param array $listFields All the field´s data for the list
+     *
+     * @return void
      */
     public function setListFields (array $listFields)
     {
@@ -126,6 +132,8 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      * const that's given
      *
      * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
+     *
+     * @param integer $ordering Type of order
      *
      * @return array
      */
@@ -147,7 +155,8 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @see Phprojekt_ModelInformation_Interface::getTitles()
      *
-     * @param integer $ordering
+     * @param integer $ordering Type of order
+     *
      * @return array
      */
     public function getTitles ($ordering = MODELINFO_ORD_DEFAULT)
