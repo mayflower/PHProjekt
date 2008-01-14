@@ -91,7 +91,7 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string
      */
-    public function render()
+    public function render($name = 'list.tpl')
     {
         if (null === $this->getModel() || count($this->getModel()) == 0) {
             return '';
@@ -101,7 +101,8 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
 
         $view->records = $this->getModel();
 
-        return $view->render('list.tpl');
+        
+        return $view->render($name);
     }
 
     /**

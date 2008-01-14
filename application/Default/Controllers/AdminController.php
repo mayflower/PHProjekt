@@ -38,7 +38,10 @@ abstract class AdminController extends IndexController
      * 
      * @var array
      */
-	public static $configuration = array('activated' => array('type' => 'selectValues', 'key'=> 'activated', 'range'=>'1#On|0#Off', 'label' => 'On/Off'));
+	public static $configuration = array('activated' => array('type'   => 'selectValues', 
+															  'key'   => 'activated', 
+															  'range' => '1#On|0#Off', 
+															  'label' => 'Module activated?'));
 	
 	/**
 	 * Initialize
@@ -57,18 +60,6 @@ abstract class AdminController extends IndexController
 	}
 	
 	/**
-	 * Overwrite postDispatch, that calls generateOutput
-	 * as the IndexController postDispatch does some additional
-	 * checks we don't need and we don't satisfy
-	 *
-	 * @return void
-	 */
-	public function postDispatch()
-	{
-		$this->_generateOutput();	
-	}
-	
-	/**
 	 * Set a bunch of standard variables needed to build up the
 	 * necessary urls
 	 *
@@ -81,6 +72,11 @@ abstract class AdminController extends IndexController
         $this->view->action     = $this->getRequest()->getActionName();
 	}
 	
+	/* public function postDispatch()
+	{
+	    $this->_generateOutput();
+	} */
+	
 	/**
 	 * Overwritten generateOutput method to render or own index file
 	 *
@@ -88,7 +84,6 @@ abstract class AdminController extends IndexController
 	 */
 	protected function _generateOutput()
 	{
-        
 		$this->view->treeView = $this->getTreeView()->render();
 		$this->render('adminindex');
 	}
@@ -115,6 +110,8 @@ abstract class AdminController extends IndexController
 	        $model->value  = $value; /* @todo: santize me */
 	        $model->save();
 	    }
+	    
+	    $this->forward('show');
 	}
 	
 	/**
@@ -142,6 +139,6 @@ abstract class AdminController extends IndexController
 	    $renderer = new Default_Helpers_FormViewRenderer();
 	    $renderer->setModel($model);
 	    
-	    $this->view->adminView = $renderer->render();
+	    $this->view->adminView = $renderer->render('adminform.tpl');
 	}
 }

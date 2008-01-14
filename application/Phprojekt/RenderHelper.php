@@ -48,7 +48,7 @@ interface Phprojekt_RenderHelper
      *
      * @return void
      */
-    public function render();
+    public function render($name = null);
 
     /**
      * Return the model that is rendered

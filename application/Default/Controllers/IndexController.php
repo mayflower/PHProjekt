@@ -83,6 +83,7 @@ class IndexController extends Zend_Controller_Action
      * @var array
      */
     protected $_submodules = array();
+    
     /**
      * Init function
      *
@@ -607,7 +608,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function postDispatch ()
+    public function postDispatch()
     {
         if (true === $this->_canRender) {
             $this->_generateOutput();
