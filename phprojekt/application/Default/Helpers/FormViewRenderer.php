@@ -91,6 +91,8 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
     /**
      * Render the content of the list view and return it
      *
+     * @param string $name Name of the template to render
+     *
      * @return string
      */
     public function render($name = 'form.tpl')
@@ -101,9 +103,10 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         } else {
             $view->record = $this->getModel();
         }
-        
+
         return $view->render($name);
     }
+
     /**
      * Switch between the form types and call the function for each one
      *

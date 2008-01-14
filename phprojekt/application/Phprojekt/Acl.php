@@ -50,7 +50,6 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function __construct()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         //first construct roles
         $this->_registerRoles();
         //than get rights and assign them to roles and ressources

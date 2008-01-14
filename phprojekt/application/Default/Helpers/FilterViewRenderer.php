@@ -118,6 +118,8 @@ class Default_Helpers_FilterViewRenderer implements Phprojekt_RenderHelper
     /**
      * Render the content of the filters view and return it
      *
+     * @param string $name Name of the template to render
+     *
      * @return string
      */
     public function render($name = 'filter.tpl')

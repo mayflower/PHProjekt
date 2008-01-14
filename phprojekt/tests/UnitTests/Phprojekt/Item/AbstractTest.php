@@ -534,28 +534,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check the getSubModules function
-     *
-     */
-    public function testSubModules()
-    {
-        $session = new Zend_Session_Namespace();
-        $session->currentProjectId = 1;
-
-        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-        $array = $module->getSubModules();
-        $this->assertEquals(array('0' => 'Todo', '1' => 'Note'),$array);
-
-        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
-        $array = $module->getSubModules();
-        $this->assertEquals(array(),$array);
-
-        $module = Phprojekt_Loader::getModel('Note', 'Note', array('db' => $this->sharedFixture));
-        $array = $module->getSubModules();
-        $this->assertEquals(array(),$array);
-    }
-
-    /**
      * test filters data
      *
      */
@@ -565,7 +543,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $array = $module->getFieldsForFilter();
         $this->assertEquals(array_keys($this->_listResult), $array);
     }
-    
+
     /**
      * test getrights function
      */
@@ -578,6 +556,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
         $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
         $this->assertEquals('write',$module->getRights());
-         
+
      }
 }

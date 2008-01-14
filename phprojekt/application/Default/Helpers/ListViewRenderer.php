@@ -89,6 +89,8 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
     /**
      * Render the content of the list view and return it
      *
+     * @param string $name Name of the template to render
+     *
      * @return string
      */
     public function render($name = 'list.tpl')
@@ -101,7 +103,6 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
 
         $view->records = $this->getModel();
 
-        
         return $view->render($name);
     }
 

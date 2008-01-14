@@ -26,29 +26,29 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_Interface 
+class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_Interface
 {
     protected $_formFields;
     protected $_listFields;
     protected $_defaultValues = array (
-    							'key'      => '',
-       							'label'    => '',
-    							'type'     => 'string',
- 								'hint'     => '',
- 								'order'    => 0,
-								'position' => 0,
-								'fieldset' => null,
-								'range'    => '',
-								'required' => false,
-								'right'    => 'write',
-								'readOnly' => false);
+                                'key'      => '',
+                                'label'    => '',
+                                'type'     => 'string',
+                                'hint'     => '',
+                                'order'    => 0,
+                                'position' => 0,
+                                'fieldset' => null,
+                                'range'    => '',
+                                'required' => false,
+                                'right'    => 'write',
+                                'readOnly' => false);
     /**
      * Initialize
      *
      * @param array $listFields array with field definitions
      * @param array $formFields array with field definitions
      */
-    public function __construct($listFields = null, $formFields = null) 
+    public function __construct($listFields = null, $formFields = null)
     {
         if (!is_array($formFields) && !is_array($listFields)) {
             $this->setFormFields(array());
@@ -59,72 +59,72 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
         } else if (null === $listFields) {
             $this->setListFields($formFields);
             $this->setFormFields($formFields);
-        } else {   
+        } else {
             $this->setFormFields($formFields);
             $this->setListFields($listFields);
         }
     }
-    
+
     /**
      * Return a sorted array that should be used
      * to display the form view
-     * 
+     *
      * @return array
      */
     public function getFormFields ()
     {
         return $this->_formFields;
     }
-    
+
     /**
      * Return a sorted array that should be used
      * to display the list view
-     * 
+     *
      * @return array
      */
     public function getListFields ()
     {
         return $this->_listFields;
     }
-    
+
     /**
      * Sets a fields definitions for the form view
      */
     public function setFormFields (array $formFields)
     {
         $this->_formFields = array();
-        
+
         if (!is_array(current($formFields))) {
             $formFields = array($formFields);
         }
-        
+
         foreach ($formFields as $fields) {
             $this->_formFields[] = array_merge($this->_defaultValues, $fields);
         }
     }
-    
+
     /**
      * Sets a fields definitions for the list view
-     * 
+     *
      * @param array $_listFields
      */
     public function setListFields (array $listFields)
     {
-        $this->_listFields = array();        
-        
+        $this->_listFields = array();
+
         if (!is_array(current($listFields))) {
             $listFields = array($listFields);
         }
-        
+
         foreach ($listFields as $fields) {
             $this->_listFields[] = array_merge($this->_defaultValues, $fields);
         }
     }
-    
+
     /**
      * Returns a the necessary field definitions based on the ordering
      * const that's given
-     * 
+     *
      * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
      *
      * @return array
@@ -141,10 +141,10 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
                 break;
         }
     }
-    
+
     /**
      * Return an array containing all titles
-     * 
+     *
      * @see Phprojekt_ModelInformation_Interface::getTitles()
      *
      * @param integer $ordering
@@ -161,12 +161,11 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
                 $list = $this->_formFields;
                 break;
         }
-        
-        $results = array();
-        foreach ($list as $definition) {
-            $result = $results['hint'];
-        }
-        return $results;
-    }
 
+        $result = array();
+        foreach ($list as $definition) {
+            $result = $definition['hint'];
+        }
+        return $result;
+    }
 }
