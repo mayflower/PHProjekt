@@ -1001,11 +1001,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $this->_data = (array) $find->_data;
         unset($find);
-           
+
         if (!array_key_exists('id', $this->_data)) {
-        	throw new Phprojekt_ActiveRecord_Exception('Table must have an id');
+            throw new Phprojekt_ActiveRecord_Exception('Table must have an id');
         }
-        
+
         $this->_storedId = $this->_data['id'];
 
         return $this;

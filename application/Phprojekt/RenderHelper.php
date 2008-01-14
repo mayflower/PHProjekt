@@ -46,6 +46,8 @@ interface Phprojekt_RenderHelper
     /**
      * Render the part.
      *
+     * @param string $name Name of the template to render
+     *
      * @return void
      */
     public function render($name = null);

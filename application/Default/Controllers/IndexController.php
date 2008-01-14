@@ -83,7 +83,7 @@ class IndexController extends Zend_Controller_Action
      * @var array
      */
     protected $_submodules = array();
-    
+
     /**
      * Init function
      *
@@ -101,6 +101,8 @@ class IndexController extends Zend_Controller_Action
             Phprojekt_Auth::isLoggedIn();
         } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
             /* user not logged in, display login page */
+            $logger = Zend_Registry::get('log');
+            $logger->debug((string) $ae);
             $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
             die();
         }
@@ -115,9 +117,6 @@ class IndexController extends Zend_Controller_Action
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
-
-        /* Add the ownerId as param */
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
     }
 
     /**

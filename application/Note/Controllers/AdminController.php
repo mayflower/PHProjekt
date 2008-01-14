@@ -15,7 +15,7 @@
 
 /**
  * Administration for the notes module
- * 
+ *
  * @copyright  2007, 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
@@ -24,8 +24,7 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Note_AdminController extends AdminController 
+class Note_AdminController extends AdminController
 {
-	public static $name = 'Note Administration';
+    public static $name = 'Note Administration';
 }
-?>

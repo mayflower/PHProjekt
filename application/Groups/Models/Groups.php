@@ -43,9 +43,6 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * Constructor for Groups
-     *
-     * @param Zend_Db $db     database
-     * @param integer $userId Id of user
      */
     public function __construct()
     {
@@ -62,7 +59,7 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      */
     public function getUserId()
     {
-    	return $this->_userId;
+        return $this->_userId;
     }
 
     /**

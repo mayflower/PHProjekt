@@ -24,29 +24,29 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Administration_IndexController extends IndexController 
+class Administration_IndexController extends IndexController
 {
-	/**
-	 * Return the list view
-	 *
-	 * @return void
-	 */
-	protected function _generateOutput()
-	{
-		$this->view->treeView  = $this->getTreeView()->render();
+    /**
+     * Return the list view
+     *
+     * @return void
+     */
+    protected function _generateOutput()
+    {
+        $this->view->treeView  = $this->getTreeView()->render();
         $this->view->adminView = $this->view->render('list.tpl');
-		$this->render('adminindex');
-	}
-	
-	/**
-	 * List the administration modules
-	 *
-	 * @return void
-	 */
-	public function listAction()
-	{
-		$modules = Phprojekt_Loader::getModel('Administration', 'AdminModels');
-		
-		$this->view->adminModules = $modules->fetchAll();
-	}
+        $this->render('adminindex');
+    }
+
+    /**
+     * List the administration modules
+     *
+     * @return void
+     */
+    public function listAction()
+    {
+        $modules = Phprojekt_Loader::getModel('Administration', 'AdminModels');
+
+        $this->view->adminModules = $modules->fetchAll();
+    }
 }

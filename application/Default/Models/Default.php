@@ -133,7 +133,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     public function save()
     {
     }
-    
+
     /**
      * Get rights.
      *
@@ -143,7 +143,12 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     {
         return 'read';
     }
-    
+
+    /**
+     * Get an array with all the fields for make the filter select
+     *
+     * @return array
+     */
     public function getFieldsForFilter()
     {
         return array();

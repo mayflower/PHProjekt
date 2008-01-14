@@ -15,7 +15,7 @@
 
 /**
  * Administration for the todo module
- * 
+ *
  * @copyright  2007, 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
@@ -26,6 +26,6 @@
  */
 class Todo_AdminController extends AdminController
 {
-	public static $name = 'Todo Administration';
-	public static $configuration = array();
+    public static $name = 'Todo Administration';
+    public static $configuration = array();
 }
