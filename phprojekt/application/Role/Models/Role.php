@@ -3,7 +3,7 @@
  * Role class for PHProjekt 6.0
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://www.phprojekt.com/license PHProjekt6 License
- * @version    CVS: $Id: User.php,v 1.6 2007/08/30 18:02:36 gustavo Exp $
+ * @version    CVS: $Id: 
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -53,7 +53,8 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
      *
      * @param Zend_Db $db database
      */
-    public function __construct($db = null) {
+    public function __construct($db = null)
+    {
         parent::__construct($db);
     }
 
@@ -66,7 +67,8 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
      *
      * @return string $_role current role
      */
-    public function fetchUserRole($userId, $projectId) {
+    public function fetchUserRole($userId, $projectId)
+    {
         $role = 0;
         // Keep the roles in the session for optimize the query
         if (isset($userId) && isset($projectId)) {
