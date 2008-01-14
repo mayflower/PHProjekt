@@ -120,7 +120,7 @@ class Default_Helpers_FilterViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string
      */
-    public function render()
+    public function render($name = 'filter.tpl')
     {
         $fields = $this->getFields();
         if (!empty($fields)) {
@@ -128,7 +128,7 @@ class Default_Helpers_FilterViewRenderer implements Phprojekt_RenderHelper
 
             $view->fields  = $fields;
             $view->filters = $this->getModel();
-            return $view->render('filter.tpl');
+            return $view->render($name);
         } else {
             return '';
         }

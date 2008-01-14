@@ -93,7 +93,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return string
      */
-    public function render()
+    public function render($name = 'form.tpl')
     {
         $view = Zend_Registry::get('view');
         if (null === $this->getModel()) {
@@ -101,7 +101,8 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         } else {
             $view->record = $this->getModel();
         }
-        return $view->render('form.tpl');
+        
+        return $view->render($name);
     }
     /**
      * Switch between the form types and call the function for each one
