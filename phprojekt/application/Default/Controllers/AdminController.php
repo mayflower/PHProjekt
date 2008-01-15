@@ -28,37 +28,8 @@
  */
 abstract class AdminController extends IndexController
 {
-    /**
-     * The configuration array contains a list of
-     * predefined renderable settings that are
-     * stored in global table by the admin module.
-     *
-     * @todo change this to dojo interaction specifications
-     *
-     * @var array
-     */
-    public static $configuration = array('activated' => array('type' => 'selectValues', 
-                                                              'key' => 'activated', 
-                                                              'range' => '1#On|0#Off', 
-                                                              'label' => 'Module activated?'));
-
-    /**
-     * Initialize
-     *
-     * @return void
-     */
-    public function init ()
-    {
-        parent::init();
-        
-        // late static binding configuration
-        $class = get_class($this);
-        $vars  = get_class_vars($class);
-        
-        // merge the default configuration with the users configuration
-        $this->_configuration = array_merge(self::$configuration, $vars['configuration']);
-    }
-
+    public static $configuration = array();
+    
     /**
      * Overwritten generateOutput method to render or own index file
      *
@@ -66,6 +37,9 @@ abstract class AdminController extends IndexController
      */
     protected function _generateOutput ()
     {
+        $this->view->module     = $this->getRequest()->getModuleName();
+        $this->view->controller = $this->getRequest()->getControllerName();
+        $this->view->action     = $this->getRequest()->getActionName();
         $this->view->treeView = $this->getTreeView()->render();
         $this->render('adminindex');
     }
@@ -78,22 +52,17 @@ abstract class AdminController extends IndexController
      */
     public function saveAction ()
     {
-        $db    = Zend_Registry::get('db');
-        $model = Phprojekt_Loader::getModel('Default', 'Configuration');
+        $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
+        $model->find($this->getRequest()->getModuleName());
         
-        /* delete existing entries and rewrite the complete configuration */
-        $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->getRequest()->getModuleName()));
-        
-        foreach ($this->_configuration as $config) {
-            $value = $this->getRequest()->getParam($config['key'], null);
-            
-            $model         = clone $model;
-            $model->module = $this->getRequest()->getModuleName();
-            $model->key    = $config['key'];
-            $model->value  = $value; /* @todo: santize me */
-            $model->save();
+        foreach ($model->configuration as $key => $config) {
+            if ($this->getRequest()->getParam($key, false) !== false) {
+                $model->$key = $this->getRequest()->getParam($key);
+            }
         }
         
+        $model->save();
+
         $this->forward('show');
     }
 
@@ -108,20 +77,19 @@ abstract class AdminController extends IndexController
         /* @todo: sanitize? */
         $module = $this->getRequest()->getModuleName();
         $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
-        $config = Phprojekt_Loader::getModel('Default', 'Configuration', $this->_configuration);
         
         if (null === $module) {
             throw new Exception('Module not given');
         }
         
-        $result = $config->fetchAll($config->getAdapter()->quoteInto('module = ?', $module), null, 1);
+        $result = $model->find($module);
         if (false === $result) {
             throw new Exception('Module not found');
         }
         
         $renderer = new Default_Helpers_FormViewRenderer();
-        $renderer->setModel($config);
-        
+        $renderer->setModel($model);
+
         $this->view->adminView = $renderer->render('adminform.tpl');
     }
 }

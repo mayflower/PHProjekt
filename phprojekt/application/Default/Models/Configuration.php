@@ -27,34 +27,4 @@
  */
 class Default_Models_Configuration extends Phprojekt_ActiveRecord_Abstract
 {
-    /**
-     * The self defined information manager that holds
-     * information about the configured admin module
-     * 
-     * @var Phprojekt_ModelInformation_Interface
-     */
-    protected $_informationManager;
-
-    /**
-     * Initialize a new class
-     * 
-     * @param $configuration array The admin module configuration to be used
-     */
-    public function __construct ($configuration = null)
-    {
-        parent::__construct();
-        $this->_informationManager = new Phprojekt_ModelInformation_Default($configuration);
-    }
-
-    /**
-     * Returns the information manager
-     * 
-     * @see Phprojekt_Model_Interface::getInformation()
-     * 
-     * @return Phprojekt_ModelInformation_Interface
-     */
-    public function getInformation ()
-    {
-        return $this->_informationManager;
-    }
 }
