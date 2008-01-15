@@ -17,13 +17,14 @@ dojo.declare('View', null,
      * @constructor
      */
 	constructor : function()
-    {
+    {	
 		this.listRoot = dojo.byId('listView');
 		this.formRoot = dojo.byId('formView');
 		
-		// Simple configuration for creating the table. 
-		// Example: id : 'title' ==> <td id='title'></td>
-		// this is no longer needed since 09.12.2007, MRuprecht
+		// only if this variable is true a view will generated
+		this.display = true;
+		
+		// Simple configuration for creating the table.
 		this.tableConf = new Object();
 		this.tableConf = [
 					// Project
@@ -68,57 +69,66 @@ dojo.declare('View', null,
 	 * the function- call, another function will be called to show the detail- view
 	 * 
 	 * @param {Object} data The data from the server
-	 * 
+	 * @param {String} divId The id of the tag
 	 * @return void
 	 */
-	showListView : function(data)
-	{			
-		var i = 0;
-		var j = 0;
-	
-		var d 		= document;
-		var root    = dojo.byId('listView');
-		
-		// creating the table
-		var table  	= d.createElement('table');
-		table.setAttribute('class', 'listView');
-		table.width = '100%';
-	
-		var tbody	= d.createElement('tbody');
-		var tr 		= d.createElement('tr');
-		
-		// getting the table headers		
-		for (tableHeader in data[0]) {
-
-		var th	= d.createElement('th');
-			var txt	= d.createTextNode(tableHeader);
+	showListView : function(data, divId)
+	{	
+		if (this.display) {
+			var i = 0;
+			var j = 0;
 			
-			th.appendChild(txt);
-			tr.appendChild(th);
-			tbody.appendChild(tr);
-			table.appendChild(tbody);	
-		}	
-	
-		// ... and the data
-		for (i; i < data.length; i++) {
-			var tr2	= d.createElement('tr');												
-			for (var keyVar in data[i]) {											
-				var td2	 = d.createElement('td');
-				var link = d.createElement('a');
-				link.setAttribute('href', 'javascript: controller.displayDetailAction( ' + data[i]['id'] + ');');
-				
-				var txt2 = d.createTextNode(data[i][keyVar]);
-								
-				link.appendChild(txt2);
-				td2.appendChild(link);
-				tr2.appendChild(td2);
-				tbody.appendChild(tr2);					
+			var d = document;
+			var root = dojo.byId(divId);
+			
+			// removing the table if exists
+			if (dojo.byId('listViewTab')) {
+				root.removeChild(dojo.byId('listViewTab'));
 			}
-		}
-		table.appendChild(tbody);
-		this.listRoot.appendChild(table);
-		this.listRoot.appendChild(d.createElement('br'));	
 			
+			// creating the table
+			var table = d.createElement('table');
+			table.setAttribute('class', 'listViewTab');
+			table.setAttribute('id', 'listViewTab');
+			table.width = '100%';
+			
+			var tbody = d.createElement('tbody');
+			var tr = d.createElement('tr');
+			
+			// getting the table headers		
+			for (tableHeader in data[0]) {
+			
+				var th = d.createElement('th');
+				var txt = d.createTextNode(tableHeader);
+				
+				th.appendChild(txt);
+				tr.appendChild(th);
+				tbody.appendChild(tr);
+				table.appendChild(tbody);
+			}
+			
+			// ... and the data
+			for (i; i < data.length; i++) {
+				var tr2 = d.createElement('tr');
+				for (var keyVar in data[i]) {
+					var td2 = d.createElement('td');
+					var link = d.createElement('a');
+					link.setAttribute('href', 'javascript: controller.displayDetailAction( ' + data[i]['id'] + ');');
+					
+					var txt2 = d.createTextNode(data[i][keyVar]);
+					
+					link.appendChild(txt2);
+					td2.appendChild(link);
+					tr2.appendChild(td2);
+					tbody.appendChild(tr2);
+				}
+			}
+			table.appendChild(tbody);
+			this.listRoot.appendChild(table);
+			
+			// setting this variable to avoid generating more than one view
+			this.display = false;
+		}		
 	},
 
 	/**
@@ -129,7 +139,6 @@ dojo.declare('View', null,
 	 * 
 	 * @param {Object} data The data from the server
 	 * @param {Integer} id The id witch data- set should be displayed
-	 * 
 	 * @return void
 	 */
 	showDetailView : function(data)
@@ -172,18 +181,18 @@ dojo.declare('View', null,
 	},
 	
 	/**
-	 * Shows the "Add"- button in the formView- div
+	 * Shows the "Add"- button in the formView div
 	 * 
 	 * @return void
 	 */
-	showAddBtn : function ()
+	showAddBtn : function (module)
 	{
 		this.formRoot.innerHTML = '';
 		var d = document;		
 		this.formRoot.appendChild(d.createElement('br'));
 		
 		var link = d.createElement('a');
-		link.setAttribute('href', 'javascript: controller.displayInputFormAction();');
+		link.setAttribute('href', 'javascript: controller.displayInputFormAction("'+module+'");');
 		link.innerHTML = 'Add';
 		this.formRoot.appendChild(link);
 		
@@ -210,7 +219,6 @@ dojo.declare('View', null,
 	 * @param {Boolean} mandatory If 'true' it´s required to enter anything, if 'false' not. Accepts only 'true' or 'false'
 	 * @param {String} msg The displayed text if you type nothing in the textbox
 	 * @param {Integer} refNode The place where the box should be displayed
-	 * 
 	 * @return void
 	 */
 	createTextbox : function (elName, mandatory, msg, refNode)
@@ -232,7 +240,6 @@ dojo.declare('View', null,
 	 * @param {String} elName The name of the created textarea
 	 * @param {Integer} row Amount of rows that the textbox have
 	 * @param {Integer} refNode Place where the textarea should be displayed
-	 * 
 	 * @return void
 	 */
 	createTextarea : function (elName, rowAmount, refNode)
@@ -253,7 +260,6 @@ dojo.declare('View', null,
 	 * 
 	 * @param {String} elName The name of the created textarea
 	 * @param {Integer} refNode Place where the dateform should be displayed
-	 * 
 	 * @return void
 	 */
 	createDateForm : function (elName, refNode)
@@ -266,6 +272,7 @@ dojo.declare('View', null,
 		input.setAttribute('value', '2007-09-05');
 		input.setAttribute('size', '8');	
 		input.setAttribute('style', 'width:180px');
+		input.setAttribute('constraints', '{datePattern:"yyyy-MM-dd"}');
 
 		dojo.byId(refNode).appendChild(input);
 		dojo.parser.parse(this.formRoot, true);
@@ -276,19 +283,20 @@ dojo.declare('View', null,
 	 * This method requires an array with the possible options. 
 	 * 
 	 * @param {Object} opt An array of the possible options
-	 * @param {Integer} id The id of the referenced node
-	 * 
+	 * @param {Integer} refNode The id of the referenced node
+	 * @param {Integer} divId The id of new created tag
 	 * @return void
 	 */
-	createComboBox : function (opt, refNode)
+	createComboBox : function (opt, refNode, divId)
 	{
 		if (opt != null) {
 			var options = opt;
 			var d		= document;
 			var select	= d.createElement('select');
-			select.setAttribute('dojoType', 'dijit.form.ComboBox');
+			select.setAttribute('dojoType', 'dijit.form.FilteringSelect');
 			select.setAttribute('autocomplete', 'false');
 			select.setAttribute('style', 'width:180px');
+			select.setAttribute('id', divId);			
 			
 			var i = 0;
 			var j = 0;
@@ -296,14 +304,14 @@ dojo.declare('View', null,
 			for (i; i < options.length; i++) {
 				var option	= d.createElement('option');
 				option.selected = 'selected';
+				option.setAttribute('value', j);
 				option.innerHTML = options[j];
 				
 				select.appendChild(option);						
 				j++;
 			}
 			dojo.byId(refNode).appendChild(select);	
-			dojo.parser.parse(this.formRoot, true);
-			
+			dojo.parser.parse(this.formRoot, true);			
 		}else {
 			alert('No data received!');	
 		}		
@@ -316,10 +324,9 @@ dojo.declare('View', null,
 	 * @param {Object} priorityScale Array of the scale 
 	 * @param {Object} currentStatus Array with a list of possible values for the current status
 	 * @param {Object} metadata Array with all the necessary informations about the dojo widgets
-	 * 
 	 * @return void
 	 */
-	showInputForm : function (projects, priorityScale, currentStatus, metadata)
+	showInputForm : function (projects, priorityScale, currentStatus, metadata, module)
 	{	
 					
 		var d = document;
@@ -332,9 +339,8 @@ dojo.declare('View', null,
 		form.id = 'addForm';
 		
 		var link = d.createElement('a');
-		// hardcodes link tho the save action, but not implemented
-		// link.href = 'javascript: controller.saveAction();';
-		link.href = '#';
+		///@todo: saveAction erwartet die richtige ID
+		link.href = 'javascript: controller.saveAction(0, "'+module+'");';
 		link.innerHTML = 'Send';
 
 		//first create the table...
@@ -368,13 +374,43 @@ dojo.declare('View', null,
 		this.formRoot.appendChild(form);
 		
 		//... and now the dojo widgets
-		this.createComboBox(projects, this.tableConf[0]['id']);	
-		this.createComboBox(priorityScale, this.tableConf[5]['id']);	
-		this.createComboBox(currentStatus, this.tableConf[6]['id']);
+		this.createComboBox(projects, this.tableConf[0]['id'], this.tableConf[0]['id']);	
+		this.createComboBox(priorityScale, this.tableConf[5]['id'], this.tableConf[5]['id']);	
+		this.createComboBox(currentStatus, this.tableConf[6]['id'], this.tableConf[6]['id']);
 		this.createTextarea(this.tableConf[2]['name'], 1, this.tableConf[2]['id']);
 		this.createDateForm(this.tableConf[3]['name'], this.tableConf[3]['id']);
 		this.createDateForm(this.tableConf[4]['name'], this.tableConf[4]['id']);
 		this.createTextbox(this.tableConf[1]['name'], 'true', this.tableConf[1]['hint'], this.tableConf[1]['id']);			
+	},
+	/**
+	 * Method to show the received tree as dojotree
+	 * 
+	 * @param treeStoreName: Name for tree Store
+	 * @return void
+	 */
+	showTreeView : function(treeStoreName)
+	{	
+	    var d = document;
+	    // removing the div if exists
+			if (dojo.byId('mytree')) {
+				 dojo.byId('treeView').removeChild(dojo.byId('mytree'));
+			}
+	    var div = d.createElement('div');
+	    div.setAttribute('dojoType', 'dijit.Tree');
+	    div.setAttribute('id', 'mytree');
+	    div.setAttribute('store', treeStoreName);
+	    div.setAttribute('query', "{parent:null}");
+	    dojo.byId('treeView').appendChild(div);
+
+	    var select = d.createElement('script');
+	    select.setAttribute('type', 'dojo/method');
+	    select.setAttribute('args', 'item');
+	    select.setAttribute('event', 'onClick');
+	    select.innerHTML = "displayList(" + treeStoreName + ".getValue(item, 'id'),'Project');";
+	    div.appendChild(select);
+	    
+	    dojo.parser.parse('treeView', true);
+	
 	}
 }
 )

@@ -20,6 +20,7 @@
 
   #main td#treeView,
   #main td#listView,
+  #main td#headerView,
   #main td#formView {
     background-color: Gainsboro;
     border: 1px outset black;
@@ -36,13 +37,13 @@
     background: #EFEFEF;
   }
 
-  table.listView th {
+  table.listViewTab th {
     text-align: left;
     background-color: SlateGray;
     color: white;
   }
 
-  table.listView td {
+  table.listViewTab td {
     background-color: white;
   }
 
@@ -73,16 +74,46 @@
   }
   {/literal}
   </style>
-  <script type="text/javascript">
-  {literal}
-  function displayBlock(field) {
-    e = document.getElementById(field);
-    if (e.style.display == 'inline') {
-        e.style.display = 'none';
-    } else {
-        e.style.display = 'inline';
-    }
-  }
+  	<script type="text/javascript" src="{$webPath}/scripts/dojo1.0/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true"></script>
+	<script type="text/javascript" src="{$webPath}/scripts/Controllers/Controller.js"></script>
+	<script type="text/javascript" src="{$webPath}/scripts/Models/Model.js"></script>
+	<script type="text/javascript" src="{$webPath}/scripts/Views/View.js"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dojo.data.ItemFileReadStore");
+		dojo.require("dijit.Tree");
+		dojo.require("dijit.form.DateTextBox");
+		dojo.require("dijit.form.ComboBox");
+		dojo.require("dijit.form.ValidationTextBox");
+		dojo.require("dijit.form.Textarea");
+		dojo.require("dijit.form.FilteringSelect");
+	</script>
+	<script type="text/javascript">
+	var webpath = '{$webPath}';
+	{literal}	
+	var controller;
+	controller = new Controller(webpath);
+	controller.getDataFromServer('Project','tree');
+	var treedata = 	controller.Model.setDataForTreeView();
+	var treeStore=new dojo.data.ItemFileReadStore(treedata);
+
+	dojo.addOnLoad(function () {		
+		controller.displayTreeAction('treeStore');	
+	});	
+	function displayList(id, module) {
+	    controller = new Controller(webpath);
+		controller.getDataFromServer(module,'');		
+		controller.displayListAction(id, module, 'listView');	
+	}
+				  
+	function displayBlock(field) {
+		e = dojo.byId(field);
+		if (e.style.display == 'inline') {
+		    e.style.display = 'none';
+		} else {
+		    e.style.display = 'inline';
+		}
+  	}
   {/literal}
   </script>
 </head>
@@ -92,8 +123,8 @@
   <caption>PHProjekt {$phprojekt_version}</caption>
   <tbody>
     <tr>
-      <td rowspan="2" style="width:20%" id="treeView">{$treeView}</td>
-      <td id="listView">
+      <td rowspan="3" style="width:20%" id="treeView"></td>
+      <td id="headerView">
       <div id="breadcrumb">
       <a href="{url action="list" module="Project" nodeId="$projectId"}">{$projectName}</a>&nbsp;
       {if ($breadcrumb != 'Project')}
@@ -104,14 +135,19 @@
       <br />
       <div id="tabView">
       {foreach name=itemModule item=itemModule from=$modules}
-        <a href="{url action="list" module=$itemModule}">{$itemModule|translate}</a>
+	     <a href="javascript: displayList({$projectId}, '{$itemModule}');">{$itemModule|translate}</a>
         {if $smarty.foreach.itemModule.iteration == $smarty.foreach.itemModule.last }
         <br /><br />
         {/if}
       {/foreach}
       </div>
       {$filterView}
-      {$listView}
+       </td>
+    </tr>
+    <tr>
+      <td id="listView">{$listView}
+      <br/></td>
+    </tr>
       </td>
     </tr>
     <tr>
