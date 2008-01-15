@@ -48,6 +48,13 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
+
+    /**
+     * Configuration objects
+     *
+     * @var array
+     */
+    protected $_objects = array();
     
     /**
      * A list of directories that are not included in the search.
@@ -57,6 +64,35 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      */
     protected static $_excludePatterns = array('Default', 'Phprojekt', 'Administration');
 
+     /**
+     * The configuration array contains a list of
+     * predefined renderable settings that are
+     * stored in global table by the admin module.
+     *
+     * @todo change this to dojo interaction specifications
+     *
+     * @var array
+     */
+    protected static $_defaultConfiguration = array('activated' => array('type'  => 'selectValues', 
+                                                                          'key'   => 'activated', 
+                                                                          'range' => '1#On|0#Off', 
+                                                                          'label' => 'Module activated?'));
+    
+    /**
+     * The actual configuration, merged from the default configuration and the module configuration
+     *
+     * @var array
+     */
+    protected $_configuration = array();
+    
+    /**
+     * Name of the properties that are readonly (without the leading _)
+     * All other protected properties are hidden
+     *
+     * @var array
+     */
+    private $_readOnlyProperties = array('niceName', 'module', 'configuration');
+    
     /**
      * Add a module to the ignore list. 
      * A ignored module is not received using 
@@ -87,11 +123,24 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      */
     public function unignoreModule ($name)
     {
-        if (($key = array_search($name, self::$_excludePattern)) !== false) {
+        if (($key = array_search($name, self::$_defaultConfiguration)) !== false) {
             unset(self::$_excludePattern[$key]);
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Set the administration configuration
+     *
+     * @param array $configuration
+     * 
+     * @return void
+     */
+    public function setConfiguration(array $configuration)
+    {
+        $this->_configuration      = array_merge(self::$_defaultConfiguration, $configuration);
+        $this->_informationManager = new Phprojekt_ModelInformation_Default($this->_configuration);
     }
 
     /**
@@ -114,6 +163,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             if (is_dir($path)) {
                 /* @todo Optimize */
                 $instance = clone $this;
+                $instance->setConfiguration($instance->configuration);
+                $instance->_loadFromDatabase();
                 if ($instance->find($dir) !== false) {
                     $results[] = $instance;
                 } else {
@@ -131,18 +182,41 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * 
      * @return mixed
      */
-    public function __get ($name)
+    public function __get ($key)
     {
-        if (property_exists($this, $name)) {
-            return $this->$name;
+        if (in_array($key, $this->_readOnlyProperties)) {
+            $key = '_' . $key;
+            return $this->$key;
         }
-        
-        $name = '_' . $name;
-        if (property_exists($this, $name)) {
-            return $this->$name;
+
+        if (in_array($key, $this->_objects)) {
+            return $this->_objects[$key]->value;
         }
     }
 
+    /**
+     * Overwrite the set so we set directly on the configuration 
+     * objects
+     *
+     * @param string $key
+     * @param mixed $value
+     * 
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        if (array_key_exists($key, $this->_objects)) {
+            $this->_objects[$key]->value = $value;
+        } else if (array_key_exists($key, $this->_configuration)) {
+            $object         = Phprojekt_Loader::getModel('Default', 'Configuration');
+            $object->module = $this->_module;
+            $object->key    = $key;
+            $object->value  = $value;
+           
+            $this->_objects[$key] = $object;
+        }
+    }
+    
     /**
      * Find a specific admin module based on the name and
      * tries to load the containing class
@@ -162,6 +236,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             $vars            = get_class_vars($moduleClass);
             $this->_niceName = (empty($vars['name'])) ? $module : $vars['name'];
             $this->_module   = $module;
+            $this->setConfiguration($vars['configuration']);
+            $this->_loadFromDatabase();
             return $this;
         } catch (Zend_Exception $ze) {
             // .. file not found
@@ -169,6 +245,24 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         }
     }
 
+    /**
+     * Load configuration from database
+     *
+     * @return void
+     */
+    protected function _loadFromDatabase() 
+    {
+        $model   = Phprojekt_Loader::getModel('Default', 'Configuration');
+        $quoted  = $model->getAdapter()->quoteInto('module = ?', $this->_module);
+        $fetched = $model->fetchAll($quoted);
+        
+        if (is_array($fetched)) {
+            foreach($fetched as $object) {
+                $this->_objects[$object->key] = $object;
+            }
+        }
+    }
+    
     /**
      * Get the information manager
      * 
@@ -193,9 +287,30 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      */
     public function save ()
     {    
-        // we don't save admin modules
+        /* @todo: optimize */
+        foreach ($this->_objects as $object) {
+            $object->save();
+        }
     }
 
+    /**
+     * Delete an entry
+     *
+     * @return int
+     */
+    public function delete()
+    {
+        $db    = Zend_Registry::get('db');
+        $model = Phprojekt_Loader::getModel('Default', 'Configuration'); 
+        
+        $result = 0;
+        if ($this->_module) {
+            $result += $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->_module));   
+        }
+        
+        return $result;
+    }
+    
     /**
      * Get the rigths
      *

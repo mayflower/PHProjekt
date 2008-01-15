@@ -1,4 +1,3 @@
-
 {if $message == ''}
   {if $action == 'add'}
   <form method="post" action="{url action='save'} id=''">
