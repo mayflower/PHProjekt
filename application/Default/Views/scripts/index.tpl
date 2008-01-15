@@ -3,6 +3,12 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Phprojekt {$phprojekt_version}</title>
+	<style type="text/css">
+		/* dojo.css holds basic sizing and usage, tundra.css holds specific coloring and styling for the tundra theme */
+		/* This are the default colors of the widgets */
+		@import "{$webPath}/scripts/dojo1.0/dijit/themes/tundra/tundra.css";
+		@import "{$webPath}/scripts/dojo1.0/dojo/resources/dojo.css";	
+	</style>
   <style type="text/css">
   {literal}
   body {
@@ -72,9 +78,17 @@
     color: White;
     text-decoration: none;
   }
-  {/literal}
+  
+  #tableFormView {
+	border-spacing: 10px;
+  }
+  
+  #tableFormView td {
+  	background-color: white;
+  }
+  {/literal}  
   </style>
-  	<script type="text/javascript" src="{$webPath}/scripts/dojo1.0/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true"></script>
+	<script type="text/javascript" src="{$webPath}/scripts/dojo1.0/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true"></script>
 	<script type="text/javascript" src="{$webPath}/scripts/Controllers/Controller.js"></script>
 	<script type="text/javascript" src="{$webPath}/scripts/Models/Model.js"></script>
 	<script type="text/javascript" src="{$webPath}/scripts/Views/View.js"></script>
@@ -117,7 +131,7 @@
   {/literal}
   </script>
 </head>
-<body>
+<body class="tundra">
 <a href="{url action="logout" module="Login"}">Logout</a>
 <table width="100%" id="main">
   <caption>PHProjekt {$phprojekt_version}</caption>
