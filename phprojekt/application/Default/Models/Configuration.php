@@ -26,7 +26,18 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Default_Models_Configuration extends Phprojekt_ActiveRecord_Abstract
-{
-
+class Default_Models_Configuration extends Phprojekt_ActiveRecord_Abstract 
+{ 
+    protected $_informationManager;
+    
+    public function __construct($configuration = null)
+    {
+        parent::__construct();
+	    $this->_informationManager = new Phprojekt_ModelInformation_Default($configuration);
+    }
+    
+    public function getInformation()
+    {
+        return $this->_informationManager;
+    }
 }
