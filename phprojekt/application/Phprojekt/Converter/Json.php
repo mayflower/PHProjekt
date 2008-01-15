@@ -92,7 +92,7 @@ class Phprojekt_Converter_Json
 
 	    $data['identifier'] = 'id';
 	    $data['label']      = 'name';
-	    $data['items']      = $tree_nodes;
+	    $data['items']      = $treeNodes;
 
 	    $datajs = Zend_Json_Encoder::encode(array('data'=>$data));
 
