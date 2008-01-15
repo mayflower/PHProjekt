@@ -1,4 +1,4 @@
-<table width="100%" class="listView">
+<table width="100%" id="listViewTab" class="listView">
 <tr align="center">
 {foreach item=title from=$records|@titles}
   <th>{$title|translate}</th>

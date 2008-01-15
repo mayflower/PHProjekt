@@ -12,6 +12,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
+
 /**
  * Default Controller for PHProjekt 6
  *
@@ -458,8 +459,17 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonListAction ()
     {
-        echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
-        exit();
+        $view = $this->_params['view'];
+
+       if('tree' == $view){
+		   $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
+		   $tree->setup();
+		   echo Phprojekt_Converter_Json::convertTree($tree);
+        } else {
+			echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
+		}
+
+        exit;
     }
 
     /**

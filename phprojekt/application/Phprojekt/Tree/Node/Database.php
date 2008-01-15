@@ -133,6 +133,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function setup(Phprojekt_Filter_Abstract $filter = null, Phprojekt_Compare_Interface $comparer = null)
     {
+        /* @todo: fix this, must be possible with requestid === null */
         if (null === $this->_requestedId) {
             throw new Phprojekt_Tree_Node_Exception(
             'You have to set a requested '

@@ -18,7 +18,7 @@ dojo.declare('Model', null,
 	 * @constructor
 	 */
 	constructor : function(response)
-    {
+    {	
 		this.responseData 	= eval(response);
 		this.metadata		= eval(response['metadata']);
 		
@@ -71,7 +71,8 @@ dojo.declare('Model', null,
 	
 		var i = 0
 		var j = 0;
-
+		
+		if (this.responseData)
 		// Getting the projects into an array
 		for (i; i < this.responseData['data'].length; i++) {
 			projects.push(this.responseData['data'][j]['title']);
@@ -86,8 +87,8 @@ dojo.declare('Model', null,
 				
 		for (var key in sort) {
 			projectsHelper.push(sort[key]);
-		}				
-		return projectsHelper;
+		}		
+		return projectsHelper;	
 	},
 	
 	/**
@@ -128,7 +129,6 @@ dojo.declare('Model', null,
 	 * 
 	 * @param {String} key
 	 * @param {String} value
-	 * 
 	 * @return void
 	 * 
 	 * @deprecated No longer needed since 04.12.2007
@@ -157,19 +157,19 @@ dojo.declare('Model', null,
 	/**
 	 * This Method returns only the data with the assigned project id
 	 * 
-	 * @param {Integer} pId The project id is needed to know which list should be generated
+	 * @param {Integer} id The projectId is needed to know which list should be generated
 	 * @return {Object} listData
 	 */
-	setDataForListView : function (pId)
+	setDataForListView : function (id, distinction)
 	{
 		var i = 0;
 		var listData = [];
-		
+
 		for (i; i < this.responseData['data'].length; i++) {
-			if (this.responseData['data'][i]['id'] == pId) {
+			if (this.responseData['data'][i][distinction] == id) {
 				listData.push(this.responseData['data'][i]);
-			}
-		}			
+			} 
+		}	
 		return listData;
 	},
 	
@@ -178,7 +178,6 @@ dojo.declare('Model', null,
 	 * detail view
 	 *
 	 * @param {Integer} id 
-	 * 
 	 * @return {Object} detailData
 	 */	
 	setDataForDetailView : function (id)
@@ -201,6 +200,16 @@ dojo.declare('Model', null,
 	 */
 	setMetadata : function () {
 		return this.metadata;
+	},
+	/**
+	 * This Method sets the data in right format for the 
+	 * tree view
+	 * @return {Object} responseData
+	 *
+	 */	
+	setDataForTreeView : function ()
+	{
+	    return this.responseData;
 	}
 }
 );
