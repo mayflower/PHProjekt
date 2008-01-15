@@ -1,0 +1,21 @@
+In the following chapter, we want to start writing code.
+We are going to write a mechanism to track our daily working hours. 
+
+We just want to have a button. If we click on the button, we start tracking the time.
+If we click another time, we stop tracking the time.
+Furthermore we want to display how many hours we worked this month
+and we want to select project to book our time on, before we start tracking.
+
+We use the a SQL database to store our data.
+In particular we are going to use MySQL syntax.
+We also use Smarty templates to display our calculated times.
+
+Our first step will be the creation of a database table that stores our data.
+After that we start creating the necessary directory structure for a module.
+Then we start writing code by creating a mapping from our database table into PHP.
+If we finished with that, we are going to design our frontend
+and then putting all together in the controller - catching the users actions.
+
+Before we start, please consider to read the Zend Coding Guidelines first.
+We are using some shortcuts that you should probably avoid in your module
+(we will left out a lot of the necessary documentation headers).

@@ -1,0 +1,17 @@
+After we setup our database table, we have to create the module directory.
+We switch into the application/ directory of PHProjekt
+and create a directory called WorkingHours/.
+Furthermore we create the directories View/, Controllers/ and Models/.
+
+[code]
+/application
+  /WorkingHours
+    /Controllers
+    /Models
+    /Views
+[/code]
+
+This layout is necessary.
+PHProjekt uses a MVC pattern and the names of the subdirectories cannot be changed.
+Make sure that Controllers/, Models/ and Views/ start with an uppercase letter.
+The directory access (correct: on most of the operating systems, but not all) is case-sensitiv.

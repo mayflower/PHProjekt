@@ -1,0 +1,22 @@
+The first thing that has to be done is creating our database tables.
+We use our favorite tool to create the following table:
+
+(We are using foreign keys here.
+If you use MySQL, make sure that PHProjekt was installed using
+InnoDB tables and that you create the example table using InnoDB.
+If necessary specifiy ENGINE=InnoDB)
+
+[code]
+CREATE TABLE `WorkingHours` (
+  `id`        INT NOT NULL AUTO_INCREMENT,
+  `startDate` DATETIME NOT NULL,
+  `endDate`   DATETIME NOT NULL,
+  `projectId` INT,
+  PRIMARY KEY(id),
+  FOREIGN KEY(projectId)   -- don't use this part if you don't use mysql with innodb
+  REFERENCES project(id) 
+  ON DELETE SET NULL
+);
+[/code]
+
+Thats everthing we need from our database. Let's pass over and create our necessary files.
