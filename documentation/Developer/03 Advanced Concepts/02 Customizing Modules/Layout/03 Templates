@@ -1,0 +1,32 @@
+[emph]Structure[/emph]
+
+------------------------------------------------------------------------
+Default
+        
+       --------------   --------------  ---------------  --------------
+       |  tree.tpl  |   |  list.tpl  |  |  index.tpl  |  |  form.tpl  | 
+       --------------   --------------  ---------------  --------------
+             |                 |               |                |
+             |                 |               |                |
+-------------|-----------------|---------------|----------------|--------
+Project      |                 |               |                |
+            \|/               \|/             \|/              \|/ 
+       --------------   --------------  ---------------  --------------
+       |  tree.tpl  |   |  list.tpl  |  |  index.tpl  |  |  form.tpl  | 
+       --------------   --------------  ---------------  --------------
+
+The Default index.tpl have the structure of the site, and all the var to draw.
+Each var can contain other templates like:
+treeView 	=> tree.tpl
+formView 	=> form.tpl
+listView 	=> list.tpl
+..etc.
+
+If you want to change some of these views, just create a new template in the folder
+/application/YOURMODULE/Views/scripts/ with the same name as the Default template.
+
+If the module don´t have any of these templates, the system will use the Default template.
+So, you only need to create the templates that you want to change in your module.
+
+If you need to overwrite just one of those, don't overwrite the
+index.tpl but instead, overwrite the template itself.

@@ -1,0 +1,13 @@
+To delete a data, find it and delete it. 
+
+Please notice that all related items will be delted too.
+
+As always, you have to do a initial find first.
+
+[code]
+$project = new Phprojekt_Project(array('db'=>$zend_db_adapter));
+$project->find(40);
+// DELETE THE PROJECT AND ALL RELATED ITEMS 
+// (ALL TODOS RELATED TO THIS PROJECT)
+$project->delete();
+[/code]

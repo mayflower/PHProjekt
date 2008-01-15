@@ -1,0 +1,13 @@
+[emph]Concept timecard gui[/emph]
+
+- Option to automatically start/stop timecard when logging in/off from PHProjekt
+- The working time stop/start Button will be on every page on the top right corner.
+  We will use a clock as a symbol. Doubleclicking this clock will start/stop timecard
+- right or single click will show the manual booking of working time  as well as
+  an overview over the working time booked so far.
+- on the right hand side there is a button Timecard for every (sub) project
+- When accessing this button on the root level all time booked on projects is shown,
+  when accessing this button on a subproject only time booked beneath this project   is shown
+- book time on projects: in the list view on the right hand side and as well in booked
+  working time  overview of the timecard or in the project itself. 
+- book time on todos/helpdesk: either in todo directly, or in the todo list view

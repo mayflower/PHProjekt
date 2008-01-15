@@ -1,0 +1,7 @@
+The idea behind ActiveRecord is making a easy mapping
+between database tables and objects
+in OOP-designed application possible.
+
+Therefore a class represents a row from a certain database table.
+Furthermore it has informations about relations between tables,
+so the active record is able to read the correct data from the database.

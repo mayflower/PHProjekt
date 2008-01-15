@@ -1,0 +1,25 @@
+First of all you have to define a class:
+
+  test table
+
+ -----------
+ |id | name |
+ -----------
+
+[code]
+class Phprojekt_Test extends Phprojekt_ActiveRecord_Abstract 
+{
+}
+
+$test = new Phprojekt_Test(array('db'=>$zend_adapter));
+$test->name = 'Hello World';
+$test->save(); // CREATE A NEW ROW IN THE test TABLE
+[/code]
+
+  test table
+
+ ------------------
+ |id | name        |
+ ------------------
+ | 1 | Hello World |
+ ------------------

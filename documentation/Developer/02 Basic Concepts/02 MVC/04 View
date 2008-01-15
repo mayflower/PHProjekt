@@ -1,0 +1,4 @@
+The view part renderes the data from a module.
+E.g it takes data for a list view and then does the rendering of the list.
+The output format is usually HTML.
+The data is provided by the controller
