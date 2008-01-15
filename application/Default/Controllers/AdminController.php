@@ -12,7 +12,6 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-
 /**
  * Default Admin Controller for PHProjekt 6
  *
@@ -38,95 +37,91 @@ abstract class AdminController extends IndexController
      *
      * @var array
      */
-	public static $configuration = array('activated' => array('type'   => 'selectValues', 
-															  'key'   => 'activated', 
-															  'range' => '1#On|0#Off', 
-															  'label' => 'Module activated?'));
-	
-	/**
-	 * Initialize
-	 *
-	 */
-	public function init()
-	{
-	    parent::init();
-	    
-	    // late static binding configuration
-	    $class = get_class($this);
-	    $vars  = get_class_vars($class);
-	    
-	    // merge the default configuration with the users configuration
-        $this->_configuration = array_merge(self::$configuration, $vars['configuration']);    
-	}
+    public static $configuration = array('activated' => array('type' => 'selectValues', 
+                                                              'key' => 'activated', 
+                                                              'range' => '1#On|0#Off', 
+                                                              'label' => 'Module activated?'));
 
-	
-	/* public function postDispatch()
-	{
-	    $this->_generateOutput();
-	} */
-	
-	/**
-	 * Overwritten generateOutput method to render or own index file
-	 *
-	 * @return void
-	 */
-	protected function _generateOutput()
-	{
-		$this->view->treeView = $this->getTreeView()->render();
-		$this->render('adminindex');
-	}
-	
-	/**
-	 * Save the values into a given global
-	 * table that is maintained by the administration module
-	 *
-	 * @return void
-	 */
-	public function saveAction()
-	{
-	    $db    = Zend_Registry::get('db');
-	    $model = Phprojekt_Loader::getModel('Default', 'Configuration');
+    /**
+     * Initialize
+     *
+     * @return void
+     */
+    public function init ()
+    {
+        parent::init();
         
-	    /* delete existing entries and rewrite the complete configuration */
-	    $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->getRequest()->getModuleName()));
-	    
-	    foreach($this->_configuration as $config) {
-	        $value = $this->getRequest()->getParam($config['key'], null);
-	        $model = clone $model;
-	        $model->module = $this->getRequest()->getModuleName();
-	        $model->key    = $config['key'];
-	        $model->value  = $value; /* @todo: santize me */
-	        $model->save();
-	    }
-	    
-	    $this->forward('show');
-	}
-	
-	/**
-	 * Setup the variables to render the overview over the 
-	 * administrateable modules
-	 *
-	 * @return voidvar_dump(func_get_args());exit;
-	 */
-	public function showAction()
-	{
-	    /* @todo: sanitize? */
-	    $module = $this->getRequest()->getModuleName();
-	    $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
-	    $config = Phprojekt_Loader::getModel('Default', 'Configuration', $this->_configuration);
-	    
-	    if (null === $module) {
-	        throw new Exception('Module not given');
-	    }
-	    
-	    $result = $config->fetchAll($config->getAdapter()->quoteInto('module = ?', $module), null, 1);
-	    if (false === $result) {
-	        throw new Exception('Module not found');
-	    }
-	    
-	    $renderer = new Default_Helpers_FormViewRenderer();
-	    $renderer->setModel($config);
-	    var_dump($config);exit;
-	    $this->view->adminView = $renderer->render('adminform.tpl');
-	}
+        // late static binding configuration
+        $class = get_class($this);
+        $vars  = get_class_vars($class);
+        
+        // merge the default configuration with the users configuration
+        $this->_configuration = array_merge(self::$configuration, $vars['configuration']);
+    }
+
+    /**
+     * Overwritten generateOutput method to render or own index file
+     *
+     * @return void
+     */
+    protected function _generateOutput ()
+    {
+        $this->view->treeView = $this->getTreeView()->render();
+        $this->render('adminindex');
+    }
+
+    /**
+     * Save the values into a given global
+     * table that is maintained by the administration module
+     *
+     * @return void
+     */
+    public function saveAction ()
+    {
+        $db    = Zend_Registry::get('db');
+        $model = Phprojekt_Loader::getModel('Default', 'Configuration');
+        
+        /* delete existing entries and rewrite the complete configuration */
+        $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->getRequest()->getModuleName()));
+        
+        foreach ($this->_configuration as $config) {
+            $value = $this->getRequest()->getParam($config['key'], null);
+            
+            $model         = clone $model;
+            $model->module = $this->getRequest()->getModuleName();
+            $model->key    = $config['key'];
+            $model->value  = $value; /* @todo: santize me */
+            $model->save();
+        }
+        
+        $this->forward('show');
+    }
+
+    /**
+     * Setup the variables to render the overview over the 
+     * administrateable modules
+     *
+     * @return voidvar_dump(func_get_args());exit;
+     */
+    public function showAction ()
+    {
+        /* @todo: sanitize? */
+        $module = $this->getRequest()->getModuleName();
+        $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
+        $config = Phprojekt_Loader::getModel('Default', 'Configuration', $this->_configuration);
+        
+        if (null === $module) {
+            throw new Exception('Module not given');
+        }
+        
+        $result = $config->fetchAll($config->getAdapter()->quoteInto('module = ?', $module), null, 1);
+        if (false === $result) {
+            throw new Exception('Module not found');
+        }
+        
+        $renderer = new Default_Helpers_FormViewRenderer();
+        $renderer->setModel($config);
+        
+        $this->view->adminView = $renderer->render('adminform.tpl');
+    }
 }

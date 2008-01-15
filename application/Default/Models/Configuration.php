@@ -13,7 +13,6 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-
 /**
  * Connection to the global configuration table that
  * stores administration settings
@@ -26,17 +25,35 @@
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class Default_Models_Configuration extends Phprojekt_ActiveRecord_Abstract 
-{ 
+class Default_Models_Configuration extends Phprojekt_ActiveRecord_Abstract
+{
+    /**
+     * The self defined information manager that holds
+     * information about the configured admin module
+     * 
+     * @var Phprojekt_ModelInformation_Interface
+     */
     protected $_informationManager;
-    
-    public function __construct($configuration = null)
+
+    /**
+     * Initialize a new class
+     * 
+     * @param $configuration array The admin module configuration to be used
+     */
+    public function __construct ($configuration = null)
     {
         parent::__construct();
-	    $this->_informationManager = new Phprojekt_ModelInformation_Default($configuration);
+        $this->_informationManager = new Phprojekt_ModelInformation_Default($configuration);
     }
-    
-    public function getInformation()
+
+    /**
+     * Returns the information manager
+     * 
+     * @see Phprojekt_Model_Interface::getInformation()
+     * 
+     * @return Phprojekt_ModelInformation_Interface
+     */
+    public function getInformation ()
     {
         return $this->_informationManager;
     }
