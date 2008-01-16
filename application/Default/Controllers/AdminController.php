@@ -28,6 +28,15 @@
  */
 abstract class AdminController extends IndexController
 {
+    /**
+     * Configuration array that contains the 
+     * definitions for the admin values that can be
+     * saved for that module.
+     * Take a look into the developer part of the
+     * manual to see how this array should be defined
+     *
+     * @var array
+     */ 
     public static $configuration = array();
     
     /**

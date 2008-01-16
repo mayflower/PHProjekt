@@ -73,10 +73,10 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @var array
      */
-    protected static $_defaultConfiguration = array('activated' => array('type'  => 'selectValues', 
-                                                                          'key'   => 'activated', 
-                                                                          'range' => '1#On|0#Off', 
-                                                                          'label' => 'Module activated?'));
+    protected static $_defaultConfiguration = array(array('type'  => 'selectValues', 
+                                                          'key'   => 'activated', 
+                                                          'range' => '1#On|0#Off', 
+                                                          'label' => 'Module activated?'));
     
     /**
      * The actual configuration, merged from the default configuration and the module configuration
@@ -131,15 +131,23 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     }
     
     /**
-     * Set the administration configuration
+     * Set the administration configuration and merge it with
+     * the default configuration.
      *
-     * @param array $configuration
+     * @param array $configuration The configuration to use
      * 
      * @return void
      */
     public function setConfiguration(array $configuration)
     {
-        $this->_configuration      = array_merge(self::$_defaultConfiguration, $configuration);
+        $configuration  = array_merge(self::$_defaultConfiguration, $configuration);
+        
+        foreach ($configuration as $config) {
+            /* we need to create an assoc array as this is easier to 
+               find our configs again */
+            $this->_configuration[$config['key']] = $config;
+        }
+        
         $this->_informationManager = new Phprojekt_ModelInformation_Default($this->_configuration);
     }
 
@@ -178,7 +186,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     /**
      * We only implement read only properties
      *
-     * @param string $name Name of the property
+     * @param string $key Name of the property
      * 
      * @return mixed
      */
@@ -198,8 +206,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * Overwrite the set so we set directly on the configuration 
      * objects
      *
-     * @param string $key
-     * @param mixed $value
+     * @param string $key   Property name
+     * @param mixed  $value Property value
      * 
      * @return void
      */
@@ -257,7 +265,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         $fetched = $model->fetchAll($quoted);
         
         if (is_array($fetched)) {
-            foreach($fetched as $object) {
+            foreach ($fetched as $object) {
                 $this->_objects[$object->key] = $object;
             }
         }
