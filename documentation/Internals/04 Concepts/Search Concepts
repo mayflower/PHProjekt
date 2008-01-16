@@ -1,0 +1,48 @@
+Abstract
+
+Searching is a key feature of applications dealing with
+large amount of data. It is necessary that searching is
+fast. Usually it is desireable that people are able
+to search for substrings and can combine search strings.
+
+Database layout
+Search is based on two tables. On is a table that only
+contains a list of words and a counter determine how often
+this word is used. A second table contains the relationship
+to the datasets that contain these words. This attemp
+helps to reduce redundancy.
+
+Table: SearchWords
++-----+-------+-------+
+| Id  | Word  | Count |
++-----+-------+-------+
+| 1   | foo   | 3     |
++-----+-------+-------+
+
+Table: SearchRelationship
++-----+-----------------+--------+-----------+
+| Id  | SearchWords_Id  | Module | Module_Id |
++-----+-----------------+--------+-----------+
+| 1   | 1               | Todo   | 2         |
++-----+-----------------+--------+-----------+
+
+Application Interface
+The serch is divded into two parts: 
+Indexing data and the actual search. The indexing mechanism
+is provided by the PHProjekt_Search_Indexing class. It takes a
+model as an argument and inserts or updates both the SearchWords
+and SearchRelationship table with the found words. To determine what
+is a word, the indexing class uses heuristics. It can be enhanced by
+adding additional heurstics.
+The Phprojekt_Search_Searching class does the actual searching and returns
+a set of founded entries (and maybe even their model objects). 
+Searching can be limited and ordered based on external criteries (ascending, descending).
+
+Heuristics
+To figure out what are words in a string, PHProjekt implements a set of
+heuristics. The simples heuristic is using stop characters. Characters between
+two stop characters are taken as words. 
+Stop characters are:
+ - all non word characters in PCRE
+
+In addition to that words shorter than 3 characters are rejected
