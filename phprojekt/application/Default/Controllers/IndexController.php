@@ -461,13 +461,13 @@ class IndexController extends Zend_Controller_Action
     {
         $view = $this->_params['view'];
 
-       if('tree' == $view){
-		   $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
-		   $tree->setup();
-		   echo Phprojekt_Converter_Json::convertTree($tree);
+        if ('tree' == $view) {
+            $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
+            $tree->setup();
+            echo Phprojekt_Converter_Json::convertTree($tree);
         } else {
-			echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
-		}
+            echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
+        }
 
         exit;
     }
