@@ -77,7 +77,6 @@ CREATE TABLE `History` (
 );
 CREATE INDEX `History_userId` ON `History`(`userId`);
 
-
 --
 -- Table structure for table `ModuleInstance`
 --
@@ -247,6 +246,14 @@ CREATE TABLE `note` (
   PRIMARY KEY  (`id`)
 );
 
+DROP TABLE IF EXISTS `Configuration`;
+CREATE TABLE `Configuration` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `module` varchar(255) NOT NULL,
+  `key` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`id`)
+);
 
 --
 -- INSERT DATA

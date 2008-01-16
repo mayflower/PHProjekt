@@ -251,6 +251,14 @@ CREATE TABLE `Note` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS `Configuration`;
+CREATE TABLE `Configuration` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `module` varchar(255) NOT NULL,
+  `key` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table `Tree`
