@@ -18,6 +18,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Default
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
@@ -132,6 +133,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      */
     public function save()
     {
+        return false;
     }
 
     /**

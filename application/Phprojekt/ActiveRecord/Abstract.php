@@ -576,7 +576,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     /**
      * Insert a n:m relation into the relation table
      *
-     * @return void
+     * @return boolean
      */
     protected function _insertHasManyAndBelongsToMany()
     {
@@ -599,7 +599,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         $stmt = $this->getAdapter()->prepare($query);
-        $stmt->execute(array($this->id, $foreignId));
+        return $stmt->execute(array($this->id, $foreignId));
     }
 
     /**
@@ -612,6 +612,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _updateHasMany($oldId, $newId)
     {
+        $result = true;
         foreach (array_keys($this->hasMany) as $key) {
             $className = $this->_getClassNameForRelationship($key, $this->hasMany);
 
@@ -629,8 +630,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             }
 
             /* @var Zend_Db_Statement $stmt */
-            $stmt = $this->getAdapter()->prepare($query);
-            $stmt->execute(array($newId, $oldId));
+            $stmt   = $this->getAdapter()->prepare($query);
+            $result = $stmt->execute(array($newId, $oldId)) && $result;
 
             /*
             * Manually update. Not nice, but effective.
@@ -641,6 +642,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 }
             }
         }
+        
+        return $result;
     }
 
 
@@ -654,6 +657,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _updateHasManyAndBelongsToMany($oldId, $newId)
     {
+        $result = true;
         foreach ($this->hasManyAndBelongsToMany as $key => $relationInfo) {
             $className = $relationInfo['classname'];
             $im        = new $className($this->getAdapter());
@@ -671,8 +675,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             }
 
             /* @var Zend_Db_Statement $stmt */
-            $stmt = $this->getAdapter()->prepare($query);
-            $stmt->execute(array($newId, $oldId));
+            $stmt   = $this->getAdapter()->prepare($query);
+            $result = $stmt->execute(array($newId, $oldId)) && $result;
 
             /*
             * Manually update. Not nice, but effective.
@@ -683,6 +687,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 }
             }
         }
+        
+        return $result;
     }
 
     /**
@@ -828,7 +834,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     /**
      * Save an entry. We either trigger update or create here.
      *
-     * @return void
+     * @return boolean
      */
     public function save()
     {
@@ -840,24 +846,23 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             }
         }
 
+        $result = true;
         /*
         * If we have a storedId, the item was received from the databas
         * and therefore should exist on the database, so we trigger an update.
         * Otherwise we create the entry.
         */
         if (null !== $this->_storedId) {
-            $this->update($data,
-            $this->getAdapter()->quoteInto('id = ?', $this->_storedId));
+            $result = ($this->update($data, $this->getAdapter()->quoteInto('id = ?', $this->_storedId)) > 0);
 
             if ($this->id !== $this->_storedId
             && count($this->hasMany) > 0) {
-                $this->_updateHasMany($this->_storedId, $this->id);
+                $result = $this->_updateHasMany($this->_storedId, $this->id) && $result;
             }
 
             if ($this->id !== $this->_storedId
             && count($this->hasManyAndBelongsToMany) > 0) {
-                $this->_updateHasManyAndBelongsToMany($this->_storedId,
-                $this->id);
+                $result = $this->_updateHasManyAndBelongsToMany($this->_storedId, $this->id) && $result;
             }
         } else {
             /*
@@ -871,16 +876,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $this->_data[$foreignKeyName] = $data[$foreignKeyName];
             }
 
-            $this->insert($data);
+            $result            = ($this->insert($data) !== null);
             $this->_data['id'] = $this->_db->lastInsertId();
             $this->_storedId   = $this->_data['id'];
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)) {
-                $this->_insertHasManyAndBelongsToMany();
+                $result = $this->_insertHasManyAndBelongsToMany() && $result;
             }
         }
-
-        return $this;
+    
+        return $result;
     }
 
     /**

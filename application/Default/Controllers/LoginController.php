@@ -20,6 +20,7 @@
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  * @author     Eduardo Polidor <epolidor@mayflower.de>

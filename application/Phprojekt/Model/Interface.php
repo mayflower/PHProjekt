@@ -58,7 +58,7 @@ interface Phprojekt_Model_Interface extends Iterator
     /**
      * Save the current object to the backend
      *
-     * @return void
+     * @return boolean
      */
     public function save();
     

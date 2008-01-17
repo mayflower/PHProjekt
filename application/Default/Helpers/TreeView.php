@@ -24,7 +24,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
- * @subpackage Core Helpers
+ * @subpackage CoreHelpers
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com

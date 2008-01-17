@@ -22,6 +22,7 @@
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
@@ -90,7 +91,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Sets a fields definitions for the form view
      *
-     * @param array $formFields All the field´s data for the form
+     * @param array $formFields All the fieldï¿½s data for the form
      *
      * @return void
      */
@@ -110,7 +111,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Sets a fields definitions for the list view
      *
-     * @param array $listFields All the field´s data for the list
+     * @param array $listFields All the fieldï¿½s data for the list
      *
      * @return void
      */
