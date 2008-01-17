@@ -151,7 +151,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Return if the values are valid or not
      *
-     * @return boolean If are valid or not
+     * @return boolean
      */
     public function recordValidate()
     {
@@ -213,6 +213,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * Each module can rewrite this class for
      * allow or denied some tags or atributes
      *
+     * @todo Refactor
      * @see InputFilter class
      *
      * @return array

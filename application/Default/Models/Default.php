@@ -147,6 +147,16 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
+     * Validate the data of the current record
+     *
+     * @return boolean
+     */
+    public function recordValidate() 
+    {
+        return true;
+    }
+    
+    /**
      * Get an array with all the fields for make the filter select
      *
      * @return array
