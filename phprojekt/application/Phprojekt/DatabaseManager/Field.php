@@ -25,6 +25,7 @@
  * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
+ * @todo Remove this class when removing smarty and the FormViewRenderer
  */
 class Phprojekt_DatabaseManager_Field
 {
@@ -44,7 +45,7 @@ class Phprojekt_DatabaseManager_Field
     {
         $this->value     = (string) $value;
         $this->_metadata = $dbm->find($name);
-        $this->right     = $dbm->getModel()->getRights();
+        // $this->right     = $dbm->getModel()->getRights();
     }
 
     /**
