@@ -309,14 +309,18 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function save()
     {
+        $result = true;
         if ($this->id > 0) {
             $this->_history->saveFields($this, 'edit');
-            parent::save();
+            $result = parent::save();
         } else {
-            parent::save();
+            $result = parent::save();
             $this->_history->saveFields($this, 'add');
         }
+        
         $this->_search->indexObjectItem($this);
+        
+        return $result;
     }
 
     /**

@@ -20,6 +20,7 @@
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
@@ -87,6 +88,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
         if (null !== $id) {
             $this->_requestedId = $id;
+        } else if (isset($activeRecord->id)) {
+            $this->_requestedId = $activeRecord->id;
         }
 
     }
@@ -294,7 +297,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
     /**
      * Set the parent node.
-     * ! NOTE this method is somewhat dumb, it doesnot check if
+     * !NOTE this method is somewhat dumb, it doesnot check if
      * it is a child of the given parent node. You can messup the tree
      * using the method not carefully.
      *
@@ -379,6 +382,23 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
     }
 
+    /**
+     * Overwrite calls. Act as a proxy for the active record
+     *
+     * @param string $name
+     * @param array  $arguments
+     * 
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        $methods = get_class_methods(get_class($this->getActiveRecord()));
+        
+        if (in_array($name, $methods)) {
+            return call_user_method_array($this->getActiveRecord(), $name, $arguments);
+        }
+    }
+    
     /**
      * Returns a node from the current tree.
      *

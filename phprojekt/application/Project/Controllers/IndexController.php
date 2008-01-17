@@ -106,6 +106,7 @@ class Project_IndexController extends IndexController
             $model = $this->getModelObject();
         }
 
+        /*
         $parent = (isset($this->_params['parent'])) ? (int) $this->_params['parent'] : 1;
 
         $parentNode = new Phprojekt_Tree_Node_Database($model, $parent);
@@ -116,23 +117,19 @@ class Project_IndexController extends IndexController
         }
         $parentNode->setup();
 
-        /* Assign the values */
         foreach ($this->_params as $k => $v) {
             if ($newNode->getActiveRecord()->keyExists($k)) {
                 $newNode->$k = $v;
             }
         }
-
+    */
         /* Validate and save if is all ok */
-        if ($newNode->getActiveRecord()->recordValidate()) {
-            if (null === $this->getRequest()->getParam('id') || $newNode->parent !== $parentNode->id) {
-                $parentNode->appendNode($newNode);
-            } else {
-                $newNode->getActiveRecord()->save();
-            }
+        $node = new Phprojekt_Tree_Node_Database($model);
+        
+        if ($node->recordValidate()) {
+            Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
             $this->view->message = 'Saved';
         } else {
-
             $this->view->errors = $newNode->getActiveRecord()->getError();
         }
 

@@ -71,8 +71,8 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      *
      * @return void
      */
-    public function setModel( $model)
-    {
+    public function setModel($model)
+    {    
         if ($model instanceof Phprojekt_Model_Interface) {
             $this->_model = $model;
         }
@@ -99,11 +99,11 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
     {
         $view = Zend_Registry::get('view');
         if (null === $this->getModel()) {
-            $view->message = '&nbsp;';
+            $view->message = 'No model found';
         } else {
             $view->record = $this->getModel();
         }
-
+        
         return $view->render($name);
     }
 
