@@ -126,11 +126,11 @@ class Project_IndexController extends IndexController
         /* Validate and save if is all ok */
         $node = new Phprojekt_Tree_Node_Database($model);
         
-        if ($node->recordValidate()) {
+        try {
             Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
             $this->view->message = 'Saved';
-        } else {
-            $this->view->errors = $newNode->getActiveRecord()->getError();
+        } catch (Exception $e){
+            $this->view->errors = $node->getActiveRecord()->getError();
         }
 
         $this->listAction();

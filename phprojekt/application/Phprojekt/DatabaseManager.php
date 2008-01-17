@@ -175,7 +175,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                   'position' => $field->formPosition,
                                   'fieldset' => '',
                                   'range'    => $field->formRange,
-                                  'required' => $field->isRequired,
+                                  'required' => (boolean) $field->isRequired,
                                   'right'    => $this->getModel()->getRights(),
                                   'readOnly' => false);
         }
@@ -198,7 +198,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $fields = $this->_getFields($this->_mapping[$order]);
         $result = array();
         foreach ($fields as $field) {
-            if ($field->keyExists($column)) {
+            if (isset($field->$column)) {
                 $result[] = $field->$column;
             }
         }
