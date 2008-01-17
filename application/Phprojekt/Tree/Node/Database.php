@@ -383,6 +383,18 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
+     * Overwrite isset
+     *
+     * @param string $key
+     * 
+     * @return boolean
+     */
+    public function __isset($key)
+    {
+        return array_key_exists($key, get_object_vars($this)) || isset($this->_activeRecord->$key);
+    }
+    
+    /**
      * Overwrite calls. Act as a proxy for the active record
      *
      * @param string $name
@@ -395,7 +407,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $methods = get_class_methods(get_class($this->getActiveRecord()));
         
         if (in_array($name, $methods)) {
-            return call_user_method_array($this->getActiveRecord(), $name, $arguments);
+            return call_user_method_array($name, $this->getActiveRecord(), $arguments);
         }
     }
     

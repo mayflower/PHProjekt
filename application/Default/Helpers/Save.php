@@ -8,6 +8,10 @@ final class Default_Helpers_Save
      * @todo optimize and use native queries to do
      * @param Phprojekt_Tree_Node_Database $node
      * @param array $params
+     * 
+     * @throws Exception If validation of parameters fails
+     * 
+     * @return void
      */
     protected static function _saveTree(Phprojekt_Tree_Node_Database $node, array $params, $parentId = null)
     {
@@ -17,7 +21,7 @@ final class Default_Helpers_Save
             $parentId = $node->getParentNode()->id;
         }
         
-        $parentNode = new Phprojekt_Tree_Node_Database($model, $parentId);
+        $parentNode = new Phprojekt_Tree_Node_Database($node->getActiveRecord(), $parentId);
         $parentNode->setup();
 
         /* Assign the values */
@@ -27,10 +31,14 @@ final class Default_Helpers_Save
             }
         }    
         
-        if ($node->parent !== $parentId) {
-            $node->setParentNode($parentNode);
+        if ($node->recordValidate()) {   
+	        if ($node->parent !== $parentId) {
+	            $node->setParentNode($parentNode);
+	        } else {
+	            $node->getActiveRecord()->save();
+	        }
         } else {
-            $node->getActiveRecord()->save();
+            throw new Exception('Validation failed');
         }
     }
     
@@ -39,6 +47,7 @@ final class Default_Helpers_Save
      *
      * @param string $name
      * @param array  $arguments
+     * @throws Exception If validation of parameters fails
      * 
      * @return void
      */
@@ -68,12 +77,12 @@ final class Default_Helpers_Save
                 throw new InvalidArgumentException('No parent id found in parameters or passed');
             }
             
-            return $this->_saveTree($model, $params, $parentId);
+            return self::_saveTree($model, $params, $parentId);
             
         } 
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            return $this->_saveModel($model, $params);
+            return self::_saveModel($model, $params);
         }
     }
 }

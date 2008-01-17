@@ -38,6 +38,7 @@
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
@@ -522,7 +523,7 @@ class IndexController extends Zend_Controller_Action
                     $k = $tmpk;
                 }
             }
-            if ($this->getModelObject()->keyExists($k)) {
+            if (isset($this->getModelObject()->$k)) {
                 $this->getModelObject()->$k = $v;
             }
         }

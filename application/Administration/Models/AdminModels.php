@@ -295,10 +295,14 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      */
     public function save ()
     {    
+        $result = true;
+        
         /* @todo: optimize */
         foreach ($this->_objects as $object) {
-            $object->save();
+            $result = $result && $object->save();
         }
+        
+        return $result;
     }
 
     /**

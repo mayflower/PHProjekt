@@ -182,7 +182,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         if (!array_key_exists('db', $config)
-        || !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
+        || !($config['db'] instanceof Zend_Db_Adapter_Abstract)) {
             throw new
             Phprojekt_ActiveRecord_Exception("ActiveRecord class must "
             . "be initialized using a valid "
@@ -308,9 +308,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return boolean
      */
-    public function keyExists($key)
+    public function __isset($key)
     {
-        return array_key_exists($key, $this->_data);
+        return array_key_exists($key, $this->_data) || array_key_exists($key, get_object_vars($this));
     }
 
     /**

@@ -160,13 +160,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $fields    = $this->_dbManager->getFieldDefinition(MODELINFO_ORD_FORM);
 
         foreach ($data as $varname => $value) {
-            if ($this->keyExists($varname)) {
+            if (isset($this->$varname)) {
                 /* Validate with the database_manager stuff */
                 foreach ($fields as $field) {
                     if ($field['key'] == $varname) {
                         $validations = $field;
 
-                        if ($validations['required']) {
+                        if (true === $validations['required']) {
                             $error = $this->validateIsRequired($value);
                             if (null != $error) {
                                 $validated = false;
