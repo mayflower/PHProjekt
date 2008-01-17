@@ -233,7 +233,7 @@ CREATE TABLE `SearchWords` (
 -- Table structure for table `Note`
 --
 DROP TABLE IF EXISTS `Note`;
-CREATE TABLE `note` (
+CREATE TABLE `Note` (
   `id` int(11) NOT NULL auto_increment,
   `projectId` int(11) default NULL,
   `title` varchar(255) NOT NULL,
