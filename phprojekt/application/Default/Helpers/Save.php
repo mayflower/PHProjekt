@@ -35,7 +35,7 @@ final class Default_Helpers_Save
      * 
      * @throws Exception If validation of parameters fails
      * 
-     * @return void
+     * @return boolean
      */
     protected static function _saveTree(Phprojekt_Tree_Node_Database $node, array $params, $parentId = null)
     {
@@ -57,10 +57,36 @@ final class Default_Helpers_Save
         
         if ($node->recordValidate()) {   
 	        if ($node->parent !== $parentId) {
-	            $node->setParentNode($parentNode);
+	            return $node->setParentNode($parentNode);
 	        } else {
-	            $node->getActiveRecord()->save();
+	            return $node->getActiveRecord()->save();
 	        }
+        } else {
+            throw new Exception('Validation failed');
+        }
+    }
+    
+    /**
+     * Help to save a model by setting the models properties.
+     * Validation is based on the ModelInformation implementation
+     *
+     * @param Phprojekt_Model_Interface $model  The model
+     * @param array                     $params The parameters used to feed the model
+     * 
+     * @throws Exception
+     * 
+     * @return boolean
+     */
+    protected static function _saveModel(Phprojekt_Model_Interface $model, array $params)
+    {
+        foreach ($params as $k => $v) {
+            if (isset($model->$k)) {
+                $model->$k = $v;
+            }
+        }
+        
+        if ($model->recordValidate()) { 
+            return $model->save();
         } else {
             throw new Exception('Validation failed');
         }

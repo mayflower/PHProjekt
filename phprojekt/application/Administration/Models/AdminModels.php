@@ -200,6 +200,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         if (in_array($key, $this->_objects)) {
             return $this->_objects[$key]->value;
         }
+        
+        return null;
     }
 
     /**
@@ -331,5 +333,20 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     public function getRights ()
     {
         return 'write';
+    }
+    
+    /**
+     * Validate the current record
+     *
+     * @return boolean
+     */
+    public function recordValidate()
+    {
+        $result = true;
+        foreach ($this->_objects as $object) {
+            $result = $object->recordValidate() && $result;
+        }
+        
+        return $true;
     }
 }

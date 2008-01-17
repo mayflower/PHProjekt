@@ -515,22 +515,10 @@ class IndexController extends Zend_Controller_Action
         if (null !== $this->_itemid) {
             $this->getModelObject()->find($this->_itemid);
         }
-        foreach ($this->_params as $k => $v) {
-            // Check for addOne fields
-            if (strstr($k, '_new')) {
-                $tmpk = ereg_replace('_new', '', $k);
-                if (! isset($this->_params[$tmpk]) || empty($this->_params[$tmpk])) {
-                    $k = $tmpk;
-                }
-            }
-            if (isset($this->getModelObject()->$k)) {
-                $this->getModelObject()->$k = $v;
-            }
-        }
-        if ($this->getModelObject()->recordValidate()) {
-            $this->getModelObject()->save();
-            $this->view->message = 'Saved';
-        } else {
+
+        try {
+            Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
+        } catch (Exception $e) {
             $this->view->errors = $this->getModelObject()->getError();
         }
         $this->listAction();
