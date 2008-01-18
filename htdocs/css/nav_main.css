@@ -1,0 +1,92 @@
+#nav_main {
+	/* This image is mainly transparent */
+    background: url("../img/nav_main/bg.gif") repeat-x top;
+	float: right;
+}
+
+#nav_main ul {
+	line-height: 1.3em;
+	list-style: none;
+	margin: 0;
+	padding: 0 0 0 50px;
+	white-space: nowrap;
+}
+
+#nav_main li {
+	/* Repeat the main color from the image */
+    background: url("../img/nav_main/left.gif") no-repeat top left;
+	float: left;
+	margin: 0;
+	padding: 0 0 0 3px;
+}
+
+#nav_main a,
+#nav_main strong {
+	/* This image is mainly transparent */
+    background: url("../img/nav_main/right.gif") no-repeat top right;
+	color: #667;
+	display: block;
+	font-weight: normal;
+	padding: 5px 11px 3px 8px;
+	text-decoration: none;
+	text-transform: none;
+
+	/**
+     * @bugfix
+     * @affected   IE5.x, IE6
+     * @css-for    all browsers
+     * @valid      yes
+     */
+    width: auto;
+	/* only IE 5.x */
+    width/**/: /**/ .1em; /* only IE 6.0 */
+}
+
+/**
+ * @bugfix
+ * @affected   IE5.x, IE6
+ * @css-for    all browsers
+ * @valid      yes
+ */
+#nav_main > ul a,
+#nav_main > ul strong {
+	width: auto;
+}
+
+/* for other browsers */
+#nav_main ul li:focus,
+#nav_main ul li:hover,
+#nav_main ul li:active {
+	/* Repeat the main color from the image */
+    background-position: 0 -265px;
+	color: #ffffff;
+}
+
+#nav_main li:focus a,
+#nav_main li:hover a,
+#nav_main li:active a {
+	background-position: 100% -265px;
+	color: #ffffff;
+}
+
+#nav_main a:focus,
+#nav_main a:hover,
+#nav_main a:active {
+	color: #223;
+}
+
+#nav_main #current {
+	/* Repeat the main color from the image */
+	background: url("../img/nav_main/left_on.gif") no-repeat left -126px;
+	border: 0;
+}
+
+#nav_main #current a,
+#nav_main #current strong {
+	/* This image is mainly transparent */
+    background: url("../img/nav_main/right_on.gif") no-repeat right -126px;
+	color: #ffffff;
+	font-weight: bold;
+	padding-bottom: 4px;
+	padding-top: 5px;
+}

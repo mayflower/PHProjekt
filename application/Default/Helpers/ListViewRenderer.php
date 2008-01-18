@@ -87,13 +87,73 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
     }
 
     /**
+     * Return the titles of the records
+     *
+     * @return array/null
+     */
+    public function getTitles()
+    {
+        $records = $this->getModel();
+        if (is_array($records)) {
+            $record = current($records);
+        } else {
+            $record = $records;
+        }
+
+        if ($record instanceof Phprojekt_Item_Abstract) {
+            /* @var Phprojekt_Item_Abstract $record */
+            return $record->getInformation()->getTitles(MODELINFO_ORD_LIST);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Set the list mode
+     *
+     * @param array $records Array with the records
+     *
+     * @return array
+     */
+    public function sort($records)
+    {
+        $allowedRecords = array();
+        if (!is_array($records) && $records instanceof Phprojekt_Item_Abstract && $records->getRights() <> '') {
+            $fields = $records->getInformation()->getFieldDefinition(MODELINFO_ORD_LIST);
+            $result = array();
+            foreach ($fields as $field) {
+                $field['value'] = $records->$field['key'];
+                $result[] = $field;
+            }
+            $allowedRecords = $result;
+        } else if (is_array($records)) {
+            foreach ($records as &$record) {
+                /* @var Phprojekt_Item_Abstract $record */
+                if ($record instanceof Phprojekt_Item_Abstract) {
+                    if ($record->getRights() <> '') {
+                        $fields = $record->getInformation()->getFieldDefinition(MODELINFO_ORD_LIST);
+                        $result = array();
+                        foreach ($fields as $field) {
+                            $field['value'] = $record->$field['key'];
+                            $result[] = $field;
+                        }
+                        $allowedRecords[$record->id] = $result;
+                    }
+                }
+            }
+        }
+
+        return $allowedRecords;
+    }
+
+    /**
      * Render the content of the list view and return it
      *
      * @param string $name Name of the template to render
      *
      * @return string
      */
-    public function render($name = 'list.tpl')
+    public function render($name = 'list.phtml')
     {
         if (null === $this->getModel() || count($this->getModel()) == 0) {
             return '';
@@ -101,7 +161,9 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
 
         $view = Zend_Registry::get('view');
 
-        $view->records = $this->getModel();
+        $view->listViewRender = $this;
+        $view->titles         = $this->getTitles();
+        $view->records        = $this->getModel();
 
         return $view->render($name);
     }
@@ -254,7 +316,11 @@ class Default_Helpers_ListViewRenderer implements Phprojekt_RenderHelper
         $tree->setup();
 
         $node = $tree->getNodeById($originalValue);
-        return $node->title;
+        if (isset($node->title)) {
+            return $node->title;
+        } else {
+            return '';
+        }
     }
 
     /**

@@ -553,25 +553,25 @@ class IndexController extends Zend_Controller_Action
         $session = new Zend_Session_Namespace();
         $write = true;
         $read = true;
+
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
+
         if (isset($session->currentProjectId)) {
             $this->view->projectId = $session->currentProjectId;
             $this->view->projectName = $session->currentProjectName;
             $rights = new Phprojekt_RoleRights(null, $session->currentProjectId, $this->getRequest()->getModuleName());
-            $write = $rights->hasRight('write');
-            $read = $rights->hasRight('read') ? true : $write;
+            //$write = $rights->hasRight('write');
+            //$read = $rights->hasRight('read') ? true : $write;
         }
-        $this->view->params = $this->_params;
-        $this->view->itemid = $this->_itemid;
-        $this->view->breadcrumb = $this->getRequest()->getModuleName();
-        $this->view->modules = $this->_submodules;
-        $this->write = $write;
-        $this->read = $read;
-        
-        
+        $this->view->params     = $this->_params;
+        $this->view->itemid     = $this->_itemid;
+        $this->view->modules    = $this->_submodules;
+        $this->view->write      = $write;
+        $this->view->read       = $read;
         $this->view->filterView = $this->getFilterView()->render();
-        $this->view->treeView = $this->getTreeView()->render();
-        $this->view->listView = $this->getListView()->render();
-        $this->view->formView = $this->getFormView()->render();
+        $this->view->treeView   = $this->getTreeView()->render();
+        $this->view->listView   = $this->getListView()->render();
+        $this->view->formView   = $this->getFormView()->render();
         $this->render('index');
     }
 
@@ -606,17 +606,17 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function postDispatch()
-    { 
+    {
         if (true === $this->_canRender) {
             $this->_generateOutput();
         }
     }
 
     /**
-     * Set various variables. Sometimes this is needed as 
-     * internally things are rendered before postDispatch or even _generateOutput was 
+     * Set various variables. Sometimes this is needed as
+     * internally things are rendered before postDispatch or even _generateOutput was
      * called but we need some view variables to generate urls right
-     * 
+     *
      * @return void
      */
     public function preDispatch()
@@ -625,7 +625,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->controller = $this->getRequest()->getControllerName();
         $this->view->action     = $this->getRequest()->getActionName();
     }
-    
+
     /**
      * The function will call the Zend _forward function
      * But set first the canRender to false for no draw nothing

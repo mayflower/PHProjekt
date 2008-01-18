@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>PHProjekt 6</title>
+    <!-- Framework CSS -->
+    <link rel="stylesheet" href="<?php echo $this->webpath; ?>css/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="<?php echo $this->webpath; ?>css/print.css" type="text/css" media="print" />
+    <!--[if IE]><link rel="stylesheet" href="../css/lib/ie.css" type="text/css" media="screen, projection"><![endif]-->
+</head>
+<body>
+<div class="container">
+    <div id="header" class="block"><img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
+        <div id="search-bar" class="last right align-right">
+            <input name="searchfield" value="Search" />
+        </div>
+        <div id="toolbar" class="span-10 right align-right">Administrator  |  <a href="<?php echo $this->url(array('module'=>'Default', 'controller'=>'logout', 'action'=>'logout')); ?>">Logout</a> |  Settings  |   Help </div>
+    </div>
+    <div id="subheader" class="block">
+        <div id="navigation-container-titel" class="column span-5">
+        <p>ROOT</p>
+        </div>
+        <div class="column"><img src="<?php echo $this->webpath; ?>/img/subheaderborder.png" alt="" /></div>
+        <div class="column right span-17 append-1 align-right">
+            <div id="nav_main">
+                <ul>
+<?php
+    foreach ($this->modules as $module) {
+        printf('<li><a href="%s">%s</a></li>', $this->url(array('module'=>$module, 'action'=>'list')), $module);
+    }
+?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="column span-5 left" id="navigation-container">
+            <div id="tree-navigation">
+                <ul id="submenu">
+                    <li class="title">Default Group</li>
+                    <?php printf('%s', $this->treeView); ?>
+                </ul>
+            </div>
+        </div>
+        <!-- BEGIN Content-->
+        <div id="content" class="column span-18 prepend-1">
+<?php
+	 printf('%s', $this->listView);
+	 printf('%s', $this->formView);
+?>
+        </div>
+        <!-- END Content-->
+    </div>
+</div>
+</body>
+</html>

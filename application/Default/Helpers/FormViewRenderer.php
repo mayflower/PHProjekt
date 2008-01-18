@@ -72,7 +72,7 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
      * @return void
      */
     public function setModel($model)
-    {    
+    {
         if ($model instanceof Phprojekt_Model_Interface) {
             $this->_model = $model;
         }
@@ -89,21 +89,61 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
     }
 
     /**
+     * Set the form mode
+     *
+     * @param array $records The row for make the form
+     *
+     * @return array
+     */
+    function sort($records)
+    {
+        $allowedRecords = array();
+        if (!is_array($records) && $records instanceof Phprojekt_Model_Interface && $records->getRights() != '') {
+            $fields = $records->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
+            $result = array();
+            foreach ($fields as $field) {
+                $field['value'] = $records->$field['key'];
+                $result[] = $field;
+            }
+            $allowedRecords = $result;
+        } else if (is_array($records)) {
+            foreach ($records as &$record) {
+                /* @var Phprojekt_Item_Abstract $record */
+                if ($record instanceof Phprojekt_Model_Interface) {
+                    if ($record->getRights() != '') { /* @todo fix rights */
+                        $fields = $record->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
+                        $result = array();
+                        foreach ($fields as $field) {
+                            $field['value'] = $record->$field['key'];
+                            $result[] = $field;
+                        }
+                        $allowedRecords[] = $result;
+                    }
+                }
+            }
+        }
+
+        return $allowedRecords;
+    }
+
+    /**
      * Render the content of the list view and return it
      *
      * @param string $name Name of the template to render
      *
      * @return string
      */
-    public function render($name = 'form.tpl')
+    public function render($name = 'form.phtml')
     {
         $view = Zend_Registry::get('view');
+        $view->formViewRender = $this;
         if (null === $this->getModel()) {
-            $view->message = 'No model found';
+            $view->message = '';
+            $view->record = array();
         } else {
             $view->record = $this->getModel();
         }
-        
+
         return $view->render($name);
     }
 

@@ -35,7 +35,7 @@ $config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION, true);
 Zend_Registry::set('config', $config);
 
 if (substr($config->webpath, -1) != '/') {
-	$config->webpath.= '/';
+    $config->webpath.= '/';
 }
 
 define('PHPR_ROOT_WEB_PATH', $config->webpath . 'index.php/');
@@ -66,15 +66,14 @@ Zend_Registry::set('log', $log);
  */
 Zend_Loader::loadClass('Default_Helpers_Smarty', PHPR_CORE_PATH);
 
-$view = new Default_Helpers_Smarty(PHPR_TEMP_PATH . DIRECTORY_SEPARATOR . 'templates_c');
-
+$view = new Zend_View();
+$view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
 $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
 $viewRenderer->setViewBasePathSpec(':moduleDir/Views')
-              ->setViewScriptPathSpec(':action.:suffix')
-              ->setViewScriptPathNoControllerSpec(':action.:suffix')
-              ->setViewSuffix('tpl');
-Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
+             ->setViewScriptPathSpec(':action.:suffix')
+             ->setViewScriptPathNoControllerSpec(':action.:suffix');
 
+Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
@@ -98,15 +97,11 @@ foreach (scandir(PHPR_CORE_PATH) as $module) {
         $front->addModuleDirectory($dir);
     }
 
-    $helperPath      = $dir . DIRECTORY_SEPARATOR . 'Helpers';
-    $smartPluginPath = $helperPath . DIRECTORY_SEPARATOR . 'Smarty';
+    $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
 
     if (is_dir($helperPath)) {
+        $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
         Zend_Controller_Action_HelperBroker::addPath($helperPath);
-    }
-
-    if(is_dir($smartPluginPath)) {
-        $view->getEngine()->plugins_dir[] = $smartPluginPath;
     }
 }
 
