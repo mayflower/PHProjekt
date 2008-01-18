@@ -1,0 +1,10 @@
+<?php
+foreach ($this->tree as $node) {
+    $depth = $node->getDepth();
+    printf('<li>%s<a href="%s">+</a><a href="%s">%s</a></li>',
+    str_repeat("&nbsp;", $depth*2),
+    $this->url(array('action'=>'toggleNode', 'tree'=>$this->treeIdentifier, 'treeid'=>$node->id),null,true),
+    $this->url(array('module'=>'Project', 'action'=>'list', 'nodeId'=>$node->id),null,true),
+    $node->title);
+}
+?>

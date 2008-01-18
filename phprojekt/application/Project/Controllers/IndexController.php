@@ -21,9 +21,6 @@
  * and redefine the function getModelsObject
  * for return the object model that you want
  *
- * You can redefine too, the var FORM_COLUMNS
- * for make your module with other number than the default
- *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    http://phprojekt.com/license PHProjekt 6 License
@@ -35,19 +32,12 @@
 class Project_IndexController extends IndexController
 {
     /**
-     * Define the amount of columns into which the form is rendered
-     *
-     * @var integer
-     */
-    const FORM_COLUMNS = 1;
-
-    /**
      * a list of submodules
      *
      * @var array
      */
     protected $_submodules = array();
-    
+
     /**
      * Set various session data.
      *
@@ -65,7 +55,7 @@ class Project_IndexController extends IndexController
             $session->currentProjectId   = $this->getRequest()->getParam('nodeId', 0);
             $session->currentProjectName = $project->title;
         }
-        
+
         $this->_submodules = $this->_getSubmodules();
     }
 
@@ -125,7 +115,7 @@ class Project_IndexController extends IndexController
     */
         /* Validate and save if is all ok */
         $node = new Phprojekt_Tree_Node_Database($model);
-        
+
         try {
             Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
             $this->view->message = 'Saved';
@@ -135,7 +125,7 @@ class Project_IndexController extends IndexController
 
         $this->listAction();
     }
-    
+
     /**
      * Get a list of submodules and check for the users right on them
      *
@@ -145,7 +135,7 @@ class Project_IndexController extends IndexController
     {
         //select all sobmodules with read rights from  db
         $session = new Zend_Session_Namespace();
-                
+
         $modulesArray    = array();
         $allModulesArray = array('Todo','Note','Timecard');
 

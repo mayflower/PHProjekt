@@ -118,23 +118,19 @@ class Default_Helpers_TreeView
      *
      * @return string
      */
-    public function render($smarty = null, $template = 'tree.tpl')
+    public function render($smarty = null, $template = 'tree.phtml')
     {
-        if (null === $smarty) {
-            $smarty = Zend_Registry::get('view');
-        }
-
         if (false === $this->_tree->isSetup()) {
             $this->_tree->setup();
         }
 
-        $smarty->tree = $this->_calculateOpenNodes($this->_tree);
+        $view = Zend_Registry::get('view');
 
-        $this->_request = Zend_Controller_Front::getInstance()->getRequest();
+        $view->tree           = $this->_calculateOpenNodes($this->_tree);
+        $this->_request       = Zend_Controller_Front::getInstance()->getRequest();
+        $view->treeIdentifier = $this->getIdentifier();
 
-        $smarty->treeIdentifier = $this->getIdentifier();
-
-        return $smarty->render($template);
+        return $view->render($template);
     }
 
     /**

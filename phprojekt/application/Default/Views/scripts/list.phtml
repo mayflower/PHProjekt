@@ -1,0 +1,24 @@
+<table width="100%" class="listView">
+<tr align="center">
+<?php
+    foreach ($this->titles as $title) {
+        printf('<th>%s</th>',$this->escape($this->translate($title)));
+    }
+?>
+</tr>
+<?php
+    $i = 1;
+    $records = $this->listViewRender->sort($this->records);
+    foreach ($records as $id => $record) {
+        $i++;
+        $class = (($i%2)==0) ? 'listFirstLine' : 'listSecondLine';
+        printf('<tr class="%s">',$class);
+        foreach ($record as $field) {
+            printf('<td><a href="%s">%s</a></td>',
+            $this->url(array('module'=>$this->module, 'action'=>'edit', 'id'=>$id),null,true),
+            $this->listViewRender->generateListElement($field));
+        }
+        printf('</tr>');
+    }
+?>
+</table>
