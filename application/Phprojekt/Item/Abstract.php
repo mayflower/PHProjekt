@@ -286,7 +286,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $info = $this->info();
 
-        $value = stripslashes(parent::__get($varname));
+        $value = parent::__get($varname);
 
         if (true == isset($info['metadata'][$varname])) {
             $type = $info['metadata'][$varname]['DATA_TYPE'];
@@ -294,6 +294,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
             }
         }
+
+        if (null != $value && is_string($value)) {
+            $value = stripslashes($value);
+        }
+
         return $value;
     }
 
@@ -406,8 +411,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Returns the right the user has on a Phprojekt item
      *
-     * @todo Make sure that this doesnot need any database query 
-     * 
+     * @todo Make sure that this doesnot need any database query
+     *
      * @return string $right
      */
     public function getRights()
