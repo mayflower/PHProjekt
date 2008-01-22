@@ -24,6 +24,14 @@
  */
 class Default_Helpers_Translate
 {
+    /**
+     * Translate a string to the users language.
+     * This is done by using a string identfier and then return
+     * the appropriate from the locals.
+     *
+     * @param string $string String identifier
+     * @return string
+     */
     public function translate($string)
     {
         if (!empty($string)) {
