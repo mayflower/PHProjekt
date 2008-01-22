@@ -431,7 +431,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     {
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->priority = 'AA';
-        $this->assertEquals(0, $item->priority);
+        $this->assertEquals("", $item->priority);
 
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->priority = '7';
@@ -447,8 +447,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $result= array();
         $result[] = array('field'    => 'title',
                           'message'  => 'Is a required field');
-        $result[] = array('field'    => 'startDate',
-                          'message'  => 'Invalid format for date');
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->getError();
         $this->assertEquals(array(), $item->getError());
@@ -500,13 +498,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->startDate = 'aaaaaaaaaa';
         $item->endDate = '1981-05-12';
         $item->priority = 1;
-        $result = array(array(
-            'field'   => 'startDate',
-            'message' => 'Invalid format for date'));
-        $item->recordValidate();
-        $this->assertEquals($result, $item->getError());
-
-        $item->startDate = '1981-05-12';
         $this->assertEquals(array(), $item->getError());
     }
 
