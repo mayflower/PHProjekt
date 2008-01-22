@@ -69,7 +69,7 @@ abstract class Phprojekt_Filter_Abstract
      *
      * @return void
      */
-    public function addFilter(Phprojekt_Filter_Interface $filter)
+    public function addFilter($filter)
     {
         if (null == $this->_next) {
             $this->_next = $filter;
