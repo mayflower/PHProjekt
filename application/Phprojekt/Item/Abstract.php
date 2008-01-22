@@ -69,11 +69,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public $history = array();
 
     /**
-     * Filter class for clean the input
-     */
-    protected $_clean = null;
-
-    /**
      * Initialize new object
      *
      * @param array $db Configuration for Zend_Db_Table
@@ -86,9 +81,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_error     = new Phprojekt_Error();
         $this->_history   = new Phprojekt_History($db);
         $this->_search    = new Phprojekt_SearchWords($db);
-
-        $config        = Zend_Registry::get('config');
-        $this->_config = $config;
+        $this->_config    = Zend_Registry::get('config');
     }
 
     /**
@@ -129,17 +122,33 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];
 
-            if ($type == 'int') {
-                $value = (int) $value;
+            switch ($type) {
+                case 'int':
+                    $value = Inspector::sanitize('integer', $value, $messages);
+                    break;
+                case 'float':
+                    if (!empty($value)) {
+                        $value = Inspector::sanitize('float', $value, $messages);
+                        $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
+                    } else {
+                        $value = 0;
+                    }
+                    break;
+                case 'date':
+                    $value = Inspector::sanitize('date', $value, $messages);
+                    break;
+                case 'time':
+                    $value = Inspector::sanitize('time', $value, $messages);
+                    break;
+                case 'timestamp':
+                    $value = Inspector::sanitize('timestamp', $value, $messages);
+                    break;
+                default:
+                    $value = Inspector::sanitize('string', $value, $messages);
+                    break;
             }
-
-            if ($type == 'float') {
-                if (!empty($value)) {
-                    $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
-                } else {
-                    $value = 0;
-                }
-            }
+        } else {
+            $value = Inspector::sanitize('string', $value, $messages);
         }
         parent::__set($varname, $value);
     }
@@ -169,17 +178,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                                 $this->_error->addError(array(
                                     'field'   => $varname,
                                     'message' => $error));
+                                break;
                             }
                         }
 
-                        if ($validations['type'] == 'date') {
-                            $error = $this->validateDate($value);
-                            if (null != $error) {
-                                $validated = false;
-                                $this->_error->addError(array(
-                                    'field'   => $varname,
-                                    'message' => $error));
-                            }
+                        $error = $this->validateValue($varname, $value);
+                        if (null != $error) {
+                            $validated = false;
+                             $this->_error->addError(array(
+                                'field'   => $varname,
+                                'message' => $error));
                         }
                         break;
                     }
@@ -187,8 +195,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
                 /* Validate an special fieldName */
                 $validater  = 'validate' . ucfirst($varname);
-                if ( ($validater != 'validateIsRequired') &&
-                    ($validater != 'validateDate')) {
+                if ($validater != 'validateIsRequired') {
                     if (in_array($validater, get_class_methods($this))) {
                         $error = call_user_method($validater, $this, $value);
                         if (null != $error) {
@@ -205,22 +212,49 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Validate date values
-     * return the msg error if exists
+<<<<<<< Abstract.php
+     * Validate a value use the database type of the field
      *
-     * @param string $value The date value to check
+     * @param string $varname Name of the field
+     * @param mix    $value   Value to validate
      *
-     * @return string Error string or null
+     * @return string Error message or null if is valid
      */
-    public function validateDate($value)
+    public function validateValue($varname, $value)
     {
-        $error = null;
-        if (!empty($value)) {
-            if (!Zend_Date::isDate($value, 'yyyy-MM-dd')) {
-                $error = 'Invalid format for date';
+        $info  = $this->info();
+        $valid = true;
+        if (isset($info['metadata'][$varname])) {
+
+            $type = $info['metadata'][$varname]['DATA_TYPE'];
+
+            switch ($type) {
+                case 'int':
+                    $valid = Inspector::validate('integer', $value, $messages, true);
+                    break;
+                case 'float':
+                    $valid = Inspector::validate('float', $value, $messages, true);
+                    break;
+                case 'date':
+                    $valid = Inspector::validate('date', $value, $messages, true);
+                    break;
+                case 'time':
+                    $valid = Inspector::validate('time', $value, $messages, true);
+                    break;
+                case 'timestamp':
+                    $valid = Inspector::validate('timestamp', $value, $messages, true);
+                    break;
+                default:
+                    $valid = Inspector::validate('string', $value, $messages, true);
+                    break;
             }
         }
-        return $error;
+
+        if (!$valid) {
+            return 'Invalid format';
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -252,7 +286,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $info = $this->info();
 
-        $value = parent::__get($varname);
+        $value = stripslashes(parent::__get($varname));
 
         if (true == isset($info['metadata'][$varname])) {
             $type = $info['metadata'][$varname]['DATA_TYPE'];
@@ -288,9 +322,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $result = parent::save();
             $this->_history->saveFields($this, 'add');
         }
-        
+
         $this->_search->indexObjectItem($this);
-        
+
         return $result;
     }
 
