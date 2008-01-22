@@ -86,7 +86,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_error     = new Phprojekt_Error();
         $this->_history   = new Phprojekt_History($db);
         $this->_search    = new Phprojekt_SearchWords($db);
-        $this->_clean     = new Phprojekt_InputFilter($this->getXssFilters());
 
         $config        = Zend_Registry::get('config');
         $this->_config = $config;
@@ -125,9 +124,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __set($varname, $value)
     {
         $info = $this->info();
-
-        /* Clean the value use the InputFilter */
-        $value = $this->_clean->process($value);
 
         if (isset($info['metadata'][$varname])) {
 
@@ -206,32 +202,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             }
         }
         return $validated;
-    }
-
-    /**
-     * Configuration for the InputFilter class
-     * Each module can rewrite this class for
-     * allow or denied some tags or atributes
-     *
-     * @todo Refactor
-     * @see InputFilter class
-     *
-     * @return array
-     */
-    public function getXssFilters()
-    {
-        $filter = array('tagsArray'    => array(),
-                        'attrArray'    => array(),
-                        'tagsMethod'   => 0,
-                        'attrMethod'   => 0,
-                        'xssAuto'      => 1,
-                        'tagBlacklist' => array('applet', 'body', 'bgsound', 'base', 'basefont',
-                                                'embed', 'frame', 'frameset', 'head', 'html', 'id',
-                                                'iframe', 'ilayer', 'layer', 'link', 'meta', 'name',
-                                                'object', 'script', 'style', 'title', 'xml'),
-                        'attrBlacklist' => array('action', 'background', 'codebase', 'dynsrc', 'lowsrc'));
-
-        return $filter;
     }
 
     /**
@@ -402,6 +372,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Returns the right the user has on a Phprojekt item
      *
+     * @todo Make sure that this doesnot need any database query 
+     * 
      * @return string $right
      */
     public function getRights()
