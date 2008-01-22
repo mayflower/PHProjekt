@@ -59,6 +59,13 @@ class IndexController extends Zend_Controller_Action
     private $_treeView;
 
     /**
+     * Tree
+     *
+     * @var Phprojekt_Tree_Node_Database
+     */
+    private $tree;
+    
+    /**
      * SQL where
      *
      * @var array
@@ -109,9 +116,10 @@ class IndexController extends Zend_Controller_Action
             die();
         }
         $projects = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree = new Phprojekt_Tree_Node_Database($projects, 1);
-        $this->_treeView = new Default_Helpers_TreeView($tree);
-        $this->_treeView->makePersistent();
+        $this->_tree = new Phprojekt_Tree_Node_Database($projects, 1);
+        $this->_tree->setup();
+        // $this->_treeView = new Default_Helpers_TreeView($this->_tree);
+        // $this->_treeView->makePersistent();
 
         /* Get the current item id */
         $this->_params = $this->_request->getParams();
@@ -392,6 +400,8 @@ class IndexController extends Zend_Controller_Action
      *
      * List Action
      *
+     * @todo to be removed
+     * 
      * @return void
      */
     public function toggleNodeAction ()
@@ -568,8 +578,9 @@ class IndexController extends Zend_Controller_Action
         $this->view->modules    = $this->_submodules;
         $this->view->write      = $write;
         $this->view->read       = $read;
+     
+        $this->view->tree       = $this->_tree;
         $this->view->filterView = $this->getFilterView()->render();
-        $this->view->treeView   = $this->getTreeView()->render();
         $this->view->listView   = $this->getListView()->render();
         $this->view->formView   = $this->getFormView()->render();
         $this->render('index');
