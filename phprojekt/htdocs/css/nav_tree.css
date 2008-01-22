@@ -34,7 +34,7 @@
 
 /* Menu Title */
 
-#submenu li title {
+#submenu li#title {
 	width: 90%;
 	padding: 3px 0px 3px 10%;
 	font-weight: bold;
