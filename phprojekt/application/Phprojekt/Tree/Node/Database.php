@@ -127,28 +127,18 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * usually fails throwing an exception.
      *
      * @param Phprojekt_Filter_Interface  $filter   A filter to chain
-     * @param Phprojekt_Compare_Interface $comparer A comparer doing pre-sorting
      *
      * @throws Phprojekt_Tree_Node_Exception If no id was requested (see constructor)
-     * @todo Apply the the pre-sorting comparer
      *
      * @return Phprojekt_Tree_Node_Database
      */
-    public function setup(Phprojekt_Filter_Abstract $filter = null, Phprojekt_Compare_Interface $comparer = null)
+    public function setup(Phprojekt_Filter_Abstract $filter = null)
     {
         /* @todo: fix this, must be possible with requestid === null */
         if (null === $this->_requestedId) {
             throw new Phprojekt_Tree_Node_Exception(
             'You have to set a requested '
             . 'treeid in the constructor');
-        }
-
-        if (!is_null($comparer)) {
-            // We have to apply the pre sorting comparer
-            if (Zend_Registry::isRegistered('log')) {
-                $log = Zend_Registry::get('log');
-                $log->debug('Pre-sorting requested and not implemented yet');
-            }
         }
 
         $database = $this->getActiveRecord()->getAdapter();
@@ -235,7 +225,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null !== $node->_activeRecord) {
             if (null === $node->id) {
-                $node->_activeRecord->parent = $this->id;
+                $node->_activeRecord->parent = (int) $this->id;
                 $node->_activeRecord->path   = sprintf('%s%s%s', $this->path, $this->id,
                 self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
@@ -309,7 +299,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if ($node->id != $this->_activeRecord->parent) {
             /* update move */
-            $this->_activeRecord->parent = $node->id;
+            $this->_activeRecord->parent = (int) $node->id;
 
             $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
             $node->getActiveRecord()->save();
