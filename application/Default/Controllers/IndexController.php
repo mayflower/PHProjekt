@@ -64,7 +64,7 @@ class IndexController extends Zend_Controller_Action
      * @var Phprojekt_Tree_Node_Database
      */
     private $tree;
-    
+
     /**
      * SQL where
      *
@@ -231,7 +231,13 @@ class IndexController extends Zend_Controller_Action
      */
     public function addFilterAction ()
     {
-        $newFilter = array('field' => $this->_params['filterField'] , 'rule' => $this->_params['filterRule'] , 'text' => $this->_params['filterText']);
+        $field = Inspector::sanitize('alpha', $this->_params['filterField'], $messages);
+        $rule  = Inspector::sanitize('alpha', $this->_params['filterRule'], $messages);
+        $text  = Inspector::sanitize('alpha', $this->_params['filterText'], $messages);
+
+        $newFilter = array('field' => $field,
+                           'rule'  => $rule,
+                           'text'  => $text);
         $this->addFilter($newFilter);
         $this->forward('list');
     }
@@ -401,7 +407,7 @@ class IndexController extends Zend_Controller_Action
      * List Action
      *
      * @todo to be removed
-     * 
+     *
      * @return void
      */
     public function toggleNodeAction ()
@@ -499,11 +505,11 @@ class IndexController extends Zend_Controller_Action
         } else {
             /* History */
             // $this->getFormView()->getModel()->find($this->_itemid);
-            $db = Zend_Registry::get('db');
-            $history = new Phprojekt_History(array('db' => $db));
-            $this->_smarty->historyData = $history->getHistoryData($this->getModelObject(), $this->_itemid);
-            $this->_smarty->dateFieldData = array('formType' => 'datetime');
-            $this->_smarty->userFieldData = array('formType' => 'userId');
+            //$db = Zend_Registry::get('db');
+            //$history = new Phprojekt_History(array('db' => $db));
+            //$this->_smarty->historyData = $history->getHistoryData($this->getModelObject(), $this->_itemid);
+            //$this->_smarty->dateFieldData = array('formType' => 'datetime');
+            //$this->_smarty->userFieldData = array('formType' => 'userId');
         }
     }
 
@@ -528,6 +534,7 @@ class IndexController extends Zend_Controller_Action
 
         try {
             Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
+            $this->view->message = 'Saved';
         } catch (Exception $e) {
             $this->view->errors = $this->getModelObject()->getError();
         }
@@ -561,8 +568,8 @@ class IndexController extends Zend_Controller_Action
     {
         /* Get the last project ID */
         $session = new Zend_Session_Namespace();
-        $write = true;
-        $read = true;
+        $write   = true;
+        $read    = true;
 
         $this->view->webpath = Zend_Registry::get('config')->webpath;
 
@@ -573,12 +580,15 @@ class IndexController extends Zend_Controller_Action
             //$write = $rights->hasRight('write');
             //$read = $rights->hasRight('read') ? true : $write;
         }
+        if (!isset($this->view->message)) {
+            $this->view->message = '';
+        }
         $this->view->params     = $this->_params;
         $this->view->itemid     = $this->_itemid;
         $this->view->modules    = $this->_submodules;
         $this->view->write      = $write;
         $this->view->read       = $read;
-     
+
         $this->view->tree       = $this->_tree;
         $this->view->filterView = $this->getFilterView()->render();
         $this->view->listView   = $this->getListView()->render();

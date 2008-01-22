@@ -1,33 +1,38 @@
 <?php
     if ($this->write == true) {
         printf('<a class="button" href="%s">%s</a>',
-        $this->url(array('action'=>'display')),
+        $this->url(array('module'=>$this->module, 'action'=>'display'), null, true),
         $this->translate('Add'));
-        printf('<a class="button" href="%s">%s</a>',
-        $this->url(array('action'=>'delete', 'id'=>$this->itemid)),
-        $this->translate('Delete'));
+        if ($this->action == 'edit') {
+            printf('<a class="button" href="%s">%s</a>',
+            $this->url(array('module'=>$this->module, 'action'=>'delete', 'id'=>$this->itemid), null, true),
+            $this->translate('Delete'));
+        }
     }
 ?>
 <br /><br />
 <?php
-    if (isset($this->errors)) {
-        foreach ($this->errors as $error) {
-            printf('<div class="error">%s: %s</div><br />',
-            $this->translate($error['field']),
-            $this->translate($error['message']));
+    if (!empty($this->message)) {
+        printf('<div class="success">%s</div>', $this->translate($this->message));
+    } else {
+        if (isset($this->errors)) {
+            foreach ($this->errors as $error) {
+                printf('<div class="error">%s: %s</div><br />',
+                $this->translate($error['field']),
+                $this->translate($error['message']));
+            }
         }
-    }
 
-    if (!empty($this->record)) {
         printf('<div id="formView">');
-        if ($this->action == 'add') {
-            $url = $this->url(array('action'=>'save', 'id'=>''));
+        if ($this->action == 'display') {
+            $url = $this->url(array('module'=>$this->module, 'action'=>'save', 'id'=>''), null, true);
         } else {
-            $url = $this->url(array('action'=>'save', 'id'=>$this->itemid));
+            $url = $this->url(array('module'=>$this->module, 'action'=>'save', 'id'=>$this->itemid), null, true);
         }
         printf('<form method="post" action="%s">', $url);
-        printf('<input type="hidden" name="id" value="%d" />', $this->record->id);
-
+        if ($this->action != 'display') {
+            printf('<input type="hidden" name="id" value="%d" />', $this->record->id);
+        }
         printf('<table>');
 
         $record = $this->formViewRender->sort($this->record);
@@ -48,8 +53,6 @@
         printf('</table>');
         printf('</form>');
         printf('</div>');
-    } else if (!empty($this->message)) {
-        printf('<div class="success">%s</div>', $this->translate($this->message));
     }
 ?>
 <br />

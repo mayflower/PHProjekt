@@ -138,7 +138,6 @@ class Default_Helpers_FormViewRenderer implements Phprojekt_RenderHelper
         $view = Zend_Registry::get('view');
         $view->formViewRender = $this;
         if (null === $this->getModel()) {
-            $view->message = '';
             $view->record = array();
         } else {
             $view->record = $this->getModel();
