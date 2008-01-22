@@ -1,3 +1,18 @@
+<?php
+function nodeset($node, $view)
+{
+    if (!$node->hasChildren()) {
+        return;
+    }
+    
+    print("<ul>\n");
+    foreach ($node->getChildren() as $child) {
+        printf("<li><a href='%s'>%s</a>\n", $view->url(array('module'=>'Project', 'action'=>'list', 'nodeId' => $child->id)), $view->escape($child->title));       
+        nodeset($child, $view);
+        print("</li>\n");
+    }
+    print("</ul>\n");
+} ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -26,7 +41,7 @@
                 <ul>
 <?php
     foreach ($this->modules as $module) {
-        printf('<li><a href="%s">%s</a></li>', $this->url(array('module'=>$module, 'action'=>'list')), $module);
+        printf('<li><a href="%s">%s</a></li>', $this->url(array('module'=>$module, 'action'=>'list')), $this->escape($module));
     }
 ?>
                 </ul>
@@ -37,16 +52,18 @@
         <div class="column span-5 left" id="navigation-container">
             <div id="tree-navigation">
                 <ul id="submenu">
-                    <li class="title">Default Group</li>
-                    <?php printf('%s', $this->treeView); ?>
+                    <li id="title">Default Group</li>
+<?php
+    nodeset($this->tree, $this);
+?>
                 </ul>
             </div>
         </div>
         <!-- BEGIN Content-->
         <div id="content" class="column span-18 prepend-1">
 <?php
-	 printf('%s', $this->listView);
-	 printf('%s', $this->formView);
+	 print($this->listView);
+	 print($this->formView);
 ?>
         </div>
         <!-- END Content-->
