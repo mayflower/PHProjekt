@@ -23,36 +23,38 @@
             }
         }
 
-        printf('<div id="formView">');
-        if ($this->action == 'display') {
-            $url = $this->url(array('module'=>$this->module, 'action'=>'save', 'id'=>''), null, true);
-        } else {
-            $url = $this->url(array('module'=>$this->module, 'action'=>'save', 'id'=>$this->itemid), null, true);
-        }
-        printf('<form method="post" action="%s">', $url);
-        if ($this->action != 'display') {
-            printf('<input type="hidden" name="id" value="%d" />', $this->record->id);
-        }
-        printf('<table>');
+        if (!empty($this->record)) {
+            printf('<div id="formView">');
+            if ($this->action == 'display') {
+                $url = $this->url(array('module'=>$this->module, 'action'=>'save', 'id'=>''), null, true);
+            } else {
+                $url = $this->url(array('module'=>$this->module, 'action'=>'save', 'id'=>$this->itemid), null, true);
+            }
+            printf('<form method="post" action="%s">', $url);
+            if ($this->action != 'display') {
+                printf('<input type="hidden" name="id" value="%d" />', $this->record->id);
+            }
+            printf('<table>');
 
-        $record = $this->formViewRender->sort($this->record);
-        foreach ($record as $field) {
-            $value = $this->escape($this->translate($field['label']));
+            $record = $this->formViewRender->sort($this->record);
+            foreach ($record as $field) {
+                $value = $this->escape($this->translate($field['label']));
+                printf('<tr>');
+                printf('<td class="align-right valign-top">%s</td>', $this->formLabel($field['label'], $value));
+                printf('<td class="align-left">%s%s</td>', $this->formViewRender->generateFormElement($field), ($field['required']) ? '&nbsp;*': '');
+                printf('</tr>');
+            }
+
             printf('<tr>');
-            printf('<td class="align-right valign-top">%s</td>', $this->formLabel($field['label'], $value));
-            printf('<td class="align-left">%s%s</td>', $this->formViewRender->generateFormElement($field), ($field['required']) ? '&nbsp;*': '');
+            printf('<td>&nbsp;</td>');
+            printf('<td><button type="submit" class="button positive"><img src="%scss/plugins/buttons/icons/tick.png" alt="%s" />%s</button></td>',
+            $this->webpath, "", $this->translate('Save'));
             printf('</tr>');
+
+            printf('</table>');
+            printf('</form>');
+            printf('</div>');
         }
-
-        printf('<tr>');
-        printf('<td>&nbsp;</td>');
-        printf('<td><button type="submit" class="button positive"><img src="%scss/plugins/buttons/icons/tick.png" alt="%s" />%s</button></td>',
-        $this->webpath, "", $this->translate('Save'));
-        printf('</tr>');
-
-        printf('</table>');
-        printf('</form>');
-        printf('</div>');
     }
 ?>
 <br />
