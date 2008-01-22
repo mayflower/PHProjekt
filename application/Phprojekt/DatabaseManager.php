@@ -161,24 +161,65 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT)
     {
-        $i = 0;
-
         $converted = array();
         $fields    = $this->_getFields($this->_mapping[$ordering]);
         /* the db manager handles field different than the encoder/output layer expect */
         foreach ($fields as $field) {
-            $converted[] = array ('key'      => $field->tableField,
-                                  'label'    => $field->formLabel,
-                                  'type'     => $field->formType,
-                                  'hint'     => $field->formTooltip,
-                                  'order'    => $i++,
-                                  'position' => $field->formPosition,
-                                  'fieldset' => '',
-                                  'range'    => $field->formRange,
-                                  'required' => (boolean) $field->isRequired,
-                                  'right'    => $this->getModel()->getRights(),
-                                  'readOnly' => false);
+            switch ($field->formType) {
+                case 'selectValues':
+                    $converted[] = $this->_convertSelect($field);
+                    break;
+                case 'space':
+                    break;
+                default:
+                    $converted[] = $this->_convertStandard($field);
+            }
         }
+        return $converted;
+    }
+    
+    /**
+     * Convert to a a selectbox
+     *
+     * @param array $field
+     * 
+     * @return array
+     */
+    protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
+    {
+        $converted          = $this->_convertStandard($field);
+        $converted['range'] = array();
+        $converted['type']  = 'select';
+        
+        foreach(explode('|', $field->formRange) as $range) {
+            list($key, $value) = explode('#', $range);
+            $converted['range'][$key] = $value;
+        }
+        
+        return $converted;
+    }
+    
+    /**
+     * Fields from the database manager have a complete different
+     * type than those that should be propagated into the PHProjekt core
+     *
+     * @param array $field
+     * 
+     * @return array
+     */
+    protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
+    {
+        $converted['key']      = $field->tableField;
+        $converted['label']    = $field->formLabel;
+        $converted['type']     = $field->formType;
+        $converted['hint']     = $field->formTooltip;
+        $converted['order']    = 0;
+        $converted['position'] = (int) $field->formPosition;
+        $converted['fieldset'] = '';
+        $converted['range']    = $field->formRange;
+        $converted['required'] = (boolean) $field->isRequired;
+        $converted['readOnly'] = false;
+        
         return $converted;
     }
 
