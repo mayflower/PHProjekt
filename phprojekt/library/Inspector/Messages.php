@@ -106,6 +106,16 @@ class Inspector_Messages
     }
 
     /**
+     * Return the messages as a string
+     *
+     * @return string
+     */
+    public function __toString() 
+    {
+        return implode(", ", $this->_messages);    
+    }
+
+    /**
      * Load messages for a certain locale
      *
      * @param string $locale Name oflocale (for example de_DE, en_US)
