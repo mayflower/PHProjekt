@@ -48,10 +48,10 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
                 $this->fail ('No user found');
             }
 
-            $david = $users[0];
-            $group  = $david->groups->create();
-            $group->name       = 'TEST GROUP';
-            $group->save();
+            $david        = $users[0];
+            $group        = $david->groups->create();
+            $group->name  = 'TEST GROUP';
+            $this->assertTrue($group->save());
 
             $this->assertNotNull($group->id);
         } catch (Exception $e) {
@@ -107,9 +107,9 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 			$user->language = 'en_GB';
 			$user->save();
 
-			$group = $user->groups->create();
-			$group->name       = 'Test';
-			$group->save();
+			$group       = $user->groups->create();
+			$group->name = 'Test';
+			$this->assertTrue($group->save());
 
 			$this->assertNotNull($user->id);
 			$this->assertEquals(1, $user->groups->count());
@@ -136,7 +136,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $module_instance = $project->instances->create();
             $module_instance->name = 'My TestModule';
             $module_instance->module = 'TestModule';
-            $module_instance->save();
+            $this->assertTrue($module_instance->save());
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
@@ -157,7 +157,8 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $user->firstname = 'Gustavo';
             $user->lastname  = 'Solt';
             $user->language  = 'es_AR';
-            $user->save();
+            
+            $this->assertTrue($user->save());
 
             $gustavo = new Users_Models_User(array('db' => $this->sharedFixture));
             $gustavo->find($user->id);
@@ -240,7 +241,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $instance->find(5);
         $instance->id = 10;
         $instance->notes = '';
-        $instance->save();
+        $this->assertTrue($instance->save());
 
         $instance->find(10);
         $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
@@ -291,7 +292,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $instance->title = 'PHPUnit Test Project';
         $this->assertEquals('PHPUnit Test Project', $instance->title);
 
-        $instance->save();
+        $this->assertTrue($instance->save());
 
         $instance->find(5);
         $this->assertEquals('PHPUnit Test Project', $instance->title);
@@ -303,7 +304,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('PHPUnit Test Project', $instance->title);
 
         $instance->title = 'Test Project';
-        $instance->save();
+        $this->assertTrue($instance->save());
     }
 
     /**
