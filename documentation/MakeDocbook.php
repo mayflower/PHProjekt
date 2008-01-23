@@ -14,9 +14,40 @@ error_reporting(E_ALL);
 /* DUBUG **/
 
 
+if (function_exists('getopt')) {
+	$opts = getopt("x:o:p:h");
+}  else {
+	$opts = array();
+}
+
+if (array_key_exists('h', $opts) || $argc == 1) {
+	usage();
+}          
+
+if (array_key_exists('x', $opts)) {
+	foreach ((array)$opts['x'] as $exclude) {
+		$this->_excluded[] = $exclude;
+	}
+}          
+
+$directory = array_pop($argv);
+if (!is_dir($directory)) {
+	die ("Not a valid directory");
+}
 
 /** create new MakeDocbook Class */
-$makeDocbook = new MakeDocbook;
+$makeDocbook = new MakeDocbook($directory);
+
+if (array_key_exists('p', $opts)) {
+	$makeDocbook->setDocbookPath($opts['p']);
+}
+
+if (array_key_exists('o', $opts)) {
+	$makeDocbook->setOutput($opts['o']);
+}
+
+$makeDocbook->process();
+
 /* create new MakeDocbook Class **/
 
 
@@ -34,8 +65,8 @@ class MakeDocbook
     
     private $_basePath;
     
-    private $_docBookPath   = "/opt/local/var/macports/software/docbook-xsl/1.72.0_0/opt/local/share/xsl/docbook-xsl/html/";
-    
+    private $_docBookPath   = "/usr/share/xml/docbook/stylesheet/nwalsh/xhtml/chunk.xsl";   
+
     private $_docBookCSS    = "book.css"; 
     
     private $_xmlOutputFile = "output.xml";
@@ -44,31 +75,57 @@ class MakeDocbook
      * Constructor calls methods to generate docbook from text files
      *
      */
-    function __construct()
+    public function __construct($directory = 'Developer', $output = 'output.xml')
     {
-        $this->_basePath = dirname(__FILE__).'/documentation/Developer';
+        $this->_basePath = dirname(__FILE__). DIRECTORY_SEPARATOR . $directory;
         $this->_xmlNodes = simplexml_load_file(dirname(__FILE__).'/template.xml');
-        $this->_setExluded();
-        $this->_getDirectory($this->_basePath);
-        $this->_execCommandLine();
+		$this->setOutput($output);
     }
     
+	/**
+	 * Set the output file or directory
+	 *
+	 * @param string $output the file or directory
+	 */
+	public function setOutput($output)
+	{
+		$this->_xmlOutputFile = $output;
+	}
+
+	/**
+	 * Set the docbook part
+	 *
+	 * @param string $path the path
+	 *
+	 * @return void
+	 */
+	public function setDocbookPath($path) 
+	{
+		$this->_docBookPath = $path;
+	}
+
     /**
-     * setExcluded from command line
+	 * Files matching the given pattern will be ignored
      * 
+	 * @param string $exclude The pattern
+	 *
      * @return void
      */
-    private function _setExluded()
+    public function addExluded($exclude)
     {
-        // get Exluded Arguments
-        $opts = getopt("x:");
-        if (array_key_exists('x', $opts)) {
-            foreach ((array)$opts['x'] as $exclude) {
-                $this->_excluded[] = $exclude;
-            }
-        }           
+		$this->_excluded[] = $exclude;
     }
     
+	/**
+	 * Clear the exclude cache
+	 *
+	 * @return void
+	 */
+	public function clearExcluded() 
+	{
+		$this->_excluded = array();
+	}
+
     /**
      * set ignored files/folders
      *
@@ -77,8 +134,7 @@ class MakeDocbook
      * @return array $ignored
      */
     private function _ignoreFiles(array $excluded)
-    {
-        
+    {        
         $ignored = array();
         foreach ($excluded as $exclude) {
             $ignored = array_merge($ignored, glob($exclude));
@@ -87,6 +143,27 @@ class MakeDocbook
         return $ignored;
     }
     
+	/**
+	 * Create the docobook xml
+	 *
+	 * @return void
+	 */
+	public function generateXml() 
+	{
+        $this->_getDirectory($this->_basePath);
+		return $this->_xmlNodes;
+	}
+
+	/**
+	 * Get the nodes and execute the command line
+	 * 
+	 * @return void
+	 */
+	public function process() 
+	{		
+        $this->_execCommandLine($this->generateXml()->asXml());
+	}
+
     /**
      * get Directorys from filesystem
      *
@@ -96,8 +173,7 @@ class MakeDocbook
      * @return void
      */
     private function _getDirectory ( $path, $parentNode = null)
-    {
-        
+    {        
         // Directories to ignore when listing output. Many hosts
         $ignoreDefault = array( 'CVS', '.', '..', '.DS_Store', 'README-WRITE_DOCS');
         
@@ -218,13 +294,41 @@ class MakeDocbook
      *
      * @return void
      */
-    private function _execCommandLine()
+    private function _execCommandLine($string)
     {
-        exec("xsltproc --stringparam html.stylesheet ".$this->_docBookCSS." "
-                                                      .$this->_docBookPath."/docbook.xsl "
-                                                      .$this->_xmlOutputFile." > outfile.html");
-                                                      
-        file_put_contents($this->_xmlOutputFile, $this->_xmlNodes->asXML());
+        $fd = popen(sprintf("xsltproc --stringparam html.stylesheet %s --output %s %s - ",
+							$this->_docBookCSS,
+							$this->_xmlOutputFile,
+							$this->_docBookPath), "w");
+		if ($fd === false) {
+			die("Cannot open file");
+		}
+
+		fwrite($fd, $string);
+		pclose($fd);
+			 // file_put_contents($this->_xmlOutputFile, $this->_xmlNodes->asXML());
     }
 }
 
+function usage()
+{
+$string = <<<EOF
+MakeDocobook.php
+Create docbooks from a directory structure
+Written by Christopher Weckerle
+(c) 2008 Mayflower GmbH	
+
+Usage: MakeDocbook.php [OPTIONS] <directory>
+Options:
+        -o          Output file. If chunk are generated the 
+                    output directory must
+                    exists and a trailing / must be given
+        -p          Path to the docbook stylesheet
+        -x          Exclude a given pattern. 
+                    Can be used multiple times. Globs allowed
+        -h          Display this help
+
+EOF;
+	echo $string;
+	exit;
+}
