@@ -169,10 +169,20 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 case 'selectValues':
                     $converted[] = $this->_convertSelect($field);
                     break;
-                case 'space':
-                    break;
-                default:
+                case 'textarea':
+                case 'date':
+                case 'textfield':
+                case 'checkbox':
+                case 'date':
+                case 'time':
+                case 'multipleselect':
                     $converted[] = $this->_convertStandard($field);
+                    break;
+                case 'label':
+                    $entry             = $this->_convertStandard($field);
+                    $entry['readOnly'] = true;
+                    $converted[]       = $entry;
+                    break;
             }
         }
         return $converted;
@@ -189,7 +199,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
-        $converted['type']  = 'select';
+        $converted['type']  = 'selectbox';
         
         foreach(explode('|', $field->formRange) as $range) {
             list($key, $value) = explode('#', $range);
