@@ -227,7 +227,9 @@ class Inspector
             $messages = Inspector_Engine::getMessages();
         }
         
-        if (Inspector_Util::isBlank($value)) {
+        /* If strings are empty they are totally valid as 
+           long as $empty is not specified */
+        if (Inspector_Util::isBlank($value) && ($type != 'string' || $empty)) {
             
             if (!$empty) {
                 $messages->add('SANITIZE_DEFAULT');
