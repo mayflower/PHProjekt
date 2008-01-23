@@ -24,11 +24,7 @@ if (array_key_exists('h', $opts) || $argc == 1) {
 	usage();
 }          
 
-if (array_key_exists('x', $opts)) {
-	foreach ((array)$opts['x'] as $exclude) {
-		$this->_excluded[] = $exclude;
-	}
-}          
+          
 
 $directory = array_pop($argv);
 if (!is_dir($directory)) {
@@ -37,7 +33,11 @@ if (!is_dir($directory)) {
 
 /** create new MakeDocbook Class */
 $makeDocbook = new MakeDocbook($directory);
-
+if (array_key_exists('x', $opts)) {
+	foreach ((array)$opts['x'] as $exclude) {
+		$makeDocbook->addExclude($exclude);
+	}
+}
 if (array_key_exists('p', $opts)) {
 	$makeDocbook->setDocbookPath($opts['p']);
 }
@@ -103,18 +103,17 @@ class MakeDocbook
 	{
 		$this->_docBookPath = $path;
 	}
-
-    /**
+	
+	/**
 	 * Files matching the given pattern will be ignored
-     * 
+	 * 
 	 * @param string $exclude The pattern
 	 *
-     * @return void
-     */
-    public function addExluded($exclude)
-    {
-		$this->_excluded[] = $exclude;
-    }
+	 * @return void
+	 */
+	public function addExclude($exclude) {
+		$this->_excluded [] = $exclude;
+	}
     
 	/**
 	 * Clear the exclude cache
