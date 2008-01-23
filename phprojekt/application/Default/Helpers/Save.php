@@ -106,14 +106,14 @@ final class Default_Helpers_Save
         if (func_num_args() < 2) {
             throw new InvalidArgumentException('Expect two arguments');
         }
+            
+        if (!is_array($params)) {
+            throw new InvalidArgumentException('Second parameter needs to be an array');
+        }
         
         $arguments = func_get_args();
 		$model     = $arguments[0];
 		$params    = $arguments[1];
-		
-		if (!is_array($params)) {
-			throw new InvalidArgumentException('Second parameter needs to be an array');
-		}
 		
         if ($model instanceof Phprojekt_Tree_Node_Database) {
             
