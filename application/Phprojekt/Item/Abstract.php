@@ -104,6 +104,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         return new Phprojekt_DatabaseManager_Field($this->getInformation(),
                                                    $this->key(),
                                                    parent::current());
+        // return parent::current();
     }
 
     /**
@@ -112,6 +113,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @param string $varname Name of the var to assign
      * @param mixed  $value   Value for assign to the var
      *
+     * @throws InvalidArgumentException
+     * 
      * @return void
      */
     public function __set($varname, $value)
@@ -124,32 +127,37 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
             switch ($type) {
                 case 'int':
-                    $value = Inspector::sanitize('integer', $value, $messages);
+                    $value = Inspector::sanitize('integer', $value, $messages, false);
                     break;
                 case 'float':
-                    if (!empty($value)) {
-                        $value = Inspector::sanitize('float', $value, $messages);
+                    $value = Inspector::sanitize('float', $value, $messages, false);
+                    if ($value !== false) {
                         $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
                     } else {
                         $value = 0;
                     }
                     break;
                 case 'date':
-                    $value = Inspector::sanitize('date', $value, $messages);
+                    $value = Inspector::sanitize('date', $value, $messages, false);
                     break;
                 case 'time':
-                    $value = Inspector::sanitize('time', $value, $messages);
+                    $value = Inspector::sanitize('time', $value, $messages, false);
                     break;
                 case 'timestamp':
-                    $value = Inspector::sanitize('timestamp', $value, $messages);
+                    $value = Inspector::sanitize('timestamp', $value, $messages, false);
                     break;
                 default:
-                    $value = Inspector::sanitize('string', $value, $messages);
+                    $value = Inspector::sanitize('string', $value, $messages, false);
                     break;
             }
         } else {
-            $value = Inspector::sanitize('string', $value, $messages);
+            $value = Inspector::sanitize('string', $value, $messages, false);
         }
+        
+        if ($value === false) {
+            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname . ' expected to be ' . $type .'.');   
+        } 
+       
         parent::__set($varname, $value);
     }
 
@@ -183,11 +191,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                         }
 
                         $error = $this->validateValue($varname, $value);
-                        if (null != $error) {
+                        if (false === $error) {
                             $validated = false;
                              $this->_error->addError(array(
                                 'field'   => $varname,
-                                'message' => $error));
+                                'message' => "Invalid Format"));
                         }
                         break;
                     }
@@ -212,7 +220,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-<<<<<<< Abstract.php
      * Validate a value use the database type of the field
      *
      * @param string $varname Name of the field
@@ -224,37 +231,33 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $info  = $this->info();
         $valid = true;
-        if (isset($info['metadata'][$varname])) {
+        if (isset($info['metadata'][$varname]) && !empty($value)) {
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];
 
             switch ($type) {
                 case 'int':
-                    $valid = Inspector::validate('integer', $value, $messages, true);
+                    $valid = Inspector::validate('integer', $value, $messages, false);
                     break;
                 case 'float':
-                    $valid = Inspector::validate('float', $value, $messages, true);
+                    $valid = Inspector::validate('float', $value, $messages, false);
                     break;
                 case 'date':
-                    $valid = Inspector::validate('date', $value, $messages, true);
+                    $valid = Inspector::validate('date', $value, $messages, false);
                     break;
                 case 'time':
-                    $valid = Inspector::validate('time', $value, $messages, true);
+                    $valid = Inspector::validate('time', $value, $messages, false);
                     break;
                 case 'timestamp':
-                    $valid = Inspector::validate('timestamp', $value, $messages, true);
+                    $valid = Inspector::validate('timestamp', $value, $messages, false);
                     break;
                 default:
-                    $valid = Inspector::validate('string', $value, $messages, true);
+                    $valid = Inspector::validate('string', $value, $messages, false);
                     break;
             }
         }
 
-        if (!$valid) {
-            return 'Invalid format';
-        } else {
-            return null;
-        }
+        return $valid !== false;
     }
 
     /**
