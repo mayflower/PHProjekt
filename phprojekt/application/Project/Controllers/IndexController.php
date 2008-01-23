@@ -96,23 +96,6 @@ class Project_IndexController extends IndexController
             $model = $this->getModelObject();
         }
 
-        /*
-        $parent = (isset($this->_params['parent'])) ? (int) $this->_params['parent'] : 1;
-
-        $parentNode = new Phprojekt_Tree_Node_Database($model, $parent);
-        $newNode    = new Phprojekt_Tree_Node_Database($model, $this->getRequest()->getParam('id'));
-
-        if (null !== $this->getRequest()->getParam('id')) {
-            $newNode->setup();
-        }
-        $parentNode->setup();
-
-        foreach ($this->_params as $k => $v) {
-            if ($newNode->getActiveRecord()->keyExists($k)) {
-                $newNode->$k = $v;
-            }
-        }
-    */
         /* Validate and save if is all ok */
         $node = new Phprojekt_Tree_Node_Database($model);
 
