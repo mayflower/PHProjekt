@@ -34,26 +34,26 @@ class Inspector_Sanitizer
      * @var unknown_type
      */
     public $sanitizers = array(
-        'int'           => 'Int',
-        'integer'       => 'Int',
-        'alnum'           => 'Alnum',
-        'alpha'           => 'Alpha',
-        'bool'           => 'Bool',
-        'boolean'       => 'Bool',
-        'float'           => 'Float',
-        'real'           => 'Float',
-        'ipv4'           => 'Ipv4',
+        'int'          => 'Int',
+        'integer'      => 'Int',
+        'alnum'        => 'Alnum',
+        'alpha'        => 'Alpha',
+        'bool'         => 'Bool',
+        'boolean'      => 'Bool',
+        'float'        => 'Float',
+        'real'         => 'Float',
+        'ipv4'         => 'Ipv4',
         'ip'           => 'Ipv4',
-        'date'           => 'IsoDate',
-        'isodate'       => 'IsoDate',
-        'time'           => 'IsoTime',
-        'isotime'       => 'IsoTime',
-        'timestamp'       => 'IsoTimestamp',
+        'date'         => 'IsoDate',
+        'isodate'      => 'IsoDate',
+        'time'         => 'IsoTime',
+        'isotime'      => 'IsoTime',
+        'timestamp'    => 'IsoTimestamp',
         'isotimestamp' => 'IsoTimestamp',
-        'numeric'       => 'Numeric',
+        'numeric'      => 'Numeric',
         'string'       => 'String',
-        'word'           => 'Word',
-        'html'           => 'Html'
+        'word'         => 'Word',
+        'html'         => 'Html'
     );
     
     
@@ -93,7 +93,7 @@ class Inspector_Sanitizer
      */
     public function sanitizeNumeric($value, &$messages)
     {
-        $instance        = Inspector_Engine::getInstance();
+        $instance       = Inspector_Engine::getInstance();
         $floatSanitizer = $instance->getSanitizer('float');
         
         return (string) $floatSanitizer->sanitize($value, $messages);
@@ -113,7 +113,11 @@ class Inspector_Sanitizer
         if (is_int($value)) {
             return date($format, $value);
         } else {
-            return date($format, strtotime($value));
+            $time = strtotime($value);
+            if ($time === false) {
+                return null;
+            }
+            return date($format, $time);
         }
         
     }
@@ -133,7 +137,11 @@ class Inspector_Sanitizer
         if (is_int($value)) {
             return date($format, $value);
         } else {
-            return date($format, strtotime($value));
+            $time = strtotime($value);
+            if ($time === false) {
+                return null;
+            }
+            return date($format, $time);
         }
     }
     
@@ -152,7 +160,11 @@ class Inspector_Sanitizer
         if (is_int($value)) {
             return date($format, $value);
         } else {
-            return date($format, strtotime($value));
+            $time = strtotime($value);
+            if ($time === false) {
+                return null;
+            }
+            return date($format, $time);
         }
     }
     
@@ -166,7 +178,13 @@ class Inspector_Sanitizer
      */
     public function sanitizeIpv4($value, &$messages)
     {
-        $result = long2ip(ip2long($value));
+        $long = ip2long($value);
+        
+        if ($long === false) {
+            return null;
+        }
+        
+        $result = long2ip($long);
     }
     
     /**
@@ -271,13 +289,13 @@ class Inspector_Sanitizer
         
         // remove all minuses not at the front
         $isNegative = ($value[0] == '-');
-        $value = str_replace('-', '', $value);
+        $value      = str_replace('-', '', $value);
         if ($isNegative) {
             $value = '-' . $value;
         }
         
         // remove all decimals but the first
-        $pos = strpos($value, '.');
+        $pos   = strpos($value, '.');
         $value = str_replace('.', '', $value);
         if ($pos !== false) {
             $value = substr($value, 0, $pos)
