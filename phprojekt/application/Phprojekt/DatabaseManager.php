@@ -170,13 +170,17 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $converted[] = $this->_convertSelect($field);
                     break;
                 case 'textarea':
-                case 'date':
                 case 'textfield':
                 case 'checkbox':
                 case 'date':
-                case 'time':
                 case 'multipleselect':
+                case 'tree':
                     $converted[] = $this->_convertStandard($field);
+                    break;
+                case 'text':
+                    $entry         = $this->_convertStandard($field);
+                    $entry['type'] = 'textfield';
+                    $converted[]   = $entry;
                     break;
                 case 'label':
                     $entry             = $this->_convertStandard($field);
