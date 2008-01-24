@@ -31,6 +31,51 @@
 class Phprojekt_Converter_Json
 {
 
+    /*
+     * @todo to be removed
+     */
+    public static function beautify($string)
+    {
+        $lines = array();
+        $inString = false;
+        $depth = 0;
+        $buffer = "";
+        for ($i = 0; $i < strlen($string) ; $i++) {
+            switch($string[$i]) {
+                case '"':
+                    if($inString)   
+                        $inString = false;
+                    else 
+                        $inString = true;
+                    break;
+                case ",":
+                    if (!$inString && !in_array($string[$i - 1], array('}', ']')) ) {
+                         $buffer.= ",<br />". str_repeat("&nbsp;", $depth * 2);
+                         $string[$i] = '';
+                    }
+                    break;
+                    
+                case "{":
+                case "[":
+                    if (!$inString) {
+                        $buffer.= "<br />". str_repeat("&nbsp;", $depth * 2);
+                        $depth++;
+                    }
+                    break;
+                    
+                case "}":  
+                case "]":
+                    if (!$inString) {
+                        $buffer.= "<br/>";
+                        $depth--;
+                    }
+                    break;
+            } 
+            $buffer.= $string[$i];
+        }
+        return $buffer;
+    }
+        
     /**
      * Convert a model or a model information into a json stream
      * 
@@ -41,6 +86,10 @@ class Phprojekt_Converter_Json
      */
     public static function convert ($models, $order = MODELINFO_ORD_DEFAULT)
     {
+        if (null === $models) {
+            return Zend_Json_Encoder::encode('');
+        }
+        
         $model = current((array) $models);
         if (! $model instanceof Phprojekt_Model_Interface) {
             throw new InvalidArgumentException();
@@ -58,7 +107,11 @@ class Phprojekt_Converter_Json
          */
         foreach ($models as $cmodel) {
             foreach ($cmodel as $key => $value) {
-                $data[$key] = (string) $value;
+                if (is_scalar($value)) {
+                    $data[$key] = $value;
+                } else {
+                    $data[$key] = (string) $value;
+                }
             }
             $datas[] = $data;
         }
