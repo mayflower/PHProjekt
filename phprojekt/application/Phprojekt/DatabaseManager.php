@@ -173,17 +173,23 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 case 'textfield':
                 case 'checkbox':
                 case 'date':
-                case 'multipleselect':
+                case 'upload':
                 case 'tree':
                     $converted[] = $this->_convertStandard($field);
                     break;
+                case 'multipleselect':
+                case 'select_multiple':
+                    $entry         = $this->_convertStandard($field);
+                    $entry['type'] = 'multipleselect';
+                    $converted[]   = $entry;
                 case 'text':
                     $entry         = $this->_convertStandard($field);
                     $entry['type'] = 'textfield';
                     $converted[]   = $entry;
                     break;
-                case 'label':
+                case 'display':
                     $entry             = $this->_convertStandard($field);
+                    $entry['type']     = 'label';
                     $entry['readOnly'] = true;
                     $converted[]       = $entry;
                     break;
