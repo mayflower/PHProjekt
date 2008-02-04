@@ -97,6 +97,10 @@ class Phprojekt_Converter_Json
         
         $information = $model->getInformation();
         
+        // TODO may $information already contains the numRows the result set would return ... I dont know Zend DB too well, and didnt find it :-(  (Wolfram)
+        // Be sure to replace this by a SQL_CALC_ROWS (or how it is called) to prevent the extra COUNT(*) query as it currently is!
+        $numRows = $model->count();
+        
         /* we can check the returned array, but at the moment we just pass it */
         $datas = array();
         $data  = array();
@@ -116,9 +120,11 @@ class Phprojekt_Converter_Json
             $datas[] = $data;
         }
         
-        $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas);
+        $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas, 'numRows'=>$numRows);
         
-        return Zend_Json_Encoder::encode($data);
+        // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
+        // the content-type dojo expects is: json-comment-filtered
+        return '/* '.Zend_Json_Encoder::encode($data).' */';
     }
 
     /**

@@ -478,12 +478,41 @@ class IndexController extends Zend_Controller_Action
     {
         $view = $this->_params['view'];
 
+        $req = $this->getRequest();
         if ('tree' == $view) {
             $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
             $tree->setup();
             echo Phprojekt_Converter_Json::convertTree($tree);
         } else {
-            echo Phprojekt_Converter_Json::convert($this->getModelObject()->fetchAll());
+            // Parse the "sort" paramter send by the grid.
+            // Dojo prefixes a column name with "-" for indicating a descending sort.
+            $sort = $req->getParam('sort');
+            if ($sort) {
+                $sort = '-' == $sort[0] ? (substr($sort, 1).' DESC') : $sort;
+            } else {
+                $sort = null;
+            }
+            // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
+            // so lets apply this to the query set. This is also used for loading a
+            // grid on demand (initially only a part is shown, scrolling down loads what is needed).
+            $count = $this->getRequest()->getParam('count');
+            $offset = $this->getRequest()->getParam('start');
+            
+            $model = $this->getModelObject();
+            // FIXXXXXXXXMEEEEEEE
+            // the ollowing array needs to be generated depending on the available columns to filter for, this is hardcoded to "Todo"!!!!!!
+            $possibleFields = array('priority', 'startDate', 'endDate', 'title');
+            $where = array();
+            foreach ($possibleFields as $k) {
+                $value = $this->_params['filter'][$k];
+                if ($value) {
+                    // I dont know if this is the right way, i would expect to use prepared statements!!!!!!
+                    $where[] = $model->getAdapter()->quoteInto("$k = ?", $value);
+                }
+            }
+            // END FIXXXXXXXXMEEEEEEE
+            
+            echo Phprojekt_Converter_Json::convert($model->fetchAll($where ? implode(' AND ', $where) : null, $sort, $count, $offset));
         }
 
         exit;
