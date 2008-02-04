@@ -936,6 +936,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Fetches all rows according to the where, order, count, offset rules
+     * @todo Example call
      *
      * @param string|array $where  Where clause
      * @param string|array $order  Order by
