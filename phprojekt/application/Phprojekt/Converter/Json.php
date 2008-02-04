@@ -153,8 +153,6 @@ class Phprojekt_Converter_Json
         $data['label']      = 'name';
         $data['items']      = $treeNodes;
         
-        $datajs = Zend_Json_Encoder::encode(array('data' => $data));
-        
-        return $datajs;
+        return '/* '.Zend_Json_Encoder::encode($data).' */';
     }
 }
