@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+    <style>
+        @import "scripts/dojo/dojo/resources/dojo.css";
+        @import "scripts/dojo/dijit/themes/tundra/tundra.css";
+        @import "scripts/dojo/dojox/grid/_grid/tundraGrid.css";
+    </style>
+    <script type="text/javascript">
+        var djConfig = {isDebug:true, parseOnLoad:false, preventBackButtonFix:false,
+                        bindEncoding: "utf-8", dojoIframeHistoryUrl: '../resources/iframe_history.html',
+                        locale:'en' };
+    </script>
+    <script type="text/javascript" src="scripts/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="scripts/phpr/phpr.js"></script>
+
+<body class="tundra">
+    <script>
+        dojo.require("phpr.app.default.Main");
+        var main = new phpr.app.default.Main();
+    </script>
+    <script src="scripts/dojo/dojox/data/QueryReadStore.js"></script>
+    <script src="scripts/phpr/grid.js"></script>
+    <script src="scripts/phpr/Component.js"></script>
+    <script src="scripts/phpr/Component.js"></script>
+    <script src="scripts/phpr/app/default/Main.js"></script>
+    <script src="scripts/phpr/app/default/Grid.js"></script>
+    <script src="scripts/phpr/app/default/Tree.js"></script>
+</body>
+</html>
