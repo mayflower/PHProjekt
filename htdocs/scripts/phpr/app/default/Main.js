@@ -7,6 +7,7 @@ dojo.require("phpr.Component");
 
 // Load the widgets the template uses.
 dojo.require("dijit.layout.SplitContainer");
+dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.form.Button");
@@ -29,9 +30,24 @@ dojo.declare("phpr.app.default.Main", phpr.Component, {
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.tree = new phpr.app.default.Tree(this);
-                this.grid = new phpr.app.default.Grid(this);
+//                this.grid = new phpr.app.default.Grid(this);
             })
         );
+        
+        dojo.subscribe("tree.onNodeClick", null, dojo.hitch(this, "openProject"))
+    },
+    
+    openProject:function(data) {
+        //console.debug(data);
+        var el = dojo.byId("contentBox");
+        phpr.destroyWidgets(el);
+        this.render(["phpr.app.default.template", "tabs.html"], el);
+        
+        // Load first tab. Is this code right here???? thinking ...
+        var w = dijit.byId("tabBox");
+        var content = this.render(["phpr.app.default.template", "content.html"]);
+        w.getChildren()[0].setContent(content);
+        this.grid = new phpr.app.default.Grid(this);
     }
     
 });
