@@ -14,11 +14,11 @@ dojo.declare("phpr.Component", null, {
         // TODO the url is hacky ... to always get the newest, do it right (using dojo.xhr/phpr.send, synchronously!!!)
         var tpl = new dojox.dtl.Template(dojo._getText(dojo.moduleUrl(template[0], template[1])+'?'+Math.random()));
         if(node){
-			node.innerHTML = tpl.render(context);
-        	// Init the widgets inside the node.
-        	phpr.initWidgets(node);
-		}
-		else{
+            node.innerHTML = tpl.render(context);
+            // Init the widgets inside the node.
+            phpr.initWidgets(node);
+        }
+        else{
             return tpl.render(context);
         }
     }

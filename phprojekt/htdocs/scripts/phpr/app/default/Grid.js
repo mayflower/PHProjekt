@@ -23,8 +23,7 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
             layout:null
         };
         this.grid.model = new phpr.grid.Model(null, null, {
-            //store:new phpr.grid.QueryReadStore({url:"http://localhost/phprojekt6/htdocs/countries.json"})
-            store:new phpr.grid.ReadStore({url:"http://localhost/phprojekt6/htdocs/index.php/Todo/index/jsonList"})
+            store:new phpr.grid.ReadStore({url:"/index.php/Todo/index/jsonList"})
         });
         // I am not 100% sure this is the best way, but it works quite well for now.
         // We trigger the request by hand here, and pass the model to the grid,

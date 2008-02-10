@@ -9,30 +9,6 @@
 <div dojoType="dijit.layout.SplitContainer" orientation="horizontal" sizerWidth="7" activeSizing="false" style="width:100%; height:600px;">
     <div id="treeBox" dojoType="dijit.layout.ContentPane" sizeMin="10" sizeShare="50" style="border:1px solid grey;">
     </div>
-    <div dojoType="dijit.layout.ContentPane" sizeMin="20" sizeShare="50">
-        <div id="headerBox" dojoType="dijit.layout.ContentPane" style="border:1px solid grey; height:1.5em;">
-            ich bin dazwischen
-        </div>
-        <div dojoType="dijit.layout.ContentPane" style="border:1px solid grey; height:2.5em;">
-            <form id="gridFilterForm" dojoType="dijit.form.Form">
-                Title <input name="title" type="text" size="10" />
-                Start <input name="startDate" dojoType="dijit.form.DateTextBox" style="width:100px" />
-                End <input name="endDate" dojoType="dijit.form.DateTextBox" style="width:100px" />
-                Priority <select name="priority" dojoType="dijit.form.FilteringSelect" style="width:40px">
-                    <option value="1">1<option>
-                    <option value="2">2<option>
-                    <option value="3">3<option>
-                    <option value="4">4<option>
-                    <option value="5">5<option>
-                </select>
-                <button id="gridFilterSubmitButton" dojoType="dijit.form.Button">Search</button>
-            </form>
-        </div>
-        <div dojoType="dijit.layout.SplitContainer" orientation="vertical" sizerWidth="7" activeSizing="false" style="width:100%; height:500px;">
-            <div id="gridBox" dojoType="dijit.layout.ContentPane" sizeMin="10" sizeShare="50" style="border:1px solid grey;">
-            </div>
-            <div id="detailsBox" dojoType="dijit.layout.ContentPane" sizeMin="10" sizeShare="10" style="border:1px solid grey;">
-            </div>
-        </div>
+    <div id="contentBox" dojoType="dijit.layout.ContentPane" sizeMin="20" sizeShare="50">
     </div>
 </div>
