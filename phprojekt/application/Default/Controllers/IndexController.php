@@ -484,6 +484,7 @@ class IndexController extends Zend_Controller_Action
             $tree->setup();
             echo Phprojekt_Converter_Json::convertTree($tree);
         } else {
+        	$db = Zend_Registry::get('db');
             // Parse the "sort" paramter send by the grid.
             // Dojo prefixes a column name with "-" for indicating a descending sort.
             $sort = $req->getParam('sort');
@@ -501,18 +502,24 @@ class IndexController extends Zend_Controller_Action
             $model = $this->getModelObject();
             // FIXXXXXXXXMEEEEEEE
             // the ollowing array needs to be generated depending on the available columns to filter for, this is hardcoded to "Todo"!!!!!!
-            $possibleFields = array('priority', 'startDate', 'endDate', 'title');
+            $possibleFields = array('priority', 'startDate', 'endDate', 'title','id');
             $where = array();
             foreach ($possibleFields as $k) {
                 $value = $this->_params['filter'][$k];
                 if ($value) {
                     // I dont know if this is the right way, i would expect to use prepared statements!!!!!!
-                    $where[] = $model->getAdapter()->quoteInto("$k = ?", $value);
+                  //  $this->addWhere($db->quoteInto("$k = ?", $value);
                 }
             }
-            // END FIXXXXXXXXMEEEEEEE
-            
-            echo Phprojekt_Converter_Json::convert($model->fetchAll($where ? implode(' AND ', $where) : null, $sort, $count, $offset));
+            $session = new Zend_Session_Namespace();
+        	if (isset($session->currentProjectId)) {
+            	$projectId = $session->currentProjectId;
+            	$this->addWhere($db->quoteInto('parent = ?', $projectId));
+       	 	} 
+        	
+        	$records = $this->getModelObject()->fetchAll($this->getWhere(), $sort, $count, $offset);
+        	$records = count($records) > 0 ? $records:null;
+            echo Phprojekt_Converter_Json::convert($records);
         }
 
         exit;

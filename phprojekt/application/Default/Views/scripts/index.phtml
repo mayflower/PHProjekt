@@ -1,73 +1,38 @@
-<?php
-function nodeset($node, $view)
-{
-    if (!$node->hasChildren()) {
-        return;
-    }
-    
-    print("<ul>\n");
-    foreach ($node->getChildren() as $child) {
-        printf("<li><a href='%s'>%s</a>\n", $view->url(array('module'=>'Project', 'action'=>'list', 'nodeId' => $child->id)), $view->escape($child->title));       
-        nodeset($child, $view);
-        print("</li>\n");
-    }
-    print("</ul>\n");
-} ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>PHProjekt 6</title>
-    <!-- Framework CSS -->
-    <link rel="stylesheet" href="<?php echo $this->webpath; ?>css/screen.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="<?php echo $this->webpath; ?>css/print.css" type="text/css" media="print" />
-    <!--[if IE]><link rel="stylesheet" href="../css/lib/ie.css" type="text/css" media="screen, projection"><![endif]-->
-</head>
-<body>
-<div class="container">
-    <div id="header" class="block"><img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
-        <div id="search-bar" class="last right align-right">
-            <input name="searchfield" value="Search" />
-        </div>
-        <div id="toolbar" class="span-10 right align-right">Administrator  |  <a href="<?php echo $this->url(array('module'=>'Default', 'controller'=>'logout', 'action'=>'logout')); ?>">Logout</a> |  Settings  |   Help </div>
-    </div>
-    <div id="subheader" class="block">
-        <div id="navigation-container-titel" class="column span-5">
-        <p>ROOT</p>
-        </div>
-        <div class="column"><img src="<?php echo $this->webpath; ?>/img/subheaderborder.png" alt="" /></div>
-        <div class="column right span-17 append-1 align-right">
-            <div id="nav_main">
-                <ul>
-<?php
-    foreach ($this->modules as $module) {
-        printf('<li><a href="%s">%s</a></li>', $this->url(array('module'=>$module, 'action'=>'list')), $this->escape($module));
-    }
-?>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="block">
-        <div class="column span-5 left" id="navigation-container">
-            <div id="tree-navigation">
-                <ul id="submenu">
-                    <li id="title">Default Group</li>
-<?php
-    nodeset($this->tree, $this);
-?>
-                </ul>
-            </div>
-        </div>
-        <!-- BEGIN Content-->
-        <div id="content" class="column span-18 prepend-1">
-<?php
-	 print($this->listView);
-	 print($this->formView);
-?>
-        </div>
-        <!-- END Content-->
-    </div>
-</div>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+    <style>
+        @import "<?php echo $this->webpath; ?>scripts/dojo/dojo/resources/dojo.css";
+       
+        @import "<?php echo $this->webpath; ?>css/screen.css";
+         @import "<?php echo $this->webpath; ?>scripts/dojo/dijit/themes/phprojekt/phprojekt.css";
+    </style>
+    <script type="text/javascript">
+        var djConfig = {isDebug:true, parseOnLoad:false, preventBackButtonFix:false,
+                        bindEncoding: "utf-8", dojoIframeHistoryUrl: '../resources/iframe_history.html',
+                        locale:'en' };
+    </script>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>scripts/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>scripts/phpr/phpr.js"></script>
+
+<body class="phprojekt">
+    <script>
+        dojo.require("phpr.app.default.Main");
+        var main = new phpr.app.default.Main("<?php echo $this->webpath; ?>","{<?php 
+         foreach ($this->modules as $module) {
+         echo "'$module'";
+         }
+        ?>}");
+    </script>
+    <script src="<?php echo $this->webpath; ?>scripts/dojo/dojox/data/QueryReadStore.js"></script>
+    <script src="<?php echo $this->webpath; ?>scripts/phpr/grid.js"></script>
+    <script src="<?php echo $this->webpath; ?>scripts/phpr/Component.js"></script>
+    <script src="<?php echo $this->webpath; ?>scripts/phpr/Component.js"></script>
+    <script src="<?php echo $this->webpath; ?>scripts/phpr/app/default/Main.js"></script>
+    <script src="<?php echo $this->webpath; ?>scripts/phpr/app/default/Grid.js"></script>
+    <script src="<?php echo $this->webpath; ?>scripts/phpr/app/default/Tree.js"></script>
 </body>
 </html>
