@@ -78,7 +78,7 @@ body {
 	margin-right: 10px;
 }
 
-#header #toolbar {
+#header #toolbar1 {
 	margin: 15px;
 	color: #ffffff;
 	font-size: 11px;
@@ -91,6 +91,7 @@ body {
 }
 
 #subheader #navigation-container-titel {
+	width:100%;
 	background: #294064;
 	height: 26px;
 	margin: 0;

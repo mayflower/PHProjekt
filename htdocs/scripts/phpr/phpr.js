@@ -4,6 +4,7 @@ dojo.provide("phpr");
 dojo.registerModulePath("phpr", "../../phpr");
 
 dojo.require("dojo.parser");
+dojo.require("dojox.data.QueryReadStore");
 
 phpr.initWidgets = function(el) {
     // This parses the given node and inits the widgets found in there.
@@ -85,7 +86,7 @@ phpr.send = function(/*Object*/paramsIn) {
     dojo.xhrPost({
         url:params.url,
         content:params.content,
-        handleAs:"json-comment-filtered",
+        //handleAs:"json-comment-filtered",
         error:_onError,
         load:_onSuccess
     });
@@ -95,7 +96,7 @@ phpr.getData = function(url, callback){
     dojo.xhrPost(
     {
         url         :	url,
-        handleAs    :   'json',
+        handleAs:"json-comment-filtered",
         timeout     :   10000,
         load: function(data) {
             callback(data);
@@ -117,4 +118,40 @@ phpr.getCurrent = function(data, identifier, value){
 		}
 	}
 	return current;
-}
+};
+dojo.declare("phpr.MetaReadStore", dojox.data.QueryReadStore, {
+//    // We need the store explicitly here, since we have to pass it to the grid model.
+    requestMethod:"post",
+    doClientPaging:false,
+    
+    _filterResponse: function(data){
+        // We need to pre-process the data before passing them to the QueryReadStore,
+        // since the data structure sent form the server does not comply to what
+        // the QueryReadStore expects, we just need to extract the data-key.
+// TODO extract the meta data and provide them so we can read them and format input data accordingly, i.e. map currentStatus 1=>"working", etc.
+        ret = {
+            items:data.metadata
+        };
+        return ret;
+    }
+
+});
+dojo.declare("phpr.CompleteReadStore", dojox.data.QueryReadStore, {
+//    // We need the store explicitly here, since we have to pass it to the grid model.
+    requestMethod:"post",
+    doClientPaging:false,
+    
+    _filterResponse: function(data){
+        // We need to pre-process the data before passing them to the QueryReadStore,
+        // since the data structure sent form the server does not comply to what
+        // the QueryReadStore expects, we just need to extract the data-key.
+// TODO extract the meta data and provide them so we can read them and format input data accordingly, i.e. map currentStatus 1=>"working", etc.
+        ret = {
+            items: [{
+				"metadata": data.metadata},
+				{"data": data.data}]
+        };
+        return ret;
+    }
+
+});
