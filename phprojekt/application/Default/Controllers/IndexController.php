@@ -508,7 +508,7 @@ class IndexController extends Zend_Controller_Action
                 $value = $this->_params['filter'][$k];
                 if ($value) {
                     // I dont know if this is the right way, i would expect to use prepared statements!!!!!!
-                  //  $this->addWhere($db->quoteInto("$k = ?", $value);
+                  $this->addWhere($db->quoteInto("$k = ?", $value));
                 }
             }
             $session = new Zend_Session_Namespace();
