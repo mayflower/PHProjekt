@@ -63,7 +63,7 @@ dojo.declare("phpr.grid.Model", dojox.grid.data.DojoData, {
     rowsPerPage:20,
     query:{name:"*"},
     clientSort:false,
-    
+    metaData:null,
     _numRows:0,
     getRowCount:function() {
         return this._numRows;
@@ -125,6 +125,7 @@ dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
     doClientPaging:false,
     
     _filterResponse: function(data){
+		this.metaData=data.metadata;
         // We need to pre-process the data before passing them to the QueryReadStore,
         // since the data structure sent form the server does not comply to what
         // the QueryReadStore expects, we just need to extract the data-key.

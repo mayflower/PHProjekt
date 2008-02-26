@@ -7,26 +7,28 @@ dojo.require("dojo.data.ItemFileReadStore");
 
 dojo.declare("phpr.app.default.Tree", phpr.Component, {
     
-    treeWidget:null,
+   	_treeNode:null,
+	treeWidget:null,
 	module:'Project',
     
     constructor:function(main,module) {
+		this._treeNode = dojo.byId("treeBox");
         this.main = main;
 		this.module = module;
         // Render the tree on the left hand side, from the template.
 		//destroy if already exists
-		if (dijit.byId("treeNode")) {
-			phpr.destroyWidgets("treeNode");
-		}		
+		if (dijit.byId(this._treeNode)) {
+			phpr.destroyWidgets(this._treeNode);
+		}
 		var treepath =  this.main.webpath+"index.php/Project/index/jsonList/view/tree";
-        this.render(["phpr.app.default.template", "tree.html"], dojo.byId("treeBox"),{url:treepath});
-        this.treeWidget = dijit.byId("treeNode");
+        this.render(["phpr.app.default.template", "tree.html"], this._treeNode,{url:treepath});
+		this.treeWidget = dijit.byId("treeNode");
         dojo.connect(this.treeWidget, "onClick", dojo.hitch(this, "onItemClick"));
     },
     
     onItemClick:function(item) {
+		if(!item)item=[];
 		dojo.publish("tree.nodeClick", [item, this.module]); 
-   		dojo.publish("tree.leaveClick", [item, this.module]);
-    }
+      }
     
 });

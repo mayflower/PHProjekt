@@ -100,7 +100,7 @@ dojo.declare("phpr.app.default.Form", phpr.Component, {
 		phpr.send({
 			url: this.main.webpath + 'index.php/' + this.module + '/index/save/id/' + this.id,
 			content: "/* "+dojo.toJson(sendData,true)+" */",
-			onSuccess: dojo.publish("form.Submitted", [this.id, this.module])
+			onSuccess: dojo.publish("form.Submitted", [this.id, this.module, sendData['parent']])
 		});
 	}
 	

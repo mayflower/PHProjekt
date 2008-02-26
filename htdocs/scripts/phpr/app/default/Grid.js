@@ -41,39 +41,32 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
         // this way we have received the first set of rows and can render the grid.
         // Ask me (Wolfram) in a while and I know a better way :-).
         // this still has the triggering two request ... for whatever reason :-(
-        this.grid.model.requestRows(0, 1, dojo.hitch(this, "onLoaded"));
+        this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
 
     },		
     onLoaded:function() {
         this.grid.widget = dijit.byId("gridNode");
 		dojo.connect(this.grid.widget, "onRowDblClick", dojo.hitch(this, "onRowClick"));
-		
-		//fetch the metasrore
-		this.metaStore = new phpr.MetaReadStore({url: this.main.webpath+"index.php/"+this.module+"/index/jsonList/nodeId/"+this.id});
-		this.metaStore.fetch({onComplete: dojo.hitch(this,function(){
-			this.grid.widget.updateRowCount(this.grid.model.getRowCount());
-        	this.grid.widget.setModel(this.grid.model);
-			var gridStructure = [
+		this.grid.widget.setModel(this.grid.model);
+		meta= this.grid.widget.model.store.metaData;
+		for (var i = 0; i < meta.length; i++) {
+			this.gridLayout.push({
+				name: meta[i]["label"],
+				field: meta[i]["label"]
+			});
+		}
+		var gridStructure = [
         	{
             	cells: [this.gridLayout
 						]
 			}
-			];
-        	this.grid.widget.setStructure(gridStructure);
-		}),
-		onItem: dojo.hitch(this, function(item,request){
-			this.gridLayout.push({
-				name: this.metaStore.getValue(item, "label"),
-				field: this.metaStore.getValue(item, "label")
-			});
-			
-		})});
-		
+		];
+        this.grid.widget.setStructure(gridStructure);
         // Initially we have to update the row count, since we dont know it before we have received the
         // answer from this request, now we know it, so update it, so we also see the
         // numRows available.
         this._filterForm = dijit.byId("gridFilterForm");
-        dijit.byId("gridFilterSubmitButton").connect("onclick", dojo.hitch(this, "onSubmitFilter"));
+        dojo.connect(dijit.byId("gridFilterSubmitButton"),"onClick", dojo.hitch(this, "onSubmitFilter"));
 
     },
 
@@ -83,7 +76,8 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
         for (var i in values) {
             vals["filter["+i+"]"] = values[i];
         }
-        this.grid.model.query = vals;
+        this.grid.model.query = vals;				
+		this.grid.model.clearData();
         this.grid.model.requestRows(null, null, dojo.hitch(this, function() {
             this.grid.widget.updateRowCount(this.grid.model.getRowCount());
         }));

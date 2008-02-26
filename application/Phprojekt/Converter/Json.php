@@ -87,7 +87,7 @@ class Phprojekt_Converter_Json
     public static function convert ($models, $order = MODELINFO_ORD_DEFAULT)
     {
         if (null === $models) {
-            return Zend_Json_Encoder::encode('');
+            return '/* '.Zend_Json_Encoder::encode($data).' */';
         }
         
         $model = current((array) $models);
@@ -96,14 +96,11 @@ class Phprojekt_Converter_Json
         }
         
         $information = $model->getInformation();
-        
-        // TODO may $information already contains the numRows the result set would return ... I dont know Zend DB too well, and didnt find it :-(  (Wolfram)
-        // Be sure to replace this by a SQL_CALC_ROWS (or how it is called) to prevent the extra COUNT(*) query as it currently is!
-        $numRows = $model->count();
-        
+               
         /* we can check the returned array, but at the moment we just pass it */
         $datas = array();
         $data  = array();
+        $numRows = 0;
         
         /*
          * we have to do this ugly convert, because Zend_Json_Encoder doesnot check
@@ -119,8 +116,8 @@ class Phprojekt_Converter_Json
             }
             $datas[] = $data;
         }
-        
-        $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas, 'numRows'=>$numRows);
+        $numRows = count($datas);
+        $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas, 'numRows'=>(int)$numRows);
         
         // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
         // the content-type dojo expects is: json-comment-filtered

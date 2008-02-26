@@ -40,14 +40,18 @@ dojo.declare("phpr.app.default.Main", phpr.Component, {
 			}
 		));
 		dojo.subscribe("tree.nodeClick", dojo.hitch(this, function(project,module){
-			this.grid = new phpr.app.default.Grid(this,project.id,module);
+			navId = null;
+			if(project.id){
+				navId = project.id;
+			}
+			this.grid = new phpr.app.default.Grid(this,navId,module);
 			if (dijit.byId("detailsBox")) {
 				phpr.destroyWidgets("detailsBox");
 			}		
         }));
-		dojo.subscribe("form.Submitted", dojo.hitch(this, function(id,module){
-			//this.tree = new phpr.app.default.Tree(this,'Project');
-			this.grid = new phpr.app.default.Grid(this,id,module);
+		dojo.subscribe("form.Submitted", dojo.hitch(this, function(id,module,parent){
+			this.tree = new phpr.app.default.Tree(this,'Project');
+			this.grid = new phpr.app.default.Grid(this,parent,module);
 			
 		}
 		));
