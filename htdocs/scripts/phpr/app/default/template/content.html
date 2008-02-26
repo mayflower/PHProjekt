@@ -2,9 +2,12 @@
 	<div dojoType="dijit.layout.TabContainer" region="center" id="{{id}}" style="height:80%">
 		{{tabsContent}}
 	</div>
-	<center>
-		<button dojoType="dijit.form.Button" id="submitButton" type="submit" >
-					Submit
+	<center style="background:#DDDDDD">
+		<button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
+					Speichern
+		</button>
+		<button dojoType="dijit.form.Button" baseClass="negative" id="deleteButton" type="submit" iconClass="cross">
+					L&ouml;schen
 		</button>
 	</center>
 </form>

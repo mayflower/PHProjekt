@@ -91,6 +91,7 @@ dojo.declare("phpr.app.default.Form", phpr.Component, {
 		formtabs ="";
 		//later on we need to provide different tabs depending on the metadata
 		formtabs = this.render(["phpr.app.default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'First Tab'});
+		formtabs += this.render(["phpr.app.default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Secon dummy Tab'});
 		this.render(["phpr.app.default.template", "content.html"], dojo.byId("detailsBox"),{formId:'detailForm'+this.id, id:'formtab',tabsContent:formtabs});
 		this.formWidget = dijit.byId('detailForm'+this.id);
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));

@@ -9,7 +9,10 @@
 
 -------------------------------------------------------------- */
 
-label { font-weight: bold; }
+label { font-weight: bold; 
+display:-moz-inline-box;
+min-width:10em;
+width:10em;}
 
 
 /* Fieldsets */
