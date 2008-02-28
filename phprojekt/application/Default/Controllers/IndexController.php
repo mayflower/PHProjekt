@@ -320,6 +320,8 @@ class IndexController extends Zend_Controller_Action
      * Add a string into the where clause
      * but don�t keep it into the session
      *
+     * @todo to be removed as fast as possible, just dirty code, nothing else
+     * 
      * @param string $string SQL where clause
      *
      * @return void
@@ -500,7 +502,8 @@ class IndexController extends Zend_Controller_Action
             $offset = $this->getRequest()->getParam('start');
             
             $model = $this->getModelObject();
-            // FIXXXXXXXXMEEEEEEE
+            // @todo This MUST be completly rewritten when we have a decent filter api, we cannot use such dynmamic statements and
+            // we have to use at least prepared statements but at all, where clause should not be done here at all!!
             // the ollowing array needs to be generated depending on the available columns to filter for, this is hardcoded to "Todo"!!!!!!
             $possibleFields = array('priority', 'startDate', 'endDate', 'title','id');
             $where = array();
