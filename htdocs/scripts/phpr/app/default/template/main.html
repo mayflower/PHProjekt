@@ -1,5 +1,6 @@
-<div class="container">
-    <div id="header" class="block"><img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" />
+<div dojoType="dijit.layout.BorderContainer" style="width:100%; height:800px;">
+    <div id="header" region="top" class="block" style="height:55px;" >
+    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" />
         <div id="search-bar" class="last right align-right">
             <input name="searchfield" value="Search" />
         </div>
@@ -13,41 +14,52 @@
     		Help
 		</div>
  	</div>
-	<div dojoType="dijit.layout.SplitContainer" orientation="horizontal" sizerWidth="10" activeSizing="false" style="width:100%; height:700px;" >
-    <div dojoType="dijit.layout.ContentPane" sizeMin="10" sizeShare="20" style="border-left: 10px solid #294064;">
-    	<div id="subheader" class="block">
- 			<div id="navigation-container-titel" class="column span-5">
+ 	<!-- Border Container which splits page in navigation and form/list view: -->
+	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
+		<!-- navigation panel -->
+    	<div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" style="width: 300px; border-left: 10px solid #294064;" region="leading" splitter="true">
+    		<div id="subheader" class="block">
+ 				<div id="navigation-container-titel" class="column span-5">
+        		</div>
         	</div>
-        </div>
-		<div id="treeBox"></div>
-    </div>
-    <div dojoType="dijit.layout.ContentPane" sizeMin="20" sizeShare="80">
-    	<div id="subheader" class="block">
-        	<div class="column"><img src="{{webpath}}img/subheaderborder.png" alt="" /></div>
-        	<div class="column right span-17 append-1 align-right">
-        	Todo Notizen</div>
- 		</div>
-        <div dojoType="dijit.layout.ContentPane" style=" margin-left:30px;">
-            <form id="gridFilterForm" dojoType="dijit.form.Form">
-                Title <input name="title" type="text" size="10" dojoType="dijit.form.TextBox"/>
-                Start <input name="startDate" dojoType="dijit.form.DateTextBox" style="width:100px" />
-                End <input name="endDate" dojoType="dijit.form.DateTextBox" style="width:100px" />
-                Priority <select name="priority" dojoType="dijit.form.FilteringSelect" style="width:40px">
-                    <option value="1">1<option>
-                    <option value="2">2<option>
-                    <option value="3">3<option>
-                    <option value="4">4<option>
-                    <option value="5">5<option>
-                </select>
-                <button id="gridFilterSubmitButton" dojoType="dijit.form.Button">Search</button>
-            </form>
-        </div>
-        <div dojoType="dijit.layout.SplitContainer" orientation="vertical" sizerWidth="2" activeSizing="true" style="margin-top:5px;height:650px;">
-            <div id="gridBox" dojoType="dijit.layout.ContentPane" sizeMin="10" sizeShare="20" style="margin-left:30px;" >
+			<div id="treeBox">
+			</div>
+    	</div>
+    	<!-- Border Container which splits main content in listview and formview -->
+    	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:100%;">
+    		<!-- Submodule navigation: -->
+    		<div dojoType="dijit.layout.ContentPane" region="center" >
+    			<div id="subheader" class="block">
+        			<div class="column">
+        				<img src="{{webpath}}img/subheaderborder.png" alt="" />
+        			</div>
+        			<div class="column right span-17 append-1 align-right">
+        				Todo Notizen
+        			</div>
+ 				</div>
+        		<div dojoType="dijit.layout.ContentPane" style="margin-left:20px;">
+        	 		<!-- Filter form: -->
+            		<form id="gridFilterForm" dojoType="dijit.form.Form">
+                		Title <input name="title" type="text" size="10" dojoType="dijit.form.TextBox"/>
+               	 		Start <input name="startDate" dojoType="dijit.form.DateTextBox" style="width:100px" />
+                		End <input name="endDate" dojoType="dijit.form.DateTextBox" style="width:100px" />
+                		Priority <select name="priority" dojoType="dijit.form.FilteringSelect" style="width:40px">
+                    		<option value="1">1<option>
+                    		<option value="2">2<option>
+                    		<option value="3">3<option>
+                    		<option value="4">4<option>
+                    		<option value="5">5<option>
+                		</select>
+                		<button id="gridFilterSubmitButton" dojoType="dijit.form.Button">Search</button>
+            		</form>
+            		<!-- List View: -->            	 
+            		<div id="gridBox" dojoType="dijit.layout.ContentPane" style="height:300px" region="center"  >
+            		</div>
+            	</div>
             </div>
-            <div id="detailsBox" dojoType="dijit.layout.ContentPane" sizeMin="10" sizeShare="10" style="margin-left:30px;" >
-            </div>
-        </div>
-    </div>
-</div>
+            <!-- Form View: -->
+ 			<div id="detailsBox" dojoType="dijit.layout.ContentPane" style="height:300px;margin-left:20px;" region="bottom"  splitter="true">
+         	</div>
+		</div>
+	</div>
 </div>
