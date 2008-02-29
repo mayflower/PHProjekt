@@ -92,6 +92,11 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
 
         try {
             $users  = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
+            
+            if (!isset($users[0]) || !isset($users[0]->id)) {
+                return false;
+            }
+            
             return $users[0]->id;
         }
         catch (Phprojekt_ActiveRecord_Exception $are) {
