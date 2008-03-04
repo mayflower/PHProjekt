@@ -47,22 +47,14 @@ dojo.declare("phpr.app.default.Form", phpr.Component, {
 					options.push({id:j, name:range[j]});
 					j++;
 				}
-				var storeValues={
-					id:"Filterstore"+itemid,
-					data: {  label: 'name',
-            			identifier: 'name',
-            			items: options
-        			}};
-    			newStore[i] = new dojo.data.ItemFileReadStore(storeValues);
-				storeName='newStore['+i+']';
 				this.formdata += this.render(["phpr.app.default.template", "formfilterselect.html"], null, {
 						label: itemlabel,
 						labelfor: itemid,
 						id: itemid,
 						value: itemvalue,
-						store: storeName,
 						required: itemrequired,
-						disabled: itemdisabled
+						disabled: itemdisabled,
+						values: options
 					});
 				break;
 				case'date':
@@ -100,7 +92,8 @@ dojo.declare("phpr.app.default.Form", phpr.Component, {
 		var sendData = this.formWidget.getValues();
 		phpr.send({
 			url: this.main.webpath + 'index.php/' + this.module + '/index/save/id/' + this.id,
-			content: "/* "+dojo.toJson(sendData,true)+" */",
+			//content: "/* "+dojo.toJson(sendData,true)+" */",
+			content:sendData,
 			onSuccess: dojo.publish("form.Submitted", [this.id, this.module, sendData['parent']])
 		});
 	}
