@@ -3,7 +3,7 @@
  * Role class for PHProjekt 6.0
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://www.phprojekt.com/license PHProjekt6 License
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -87,12 +87,12 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
                     $role = $roles['id'];
                     $roleNamespace->$roles['projectId'] = $role;
                 }
-                if (!$roleNamespace-> $projectId) {
+                if (!$roleNamespace->$projectId) {
                     $projectObject = Phprojekt_Loader::getModel('Project', 'Project');
                     $parent        = $projectObject->find($projectId);
                     if (null != $parent && $parent->parent > 0) {
                         $role = $this->fetchUserRole($userId, $parent->parent);
-                        $roleNamespace-> $projectId = $role;
+                        $roleNamespace->$projectId = $role;
                     }
                 }
             }

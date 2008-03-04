@@ -6,9 +6,9 @@
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
     <style>
         @import "<?php echo $this->webpath; ?>scripts/dojo/dojo/resources/dojo.css";
-       
+
         @import "<?php echo $this->webpath; ?>css/screen.css";
-         @import "<?php echo $this->webpath; ?>scripts/dojo/dijit/themes/phprojekt/phprojekt.css";
+        @import "<?php echo $this->webpath; ?>scripts/dojo/dijit/themes/phprojekt/phprojekt.css";
     </style>
     <script type="text/javascript">
         var djConfig = {isDebug:true, parseOnLoad:false, preventBackButtonFix:false,
@@ -21,7 +21,7 @@
 <body class="phprojekt">
     <script>
         dojo.require("phpr.app.default.Main");
-        var main = new phpr.app.default.Main("<?php echo $this->webpath; ?>","{<?php 
+        var main = new phpr.app.default.Main("<?php echo $this->webpath; ?>","{<?php
          foreach ($this->modules as $module) {
          echo "'$module'";
          }

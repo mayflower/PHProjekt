@@ -218,7 +218,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction ()
     {
-        $this->forward('list');
+        $this->listAction();
     }
 
     /**
@@ -321,7 +321,7 @@ class IndexController extends Zend_Controller_Action
      * but don�t keep it into the session
      *
      * @todo to be removed as fast as possible, just dirty code, nothing else
-     * 
+     *
      * @param string $string SQL where clause
      *
      * @return void
@@ -500,7 +500,7 @@ class IndexController extends Zend_Controller_Action
             // grid on demand (initially only a part is shown, scrolling down loads what is needed).
             $count = $this->getRequest()->getParam('count');
             $offset = $this->getRequest()->getParam('start');
-            
+
             $model = $this->getModelObject();
             // @todo This MUST be completly rewritten when we have a decent filter api, we cannot use such dynmamic statements and
             // we have to use at least prepared statements but at all, where clause should not be done here at all!!
@@ -518,8 +518,8 @@ class IndexController extends Zend_Controller_Action
         	if (isset($session->currentProjectId)) {
             	$projectId = $session->currentProjectId;
             	$this->addWhere($db->quoteInto('parent = ?', $projectId));
-       	 	} 
-        	
+       	 	}
+
         	$records = $this->getModelObject()->fetchAll($this->getWhere(), $sort, $count, $offset);
         	$records = count($records) > 0 ? $records:null;
             echo Phprojekt_Converter_Json::convert($records);

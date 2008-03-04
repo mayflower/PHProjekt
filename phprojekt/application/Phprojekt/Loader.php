@@ -157,20 +157,11 @@ class Phprojekt_Loader extends Zend_Loader
         $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
         $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
 
-        try {
-            self::loadClass($cIdentifier, self::$_directories);
-            $logger->debug("get customized class {$cIdentifier} "
-                         . "instead of {$nIdentifier}");
+        if (class_exists($cIdentifier)) {
             return $cIdentifier;
-        } catch (Zend_Exception $ze) {
-            if (Zend_Registry::isRegistered('log')) {
-                $log = Zend_Registry::get('log');
-                $log->debug((string) $ze->getMessage());
-            }
+        } else {
+            return $nIdentifier;
         }
-
-        self::loadClass($nIdentifier, self::$_directories);
-        return $nIdentifier;
     }
 
     /**

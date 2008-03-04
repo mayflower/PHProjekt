@@ -36,7 +36,7 @@ class Phprojekt_RoleRights
      * name of current module
      * @var string
      */
-    protected $_module='';
+    protected $_module = '';
 
     /**
      * Id of user
@@ -235,7 +235,13 @@ class Phprojekt_RoleRights
      */
     private function _setUserRole()
     {
-        $role        = Phprojekt_Loader::getModel('Role', 'Role');
+        // Keep the Role_Models_Role in the session
+        // since the Models can´t be instanted
+        $roleModelNamespace = new Zend_Session_Namespace('Role_Model');
+        if (!isset($roleModelNamespace->roleModel)) {
+            $roleModelNamespace->roleModel = Phprojekt_Loader::getModel('Role', 'Role');
+        }
+        $role        = $roleModelNamespace->roleModel;
         $this->_role = $role->fetchUserRole($this->getUser(), $this->getProject());
     }
 
