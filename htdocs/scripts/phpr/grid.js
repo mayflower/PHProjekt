@@ -8,7 +8,7 @@ dojo.require("dojox.grid._data.model"); // dojox.grid.data.DojoData is in there
 dojo.require("dojox.data.QueryReadStore");
 
 phpr.grid.formatDateTime = function(date) {
-    if (!date || !date.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
+    if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
         return date;
     }
     var iso = String(date).replace(" ", "T"); // Make it a real date ISO string
@@ -17,7 +17,7 @@ phpr.grid.formatDateTime = function(date) {
 };
 
 phpr.grid.formatDate = function(date) {
-    if (!date || !date.match(/\d{4}-\d{2}-\d{2}/)) {
+    if (!date || ! String(date).match(/\d{4}-\d{2}-\d{2}/)) {
         return date;
     }
     var iso = String(date).replace(" ", "T"); // Make it a real date ISO string

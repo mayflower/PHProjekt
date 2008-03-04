@@ -5,17 +5,17 @@ dojo.require("phpr.Component");
 dojo.require("dijit.Menu");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dijit.form.Form");
-dojo.require("dijit.layout.TabContainer");
 // Other classes, class specific
 dojo.require("phpr.grid");
+dojo.require("phpr._EditableGrid");
 
-dojo.declare("phpr.app.default.Grid", phpr.Component, {
+dojo.declare("phpr.app.default.Grid", [phpr.Component,phpr._EditableGrid], {
     
     _node:null,
 	module:'Project',
 	gridLayout: new Array(),
 	
-    constructor:function(main,id,module) {
+    constructor:function(updateUrl,main,id,module) {
 		
         this._node = dojo.byId("gridBox");
 		this.module = module;
@@ -23,6 +23,9 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
 		this.id = id;
 		if (dijit.byId(this._node)) {
 			phpr.destroyWidgets(this._node);
+		}
+		if (dijit.byId("submenu1")) {
+			phpr.destroyWidgets("submenu1");
 		}
         this.render(["phpr.app.default.template", "grid.html"], this._node);
       
@@ -36,27 +39,69 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
         this.grid.model = new phpr.grid.Model(null, null, {
             store:this.gridStore
         });
-        // I am not 100% sure this is the best way, but it works quite well for now.
-        // We trigger the request by hand here, and pass the model to the grid,
-        // this way we have received the first set of rows and can render the grid.
-        // Ask me (Wolfram) in a while and I know a better way :-).
-        // this still has the triggering two request ... for whatever reason :-(
         this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
-
     },		
     onLoaded:function() {
         this.grid.widget = dijit.byId("gridNode");
+		dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
 		dojo.connect(this.grid.widget, "onRowDblClick", dojo.hitch(this, "onRowClick"));
+		dojo.connect(this.grid.widget, "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
+		window["gridHeaderContextMenu"] = dijit.byId("submenu1");
+        gridHeaderContextMenu.bindDomNode(this.grid.widget.domNode);
+		this.grid.widget.onCellContextMenu = function(e) {
+				cellNode = e.cellNode;
+			};
+		this.grid.widget.onHeaderContextMenu = function(e) {
+				cellNode = e.cellNode;
+			};
 		this.grid.widget.setModel(this.grid.model);
 		meta= this.grid.widget.model.store.metaData;
 		for (var i = 0; i < meta.length; i++) {
-			this.gridLayout.push({
-				name: meta[i]["label"],
-				field: meta[i]["label"]
-			});
+			switch(meta[i]["type"]){
+				case'selectbox':
+				var range = meta[i]["range"];
+				var opts =new Array();
+				var vals  =new Array();
+				var j=0;
+				for (j in range){
+					opts.push(range[j])
+					vals.push(j);
+					j++;
+				}
+				this.gridLayout.push({
+						name: meta[i]["label"],
+						field: meta[i]["label"],
+						styles: "text-align:right;",
+						width:"auto",
+						editor: dojox.grid.editors.Select,
+						options: opts,
+						values: vals
+					});
+					break;
+				case'date':
+					this.gridLayout.push({
+						name: meta[i]["label"],
+						field: meta[i]["label"],
+						styles: "text-align:right;",
+						width:"auto",
+						formatter: phpr.grid.formatDate,
+						editor: dojox.grid.editors.DateTextBox
+					});
+				break;
+				default:
+					this.gridLayout.push({
+						name: meta[i]["label"],
+						field: meta[i]["label"],
+						styles: "text-align:right;",
+						width:"auto",
+						editor: dojox.grid.editors.Input
+						});
+				break;
+			}
 		}
 		var gridStructure = [
         	{
+				noscroll: true,
             	cells: [this.gridLayout
 						]
 			}
@@ -67,7 +112,7 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
         // numRows available.
         this._filterForm = dijit.byId("gridFilterForm");
         dojo.connect(dijit.byId("gridFilterSubmitButton"),"onClick", dojo.hitch(this, "onSubmitFilter"));
-
+		
     },
 
     onSubmitFilter:function() {
@@ -83,31 +128,16 @@ dojo.declare("phpr.app.default.Grid", phpr.Component, {
         }));
     },
 
-    /**Doesnt work
-     * 1) i dont know how to connect to onHeaderContextMenu to open the contextmenu
-     * 2) using the way below i dont get a ref to the header the context menu opened up on top of
-     * 3) connect() must be called AFTER the grid was rendered
-     *  tooo much work for now :-(
-    */
-    connect:function() {
-        // Connect the header nodes on double click (like Albrecht wants it) to start filtering
-        //dojo.connect(this.grid.widget, "onHeaderContextMenu", dojo.hitch(this, "openHeaderContextMenu"));
-        var nodes = dojo.query("th", this.grid.widget.headerNode);
-        var wdgt = dijit.byId("gridHeaderContextMenu");
-        for (var i=0, l=nodes.length; i<l; i++) {
-            wdgt.bindDomNode(nodes[i]);
-            //dojo.connect(nodes[i], "oncontextmenu", dojo.hitch(this, "openHeaderContextMenu"));
-        }
-        dojo.connect(wdgt, "onOpen", dojo.hitch(this, "onOpenContextMenu"));
-    },
-    
-    onOpenContextMenu:function(e) {
-        var wdgt = dijit.byId("gridHeaderContextMenu");
-        wdgt.show();
-    },
 	onRowClick: function(e){
 		var rowID=this.grid.model.getDatum(e.rowIndex,0);
 		dojo.publish("grid.RowClick",[rowID,this.module]); 
 		
+	},
+	onCellEdit: function(inValue, inRowIndex, inFieldIndex){
+		var value=this.grid.model.getDatum(inRowIndex,inFieldIndex);
+		dojo.publish("grid.CellEdit",[value, inRowIndex, inFieldIndex]); 
+		this.cellEdited(value, inRowIndex, inFieldIndex);
+		
 	}
+	
 });
