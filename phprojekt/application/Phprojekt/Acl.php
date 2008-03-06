@@ -63,13 +63,7 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function _registerRoles()
     {
-        // Keep the Role_Models_Role in the session
-        // since the Models can´t be instanted
-        $roleModelNamespace = new Zend_Session_Namespace('Role_Model');
-        if (!isset($roleModelNamespace->roleModel)) {
-            $roleModelNamespace->roleModel = Phprojekt_Loader::getModel('Role', 'Role');
-        }
-        $roles = $roleModelNamespace->roleModel;
+        $roles = Phprojekt_Loader::getModel('Role', 'Role');
         foreach ($roles->fetchAll() as $role) {
             if ($role->parent < 1) {
                 $role->parent = null;
