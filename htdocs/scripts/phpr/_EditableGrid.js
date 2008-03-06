@@ -45,16 +45,17 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
         // so we also get the new data into _newRowValues.
         this.grid.widget.edit.apply();
         // Get all the IDs for the data sets.
-        var content = {};
+        var content = new Array();
         for (var i in this._newRowValues) {
-
 			var curId = this.grid.widget.model.data[i].id;
-			content[curId] ={};
+			content_curId = new Array();
 			for (var j in this._newRowValues[i]) {
-				content[curId][j] = this._newRowValues[i][j];
+				content_curId.push({
+					j: this._newRowValues[i][j]
+				});
 			}
+			content[curId]=content_curId;
         }
-		console.debug(content);
         phpr.send({
             url:this._updateUrl,
             content:content,

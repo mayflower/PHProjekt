@@ -1,0 +1,18 @@
+<label for="{{labelfor}}">{{label}}</label>
+<select
+		       id="{{id}}"
+		       name="{{label}}"
+		       dojoType="dijit.form.FilteringSelect"
+			   required="{{required}}" 
+			   disabled="{{disabled}}"
+			   autocomplete="true"
+			   value="{{value}}" 
+               searchAttr="name"
+			   invalidMessage="" >
+{% for item in values %}
+<option value ="{{item.id}}">{{item.name}}</option>
+{% endfor %}
+</select>
+<br>
+
+     		
