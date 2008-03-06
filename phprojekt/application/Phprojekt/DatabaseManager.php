@@ -197,12 +197,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
         return $converted;
     }
-    
+
     /**
      * Convert to a a selectbox
      *
      * @param array $field
-     * 
+     *
      * @return array
      */
     protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
@@ -210,21 +210,22 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
-        
+
         foreach(explode('|', $field->formRange) as $range) {
             list($key, $value) = explode('#', $range);
-            $converted['range'][$key] = $value;
+            $converted['range'][] = array('id'   => $key,
+                                          'name' => $value);
         }
-        
+
         return $converted;
     }
-    
+
     /**
      * Fields from the database manager have a complete different
      * type than those that should be propagated into the PHProjekt core
      *
      * @param array $field
-     * 
+     *
      * @return array
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
@@ -236,10 +237,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['order']    = 0;
         $converted['position'] = (int) $field->formPosition;
         $converted['fieldset'] = '';
-        $converted['range']    = $field->formRange;
+        $converted['range']    = array('id'   => $field->formRange,
+                                       'name' => $field->formRange);
         $converted['required'] = (boolean) $field->isRequired;
         $converted['readOnly'] = false;
-        
+
         return $converted;
     }
 
