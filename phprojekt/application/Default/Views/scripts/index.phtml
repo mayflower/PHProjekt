@@ -20,19 +20,12 @@
 
 <body class="phprojekt">
     <script>
-        dojo.require("phpr.app.default.Main");
-        var main = new phpr.app.default.Main("<?php echo $this->webpath; ?>","{<?php
-         foreach ($this->modules as $module) {
+    	dojo.require("phpr.Main");
+        var main = new phpr.Main("<?php echo $this->webpath; ?>","Project","{<?php 
+        foreach ($this->modules as $module) {
          echo "'$module'";
          }
         ?>}");
     </script>
-    <script src="<?php echo $this->webpath; ?>scripts/dojo/dojox/data/QueryReadStore.js"></script>
-    <script src="<?php echo $this->webpath; ?>scripts/phpr/grid.js"></script>
-    <script src="<?php echo $this->webpath; ?>scripts/phpr/Component.js"></script>
-    <script src="<?php echo $this->webpath; ?>scripts/phpr/Component.js"></script>
-    <script src="<?php echo $this->webpath; ?>scripts/phpr/app/default/Main.js"></script>
-    <script src="<?php echo $this->webpath; ?>scripts/phpr/app/default/Grid.js"></script>
-    <script src="<?php echo $this->webpath; ?>scripts/phpr/app/default/Tree.js"></script>
-</body>
+   </body>
 </html>
