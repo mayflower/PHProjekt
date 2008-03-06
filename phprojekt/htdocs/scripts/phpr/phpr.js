@@ -1,6 +1,5 @@
 dojo.provide("phpr");
 
-// This path is relative to the dojo.js (see index.html)
 dojo.registerModulePath("phpr", "../../phpr");
 
 dojo.require("dojo.parser");
@@ -29,7 +28,7 @@ phpr.destroyWidgets = function(el) {
 
 
 phpr.send = function(/*Object*/paramsIn) {
-    // Send the given content to the server using the default values,
+    // Send the given content to the server using the Default values,
     // if you need something special dont use this function.
     //
     //  Example call:
@@ -84,11 +83,10 @@ phpr.send = function(/*Object*/paramsIn) {
         };
     }
     dojo.xhrPost({
-        url:params.url,
-        content:params.content,
-        //handleAs:"json-comment-filtered",
-        error:_onError,
-        load:_onSuccess
+        url		:	params.url,
+        content	:	params.content,
+        error	:	_onError,
+        load	:	_onSuccess
     });
 };
 
@@ -96,15 +94,15 @@ phpr.getData = function(url, callback){
     dojo.xhrPost(
     {
         url         :	url,
-        handleAs:"json-comment-filtered",
+        handleAs	:	"json-comment-filtered",
         timeout     :   10000,
-        load: function(data) {
-            callback(data);
-        },
+        load		: 	function(data) {
+            				callback(data);
+        				},
         error       :   function(response, ioArgs) {
-            alert('Error! No data received! ' + ioArgs);
-            return response;
-        },
+            				alert('Error! No data received! ' + ioArgs);
+            				return response;
+        				},
         sync		:	true,
     }
     )
@@ -120,16 +118,11 @@ phpr.getCurrent = function(data, identifier, value){
 	return current;
 };
 dojo.declare("phpr.MetaReadStore", dojox.data.QueryReadStore, {
-//    // We need the store explicitly here, since we have to pass it to the grid model.
+	// We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
-    
     _filterResponse: function(data){
-        // We need to pre-process the data before passing them to the QueryReadStore,
-        // since the data structure sent form the server does not comply to what
-        // the QueryReadStore expects, we just need to extract the data-key.
-// TODO extract the meta data and provide them so we can read them and format input data accordingly, i.e. map currentStatus 1=>"working", etc.
-        ret = {
+          ret = {
             items:data.metadata
         };
         return ret;
@@ -137,16 +130,12 @@ dojo.declare("phpr.MetaReadStore", dojox.data.QueryReadStore, {
 
 });
 dojo.declare("phpr.CompleteReadStore", dojox.data.QueryReadStore, {
-//    // We need the store explicitly here, since we have to pass it to the grid model.
+	// We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
     
     _filterResponse: function(data){
-        // We need to pre-process the data before passing them to the QueryReadStore,
-        // since the data structure sent form the server does not comply to what
-        // the QueryReadStore expects, we just need to extract the data-key.
-// TODO extract the meta data and provide them so we can read them and format input data accordingly, i.e. map currentStatus 1=>"working", etc.
-        ret = {
+		ret = {
             items: [{
 				"metadata": data.metadata},
 				{"data": data.data}]
