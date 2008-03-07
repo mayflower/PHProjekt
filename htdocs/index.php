@@ -62,10 +62,10 @@ Zend_Registry::set('log', $log);
 
 $view = new Zend_View();
 $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+
 $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
-$viewRenderer->setViewBasePathSpec(':moduleDir/Views')
-             ->setViewScriptPathSpec(':action.:suffix')
-             ->setViewScriptPathNoControllerSpec(':action.:suffix');
+$viewRenderer->setViewBasePathSpec(':moduleDir/Views');
+$viewRenderer->setViewScriptPathSpec(':action.:suffix'); 
 
 Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
