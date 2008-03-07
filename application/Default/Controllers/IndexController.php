@@ -163,20 +163,19 @@ class IndexController extends Zend_Controller_Action
      *
      * Form Action
      *
+     * @requestparam integer id ...
+     *
      * @return void
      */
-    public function saveAction ()
+    public function jsonSaveAction ()
     {
-        if (null !== $this->_itemid) {
-            $this->getModelObject()->find($this->_itemid);
-        }
+     	$id = (int) $this->getRequest()->getParam('id');
 
-        try {
-            Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
-            $this->view->message = 'Saved';
-        } catch (Exception $e) {
-            $this->view->errors = $this->getModelObject()->getError();
-        }
+     	if (empty($id)) {
+     	    throw new InvalidArgumentException('id missing');
+     	}
+
+        Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
     /**
@@ -188,6 +187,12 @@ class IndexController extends Zend_Controller_Action
      */
     public function deleteAction ()
     {
+     	$id = (int) $this->getRequest()->getParam('id');
+
+     	if (empty($id)) {
+     	    throw new InvalidArgumentException('id missing');
+     	}
+
         if ($this->_itemid < 1) {
             $this->forward('display');
         } else {
