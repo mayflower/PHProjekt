@@ -87,61 +87,47 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Example for json convert.
+     * Returns a tree for a model in JSON.
      *
-     * @todo remove if not longer necessary
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
      * @return void
      */
-    public function jsonListAction ()
+    public function jsonTreeAction()
     {
-        $view = $this->_params['view'];
+        $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
+        $tree->setup();
+        echo Phprojekt_Converter_Json::convertTree($tree);
+    }
 
-        $req = $this->getRequest();
-        if ('tree' == $view) {
-            $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
-            $tree->setup();
-            echo Phprojekt_Converter_Json::convertTree($tree);
-        } else {
-        	$db = Zend_Registry::get('db');
-            // Parse the "sort" paramter send by the grid.
-            // Dojo prefixes a column name with "-" for indicating a descending sort.
-            $sort = $req->getParam('sort');
-            if ($sort) {
-                $sort = '-' == $sort[0] ? (substr($sort, 1).' DESC') : $sort;
-            } else {
-                $sort = null;
-            }
-            // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-            // so lets apply this to the query set. This is also used for loading a
-            // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-            $count = $this->getRequest()->getParam('count');
-            $offset = $this->getRequest()->getParam('start');
+    /**
+     * Returns the list for a model in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam integer count ...
+     * @requestparam integer start ...
+     *
+     * @return void
+     */
+    public function jsonListAction()
+    {
+        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
+        // so lets apply this to the query set. This is also used for loading a
+        // grid on demand (initially only a part is shown, scrolling down loads what is needed).
+        $count     = (int) $this->getRequest()->getParam('count');
+        $offset    = (int) $this->getRequest()->getParam('start');
+     	$projectId = (int) $this->getRequest()->getParam('nodeId');
 
-            $model = $this->getModelObject();
-            // @todo This MUST be completly rewritten when we have a decent filter api, we cannot use such dynmamic statements and
-            // we have to use at least prepared statements but at all, where clause should not be done here at all!!
-            // the ollowing array needs to be generated depending on the available columns to filter for, this is hardcoded to "Todo"!!!!!!
-            $possibleFields = array('priority', 'startDate', 'endDate', 'title','id');
-            $where = array();
-            foreach ($possibleFields as $k) {
-                $value = $this->_params['filter'][$k];
-                if ($value) {
-                    // I dont know if this is the right way, i would expect to use prepared statements!!!!!!
-                    //$this->addWhere($db->quoteInto("$k = ?", $value));
-                }
-            }
-            $session = new Zend_Session_Namespace();
-        	if (isset($session->currentProjectId)) {
-            	$projectId = $session->currentProjectId;
-            	//$this->addWhere($db->quoteInto('parent = ?', $projectId));
-       	 	}
+     	if (empty($projectId)) {
+     	    $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
+     	} else {
+        	$records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, $count, $offset);
+     	}
 
-        	$records = $this->getModelObject()->fetchAll($this->getWhere(), $sort, $count, $offset);
-        	$records = count($records) > 0 ? $records:null;
-            echo Phprojekt_Converter_Json::convert($records);
-        }
-
-        exit;
+        echo Phprojekt_Converter_Json::convert($records);
     }
 
     /**

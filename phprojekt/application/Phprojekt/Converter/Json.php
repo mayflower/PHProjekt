@@ -43,9 +43,9 @@ class Phprojekt_Converter_Json
         for ($i = 0; $i < strlen($string) ; $i++) {
             switch($string[$i]) {
                 case '"':
-                    if($inString)   
+                    if($inString)
                         $inString = false;
-                    else 
+                    else
                         $inString = true;
                     break;
                 case ",":
@@ -54,7 +54,7 @@ class Phprojekt_Converter_Json
                          $string[$i] = '';
                     }
                     break;
-                    
+
                 case "{":
                 case "[":
                     if (!$inString) {
@@ -62,46 +62,46 @@ class Phprojekt_Converter_Json
                         $depth++;
                     }
                     break;
-                    
-                case "}":  
+
+                case "}":
                 case "]":
                     if (!$inString) {
                         $buffer.= "<br/>";
                         $depth--;
                     }
                     break;
-            } 
+            }
             $buffer.= $string[$i];
         }
         return $buffer;
     }
-        
+
     /**
      * Convert a model or a model information into a json stream
-     * 
+     *
      * @param Phprojekt_Interface_Model|array $models The model to convert
      * @param int                             $order  A MODELINFO_ const that defines the ordering for the convert
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public static function convert ($models, $order = MODELINFO_ORD_DEFAULT)
     {
         if (null === $models) {
-            return '/* '.Zend_Json_Encoder::encode($data).' */';
+            return '/* */';
         }
-        
+
         $model = current((array) $models);
         if (! $model instanceof Phprojekt_Model_Interface) {
             throw new InvalidArgumentException();
         }
-        
+
         $information = $model->getInformation();
-               
+
         /* we can check the returned array, but at the moment we just pass it */
         $datas = array();
         $data  = array();
         $numRows = 0;
-        
+
         /*
          * we have to do this ugly convert, because Zend_Json_Encoder doesnot check
          * if a value in an array is an object
@@ -118,7 +118,7 @@ class Phprojekt_Converter_Json
         }
         $numRows = count($datas);
         $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas, 'numRows'=>(int)$numRows);
-        
+
         // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
         // the content-type dojo expects is: json-comment-filtered
         return '/* '.Zend_Json_Encoder::encode($data).' */';
@@ -126,10 +126,10 @@ class Phprojekt_Converter_Json
 
     /**
      * Convert a model or a model information into a json stream
-     * 
+     *
      * @param Phprojekt_Interface_Model $tree Tree instance to convert
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public static function convertTree (Phprojekt_Tree_Node_Database $tree)
     {
@@ -139,17 +139,17 @@ class Phprojekt_Converter_Json
             foreach ($node->getChildren() as $child) {
                 $references[] = array('_reference' => $child->id);
             }
-            $treeNodes[] = array('name'     => $node->title, 
-                                 'id'       => $node->id, 
-                                 'parent'   => $node->parent, 
+            $treeNodes[] = array('name'     => $node->title,
+                                 'id'       => $node->id,
+                                 'parent'   => $node->parent,
                                  'children' => $references);
         }
-        
+
         $data               = array();
         $data['identifier'] = 'id';
         $data['label']      = 'name';
         $data['items']      = $treeNodes;
-        
+
         return '/* '.Zend_Json_Encoder::encode($data).' */';
     }
 }
