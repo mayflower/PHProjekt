@@ -16,11 +16,9 @@ phpr.initWidgets = function(el) {
 phpr.destroyWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
     var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
-    var l = oldWidgetNodes.length;
-    for (var i=0; i<l; i++) {
-        var w = dijit.byNode(oldWidgetNodes[i]);
-        if (w) {
-            w.destroy();
+    for (var i = 0; i < oldWidgetNodes.length; i++) {
+        if (dijit.byNode(oldWidgetNodes[i])) {
+            dijit.byNode(oldWidgetNodes[i]).destroy();
         }
     }
 };
