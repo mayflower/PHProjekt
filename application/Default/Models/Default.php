@@ -141,7 +141,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      *
      * @return string
      */
-    public function getRights()
+    public function getRights($userId)
     {
         return 'read';
     }

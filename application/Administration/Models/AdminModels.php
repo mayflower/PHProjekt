@@ -330,7 +330,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @return string
      */
-    public function getRights ()
+    public function getRights ($userId)
     {
         return 'write';
     }
