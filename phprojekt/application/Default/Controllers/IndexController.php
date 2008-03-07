@@ -131,6 +131,28 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Returns the detail for a model in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonDetailAction()
+    {
+     	$id = (int) $this->getRequest()->getParam('id');
+
+     	if (empty($id)) {
+     	    throw new InvalidArgumentException('id missing');
+     	}
+       	$record = $this->getModelObject()->fetch($id);
+
+        echo Phprojekt_Converter_Json::convert($record);
+    }
+
+    /**
      * Saves the current item
      * Save if you are add one or edit one.
      * Use the model module for get the data
