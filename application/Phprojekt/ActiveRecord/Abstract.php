@@ -346,7 +346,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         } elseif (array_key_exists($varname, $this->_data)) {
             return $this->_data[$varname];
         } elseif (array_key_exists('hasManyAndBelongsToMany', $this->_relations) &&
-        get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
+                  get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
             return $this->_relations['hasManyAndBelongsToMany']['id'];
         } else {
             throw new Exception("{$varname} does not exist");
@@ -590,9 +590,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $tableName = $this->_translateIntoRelationTableName($this, $im);
 
         $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)",
-        $this->getAdapter()->quoteIdentifier($tableName),
-        $this->getAdapter()->quoteIdentifier($myKeyName),
-        $this->getAdapter()->quoteIdentifier($foreignKeyName));
+                         $this->getAdapter()->quoteIdentifier($tableName),
+                         $this->getAdapter()->quoteIdentifier($myKeyName),
+                         $this->getAdapter()->quoteIdentifier($foreignKeyName));
 
         if (null !== $this->_log) {
             $this->_log->debug($query);
@@ -642,7 +642,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 }
             }
         }
-        
+
         return $result;
     }
 
@@ -687,7 +687,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 }
             }
         }
-        
+
         return $result;
     }
 
@@ -884,7 +884,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $result = $this->_insertHasManyAndBelongsToMany() && $result;
             }
         }
-    
+
         return $result;
     }
 

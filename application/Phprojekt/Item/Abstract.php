@@ -114,7 +114,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @param mixed  $value   Value for assign to the var
      *
      * @throws InvalidArgumentException
-     * 
+     *
      * @return void
      */
     public function __set($varname, $value)
@@ -153,11 +153,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         } else {
             $value = Inspector::sanitize('string', $value, $messages, false);
         }
-        
+
         if ($value === false) {
-            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname . ' expected to be ' . $type .'.');   
-        } 
-       
+            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname . ' expected to be ' . $type .'.');
+        }
+
         parent::__set($varname, $value);
     }
 
@@ -418,71 +418,70 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @return string $right
      */
-    public function getRights()
+    public function getRights($userId)
     {
-        $right     = '';
-        $itemright = '';
-        $class = $this->getTableName();
-        if ($this->_data['id']>0) {
-            $groups = Phprojekt_Loader::getModel('Groups', 'Groups');
-            if ($this->read) {
-                if ($groups->isUserInGroup($this->_data['read'])) {
-                    $itemright = 'read';
-                }
+        $itemRight = '';
+        // TODO: class name and table name can differ
+        $class     = $this->getTableName();
+
+        if ($this->id > 0) {
+            $groups = Phprojekt_Loader::getModel('Groups', 'Groups', $userId);
+            if ($this->read && $groups->isUserInGroup($this->read)) {
+                $itemRight = 'read';
             }
-            if ($this->write) {
-                if ($groups->isUserInGroup($this->_data['write'])) {
-                    $itemright = 'write';
-                }
+            if ($this->write && $groups->isUserInGroup($this->write)) {
+                $itemRight = 'write';
             }
-            if ($this->admin) {
-                if ($groups->isUserInGroup($this->_data['admin'])) {
-                    $itemright = 'admin';
-                }
+            if ($this->admin && $groups->isUserInGroup($this->admin)) {
+                $itemRight = 'admin';
             }
             if ($this->ownerId == $groups->getUserId()) {
-                $itemright = 'admin';
+                $itemRight = 'admin';
             }
+
             switch ($class) {
-                case'Project':
-                    $relfield=$this->_data['parent'];
+                case 'Project':
+                    $relationField = $this->parent;
                     break;
                 default:
-                    $relfield=$this->_data['projectId'];
+                    $relationField = $this->projectId;
                     break;
             }
 
         } else {
-            $itemright='write';
-            $session        = new Zend_Session_Namespace();
-            $relfield       = (int) $session->currentProjectId;
+            $itemRight     = 'write';
+            $session       = new Zend_Session_Namespace();
+            $relationField = (int) $session->currentProjectId;
         }
-        $rolerights     = new Phprojekt_RoleRights($relfield, $class, $this->_data['id']);
-        $rolerightread  = $rolerights->hasRight('read');
-        $rolerightwrite = $rolerights->hasRight('write');
-        switch ($itemright) {
+
+        $roleRights     = new Phprojekt_RoleRights($relationField, $class, $this->id);
+        $roleRightRead  = $roleRights->hasRight('read');
+        $roleRightWrite = $roleRights->hasRight('write');
+
+        switch ($itemRight) {
             case'read':
-                if ($rolerightread || $rolerightwrite) {
+                if ($roleRightRead || $roleRightWrite) {
                     $right = 'read';
                 }
                 break;
             case'write':
-                if ($rolerightread ) {
+                if ($roleRightRead) {
                     $right = 'read';
                 }
-                if ($rolerightwrite) {
+                if ($roleRightWrite) {
                     $right ='write';
                 }
                 break;
             case'admin':
-                if ($rolerightread ) {
+                if ($roleRightRead) {
                     $right = 'read';
                 }
-                if ($rolerightwrite) {
+                if ($roleRightWrite) {
                     $right = 'admin';
                 }
                 break;
             default:
+                $right = '';
                 break;
         }
         return $right;
