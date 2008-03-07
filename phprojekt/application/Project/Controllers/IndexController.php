@@ -48,37 +48,8 @@ class Project_IndexController extends IndexController
      */
     public function init() {
         parent::init();
-        $session = new Zend_Session_Namespace();
-        $project = $this->getModelObject();
-        if ($this->getRequest()->getParam('nodeId', 0) > 0) {
-            $project->find($this->getRequest()->getParam('nodeId'));
-            $session->currentProjectId   = $this->getRequest()->getParam('nodeId', 0);
-            $session->currentProjectName = $project->title;
-        }
 
         $this->_submodules = $this->_getSubmodules();
-    }
-
-    /**
-     * We store the id of the shown project in the session, as other modules
-     * and the indexcontroller might depend on that to define the current active
-     * object
-     *
-     * @return void
-     */
-    public function listAction()
-    {
-        $db = Zend_Registry::get('db');
-        /* Save the last project id into the session */
-        /* @todo: Sanitize ID / Request parameter */
-        $session = new Zend_Session_Namespace();
-        $project = $this->getModelObject();
-
-        if (isset($session->currentProjectId)) {
-            $this->addWhere($db->quoteInto('parent = ?', $session->currentProjectId));
-        }
-
-        $this->getListView()->setModel($project->fetchAll($this->getWhere()));
     }
 
     /**
@@ -90,23 +61,14 @@ class Project_IndexController extends IndexController
      */
     public function saveAction()
     {
-        if ($this->getRequest()->getParam('id', 0) > 0) {
-            $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
-        } else {
-            $model = $this->getModelObject();
+        if (null === $this->getRequest()->getParam('id', null)) {
+            throw new InvalidArgumentException('Id not found');    
         }
-
+        
+        $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
         /* Validate and save if is all ok */
         $node = new Phprojekt_Tree_Node_Database($model);
-
-        try {
-            Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
-            $this->view->message = 'Saved';
-        } catch (Exception $e){
-            $this->view->errors = $node->getActiveRecord()->getError();
-        }
-
-        $this->listAction();
+        Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
     }
 
     /**
