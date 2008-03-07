@@ -53,19 +53,6 @@ class IndexController extends Zend_Controller_Action
     private $_canRender = true;
 
     /**
-     * The treeview helper. Not the renderer.
-     *
-     */
-    private $_treeView;
-
-    /**
-     * Tree
-     *
-     * @var Phprojekt_Tree_Node_Database
-     */
-    private $tree;
-
-    /**
      * SQL where
      *
      * @var array
@@ -118,8 +105,7 @@ class IndexController extends Zend_Controller_Action
         $projects = Phprojekt_Loader::getModel('Project', 'Project');
         $this->_tree = new Phprojekt_Tree_Node_Database($projects, 1);
         $this->_tree->setup();
-        // $this->_treeView = new Default_Helpers_TreeView($this->_tree);
-        // $this->_treeView->makePersistent();
+
 
         /* Get the current item id */
         $this->_params = $this->_request->getParams();
@@ -127,85 +113,6 @@ class IndexController extends Zend_Controller_Action
         if (isset($this->_params['id'])) {
             $this->_itemid = (int) $this->_params['id'];
         }
-    }
-
-    /**
-     * Returns the current treeview
-     *
-     * @return Default_Helpers_TreeView
-     */
-    public function getTreeView ()
-    {
-        return $this->_treeView;
-    }
-
-    /**
-     * Return the list form render helper.
-     *
-     * @return Phprojekt_RenderHelper
-     */
-    public function getFormView ()
-    {
-        $instance = Default_Helpers_FormViewRenderer::getInstance();
-        $action = $this->_request->getActionName();
-        switch ($action) {
-            case 'default':
-            case 'list':
-                break;
-            case 'display':
-                if (null !== $this->getModelObject()) {
-                    $instance->setModel($this->getModelObject());
-                }
-                break;
-            case 'edit':
-                if ($this->_itemid > 0) {
-                    $instance->setModel($this->getModelObject()->find($this->_itemid));
-                }
-                break;
-            case 'save':
-                if ($this->_itemid > 0) {
-                    $instance->setModel($this->getModelObject()->find($this->_itemid));
-                } else if (null !== $this->getModelObject()) {
-                    $instance->setModel($this->getModelObject());
-                }
-                break;
-        }
-        return $instance;
-    }
-
-    /**
-     * Return the list view render helper.
-     *
-     * @return Phprojekt_RenderHelper
-     */
-    public function getListView ()
-    {
-        $instance = Default_Helpers_ListViewRenderer::getInstance();
-        if (null !== $this->getModelObject() && null === $instance->getModel()) {
-            $instance->setModel($this->getModelObject());
-        }
-        return $instance;
-    }
-
-    /**
-     * Return the filter view render helper.
-     *
-     * @return Phprojekt_RenderHelper
-     */
-    public function getFilterView ()
-    {
-        $session = $this->_getCurrentSessionModule();
-        $instance = Default_Helpers_FilterViewRenderer::getInstance();
-        $filters = $instance->getModel();
-        $fields = $instance->getFields();
-        if (! empty($session->filters) && empty($filters)) {
-            $instance->setModel($session->filters);
-        }
-        if (empty($fields)) {
-            $fields = $this->getModelObject()->getFieldsForFilter();
-            $instance->setFields($fields);
-        }
-        return $instance;
     }
 
     /**
@@ -218,7 +125,9 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction ()
     {
-        $this->listAction();
+        $this->view->modules = $this->_submodules;
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
+        $this->render('index');
     }
 
     /**
@@ -354,99 +263,6 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Delivers the inner part of the IndexAction using ajax
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function componentIndexAction ()
-    {
-
-    }
-
-    /**
-     * Delivers the inner part of the Listaction using ajax
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function componentListAction ()
-    {
-
-    }
-
-    /**
-     * Ajax part of displayAction
-     *
-     * Form Action
-     *
-     * @todo Not implemented yet
-     * @return void
-     */
-    public function componentDisplayAction ()
-    {
-
-    }
-
-    /**
-     * Ajaxified part of the edit action
-     *
-     * Form Action
-     *
-     * @todo Not implemented yet
-     * @return void
-     */
-    public function componentEditAction ()
-    {
-
-    }
-
-    /**
-     * Toggle a open/close a node
-     *
-     * List Action
-     *
-     * @todo to be removed
-     *
-     * @return void
-     */
-    public function toggleNodeAction ()
-    {
-        $currentActiveTree = Default_Helpers_TreeView::findPersistant();
-        $currentActiveTree->toggleNode();
-        $this->forward('list', $this->getRequest()->getControllerName(), $this->getRequest()->getModuleName());
-    }
-
-    /**
-     * List all the data using the model for get it
-     * We store the id of the shown project in the session, as other modules
-     * and the indexcontroller might depend on that to define the current active
-     * object
-     * The default filter is the projectId
-     * for get all the record from the current project
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function listAction ()
-    {
-        $db = Zend_Registry::get('db');
-        /* Save the last project id into the session */
-        /* @todo: Sanitize ID / Request parameter */
-        $session = new Zend_Session_Namespace();
-        if (isset($session->currentProjectId)) {
-            $projectId = $session->currentProjectId;
-        } else {
-            $projectId = 0;
-        }
-        $this->addWhere($db->quoteInto('projectId = ?', $projectId));
-        $this->getListView()->setModel($this->getModelObject()->fetchAll($this->getWhere()));
-    }
-
-    /**
      * Abandon current changes and return to the default view
      *
      * Form Action
@@ -456,18 +272,6 @@ class IndexController extends Zend_Controller_Action
     public function cancelAction ()
     {
 
-    }
-
-    /**
-     * Displays the a single item for add an Item
-     *
-     * Form Action
-     *
-     * @return void
-     */
-    public function displayAction ()
-    {
-        $this->listAction();
     }
 
     /**
@@ -529,30 +333,6 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Displays the edit screen for the current item
-     * Use the model module for get the data
-     *
-     * Form Action
-     *
-     * @return void
-     */
-    public function editAction ()
-    {
-        $this->listAction();
-        if ($this->_itemid < 1) {
-            $this->forward('display');
-        } else {
-            /* History */
-            // $this->getFormView()->getModel()->find($this->_itemid);
-            //$db = Zend_Registry::get('db');
-            //$history = new Phprojekt_History(array('db' => $db));
-            //$this->_smarty->historyData = $history->getHistoryData($this->getModelObject(), $this->_itemid);
-            //$this->_smarty->dateFieldData = array('formType' => 'datetime');
-            //$this->_smarty->userFieldData = array('formType' => 'userId');
-        }
-    }
-
-    /**
      * Saves the current item
      * Save if you are add one or edit one.
      * Use the model module for get the data
@@ -577,7 +357,6 @@ class IndexController extends Zend_Controller_Action
         } catch (Exception $e) {
             $this->view->errors = $this->getModelObject()->getError();
         }
-        $this->listAction();
     }
 
     /**
@@ -599,43 +378,6 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Render all the views that are not already renders
-     *
-     * @return void
-     */
-    protected function _generateOutput ()
-    {
-        /* Get the last project ID */
-        $session = new Zend_Session_Namespace();
-        $write   = true;
-        $read    = true;
-
-        $this->view->webpath = Zend_Registry::get('config')->webpath;
-
-        if (isset($session->currentProjectId)) {
-            $this->view->projectId = $session->currentProjectId;
-            $this->view->projectName = $session->currentProjectName;
-            $rights = new Phprojekt_RoleRights(null, $session->currentProjectId, $this->getRequest()->getModuleName());
-            //$write = $rights->hasRight('write');
-            //$read = $rights->hasRight('read') ? true : $write;
-        }
-        if (!isset($this->view->message)) {
-            $this->view->message = '';
-        }
-        $this->view->params     = $this->_params;
-        $this->view->itemid     = $this->_itemid;
-        $this->view->modules    = $this->_submodules;
-        $this->view->write      = $write;
-        $this->view->read       = $read;
-
-        $this->view->tree       = $this->_tree;
-        $this->view->filterView = $this->getFilterView()->render();
-        $this->view->listView   = $this->getListView()->render();
-        $this->view->formView   = $this->getFormView()->render();
-        $this->render('index');
-    }
-
-    /**
      * Get the model object
      * This function must be redefined in each module
      *
@@ -651,25 +393,6 @@ class IndexController extends Zend_Controller_Action
             }
         }
         return $object;
-    }
-
-    /**
-     * Redefine the postDispatch function
-     * After all action, this functions is called
-     *
-     * The function will call the generateOuput and render for show the layout
-     *
-     * Is disable only if you set the canRender to false,
-     * for example, the canRender is seted to false before each _forward,
-     * for no draw nothing, forward the action and then draw the correct layout
-     *
-     * @return void
-     */
-    public function postDispatch()
-    {
-        if (true === $this->_canRender) {
-            $this->_generateOutput();
-        }
     }
 
     /**

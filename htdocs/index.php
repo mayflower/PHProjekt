@@ -60,12 +60,6 @@ Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
 $log = new Phprojekt_Log($config);
 Zend_Registry::set('log', $log);
 
-/**
- * Configure the ViewRenderer Helper
- * to enable the autorendering feature of ZF
- */
-Zend_Loader::loadClass('Default_Helpers_Smarty', PHPR_CORE_PATH);
-
 $view = new Zend_View();
 $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
 $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
