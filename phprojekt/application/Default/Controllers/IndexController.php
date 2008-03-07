@@ -52,7 +52,7 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function init ()
-    {
+    {               
         try {
             Phprojekt_Auth::isLoggedIn();
         } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
@@ -62,6 +62,12 @@ class IndexController extends Zend_Controller_Action
             $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
             exit;
         }
+        
+        /*
+         * this is a work around as we cannot set this in the front /*
+         */
+        $this->_helper->viewRenderer->setNoRender();
+        
     }
 
     /**
@@ -117,7 +123,7 @@ class IndexController extends Zend_Controller_Action
      	if (empty($projectId)) {
      	    $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
      	} else {
-        	$records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, $count, $offset);
+        	$records = $this->getModelObject()->fetchAll('parent = ' . $projectId, null, $count, $offset);
      	}
 
         echo Phprojekt_Converter_Json::convert($records);
