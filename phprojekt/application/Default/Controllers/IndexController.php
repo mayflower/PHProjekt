@@ -34,13 +34,6 @@
 class IndexController extends Zend_Controller_Action
 {
     /**
-     * Boolean var for render or not
-     *
-     * @var boolean
-     */
-    private $_canRender = true;
-
-    /**
      * Submodules
      *
      * @var array
@@ -147,7 +140,7 @@ class IndexController extends Zend_Controller_Action
      	if (empty($id)) {
      	    throw new InvalidArgumentException('id missing');
      	}
-       	$record = $this->getModelObject()->fetch($id);
+       	$record = $this->getModelObject()->find($id);
 
         echo Phprojekt_Converter_Json::convert($record);
     }
@@ -185,7 +178,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function deleteAction ()
+    public function jsonDeleteAction ()
     {
      	$id = (int) $this->getRequest()->getParam('id');
 
@@ -193,13 +186,7 @@ class IndexController extends Zend_Controller_Action
      	    throw new InvalidArgumentException('id missing');
      	}
 
-        if ($this->_itemid < 1) {
-            $this->forward('display');
-        } else {
-            $this->getModelObject()->find($this->_itemid)->delete();
-            $this->view->message = 'Deleted';
-        }
-        $this->listAction();
+        $this->getModelObject()->find($this->_itemid)->delete();
     }
 
     /**
@@ -212,43 +199,13 @@ class IndexController extends Zend_Controller_Action
     {
         static $object = null;
         if (null === $object) {
-            $object = Phprojekt_Loader::getModel($this->getRequest()->getModuleName(), $this->getRequest()->getModuleName());
+            $moduleName = $this->getRequest()->getModuleName();
+            $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
             if (null === $object) {
-                $object = Phprojekt_Language::getModel('Default', 'Default');
+                $object = Phprojekt_Loader::getModel('Default', 'Default');
             }
         }
         return $object;
-    }
-
-    /**
-     * Set various variables. Sometimes this is needed as
-     * internally things are rendered before postDispatch or even _generateOutput was
-     * called but we need some view variables to generate urls right
-     *
-     * @return void
-     */
-    public function preDispatch()
-    {
-        $this->view->module     = $this->getRequest()->getModuleName();
-        $this->view->controller = $this->getRequest()->getControllerName();
-        $this->view->action     = $this->getRequest()->getActionName();
-    }
-
-    /**
-     * The function will call the Zend _forward function
-     * But set first the canRender to false for no draw nothing
-     *
-     * @param string $action     The new action to display
-     * @param string $controller The new controller to display
-     * @param string $module     The new module to display
-     * @param array  $params     The params for the new request
-     *
-     * @return void
-     */
-    public function forward($action, $controller = null, $module = null, array $params = null)
-    {
-        $this->_canRender = false;
-        $this->_forward($action, $controller, $module, $params);
     }
 
 }
