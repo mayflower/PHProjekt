@@ -74,5 +74,5 @@ interface Phprojekt_Model_Interface extends Iterator
      *
      * @return array
      */
-    public function getRights();
+    public function getRights($userId);
 }
