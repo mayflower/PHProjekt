@@ -29,18 +29,18 @@ dojo.require("phpr.Todo.Main");
 dojo.require("phpr.Default.Main");
 dojo.require("phpr.Project.Main");
 
-dojo.declare("phpr.Main",null, {
-	constructor:function(webpath,currentModule, availableModules) {
+dojo.declare("phpr.Main", null, {
+	constructor: function(webpath, currentModule, availableModules) {
 		/**
 		 * All modules are initialized in the constructor
 		 */
-		this.Todo = new phpr.Todo.Main(webpath,availableModules);
-		this.Project = new phpr.Project.Main(webpath,availableModules);
-		this.Default = new phpr.Default.Main(webpath,availableModules);
+		this.Todo    = new phpr.Todo.Main(webpath, availableModules);
+		this.Project = new phpr.Project.Main(webpath, availableModules);
+		this.Default = new phpr.Default.Main(webpath, availableModules);
 		/**
 		 * The load method of the currentModule is called
 		 */
-		dojo.publish(currentModule+".load"); 
+		dojo.publish(currentModule + ".load"); 
 	}
 
 });
