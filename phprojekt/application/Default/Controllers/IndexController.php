@@ -19,18 +19,6 @@
  * The controller will get all the actions
  * and run the nessesary stuff for each one
  *
- * The indexcontroller have all the helper for use:
- * - Smarty = For make all the templates
- * - ListView = For correct values on the list view
- * - FormView = For make different form inputs for each type of field
- * - TreeView = For make the tree view
- *
- * All action do the nessesary job and then call the generateOutput
- * by postDispatch()
- * This function draw all the views that are not already rendered.
- * So you in each action you can render one view
- * and let that the generateOutput render the others.
- *
  * The class contain the model var for get the module model object
  * that return all the data for process
  *
@@ -51,27 +39,6 @@ class IndexController extends Zend_Controller_Action
      * @var boolean
      */
     private $_canRender = true;
-
-    /**
-     * SQL where
-     *
-     * @var array
-     */
-    private $_where = array();
-
-    /**
-     * Current item ID
-     *
-     * @var int
-     */
-    protected $_itemid = 0;
-
-    /**
-     * Current params request
-     *
-     * @var array
-     */
-    protected $_params = array();
 
     /**
      * Submodules
@@ -100,18 +67,7 @@ class IndexController extends Zend_Controller_Action
             $logger = Zend_Registry::get('log');
             $logger->debug((string) $ae);
             $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
-            die();
-        }
-        $projects = Phprojekt_Loader::getModel('Project', 'Project');
-        $this->_tree = new Phprojekt_Tree_Node_Database($projects, 1);
-        $this->_tree->setup();
-
-
-        /* Get the current item id */
-        $this->_params = $this->_request->getParams();
-
-        if (isset($this->_params['id'])) {
-            $this->_itemid = (int) $this->_params['id'];
+            exit;
         }
     }
 
@@ -128,150 +84,6 @@ class IndexController extends Zend_Controller_Action
         $this->view->modules = $this->_submodules;
         $this->view->webpath = Zend_Registry::get('config')->webpath;
         $this->render('index');
-    }
-
-    /**
-     * Add a Filter
-     * Save the POST values from the filter into the session where
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function addFilterAction ()
-    {
-        $field = Inspector::sanitize('alpha', $this->_params['filterField'], $messages);
-        $rule  = Inspector::sanitize('alpha', $this->_params['filterRule'], $messages);
-        $text  = Inspector::sanitize('alpha', $this->_params['filterText'], $messages);
-
-        $newFilter = array('field' => $field,
-                           'rule'  => $rule,
-                           'text'  => $text);
-        $this->addFilter($newFilter);
-        $this->forward('list');
-    }
-
-    /**
-     * Delete a Filter
-     *
-     * List Action
-     *
-     * @return void
-     */
-    public function deleteFilterAction ()
-    {
-        $id = (int) $this->_params['filterId'];
-        $this->deleteFilter($id);
-        $this->forward('list');
-    }
-
-    /**
-     * Set the name of the session with the module and the id
-     *
-     * @return Zend_Session_Namespace
-     */
-    private function _getCurrentSessionModule ()
-    {
-        $session = new Zend_Session_Namespace();
-        $id = (int) $session->currentProjectId;
-        $index = $this->getRequest()->getModuleName() . $id;
-        return new Zend_Session_Namespace($index);
-    }
-
-    /**
-     * Add a filter into the session array
-     * only if the filter don�t exists
-     *
-     * @param array $newFilter Filter data
-     *
-     * @return array All the filters
-     */
-    public function addFilter ($newFilter)
-    {
-        $session = $this->_getCurrentSessionModule();
-        $filters = (! empty($session->filters)) ? $session->filters : array();
-        $found = false;
-        foreach ($filters as $filter) {
-            if ((strcmp($filter['field'], $newFilter['field']) == 0) && (strcmp($filter['rule'], $newFilter['rule']) == 0) && (strcmp($filter['text'], $newFilter['text']) == 0)) {
-                $found = true;
-            }
-        }
-        if (! $found) {
-            $newFilter['id'] = count($filters);
-            $filters[] = $newFilter;
-            ;
-        }
-        $session->filters = $filters;
-    }
-
-    /**
-     * Delete a filter with the parsed id
-     *
-     * @param integer $id The id of the filter in the session
-     *
-     * @return void
-     */
-    public function deleteFilter ($id)
-    {
-        $session = $this->_getCurrentSessionModule();
-        $filters = (! empty($session->filters)) ? $session->filters : array();
-        if ($id == "-1") {
-            $filters = array();
-        } else {
-            if (isset($filters[$id])) {
-                unset($filters[$id]);
-            }
-        }
-        $session->filters = $filters;
-    }
-
-    /**
-     * Add a string into the where clause
-     * but don�t keep it into the session
-     *
-     * @todo to be removed as fast as possible, just dirty code, nothing else
-     *
-     * @param string $string SQL where clause
-     *
-     * @return void
-     */
-    public function addWhere ($string)
-    {
-        $this->_where[] = $string;
-    }
-
-    /**
-     * Return the saved where clause
-     *
-     * @return string SQL where clause
-     */
-    public function getWhere ()
-    {
-        $session = $this->_getCurrentSessionModule();
-        if (empty($this->_where)) {
-            $this->_where = (! empty($session->where)) ? $session->where : array();
-        }
-        $filters = (! empty($session->filters)) ? $session->filters : array();
-        foreach ($filters as $filter) {
-            $this->_where[] = $this->_applyFilter($filter['field'], $filter['rule'], $filter['text']);
-        }
-        if (! empty($this->_where)) {
-            return implode(' AND ', $this->_where);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Abandon current changes and return to the default view
-     *
-     * Form Action
-     *
-     * @return void
-     */
-    public function cancelAction ()
-    {
-
     }
 
     /**
@@ -315,13 +127,13 @@ class IndexController extends Zend_Controller_Action
                 $value = $this->_params['filter'][$k];
                 if ($value) {
                     // I dont know if this is the right way, i would expect to use prepared statements!!!!!!
-                  $this->addWhere($db->quoteInto("$k = ?", $value));
+                    //$this->addWhere($db->quoteInto("$k = ?", $value));
                 }
             }
             $session = new Zend_Session_Namespace();
         	if (isset($session->currentProjectId)) {
             	$projectId = $session->currentProjectId;
-            	$this->addWhere($db->quoteInto('parent = ?', $projectId));
+            	//$this->addWhere($db->quoteInto('parent = ?', $projectId));
        	 	}
 
         	$records = $this->getModelObject()->fetchAll($this->getWhere(), $sort, $count, $offset);
@@ -420,53 +232,10 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function forward ($action, $controller = null, $module = null, array $params = null)
+    public function forward($action, $controller = null, $module = null, array $params = null)
     {
         $this->_canRender = false;
         $this->_forward($action, $controller, $module, $params);
     }
 
-    /**
-     * Make the SQL where clause
-     *
-     * @param string $field The field in the database
-     * @param string $rule  The rule clause
-     * @param string $text  The text to seacrh
-     *
-     * @return string SQL where clause
-     */
-    private function _applyFilter ($field, $rule, $text)
-    {
-        $db = Zend_Registry::get('db');
-        switch ($rule) {
-            case 'begins':
-                $w = $field . " LIKE " . $db->quote("$text%");
-                break;
-            case 'ends':
-                $w = $field . " LIKE " . $db->quote("%$text");
-                break;
-            case 'exact':
-                $w = $field . " = " . $db->quote($text);
-                break;
-            case 'mayor':
-                $w = $field . " > " . $db->quote($text);
-                break;
-            case 'mayorequal':
-                $w = $field . " >= " . $db->quote($text);
-                break;
-            case 'minorequal':
-                $w = $field . " <= " . $db->quote($text);
-                break;
-            case 'minor':
-                $w = $field . " < " . $db->quote($text);
-                break;
-            case 'not like':
-                $w = $field . " NOT LIKE " . $db->quote("%$text%");
-                break;
-            default:
-                $w = $field . " LIKE " . $db->quote("%$text%");
-                break;
-        }
-        return $w;
-    }
 }
