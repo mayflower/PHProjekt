@@ -426,7 +426,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      * Test set for integer fields
      *
      * @expectedException InvalidArgumentException
-     * 
+     *
      * @return void
      */
     public function testIntegerFieldSet()
@@ -444,7 +444,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      * Test for get errors
      *
      * @expectedException InvalidArgumentException
-     * 
+     *
      */
     public function testGetError()
     {
@@ -496,7 +496,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      * Test date field
      *
      * @expectedException InvalidArgumentException
-     * 
+     *
      */
     public function testDate()
     {
@@ -557,11 +557,14 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $session = new Zend_Session_Namespace();
         $session->currentProjectId = 1;
 
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $userId = $authNamespace->userId;
+
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-        $this->assertEquals('write',$module->getRights());
+        $this->assertEquals('write',$module->getRights($userId));
 
         $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
-        $this->assertEquals('write',$module->getRights());
+        $this->assertEquals('write',$module->getRights($userId));
 
      }
 }
