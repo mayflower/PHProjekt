@@ -34,13 +34,6 @@
 class IndexController extends Zend_Controller_Action
 {
     /**
-     * Submodules
-     *
-     * @var array
-     */
-    protected $_submodules = array();
-
-    /**
      * Init function
      *
      * First check if is a logued user, if not is redirect to the login form.
@@ -52,7 +45,7 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function init ()
-    {               
+    {
         try {
             Phprojekt_Auth::isLoggedIn();
         } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
@@ -62,12 +55,12 @@ class IndexController extends Zend_Controller_Action
             $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
             exit;
         }
-        
+
         /*
          * this is a work around as we cannot set this in the front /*
          */
         $this->_helper->viewRenderer->setNoRender();
-        
+
     }
 
     /**
@@ -80,9 +73,20 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction ()
     {
-        $this->view->modules = $this->_submodules;
-        $this->view->webpath = Zend_Registry::get('config')->webpath;
+        $this->view->submodules = $this->_getSubmodules();
+        $this->view->webpath    = Zend_Registry::get('config')->webpath;
         $this->render('index');
+    }
+
+    /**
+     * Get a list of submodules
+     * and check for the users right on them
+     *
+     * @return array
+     */
+    protected function _getSubmodules()
+    {
+        return Phprojekt_SubModules::getInstance()->getSubModules();
     }
 
     /**
@@ -213,5 +217,4 @@ class IndexController extends Zend_Controller_Action
         }
         return $object;
     }
-
 }
