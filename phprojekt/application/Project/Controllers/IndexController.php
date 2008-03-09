@@ -32,27 +32,6 @@
 class Project_IndexController extends IndexController
 {
     /**
-     * a list of submodules
-     *
-     * @var array
-     */
-    protected $_submodules = array();
-
-    /**
-     * Set various session data.
-     *
-     * @todo Check if we have to move this part of the code, as lastProjectId
-     *       is used everywhere.
-     *
-     * @return void
-     */
-    public function init() {
-        parent::init();
-
-        $this->_submodules = $this->_getSubmodules();
-    }
-
-    /**
      * Save Action
      *
      * The save is redefined for use with tree in the project module
@@ -62,9 +41,9 @@ class Project_IndexController extends IndexController
     public function saveAction()
     {
         if (null === $this->getRequest()->getParam('id', null)) {
-            throw new InvalidArgumentException('Id not found');    
+            throw new InvalidArgumentException('Id not found');
         }
-        
+
         $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
         /* Validate and save if is all ok */
         $node = new Phprojekt_Tree_Node_Database($model);
@@ -72,17 +51,16 @@ class Project_IndexController extends IndexController
     }
 
     /**
-     * Get a list of submodules and check for the users right on them
+     * Get a list of submodules
+     * and check for the users right on them
      *
      * @return array
      */
     protected function _getSubmodules()
     {
-        //select all sobmodules with read rights from  db
-        $session = new Zend_Session_Namespace();
-
+        $session         = new Zend_Session_Namespace();
         $modulesArray    = array();
-        $allModulesArray = array('Todo','Note','Timecard');
+        $allModulesArray = Phprojekt_SubModules::getInstance()->getSubModules();
 
         $rights = new Phprojekt_RoleRights($session->currentProjectId, 'Project');
         foreach ($allModulesArray as $module) {

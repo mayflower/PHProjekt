@@ -1,0 +1,21 @@
+[emph]Sub Modules[/emph]
+
+For show all the availables submodules, the indexcontroller return a var "submodules".
+This var contains the result of the _getSubmodules() function.
+By default, the _getSubmodules calls the Phprojekt_SubModules, that read all the CORE_PATH
+and return all the folders, except the system´s folders like:
+
+'Administration', 'Groups', 'Phprojekt', 'Role', 'Users',
+
+and the CVS´s folders like:
+
+'.','..','.cvsignore','CVS'.
+
+All the other folder, are modules for show.
+
+In each IndexController of each module, you can rewrite the _getSubmodules() function,
+for work it with rights or other special stuff if you want.
+
+The submodules var is just an array, that are transformed in the index.phtml to:
+"{'Default,'History,'Note,'Project,'Todo'}"
+The client will show all these submodules and knows which are the current one.
