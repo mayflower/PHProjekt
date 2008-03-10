@@ -74,6 +74,10 @@ del         { color:#666; }
 a:focus,
 a:hover      { color: #000; }
 a, a:visited { color: #fff; text-decoration: none; }
+a:focus.navigation,
+a:hover.navigation { color: #F1CE47;text-transform:uppercase;}
+a.navigation, a:visited.navigation{color:  #294064; text-decoration: none; text-transform:uppercase;font-weight: bold;}
+.navigation { color: #F1CE47;text-transform:uppercase; text-decoration: underline;font-weight: bold;}
 
 blockquote  { margin: 1.5em; color: #666; font-style: italic; }
 strong      { font-weight: bold; }

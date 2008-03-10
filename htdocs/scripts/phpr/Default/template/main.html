@@ -1,17 +1,17 @@
-<div dojoType="dijit.layout.BorderContainer" style="width:100%; height:800px;">
+<div dojoType="dijit.layout.BorderContainer" style="width:100%; height:800px;" id="completeContentNina">
     <div id="header" region="top" class="block" style="height:55px;" >
     	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" />
         <div id="search-bar" class="last right align-right">
             <input name="searchfield" value="Search" />
         </div>
-		<div id="toolbar1"  class="right align-right" dojoType="dijit.Toolbar" >
-    		<a href="">Administrator</a>
+		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar" >
+    		<a class="dijitToolbar" href='javascript:dojo.publish("Admin.load")'>Administrator</a>
     		<span dojoType="dijit.ToolbarSeparator"></span>
-    		<a href="">Login/out</a>
+    		<a class="dijitToolbar" href='javascript:dojo.publish("Login.load")'>Login/out</a>
     		<span dojoType="dijit.ToolbarSeparator"></span>
-    		Settings
+    		<a class="dijitToolbar" href='javascript:dojo.publish("Settings.load")'>Settings</a>
     		<span dojoType="dijit.ToolbarSeparator"></span>
-    		Help
+    		<a class="dijitToolbar" href='javascript:dojo.publish("Help.load")'>Help</a>
 		</div>
  	</div>
  	<!-- Border Container which splits page in navigation and form/list view: -->
@@ -33,8 +33,7 @@
         			<div class="column">
         				<img src="{{webpath}}img/subheaderborder.png" alt="" />
         			</div>
-        			<div class="column right span-17 append-1 align-right">
-        				Todo Notizen
+        			<div class="align-left" style="margin: 5px 0 5px 20px;" id="subModuleNavigation">        				
         			</div>
  				</div>
         		<div dojoType="dijit.layout.ContentPane" style="margin-left:20px;">
