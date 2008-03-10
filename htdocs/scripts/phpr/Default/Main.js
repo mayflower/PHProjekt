@@ -40,7 +40,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 			navId = project.id;
 		}
 		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/';
-		alert(updateUrl);
+
 		this.grid     = new phpr.Default.Grid(updateUrl, this, navId, module);
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
