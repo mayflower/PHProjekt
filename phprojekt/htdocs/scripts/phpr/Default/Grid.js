@@ -19,11 +19,13 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 		if (dijit.byId(this._node)) {
 			phpr.destroyWidgets(this._node);
 		}
-		
-		if (dijit.byId("submenu1")) {
-			phpr.destroyWidgets("submenu1");
+		if (dijit.byId("headerContext")) {
+			phpr.destroyWidgets("headerContext");
 		}
-		
+		if (dijit.byId("gridContext")) {
+			alert("destroy:!!!");
+			phpr.destroyWidgets("gridContext");
+		}		
         this.render(["phpr.Default.template", "grid.html"], this._node);
       
         this.grid = {
@@ -52,8 +54,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 		dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
 		dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
 		
-		window["gridHeaderContextMenu"] = dijit.byId("submenu1");
-		
+		window["gridHeaderContextMenu"] = dijit.byId("headerContext");
         gridHeaderContextMenu.bindDomNode(this.grid.widget.domNode);
         
 		this.grid.widget.onCellContextMenu = function(e) {
@@ -74,18 +75,16 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 					var range = meta[i]["range"];
 					var opts  = new Array();
 					var vals  = new Array();
-					
-					var j = 0;
+					var j=0;
 					for (j in range){
-						opts.push(range[j])
-						vals.push(j);
+						vals.push(range[j]["id"]);
+						opts.push(range[j]["name"]);
 						j++;
 					}
-				
-				    this.gridLayout.push({
+					this.gridLayout.push({
 						name:    meta[i]["label"],
 						field:   meta[i]["label"],
-						styles:  "text-align:right;",
+						styles:  "text-align:center;",
 						width:   "auto",
 						editor:  dojox.grid.editors.Select,
 						options: opts,
@@ -95,21 +94,21 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 					
 				case'date':
 					this.gridLayout.push({
-						name: meta[i]["label"],
-						field: meta[i]["label"],
-						styles: "text-align:right;",
-						width:"auto",
+						name:      meta[i]["label"],
+						field:     meta[i]["label"],
+						styles:    "text-align:center;",
+						width:     "auto",
 						formatter: phpr.grid.formatDate,
-						editor: dojox.grid.editors.DateTextBox
+						editor:    dojox.grid.editors.DateTextBox
 					});
 				    break;
 				
 				default:
 					this.gridLayout.push({
-						name: meta[i]["label"],
-						field: meta[i]["label"],
-						styles: "text-align:right;",
-						width:"auto",
+						name:   meta[i]["label"],
+						field:  meta[i]["label"],
+						styles: "text-align:center;",
+						width:  "auto",
 						editor: dojox.grid.editors.Input
 						});
 				    break;

@@ -120,7 +120,7 @@ dojo.declare("phpr.grid.Model", dojox.grid.data.DojoData, {
 });
 
 dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
-//    // We need the store explicitly here, since we have to pass it to the grid model.
+    // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
     
@@ -129,7 +129,6 @@ dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
         // We need to pre-process the data before passing them to the QueryReadStore,
         // since the data structure sent form the server does not comply to what
         // the QueryReadStore expects, we just need to extract the data-key.
-// TODO extract the meta data and provide them so we can read them and format input data accordingly, i.e. map currentStatus 1=>"working", etc.
         ret = {
             numRows:data.numRows,
             items:data.data

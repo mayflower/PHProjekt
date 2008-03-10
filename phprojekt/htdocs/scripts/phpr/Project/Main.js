@@ -6,8 +6,11 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 	 constructor: function(webpath, availmodules){
 	 	this.module = "Project";
 	 	dojo.subscribe("Project.load", this, "load");
+		dojo.subscribe("Project.reload", this, "reload");
 		dojo.subscribe("Project.grid.RowClick", this, "openForm");
 		dojo.subscribe("Project.tree.nodeClick", this, "loadSubElements");
 		dojo.subscribe("Project.form.Submitted", this, "submitForm");
+
 	 },
+
 });

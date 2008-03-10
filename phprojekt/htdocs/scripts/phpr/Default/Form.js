@@ -45,7 +45,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 				var options=new Array();
 				var j=0;
 				for (j in range){
-					options.push({id:j, name:range[j]});
+					options.push(range[j]);
 					j++;
 				}
 				this.formdata += this.render(["phpr.Default.template", "formfilterselect.html"], null, {
