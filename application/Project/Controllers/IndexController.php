@@ -49,27 +49,4 @@ class Project_IndexController extends IndexController
         $node = new Phprojekt_Tree_Node_Database($model);
         Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
     }
-
-    /**
-     * Get a list of submodules
-     * and check for the users right on them
-     *
-     * @return array
-     */
-    public function jsonGetSubmodulesAction()
-    {
-        $session           = new Zend_Session_Namespace();
-        $allowedSubModules = array();
-        $subModules        = Phprojekt_SubModules::getInstance()->getSubModules();
-
-        $rights = new Phprojekt_RoleRights($session->currentProjectId, 'Project');
-        foreach ($subModules as $subModuleData) {
-            $right = $rights->hasRight('read', $subModuleData['name']) ? true : $rights->hasRight('write', $subModuleData['name']);
-            if ($right) {
-                $allowedSubModules[] = $subModuleData;
-            }
-        }
-
-        echo Phprojekt_Converter_Json::covertValue($allowedSubModules);
-    }
 }

@@ -80,13 +80,31 @@ class IndexController extends Zend_Controller_Action
     /**
      * Get a list of submodules
      * and check for the users right on them
+     * if the nodeId param isset
+     *
+     * @requestparam integer projectId
      *
      * @return array
      */
     public function jsonGetSubmodulesAction()
     {
         $subModules = Phprojekt_SubModules::getInstance()->getSubModules();
-        echo Phprojekt_Converter_Json::covertValue($subModules);
+        $projectId  = (int) $this->getRequest()->getParam('nodeId');
+
+        if ($projectId == 0) {
+            $data = $subModules;
+        } else {
+            $allowedSubModules = array();
+            $rights = new Phprojekt_RoleRights($projectId, 'Project');
+            foreach ($subModules as $subModuleData) {
+                $right = ($rights->hasRight('read', $subModuleData['name'])) ? true : $rights->hasRight('write', $subModuleData['name']);
+                if ($right) {
+                    $allowedSubModules[] = $subModuleData;
+                }
+            }
+            $data = $allowedSubModules;
+        }
+        echo Phprojekt_Converter_Json::covertValue($data);
     }
 
     /**
