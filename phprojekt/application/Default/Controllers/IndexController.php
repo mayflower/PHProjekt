@@ -73,8 +73,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction ()
     {
-        $this->view->submodules = $this->_getSubmodules();
-        $this->view->webpath    = Zend_Registry::get('config')->webpath;
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
         $this->render('index');
     }
 
@@ -84,9 +83,10 @@ class IndexController extends Zend_Controller_Action
      *
      * @return array
      */
-    protected function _getSubmodules()
+    public function jsonGetSubmodulesAction()
     {
-        return Phprojekt_SubModules::getInstance()->getSubModules();
+        $subModules = Phprojekt_SubModules::getInstance()->getSubModules();
+        echo Zend_Json_Encoder::encode($subModules);
     }
 
     /**
