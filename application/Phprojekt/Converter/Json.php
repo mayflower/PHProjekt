@@ -30,7 +30,6 @@
  */
 class Phprojekt_Converter_Json
 {
-
     /*
      * @todo to be removed
      */
@@ -90,8 +89,13 @@ class Phprojekt_Converter_Json
             return '/* */';
         }
 
-        $model = current((array) $models);
-        if (! $model instanceof Phprojekt_Model_Interface) {
+        if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
+            $model = $models;
+        } else if (is_array($models)) {
+            $model = current((array) $models);
+        }
+
+        if (!$model instanceof Phprojekt_Model_Interface) {
             throw new InvalidArgumentException();
         }
 
@@ -150,6 +154,19 @@ class Phprojekt_Converter_Json
         $data['label']      = 'name';
         $data['items']      = $treeNodes;
 
+        return '/* '.Zend_Json_Encoder::encode($data).' */';
+    }
+
+    /**
+     * Just convert a normal value
+     * And return it with the json-comment-filtered
+     *
+     * @param mix $data Some value to convert
+     *
+     * @return string
+     */
+    public function covertValue($data)
+    {
         return '/* '.Zend_Json_Encoder::encode($data).' */';
     }
 }

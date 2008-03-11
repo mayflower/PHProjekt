@@ -86,7 +86,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonGetSubmodulesAction()
     {
         $subModules = Phprojekt_SubModules::getInstance()->getSubModules();
-        echo Zend_Json_Encoder::encode($subModules);
+        echo Phprojekt_Converter_Json::covertValue($subModules);
     }
 
     /**
@@ -148,9 +148,10 @@ class IndexController extends Zend_Controller_Action
      	$id = (int) $this->getRequest()->getParam('id');
 
      	if (empty($id)) {
-     	    throw new InvalidArgumentException('id missing');
+     	    $record = $this->getModelObject();
+     	} else {
+       	    $record = $this->getModelObject()->find($id);
      	}
-       	$record = $this->getModelObject()->find($id);
 
         echo Phprojekt_Converter_Json::convert($record);
     }
