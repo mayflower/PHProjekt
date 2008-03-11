@@ -44,25 +44,28 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
         // Make sure, that an element that is still in edit mode calls "onApplyCellEdit",
         // so we also get the new data into _newRowValues.
         this.grid.widget.edit.apply();
+		
         // Get all the IDs for the data sets.
-        var content = new Array();
+        var content = "";
         for (var i in this._newRowValues) {
 			var curId = this.grid.widget.model.data[i].id;
-			content_curId = new Array();
 			for (var j in this._newRowValues[i]) {
-				content_curId.push({
-					j: this._newRowValues[i][j]
-				});
+				content += '&data['+ encodeURIComponent(curId) +']['+encodeURIComponent(j)+']='+encodeURIComponent(this._newRowValues[i][j]);
 			}
-			content[curId]=content_curId;
         }
-        phpr.send({
-            url:this._updateUrl,
-            content:content,
-            onSuccess:dojo.hitch(this, function(data) {
-                this._newRowValues = {};
-                this.toggleSaveButtons(false);
-            })
-        });
+		
+		//post the content of all changed forms
+		dojo.rawXhrPost( {
+        	url: this._updateUrl,
+        	postData: content,
+        	load: dojo.hitch(this,function(response, ioArgs) {
+				  	this._newRowValues = {};
+         		  	this.toggleSaveButtons(false);
+                	return response;
+        	}),
+        	error: function(response, ioArgs) {
+          	      return response;
+        	}
+		});
     }
 });

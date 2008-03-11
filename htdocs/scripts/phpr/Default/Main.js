@@ -24,21 +24,22 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     tree:null,
     grid:null,
 	module:null,
-	superMain:null,
 	webpath:'',
 	availableModules:null,
     
-    constructor:function(webpath, availableModules, main) {
-		this.superMain  = main;
+    constructor:function(webpath){
 		this.webpath = webpath;
-		this.availableModules = availableModules;
     },
-    
+	
+    receiveData: function(response){
+		return eval(response);
+	},
+	
 	openForm: function(id,module){
 		this.form = new phpr.Default.Form(this,id,module);
 	},
 	
-	loadSubElements: function(project, module) {
+	loadSubElements: function(project, module){
 		navId = null;
 		if(project.id){
 			navId = project.id;
@@ -51,32 +52,38 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 		}		
 	},
 	
-	submitForm: function(id,module,parent) {
-		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/';
+	submitForm: function(id,module,parent){
+		var updateUrl = this.webpath + 'index.php/Project/index/jsonSave/id/';
 		this.tree     = new phpr.Default.Tree(this,'Project');
 		this.grid     = new phpr.Default.Grid(updateUrl,this,parent,module);
 	},
+	
 	load:function(){
+		//summary: This function initially renders the page
+		//description: This function should only be called once as there is no need to render the whole page
+		//later on. Use reload instead to only replace those parts of the page which should change
+		
 		this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:this.webpath, currentModule:this.module});
 		dojo.addOnLoad(dojo.hitch(this, function() {
        			// Load the components, tree, list and details.
 				this.setSubmoduleNavigation();
-				var updateUrl = this.webpath + 'index.php/'+this.module+'/index/save/id/';
+				var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/id/';
         		this.tree     = new phpr.Default.Tree(this, this.module);
         		this.grid     = new phpr.Default.Grid(updateUrl, this, null, this.module);
          	})
         );
 	},
+	
 	reload:function(){
 		this.setSubmoduleNavigation();
-		var updateUrl = this.webpath + 'index.php/'+this.module+'/index/save/id/';
-        this.tree     = new phpr.Default.Tree(this, this.module);
+		var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/id/';
         this.grid     = new phpr.Default.Grid(updateUrl, this, null, this.module);
 		// destroy form if exists
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
 		}		
 	},
+	
 	setSubmoduleNavigation: function(){
 		var navigation ="";
 		for(i in this.availableModules){
@@ -86,5 +93,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 			i++;
 		}
 		dojo.byId("subModuleNavigation").innerHTML = navigation;
+	},
+	
+	getSubmodules: function(){
+		if(!(this.availableModules)){
+			var subModuleUrl = this.webpath + 'index.php/' + this.module + '/index/jsonGetSubmodules';
+			this.availableModules = phpr.getData(subModuleUrl,dojo.hitch(this, 'receiveData'));
+		}
 	}
 });

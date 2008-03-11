@@ -14,7 +14,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		this.module = module;
         // Render the form element on the right bottom
 		this.formStore = new phpr.CompleteReadStore({
-			url: this.main.webpath+"index.php/" + this.module + "/index/jsonList/Id/" + this.id
+			url: this.main.webpath+"index.php/" + this.module + "/index/jsonDetail/id/" + this.id
 		});
 		this.formStore.fetch({onComplete: dojo.hitch(this, "getFormData" )});
     },
@@ -92,7 +92,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 	submitForm: function(){
 		var sendData = this.formWidget.getValues();
 		phpr.send({
-			url: this.main.webpath + 'index.php/' + this.module + '/index/save/id/' + this.id,
+			url: this.main.webpath + 'index.php/' + this.module + '/index/jsonSave/id/' + this.id,
 			content:sendData,
 			onSuccess: dojo.publish(this.module+".form.Submitted", [this.id, this.module, sendData['parent']])
 			});
