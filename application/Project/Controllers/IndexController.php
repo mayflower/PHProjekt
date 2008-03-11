@@ -56,20 +56,20 @@ class Project_IndexController extends IndexController
      *
      * @return array
      */
-    protected function _getSubmodules()
+    public function jsonGetSubmodulesAction()
     {
-        $session         = new Zend_Session_Namespace();
-        $modulesArray    = array();
-        $allModulesArray = Phprojekt_SubModules::getInstance()->getSubModules();
+        $session           = new Zend_Session_Namespace();
+        $allowedSubModules = array();
+        $subModules        = Phprojekt_SubModules::getInstance()->getSubModules();
 
         $rights = new Phprojekt_RoleRights($session->currentProjectId, 'Project');
-        foreach ($allModulesArray as $module) {
-            $right = $rights->hasRight('read', $module) ? true : $rights->hasRight('write', $module);
+        foreach ($subModules as $subModuleData) {
+            $right = $rights->hasRight('read', $subModuleData['name']) ? true : $rights->hasRight('write', $subModuleData['name']);
             if ($right) {
-                $modulesArray[] = $module;
+                $allowedSubModules[] = $subModuleData;
             }
         }
 
-        return $modulesArray;
+        echo Zend_Json_Encoder::encode($allowedSubModules);
     }
 }
