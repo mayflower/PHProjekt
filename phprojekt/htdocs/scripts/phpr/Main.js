@@ -22,22 +22,14 @@ dojo.require("phpr.Default.Main");
 dojo.require("phpr.Project.Main");
 
 dojo.declare("phpr.Main", null, {
-	constructor: function(webpath, currentModule, availableModules) {
+	constructor: function(webpath, currentModule){
 		
-		/**
-		 * Unil its fixed on the server we set the availableModule manually
-		 */
-		availableModules=[{"name":"Project","label":"Project"},
-						  {"name":"Todo",   "label":"Todo"}
-						 ];
 		//All modules are initialized in the constructor
-		this.Todo    = new phpr.Todo.Main(webpath, availableModules, this);
-		this.Project = new phpr.Project.Main(webpath, availableModules, this);
-		this.Default = new phpr.Default.Main(webpath, availableModules, this);
+		this.Todo    = new phpr.Todo.Main(webpath);
+		this.Project = new phpr.Project.Main(webpath);
+		this.Default = new phpr.Default.Main(webpath);
 		
 		//The load method of the currentModule is called
 		dojo.publish(currentModule + ".load"); 
 	}
-
-
 });
