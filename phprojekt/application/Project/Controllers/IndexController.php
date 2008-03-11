@@ -70,6 +70,6 @@ class Project_IndexController extends IndexController
             }
         }
 
-        echo Zend_Json_Encoder::encode($allowedSubModules);
+        echo Phprojekt_Converter_Json::covertValue($allowedSubModules);
     }
 }
