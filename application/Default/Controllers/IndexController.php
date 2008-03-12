@@ -192,15 +192,17 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function jsonSaveAction ()
+    public function jsonSaveAction()
     {
      	$id = (int) $this->getRequest()->getParam('id');
 
-     	if (empty($id)) {
-     	    throw new InvalidArgumentException('id missing');
+     	try {
+            Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
+        } catch (Exception $saveError) {
+            $data = array();
+            $data['error'] = $this->getModelObject()->getError();
+            echo Phprojekt_Converter_Json::covertValue($data);
      	}
-
-        Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
     /**
@@ -210,7 +212,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function jsonDeleteAction ()
+    public function jsonDeleteAction()
     {
      	$id = (int) $this->getRequest()->getParam('id');
 
@@ -227,7 +229,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return Phprojekt_Model_Interface
      */
-    public function getModelObject ()
+    public function getModelObject()
     {
         static $object = null;
         if (null === $object) {

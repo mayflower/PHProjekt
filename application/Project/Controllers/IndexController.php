@@ -70,15 +70,22 @@ class Project_IndexController extends IndexController
      *
      * @return void
      */
-    public function saveAction()
+    public function jsonSaveAction()
     {
-        if (null === $this->getRequest()->getParam('id', null)) {
-            throw new InvalidArgumentException('Id not found');
-        }
+     	$id = (int) $this->getRequest()->getParam('id');
 
-        $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
-        /* Validate and save if is all ok */
-        $node = new Phprojekt_Tree_Node_Database($model);
-        Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
+     	try {
+     	    if (empty($id)) {
+                $model = $this->getModelObject();
+            } else {
+                $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
+     	    }
+     	    $node = new Phprojekt_Tree_Node_Database($model, $id);
+            Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
+        } catch (Exception $saveError) {
+            $data = array();
+            $data['error'] = $this->getModelObject()->getError();
+            echo Phprojekt_Converter_Json::covertValue($data);
+     	}
     }
 }
