@@ -2,6 +2,7 @@
 
 For show all the availables submodules,
 the indexcontroller call the jsonGetSubmodulesAction() function.
+With the nodeId as parameter.
 By default, the jsonGetSubmodulesAction() calls the Phprojekt_SubModules,
 that read all the CORE_PATH, and return all the folders,
 except the system´s folders like:
@@ -16,6 +17,7 @@ All the other folder, are modules for show.
 
 In each IndexController of each module, you can rewrite the jsonGetSubmodulesAction() function,
 for work it with rights or other special stuff if you want.
+The nodeId parameters is used for get the rights of the specific project.
 
 The submodules are return in the follow format:
 [{"name":"Default","label":"Default"},{"name":"Note","label":"Note"},{"name":"Project","label":"Project"}]

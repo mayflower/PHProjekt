@@ -1,0 +1,18 @@
+The list action is called for get the list of items.
+
+Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging.
+This is also used for loading a grid on demand (initially only a part is shown, scrolling down loads what is needed).
+
+The request can be:
+
+- Module/jsonList
+Return all the items with projectId = null
+For project module, return all the project with parent = null
+
+- Module/jsonList/nodeId/xx
+Return all the items with projectId = xx
+For project module, return all the project with parent = xx
+
+- Module/jsonList/id/xx
+Return only the items with id = xx
+For project module, return only the project with id = xx
