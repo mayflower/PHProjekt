@@ -110,8 +110,8 @@ class Phprojekt_Converter_Json
          * we have to do this ugly convert, because Zend_Json_Encoder doesnot check
          * if a value in an array is an object
          */
-        foreach ($models as $cmodel) {
-            foreach ($cmodel as $key => $value) {
+        if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
+            foreach ($model as $key => $value) {
                 if (is_scalar($value)) {
                     $data[$key] = $value;
                 } else {
@@ -119,6 +119,17 @@ class Phprojekt_Converter_Json
                 }
             }
             $datas[] = $data;
+        } else {
+            foreach ($models as $cmodel) {
+                foreach ($cmodel as $key => $value) {
+                    if (is_scalar($value)) {
+                        $data[$key] = $value;
+                    } else {
+                        $data[$key] = (string) $value;
+                    }
+                }
+                $datas[] = $data;
+            }
         }
         $numRows = count($datas);
         $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas, 'numRows'=>(int)$numRows);
