@@ -61,18 +61,26 @@ interface Phprojekt_Model_Interface extends Iterator
      * @return boolean
      */
     public function save();
-    
+
     /**
      * Validate the data of the current record
      *
      * @return boolean
      */
     public function recordValidate();
-    
+
     /**
      * Get rights
      *
      * @return array
      */
     public function getRights($userId);
+
+    /**
+     * Get the errors on the
+     * add/edit/delete items
+     *
+     * @return array
+     */
+    public function getError();
 }

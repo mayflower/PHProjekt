@@ -1,0 +1,8 @@
+The jsonSave functiois can be called:
+with an id param => will update the item
+without any id   => will create a new item
+
+The save function will validate the fields,
+if all is ok, the item is saved.
+If not, an error is return to the dojo client in the format:
+/* {"error":[{"field":"title","message":"Is a required field"},{"field":"startDate","message":"Is a required field"},{"field":"endDate","message":"Is a required field"},{"field":"priority","message":"Is a required field"}]} */
