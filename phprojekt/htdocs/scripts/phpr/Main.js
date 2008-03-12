@@ -22,12 +22,12 @@ dojo.require("phpr.Default.Main");
 dojo.require("phpr.Project.Main");
 
 dojo.declare("phpr.Main", null, {
-	constructor: function(webpath, currentModule){
+	constructor: function(webpath, currentModule, currentProject){
 		
 		//All modules are initialized in the constructor
-		this.Todo    = new phpr.Todo.Main(webpath);
-		this.Project = new phpr.Project.Main(webpath);
-		this.Default = new phpr.Default.Main(webpath);
+		this.Todo    = new phpr.Todo.Main(webpath, currentProject);
+		this.Project = new phpr.Project.Main(webpath, currentProject);
+		this.Default = new phpr.Default.Main(webpath, currentProject);
 		
 		//The load method of the currentModule is called
 		dojo.publish(currentModule + ".load"); 

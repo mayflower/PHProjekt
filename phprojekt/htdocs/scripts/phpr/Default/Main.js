@@ -26,27 +26,22 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	module:null,
 	webpath:'',
 	availableModules:null,
+	currentProject:null,
     
-    constructor:function(webpath){
+    constructor:function(webpath,currentProject){
 		this.webpath = webpath;
+		this.currentProject = currentProject;
     },
-	
-    receiveData: function(response){
-		return eval(response);
-	},
 	
 	openForm: function(id,module){
 		this.form = new phpr.Default.Form(this,id,module);
 	},
 	
 	loadSubElements: function(project, module){
-		navId = null;
-		if(project.id){
-			navId = project.id;
-		}
-		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/';
-
-		this.grid     = new phpr.Default.Grid(updateUrl, this, navId, module);
+		this.currentProject = project.id;
+		this.setSubmoduleNavigation();
+		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/'+this.currentProject;
+		this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, module);
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
 		}		
@@ -67,17 +62,18 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 		dojo.addOnLoad(dojo.hitch(this, function() {
        			// Load the components, tree, list and details.
 				this.setSubmoduleNavigation();
-				var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/id/';
+				var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/' + this.currentProject;
         		this.tree     = new phpr.Default.Tree(this, this.module);
-        		this.grid     = new phpr.Default.Grid(updateUrl, this, null, this.module);
+        		this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, this.module);
          	})
         );
 	},
 	
 	reload:function(){
 		this.setSubmoduleNavigation();
-		var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/id/';
-        this.grid     = new phpr.Default.Grid(updateUrl, this, null, this.module);
+		this.tree     = new phpr.Default.Tree(this, this.module);
+		var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/' + this.currentProject;
+        this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, this.module);
 		// destroy form if exists
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
@@ -85,6 +81,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	},
 	
 	setSubmoduleNavigation: function(){
+		this.getSubmodules();
 		var navigation ="";
 		for(i in this.availableModules){
 			var moduleName  = this.availableModules[i]["name"];
@@ -96,9 +93,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	},
 	
 	getSubmodules: function(){
-		if(!(this.availableModules)){
-			var subModuleUrl = this.webpath + 'index.php/' + this.module + '/index/jsonGetSubmodules';
-			this.availableModules = phpr.getData(subModuleUrl,dojo.hitch(this, 'receiveData'));
-		}
+		var subModuleUrl = this.webpath + 'index.php/' + this.module + '/index/jsonGetSubmodules/nodeId/' + this.currentProject;
+		phpr.getData(subModuleUrl,dojo.hitch(this, function(response){
+			this.availableModules =  eval(response);
+		}));
 	}
 });
