@@ -230,8 +230,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
+        $translate = Zend_Registry::get('translate');
+        
         $converted['key']      = $field->tableField;
-        $converted['label']    = $field->formLabel;
+        $converted['label']    = $translate->translate($field->formLabel);
         $converted['type']     = $field->formType;
         $converted['hint']     = $field->formTooltip;
         $converted['order']    = 0;

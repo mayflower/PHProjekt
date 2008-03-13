@@ -83,7 +83,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 					}
 					this.gridLayout.push({
 						name:    meta[i]["label"],
-						field:   meta[i]["label"],
+						field:   meta[i]["key"],
 						styles:  "text-align:center;",
 						width:   "auto",
 						editor:  dojox.grid.editors.Select,
@@ -95,7 +95,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 				case'date':
 					this.gridLayout.push({
 						name:      meta[i]["label"],
-						field:     meta[i]["label"],
+						field:     meta[i]["key"],
 						styles:    "text-align:center;",
 						width:     "auto",
 						formatter: phpr.grid.formatDate,
@@ -106,7 +106,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 				default:
 					this.gridLayout.push({
 						name:   meta[i]["label"],
-						field:  meta[i]["label"],
+						field:  meta[i]["key"],
 						styles: "text-align:center;",
 						width:  "auto",
 						editor: dojox.grid.editors.Input
