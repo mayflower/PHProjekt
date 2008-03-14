@@ -84,5 +84,8 @@ class LoginController extends Zend_Controller_Action
     public function logoutAction()
     {
         Phprojekt_Auth::logout();
+        $config = Zend_Registry::get('config');
+        $this->_redirect($config->webpath.'index.php/login/index');
+        die();
     }
 }
