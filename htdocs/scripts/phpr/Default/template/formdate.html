@@ -1,13 +1,12 @@
 <label for="{{labelfor}}">{{label}}</label>
-<input type="text" 
+<input type="text"
 		       id="{{id}}"
 		       name="{{id}}"
 		       dojoType="dijit.form.DateTextBox"
-			   required="{{required}}" 
-			   disabled="{{disabled}}"
-			   lang= "de-de"
+			   required="{{required}}"
+               disabled="{{disabled}}"
+               constraints="{datePattern:'dd.MM.yyyy'}"
 			   promptMessage = "dd.mm.yy"
 			   invalidMessage = "Invalid date. Use dd.mm.yy format."
 			   value="{{value}}" />
 <br>
-     		
