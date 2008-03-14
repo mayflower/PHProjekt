@@ -196,13 +196,7 @@ class IndexController extends Zend_Controller_Action
     {
      	$id = (int) $this->getRequest()->getParam('id');
 
-     	try {
-            Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
-        } catch (Exception $saveError) {
-            $data = array();
-            $data['error'] = $this->getModelObject()->getError();
-            echo Phprojekt_Converter_Json::covertValue($data);
-     	}
+     	Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
     /**
