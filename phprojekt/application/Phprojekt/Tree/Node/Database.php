@@ -175,7 +175,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                     $this->_activeRecord = $record;
                 } elseif (array_key_exists($record->projectId, $this->_index)) {
                     $node = new Phprojekt_Tree_Node_Database($record);
-                    $this->_index[$record->id]->appendNode($node);
+                    $this->_index[$record->projectId]->appendNode($node);
                 }
 
                 if (null !== $node) {
@@ -375,31 +375,31 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * Overwrite isset
      *
      * @param string $key
-     * 
+     *
      * @return boolean
      */
     public function __isset($key)
     {
         return array_key_exists($key, get_object_vars($this)) || isset($this->_activeRecord->$key);
     }
-    
+
     /**
      * Overwrite calls. Act as a proxy for the active record
      *
      * @param string $name
      * @param array  $arguments
-     * 
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
     {
         $methods = get_class_methods(get_class($this->getActiveRecord()));
-        
+
         if (in_array($name, $methods)) {
             return call_user_method_array($name, $this->getActiveRecord(), $arguments);
         }
     }
-    
+
     /**
      * Returns a node from the current tree.
      *
