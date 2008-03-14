@@ -143,13 +143,13 @@ class IndexController extends Zend_Controller_Action
      	$projectId = (int) $this->getRequest()->getParam('nodeId');
      	$itemId    = (int) $this->getRequest()->getParam('id');
 
-     	if (!empty($itemId)) {
+        if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
-        } else if (empty($projectId)) {
-     	    $records = $this->getModelObject()->fetchAll('projectId is null', null, $count, $offset);
-     	} else {
-        	$records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, $count, $offset);
-     	}
+        } else if (!empty($projectId)) {
+            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, $count, $offset);
+        } else {
+            $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
+        }
 
         echo Phprojekt_Converter_Json::convert($records);
     }

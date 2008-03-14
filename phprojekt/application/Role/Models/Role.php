@@ -33,7 +33,7 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
     public $hasManyAndBelongsToMany = array('users' => array('module' => 'Users',
                                                              'model'  => 'User'),
                                             'projects'=> array('module' => 'Project',
-                                                               'model'  => 'Rproject'));
+                                                               'model'  => 'Project'));
 
     /**
      * Id of user
@@ -90,8 +90,8 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
                 if (!$roleNamespace->$projectId) {
                     $projectObject = Phprojekt_Loader::getModel('Project', 'Project');
                     $parent        = $projectObject->find($projectId);
-                    if (null != $parent && $parent->parent > 0) {
-                        $role = $this->fetchUserRole($userId, $parent->parent);
+                    if (null != $parent && $parent->projectId > 0) {
+                        $role = $this->fetchUserRole($userId, $parent->projectId);
                         $roleNamespace->$projectId = $role;
                     }
                 }
