@@ -439,14 +439,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 $itemRight = 'admin';
             }
 
-            switch ($class) {
-                case 'Project':
-                    $relationField = $this->parent;
-                    break;
-                default:
-                    $relationField = $this->projectId;
-                    break;
-            }
+            $relationField = $this->projectId;
 
         } else {
             $itemRight     = 'write';

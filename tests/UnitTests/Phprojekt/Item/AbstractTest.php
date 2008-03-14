@@ -45,7 +45,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $this->_emptyResult = array();
 
         $this->_formResult = array(
-                        'parent' => array(
+                        'projectId' => array(
                                 'id'                => '',
                                 'tableName'         => '',
                                 'tablefield'        => '',
@@ -258,7 +258,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
                                 'isInteger'         => '',
                                 'isRequired'        => '',
                                 'isUnique'          => ''),
-                        'parent' => array(
+                        'projectId' => array(
                                 'id'                => '',
                                 'tableName'         => '',
                                 'tablefield'        => '',

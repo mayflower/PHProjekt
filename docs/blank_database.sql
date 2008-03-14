@@ -97,7 +97,7 @@ CREATE INDEX `ModuleInstance_userId` ON `ModuleInstance`(`projectId`);
 DROP TABLE IF EXISTS `Project`;
 CREATE TABLE `Project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent` int(11) default NULL,
+  `projectId` int(11) default NULL,
   `path` varchar(25) NOT NULL default '\\',
   `title` varchar(255) NOT NULL,
   `notes` text default NULL,
@@ -260,7 +260,7 @@ CREATE TABLE `Configuration` (
 --
 
 INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES 
-(0, 'Project', 'parent', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
+(0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
 (0, 'Project', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Project', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Project', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0),
@@ -295,7 +295,7 @@ INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLa
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
 (1,'dsp','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A');
 
-INSERT INTO `Project` (`id`, `parent`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`, `read`, `write`, `admin`) VALUES
+INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`, `read`, `write`, `admin`) VALUES
 (1, NULL, '/', 'Invisible Root', '', NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL, 1, 1, 1),
 (2, 1, '/1/', 'Project 1', '', NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL, 1, 1, NULL),
 (3, 1, '/1/', 'Project 2', '', NULL, NULL, NULL, NULL, 'working' ,0, NULL, NULL, NULL, NULL, NULL),

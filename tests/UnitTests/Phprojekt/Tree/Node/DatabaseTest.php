@@ -115,7 +115,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
 
         $this->_tree->getNodeById(5)->appendNode($new);
         $this->assertEquals('/1/2/5/', $new->path);
-        $this->assertEquals(5, $new->parent);
+        $this->assertEquals(5, $new->projectId);
     }
 
     /**

@@ -173,9 +173,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 if ($record->id == $this->_requestedId) {
                     $node                = $this;
                     $this->_activeRecord = $record;
-                } elseif (array_key_exists($record->parent, $this->_index)) {
+                } elseif (array_key_exists($record->projectId, $this->_index)) {
                     $node = new Phprojekt_Tree_Node_Database($record);
-                    $this->_index[$node->parent]->appendNode($node);
+                    $this->_index[$record->id]->appendNode($node);
                 }
 
                 if (null !== $node) {
@@ -225,9 +225,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null !== $node->_activeRecord) {
             if (null === $node->id) {
-                $node->_activeRecord->parent = (int) $this->id;
-                $node->_activeRecord->path   = sprintf('%s%s%s', $this->path, $this->id,
-                self::NODE_SEPARATOR);
+                $node->_activeRecord->projectId = (int) $this->id;
+                $node->_activeRecord->path      = sprintf('%s%s%s', $this->path, $this->id, self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
             }
 
@@ -297,9 +296,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function setParentNode(Phprojekt_Tree_Node_Database $node)
     {
-        if ($node->id != $this->_activeRecord->parent) {
+        if ($node->id != $this->_activeRecord->projectId) {
             /* update move */
-            $this->_activeRecord->parent = (int) $node->id;
+            $this->_activeRecord->projectId = (int) $node->id;
 
             $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
             $node->getActiveRecord()->save();
@@ -366,7 +365,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null !== $this->_activeRecord) {
             /* dont allow to set the tree dependent stuff */
-            if (!in_array($key, array('id', 'path', 'parent'))) {
+            if (!in_array($key, array('id', 'path', 'projectId'))) {
                 $this->_activeRecord->$key = $value;
             }
         }
@@ -451,7 +450,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function isRootNode()
     {
-        return null === $this->parent;
+        return null === $this->projectId;
     }
 
     /**

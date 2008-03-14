@@ -33,11 +33,11 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $this->_emptyResult = array();
 
         $this->_formResult = array(
-                        'parent','title','notes','startDate','endDate',
+                        'projectId','title','notes','startDate','endDate',
                         'priority','currentStatus','completePercent','budget');
 
         $this->_listResult = array(
-                        'title','parent','startDate','endDate','priority',
+                        'title','projectId','startDate','endDate','priority',
                         'currentStatus','completePercent');
     }
 
