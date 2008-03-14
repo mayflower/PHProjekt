@@ -19,7 +19,10 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
-require_once 'Controllers/BaseTest.php';
+// require_once 'Controllers/BaseTest.php';
+require_once 'Controllers/IndexControllerTest.php';
+require_once 'Controllers/LoginControllerTest.php';
+require_once 'Controllers/ErrorControllerTest.php';
 
 /**
  * Test suite for the default module
@@ -55,6 +58,11 @@ class Default_AllTests
 
         // $suite->addTestSuite('BaseTest');
         // ...
+        
+
+        // $suite->addTestSuite('Phprojekt_IndexController_Test');
+        $suite->addTestSuite('Phprojekt_LoginController_Test');
+        $suite->addTestSuite('Phprojekt_ErrorController_Test');
 
         return $suite;
     }

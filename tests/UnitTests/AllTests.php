@@ -84,7 +84,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
         if (!is_object($config)) {
-            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION);
+            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, array("allowModifications" => true));
             Zend_Registry::set('config', $config);
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
         }
@@ -110,6 +110,55 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         $authNamespace         = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
+
+        // Loading view stuff for controller tests
+
+        $view = new Zend_View();
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+
+        $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
+        $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
+        $viewRenderer->setViewScriptPathSpec(':action.:suffix');
+
+        Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
+
+        /* Front controller stuff */
+        $front = Zend_Controller_Front::getInstance();
+        $front->setDispatcher(new Phprojekt_Dispatcher());
+
+        $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
+        $front->setDefaultModule('Default');
+
+        foreach (scandir(PHPR_CORE_PATH) as $module) {
+            $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
+
+            if (is_dir(!$dir)) {
+                continue;
+            }
+
+            if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
+                $front->addModuleDirectory($dir);
+            }
+
+            $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
+
+            if (is_dir($helperPath)) {
+                $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
+                Zend_Controller_Action_HelperBroker::addPath($helperPath);
+            }
+        }
+
+        Zend_Registry::set('view', $view);
+        $view->webPath  = $config->webpath;
+        Zend_Registry::set('translate', $translate);
+
+        $front->setModuleControllerDirectoryName('Controllers');
+        $front->addModuleDirectory(PHPR_CORE_PATH);
+
+        $front->setParam('useDefaultControllerAlways', true);
+
+        $front->throwExceptions(true);
+
 
         $suite                 = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->sharedFixture  = &$db;
@@ -176,7 +225,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
     }
 
 
-    $config = new Zend_Config_Ini($configFile, $configSect);
+    $config = new Zend_Config_Ini($configFile, $configSect, array("allowModifications" => true));
     Zend_Registry::set('config', $config);
 
     if ($whiteListing) {
