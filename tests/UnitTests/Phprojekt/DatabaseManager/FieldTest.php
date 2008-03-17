@@ -49,6 +49,18 @@ class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
         $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(),
                                                    'parent',
                                                    'testvalue');
+        
+        // catching the output
+        ob_start();
+        
+        // this will return the string convertion of $dbField;
         echo $dbField;
+        
+        $string_value = ob_get_contents();
+        
+        ob_end_clean();
+        
+        // the string value has to be the assigned value
+        $this->assertEquals('testvalue',$string_value);
     }
 }

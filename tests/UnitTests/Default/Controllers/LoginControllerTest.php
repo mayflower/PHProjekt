@@ -59,6 +59,10 @@ class Phprojekt_LoginController_Test extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * Tests login action on login controller
+     *
+     */
     public function testLoginLoginAction()
     {
         $config = Zend_Registry::get('config');
@@ -93,6 +97,10 @@ class Phprojekt_LoginController_Test extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * Tests logout action on login controller
+     *
+     */
     public function testLoginLogoutAction()
     {
         $config = Zend_Registry::get('config');
@@ -104,7 +112,7 @@ class Phprojekt_LoginController_Test extends PHPUnit_Framework_TestCase
 
         $request->setModuleName('Default');
 
-        $request->setActionName('login');
+        $request->setActionName('logout');
 
         $request->setBaseUrl($config->webpath.'index.php');
         $request->setPathInfo('login/logout');

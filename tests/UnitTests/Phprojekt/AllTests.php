@@ -49,6 +49,7 @@ require_once 'AclTest.php';
 require_once 'RoleRightsTest.php';
 require_once 'GroupTest.php';
 require_once 'RoleTest.php';
+require_once 'Converter/ConverterTest.php';
 
 /**
  * Test suite for the default module
@@ -99,7 +100,8 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_AclTest');
         $suite->addTestSuite('Phprojekt_RoleRightsTest');
         $suite->addTestSuite('Phprojekt_RoleTest');
-
+        $suite->addTestSuite('Phprojekt_ConverterTest');
+        
         return $suite;
     }
 }
