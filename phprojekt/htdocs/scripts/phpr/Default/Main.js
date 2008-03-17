@@ -31,6 +31,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     constructor:function(webpath,currentProject){
 		this.webpath = webpath;
 		this.currentProject = currentProject;
+		dojo.subscribe("Project.tree.nodeClick",this, "loadSubElements");
     },
 	
 	openForm: function(id,module){
@@ -39,6 +40,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	
 	loadSubElements: function(project, module){
 		this.currentProject = project.id;
+		this.module = module
 		this.setSubmoduleNavigation();
 		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/'+this.currentProject;
 		this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, module);
