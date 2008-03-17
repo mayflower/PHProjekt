@@ -49,11 +49,11 @@ class Phprojekt_ErrorController_Test extends PHPUnit_Framework_TestCase
         $request->setActionName('error');
         
         // setting the path, controller and action 
-        $request->setBaseUrl($config->webpath.'index.php');
+        $request->setBaseUrl($config->webpath.'index.php/');
         $request->setPathInfo('error/error');
         $request->setRequestUri('/error/error');
 
-        $frontController = Zend_Controller_Front::getInstance();
+        $front = Zend_Controller_Front::getInstance();
 
         // prevent oupput
         ob_start();
@@ -65,7 +65,7 @@ class Phprojekt_ErrorController_Test extends PHPUnit_Framework_TestCase
             $error->exception = $e;
             $request->setParam('error_handler', $error);
 
-            $frontController->dispatch($request, $response);
+            $front->dispatch($request, $response);
             $response = ob_get_contents();
 
             ob_end_clean();
