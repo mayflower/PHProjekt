@@ -8,7 +8,6 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
 	 	dojo.subscribe("Todo.load", this, "load");
 		dojo.subscribe("Todo.reload", this, "reload");
 		dojo.subscribe("Todo.grid.RowClick",this, "openForm");
-		dojo.subscribe("Project.tree.nodeClick",this, "loadSubElements");
 		dojo.subscribe("Todo.form.Submitted",this, "submitForm");
 	 }
 

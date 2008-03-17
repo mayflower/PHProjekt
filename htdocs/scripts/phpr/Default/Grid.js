@@ -51,7 +51,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
         this.grid.widget = dijit.byId("gridNode");
         
 		dojo.connect(dijit.byId("saveChanges"), "onClick",         dojo.hitch(this, "saveChanges"));
-		dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
+		dojo.connect(this.grid.widget,          "onRowClick",   dojo.hitch(this, "onRowClick"));
 		dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
 		
 		window["gridHeaderContextMenu"] = dijit.byId("headerContext");
