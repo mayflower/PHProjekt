@@ -1,0 +1,24 @@
+The complete PHProjekt Client is based on dojo Version 1.02
+
+For the PHProjekt specific dojo classes we use the Namespace phpr. Those classes can be found at htdocs/scripts/phpr
+
+The dojo Client and the custom Class phpr.Main are loaded in the /application/Default/view/index.phtml file.
+The phpr.Main class is located in htdocs/scripts/phpr/Main.js and is responsible for loading all required modules
+and classes.
+
+The Default methods for displaying a default PHProjekt Module can be found in the phpr.Default widget.
+In that widget the functionality for creating the general layout, the navigation, submodule navigation, tree, grid and
+Detail view is provided.
+
+All other module widgets inherit the basic functionality from the Default widget. Only special funtions for those 
+widgets must be manually implemented.
+
+For the Communication between the different components (e.g. tree/grid/detail view) and the modules we use 
+the dojo's topic system. Dojo.publish calls any functions that are connected to the topic via dojo.subscribe,
+passing to those subscribed functions arguments that are published.
+That way the Components themselve don't need to know which other Components must be notified when changes occur.
+Instead all Components just subscribe all topics which affect them.
+
+For more information on this please read 
+http://dojotoolkit.org/book/dojo-book-0-9/part-3-programmatic-dijit-and-dojo/event-system/publish-and-subscribe-events
+

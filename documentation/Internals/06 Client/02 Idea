@@ -1,0 +1,6 @@
+The complete view component of PHProjekt 6 is realized with a customized implementation of the Dojo
+Client.
+
+The basic idea is that through the use of the Dojo Client no time consuming page reloads are required anymore.
+
+Instead all updates on the view are realized by Javascript requests from the client to the server.

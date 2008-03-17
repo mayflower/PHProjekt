@@ -1,0 +1,26 @@
+The phpr.Default.Grid class is a Component as well but it does not only extend the phpr.Component class,
+but it extends the private class phpr._EditableGrid in addition to the Component class.
+
+This class is responsible for rendering the Grid within the div with the id "gridBox".
+The Grid always shows the corresponding Subelements, depending on the current Project id and the Module.
+
+On construction the contexteMenu (gridHeaderContextMenu) is created and the table is rendered.
+
+For rendering the grid we receive the data for the Elements which are supposed to be displayed from the server and 
+store them in a phpr.grid.ReadStore.
+
+We use the variable meta which is set within that Store to determine the type of the fields which are to be displayed
+within our Grid. Depending on that grid we set the Structure of the grid with the help of the setStructure method
+of the dojox.grid widget.
+
+That way dojo knows how to render the header and the data of the grid and which kind of inline editor we require 
+for the different fields. The customized class _EditableGrid.js, with is also a superclass of our grid, makes sure
+all changes we are applying to our grid are temporally saved.
+This is accomplished by calling the phpr._EditableGrid.onCellEdit method everytime a change is made to the grid.
+Now when we click the "Save Changes" Button which can be found in our grid.html template the 
+phpr._EditableGrid.saveChanges method is called and all Changes in the grid are converted into an
+url-formatted format and are posted to the server.
+
+In addition to that we publish the "grid.RowClick" Topic of the current module when doubleclicking a certain row
+of the grid. 
+

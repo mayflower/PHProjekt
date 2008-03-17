@@ -1,0 +1,9 @@
+The Component Submodule provides the methods which are needed by all PHProjekt Components.
+At the moment PHProjekt consists of the components 'Tree', 'Form', and 'Grid'.
+
+All those classes extend the Component.js class.
+
+At this point the Component.js only provides a function to render a specific content underneath a given node.
+
+The render function uses the dojox.dtl.Template class for rendering the templates and automatically initializes 
+widgets wich are provided in the template that is rendered.

@@ -1,0 +1,11 @@
+This is the Main class, which always needs to be loaded when using the PHProjekt Client.
+
+The main purpose of this class is to require all other classe which we need for the PHProjekt Client.
+
+We don't load the different widgets and classe when they are really needed, but from the beginning within the phpr.Main
+class. As a result we can rely on the dojo publish and subscribe Methods for Communication between the Components
+and we don't need to implement any dispatcher logic ourself.
+
+The phpr.Main class doesn't extend any other dojo class.
+All is does is to instantiate all the Main classes for our PHProjekt Modules and to publish the load method
+of the Module which is supposed to be shown when logging in ot PHProjekt. 

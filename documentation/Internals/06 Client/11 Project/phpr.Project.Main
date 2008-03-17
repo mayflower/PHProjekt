@@ -1,0 +1,14 @@
+At the moment the phpr.Project.Main is the only class within the Project Module.
+
+All funtionality is inherited from the SuperClass phpr.Default.Main.
+
+All the phpr.Project.Main class does is setting the var module to 'Project' and subscribing to several dojo Topics, and calling the soccresponding methods
+which are inherited from the phpr.Default.Main.
+
+The following topics are subscribed:
+
+"Project.load":   			the phpr.Project.load method is called
+"Project.reload": 			the phpr.Project.reload method is called
+"Project.grid.RowClick": 	the phpr.Project.openForm method is called
+"Project.tree.nodeClick": 	the the phpr.Project.loadSubElements method is called
+"Project.form.Submitted": 	the the phpr.Project.submitForm method is called
