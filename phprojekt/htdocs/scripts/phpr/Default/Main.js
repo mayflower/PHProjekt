@@ -30,12 +30,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     
     constructor:function(webpath,currentProject){
 		this.webpath = webpath;
+		this.gridWidget = phpr.Default.Grid;
+		this.formWidget = phpr.Default.Form;
+		this.treeWidget = phpr.Default.Tree;
 		this.currentProject = currentProject;
 		dojo.subscribe("Project.tree.nodeClick",this, "loadSubElements");
     },
 	
 	openForm: function(id,module){
-		this.form = new phpr.Default.Form(this,id,module);
+		this.form = new this.formWidget(this,id,module);
 	},
 	
 	loadSubElements: function(project, module){
@@ -43,7 +46,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 		this.module = module
 		this.setSubmoduleNavigation();
 		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/'+this.currentProject;
-		this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, module);
+		this.grid     = new this.gridWidget(updateUrl, this, this.currentProject, module);
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
 		}		
@@ -51,8 +54,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	
 	submitForm: function(id,module,parent){
 		var updateUrl = this.webpath + 'index.php/Project/index/jsonSave/id/';
-		this.tree     = new phpr.Default.Tree(this,'Project');
-		this.grid     = new phpr.Default.Grid(updateUrl,this,parent,module);
+		this.tree     = new this.treeWidget(this,'Project');
+		this.grid     = new this.gridWidget(updateUrl,this,parent,module);
 	},
 	
 	load:function(){
@@ -65,17 +68,17 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
        			// Load the components, tree, list and details.
 				this.setSubmoduleNavigation();
 				var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/' + this.currentProject;
-        		this.tree     = new phpr.Default.Tree(this, this.module);
-        		this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, this.module);
+        		this.tree     = new this.treeWidget(this, this.module);
+        		this.grid     = new this.gridWidget(updateUrl, this, this.currentProject, this.module);
          	})
         );
 	},
 	
 	reload:function(){
 		this.setSubmoduleNavigation();
-		this.tree     = new phpr.Default.Tree(this, this.module);
+		this.tree     = new this.treeWidget(this, this.module);
 		var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/' + this.currentProject;
-        this.grid     = new phpr.Default.Grid(updateUrl, this, this.currentProject, this.module);
+        this.grid     = new this.gridWidget(updateUrl, this, this.currentProject, this.module);
 		// destroy form if exists
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
