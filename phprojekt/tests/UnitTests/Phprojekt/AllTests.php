@@ -50,6 +50,9 @@ require_once 'RoleRightsTest.php';
 require_once 'GroupTest.php';
 require_once 'RoleTest.php';
 require_once 'Converter/ConverterTest.php';
+require_once 'ModelInformation/DefaultTest.php';
+require_once 'LoaderTest.php';
+
 
 /**
  * Test suite for the default module
@@ -101,6 +104,8 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_RoleRightsTest');
         $suite->addTestSuite('Phprojekt_RoleTest');
         $suite->addTestSuite('Phprojekt_ConverterTest');
+        $suite->addTestSuite('Phprojekt_ModelInformation_DefaultTest');
+        
         
         return $suite;
     }
