@@ -46,4 +46,38 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
         $instance = new $name(array('db'=>$this->sharedFixture));
         $this->assertNotNull($instance);
     }
+    
+    /**
+     * Test GetViewClassname
+     *
+     */
+    public function testGetViewClassname()
+    {
+        $this->assertEquals('Project_Views_Project', Phprojekt_Loader::getViewClassname('Project', 'Project'));
+
+    }
+    
+    /**
+     * Test getModelFromObject
+     *
+     */
+    public function getModelFromObject()
+    {
+        
+        
+        $this->assertEquals('Project_Models_Project', Phprojekt_Loader::getModelFromObject($object));
+
+    }
+    
+    /**
+     * Test getModuleFromObject
+     *
+     */
+    public function getModuleFromObject()
+    {
+        
+        
+        $this->assertEquals('Todo', Phprojekt_Loader::getModuleFromObject($object));
+
+    }
 }

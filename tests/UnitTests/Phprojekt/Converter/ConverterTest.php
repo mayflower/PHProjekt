@@ -50,7 +50,7 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertTree()
     {
-        $converted = substr('/* {"metadata":[{"key":"title","label":"Title","type":',0,23);
+        $converted = substr('/* {"identifier":"id","label":"name","items":[{"name"',0,23);
         
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
@@ -62,8 +62,23 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
 
        
         $data = Phprojekt_Converter_Json::convertTree($tree);
-        print("|1|$data|2|");
+        
         $this->assertEquals($converted, substr($data,0,23));
+    }
+        
+    /**
+     * Test json convertion of single value
+     *
+     */
+    public function testConvertValue()
+    {
+        $data = 'This is a test of convetion';
+        $converted = '/* "This is a test of convetion" */';
+        
+               
+        $result = Phprojekt_Converter_Json::covertValue($data);
+        
+        $this->assertEquals($converted, $result);
     }
 
 }

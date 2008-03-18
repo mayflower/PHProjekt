@@ -30,51 +30,6 @@
  */
 class Phprojekt_Converter_Json
 {
-    /*
-     * @todo to be removed
-     */
-    public static function beautify($string)
-    {
-        $lines = array();
-        $inString = false;
-        $depth = 0;
-        $buffer = "";
-        for ($i = 0; $i < strlen($string) ; $i++) {
-            switch($string[$i]) {
-                case '"':
-                    if($inString)
-                        $inString = false;
-                    else
-                        $inString = true;
-                    break;
-                case ",":
-                    if (!$inString && !in_array($string[$i - 1], array('}', ']')) ) {
-                         $buffer.= ",<br />". str_repeat("&nbsp;", $depth * 2);
-                         $string[$i] = '';
-                    }
-                    break;
-
-                case "{":
-                case "[":
-                    if (!$inString) {
-                        $buffer.= "<br />". str_repeat("&nbsp;", $depth * 2);
-                        $depth++;
-                    }
-                    break;
-
-                case "}":
-                case "]":
-                    if (!$inString) {
-                        $buffer.= "<br/>";
-                        $depth--;
-                    }
-                    break;
-            }
-            $buffer.= $string[$i];
-        }
-        return $buffer;
-    }
-
     /**
      * Convert a model or a model information into a json stream
      *
