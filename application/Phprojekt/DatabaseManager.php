@@ -174,7 +174,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 case 'checkbox':
                 case 'date':
                 case 'upload':
-                case 'tree':
                     $converted[] = $this->_convertStandard($field);
                     break;
                 case 'multipleselect':
@@ -191,6 +190,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $entry             = $this->_convertStandard($field);
                     $entry['type']     = 'label';
                     $entry['readOnly'] = true;
+                    $converted[]       = $entry;
+                    break;
+                case 'tree':
+                    $entry             = $this->_convertTree($field);
+                    $entry['type']     = 'selectbox';
                     $converted[]       = $entry;
                     break;
             }
@@ -231,7 +235,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
         $translate = Zend_Registry::get('translate');
-        
+
         $converted['key']      = $field->tableField;
         $converted['label']    = $translate->translate($field->formLabel);
         $converted['type']     = $field->formType;
@@ -243,6 +247,32 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                        'name' => $field->formRange);
         $converted['required'] = (boolean) $field->isRequired;
         $converted['readOnly'] = false;
+
+        return $converted;
+    }
+
+    /**
+     * Convert to a selectbox using tree values
+     *
+     * @param array $field
+     *
+     * @return array
+     */
+    public function _convertTree(Phprojekt_ModelInformation_Interface $field)
+    {
+        $converted          = $this->_convertStandard($field);
+        $converted['range'] = array();
+        $converted['type']  = 'selectbox';
+
+        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord,1);
+        $tree->setup();
+        foreach ($tree as $node) {
+            $key   = $node->id;
+            $value = str_repeat('....', $node->getDepth()) . $node->title;
+            $converted['range'][] = array('id'   => $key,
+                                          'name' => $value);
+        }
 
         return $converted;
     }
