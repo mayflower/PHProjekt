@@ -49,6 +49,8 @@ class Phprojekt_Filter_ParseTree
      */
     public function stringToTree($string)
     {
+    	$string = $this->checkString($string);
+    	
         // we use this dertemining left open braces
         $braces = 0;
 
@@ -60,9 +62,8 @@ class Phprojekt_Filter_ParseTree
         $tokenizer = new Phprojekt_Filter_Tokenizer($string);
 
         while ($current = $tokenizer->getCurrent()) {
-
+            
             $next = $tokenizer->getNext();
-
             /**
              * If a tree [(LEAF)-(NODE)-(LEAF)] was created in last iteration, we have to return
              * if EOF is reached
@@ -72,9 +73,13 @@ class Phprojekt_Filter_ParseTree
             } else {
                 $tmpTree = null;
             }
-
+            
+            if (!is_object($next)) {
+            	break;
+            }
+            
             // Parser error, never the same token twice except braces
-            if ($current->type == $next->type &&
+            if ($current->type === $next->type &&
                 $current->type != Phprojekt_Filter_Tokenizer::T_OPEN_BRACE &&
                 $current->type != Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE) {
                 throw new Exception(sprintf("Parser error near %s %s %s",
@@ -117,10 +122,10 @@ class Phprojekt_Filter_ParseTree
                     }
 
                     if (0 == $braces) {
-                        #var_dump($parsed);
+                        
                         $tree = new Phprojekt_Tree_Binary($current->value, $current->type);
-                        $tree->addChild(new Phprojekt_Tree_Binary($this->stringToTree($parsed)),
-                                        new Phprojekt_Tree_Binary($this->stringToTree($tokenizer->getRest())));
+                        $tree->addChild($this->stringToTree($parsed),
+                                        $this->stringToTree($tokenizer->getRest()));
                         return $tree;
                     }
                     break;
@@ -162,7 +167,8 @@ class Phprojekt_Filter_ParseTree
                                             $next->value));
                     }
                     break;
-                default;
+                default:
+                	echo "default";
             }
 
             // remember the parsed string to call it recursivly
@@ -170,11 +176,14 @@ class Phprojekt_Filter_ParseTree
 
             // we need the last token to create a tree (last) <- (current) -> (next) if current is
             // a node
-            $last    = $current;
-
+            $last = clone $current;
             $tokenizer->next();
         }
-
+        
+        if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
+        	$braces--;
+        }
+        
         if ($braces != 0) {
             throw new Exception(sprintf("Parser error: Braces are set incorrectly!"));
         }
@@ -185,30 +194,79 @@ class Phprojekt_Filter_ParseTree
      *
      * @param Phprojekt_Tree_Binary $tree the tree that should be converted
      *
-     * @return string
+     * @return mixed
      */
     public function treeToString(Phprojekt_Tree_Binary $tree)
     {
-        $left   = '';
-        $right  = '';
-
         if ($tree->isLeaf()) {
             return $tree->getNode();
         }
-        if ($child = $tree->getLeftChild()) {
-            $left = $this->treeToString($child);
-        }
-        if ($child = $tree->getRightChild()) {
-            $right = $this->treeToString($child);
-        }
-
-        #var_dump($left);
-        #var_dump($right);
-
+        
+        $left   = $this->treeToString($tree->getLeftChild());
+        $right  = $this->treeToString($tree->getRightChild());
+        
         if ($tree->getNodeType() == Phprojekt_Filter_Tokenizer::T_CONNECTOR) {
             $right = " (" . $right . ") ";
             $left  = " (" . $left . ") ";
         }
+        
         return $left . $tree->getNode() . $right;
+    }
+    
+    /**
+     * Check the given string 
+     * 
+     * Checking for braces are implemented. If surrounding braces exist remove them,
+     * for example: 
+     *  ( string ) => string
+     *  ( string ) string => ( string ) string
+     * 
+     * But this function may be upgraded for further validations.
+     *
+     * @param string $string the string that should be checked
+     * 
+     * @return string
+     */
+    private function checkString($string) 
+    {
+    	$string       = trim($string);
+    	$tokenizer    = new Phprojekt_Filter_Tokenizer($string);
+    	$braces       = 0;
+    	$braces_count = 0;
+    	$last_token   = null;
+    	$last_token   = $tokenizer->getLast();
+    	$is_valid     = false;
+    	
+    	// if last token is not a brace string is valid
+    	if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $last_token->type) {
+    		return $string;
+    	}
+    	
+    	while ($current = $tokenizer->getCurrent()) {
+    		
+    		if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE === $current->type) {
+    			$braces++;
+    			$braces_count++;
+    		}
+    		
+    	    if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
+                $braces--;
+                $braces_count++;
+            }
+            
+            // if in between braces sum +(-) is zero and braces exist, end next token not null
+            // e.g. (string) string (string), this is valid, but (string) not
+            $next = $tokenizer->getNext();
+            if (0 < $braces_count && 0 === $braces && false !== $next) {
+            	$is_valid = true;
+            	break;
+            }
+            $tokenizer->next();
+    	}
+    	
+    	if (!$is_valid) {
+    		return substr($string, 1, -1);
+    	} 
+    	return $string;
     }
 }

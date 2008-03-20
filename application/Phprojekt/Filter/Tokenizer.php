@@ -27,6 +27,7 @@
  */
 class Phprojekt_Filter_Tokenizer
 {
+    const T_UNDEFINED   = 0;
     const T_OPEN_BRACE  = 1;
     const T_CLOSE_BRACE = 2;
     const T_CONNECTOR   = 3;
@@ -99,6 +100,24 @@ class Phprojekt_Filter_Tokenizer
         $next->value = $token[1];
         return $next;
     }
+    
+    public function getLast()
+    {
+        if ($this->data == '') {
+            return false;
+        }
+        $tok = substr($this->data, -1);
+        
+        // we only need type information T_CLOSE_BRACE, else UNDEFINED is working as well
+        $tok = (')' === $tok) 
+        ? array(self::T_CLOSE_BRACE, $tok) 
+        : array(self::T_UNDEFINED, $tok);
+        
+        $last = new Phprojekt_Filter_Tokenizer();
+        $last->type  = $tok[0];
+        $last->value = $tok[1];
+        return $last;
+    }
 
     public function next()
     {
@@ -150,7 +169,7 @@ class Phprojekt_Filter_Tokenizer
             }
             return $token;
         } else {
-            $splitted = preg_split('/[\s]/', $this->data);
+            $splitted = preg_split('/[\s]+/', $this->data);
             if (!empty($this->currentToken)) {
                 if ($this->currentToken[0] === self::T_CONNECTOR || $this->currentToken[0] === self::T_OPEN_BRACE) {
                     $token = array(self::T_COLUMN, $splitted[0]);
