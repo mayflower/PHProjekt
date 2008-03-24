@@ -40,20 +40,20 @@ class Project_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-     	$id = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
-     	try {
-     	    if (empty($id)) {
+        try {
+            if (empty($id)) {
                 $model = $this->getModelObject();
             } else {
                 $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
-     	    }
-     	    $node = new Phprojekt_Tree_Node_Database($model, $id);
+            }
+            $node = new Phprojekt_Tree_Node_Database($model, $id);
             Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
         } catch (Exception $saveError) {
             $data = array();
             $data['error'] = $this->getModelObject()->getError();
             echo Phprojekt_Converter_Json::covertValue($data);
-     	}
+        }
     }
 }

@@ -140,8 +140,8 @@ class IndexController extends Zend_Controller_Action
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
         $count     = (int) $this->getRequest()->getParam('count');
         $offset    = (int) $this->getRequest()->getParam('start');
-     	$projectId = (int) $this->getRequest()->getParam('nodeId');
-     	$itemId    = (int) $this->getRequest()->getParam('id');
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
+        $itemId    = (int) $this->getRequest()->getParam('id');
 
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
@@ -166,13 +166,13 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDetailAction()
     {
-     	$id = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
-     	if (empty($id)) {
-     	    $record = $this->getModelObject();
-     	} else {
-       	    $record = $this->getModelObject()->find($id);
-     	}
+        if (empty($id)) {
+            $record = $this->getModelObject();
+        } else {
+            $record = $this->getModelObject()->find($id);
+        }
 
         echo Phprojekt_Converter_Json::convert($record);
     }
@@ -194,9 +194,9 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonSaveAction()
     {
-     	$id = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
-     	Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
+        Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
     /**
@@ -208,11 +208,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDeleteAction()
     {
-     	$id = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
-     	if (empty($id)) {
-     	    throw new InvalidArgumentException('id missing');
-     	}
+        if (empty($id)) {
+            throw new InvalidArgumentException('id missing');
+        }
 
         $this->getModelObject()->find($this->_itemid)->delete();
     }
