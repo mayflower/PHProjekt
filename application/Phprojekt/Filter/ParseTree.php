@@ -50,7 +50,7 @@ class Phprojekt_Filter_ParseTree
     public function stringToTree($string)
     {
     	$string = $this->checkString($string);
-    	
+       
         // we use this dertemining left open braces
         $braces = 0;
 
@@ -235,21 +235,21 @@ class Phprojekt_Filter_ParseTree
     	$braces_count = 0;
     	$last_token   = null;
     	$last_token   = $tokenizer->getLast();
-    	$is_valid     = false;
-    	
-    	// if last token is not a brace string is valid
-    	if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $last_token->type) {
-    		return $string;
-    	}
-    	
-    	while ($current = $tokenizer->getCurrent()) {
-    		
-    		if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE === $current->type) {
-    			$braces++;
-    			$braces_count++;
-    		}
-    		
-    	    if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
+		$is_valid     = false;
+       
+		// if last token is not a brace string is valid
+       	if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $last_token->type) {
+       		return $string;
+       	}
+       
+		while ($current = $tokenizer->getCurrent()) {
+          
+       		if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE === $current->type) {
+          		$braces++;
+          		$braces_count++;
+          	}
+          
+           if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
                 $braces--;
                 $braces_count++;
             }
@@ -259,14 +259,15 @@ class Phprojekt_Filter_ParseTree
             $next = $tokenizer->getNext();
             if (0 < $braces_count && 0 === $braces && false !== $next) {
             	$is_valid = true;
-            	break;
+               	break;
             }
             $tokenizer->next();
-    	}
-    	
-    	if (!$is_valid) {
-    		return substr($string, 1, -1);
-    	} 
-    	return $string;
+		}
+       
+       	if (!$is_valid) {
+       		return substr($string, 1, -1);
+       	}
+       	 
+       	return $string;
     }
 }

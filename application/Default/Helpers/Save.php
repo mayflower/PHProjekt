@@ -57,10 +57,10 @@ final class Default_Helpers_Save
 
         if ($node->getActiveRecord()->recordValidate()) {
             if ((int)$node->parent !== $parentId) {
-	            return $node->setParentNode($parentNode);
-	        } else {
-	            return $node->getActiveRecord()->save();
-	        }
+               return $node->setParentNode($parentNode);
+           } else {
+               return $node->getActiveRecord()->save();
+           }
         } else {
             throw new Exception('Validation failed');
         }
@@ -104,8 +104,8 @@ final class Default_Helpers_Save
     public static function save()
     {
         $arguments = func_get_args();
-		$model     = $arguments[0];
-		$params    = $arguments[1];
+      	$model     = $arguments[0];
+      	$params    = $arguments[1];
 
         if (func_num_args() < 2) {
             throw new InvalidArgumentException('Expect two arguments');

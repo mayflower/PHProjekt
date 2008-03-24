@@ -121,9 +121,9 @@ class Phprojekt_Filter_Tokenizer
 
     public function next()
     {
-     $this->currentToken = $this->parseString();
-     $this->type         = $this->currentToken[0];
-     $this->value        = $this->currentToken[1];
+     	$this->currentToken = $this->parseString();
+     	$this->type         = $this->currentToken[0];
+     	$this->value        = $this->currentToken[1];
     }
 
     public function getRest()
@@ -181,7 +181,7 @@ class Phprojekt_Filter_Tokenizer
                     $token = array(self::T_VALUE, $splitted[0]);
                 }
             } else {
-             $token = array(self::T_COLUMN, $splitted[0]);;
+            	$token = array(self::T_COLUMN, $splitted[0]);;
             }
 
             if (isset($token)) {

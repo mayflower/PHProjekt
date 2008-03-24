@@ -35,7 +35,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     protected $_niceName;
     
     /**
-     * The module name	
+     * The module name   
      *
      * @var string
      */
