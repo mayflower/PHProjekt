@@ -13,12 +13,6 @@ dojo.require("dijit.Toolbar");
 dojo.require("dijit.form.Button");
 dojo.require("dojo.data.ItemFileReadStore");
 
-// app specific files
-dojo.require("phpr.Default.Tree");
-dojo.require("phpr.Default.Grid");
-dojo.require("phpr.Default.Form");
-
-
 dojo.declare("phpr.Default.Main", phpr.Component, {
     
     tree:null,
@@ -30,9 +24,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     
     constructor:function(webpath,currentProject){
 		this.webpath = webpath;
-		this.gridWidget = phpr.Default.Grid;
-		this.formWidget = phpr.Default.Form;
-		this.treeWidget = phpr.Default.Tree;
 		this.currentProject = currentProject;
 		dojo.subscribe("Project.tree.nodeClick",this, "loadSubElements");
     },
@@ -43,7 +34,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	
 	loadSubElements: function(project, module){
 		this.currentProject = project.id;
-		this.module = module
 		this.setSubmoduleNavigation();
 		var updateUrl = this.webpath + 'index.php/Project/index/save/navId/'+this.currentProject;
 		this.grid     = new this.gridWidget(updateUrl, this, this.currentProject, module);
@@ -75,6 +65,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	},
 	
 	reload:function(){
+		console.debug("this reload module" + this.module);
 		this.setSubmoduleNavigation();
 		this.tree     = new this.treeWidget(this, this.module);
 		var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/' + this.currentProject;
