@@ -1,6 +1,7 @@
 dojo.provide("phpr.Default.Form");
 
 dojo.require("phpr.Component");
+dojo.require("phpr.Default.field");
 
 dojo.declare("phpr.Default.Form", phpr.Component, {
     
@@ -26,6 +27,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		meta = this.formStore.getValue(items[0], "metadata");
 		data = this.formStore.getValue(items[1], "data");
 		newStore = [];
+		this.fieldTemplate = new phpr.Default.field();
 		for (var i = 0; i < meta.length; i++) {
 			
 			itemtype = meta[i]["type"];
@@ -35,49 +37,37 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			itemrequired = meta[i]["required"];
 			itemlabel = meta[i]["label"];
 			itemvalue = data[0][itemid];
-			
-			/**
-			 * render the fields according to their type
-			 */
+
+			//render the fields according to their type
 			switch (itemtype) {
+				case 'checkbox':
+					this.formdata += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue);
+					break;
+
 				case'selectbox':
-				var range = meta[i]["range"];
-				var options=new Array();
-				var j=0;
-				for (j in range){
-					options.push(range[j]);
-					j++;
-				}
-				this.formdata += this.render(["phpr.Default.template", "formfilterselect.html"], null, {
-						label: itemlabel,
-						labelfor: itemid,
-						id: itemid,
-						value: itemvalue,
-						required: itemrequired,
-						disabled: itemdisabled,
-						values: options
-					});
-				break;
+					this.formdata += this.fieldTemplate.selectRender(meta[i]["range"],itemlabel, itemid, itemvalue, itemrequired,
+					  												 itemdisabled);
+					break;
+				case 'multipleselect':
+					this.formdata += this.fieldTemplate.MultipleSelectRender(meta[i]["range"],itemlabel, itemid, itemvalue, itemrequired,
+					  												  		itemdisabled);
+					break;
 				case'date':
-				this.formdata += this.render(["phpr.Default.template", "formdate.html"], null, {
-						label: itemlabel,
-						labelfor: itemid,
-						id: itemid,
-						value: itemvalue,
-						required: itemrequired,
-						disabled: itemdisabled
-					});
+					this.formdata += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue, itemrequired,
+																   itemdisabled);
+					break;
+				case 'time':
+					this.formdata += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue, itemrequired,
+																   itemdisabled);
+					break;
+				case 'textarea':
+					this.formdata += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
+																       itemdisabled);
 					break;
 				case 'textfield':
 				default:
-					this.formdata += this.render(["phpr.Default.template", "formtext.html"], null, {
-						label: itemlabel,
-						labelfor: itemid,
-						id: itemid,
-						value: itemvalue,
-						required: itemrequired,
-						disabled: itemdisabled
-					});
+					this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+																		itemdisabled);
 					break;
 			}
 		}

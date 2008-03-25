@@ -9,6 +9,7 @@ dojo.require("dijit.Menu");
 dojo.require("dojox.dtl");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.Form");
+dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dojo.date.locale");
 
