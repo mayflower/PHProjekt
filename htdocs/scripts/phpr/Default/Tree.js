@@ -9,7 +9,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     
    	_treeNode:  null,
 	treeWidget: null,
-	module:    'Project',
+	module:     null,
     
     constructor: function(main, module) {
         var treepath = main.webpath + "index.php/Project/index/jsonTree";

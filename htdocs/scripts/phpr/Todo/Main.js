@@ -1,9 +1,13 @@
 dojo.provide("phpr.Todo.Main");
 
 dojo.require("phpr.Default.Main");
+// app specific files
+dojo.require("phpr.Todo.Tree");
+dojo.require("phpr.Todo.Grid");
+dojo.require("phpr.Todo.Form");
 
 dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
-	 constructor: function(webpath, availmodules){
+	 constructor: function(webpath){
 	 	this.module = "Todo";
 		this.gridWidget = phpr.Todo.Grid;
 		this.formWidget = phpr.Todo.Form;

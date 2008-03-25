@@ -27,7 +27,6 @@ dojo.declare("phpr.Main", null, {
 		//All modules are initialized in the constructor
 		this.Todo    = new phpr.Todo.Main(webpath, currentProject);
 		this.Project = new phpr.Project.Main(webpath, currentProject);
-		this.Default = new phpr.Default.Main(webpath, currentProject);
 		
 		//The load method of the currentModule is called
 		dojo.publish(currentModule + ".load"); 
