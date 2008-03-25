@@ -142,3 +142,9 @@ dojo.declare("phpr.CompleteReadStore", dojox.data.QueryReadStore, {
     }
 
 });
+dojo.require("dijit.form.DateTextBox");
+dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
+	serialize: function(d, options) {
+             		return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
+           		}
+});
