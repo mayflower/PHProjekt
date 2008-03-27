@@ -14,19 +14,18 @@ dojo.require("dijit.form.Button");
 dojo.require("dojo.data.ItemFileReadStore");
 
 dojo.declare("phpr.Default.Main", phpr.Component, {
-    
-    tree:null,
-    grid:null,
-	module:null,
+	
+	tree:null,
+	grid:null,
 	webpath:'',
 	availableModules:null,
 	currentProject:null,
-    
-    constructor:function(webpath,currentProject){
+	
+	constructor:function(webpath, currentProject){
 		this.webpath = webpath;
 		this.currentProject = currentProject;
 		dojo.subscribe("Project.tree.nodeClick",this, "loadSubElements");
-    },
+	},
 	
 	openForm: function(id,module){
 		this.form = new this.formWidget(this,id,module);
@@ -55,7 +54,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 		
 		this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:this.webpath, currentModule:this.module});
 		dojo.addOnLoad(dojo.hitch(this, function() {
-       			// Load the components, tree, list and details.
+				// Load the components, tree, list and details.
 				this.setSubmoduleNavigation();
 				var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/' + this.currentProject;
         		this.tree     = new this.treeWidget(this, this.module);
@@ -90,7 +89,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 	
 	getSubmodules: function(){
 		var subModuleUrl = this.webpath + 'index.php/' + this.module + '/index/jsonGetSubmodules/nodeId/' + this.currentProject;
-		phpr.getData(subModuleUrl,dojo.hitch(this, function(response){
+		phpr.getData(subModuleUrl, dojo.hitch(this, function(response){
 			this.availableModules =  eval(response);
 		}));
 	}
