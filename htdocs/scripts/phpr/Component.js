@@ -12,7 +12,7 @@ dojo.declare("phpr.Component", null, {
 		var tplContent = __phpr_templateCache[template[0]+"."+template[1]];
 		if (!tplContent) {
 			tplContent = dojo._getText(dojo.moduleUrl(template[0], template[1])+'?'+Math.random());
-			__phpr_templateCache[template[0]+"."+template[1]] = content;
+			__phpr_templateCache[template[0]+"."+template[1]] = tplContent;
 		}
 		var tpl = new dojox.dtl.Template(tplContent);
 		if(node) {
