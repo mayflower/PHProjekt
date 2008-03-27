@@ -4,14 +4,13 @@ dojo.provide("phpr.Default.Grid");
 dojo.require("phpr.grid");
 dojo.require("phpr._EditableGrid");
 
-dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
-    
-    _node:      null,
-	module:     null,
-	gridLayout: new Array(),
+dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 	
-    constructor: function(updateUrl, main, id, module) {
-        this._node  = dojo.byId("gridBox");
+	gridLayout:[],
+	_node:null,
+	
+	constructor: function(updateUrl, main, id, module) {
+		this._node  = dojo.byId("gridBox");
 		this.module = module;
 		this.main   = main;
 		this.id     = id;
@@ -26,22 +25,22 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 			alert("destroy:!!!");
 			phpr.destroyWidgets("gridContext");
 		}		
-        this.render(["phpr.Default.template", "grid.html"], this._node);
-      
-        this.grid = {
-            widget:null,
-            model:null,
-            layout:null
-        };
-        
+		this.render(["phpr.Default.template", "grid.html"], this._node);
+		
+		this.grid = {
+			widget:null,
+			model:null,
+			layout:null
+		};
+		
 		this.gridLayout = new Array();
 		this.gridStore  = new phpr.grid.ReadStore({url: this.main.webpath+"index.php/"+this.module+"/index/jsonList/nodeId/"+id});
-        this.grid.model = new phpr.grid.Model(null, null, {
-            store: this.gridStore
-        });
-        
-        this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
-    },		
+		this.grid.model = new phpr.grid.Model(null, null, {
+			store: this.gridStore
+		});
+		
+		this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
+	},
     
     /**
      * Called when the grid was loaded 
@@ -144,14 +143,14 @@ dojo.declare("phpr.Default.Grid", [phpr.Component,phpr._EditableGrid], {
 
 	onRowClick: function(e) {
 		var rowID=this.grid.model.getDatum(e.rowIndex,0);
-		dojo.publish(this.module+".grid.RowClick",[rowID,this.module]); 
+		this.publish("grid.RowClick", [rowID, this.module]); 
 		
 	},
 	
 	onCellEdit: function(inValue, inRowIndex, inFieldIndex){
 		var value = this.grid.model.getDatum(inRowIndex,inFieldIndex);
 		
-		dojo.publish(this.module+".grid.CellEdit",[value, inRowIndex, inFieldIndex]); 
+		this.publish("grid.CellEdit", [value, inRowIndex, inFieldIndex]); 
 		this.cellEdited(value, inRowIndex, inFieldIndex);
 		
 	}

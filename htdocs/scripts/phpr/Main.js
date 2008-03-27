@@ -27,7 +27,7 @@ dojo.declare("phpr.Main", null, {
 	constructor: function(webpath, currentModule, currentProject){
 		
 		//All modules are initialized in the constructor
-		this.Todo    = new phpr.Todo.Main(webpath, currentProject);
+		//this.Todo    = new phpr.Todo.Main(webpath, currentProject);
 		this.Project = new phpr.Project.Main(webpath, currentProject);
 		this.Administration = new phpr.Administration.Main(webpath, currentProject);
 		
