@@ -1,10 +1,10 @@
-dojo.provide("phpr.admin.Elements");
+dojo.provide("phpr.Adminsitration.Md.Elements");
 
 
 dojo.require("phpr.Component");
 dojo.require("dojo.data.ItemFileReadStore");
 
-dojo.declare("phpr.admin.Elements", phpr.Component, {
+dojo.declare("phpr.Adminsitration.Md.Elements", phpr.Component, {
 
     _data: null,
     constructor:function(main) {
@@ -28,7 +28,7 @@ dojo.declare("phpr.admin.Elements", phpr.Component, {
             var node = null;
             var context = {label:current.label, icon:current.icon, text:'', id:current.id,};
 
-            html += this.render(["phpr.admin.template", "button.html"],node,context)+'<br>';
+            html += this.render(["phpr.Adminsitration.Md.template", "button.html"],node,context)+'<br>';
         }
         dojo.byId('myelements').innerHTML = html;
         phpr.initWidgets(dojo.byId('myelements'));
@@ -51,7 +51,7 @@ dojo.declare("phpr.admin.Elements", phpr.Component, {
 					var current = phpr.getCurrent(self.meta,'id',elementId);
 					var ident =current.id;
 					current.id = uID;
-					self.render(["phpr.admin.template", current.type+".html"],mynodes[0],current);
+					self.render(["phpr.Adminsitration.Md.template", current.type+".html"],mynodes[0],current);
 					dijit.byId(uID).editorId=ident;
                     dojo.dnd.manager().nodes = mynodes;
                 });
@@ -67,7 +67,7 @@ dojo.declare("phpr.admin.Elements", phpr.Component, {
 		console.debug('widget id'+widget.editorId);
      	this.metadataStore.fetchItemByIdentity({identity:widget.editorId,onItem:this.metadaRender})
 		console.debug('der editortype:'+widget.editorId);
-        var html = this.render(["phpr.admin.template", "label.html"],null,{label:'Wert'});
+        var html = this.render(["phpr.Adminsitration.Md.template", "label.html"],null,{label:'Wert'});
         dojo.byId('myvalues').innerHTML =html;
         //dojo.connect(dojo.byId(newId2), "onchange",dojo.hitch(this, "updateValues"));
 
