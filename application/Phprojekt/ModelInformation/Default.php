@@ -29,8 +29,26 @@
  */
 class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_Interface
 {
+    /**
+     * Array that contains the form field values
+     *
+     * @var array
+     */
     protected $_formFields;
+
+    /**
+     * Array that contains the list field values
+     *
+     * @var array
+     */
     protected $_listFields;
+
+    /**
+     * An array that defines the default values used when
+     * setting the form or list fields if they are not given
+     *
+     * @var array
+     */
     protected $_defaultValues = array (
                                 'key'      => '',
                                 'label'    => '',
