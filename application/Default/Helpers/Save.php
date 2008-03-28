@@ -108,11 +108,11 @@ final class Default_Helpers_Save
       	$params    = $arguments[1];
 
         if (func_num_args() < 2) {
-            throw new InvalidArgumentException('Expect two arguments');
+            throw new Phprojekt_PublishedException('Expect two arguments');
         }
 
         if (!is_array($params)) {
-            throw new InvalidArgumentException('Second parameter needs to be an array');
+            throw new Phprojekt_PublishedException('Second parameter needs to be an array');
         }
 
         if ($model instanceof Phprojekt_Tree_Node_Database) {
@@ -123,7 +123,7 @@ final class Default_Helpers_Save
             } else if (array_key_exists('projectId', $params)) {
                 $parentId = $params['projectId'];
             } else {
-                throw new InvalidArgumentException('No parent id found in parameters or passed');
+                throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
             }
 
             return self::_saveTree($model, $params, $parentId);

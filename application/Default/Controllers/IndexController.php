@@ -119,6 +119,7 @@ class IndexController extends Zend_Controller_Action
     {
         $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
         $tree->setup();
+        
         echo Phprojekt_Converter_Json::convertTree($tree);
     }
 
@@ -138,10 +139,10 @@ class IndexController extends Zend_Controller_Action
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count     = (int) $this->getRequest()->getParam('count');
-        $offset    = (int) $this->getRequest()->getParam('start');
-        $projectId = (int) $this->getRequest()->getParam('nodeId');
-        $itemId    = (int) $this->getRequest()->getParam('id');
+        $count     = (int) $this->getRequest()->getParam('count',  null);
+        $offset    = (int) $this->getRequest()->getParam('start',  null);
+        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
+        $itemId    = (int) $this->getRequest()->getParam('id',     null);
 
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
@@ -196,6 +197,10 @@ class IndexController extends Zend_Controller_Action
     {
         $id = (int) $this->getRequest()->getParam('id');
 
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException('ID parameter required');
+        }
+        
         Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
@@ -211,7 +216,25 @@ class IndexController extends Zend_Controller_Action
         $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new InvalidArgumentException('id missing');
+            throw new Phprojekt_PublishedException('ID parameter required');
+        }
+        
+        Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
+    }
+
+    /**
+     * Deletes a certain item
+     *
+     * Form Action
+     *
+     * @return void
+     */
+    public function jsonDeleteAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException('ID parameter required');
         }
 
         $this->getModelObject()->find($this->_itemid)->delete();

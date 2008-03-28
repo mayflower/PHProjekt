@@ -28,29 +28,42 @@
 class ErrorController extends Zend_Controller_Action
 {
     /**
+     * Initialize our error controller and disable the viewRenderer
+     */
+    public function init() 
+    {
+        $this->_helper->viewRenderer->setNoRender();
+    }
+	   
+    /**
      * Default error action
      *
      * @return void
      */
     public function errorAction()
     {
-        $config = Zend_Registry::get('config');
-        $logger = Zend_Registry::get('log');
-
-        $logger->err('Error handler called');
-
-
-        $this->getResponse()->clearHeaders();
+        $errors = $this->_getParam('error_handler');
+    
         $this->getResponse()->clearBody();
-
-        $errors    = $this->_getParam('error_handler');
-        $exception = $errors->exception;
-        $logger->debug($exception->getMessage() . "\n"
-                     . $exception->getTraceAsString());
-
-        if ($config->debug) {
-            $this->view->message = $exception->getMessage();
+        switch ($errors->type) {
+            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
+            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
+                // 404 error -- controller or action not found
+                $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+                break;
+            default:                
+                $exception = $errors->exception;
+                
+                $logger = Zend_Registry::get('log');
+                $logger->err($exception->getMessage() . "\n"
+                           . $exception->getTraceAsString());
+                           
+                /* we only forward exception with type PublishedException */
+                if ($exception instanceof Phprojekt_PublishedException) {
+	                echo '/* '. Zend_Json_Encoder::encode($exception) . ' */';
+                }
+                
+                break;
         }
-
     }
 }
