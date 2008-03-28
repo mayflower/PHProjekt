@@ -26,7 +26,7 @@
  * @since      File available since Release 1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Phprojekt_Auth_UserNotLoggedInException extends Exception
+class Phprojekt_Auth_UserNotLoggedInException extends Phprojekt_PublishedException 
 {
     /**
      * New instance
