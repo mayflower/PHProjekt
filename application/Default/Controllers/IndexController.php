@@ -218,24 +218,6 @@ class IndexController extends Zend_Controller_Action
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
-        
-        Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
-    }
-
-    /**
-     * Deletes a certain item
-     *
-     * Form Action
-     *
-     * @return void
-     */
-    public function jsonDeleteAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-
-        if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
-        }
 
         $this->getModelObject()->find($this->_itemid)->delete();
     }
