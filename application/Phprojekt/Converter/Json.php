@@ -66,17 +66,21 @@ class Phprojekt_Converter_Json
          * if a value in an array is an object
          */
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
-            foreach ($model as $key => $value) {
-                if (is_scalar($value)) {
-                    $data[$key] = $value;
-                } else {
-                    $data[$key] = (string) $value;
-                }
+            foreach ($information->getFieldDefinition() as $field) {
+               $key   = $field['key'];
+               $value = $models->$key;
+               if (is_scalar($value)) {
+                   $data[$key] = $value;
+               } else {
+                   $data[$key] = (string) $value;
+               }
             }
             $datas[] = $data;
         } else {
             foreach ($models as $cmodel) {
-                foreach ($cmodel as $key => $value) {
+                foreach ($information->getFieldDefinition() as $field) {
+                    $key   = $field['key'];
+                    $value = $cmodel->$key;
                     if (is_scalar($value)) {
                         $data[$key] = $value;
                     } else {
