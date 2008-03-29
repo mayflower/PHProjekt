@@ -32,7 +32,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @var string
      */
-    protected $_niceName;
+    protected $_name;
     
     /**
      * The module name   
@@ -76,7 +76,13 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     protected static $_defaultConfiguration = array(array('type'  => 'selectValues', 
                                                           'key'   => 'activated', 
                                                           'range' => '1#On|0#Off', 
-                                                          'label' => 'Module activated?'));
+                                                          'label' => 'Module activated?'),
+                                                   array('type'  => 'label',
+                                                         'key'   => 'name',
+                                                         'label' => ''),
+                                                   array('type'  => 'label',
+                                                         'key'   => 'module',
+                                                         'label' => ''));
     
     /**
      * The actual configuration, merged from the default configuration and the module configuration
@@ -91,7 +97,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @var array
      */
-    private $_readOnlyProperties = array('niceName', 'module', 'configuration');
+    private $_readOnlyProperties = array('name', 'module', 'configuration');
     
     /**
      * Add a module to the ignore list. 
@@ -140,7 +146,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      */
     public function setConfiguration(array $configuration)
     {
-        $configuration  = array_merge(self::$_defaultConfiguration, $configuration);
+        $configuration = array_merge(self::$_defaultConfiguration, $configuration);
         
         foreach ($configuration as $config) {
             /* we need to create an assoc array as this is easier to 
@@ -167,7 +173,6 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePatterns)) {
                 continue;
             }
-            
             if (is_dir($path)) {
                 /* @todo Optimize */
                 $instance = clone $this;
@@ -244,7 +249,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             
             /* workaround as php 5.2 doesnot support late static bindings */
             $vars            = get_class_vars($moduleClass);
-            $this->_niceName = (empty($vars['name'])) ? $module : $vars['name'];
+            $this->_name     = (empty($vars['name'])) ? $module : $vars['name'];
             $this->_module   = $module;
             $this->setConfiguration($vars['configuration']);
             $this->_loadFromDatabase();
