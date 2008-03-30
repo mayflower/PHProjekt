@@ -100,7 +100,6 @@ foreach (scandir(PHPR_CORE_PATH) as $module) {
 }
 
 Zend_Registry::set('view', $view);
-$view->webPath  = $config->webpath;
 Zend_Registry::set('translate', $translate);
 
 $front->setModuleControllerDirectoryName('Controllers');
