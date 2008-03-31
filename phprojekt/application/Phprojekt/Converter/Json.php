@@ -46,8 +46,10 @@ class Phprojekt_Converter_Json
 
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
             $model = $models;
-        } else if (is_array($models)) {
+        } else if (is_array($models) && !empty($models)) {
             $model = current((array) $models);
+        } else {
+            return '/* */';
         }
 
         if (!$model instanceof Phprojekt_Model_Interface) {
