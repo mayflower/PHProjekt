@@ -36,6 +36,20 @@ class Phprojekt_Filter_Tokenizer
     const T_VALUE       = 6;
 
     /**
+     * regex for tokens
+     * 
+     * @var array
+     */
+    private $token = array(
+        self::T_OPEN_BRACE  => '/^(\()(.)*?$/',
+        self::T_CLOSE_BRACE => '/^(\))(.)*?$/',
+        self::T_CONNECTOR   => '/^(or|and)(.)*$/i',
+        self::T_OPERATOR    => '/^(=|!=|\<=|\<|\>|=\>)(.)*?$/',
+        self::T_COLUMN      => '/^(((\'|\")(\w| )+(\"|\'))|(\w)+)( )*?(=|!=|\<=|\<|\>|=\>)(.)*?$/i',
+        self::T_VALUE       => '/^((\'|\")(\w| )+(\'|\")|(\d){1,})( )*?(((and|or)(.)*)|(\)(.)*?|( )*?))/i',
+        );
+    
+    /**
      * string to tokenize
      *
      * @var string
@@ -54,7 +68,7 @@ class Phprojekt_Filter_Tokenizer
      *
      * @var int
      */
-    public $type  = null;
+    public $type = null;
 
     /**
      * value of token
@@ -65,7 +79,7 @@ class Phprojekt_Filter_Tokenizer
 
     public function __construct($string = '')
     {
-        $this->data         = $string;
+        $this->data         = trim($string);
         $this->currentToken = $this->parseString();
         $this->type         = $this->currentToken[0];
         $this->value        = $this->currentToken[1];
@@ -94,13 +108,19 @@ class Phprojekt_Filter_Tokenizer
         if ($this->data == '') {
             return false;
         }
+
         $next        = new Phprojekt_Filter_Tokenizer($this->data);
-        $token       = $this->parseString(false);
+        $token       = $next->parseString(false);
         $next->type  = $token[0];
         $next->value = $token[1];
         return $next;
     }
     
+    /**
+     * Returns last token
+     *
+     * @return array
+     */
     public function getLast()
     {
         if ($this->data == '') {
@@ -119,6 +139,11 @@ class Phprojekt_Filter_Tokenizer
         return $last;
     }
 
+    /**
+     * go to next token
+     *
+     * @return void
+     */
     public function next()
     {
      	$this->currentToken = $this->parseString();
@@ -126,6 +151,11 @@ class Phprojekt_Filter_Tokenizer
      	$this->value        = $this->currentToken[1];
     }
 
+    /**
+     * Returns string
+     *
+     * @return string
+     */
     public function getRest()
     {
         return $this->data;
@@ -140,56 +170,19 @@ class Phprojekt_Filter_Tokenizer
     private function parseString($remove = true)
     {
         $this->data = trim($this->data);
-        if (strpos($this->data, '(') !== false && strpos($this->data, '(') < 1) {
-            //open brace
-            $token = array(self::T_OPEN_BRACE, '(');
-            if ($remove) {
-             $this->data = preg_replace('[\(]', '', $this->data, 1);
-            }
-            return $token;
-        } elseif (strpos($this->data, ')') !== false && strpos($this->data, ')') < 1) {
-            //closing brace
-            $token = array(self::T_CLOSE_BRACE, ')');
-            if ($remove) {
-                $this->data = preg_replace('[\)]', '', $this->data, 1);
-            }
-            return $token;
-        } elseif (stripos($this->data, 'and') !== false && stripos($this->data, 'and') < 1) {
-            // and
-            $token = array(self::T_CONNECTOR, 'and');
-            if ($remove) {
-                $this->data = preg_replace('/and/i', '', $this->data, 1);
-            }
-            return $token;
-        } elseif (stripos($this->data, 'or') !== false && stripos($this->data, 'or') < 1) {
-            //or
-            $token = array(self::T_CONNECTOR, 'or');
-            if ($remove) {
-                $this->data = preg_replace('/or/i', '', $this->data, 1);
-            }
-            return $token;
+        foreach ($this->token as $key => $regex) {
+        	if (preg_match($regex, $this->data, $matches)) {
+        		$found_token = array($key, $matches[1]);  
+        	    if ($remove) {
+        	        $this->data = substr($this->data, strlen($matches[1]), strlen($this->data));
+                }
+        		break;      	    
+        	} 
+        }
+        if (isset($found_token)) {
+        	return $found_token;
         } else {
-            $splitted = preg_split('/[\s]+/', $this->data);
-            if (!empty($this->currentToken)) {
-                if ($this->currentToken[0] === self::T_CONNECTOR || $this->currentToken[0] === self::T_OPEN_BRACE) {
-                    $token = array(self::T_COLUMN, $splitted[0]);
-                }
-                if ($this->currentToken[0] === self::T_COLUMN) {
-                    $token = array(self::T_OPERATOR, $splitted[0]);
-                }
-                if ($this->currentToken[0] === self::T_OPERATOR) {
-                    $token = array(self::T_VALUE, $splitted[0]);
-                }
-            } else {
-            	$token = array(self::T_COLUMN, $splitted[0]);;
-            }
-
-            if (isset($token)) {
-                if ($remove) {
-                    $this->data = preg_replace('/'.$splitted[0].'/', '', $this->data, 1);
-                }
-                return $token;
-            }
+            return NULL;
         }
     }
 }
