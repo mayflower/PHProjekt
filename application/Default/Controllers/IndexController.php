@@ -57,8 +57,8 @@ class IndexController extends Zend_Controller_Action
         }
 
         /*
-         * this is a work around as we cannot set this in the front /*
-         */
+        * this is a work around as we cannot set this in the front /*
+        */
         $this->_helper->viewRenderer->setNoRender();
 
     }
@@ -119,7 +119,7 @@ class IndexController extends Zend_Controller_Action
     {
         $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
         $tree->setup();
-        
+
         echo Phprojekt_Converter_Json::convertTree($tree);
     }
 
@@ -200,7 +200,7 @@ class IndexController extends Zend_Controller_Action
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
-        
+
         Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
@@ -239,5 +239,43 @@ class IndexController extends Zend_Controller_Action
             }
         }
         return $object;
+    }
+
+
+    /**
+     * Get a list of permissions for each module
+     * for the users who requested the list.
+     * It checks the user permission on the projectId
+     *
+     * @requestparam integer projectId
+     *
+     * @return array
+     */
+    public function jsonGetModulesPermissionAction()
+    {
+        $subModules = Phprojekt_SubModules::getInstance()->getSubModules();
+        $projectId  = (int) $this->getRequest()->getParam('nodeId');
+
+        if ($projectId == 0) {
+            $data = ""; // there is no rights on invalid projects
+
+        } else {
+            $allowedSubModules = array();
+            $rights = new Phprojekt_RoleRights($projectId, 'Project');
+            foreach ($subModules as $subModuleData) {
+
+                $subModuleData['access']     = $rights->hasRight('access', $subModuleData['name']);
+                $subModuleData['read']       = $rights->hasRight('read', $subModuleData['name']);
+                $subModuleData['write']      = $rights->hasRight('write', $subModuleData['name']);
+                $subModuleData['create']     = $rights->hasRight('create', $subModuleData['name']);
+                $subModuleData['permission'] = (int) (1 *$subModuleData['access'] + 2 * $subModuleData['read'] + 4 * $subModuleData['write'] + 8 * $subModuleData['create']);
+
+                $allowedSubModules[]    = $subModuleData;
+
+            }
+            $data = $allowedSubModules;
+
+        }
+        echo Phprojekt_Converter_Json::covertValue($data);
     }
 }
