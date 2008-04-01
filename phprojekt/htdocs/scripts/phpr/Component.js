@@ -23,7 +23,7 @@ dojo.declare("phpr.Component", null, {
 		}
 	},
 	
-	publish:function(/*String*/ name){
+	publish:function(/*String*/ name, /*array*/args){
 		// summary:
 		//		Publish the topic for the current module, its always prefixed with the module.
 		// description:
@@ -31,7 +31,9 @@ dojo.declare("phpr.Component", null, {
 		//		will then publish the topic "project.open".
 		// name: String
 		//		The topic of this module that shall be published.
-		dojo.publish(this.module+"."+name);
+		//args: Array
+		//      Arguments that should be published with the topic
+		dojo.publish(this.module+"."+name, args);
 	}
 	
 });

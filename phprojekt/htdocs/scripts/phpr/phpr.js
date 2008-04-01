@@ -127,7 +127,7 @@ dojo.declare("phpr.MetaReadStore", dojox.data.QueryReadStore, {
     }
 
 });
-dojo.declare("phpr.CompleteReadStore", dojox.data.QueryReadStore, {
+dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 	// We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
