@@ -1,0 +1,34 @@
+/** 
+ * dijit.layout.BorderContainer 
+ *
+ */ 
+
+.phprojekt .dijitSplitterHorizontal {
+	background: #294064;
+	border:0;
+	border-left:0px solid #294064;
+	border-right:0px solid #294064;
+	height:5px;
+}
+
+.phprojekt .dijitSplitterHorizontal .dijitSplitterThumb {
+	background:url("../images/splitContainerSizerH-thumb.png") no-repeat;
+	top:1px;
+	width:19px;
+	height:2px;
+}
+
+.phprojekt .dijitSplitterVertical {
+	background:#294064;
+	border:0;
+	border-top:0px solid #436496;
+	border-bottom:0px solid #436496;
+	width:10px;
+}
+
+.phprojekt .dijitSplitterVertical .dijitSplitterThumb {
+	background:url("../images/splitContainerSizerV-thumb.png") no-repeat;
+	left:1px;
+	height:19px;
+	width:5px;
+}
