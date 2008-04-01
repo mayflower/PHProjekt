@@ -14,7 +14,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		this.id = id;
 		this.module = module;
         // Render the form element on the right bottom
-		this.formStore = new phpr.CompleteReadStore({
+		this.formStore = new phpr.ReadStore({
 			url: this.main.webpath+"index.php/" + this.module + "/index/jsonDetail/id/" + this.id
 		});
 		this.formStore.fetch({onComplete: dojo.hitch(this, "getFormData" )});
