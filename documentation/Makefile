@@ -1,9 +1,13 @@
-PHP=php
-MKDIR=mkdir -p
-XSLHTML=/usr/share/xml/docbook/stylesheet/nwalsh/xhtml/chunk.xsl
-XSLFO=/usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl
-OUTDIR=output
-DEFAULTARGS=-x "*~"
+# A simple make file to generate HTML/docbook
+# 
+#
+
+PHP = php
+MKDIR = mkdir -p
+XSLHTML = /usr/share/xml/docbook/stylesheet/nwalsh/xhtml/chunk.xsl
+XSLFO = /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl
+OUTDIR = output
+DEFAULTARGS = -x "*~"
 
 all:: user internals developer css
 
