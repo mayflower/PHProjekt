@@ -9,9 +9,8 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 	gridLayout:[],
 	_node:null,
 	
-	constructor: function(updateUrl, main, id, module) {
+	constructor: function(updateUrl, main, id) {
 		this._node  = dojo.byId("gridBox");
-		this.module = module;
 		this.main   = main;
 		this.id     = id;
 		
@@ -34,7 +33,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 		};
 		
 		this.gridLayout = new Array();
-		this.gridStore  = new phpr.grid.ReadStore({url: this.main.webpath+"index.php/"+this.module+"/index/jsonList/nodeId/"+id});
+		this.gridStore  = new phpr.grid.ReadStore({url: phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/"+id});
 		this.grid.model = new phpr.grid.Model(null, null, {
 			store: this.gridStore
 		});
@@ -143,7 +142,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 
 	onRowClick: function(e) {
 		var rowID=this.grid.model.getDatum(e.rowIndex,0);
-		this.publish("grid.RowClick", [rowID, this.module]); 
+		this.publish("grid.RowClick", [rowID]); 
 		
 	},
 	

@@ -24,14 +24,19 @@ dojo.require("phpr.Project.Main");
 dojo.require("phpr.Administration.Main");
 
 dojo.declare("phpr.Main", null, {
-	constructor: function(webpath, currentModule, currentProject){
+    constructor: function(webpath, currentModule, currentProjectId){
+        
+        //set global vars to current settings
+        phpr.module  = currentModule;
+        phpr.webpath = webpath;
+        phpr.currentProjectId = currentProjectId ;
 		
-		//All modules are initialized in the constructor
-		this.Todo    = new phpr.Todo.Main(webpath, currentProject);
-		this.Project = new phpr.Project.Main(webpath, currentProject);
-		this.Administration = new phpr.Administration.Main(webpath, currentProject);
-		
-		//The load method of the currentModule is called
-		dojo.publish(currentModule + ".load"); 
-	}
+        //All modules are initialized in the constructor
+        this.Todo    = new phpr.Todo.Main();
+        this.Project = new phpr.Project.Main();
+        this.Administration = new phpr.Administration.Main();
+        
+        //The load method of the currentModule is called
+        dojo.publish(phpr.module + ".load");
+    }
 });
