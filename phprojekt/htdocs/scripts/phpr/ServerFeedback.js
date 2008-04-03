@@ -7,8 +7,8 @@ dojo.declare("phpr.ServerFeedback",
 		// A class for displaying the ServerFeedback
 		// This class receives the Server Feedback and displays it to the User
 		
-		class:null,
-		output:null,		
-		templatePath: dojo.moduleUrl("phpr.Default", "template/Exception.html"),
+		cssClass:     null,
+		output:       null,		
+		templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
 	}
 );

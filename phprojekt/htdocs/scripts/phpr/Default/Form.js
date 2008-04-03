@@ -9,13 +9,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 	range: new Array(),
 	formdata:'',
     
-    constructor:function(main, id, module) {
+    constructor:function(main, id) {
         this.main = main;
 		this.id = id;
-		this.module = module;
         // Render the form element on the right bottom
 		this.formStore = new phpr.ReadStore({
-			url: this.main.webpath+"index.php/" + this.module + "/index/jsonDetail/id/" + this.id
+			url: phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id
 		});
 		this.formStore.fetch({onComplete: dojo.hitch(this, "getFormData" )});
     },
@@ -82,9 +81,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 	submitForm: function(){
 		var sendData = this.formWidget.getValues();
 		phpr.send({
-			url: this.main.webpath + 'index.php/' + this.module + '/index/jsonSave/id/' + this.id,
-			content:sendData,
-			onSuccess: dojo.publish(this.module+".form.Submitted", [this.id, this.module, sendData['parent']])
+			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
+			content:   sendData,
+			onSuccess: this.publish("form.Submitted", [this.id, sendData['parent']]),
 			});
 	}
 	

@@ -8,7 +8,7 @@ dojo.require("phpr.Todo.Form");
 
 dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
 	 constructor: function(webpath){
-	 	this.module = "Todo";
+	 	this.module     = "Todo";
 		this.gridWidget = phpr.Todo.Grid;
 		this.formWidget = phpr.Todo.Form;
 		this.treeWidget = phpr.Todo.Tree;

@@ -5,6 +5,11 @@ dojo.registerModulePath("phpr", "../../phpr");
 dojo.require("dojo.parser");
 dojo.require("dojox.data.QueryReadStore");
 
+// global vars
+var module = null;
+var webpath = null;
+var currentProjectId = null;
+
 phpr.initWidgets = function(el) {
     // This parses the given node and inits the widgets found in there.
     if (dojo.isString(el)) {
@@ -56,8 +61,7 @@ phpr.send = function(/*Object*/paramsIn) {
         }
     } else {
         _onError = function(response, ioArgs) {
-            //console.debug(response, ioArgs);
-            alert("Error, please try again.\nError:"+dojo.toJson(response)+"\n\n"+dojo.toJson(ioArgs));
+			new this.ServerFeedback({cssClass: 'error', output: 'ein error'},dojo.byId('serverFeedback'))
             _onEnd();
         }
     }
@@ -74,6 +78,7 @@ phpr.send = function(/*Object*/paramsIn) {
         };
     } else {
         _onSuccess = function(data) {
+			alert(data.ret);
             _onEnd();
             if (!data.ret && (data.error || data.errors)) {
                 alert(data.error || data.errors);
@@ -104,6 +109,16 @@ phpr.getData = function(url, callback){
         sync		:	true,
     }
     )
+};
+phpr.handleError = function(resultArea,exception)
+{
+	if (dijit.byId(resultArea)) {
+		phpr.destroyWidgets(resultArea);
+	}	
+	new phpr.ServerFeedback({
+		cssClass: 'error',
+		output:    exception.message
+		},dojo.byId(resultArea));
 };
 phpr.getCurrent = function(data, identifier, value){
 	var current = null;

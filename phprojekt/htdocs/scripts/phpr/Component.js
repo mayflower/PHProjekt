@@ -33,7 +33,20 @@ dojo.declare("phpr.Component", null, {
 		//		The topic of this module that shall be published.
 		//args: Array
 		//      Arguments that should be published with the topic
-		dojo.publish(this.module+"."+name, args);
+		dojo.publish(phpr.module+"."+name, args);
+	},
+	
+	subscribe:function(/*String*/name, /*String or null*/ context, /*String or function*/ method ){
+		// summary:
+		//		Subcribe topic which was published for the current module, its always prefixed with the module.
+		// description:
+		//		I.e. if the module name is "project" this.subscribe("open)
+		//		will then subscribe the topic "project.open".
+		// name: String
+		//		The topic of this module that shall be published.
+		//args: Array
+		//      Arguments that should be published with the topic
+		dojo.subscribe(phpr.module+"."+name, context, method);
 	}
 	
 });

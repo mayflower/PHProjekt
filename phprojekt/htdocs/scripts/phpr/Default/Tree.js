@@ -11,10 +11,9 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
 	treeWidget: null,
 	module:     null,
     
-    constructor: function(main, module) {
-        var treepath = main.webpath + "index.php/Project/index/jsonTree";
+    constructor: function(main) {
+        var treepath = phpr.webpath + "index.php/Project/index/jsonTree";
         this.main    = main;
-        this.module  = module;
 
 		this._treeNode = dojo.byId("treeBox");
 
@@ -32,7 +31,6 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
 		if(!item) { 
 		  item = [];
 	    }
-		  
-		dojo.publish("Project.tree.nodeClick", [item, this.module]); 
+		this.publish("changeProjekt", [item]); 
     }
 });
