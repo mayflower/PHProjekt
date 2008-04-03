@@ -57,10 +57,11 @@ class Phprojekt_Converter_Json
         }
 
         $information = $model->getInformation();
+        $tag         = Phprojekt_Tags_Default::getInstance();
 
         /* we can check the returned array, but at the moment we just pass it */
-        $datas = array();
-        $data  = array();
+        $datas   = array();
+        $data    = array();
         $numRows = 0;
 
         /*
@@ -78,6 +79,7 @@ class Phprojekt_Converter_Json
                }
             }
             $datas[] = $data;
+            $tags = $tag->getTagsByModule($models->getTableName(), $models->id);
         } else {
             foreach ($models as $cmodel) {
                 foreach ($information->getFieldDefinition() as $field) {
@@ -91,9 +93,14 @@ class Phprojekt_Converter_Json
                 }
                 $datas[] = $data;
             }
+            $tags = $tag->getTags();
         }
+
         $numRows = count($datas);
-        $data = array('metadata' => $information->getFieldDefinition($order), 'data' => $datas, 'numRows'=>(int)$numRows);
+        $data = array('metadata' => $information->getFieldDefinition($order),
+                      'data'     => $datas,
+                      'tags'     => $tags,
+                      'numRows'  => (int)$numRows);
 
         // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
         // the content-type dojo expects is: json-comment-filtered

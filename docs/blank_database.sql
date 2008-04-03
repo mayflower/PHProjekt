@@ -35,9 +35,9 @@ CREATE TABLE `DatabaseManager` (
 );
 
 
--- 
+--
 -- Table structure for table `Groups`
--- 
+--
 DROP TABLE IF EXISTS `Groups`;
 CREATE TABLE `Groups` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -46,9 +46,9 @@ CREATE TABLE `Groups` (
 );
 
 
--- 
+--
 -- Table structure for table `GroupsUserRelation`
--- 
+--
 DROP TABLE IF EXISTS `GroupsUserRelation`;
 CREATE TABLE `GroupsUserRelation` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -143,9 +143,9 @@ CREATE TABLE `Role` (
 );
 
 
--- 
+--
 -- Table structure for table `RoleModulePermissions`
--- 
+--
 DROP TABLE IF EXISTS `RoleModulePermissions`;
 CREATE TABLE `RoleModulePermissions` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -208,7 +208,7 @@ CREATE TABLE `UserModuleSetting` (
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 );
-CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);	 
+CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
 --
 -- Table structure for table `Tree`
@@ -227,7 +227,39 @@ CREATE TABLE `SearchWords` (
   `crc32` bigint NOT NULL,
   PRIMARY KEY  (`itemId`,`module`,`crc32`)
 );
-	  	
+
+--
+-- Table structure for table `Tags`
+--
+DROP TABLE IF EXISTS `Tags`;
+CREATE TABLE `Tags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word` varchar(255) NOT NULL,
+  `crc32` bigint NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+--
+-- Table structure for table `TagsUsers`
+--
+DROP TABLE IF EXISTS `TagsUsers`;
+CREATE TABLE `TagsUsers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `tagId` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+--
+-- Table structure for table `TagsModules`
+--
+DROP TABLE IF EXISTS `TagsModules`;
+CREATE TABLE `TagsModules` (
+  `module` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `tagUserId` int(11) NOT NULL,
+  PRIMARY KEY  (`module`, `itemId`, `tagUserId`)
+);
 
 --
 -- Table structure for table `Note`
@@ -259,7 +291,7 @@ CREATE TABLE `Configuration` (
 -- INSERT DATA
 --
 
-INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES 
+INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
 (0, 'Project', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Project', 'notes', 1, 'notes', 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
@@ -277,7 +309,7 @@ INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLa
 (0, 'Todo', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0),
 (0, 'Todo', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
 (0, 'Todo', 'projectId', 1, 'project', 'project', 'tree', 1, 1, NULL, 'Project', '', 2, 'center', 1, 1, '1', 1, 0, 0),
-			 
+
 (0, 'History', 'userId', 1, 'UserId', 'UserId', 'userId', '1', '1', NULL, NULL, 0, 1, 'left', 1, 1, 1, 1, 1, 0),
 (0, 'History', 'dataobjectId', 1, 'DataobjectId', 'DataobjectId', 'text', '2', '1', NULL, NULL, 0, 2, 'center', 1, 2, 1, 1, 1, 0),
 (0, 'History', 'module', 1, 'Module', 'Module', 'text', '3', '1', NULL, NULL, '', 3, 'left', 1, 3, 1, 0, 1, 0),
@@ -307,18 +339,18 @@ INSERT INTO `Groups` (`id`, `name`) VALUES
 (3, 'ninasgruppe'),
 (4, 'testgruppe');
 
-INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES 
+INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 1);
 
-INSERT INTO `Role` (`id`, `name`, `parent`) VALUES 
+INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
 (1, 'admin', 0);
 
-INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES 
+INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES
 (1, 1, 1);
-				   
-INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `module`, `permission`) VALUES 
+
+INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `module`, `permission`) VALUES
 (1, 1, 'Project', 'write'),
 (2, 1, 'Todo', 'write');
 
