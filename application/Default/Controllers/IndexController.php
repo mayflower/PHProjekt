@@ -104,7 +104,7 @@ class IndexController extends Zend_Controller_Action
             }
             $data = $allowedSubModules;
         }
-        echo Phprojekt_Converter_Json::covertValue($data);
+        echo Phprojekt_Converter_Json::convertValue($data);
     }
 
     /**
@@ -276,6 +276,6 @@ class IndexController extends Zend_Controller_Action
             $data = $allowedSubModules;
 
         }
-        echo Phprojekt_Converter_Json::covertValue($data);
+        echo Phprojekt_Converter_Json::convertValue($data);
     }
 }

@@ -76,7 +76,7 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
         $converted = '/* "This is a test of convetion" */';
         
                
-        $result = Phprojekt_Converter_Json::covertValue($data);
+        $result = Phprojekt_Converter_Json::convertValue($data);
         
         $this->assertEquals($converted, $result);
     }

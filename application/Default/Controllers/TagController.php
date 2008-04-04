@@ -60,7 +60,7 @@ class TagController extends IndexController
         $limit = (int) $this->getRequest()->getParam('limit', 0);
         $tags  = $this->_tags->getTags($limit);
 
-        echo Phprojekt_Converter_Json::covertValue($tags);
+        echo Phprojekt_Converter_Json::convertValue($tags);
     }
 
     /**
@@ -77,7 +77,7 @@ class TagController extends IndexController
         $limit = (int) $this->getRequest()->getParam('limit', 0);
         $tags  = $this->_tags->getModulesByTag($tag, $limit);
 
-        echo Phprojekt_Converter_Json::covertValue($tags);
+        echo Phprojekt_Converter_Json::convertValue($tags);
     }
 
     /**

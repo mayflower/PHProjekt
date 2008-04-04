@@ -144,7 +144,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public function covertValue($data)
+    public function convertValue($data)
     {
         return '/* '.Zend_Json_Encoder::encode($data).' */';
     }
