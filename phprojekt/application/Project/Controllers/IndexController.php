@@ -53,7 +53,7 @@ class Project_IndexController extends IndexController
         } catch (Exception $saveError) {
             $data = array();
             $data['error'] = $this->getModelObject()->getError();
-            echo Phprojekt_Converter_Json::covertValue($data);
+            echo Phprojekt_Converter_Json::convertValue($data);
         }
     }
 }
