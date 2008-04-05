@@ -191,18 +191,18 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $front->dispatch($request, $response);
         $response = ob_get_contents();
 
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":""') > 0);
+        $this->assertTrue(strpos($response, '{"metadata":[{"key":"title","label":"title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":""') > 0);
         $this->assertTrue(strpos($response, '"numRows":6} ') > 0);
 
     }
-    
+
     /**
      * Test of json detail model
      */
@@ -280,20 +280,20 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $front->dispatch($request, $response);
         $response = ob_get_contents();
 
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":""') > 0);
+        $this->assertTrue(strpos($response, '{"metadata":[{"key":"title","label":"title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":""') > 0);
         $this->assertTrue(strpos($response, '"numRows":1} ') > 0);
 
     }
-    
+
     /**
-     * Test of json tree 
+     * Test of json tree
      */
     public function testJsonTreeAction()
     {
@@ -369,7 +369,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $front->dispatch($request, $response);
         $response = ob_get_contents();
 
@@ -380,7 +380,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '"parent":"2","children":[]}]}') > 0);
 
     }
-    
+
     /**
      * Test of json get submodules
      */
@@ -458,7 +458,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $front->dispatch($request, $response);
         $response = ob_get_contents();
 
@@ -468,9 +468,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo"}]') > 0);
-        
+
     }
-    
+
      /**
      * Test of json get submodules
      */
@@ -548,7 +548,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $front->dispatch($request, $response);
         $response = ob_get_contents();
 
@@ -560,7 +560,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo"}]') > 0);
-        
+
     }
 
 }
