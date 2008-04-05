@@ -1,0 +1,17 @@
+The GetTags action return all the tags saved by the current user.
+
+The returned value is an array with all the tags as index
+and the number of ocurrences as value.
+
+An example is:
+
+Module/Tag/jsonGetTags
+/* {"this":3,"tag":3,"test":2} */
+
+If the parameter "limit" is set,
+the array will contain only "limit" number of items
+
+An example is:
+Module/Tag/jsonGetTags/limit/2
+
+/* {"this":3,"tag":3} */

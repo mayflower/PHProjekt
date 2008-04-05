@@ -1,0 +1,18 @@
+The GetModulesByTag action return all the modules and their itemId
+that contain the tag parsed as parameter.
+
+The return is an array that contain arrays with id and module
+
+An example is:
+
+Module/Tag/jsonGetModulesByTag/tag/this
+
+/* [{"id":"1","module":"Project"},{"id":"2","module":"Project"},{"id":"1","module":"Todo"}] */
+
+If the parameter "limit" is set,
+the array will contain only "limit" number of items
+
+An example is:
+Module/Tag/jsonGetModulesByTag/tag/this/limit/2
+
+/* [{"id":"1","module":"Project"},{"id":"2","module":"Project"}] */
