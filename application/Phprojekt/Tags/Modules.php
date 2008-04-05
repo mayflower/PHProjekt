@@ -126,7 +126,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      *
      * @return void
      */
-    public function _delete($module, $itemId, $tagUserIds)
+    public function deleteRelations($module, $itemId, $tagUserIds)
     {
         $clone = clone($this);
         foreach ($tagUserIds as $tagUserId) {
