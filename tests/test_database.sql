@@ -265,6 +265,38 @@ CREATE TABLE `Configuration` (
 --
 DROP TABLE IF EXISTS `Tree`;
 
+--
+-- Table structure for table `Tags`
+--
+DROP TABLE IF EXISTS `Tags`;
+CREATE TABLE `Tags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word` varchar(255) NOT NULL,
+  `crc32` bigint NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+--
+-- Table structure for table `TagsUsers`
+--
+DROP TABLE IF EXISTS `TagsUsers`;
+CREATE TABLE `TagsUsers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `tagId` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+--
+-- Table structure for table `TagsModules`
+--
+DROP TABLE IF EXISTS `TagsModules`;
+CREATE TABLE `TagsModules` (
+  `module` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `tagUserId` int(11) NOT NULL,
+  PRIMARY KEY  (`module`, `itemId`, `tagUserId`)
+);
 
 --
 -- INSERT DATA
