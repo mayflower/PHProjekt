@@ -235,7 +235,7 @@ class Phprojekt_Tags_Default
         $oldTagUserRelations = $this->getRelationIdByModule($module, $itemId);
 
         // Delete the entries for the module-itemId <-> userId
-        $this->_tagsModules->_delete($module, $itemId, $oldTagUserRelations);
+        $this->_tagsModules->deleteRelations($module, $itemId, $oldTagUserRelations);
 
         foreach ($array as $word) {
             $crc32 = crc32($word);
