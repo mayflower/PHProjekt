@@ -13,6 +13,7 @@
  * @link      http://www.phprojekt.com
  * @since     File available since Release 1.0
  */
+
 /**
  * Convert a model into a json structure.
  * This is usally done by a controller to send data to the client.
@@ -70,6 +71,7 @@ class Phprojekt_Converter_Json
          */
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
             foreach ($information->getFieldDefinition() as $field) {
+               $data['id'] = $models->id;
                $key   = $field['key'];
                $value = $models->$key;
                if (is_scalar($value)) {
@@ -82,6 +84,7 @@ class Phprojekt_Converter_Json
             $tags = $tag->getTagsByModule($models->getTableName(), $models->id);
         } else {
             foreach ($models as $cmodel) {
+                $data['id'] = $cmodel->id;
                 foreach ($information->getFieldDefinition() as $field) {
                     $key   = $field['key'];
                     $value = $cmodel->$key;
