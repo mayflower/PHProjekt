@@ -4,7 +4,7 @@
  *
  * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   CVS: $Id$
+ * @version   CVS: $Id: User.php 635 2008-04-02 19:32:05Z david $
  * @author    Eduardo Polidor <polidor@mayflower.de>
  * @package   PHProjekt
  * @subpackage Core
@@ -24,14 +24,14 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
+class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
      * Has many declrations
      *
      * @var array
      */
-    public $hasMany = array('settings' => array('module' => 'Users',
+    public $hasMany = array('settings' => array('module' => 'User',
                                                 'model'  => 'UserModuleSetting'));
 
     /**
@@ -44,6 +44,14 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
                                                               'model'     => 'Groups'));
 
     /**
+     * The standard information manager with hardcoded
+     * field definitions
+     *
+     * @var Phprojekt_ModelInformation_Interface
+     */
+    protected $_informationManager;
+
+    /**
      * Initialize new user
      * If is seted the user id in the session,
      * the class will get all the values of these user
@@ -52,8 +60,11 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      *
      * @return void
      */
-    public function __construct($db)
+    public function __construct($db = null)
     {
+        if (null === $db) {
+            $db = Zend_Registry::get('db');
+        }
         parent::__construct($db);
 
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
@@ -62,6 +73,7 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
                 $this->find($authNamespace->userId);
             }
         }
+        $this->_informationManager = new User_Models_Information();
     }
 
     /**
@@ -92,11 +104,11 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
 
         try {
             $users  = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
-            
+
             if (!isset($users[0]) || !isset($users[0]->id)) {
                 return false;
             }
-            
+
             return $users[0]->id;
         }
         catch (Phprojekt_ActiveRecord_Exception $are) {
@@ -115,7 +127,7 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
      *
      * @param int $id The user id
      *
-     * @return Users_Models_User
+     * @return User_Models_User
      */
     public function findUserById($id)
     {
@@ -126,5 +138,37 @@ class Users_Models_User extends Phprojekt_ActiveRecord_Abstract
         } else {
             return $this;
         }
+    }
+
+    /**
+     * Get the information manager
+     *
+     * @see Phprojekt_Model_Interface::getInformation()
+     *
+     * @return Phprojekt_ModelInformation_Interface
+     */
+    public function getInformation ()
+    {
+        return $this->_informationManager;
+    }
+
+    /**
+     * Get the rigths
+     *
+     * @return string
+     */
+    public function getRights ($userId)
+    {
+        return 'write';
+    }
+
+    /**
+     * Validate the current record
+     *
+     * @return boolean
+     */
+    public function recordValidate()
+    {
+        return $true;
     }
 }

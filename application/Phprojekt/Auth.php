@@ -56,7 +56,7 @@ class Phprojekt_Auth extends Zend_Auth
         $db = Zend_Registry::get('db');
         /* @var $db Zend_Db_Adapter_Abstract */
 
-        $user = Phprojekt_Loader::getModel('Users', 'User', (array ('db' => $db)));
+        $user = Phprojekt_Loader::getModel('User', 'User', (array ('db' => $db)));
 
         $userId = $user->findIdByUsername($username);
 

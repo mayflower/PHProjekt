@@ -103,7 +103,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     public function sendNotification($subject, $users, $html, $text = null)
     {
         $db         = Zend_Registry::get('db');
-        $userObject = new Users_Models_User($db);
+        $userObject = new User_Models_User($db);
 
         if ($text != null) {
             $this->setBodyText($text);
@@ -128,7 +128,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     /**
      * Return the way to display the user name and lastname
      *
-     * @param Users_Models_User $object The user object
+     * @param User_Models_User $object The user object
      *
      * @return string
      */
