@@ -33,14 +33,14 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * @var string
      */
     protected $_name;
-    
+
     /**
-     * The module name   
+     * The module name
      *
      * @var string
      */
     protected $_module;
-    
+
     /**
      * The standard information manager with hardcoded
      * field definitions
@@ -55,7 +55,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * @var array
      */
     protected $_objects = array();
-    
+
     /**
      * A list of directories that are not included in the search.
      * Usually Default and PHProjekt
@@ -73,9 +73,9 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @var array
      */
-    protected static $_defaultConfiguration = array(array('type'  => 'selectValues', 
-                                                          'key'   => 'activated', 
-                                                          'range' => '1#On|0#Off', 
+    protected static $_defaultConfiguration = array(array('type'  => 'selectValues',
+                                                          'key'   => 'activated',
+                                                          'range' => '1#On|0#Off',
                                                           'label' => 'Module activated?'),
                                                    array('type'  => 'label',
                                                          'key'   => 'name',
@@ -83,14 +83,14 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
                                                    array('type'  => 'label',
                                                          'key'   => 'module',
                                                          'label' => ''));
-    
+
     /**
      * The actual configuration, merged from the default configuration and the module configuration
      *
      * @var array
      */
     protected $_configuration = array();
-    
+
     /**
      * Name of the properties that are readonly (without the leading _)
      * All other protected properties are hidden
@@ -98,15 +98,15 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * @var array
      */
     private $_readOnlyProperties = array('name', 'module', 'configuration');
-    
+
     /**
-     * Add a module to the ignore list. 
-     * A ignored module is not received using 
+     * Add a module to the ignore list.
+     * A ignored module is not received using
      * fetchAll() but it can be received using find().
      * Returns TRUE on success otherwise FALSE
      *
      * @param string $name Directory name of the module that should be ignored
-     * 
+     *
      * @return boolean
      */
     public function ignoreModule ($name)
@@ -120,11 +120,11 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
 
     /**
      * Remove a module from the ignore list.
-     * This method is case sensitive. It returns TRUE 
+     * This method is case sensitive. It returns TRUE
      * on success otherwise FALSE
      *
      * @param string $name Directory name of the module that should be included again
-     * 
+     *
      * @return boolean
      */
     public function unignoreModule ($name)
@@ -135,32 +135,32 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         }
         return false;
     }
-    
+
     /**
      * Set the administration configuration and merge it with
      * the default configuration.
      *
      * @param array $configuration The configuration to use
-     * 
+     *
      * @return void
      */
     public function setConfiguration(array $configuration)
     {
         $configuration = array_merge(self::$_defaultConfiguration, $configuration);
-        
+
         foreach ($configuration as $config) {
-            /* we need to create an assoc array as this is easier to 
+            /* we need to create an assoc array as this is easier to
                find our configs again */
             $this->_configuration[$config['key']] = $config;
         }
-        
+
         $this->_informationManager = new Phprojekt_ModelInformation_Default($this->_configuration);
     }
 
     /**
      * Implementation of fetchAll for AdminModules.
      * Returns a set of modules available and have administration sections
-     * 
+     *
      * @see Phprojekt_Model_Interface::fetchAll()
      *
      * @return array
@@ -192,7 +192,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * We only implement read only properties
      *
      * @param string $key Name of the property
-     * 
+     *
      * @return mixed
      */
     public function __get ($key)
@@ -205,17 +205,17 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         if (in_array($key, $this->_objects)) {
             return $this->_objects[$key]->value;
         }
-        
+
         return null;
     }
 
     /**
-     * Overwrite the set so we set directly on the configuration 
+     * Overwrite the set so we set directly on the configuration
      * objects
      *
      * @param string $key   Property name
      * @param mixed  $value Property value
-     * 
+     *
      * @return void
      */
     public function __set($key, $value)
@@ -227,15 +227,15 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             $object->module = $this->_module;
             $object->key    = $key;
             $object->value  = $value;
-           
+
             $this->_objects[$key] = $object;
         }
     }
-    
+
     /**
      * Find a specific admin module based on the name and
      * tries to load the containing class
-     * 
+     *
      * @see Phprojekt_Model_Interface::find()
      *
      * @return Phprojekt_Model_Interface
@@ -246,7 +246,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         $moduleClass = sprintf('%s_AdminController', $module);
         try {
             Phprojekt_Loader::loadClass($moduleClass);
-            
+
             /* workaround as php 5.2 doesnot support late static bindings */
             $vars            = get_class_vars($moduleClass);
             $this->_name     = (empty($vars['name'])) ? $module : $vars['name'];
@@ -265,22 +265,22 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @return void
      */
-    protected function _loadFromDatabase() 
+    protected function _loadFromDatabase()
     {
         $model   = Phprojekt_Loader::getModel('Default', 'Configuration');
         $quoted  = $model->getAdapter()->quoteInto('module = ?', $this->_module);
         $fetched = $model->fetchAll($quoted);
-        
+
         if (is_array($fetched)) {
             foreach ($fetched as $object) {
                 $this->_objects[$object->key] = $object;
             }
         }
     }
-    
+
     /**
      * Get the information manager
-     * 
+     *
      * @see Phprojekt_Model_Interface::getInformation()
      *
      * @return Phprojekt_ModelInformation_Interface
@@ -295,20 +295,20 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      * You cannot save a administration module you
      * just can write their values to the backend but
      * thats done by the Default)Models_Configuration class
-     * 
+     *
      * @see Phprojekt_Model_Interface::save()
      *
      * @return void
      */
     public function save ()
-    {    
+    {
         $result = true;
-        
+
         /* @todo: optimize */
         foreach ($this->_objects as $object) {
             $result = $result && $object->save();
         }
-        
+
         return $result;
     }
 
@@ -320,16 +320,16 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     public function delete()
     {
         $db    = Zend_Registry::get('db');
-        $model = Phprojekt_Loader::getModel('Default', 'Configuration'); 
-        
+        $model = Phprojekt_Loader::getModel('Default', 'Configuration');
+
         $result = 0;
         if ($this->_module) {
-            $result += $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->_module));   
+            $result += $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->_module));
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Get the rigths
      *
@@ -339,7 +339,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     {
         return 'write';
     }
-    
+
     /**
      * Validate the current record
      *
@@ -351,7 +351,17 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         foreach ($this->_objects as $object) {
             $result = $object->recordValidate() && $result;
         }
-        
+
         return $true;
+    }
+
+    /**
+     * Needed for work as an activerecord
+     *
+     * @return string null
+     */
+    public function getTableName()
+    {
+        return;
     }
 }

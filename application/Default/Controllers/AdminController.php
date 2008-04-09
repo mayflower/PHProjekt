@@ -30,29 +30,15 @@
 abstract class AdminController extends IndexController
 {
     /**
-     * Configuration array that contains the 
+     * Configuration array that contains the
      * definitions for the admin values that can be
      * saved for that module.
      * Take a look into the developer part of the
      * manual to see how this array should be defined
      *
      * @var array
-     */ 
-    public static $configuration = array();
-    
-    /**
-     * Overwritten generateOutput method to render or own index file
-     *
-     * @return void
      */
-    protected function _generateOutput ()
-    {
-        $this->view->module     = $this->getRequest()->getModuleName();
-        $this->view->controller = $this->getRequest()->getControllerName();
-        $this->view->action     = $this->getRequest()->getActionName();
-        $this->view->treeView = $this->getTreeView()->render();
-        $this->render('adminindex');
-    }
+    public static $configuration = array();
 
     /**
      * Save the values into a given global
@@ -60,46 +46,45 @@ abstract class AdminController extends IndexController
      *
      * @return void
      */
-    public function saveAction ()
+    public function jsonSaveAction()
     {
         $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
         $model->find($this->getRequest()->getModuleName());
-        
+
         foreach ($model->configuration as $key => $config) {
             if ($this->getRequest()->getParam($key, false) !== false) {
                 $model->$key = $this->getRequest()->getParam($key);
             }
         }
-        
-        $model->save();
 
-        $this->forward('show');
+        $model->save();
     }
 
     /**
-     * Setup the variables to render the overview over the 
-     * administrateable modules
+     * Return the data
+     * for show the administrateable modules
+     * in the json format
      *
-     * @return voidvar_dump(func_get_args());exit;
+     * @return void
      */
-    public function showAction ()
+    public function jsonShowAction()
     {
+        $id = (int) $this->getRequest()->getParam('id');
+
         /* @todo: sanitize? */
         $module = $this->getRequest()->getModuleName();
         $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
-        
+
         if (null === $module) {
-            throw new Exception('Module not given');
+            throw new Phprojekt_PublishedException('Module not given');
         }
-        
+
         $result = $model->find($module);
         if (false === $result) {
-            throw new Exception('Module not found');
+            throw new Phprojekt_PublishedException('Module not found');
         }
-        
-        $renderer = new Default_Helpers_FormViewRenderer();
-        $renderer->setModel($model);
 
-        $this->view->adminView = $renderer->render('adminform.tpl');
+
+        echo Phprojekt_Converter_Json::convert($result);
     }
 }
