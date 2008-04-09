@@ -24,7 +24,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
+class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
      * Has many and belongs to many declrations
@@ -42,6 +42,14 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
     private $_userId = null;
 
     /**
+     * The standard information manager with hardcoded
+     * field definitions
+     *
+     * @var Phprojekt_ModelInformation_Interface
+     */
+    protected $_informationManager;
+
+    /**
      * Constructor for Groups
      */
     public function __construct()
@@ -50,6 +58,8 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
 
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $this->_userId = $authNamespace->userId;
+
+        $this->_informationManager = new Groups_Models_Information();
     }
 
     /**
@@ -115,5 +125,37 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
             $groupNamespace->groups = $groups;
         }
         return $groups;
+    }
+
+    /**
+     * Get the information manager
+     *
+     * @see Phprojekt_Model_Interface::getInformation()
+     *
+     * @return Phprojekt_ModelInformation_Interface
+     */
+    public function getInformation ()
+    {
+        return $this->_informationManager;
+    }
+
+    /**
+     * Get the rigths
+     *
+     * @return string
+     */
+    public function getRights ($userId)
+    {
+        return 'write';
+    }
+
+    /**
+     * Validate the current record
+     *
+     * @return boolean
+     */
+    public function recordValidate()
+    {
+        return $true;
     }
 }
