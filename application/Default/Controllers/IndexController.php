@@ -197,7 +197,7 @@ class IndexController extends Zend_Controller_Action
     {
         $id = (int) $this->getRequest()->getParam('id');
 
-        if (empty($id)) {
+        if (empty($id) || $id == 0) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
