@@ -47,7 +47,7 @@ class Phprojekt_SubModules
      * @var array
      */
     protected $_ommited = array('Administration', 'Groups',
-                                'Phprojekt', 'Role', 'Users',
+                                'Phprojekt', 'Role', 'User',
                                 '.','..','.cvsignore','CVS','.svn');
 
     /**

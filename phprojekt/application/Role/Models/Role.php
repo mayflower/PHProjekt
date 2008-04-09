@@ -30,7 +30,7 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    public $hasManyAndBelongsToMany = array('users' => array('module' => 'Users',
+    public $hasManyAndBelongsToMany = array('users' => array('module' => 'User',
                                                              'model'  => 'User'),
                                             'projects'=> array('module' => 'Project',
                                                                'model'  => 'Project'));

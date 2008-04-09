@@ -31,8 +31,8 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    public $hasManyAndBelongsToMany = array('users' =>  array('classname' => 'Users_Models_User',
-                                                              'module'    => 'Users',
+    public $hasManyAndBelongsToMany = array('users' =>  array('classname' => 'User_Models_User',
+                                                              'module'    => 'User',
                                                               'model'     => 'User'));
 
     /**
