@@ -1,4 +1,36 @@
 <?php
+/**
+ * Convert a model into a json structure.
+ * This is usually done by a controller to send data to the
+ * client
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @version    CVS: $Id: Interface.php 635 2008-04-02 19:32:05Z david $
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @package    PHProjekt
+ * @subpackage Core
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ */
+
+/**
+ * Convert a model into a json structure.
+ * This is usally done by a controller to send data to the client.
+ * The Phprojekt_Convert_Json takes care that a apporpriate structure
+ * is made from the given model.
+ *
+ * The fields are hardcore.
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @version    Release: @package_version@
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @package    PHProjekt
+ * @subpackage Core
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ */
 class User_Models_Information extends EmptyIterator implements Phprojekt_ModelInformation_Interface
 {
     /**

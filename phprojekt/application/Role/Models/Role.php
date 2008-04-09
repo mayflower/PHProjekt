@@ -23,7 +23,7 @@
  * @since      File available since Release 1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
+class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
      * Has many and belongs to many declrations
@@ -49,6 +49,14 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
     private $_projectRoles = array();
 
     /**
+     * The standard information manager with hardcoded
+     * field definitions
+     *
+     * @var Phprojekt_ModelInformation_Interface
+     */
+    protected $_informationManager;
+
+    /**
      * Constructor for Groups
      *
      * @param Zend_Db $db database
@@ -56,6 +64,8 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
     public function __construct($db = null)
     {
         parent::__construct($db);
+
+        $this->_informationManager = new Role_Models_Information();
     }
 
     /**
@@ -98,5 +108,37 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract
             }
         }
         return $role;
+    }
+
+    /**
+     * Get the information manager
+     *
+     * @see Phprojekt_Model_Interface::getInformation()
+     *
+     * @return Phprojekt_ModelInformation_Interface
+     */
+    public function getInformation ()
+    {
+        return $this->_informationManager;
+    }
+
+    /**
+     * Get the rigths
+     *
+     * @return string
+     */
+    public function getRights ($userId)
+    {
+        return 'write';
+    }
+
+    /**
+     * Validate the current record
+     *
+     * @return boolean
+     */
+    public function recordValidate()
+    {
+        return $true;
     }
 }
