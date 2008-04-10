@@ -1,6 +1,7 @@
 dojo.provide("phpr.Default.field");
 dojo.require("phpr.Component");
 dojo.require("dijit.form.Textarea");
+dojo.require("dojox.widget.MultiComboBox"); 
 dojo.declare("phpr.Default.field", phpr.Component, {
 	formdata: '',
 	checkRender: function(itemlabel, itemid,itemvalue){
@@ -81,11 +82,12 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							label: itemlabel,
 							labelfor: itemid,
 							id: itemid,
-							value: itemvalue,
+							values: itemvalue,
 							required: itemrequired,
 							disabled: itemdisabled,
-							values: options
+							options: options
 				});
 	},
+	
 	
 });
