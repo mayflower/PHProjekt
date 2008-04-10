@@ -54,14 +54,14 @@ class Phprojekt_Filter_Tokenizer
      *
      * @var string
      */
-    private $data = '';
+    private $_data = '';
 
     /**
      * array with current token
      *
      * @var array
      */
-    private $currentToken = array();
+    private $_currentToken = array();
 
     /**
      * type of token
@@ -79,10 +79,10 @@ class Phprojekt_Filter_Tokenizer
 
     public function __construct($string = '')
     {
-        $this->data         = trim($string);
-        $this->currentToken = $this->parseString();
-        $this->type         = $this->currentToken[0];
-        $this->value        = $this->currentToken[1];
+        $this->_data         = trim($string);
+        $this->_currentToken = $this->parseString();
+        $this->type          = $this->_currentToken[0];
+        $this->value         = $this->_currentToken[1];
     }
 
     /**
@@ -92,7 +92,7 @@ class Phprojekt_Filter_Tokenizer
      */
     public function getCurrent()
     {
-        if ($this->currentToken === NULL) {
+        if (null === $this->_currentToken) {
             return false;
         }
         return $this;
@@ -105,12 +105,12 @@ class Phprojekt_Filter_Tokenizer
      */
     public function getNext()
     {
-        if ($this->data == '') {
+        if ('' == $this->_data) {
             return false;
         }
 
-        $next        = new Phprojekt_Filter_Tokenizer($this->data);
-        $token       = $this->parseString(false);       
+        $next        = new Phprojekt_Filter_Tokenizer($this->_data);
+        $token       = $this->parseString(false);
         $next->type  = $token[0];
         $next->value = $token[1];
         return $next;
@@ -123,17 +123,19 @@ class Phprojekt_Filter_Tokenizer
      */
     public function getLast()
     {
-        if ($this->data == '') {
+        if ('' == $this->_data) {
             return false;
         }
-        $tok = substr($this->data, -1);
+        $tok = substr($this->_data, -1);
         
         // we only need type information T_CLOSE_BRACE, else UNDEFINED is working as well
-        $tok = (')' === $tok) 
-        ? array(self::T_CLOSE_BRACE, $tok) 
-        : array(self::T_UNDEFINED, $tok);
+        if (')' === $tok) {
+            $tok = array(self::T_CLOSE_BRACE, $tok);
+        } else {
+            $tok = array(self::T_UNDEFINED, $tok);
+        }
         
-        $last = new Phprojekt_Filter_Tokenizer();
+        $last        = new Phprojekt_Filter_Tokenizer();
         $last->type  = $tok[0];
         $last->value = $tok[1];
         return $last;
@@ -146,9 +148,9 @@ class Phprojekt_Filter_Tokenizer
      */
     public function next()
     {
-        $this->currentToken = $this->parseString();
-        $this->type         = $this->currentToken[0];
-        $this->value        = $this->currentToken[1];
+        $this->_currentToken = $this->parseString();
+        $this->type          = $this->_currentToken[0];
+        $this->value         = $this->_currentToken[1];
     }
 
     /**
@@ -158,7 +160,7 @@ class Phprojekt_Filter_Tokenizer
      */
     public function getRest()
     {
-        return $this->data;
+        return $this->_data;
     }
 
     /**
@@ -169,24 +171,24 @@ class Phprojekt_Filter_Tokenizer
      */
     private function parseString($remove = true)
     {
-        if ($this->data == '') {
-            return NULL;
+        if ('' == $this->_data) {
+            return null;
         }
-        
-        $this->data = trim($this->data);
+
+        $this->_data = trim($this->_data);
         foreach ($this->token as $key => $regex) {
-            if (preg_match($regex, $this->data, $matches)) {
-                $found_token = array($key, $matches[1]);  
+            if (preg_match($regex, $this->_data, $matches)) {
+                $foundToken = array($key, $matches[1]);
                 if ($remove) {
-                    $this->data = substr($this->data, strlen($matches[1]), strlen($this->data));
+                    $this->_data = substr($this->_data, strlen($matches[1]), strlen($this->_data));
                 }
-                break;              
-            }  
+                break;
+            }
         }
-        if (isset($found_token)) {
-            return $found_token;
+        if (isset($foundToken)) {
+            return $foundToken;
         } else {
-            return NULL;
+            return null;
         }
     }
 }
