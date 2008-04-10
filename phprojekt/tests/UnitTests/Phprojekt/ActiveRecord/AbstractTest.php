@@ -41,7 +41,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testCreateHasManyAndBelongsToMany()
     {
         try {
-            $user = new Users_Models_User(array('db' => $this->sharedFixture));
+            $user = new User_Models_User(array('db' => $this->sharedFixture));
             $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
 
             if ($users == NULL) {
@@ -101,7 +101,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 		try {
             $authNamespace->userId = 0;
 
-			$user = new Users_Models_User(array('db' => $this->sharedFixture));
+			$user = new User_Models_User(array('db' => $this->sharedFixture));
 			$user->username = 'Foo';
 			$user->password = md5('Bar');
 			$user->language = 'en_GB';
@@ -151,7 +151,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $keepUser = $authNamespace->userId;
         try {
             $authNamespace->userId = 0;
-            $user = new Users_Models_User(array('db'=>$this->sharedFixture));
+            $user = new User_Models_User(array('db'=>$this->sharedFixture));
             $user->username  = 'gustavo';
             $user->password  = md5('gustavo');
             $user->firstname = 'Gustavo';
@@ -160,7 +160,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             
             $this->assertTrue($user->save());
 
-            $gustavo = new Users_Models_User(array('db' => $this->sharedFixture));
+            $gustavo = new User_Models_User(array('db' => $this->sharedFixture));
             $gustavo->find($user->id);
             $this->assertEquals('gustavo', $gustavo->username);
         } catch (Exception $e) {
@@ -177,7 +177,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testHasManyAndBelongsToMany()
     {
-        $user = new Users_Models_User(array('db' => $this->sharedFixture));
+        $user = new User_Models_User(array('db' => $this->sharedFixture));
         $user->find(1);
         $group = $user->groups->fetchAll();
 
@@ -257,7 +257,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testUpdateHasManyAndBelongsToMany()
     {
         try {
-            $user = new Users_Models_User(array('db' => $this->sharedFixture));
+            $user = new User_Models_User(array('db' => $this->sharedFixture));
             $user->find(1);
             $user->id = 2;
             $user->username = 'dsp';
