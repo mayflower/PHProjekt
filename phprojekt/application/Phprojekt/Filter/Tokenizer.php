@@ -44,9 +44,9 @@ class Phprojekt_Filter_Tokenizer
         self::T_OPEN_BRACE  => '/^(\()(.)*?$/',
         self::T_CLOSE_BRACE => '/^(\))(.)*?$/',
         self::T_CONNECTOR   => '/^(or|and)(.)*$/i',
-        self::T_OPERATOR    => '/^(=|!=|\<=|\<|\>|=\>)(.)*?$/',
-        self::T_COLUMN      => '/^(((\'|\")(\w| )+(\"|\'))|(\w)+)( )*?(=|!=|\<=|\<|\>|=\>)(.)*?$/i',
-        self::T_VALUE       => '/^((\'|\")(\w| )+(\'|\")|(\d){1,})( )*?(((and|or)(.)*)|(\)(.)*?|( )*?))/i',
+        self::T_OPERATOR    => '/^(=|!=|\<=|\<|\>=|\>)(.)*?$/',
+        self::T_COLUMN      => '/^(((\'|\")(\w| )+(\"|\'))|(\w)+)( )*?(=|!=|\<=|\<|\>=|\>)(.)*?$/i',
+        self::T_VALUE       => '/^((\'|\")(\w| )+(\'|\")|(([0-9]+)(\.)([0-9]+))|(\d){1,})( )*?(((and|or)(.)*)|(\)(.)*?|( )*?))/i',
         );
     
     /**
@@ -110,7 +110,7 @@ class Phprojekt_Filter_Tokenizer
         }
 
         $next        = new Phprojekt_Filter_Tokenizer($this->data);
-        $token       = $next->parseString(false);
+        $token       = $this->parseString(false);       
         $next->type  = $token[0];
         $next->value = $token[1];
         return $next;
@@ -146,9 +146,9 @@ class Phprojekt_Filter_Tokenizer
      */
     public function next()
     {
-     	$this->currentToken = $this->parseString();
-     	$this->type         = $this->currentToken[0];
-     	$this->value        = $this->currentToken[1];
+        $this->currentToken = $this->parseString();
+        $this->type         = $this->currentToken[0];
+        $this->value        = $this->currentToken[1];
     }
 
     /**
@@ -169,18 +169,22 @@ class Phprojekt_Filter_Tokenizer
      */
     private function parseString($remove = true)
     {
+        if ($this->data == '') {
+            return NULL;
+        }
+        
         $this->data = trim($this->data);
         foreach ($this->token as $key => $regex) {
-        	if (preg_match($regex, $this->data, $matches)) {
-        		$found_token = array($key, $matches[1]);  
-        	    if ($remove) {
-        	        $this->data = substr($this->data, strlen($matches[1]), strlen($this->data));
+            if (preg_match($regex, $this->data, $matches)) {
+                $found_token = array($key, $matches[1]);  
+                if ($remove) {
+                    $this->data = substr($this->data, strlen($matches[1]), strlen($this->data));
                 }
-        		break;      	    
-        	} 
+                break;              
+            }  
         }
         if (isset($found_token)) {
-        	return $found_token;
+            return $found_token;
         } else {
             return NULL;
         }
