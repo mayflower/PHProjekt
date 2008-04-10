@@ -49,7 +49,7 @@ class Phprojekt_Filter_ParseTree
      */
     public function stringToTree($string)
     {
-	$string = $this->_checkString($string);
+        $string = $this->_checkString($string);
        
         // we use this dertemining left open braces
         $braces = 0;
@@ -80,10 +80,8 @@ class Phprojekt_Filter_ParseTree
             if ($current->type === $next->type &&
                 Phprojekt_Filter_Tokenizer::T_OPEN_BRACE !== $current->type &&
                 Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $current->type) {
-                throw new Exception(sprintf("Parser error near %s %s %s",
-                                    $last->value,
-                                    $current->value,
-                                    $next->value));
+                throw new Phprojekt_ParseException(sprintf("Parser error near %s %s %s",
+                                                    $last->value, $current->value, $next->value), null, $string);
             }
 
             switch ($current->type) {
@@ -91,25 +89,22 @@ class Phprojekt_Filter_ParseTree
                     $braces++;
 
                     if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE != $next->type && Phprojekt_Filter_Tokenizer::T_COLUMN != $next->type) {
-                        throw new Exception(sprintf("Parser error near %s %s",
-                                            $current->value,
-                                            $next->value));
+                        throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
+                                                           $current->value, $next->value), null, $string);
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE:
                     $braces--;
 
                     if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE != $next->type && Phprojekt_Filter_Tokenizer::T_CONNECTOR != $next->type) {
-                        throw new Exception(sprintf("Parser error near %s %s",
-                                            $current->value,
-                                            $next->value));
+                        throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
+                                                           $current->value, $next->value), null, $string);
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_CONNECTOR:
                     if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE != $next->type && Phprojekt_Filter_Tokenizer::T_COLUMN != $next->type) {
-                        throw new Exception(sprintf("Parser error near %s %s",
-                                            $current->value,
-                                            $next->value));
+                        throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
+                                                           $current->value, $next->value), null, $string);
                     }
 
                     if (0 == $braces) {
@@ -121,9 +116,8 @@ class Phprojekt_Filter_ParseTree
                     break;
                 case Phprojekt_Filter_Tokenizer::T_OPERATOR:
                     if (Phprojekt_Filter_Tokenizer::T_VALUE != $next->type) {
-                        throw new Exception(sprintf("Parser error near %s %s",
-                                            $current->value,
-                                            $next->value));
+                        throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
+                                                           $current->value, $next->value), null, $string);
                     }
 
                     /**
@@ -139,16 +133,14 @@ class Phprojekt_Filter_ParseTree
                     break;
                 case Phprojekt_Filter_Tokenizer::T_COLUMN:
                     if (Phprojekt_Filter_Tokenizer::T_OPERATOR != $next->type) {
-                        throw new Exception(sprintf("Parser error near %s %s",
-                                            $current->value,
-                                            $next->value));
+                        throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
+                                                                   $current->value, $next->value), null, $string);
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_VALUE:
                     if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE != $next->type AND Phprojekt_Filter_Tokenizer::T_CONNECTOR != $next->type) {
-                        throw new Exception(sprintf("Parser error near %s %s",
-                                            $current->value,
-                                            $next->value));
+                        throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
+                                                           $current->value, $next->value), null, $string);
                     }
                     break;
                 default:
@@ -169,7 +161,7 @@ class Phprojekt_Filter_ParseTree
         }
         
         if ($braces != 0) {
-            throw new Exception(sprintf("Parser error: Braces are set incorrectly!"));
+            throw new Phprojekt_ParseException(sprintf("Parser error: Braces are set incorrectly!"), null, $string);
         }
     }
 
