@@ -1,9 +1,9 @@
 <label for="{{labelfor}}">{{label}}</label>
-<select	       id="{{id}}"
-		       name="{{label}}"
-			   multiple="multiple"
-			   size ="3" >
-{% for item in values %}
+<select dojoType="dojox.widget.MultiComboBox"
+			id="{{id}}"
+		    name="{{id}}"
+			value="{{values}}" />
+{% for item in options %}
 <option value ="{{item.id}}">{{item.name}}</option>
 {% endfor %}
 </select>

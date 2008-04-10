@@ -44,6 +44,7 @@ phpr.send = function(/*Object*/paramsIn) {
     var params = {
         url:"",
         content:"",
+        handleAs:"text",
         onSuccess:null,
         onError:null,
         onEnd:null,
@@ -61,7 +62,7 @@ phpr.send = function(/*Object*/paramsIn) {
         }
     } else {
         _onError = function(response, ioArgs) {
-			new this.ServerFeedback({cssClass: 'error', output: 'ein error'},dojo.byId('serverFeedback'))
+            new phpr.handleResponse('serverFeedback',response);
             _onEnd();
         }
     }
@@ -78,7 +79,7 @@ phpr.send = function(/*Object*/paramsIn) {
         };
     } else {
         _onSuccess = function(data) {
-			alert(data.ret);
+            new phpr.handleResponse('serverFeedback',data);
             _onEnd();
             if (!data.ret && (data.error || data.errors)) {
                 alert(data.error || data.errors);
@@ -88,70 +89,48 @@ phpr.send = function(/*Object*/paramsIn) {
     dojo.xhrPost({
         url		:	params.url,
         content	:	params.content,
+        handleAs:   params.handleAs,
         error	:	_onError,
         load	:	_onSuccess
     });
 };
-
-phpr.getData = function(url, callback){
-    dojo.xhrPost(
-    {
-        url         :	url,
-        handleAs	:	"json-comment-filtered",
-        timeout     :   10000,
-        load		: 	function(data) {
-            				callback(data);
-        				},
-        error       :   function(response, ioArgs) {
-            				alert('Error! No data received! ' + ioArgs);
-            				return response;
-        				},
-        sync		:	true,
-    }
-    )
-};
-phpr.handleError = function(resultArea,exception)
+phpr.handleResponse = function(resultArea,result)
 {
-	if (dijit.byId(resultArea)) {
-		phpr.destroyWidgets(resultArea);
-	}	
-	new phpr.ServerFeedback({
-		cssClass: 'error',
-		output:    exception.message
-		},dojo.byId(resultArea));
+    if (dijit.byId(resultArea)) {
+        phpr.destroyWidgets(resultArea);
+    }	
+    var css = result.__className;
+    if(!css){
+        css = 'error'; 
+    } 
+    var message= result.message
+    if (!message) {
+        message = "";
+    }
+    new phpr.ServerFeedback({cssClass: css, output:message},dojo.byId(resultArea))
+    
 };
 phpr.getCurrent = function(data, identifier, value){
-	var current = null;
-	for (i=0; i < data.length; i++) {
-		if(value == data[i][identifier]){
-			current = data[i];
-			break;
-		}
-	}
-	return current;
-};
-dojo.declare("phpr.MetaReadStore", dojox.data.QueryReadStore, {
-	// We need the store explicitly here, since we have to pass it to the grid model.
-    requestMethod:"post",
-    doClientPaging:false,
-    _filterResponse: function(data){
-          ret = {
-            items:data.metadata
-        };
-        return ret;
+    var current = null;
+    for (i=0; i < data.length; i++) {
+        if(value == data[i][identifier]){
+            current = data[i];
+            break;
+        }
     }
+    return current;
+};
 
-});
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
-	// We need the store explicitly here, since we have to pass it to the grid model.
+    // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
     
     _filterResponse: function(data){
-		ret = {
+        ret = {
             items: [{
-				"metadata": data.metadata},
-				{"data": data.data}]
+                "metadata": data.metadata},
+                {"data": data.data}]
         };
         return ret;
     }
@@ -159,7 +138,19 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 });
 dojo.require("dijit.form.DateTextBox");
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
-	serialize: function(d, options) {
-             		return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
-           		}
+    serialize: function(d, options) {
+                    return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
+                }
 });
+dojo.declare("phpr.ServerFeedback",
+    [dijit._Widget, dijit._Templated],
+    {
+        // summary:
+        // A class for displaying the ServerFeedback
+        // This class receives the Server Feedback and displays it to the User
+        
+        cssClass:     null,
+        output:       null,		
+        templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
+    }
+);

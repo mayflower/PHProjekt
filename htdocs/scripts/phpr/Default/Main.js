@@ -47,8 +47,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //summary: This function initially renders the page
         //description: This function should only be called once as there is no need to render the whole page
         //later on. Use reload instead to only replace those parts of the page which should change
-		
-		// important set the global phpr.module to the module which is currently loaded!!!
+        
+        // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:phpr.webpath, currentModule:phpr.module});
         dojo.addOnLoad(dojo.hitch(this, function() {
@@ -62,7 +62,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
     
     reload:function(){
-		// important set the global phpr.module to the module which is currently loaded!!!
+        // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         this.setSubmoduleNavigation();
         this.tree     = new this.treeWidget(this);
@@ -73,23 +73,25 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.destroyWidgets("detailsBox");
         }		
     },
-    
+
     setSubmoduleNavigation: function(){
-        this.getSubmodules();
-        var navigation ="";
-        for(i in this.availableModules){
-            var moduleName  = this.availableModules[i]["name"];
-            var moduleLabel = this.availableModules[i]["label"];
-            navigation += this.render(["phpr.Default.template", "navigation.html"], null,{moduleName:moduleName, moduleLabel:moduleLabel});
-            i++;
-        }
-        dojo.byId("subModuleNavigation").innerHTML = navigation;
-    },
-    
-    getSubmodules: function(){
         var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetSubmodules/nodeId/' + phpr.currentProjectId;
-        phpr.getData(subModuleUrl, dojo.hitch(this, function(response){
-            this.availableModules =  eval(response);
-        }));
-    }
+        var self =this;
+        phpr.send({
+            url:       subModuleUrl,
+            handleAs: "json-comment-filtered",
+            onSuccess: dojo.hitch(this,function(data){
+                    self.availableModules = data;
+                    var navigation ="";
+                    dojo.forEach(this.availableModules,function(modules) {
+                        var moduleName  = modules.name;
+                        var moduleLabel = modules.label;
+                        navigation += self.render(["phpr.Default.template", "navigation.html"], null,{moduleName:moduleName, moduleLabel:moduleLabel});
+                    });
+                    dojo.byId("subModuleNavigation").innerHTML = navigation;
+                    }),
+        });
+    },
+        
+
 });

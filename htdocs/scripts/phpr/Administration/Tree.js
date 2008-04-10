@@ -8,7 +8,7 @@ dojo.declare("phpr.Administration.Tree", phpr.Component, {
 	module:     "Administration",
     
     constructor: function(main) {
-        var treepath = main.webpath + "scripts/phpr/Administration/admintree.json";
+        var treepath = phpr.webpath + "scripts/phpr/Administration/admintree.json";
         this.main    = main;
 
 		this._treeNode = dojo.byId("treeBox");

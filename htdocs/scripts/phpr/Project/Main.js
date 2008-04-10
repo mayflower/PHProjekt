@@ -15,12 +15,11 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 		this.treeWidget = phpr.Project.Tree;
 		
 		//subscribe to all topics which concern this module
-		// we might wanna move the subscribes for the default elements in the default module?
-		this.subscribe("load", this, "load");
-		this.subscribe("changeProjekt",this, "loadSubElements"); 
-		this.subscribe("reload", this, "reload");
-		this.subscribe("grid.RowClick", this, "openForm");
-		this.subscribe("form.Submitted", this, "submitForm");
+		dojo.subscribe("Project.load", this, "load");
+		dojo.subscribe("Project.changeProjekt",this, "loadSubElements"); 
+		dojo.subscribe("Project.reload", this, "reload");
+		dojo.subscribe("Project.grid.RowClick", this, "openForm");
+		dojo.subscribe("Project.form.Submitted", this, "submitForm");
 	}
 
 });

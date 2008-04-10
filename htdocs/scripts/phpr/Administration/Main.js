@@ -8,8 +8,7 @@ dojo.require("phpr.Administration.Groups.Main");
 dojo.require("phpr.Administration.Tree");
 
 dojo.declare("phpr.Administration.Main", phpr.Component, {
-	 constructor: function(webpath){
-	 	this.webpath     = webpath;
+	 constructor: function(){
 	 	this.module      = "Administration";
 		this.treeWidget  = phpr.Administration.Tree;
 		this.usersWidget = phpr.Administration.Users.Main;
@@ -19,14 +18,15 @@ dojo.declare("phpr.Administration.Main", phpr.Component, {
 		dojo.subscribe("Administration.tree.nodeClick",this, "loadSubElements");
 	 },
 	 reload:function(){
+	 	phpr.module = this.module;
 		this.deleteSubmoduleNavigation();
 		this.tree     = new this.treeWidget(this, this.module);
-		this.Users 	  = new this.usersWidget(this.webpath);
-		this.Role 	  = new this.roleWidget(this.webpath);
-		this.Groups	  = new this.groupsWidget(this.webpath);
+		this.Users 	  = new this.usersWidget(phpr.webpath);
+		this.Role 	  = new this.roleWidget(phpr.webpath);
+		this.Groups	  = new this.groupsWidget(phpr.webpath);
 	},
 	loadSubElements: function(project){
-		this.currentProject = project.id;
+		phpr.currentProjectId = project.id;
 		dojo.publish("Administration."+project.id+".load");
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
