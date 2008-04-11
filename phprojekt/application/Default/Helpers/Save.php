@@ -56,13 +56,14 @@ final class Default_Helpers_Save
         }
 
         if ($node->getActiveRecord()->recordValidate()) {
-            if ((int)$node->parent !== $parentId) {
+            if ((int)$node->projectId !== $parentId) {
                return $node->setParentNode($parentNode);
            } else {
                return $node->getActiveRecord()->save();
            }
         } else {
-            throw new Exception('Validation failed');
+            $error = array_pop($node->getActiveRecord()->getError());
+            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         }
     }
 
@@ -118,8 +119,6 @@ final class Default_Helpers_Save
         if ($model instanceof Phprojekt_Tree_Node_Database) {
             if (func_num_args() == 3) {
                 $parentId = $arguments[2];
-            } else if (array_key_exists('parent', $params)) {
-                $parentId = $params['parent'];
             } else if (array_key_exists('projectId', $params)) {
                 $parentId = $params['projectId'];
             } else {
