@@ -170,7 +170,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $validated = true;
         $data      = $this->_data;
-        $fields    = $this->_dbManager->getFieldDefinition(MODELINFO_ORD_FORM);
+        $fields    = $this->_dbManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($data as $varname => $value) {
             if (isset($this->$varname)) {
@@ -367,7 +367,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getFieldsForFilter()
     {
-        return $this->getInformation()->getInfo(MODELINFO_ORD_LIST, Phprojekt_DatabaseManager::COLUMN_NAME);
+        return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST, 
+                                                Phprojekt_DatabaseManager::COLUMN_NAME);
     }
 
 

@@ -60,7 +60,7 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
         
         $this->assertEquals($records, '');
         
-        $records = $object->getTitles(MODELINFO_ORD_FORM);
+        $records = $object->getTitles(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         
         $this->assertEquals($records, '');
     }

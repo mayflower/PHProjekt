@@ -81,12 +81,12 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields = $db->getInfo(MODELINFO_ORD_LIST, Phprojekt_DatabaseManager::COLUMN_TITLE);
+        $fields = $db->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST, Phprojekt_DatabaseManager::COLUMN_TITLE);
         $this->assertEquals($this->_listResult, $fields);
 
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields = $db->getInfo(MODELINFO_ORD_FORM, Phprojekt_DatabaseManager::COLUMN_TITLE);
+        $fields = $db->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM, Phprojekt_DatabaseManager::COLUMN_TITLE);
         $this->assertEquals($this->_formResult, $fields);
     }
 

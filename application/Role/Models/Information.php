@@ -36,11 +36,11 @@ class Role_Models_Information extends EmptyIterator implements Phprojekt_ModelIn
     /**
      * Return an array of field information.
      *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $ordering An ordering constant
      *
      * @return array
      */
-    public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT)
+    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
         $translate = Zend_Registry::get('translate');
@@ -66,11 +66,11 @@ class Role_Models_Information extends EmptyIterator implements Phprojekt_ModelIn
     /**
      * Return an array with titles to simplify things
      *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $ordering An ordering constant
      *
      * @return array
      */
-    public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
+    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $result = array();
         return $result;

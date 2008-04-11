@@ -87,7 +87,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      */
     private function _getDifferences(Phprojekt_Item_Abstract $object, $action)
     {
-        $fields = $object->getInformation()->getFieldDefinition(MODELINFO_ORD_FORM);
+        $fields = $object->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $clone  = clone($object);
         $clone->find($object->id);
         $differences = array();

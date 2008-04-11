@@ -30,6 +30,31 @@
 class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_Interface
 {
     /**
+     * The fields given by the ModelInformation interface
+     * are used by a list view and therefore ordered in that way
+     */
+    const ORDERING_LIST = 1;
+
+    /**
+     * The fields given by the ModelInformation interface
+     * are used by a form and therefore ordered in that way
+     */
+    const ORDERING_FORM = 2;
+
+    /**
+     * The fields given by the ModelInformation interface
+     * are used by a filter and therefore ordered in that way
+     */
+    const ORDERING_FILTER = 3;
+
+    /**
+     * The fields given by the ModelInformation interface
+     * are used by something undeclared, therefore we ust a
+     * default value.
+     */
+    const ORDERING_DEFAULT = Phprojekt_ModelInformation_Default::ORDERING_LIST;
+
+    /**
      * Array that contains the form field values
      *
      * @var array
@@ -156,14 +181,14 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return array
      */
-    public function getFieldDefinition ($ordering = MODELINFO_ORD_DEFAULT)
+    public function getFieldDefinition ($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         switch ($ordering) {
-            case MODELINFO_ORD_FILTER:
-            case MODELINFO_ORD_LIST:
+            case Phprojekt_ModelInformation_Default::ORDERING_FILTER:
+            case Phprojekt_ModelInformation_Default::ORDERING_LIST:
                 return $this->_listFields;
                 break;
-            case MODELINFO_ORD_FORM:
+            case Phprojekt_ModelInformation_Default::ORDERING_FORM:
                 return $this->_formFields;
                 break;
         }
@@ -178,14 +203,14 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return array
      */
-    public function getTitles ($ordering = MODELINFO_ORD_DEFAULT)
+    public function getTitles ($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         switch ($ordering) {
-            case MODELINFO_ORD_FILTER:
-            case MODELINFO_ORD_LIST:
+            case Phprojekt_ModelInformation_Default::ORDERING_FILTER:
+            case Phprojekt_ModelInformation_Default::ORDERING_LIST:
                 $list = $this->_listFields;
                 break;
-            case MODELINFO_ORD_FORM:
+            case Phprojekt_ModelInformation_Default::ORDERING_FORM:
                 $list = $this->_formFields;
                 break;
         }
