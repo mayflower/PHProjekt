@@ -33,12 +33,12 @@ class Phprojekt_ErrorTest extends PHPUnit_Framework_TestCase
         $data = array(
             'field'   => 'title',
             'message' => 'Is a required field');
-        $result = ' | title # Is a required field';
+        $result = array($data);
         $error  = new Phprojekt_Error();
 
         $error->addError();
         $return = $error->getError();
-        $this->assertEquals(' | ', $return);
+        $this->assertEquals(array(array()), $return);
 
         $error->addError($data);
         $return = $error->getError();

@@ -61,16 +61,12 @@ class Phprojekt_Error
     /**
      * Return the error data and delete it
      *
-     * @return string
+     * @return array
      */
     public function getError()
     {
         $error         = $this->_errors;
         $this->_errors = array();
-        $return = '';
-        foreach ($error as $tmp => $errorData) {
-            $return .= ' | ' . implode(' # ', $errorData);
-        }
-        return $return;
+        return $error;
     }
 }

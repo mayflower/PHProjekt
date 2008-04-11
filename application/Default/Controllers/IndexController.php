@@ -201,12 +201,7 @@ class IndexController extends Zend_Controller_Action
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
-        try {
-            Default_Helpers_Save::save($this->getModelObject()->find($id), $this->getRequest()->getParams());
-        } catch (Exception $saveError) {
-            $error = $saveError->getMessage() . $this->getModelObject()->getError();
-            throw new Phprojekt_PublishedException($error);
-        }
+        Default_Helpers_Save::save($this->getModelObject(), $this->getRequest()->getParams());
     }
 
     /**

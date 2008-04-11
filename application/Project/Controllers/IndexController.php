@@ -51,8 +51,9 @@ class Project_IndexController extends IndexController
             $node = new Phprojekt_Tree_Node_Database($model, $id);
             Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('parent', null));
         } catch (Exception $saveError) {
-            $error = $saveError->getMessage() . $this->getModelObject()->getError();
-            throw new Phprojekt_PublishedException($error);
+            $data = array();
+            $data['error'] = $this->getModelObject()->getError();
+            echo Phprojekt_Converter_Json::convertValue($data);
         }
     }
 }
