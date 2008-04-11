@@ -45,7 +45,7 @@ class Project_IndexController extends IndexController
         if (empty($id)) {
             $model = $this->getModelObject();
         } else {
-            $model = $this->getModelObject()->find($this->getRequest()->getParam('id'));
+            $model = $this->getModelObject()->find($id);
         }
         $node = new Phprojekt_Tree_Node_Database($model, $id);
         Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
