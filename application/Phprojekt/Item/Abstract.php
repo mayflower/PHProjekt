@@ -312,7 +312,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getError()
     {
-        return (array) $this->_error->getError();
+        return $this->_error->getError();
     }
 
     /**
