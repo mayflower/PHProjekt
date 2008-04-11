@@ -77,7 +77,13 @@ $translate = new Phprojekt_Language($config->language);
 $front = Zend_Controller_Front::getInstance();
 $front->setDispatcher(new Phprojekt_Dispatcher());
 
-$front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
+$plugin = new Zend_Controller_Plugin_ErrorHandler();
+$plugin->setErrorHandlerModule('Default');
+$plugin->setErrorHandlerController('Error');
+$plugin->setErrorHandlerAction('error');
+
+$front->registerPlugin($plugin);
+
 $front->setDefaultModule('Default');
 
 foreach (scandir(PHPR_CORE_PATH) as $module) {
@@ -107,5 +113,4 @@ $front->addModuleDirectory(PHPR_CORE_PATH);
 
 $front->setParam('useDefaultControllerAlways', true);
 
-$front->throwExceptions(true);
 $front->dispatch();
