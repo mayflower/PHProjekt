@@ -35,11 +35,12 @@ class Phprojekt_Converter_Json
      * Convert a model or a model information into a json stream
      *
      * @param Phprojekt_Interface_Model|array $models The model to convert
-     * @param int                             $order  A MODELINFO_ const that defines the ordering for the convert
+     * @param int                             $order  A Phprojekt_ModelInformation_Default::ORDERING_*
+     *                                                const that defines the ordering for the convert
      *
      * @return string
      */
-    public static function convert ($models, $order = MODELINFO_ORD_DEFAULT)
+    public static function convert ($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (null === $models) {
             return '/* */';

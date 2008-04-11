@@ -79,9 +79,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      *
      * @var array
      */
-    private $_mapping = array (MODELINFO_ORD_FORM   => 'formPosition',
-                               MODELINFO_ORD_LIST   => 'listPosition',
-                               MODELINFO_ORD_FILTER => 'listUseFilter');
+    private $_mapping = array (Phprojekt_ModelInformation_Default::ORDERING_FORM   => 'formPosition',
+                               Phprojekt_ModelInformation_Default::ORDERING_LIST   => 'listPosition',
+                               Phprojekt_ModelInformation_Default::ORDERING_FILTER => 'listUseFilter');
 
     /**
      * Initialize a new Database Manager and configurate it with a model
@@ -155,11 +155,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Return an array of field information.
      *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $ordering An ordering constant
      *
      * @return array
      */
-    public function getFieldDefinition($ordering = MODELINFO_ORD_DEFAULT)
+    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
         $fields    = $this->_getFields($this->_mapping[$ordering]);
@@ -281,7 +281,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * Create a primitive mapping to an array. This is not pretty nice, but
      * for this version a reasonable solution
      *
-     * @param integer $order  An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $order  An ordering constant
      * @param string  $column Column
      *
      * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
@@ -307,7 +307,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      *
      * @return array
      */
-    public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
+    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $result = array();
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
