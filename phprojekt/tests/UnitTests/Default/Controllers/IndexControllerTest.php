@@ -376,7 +376,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2') > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower(' {"metadata":[{"key":"projectId","label":"projectId","type":"selectbox","hint":"projectId","order":0')) > 0);
         $this->assertTrue(strpos($response, '"numRows":1} ') > 0);
 
     }
@@ -645,7 +645,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project"}') > 0);
-        $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo"}]') > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Todo","label":"Todo"}]')) > 0);
 
     }
 
@@ -737,7 +737,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"History","label":"History"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project"}') > 0);
-        $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo"}]') > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Todo","label":"Todo"}]')) > 0);
 
     }
     

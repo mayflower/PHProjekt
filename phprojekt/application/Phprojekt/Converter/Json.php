@@ -58,7 +58,7 @@ class Phprojekt_Converter_Json
             throw new InvalidArgumentException();
         }
 
-        $information = $model->getInformation();
+        $information = $model->getInformation($order);
         $tag         = Phprojekt_Tags_Default::getInstance();
 
         /* we can check the returned array, but at the moment we just pass it */
@@ -71,7 +71,7 @@ class Phprojekt_Converter_Json
          * if a value in an array is an object
          */
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
-            foreach ($information->getFieldDefinition() as $field) {
+            foreach ($information->getFieldDefinition($order) as $field) {
                $data['id'] = $models->id;
                $key   = $field['key'];
                $value = $models->$key;
@@ -86,7 +86,7 @@ class Phprojekt_Converter_Json
         } else {
             foreach ($models as $cmodel) {
                 $data['id'] = $cmodel->id;
-                foreach ($information->getFieldDefinition() as $field) {
+                foreach ($information->getFieldDefinition($order) as $field) {
                     $key   = $field['key'];
                     $value = $cmodel->$key;
                     if (is_scalar($value)) {
