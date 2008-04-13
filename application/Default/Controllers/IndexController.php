@@ -152,7 +152,7 @@ class IndexController extends Zend_Controller_Action
             $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
         }
 
-        echo Phprojekt_Converter_Json::convert($records);
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -175,7 +175,7 @@ class IndexController extends Zend_Controller_Action
             $record = $this->getModelObject()->find($id);
         }
 
-        echo Phprojekt_Converter_Json::convert($record);
+        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
