@@ -3,6 +3,10 @@ dojo.require("phpr.Component");
 dojo.require("dijit.form.Textarea");
 dojo.require("dojox.widget.MultiComboBox"); 
 dojo.declare("phpr.Default.field", phpr.Component, {
+    // summary: 
+    //    class for rendering form fields
+    // description:
+    //    this class renders the different form types which are available in a PHProjekt Detail View
 	formdata: '',
 	checkRender: function(itemlabel, itemid,itemvalue){
 		var itemchecked = null;
@@ -87,7 +91,5 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							disabled: itemdisabled,
 							options: options
 				});
-	},
-	
-	
+	}
 });

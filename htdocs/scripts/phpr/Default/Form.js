@@ -4,12 +4,21 @@ dojo.require("phpr.Component");
 dojo.require("phpr.Default.field");
 
 dojo.declare("phpr.Default.Form", phpr.Component, {
-    
+    // summary:    
+    //    Class for displaying a PHProjekt Detail View
+    // description: 
+    //    This Class takes care of displaying the form information we receive from our Server 
+    //    in a dojo form with tabs
+
     formWidget:null,
 	range: new Array(),
 	formdata:'',
     
     constructor:function(main, id) {
+        // summary:    
+        //    render the form on construction
+        // description: 
+        //    this function receives the form data from the server and renders the corresponding form
         this.main = main;
 		this.id = id;
         // Render the form element on the right bottom
@@ -19,6 +28,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		this.formStore.fetch({onComplete: dojo.hitch(this, "getFormData" )});
     },
 	getFormData: function(items, request){
+        // summary:    
+        //    This function renders the form data according to the database manager settings
+        // description: 
+        //    This function processes the form data which is stored in a phpr.ReadStore and
+        //    renders the actual form according to the received data    
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
 		}		
@@ -81,11 +95,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
 	},
 	submitForm: function(){
+        // summary: 
+        //    This function is responsible for submitting the formdata
+        // description:
+        //    This function sends the form data as json data to the server and publishes
+        //    a form.Submitted topic after the data was send.
 		var sendData = this.formWidget.getValues();
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
 			content:   sendData,
-			onSuccess: this.publish("form.Submitted", [this.id, sendData['parent']]),
+			onSuccess: this.publish("form.Submitted", [this.id, sendData['parent']])
 			});
 	}
 	

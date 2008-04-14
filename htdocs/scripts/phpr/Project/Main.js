@@ -18,7 +18,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 		dojo.subscribe("Project.load", this, "load");
 		dojo.subscribe("Project.changeProjekt",this, "loadSubElements"); 
 		dojo.subscribe("Project.reload", this, "reload");
-		dojo.subscribe("Project.grid.RowClick", this, "openForm");
+		dojo.subscribe("Project.openForm", this, "openForm");
 		dojo.subscribe("Project.form.Submitted", this, "submitForm");
 	}
 
