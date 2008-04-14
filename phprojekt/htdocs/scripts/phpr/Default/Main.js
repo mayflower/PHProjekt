@@ -30,7 +30,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     loadSubElements: function(project){
         phpr.currentProjectId = project.id;
         this.setSubmoduleNavigation();
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/save/navId/'+phpr.currentProjectId;
+        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/navId/'+phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         if (dijit.byId("detailsBox")) {
             phpr.destroyWidgets("detailsBox");

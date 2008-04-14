@@ -6,7 +6,7 @@ dojo.require("phpr.Administration.Users.Grid");
 dojo.require("phpr.Administration.Users.Form");
 
 dojo.declare("phpr.Administration.Users.Main", phpr.Default.Main, {
-	 constructor: function(webpath){
+	 constructor: function(){
 	 	this.module = "Users";
 		this.gridWidget = phpr.Administration.Users.Grid;
 		this.formWidget = phpr.Administration.Users.Form;

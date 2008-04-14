@@ -73,9 +73,9 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @var array
      */
-    protected static $_defaultConfiguration = array(array('type'  => 'selectValues',
+    protected static $_defaultConfiguration = array(array('type'  => 'selectbox',
                                                           'key'   => 'activated',
-                                                          'range' => '1#On|0#Off',
+                                                          'range' => array(array('id'=>1,'name'=>'On'),array('id'=>2,'name'=>'Off')),
                                                           'label' => 'Module activated?'),
                                                    array('type'  => 'label',
                                                          'key'   => 'name',
