@@ -44,7 +44,7 @@ phpr.send = function(/*Object*/paramsIn) {
     var params = {
         url:"",
         content:"",
-        handleAs:"text",
+        handleAs: "json-comment-filtered",
         onSuccess:null,
         onError:null,
         onEnd:null,
@@ -96,18 +96,19 @@ phpr.send = function(/*Object*/paramsIn) {
 };
 phpr.handleResponse = function(resultArea,result)
 {
-    if (dijit.byId(resultArea)) {
-        phpr.destroyWidgets(resultArea);
+    if (dijit.byId("resultDiv")) {
+        dijit.byId("resultDiv").destroy();
     }	
-    var css = result.__className;
-    if(!css){
+    var css = 'success';
+    if(result.__className == "Phprojekt_PublishedException"){
         css = 'error'; 
     } 
     var message= result.message
     if (!message) {
         message = "";
     }
-    new phpr.ServerFeedback({cssClass: css, output:message},dojo.byId(resultArea))
+    dojo.byId(resultArea).innerHTML = '<div id="resultDiv"></div>';
+    new phpr.ServerFeedback({cssClass: css, output:message},dojo.byId("resultDiv"));
     
 };
 phpr.getCurrent = function(data, identifier, value){
