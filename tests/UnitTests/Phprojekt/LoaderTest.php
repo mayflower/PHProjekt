@@ -32,6 +32,19 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
     {
 
     }
+    
+    /**
+     * Test the loadClass functionality
+     *
+     */
+    public function testLoadClass()
+    {
+        Phprojekt_Loader::loadClass('IndexController');
+
+        $this->assertTrue(class_exists('IndexController'));
+
+    }
+    
 
     /**
      * Test the getModel functionality
@@ -61,11 +74,13 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
      * Test getModelFromObject
      *
      */
-    public function getModelFromObject()
+    public function testGetModelFromObject()
     {
         
         
-        $this->assertEquals('Project_Models_Project', Phprojekt_Loader::getModelFromObject($object));
+        $object = Phprojekt_Loader::getModel('Role', 'Role');
+        
+        $this->assertEquals('Role', Phprojekt_Loader::getModelFromObject($object));
 
     }
     
@@ -73,11 +88,13 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
      * Test getModuleFromObject
      *
      */
-    public function getModuleFromObject()
+    public function testGetModuleFromObject()
     {
         
+        $object = Phprojekt_Loader::getModel('Role', 'Role');
         
-        $this->assertEquals('Todo', Phprojekt_Loader::getModuleFromObject($object));
+        $this->assertEquals('Role', Phprojekt_Loader::getModuleFromObject($object));
 
     }
+    
 }
