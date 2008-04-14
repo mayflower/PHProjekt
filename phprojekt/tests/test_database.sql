@@ -276,6 +276,11 @@ CREATE TABLE `Tags` (
   PRIMARY KEY  (`id`)
 );
 
+INSERT INTO Tags (`id`, `word`, `crc32`) VALUES 
+(1,'this',-17923545),
+(2,'todo',1510913696);
+
+
 --
 -- Table structure for table `TagsUsers`
 --
@@ -287,6 +292,10 @@ CREATE TABLE `TagsUsers` (
   PRIMARY KEY  (`id`)
 );
 
+INSERT INTO TagsUsers (`id`, `userId`, `tagId`) VALUES 
+(1, 1, 1),
+(2, 1, 2);
+
 --
 -- Table structure for table `TagsModules`
 --
@@ -297,6 +306,9 @@ CREATE TABLE `TagsModules` (
   `tagUserId` int(11) NOT NULL,
   PRIMARY KEY  (`module`, `itemId`, `tagUserId`)
 );
+
+INSERT INTO TagsModules (`module`, `itemId`, `tagUserId`) VALUES 
+('Default', 1, 1);
 
 --
 -- INSERT DATA

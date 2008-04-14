@@ -288,7 +288,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":')) > 0);
-        $this->assertTrue(strpos($response, '"tags":[],"numRows":2}') > 0);
+        $this->assertTrue(strpos($response, '"tags":{"this":1},"numRows":2}') > 0);
 
     }
 
