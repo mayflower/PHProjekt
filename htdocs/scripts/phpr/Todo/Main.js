@@ -13,6 +13,7 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
 		this.formWidget = phpr.Todo.Form;
 		this.treeWidget = phpr.Todo.Tree;
 	 	dojo.subscribe("Todo.load", this, "load");
+        dojo.subscribe("Todo.changeProjekt",this, "loadSubElements"); 
 		dojo.subscribe("Todo.reload", this, "reload");
 		dojo.subscribe("Todo.openForm",this, "openForm");
 		dojo.subscribe("Todo.form.Submitted",this, "submitForm");
