@@ -6,12 +6,12 @@ dojo.require("phpr.Administration.Role.Grid");
 dojo.require("phpr.Administration.Role.Form");
 
 dojo.declare("phpr.Administration.Role.Main", phpr.Default.Main, {
-	 constructor: function(webpath){
+	 constructor: function(){
 	 	this.module = "Role";
 		this.gridWidget = phpr.Administration.Role.Grid;
 		this.formWidget = phpr.Administration.Role.Form;
 		this.treeWidget = null;
-		dojo.subscribe("Administration.Role.load", this, "reload");
+		dojo.subscribe("Role.load", this, "reload");
 	 },
 
 reload:function(){

@@ -28,6 +28,6 @@ dojo.declare("phpr.Administration.Tree", phpr.Component, {
 		  item = [];
 	    }
 		  
-		dojo.publish("Administration.tree.nodeClick", [item]); 
+		this.publish("changeAdminSection", [item]); 
     }
 });

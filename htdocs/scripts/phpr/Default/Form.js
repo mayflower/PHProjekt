@@ -70,7 +70,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 					break;
 			}
 		}
-		this.formdata += this.fieldTemplate.MultipleSelectRender('tags', 'tags', data[0]['tags'], false,
+		this.formdata += this.fieldTemplate.MultipleSelectRender(data[0]['tags'],'tags', 'tags', data[0]['tags'], false,
 																		false);
 		formtabs ="";
 		//later on we need to provide different tabs depending on the metadata
