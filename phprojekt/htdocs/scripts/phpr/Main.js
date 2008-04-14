@@ -24,16 +24,28 @@ dojo.require("phpr.Project.Main");
 dojo.require("phpr.Administration.Main");
 
 dojo.declare("phpr.Main", null, {
-    constructor: function(webpath, currentModule, currentProjectId){
+    // summary: Main class for PHProjekt Gui
         
-        //set global vars to current settings
-        phpr.module  = currentModule;
-        phpr.webpath = webpath;
+    constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/currentProjectId){
+        // summary:
+        //    Initialize all components for the javascript Userinterfae.
+        // description:
+        //    I.e. if the module name is "project" this.publish("open)
+        //    will then publish the topic "project.open".
+        // webpath: String
+        //    The path to the htdocs folder of the current PHProjekt Installation.
+        // currentModule: String
+        //    The module which should be displayed on start
+        // currentProjectId: Int
+        //    The Id of the current Project - This is important as user rights depend on Project
+        
+        phpr.module           = currentModule;
+        phpr.webpath          = webpath;
         phpr.currentProjectId = currentProjectId ;
-		
+        
         //All modules are initialized in the constructor
-        this.Todo    = new phpr.Todo.Main();
-        this.Project = new phpr.Project.Main();
+        this.Todo           = new phpr.Todo.Main();
+        this.Project        = new phpr.Project.Main();
         this.Administration = new phpr.Administration.Main();
         
         //The load method of the currentModule is called

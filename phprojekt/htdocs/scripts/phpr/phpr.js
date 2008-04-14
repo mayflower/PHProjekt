@@ -139,18 +139,24 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 dojo.require("dijit.form.DateTextBox");
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
     serialize: function(d, options) {
-                    return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
-                }
+        // summary:
+        //     This function overwrites the dijit.form.DateTextBox display
+        //     description:
+        //     Make sure that the date is not only displayed localized, but also
+        //     the value which is returned is set to this date format    
+        return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
+    }
 });
 dojo.declare("phpr.ServerFeedback",
     [dijit._Widget, dijit._Templated],
     {
         // summary:
-        // A class for displaying the ServerFeedback
-        // This class receives the Server Feedback and displays it to the User
+        //     A class for displaying the ServerFeedback
+        // description:
+        //     This class receives the Server Feedback and displays it to the User
         
         cssClass:     null,
         output:       null,		
-        templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
+        templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html")
     }
 );

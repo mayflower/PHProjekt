@@ -27,14 +27,13 @@ phpr.grid.formatDate = function(date) {
 };
 
 phpr.grid.updateRows = function(gridWidget, rowNumbers) {
-    //  summary:
-    //      Updates the given rowNumbers in the given grid.
-    //
-    //  description:
-    //      To do so, it requests the data for these rows from the server and
-    //      triggers the update of the visual grid row.
-    //      It would be great if there was an integrated way for this in the grid
-    //      model, but I didnt find it.
+    // summary:
+    //    Updates the given rowNumbers in the given grid.
+    // description:
+    //    To do so, it requests the data for these rows from the server and
+    //    triggers the update of the visual grid row.
+    //    It would be great if there was an integrated way for this in the grid
+    //    model, but I didnt find it.
     //
     var model = gridWidget.model;
     var ids = [];
@@ -84,8 +83,8 @@ dojo.declare("phpr.grid.Model", dojox.grid.data.DojoData, {
               this.query
             ),
             query: this.query,
-            // onBegin: dojo.hitch(this, "beginReturn"),
-            //onComplete: dojo.hitch(this, "processRows"),
+            // onBegin:     dojo.hitch(this, "beginReturn"),
+            // onComplete:  dojo.hitch(this, "processRows"),
             onComplete: dojo.hitch(this, function(items, request) {
                 if (dojo.isFunction(onComplete)) {
                     onComplete();
@@ -126,7 +125,7 @@ dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
     doClientPaging:false,
     
     _filterResponse: function(data){
-		this.metaData=data.metadata;
+        this.metaData=data.metadata;
         // We need to pre-process the data before passing them to the QueryReadStore,
         // since the data structure sent form the server does not comply to what
         // the QueryReadStore expects, we just need to extract the data-key.
@@ -139,18 +138,18 @@ dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
 });
 
 dojo.declare("phpr.grid.editors.MultiComboBox", dojox.grid.editors.Dijit, {
-	editorClass: "dojox.widget.MultiComboBox",
-	getEditorProps: function(inDatum){
-		var store = new dojo.data.ItemFileReadStore({data: {identifier:"id", items: this.cell.options}});
-		return dojo.mixin({}, this.cell.editorProps||{}, {
-			value: inDatum,
-			store: store
-		});
-	},
-	getValue: function(){
-		var e = this.editor;
-		// make sure to apply the displayed value
-		e.setDisplayedValue(e.getDisplayedValue());
-		return e.getValue();
-	}
+    editorClass: "dojox.widget.MultiComboBox",
+    getEditorProps: function(inDatum){
+        var store = new dojo.data.ItemFileReadStore({data: {identifier:"id", items: this.cell.options}});
+        return dojo.mixin({}, this.cell.editorProps||{}, {
+            value: inDatum,
+            store: store
+        });
+    },
+    getValue: function(){
+        var e = this.editor;
+        // make sure to apply the displayed value
+        e.setDisplayedValue(e.getDisplayedValue());
+        return e.getValue();
+    }
 });
