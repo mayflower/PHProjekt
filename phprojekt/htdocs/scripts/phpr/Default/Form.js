@@ -43,13 +43,19 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		this.fieldTemplate = new phpr.Default.field();
 		for (var i = 0; i < meta.length; i++) {
 			
-			itemtype = meta[i]["type"];
-			itemid = meta[i]["key"];
-			itemlabel = meta[i]["label"];
+			itemtype     = meta[i]["type"];
+			itemid       = meta[i]["key"];
+			itemlabel    = meta[i]["label"];
 			itemdisabled = meta[i]["readOnly"];
 			itemrequired = meta[i]["required"];
-			itemlabel = meta[i]["label"];
-			itemvalue = data[0][itemid];
+			itemlabel    = meta[i]["label"];
+			itemvalue    = data[0][itemid];
+            itemrange    = meta[i]["range"];
+            itemwrite    = true;
+            //special workaround for new projects - set parent to current ProjectId
+            if(itemid == 'projectId' && !itemvalue){
+                itemvalue = phpr.currentProjectId;
+            }
 
 			//render the fields according to their type
 			switch (itemtype) {
@@ -58,11 +64,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 					break;
 
 				case'selectbox':
-					this.formdata += this.fieldTemplate.selectRender(meta[i]["range"],itemlabel, itemid, itemvalue, itemrequired,
+					this.formdata += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
 					  												 itemdisabled);
 					break;
 				case 'multipleselect':
-					this.formdata += this.fieldTemplate.MultipleSelectRender(meta[i]["range"],itemlabel, itemid, itemvalue, itemrequired,
+					this.formdata += this.fieldTemplate.MultipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
 					  												  		itemdisabled);
 					break;
 				case'date':
@@ -90,7 +96,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		//later on we need to provide different tabs depending on the metadata
 		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'First Tab'});
 		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Secon dummy Tab'});
-		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{formId:'detailForm'+this.id, id:'formtab',tabsContent:formtabs});
+		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{formId:'detailForm'+this.id, id:'formtab',tabsContent:formtabs,
+        writePermissions:itemwrite});
 		this.formWidget = dijit.byId('detailForm'+this.id);
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
 	},
@@ -104,7 +111,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
 			content:   sendData,
-			onSuccess: this.publish("form.Submitted", [this.id, sendData['parent']])
+			onSuccess: this.publish("form.Submitted", [this.id, sendData['projectId']])
 			});
 	}
 	

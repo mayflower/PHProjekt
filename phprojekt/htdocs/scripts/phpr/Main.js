@@ -26,7 +26,7 @@ dojo.require("phpr.Administration.Main");
 dojo.declare("phpr.Main", null, {
     // summary: Main class for PHProjekt Gui
         
-    constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/currentProjectId){
+    constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId){
         // summary:
         //    Initialize all components for the javascript Userinterfae.
         // description:
@@ -36,11 +36,12 @@ dojo.declare("phpr.Main", null, {
         //    The path to the htdocs folder of the current PHProjekt Installation.
         // currentModule: String
         //    The module which should be displayed on start
-        // currentProjectId: Int
-        //    The Id of the current Project - This is important as user rights depend on Project
+        // rootProjectId): Int
+        //    The Id of the root Project - This is important as user rights depend on Project
         
         phpr.module           = currentModule;
         phpr.webpath          = webpath;
+        phpr.rootProjectId    = rootProjectId; 
         phpr.currentProjectId = currentProjectId ;
         
         //All modules are initialized in the constructor

@@ -3,11 +3,13 @@
 		{{tabsContent}}
 	</div>
 	<center style="background:#DDDDDD">
+		{% if writePermissions %}
 		<button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
 					Speichern
 		</button>
 		<button dojoType="dijit.form.Button" baseClass="negative" id="deleteButton" type="submit" iconClass="cross">
 					L&ouml;schen
 		</button>
+		{% endif %}		
 	</center>
 </form>

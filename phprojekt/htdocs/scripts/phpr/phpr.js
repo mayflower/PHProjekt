@@ -9,6 +9,7 @@ dojo.require("dojox.data.QueryReadStore");
 var module = null;
 var webpath = null;
 var currentProjectId = null;
+var rootProjectId = null;
 
 phpr.initWidgets = function(el) {
     // This parses the given node and inits the widgets found in there.

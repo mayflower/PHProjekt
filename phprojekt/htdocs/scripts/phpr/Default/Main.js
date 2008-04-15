@@ -19,6 +19,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     grid:             null,
     module:           null,
     availableModules: null,
+    writePermissions: false,
     
     constructor:function(){
     },
@@ -35,6 +36,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    When a new submodule is called, the new grid is displayed,
         //    the navigation changed and the Detail View is resetted
         phpr.currentProjectId = project.id;
+        if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
         this.setSubmoduleNavigation();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/navId/'+phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
@@ -103,8 +105,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetSubmodules/nodeId/' + phpr.currentProjectId;
+        var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self =this;
+        var newEntry ="";
+        phpr.destroyWidgets(dojo.byId("subModuleNavigation"));
         phpr.send({
             url:       subModuleUrl,
             handleAs: "json-comment-filtered",
@@ -114,10 +118,28 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                             dojo.forEach(this.availableModules,function(modules) {
                                 var moduleName  = modules.name;
                                 var moduleLabel = modules.label;
-                                navigation += self.render(["phpr.Default.template", "navigation.html"], null,{moduleName:moduleName, moduleLabel:moduleLabel});
+                                if (modules.permission >0) {
+                                    navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
+                                        moduleName: moduleName,
+                                        moduleLabel: moduleLabel
+                                    });
+                                }   
+                                if (modules.permission > 3 && moduleName == phpr.module) {
+                                    newEntry = "<br><br><button dojoType='dijit.form.Button' id='newEntry' type='link'>New "+
+                                                moduleLabel+"</button>";
+                                    this.writePermissions = true;
+                                }
                             });
-                            dojo.byId("subModuleNavigation").innerHTML = navigation;
+                            dojo.byId("subModuleNavigation").innerHTML = navigation+newEntry;
+                            phpr.initWidgets(dojo.byId("subModuleNavigation"));
+                            dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));  
                          })
         });
+    },
+    newEntry: function(){
+        // summary:
+        //     This function is responsible for displaying the form for a new entry in the
+        //     current Module
+        this.publish("openForm", [null]);
     }
 });
