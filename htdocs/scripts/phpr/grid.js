@@ -50,7 +50,10 @@ phpr.grid.updateRows = function(gridWidget, rowNumbers) {
                 model.setRow(item, rowNum);
                 gridWidget.updateRow(rowNum);
             }
-        })
+        }),
+        onError: function(response, ioArgs) {
+            new phpr.handleResponse('serverFeedback',response);
+        }
     };
     model.store.fetch(params);
 };
@@ -93,7 +96,10 @@ dojo.declare("phpr.grid.Model", dojox.grid.data.DojoData, {
             }),
             onBegin:dojo.hitch(this, function(numRows) {
                 this._numRows = numRows;
-            })
+            }),
+            onError: function(response, ioArgs) {
+                new phpr.handleResponse('serverFeedback',response);
+            }
         }
         this.store.fetch(params);
     },

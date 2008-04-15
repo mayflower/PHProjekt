@@ -42,7 +42,7 @@ dojo.declare("phpr.Main", null, {
         phpr.module           = currentModule;
         phpr.webpath          = webpath;
         phpr.rootProjectId    = rootProjectId; 
-        phpr.currentProjectId = currentProjectId ;
+        phpr.currentProjectId = rootProjectId ;
         
         //All modules are initialized in the constructor
         this.Todo           = new phpr.Todo.Main();
