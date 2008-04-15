@@ -40,7 +40,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public static function convert ($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public static function convert($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (null === $models) {
             return '/* {"metadata":[]}*/';
@@ -59,7 +59,6 @@ class Phprojekt_Converter_Json
         }
 
         $information = $model->getInformation($order);
-        $tag         = Phprojekt_Tags_Default::getInstance();
 
         /* we can check the returned array, but at the moment we just pass it */
         $datas   = array();
@@ -82,7 +81,6 @@ class Phprojekt_Converter_Json
                }
             }
             $datas[] = $data;
-            $tags = $tag->getTagsByModule($models->getTableName(), $models->id);
         } else {
             foreach ($models as $cmodel) {
                 $data['id'] = $cmodel->id;
@@ -97,13 +95,11 @@ class Phprojekt_Converter_Json
                 }
                 $datas[] = $data;
             }
-            $tags = $tag->getTags();
         }
 
         $numRows = count($datas);
         $data = array('metadata' => $information->getFieldDefinition($order),
                       'data'     => $datas,
-                      'tags'     => $tags,
                       'numRows'  => (int)$numRows);
 
         // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
@@ -118,7 +114,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public static function convertTree (Phprojekt_Tree_Node_Database $tree)
+    public static function convertTree(Phprojekt_Tree_Node_Database $tree)
     {
         $treeNodes = array();
         foreach ($tree as $node) {
@@ -150,6 +146,24 @@ class Phprojekt_Converter_Json
      */
     public function convertValue($data)
     {
+        return '/* '.Zend_Json_Encoder::encode($data).' */';
+    }
+
+    /**
+     * Convert the tag data to json-format
+     *
+     * @param array $data            The tags values
+     * @param array $fieldDefinition The definition of each field
+     *
+     * @return string
+     */
+    public function convertTag($data, $fieldDefinition)
+    {
+        $numRows = count($data);
+        $data = array('metadata' => $fieldDefinition,
+                      'data'     => $data,
+                      'numRows'  => (int)$numRows);
+
         return '/* '.Zend_Json_Encoder::encode($data).' */';
     }
 }

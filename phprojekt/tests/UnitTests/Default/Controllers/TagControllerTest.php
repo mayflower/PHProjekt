@@ -108,10 +108,10 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"this":1') > 0);
+        $this->assertTrue(strpos($response, '{"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],"data":[{"string":"') > 0);
 
     }
-    
+
     /**
      * Test of GetModulesByTag
      */
@@ -192,10 +192,8 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = ob_get_contents();
 
         ob_end_clean();
-
-
     }
-    
+
 
     /**
      * Test of GetModulesByTag
@@ -280,11 +278,5 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '{"id":"1","module":"Default"}]') > 0);
-
     }
-
-    
-
-
-
 }
