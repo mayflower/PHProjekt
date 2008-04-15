@@ -41,6 +41,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (dijit.byId("detailsBox")) {
             phpr.destroyWidgets("detailsBox");
         }		
+        // destroy serverFeedback
+        phpr.destroyWidgets("serverFeedback");
     },
     
     submitForm: function(/*int*/id,/*int*/parent){
@@ -90,7 +92,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // destroy form if exists
         if (dijit.byId("detailsBox")) {
             phpr.destroyWidgets("detailsBox");
-        }		
+        }
+        // destroy serverFeedback
+        phpr.destroyWidgets("serverFeedback");
     },
 
     setSubmoduleNavigation: function(){
