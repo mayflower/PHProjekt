@@ -75,7 +75,10 @@ phpr.send = function(/*Object*/paramsIn) {
                 params.onSuccess(data, ioArgs);
                 _onEnd();
             } catch(e) {
-                alert("Please inform the admin, this error should not occur.\n\n"+e);
+                var response = {};
+                response.type ='error';
+                response.message = e;
+                new phpr.handleResponse('serverFeedback',response);
             }
         };
     } else {
@@ -100,9 +103,9 @@ phpr.handleResponse = function(resultArea,result)
     if (dijit.byId("resultDiv")) {
         dijit.byId("resultDiv").destroy();
     }	
-    var css = 'success';
-    if(result.__className == "Phprojekt_PublishedException"){
-        css = 'error'; 
+    var css = 'error';
+    if(result.type =='success'){
+        css = 'success'; 
     } 
     var message= result.message
     if (!message) {
@@ -135,8 +138,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
                 {"data": data.data}]
         };
         return ret;
-    }
-
+    }    
 });
 dojo.require("dijit.form.DateTextBox");
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
