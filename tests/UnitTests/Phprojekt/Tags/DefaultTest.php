@@ -34,16 +34,21 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
         // Test add
         $tag = Phprojekt_Tags_Default::getInstance();
         $tag->saveTags('Project', 1, 'This is a tag test');
-        $result = array('0' => 'this',
-                        '1' => 'test',
-                        '2' => 'tag');
-        
+        $result = array('0' => array('string' => 'this',
+                                     'count'  => 1),
+                        '1' => array('string' => 'test',
+                                     'count'  => 1),
+                        '2' => array('string' => 'tag',
+                                     'count'  => 1));
+
         $this->assertEquals($tag->getTagsByModule('Project', 1), $result);
 
         // Test update
         $tag->saveTags('Project', 1, 'This is a tag');
-        $result = array('0' => 'this',
-                        '1' => 'tag');
+        $result = array('0' => array('string' => 'this',
+                                     'count'  => 1),
+                        '1' => array('string' => 'tag',
+                                     'count'  => 1));
         $this->assertEquals($tag->getTagsByModule('Project', 1), $result);
         $tag->saveTags('Project', 1, 'This is a tag test');
     }
@@ -56,27 +61,37 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
     public function testGetTags()
     {
         $tag = Phprojekt_Tags_Default::getInstance();
-        $result = array('test' => 2,
-                        'tag'  => 1,
-                        'this' => 1);
-
+        $result = array('0' => array('string' => 'test',
+                                     'count'  => 2),
+                        '1' => array('string' => 'tag',
+                                     'count'  => 1),
+                        '2' => array('string' => 'this',
+                                     'count'  => 1));
         $this->assertEquals($tag->getTags(), $result);
 
         $tag->saveTags('Project', 2, 'This is other test');
         $tag->saveTags('Todo', 1, 'This is other test for todo');
-        $result = array('test'  => 4,
-                        'this'  => 3,
-                        'other' => 2,
-                        'tag'   => 1,
-                        'for'   => 1,
-                        'todo'  => 1);
-                        
+        $result = array('0' => array('string' => 'test',
+                                     'count'  => 4),
+                        '1' => array('string' => 'this',
+                                     'count'  => 3),
+                        '2' => array('string' => 'other',
+                                     'count'  => 2),
+                        '3' => array('string' => 'for',
+                                     'count'  => 1),
+                        '4' => array('string' => 'tag',
+                                     'count'  => 1),
+                        '5' => array('string' => 'todo',
+                                     'count'  => 1));
         $this->assertEquals($tag->getTags(), $result);
 
         // Limit
-        $result = array('test'  => 4,
-                        'this'  => 3,
-                        'other' => 2);
+        $result = array('0' => array('string' => 'test',
+                                     'count'  => 4),
+                        '1' => array('string' => 'this',
+                                     'count'  => 3),
+                        '2' => array('string' => 'other',
+                                     'count'  => 2));
         $this->assertEquals($tag->getTags(3), $result);
     }
 
@@ -94,7 +109,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'module' => 'Project'),
                         '2' => array('id' => 1,
                                      'module' => 'Todo'));
-                                     
+
         $this->assertEquals($tag->getModulesByTag('this'), $result);
 
         // limit
@@ -117,7 +132,12 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
     public function testGetTagsByModule()
     {
         $tag = Phprojekt_Tags_Default::getInstance();
-        $result = array('this', 'test', 'tag');
+        $result = array('0' => array('string' => 'this',
+                                     'count'  => 1),
+                        '1' => array('string' => 'test',
+                                     'count'  => 1),
+                        '2' => array('string' => 'tag',
+                                     'count'  => 1));
         $this->assertEquals($tag->getTagsByModule('Project', 1), $result);
 
         // No  ID
@@ -127,7 +147,10 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($tag->getTagsByModule('NOMODULE', 4), array());
 
         // Limit
-        $result = array('this', 'test');
+        $result = array('0' => array('string' => 'this',
+                                     'count'  => 1),
+                        '1' => array('string' => 'test',
+                                     'count'  => 1));
         $this->assertEquals($tag->getTagsByModule('Project', 1, 2), $result);
     }
 

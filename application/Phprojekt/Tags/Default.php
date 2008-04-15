@@ -48,7 +48,7 @@ class Phprojekt_Tags_Default
      *
      * @var Phprojekt_Tags_Modules
      */
-    protected $_tagsModule = null;
+    protected $_tagsModules = null;
 
     /**
      * Phprojekt_Tags_Users class
@@ -140,6 +140,14 @@ class Phprojekt_Tags_Default
             $foundResults = array_slice($foundResults, 0, $limit);
         }
 
+        // Return the formated array
+        $tmp = $foundResults;
+        $foundResults = array();
+        foreach ($tmp as $tagName => $count) {
+            $foundResults[] = array('string' => $tagName,
+                                    'count'  => $count);
+        }
+
         return $foundResults;
     }
 
@@ -213,6 +221,13 @@ class Phprojekt_Tags_Default
             $foundResults = array_slice($foundResults, 0, $limit);
         }
 
+        // Return the formated array
+        $tmp = $foundResults;
+        $foundResults = array();
+        foreach ($tmp as $tagName) {
+            $foundResults[] = array('string' => $tagName,
+                                    'count'  => 1);
+        }
         return $foundResults;
     }
 
@@ -337,5 +352,31 @@ class Phprojekt_Tags_Default
     private function _stripShortsWords($var)
     {
         return(strlen($var) > 2);
+    }
+
+    /**
+     * Return the field definiton for tags
+     *
+     * @return array
+     */
+    public function getFieldDefinition()
+    {
+        $translate = Zend_Registry::get('translate');
+        $fields = array();
+        $fields[] = array('key'   => 'string',
+                          'label' => $translate->translate('Tag'));
+        $fields[] = array('key'   => 'count',
+                          'label' => $translate->translate('Count'));
+        return $fields;
+    }
+
+    /**
+     * Return the field definiton for tagsModule
+     *
+     * @return array
+     */
+    public function getModuleFieldDefinition()
+    {
+        return $this->_tagsModules->getFieldDefinition();
     }
 }

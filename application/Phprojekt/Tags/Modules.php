@@ -137,4 +137,18 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
             $clone->delete($where);
         }
     }
+
+    /**
+     * Return the field definiton for tagsModule
+     *
+     * @return array
+     */
+    public function getFieldDefinition()
+    {
+        $translate = Zend_Registry::get('translate');
+        $fields = array();
+        $fields[] = array('key'   => 'module',
+                          'label' => $translate->translate('Module'));
+        return $fields;
+    }
 }
