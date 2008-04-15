@@ -1,6 +1,6 @@
 The SaveTags action will save all the tags for one module and itemId.
 
-The function espect as parameters the itemId and the strings for save.
+The function espect as parameters the id and the strings for save.
 
 The strings is a post that contain all the words separated by spaces.
 This parameter must be by POST

@@ -42,3 +42,11 @@ The $limit parameter is for get only this number of modules.
 Get an array with all the tags
 that have the $module-$itemId for the current user.
 The $limit parameter is for get only this number of tags.
+
+- getFieldDefinition()
+Return the field definitions for the return values of the tags.
+
+- getModuleFieldDefinition()
+Return the field definitions for the return values of the module-tags.
+This function used the getFieldDefinition() defined on the Module class.
+So each class return their array and their definition of them.

@@ -1,12 +1,23 @@
 The GetTags action return all the tags saved by the current user.
 
-The returned value is an array with all the tags as index
-and the number of ocurrences as value.
+The returned value is a json format data like:
+metadata => All the field definition.
+data     => All the tags data with the string and the number of ocurrences.
+numRows  => Number of results.
 
 An example is:
 
 Module/Tag/jsonGetTags
-/* {"this":3,"tag":3,"test":2} */
+/*
+{"metadata":[
+{"key":"string","label":"Tag"},
+{"key":"count","label":"Count"}],
+"data":[
+{"string":"this","count":3},
+{"string":"tag","count":3},
+{"string":"test","count":2}],
+"numRows":3}
+*/
 
 If the parameter "limit" is set,
 the array will contain only "limit" number of items
@@ -14,4 +25,11 @@ the array will contain only "limit" number of items
 An example is:
 Module/Tag/jsonGetTags/limit/2
 
-/* {"this":3,"tag":3} */
+/*
+{"metadata":[{"key":"string","label":"Tag"},
+{"key":"count","label":"Count"}],
+"data":[
+{"string":"this","count":3},
+{"string":"tag","count":3}],
+"numRows":2}
+*/
