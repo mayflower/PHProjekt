@@ -125,9 +125,9 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Tags/jsonSaveTags/strings/test/id/1');
-        $request->setPathInfo('/Tag/jsonSaveTags/strings/test/id/1');
-        $request->setRequestUri('Tag/jsonSaveTags/strings/test/id/1');
+        $request->setBaseUrl($config->webpath.'index.php/Tags/jsonSaveTags/string/test/id/1');
+        $request->setPathInfo('/Tag/jsonSaveTags/string/test/id/1');
+        $request->setRequestUri('Tag/jsonSaveTags/string/test/id/1');
 
         // getting the view information
         $request->setModuleKey('module');
