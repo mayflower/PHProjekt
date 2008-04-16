@@ -12,6 +12,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
     formWidget:null,
 	range: new Array(),
+    sendData: new Array(),
 	formdata:'',
     
     constructor:function(main, id) {
@@ -90,8 +91,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 					break;
 			}
 		}
-		this.formdata += this.fieldTemplate.MultipleSelectRender(data[0]['tags'],'tags', 'tags', data[0]['tags'], false,
-																		false);
+        // add tags at the end of the first tab
+        
+		this.formdata += this.displayTagInput();
 		formtabs ="";
 		//later on we need to provide different tabs depending on the metadata
 		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'First Tab'});
@@ -107,12 +109,46 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    This function sends the form data as json data to the server and publishes
         //    a form.Submitted topic after the data was send.
-		var sendData = this.formWidget.getValues();
+		this.sendData = this.formWidget.getValues();
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
-			content:   sendData,
-			onSuccess: this.publish("form.Submitted", [this.id, sendData['projectId']])
-			});
-	}
-	
+			content:   this.sendData,
+            onSuccess: dojo.hitch(this, function(data){
+               if (this.id < 1) {
+                   this.id = data['id'];
+               } 
+               phpr.send({
+                    url: phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonSaveTags/id/' + this.id,
+                    content:   this.sendData,
+                    onSuccess: this.publish("form.Submitted", [this.id, this.sendData['projectId']])
+                });  
+            })
+        });
+	},
+    displayTagInput: function(){
+        // summary:
+        // This function manually receives the Tags for the current element
+        // description:
+        // By calling the TagController this function receives all data it needs 
+        // for rendering a Tag from the server and renders those tags in a MultiSelectBox
+        
+        //first of all update the User Tags
+        phpr.receiveUserTags();
+        
+        var tags          = phpr.getUserTags();
+        var meta          = tags["metadata"][0];
+        var data          = new Array();
+        var value         = '';
+        if (this.id > 0) {
+            phpr.receiveCurrentTags(this.id);
+            var currentTags = phpr.getCurrentTags();
+            for (var i = 0; i < currentTags['data'].length; i++){
+                 value +=currentTags['data'][i]['string']+',';
+            }
+        }
+        for (var i = 0; i < tags['data'].length; i++) {
+            data.push({"id":tags['data'][i]['string'],"name":tags['data'][i]['string']});
+        }
+        return this.fieldTemplate.MultipleSelectRender(data ,meta['label'], meta['key'], value, false, false);
+    }	
 });
