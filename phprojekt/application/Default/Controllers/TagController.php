@@ -111,21 +111,21 @@ class TagController extends IndexController
     /**
      * Saves the tags for the current item
      *
-     * @requestparam integer $id      Item id
-     * @requestparam string  $strings All the tags separated by space
+     * @requestparam integer $id     Item id
+     * @requestparam string  $string All the tags separated by space
      *
      * @return void
      */
     public function jsonSaveTagsAction()
     {
-        $id      = (int) $this->getRequest()->getParam('id');
-        $strings = $this->getRequest()->getParam('strings','');
+        $id     = (int) $this->getRequest()->getParam('id');
+        $string = $this->getRequest()->getParam('string','');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
         $moduleName = $this->getRequest()->getModuleName();
-        $this->_tags->saveTags($moduleName, $id, $strings);
+        $this->_tags->saveTags($moduleName, $id, $string);
     }
 }
