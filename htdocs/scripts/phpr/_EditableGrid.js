@@ -58,13 +58,16 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
         dojo.rawXhrPost( {
             url: this._updateUrl,
             postData: content,
+            handleAs: "json-comment-filtered",
             load: dojo.hitch(this,function(response, ioArgs) {
                     this._newRowValues = {};
                     this.toggleSaveButtons(false);
+                    new phpr.handleResponse('serverFeedback',response);
+                    alert(dojo.toJson(response));
                     return response;
             }),
             error: function(response, ioArgs) {
-                  return response;
+                new phpr.handleResponse('serverFeedback',response);
             }
         });
     }

@@ -10,7 +10,8 @@ var module = null;
 var webpath = null;
 var currentProjectId = null;
 var rootProjectId = null;
-
+var userTags = null;
+var currentTags = null;
 phpr.initWidgets = function(el) {
     // This parses the given node and inits the widgets found in there.
     if (dojo.isString(el)) {
@@ -49,6 +50,7 @@ phpr.send = function(/*Object*/paramsIn) {
         onSuccess:null,
         onError:null,
         onEnd:null,
+        sync:false,
         chunkMap:{}
     }
     if (dojo.isObject(paramsIn)) {
@@ -94,6 +96,7 @@ phpr.send = function(/*Object*/paramsIn) {
         url		:	params.url,
         content	:	params.content,
         handleAs:   params.handleAs,
+        sync    :   params.sync,        
         error	:	_onError,
         load	:	_onSuccess
     });
@@ -109,6 +112,7 @@ phpr.handleResponse = function(resultArea,result)
     } 
     var message= result.message
     if (!message) {
+        css = '';
         message = "";
     }
     dojo.byId(resultArea).innerHTML = '<div id="resultDiv"></div>';
@@ -126,6 +130,32 @@ phpr.getCurrent = function(data, identifier, value){
     return current;
 };
 
+phpr.receiveUserTags = function(){
+    phpr.send({
+		url:       phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetTags',
+        sync:      true,
+		onSuccess: function(data){
+             phpr.userTags = data;
+             new phpr.handleResponse('serverFeedback', data);
+        }
+	});
+};
+phpr.receiveCurrentTags = function(id){
+    phpr.send({
+		url:       phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetTagsByModule/id/'+id,
+        sync:      true,
+		onSuccess: function(data){
+             phpr.currentTags = data;
+             new phpr.handleResponse('serverFeedback', data);
+        }
+	});
+}
+phpr.getCurrentTags = function(){
+    return phpr.currentTags;
+}
+phpr.getUserTags = function(){
+    return phpr.userTags;
+};
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
