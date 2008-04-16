@@ -11,7 +11,7 @@ An example is:
 POST /Module/jsonSaveTagsAction
 With
 $_POST['id'] = 1;
-$_POST['strings'] = 'This is a test for save tags';
+$_POST['string'] = 'This is a test for save tags';
 
 The function return an execption is the id is null or empty
 and void on sucess.
