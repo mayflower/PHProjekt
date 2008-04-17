@@ -30,11 +30,11 @@ class ErrorController extends Zend_Controller_Action
     /**
      * Initialize our error controller and disable the viewRenderer
      */
-    public function init() 
+    public function init()
     {
         $this->_helper->viewRenderer->setNoRender();
     }
-	   
+
     /**
      * Default error action
      *
@@ -43,7 +43,7 @@ class ErrorController extends Zend_Controller_Action
     public function errorAction()
     {
         $errors = $this->_getParam('error_handler');
-    
+
         $this->getResponse()->clearBody();
         switch ($errors->type) {
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
@@ -51,18 +51,21 @@ class ErrorController extends Zend_Controller_Action
                 // 404 error -- controller or action not found
                 $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
                 break;
-            default:                
+            default:
                 $exception = $errors->exception;
-                
+
                 $logger = Zend_Registry::get('log');
                 $logger->err($exception->getMessage() . "\n"
                            . $exception->getTraceAsString());
-                           
+
                 /* we only forward exception with type PublishedException */
                 if ($exception instanceof Phprojekt_PublishedException) {
-	                echo '/* '. Zend_Json_Encoder::encode($exception) . ' */';
+                    $error = array('type'    => 'error',
+                                   'message' => $exception->getMessage(),
+                                   'code'    => $exception->getCode());
+	                echo '/* '. Zend_Json_Encoder::encode($error) . ' */';
                 }
-                
+
                 break;
         }
     }
