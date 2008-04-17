@@ -183,11 +183,9 @@ class IndexController extends Zend_Controller_Action
      * Save if you are add one or edit one.
      * Use the model module for get the data
      *
-     * NOTE: You MUST validate the data before save.
-     *
-     * If there is an error, we show it.
-     *
-     * Form Action
+     * If there is an error, the save will return a Phprojekt_PublishedException
+     * If not, the return is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
      *
      * @requestparam integer id ...
      *
@@ -195,33 +193,60 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonSaveAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            $model = $this->getModelObject();
+            $model   = $this->getModelObject();
+            $message = $translate->translate('The Item was added correctly');
         } else {
-            $model = $this->getModelObject()->find($id);
+            $model   = $this->getModelObject()->find($id);
+            $message = $translate->translate('The Item was edited correctly');
         }
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
+        $return    = array('type'    => 'success',
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $model->id);
+        echo Phprojekt_Converter_Json::convertValue($return);
     }
 
     /**
      * Deletes a certain item
      *
-     * Form Action
+     * If the item are already deleted or don´t exist
+     * return a Phprojekt_PublishedException
+     * If the item is deleted, the return is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
+     *
+     * @requestparam integer id ...
      *
      * @return void
      */
     public function jsonDeleteAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
-        $this->getModelObject()->find($this->_itemid)->delete();
+        $model = $this->getModelObject()->find($id);
+
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $model->delete();
+            $message = $translate->translate('The Item was deleted correctly');
+            $return  = array('type'    => 'success',
+                             'message' => $message,
+                             'code'    => 0,
+                             'id'      => $id);
+            echo Phprojekt_Converter_Json::convertValue($return);
+        } else {
+            throw new Phprojekt_PublishedException('Item not found');
+        }
     }
 
     /**

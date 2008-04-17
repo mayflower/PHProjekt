@@ -40,14 +40,23 @@ class Project_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            $model = $this->getModelObject();
+            $model   = $this->getModelObject();
+            $message = $translate->translate('The Item was added correctly');
         } else {
-            $model = $this->getModelObject()->find($id);
+            $model   = $this->getModelObject()->find($id);
+            $message = $translate->translate('The Item was edited correctly');
         }
-        $node = new Phprojekt_Tree_Node_Database($model, $id);
-        Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
+        $node    = new Phprojekt_Tree_Node_Database($model, $id);
+        $newNode = Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
+
+        $return    = array('type'    => 'success',
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $newNode->id);
+        echo Phprojekt_Converter_Json::convertValue($return);
     }
 }
