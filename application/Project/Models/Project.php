@@ -29,5 +29,4 @@
  */
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
-
 }

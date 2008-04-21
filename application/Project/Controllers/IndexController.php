@@ -53,10 +53,17 @@ class Project_IndexController extends IndexController
         $node    = new Phprojekt_Tree_Node_Database($model, $id);
         $newNode = Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
 
+        // Set the id since the Tree save
+        // return differents values from insert and update
+        if (empty($id)) {
+            $newId = $newNode->id;
+        } else {
+            $newId = $id;
+        }
         $return    = array('type'    => 'success',
                            'message' => $message,
                            'code'    => 0,
-                           'id'      => $newNode->id);
+                           'id'      => $newId);
         echo Phprojekt_Converter_Json::convertValue($return);
     }
 }
