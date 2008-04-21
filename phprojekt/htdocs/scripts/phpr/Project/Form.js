@@ -1,12 +1,12 @@
-dojo.provide("phpr.Note.Form");
+dojo.provide("phpr.Project.Form");
 
 dojo.require("phpr.Default.Form");
 
-dojo.declare("phpr.Note.Form", phpr.Default.Form, {
+dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     // summary: 
-    //    This class is responsible for rendering the Form of a Note module
+    //    This class is responsible for rendering the Form of a Project module
     // description: 
-    //    The Form for the Note module is rendered -  at the moment it is exactly
+    //    The Form for the Project module is rendered -  at the moment it is exactly
     //    the same as in the Default module
 	constructor: function(){
 	
