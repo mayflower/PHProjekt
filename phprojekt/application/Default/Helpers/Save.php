@@ -55,6 +55,10 @@ final class Default_Helpers_Save
             }
         }
 
+        /* Set the owner */
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $node->ownerId = $authNamespace->userId;
+
         if ($node->getActiveRecord()->recordValidate()) {
             if ((int)$node->projectId !== $parentId) {
                return $node->setParentNode($parentNode);
@@ -85,6 +89,10 @@ final class Default_Helpers_Save
                 $model->$k = $v;
             }
         }
+
+        /* Set the owner */
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $model->ownerId = $authNamespace->userId;
 
         if ($model->recordValidate()) {
             return $model->save();
