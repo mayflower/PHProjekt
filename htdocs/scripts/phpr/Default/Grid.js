@@ -121,19 +121,6 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
                     break;
             }
         }
-        var opts  = new Array();
-        var vals  = new Array();
-        //just temp until server returns valid data
-        var range =[{"id":"1","name":"1"},{"id":"2","name":"2"}]
-        var j=0;
-        this.gridLayout.push({
-                        name:   "Tags",
-                        field:   "tags",
-                        styles: "text-align:center;",
-                        width:  "auto",
-                        options: range,
-                        editor: phpr.grid.editors.MultiComboBox
-                        });
         var gridStructure = [{
                 noscroll: true,
                 cells: [this.gridLayout]
