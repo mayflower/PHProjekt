@@ -21,6 +21,7 @@ dojo.require("phpr.Component");
 dojo.require("phpr.Todo.Main");
 dojo.require("phpr.Default.Main");
 dojo.require("phpr.Project.Main");
+dojo.require("phpr.Note.Main");
 dojo.require("phpr.Administration.Main");
 
 dojo.declare("phpr.Main", null, {
@@ -46,6 +47,7 @@ dojo.declare("phpr.Main", null, {
         
         //All modules are initialized in the constructor
         this.Todo           = new phpr.Todo.Main();
+        this.Note           = new phpr.Note.Main();
         this.Project        = new phpr.Project.Main();
         this.Administration = new phpr.Administration.Main();
         
