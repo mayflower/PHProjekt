@@ -86,7 +86,10 @@ final class Default_Helpers_Save
     {
         foreach ($params as $k => $v) {
             if (isset($model->$k)) {
-                $model->$k = $v;
+                /* dont allow to set the id on save, since is doit by the activerecord */
+                if (!in_array($k, array('id'))) {
+                    $model->$k = $v;
+                }
             }
         }
 
