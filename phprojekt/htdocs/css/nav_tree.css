@@ -3,7 +3,7 @@
 	overflow: hidden;
 	margin: 0 0 1.5em 0;
 	list-style-type: none;
-	border: 1px #f3f3f3 solid;
+	border: 0px #f3f3f3 solid;
 	border-bottom: 2px #f3f3f3 solid;
 	font-size: 11px;
 }
@@ -18,7 +18,7 @@
 	float: left;
 	width: 100%;
 	margin: 0;
-	padding: 0
+	padding: 0;
 }
 
 #submenu a,
@@ -42,8 +42,21 @@
 	border-bottom: 4px #f3f3f3 solid;
 	background: #f1ce47 url(../img/group-list.png);
 	background-repeat: no-repeat;
-	background-position: 7px center;
+	background-position: 10px center;
 	text-transform: uppercase;
+}
+
+#submenu li#title a:visited {
+	color: #ffffff;	
+}
+
+#submenu li#title a {
+	text-decoration: none;
+	background: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+	color: #ffffff;		
 }
 
 #submenu li span {
