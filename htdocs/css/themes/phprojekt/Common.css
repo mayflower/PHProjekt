@@ -1,0 +1,44 @@
+
+/**** Disabled cursor *****/
+.phprojekt .dijitSliderDisabled *,
+.phprojekt .dijitDisabledClickableRegion,	/* a region the user would be able to click on, but it's disabled */
+.phprojekt .dijitSpinnerDisabled *,
+.phprojekt .dijitButtonDisabled *,
+.phprojekt .dijitDropDownButtonDisabled *,
+.phprojekt .dijitComboButtonDisabled *,
+.phprojekt .dijitComboBoxDisabled *
+{
+	cursor: not-allowed !important;
+}
+.phprojekt .body {
+  color: #222;
+  font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 75%;
+}
+.phprojekt.body .positive {
+  color:#529214;
+}
+/* Negative */
+phprojekt.body .negative {
+  color:#d12f19;
+}
+h1,h2,h3,h4,h5,h6 {
+  color: #111;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+/* DnD avatar-specific settings */
+/* For now it uses a default set of rules. Some other DnD classes can be modified as well. */
+.phprojekt .dojoDndAvatar			{font-size: 75%; color: black;}
+.phprojekt .dojoDndAvatarHeader td	{padding:5px 20px;}
+.phprojekt .dojoDndAvatarHeader	{background: #ccc;}
+.phprojekt .dojoDndAvatarItem		{background: #eee;}
+.phprojekt.dojoDndMove .dojoDndAvatarHeader	{background-image: url(images/dndNoMove.png); background-repeat: no-repeat;}
+.phprojekt.dojoDndCopy .dojoDndAvatarHeader	{background-image: url(images/dndNoCopy.png); background-repeat: no-repeat;}
+.phprojekt.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-image: url(images/dndMove.png); background-repeat: no-repeat;}
+.phprojekt.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-image: url(images/dndCopy.png); background-repeat: no-repeat;}
+
+.phprojekt .dojoDndItem {
+
+}

@@ -78,10 +78,11 @@ body {
 	margin-right: 10px;
 }
 
-#header #toolbar1 {
+#header #toolbar {
 	margin: 15px;
 	color: #ffffff;
 	font-size: 11px;
+	font-weight: bold;
 }
 
 #subheader {
@@ -91,7 +92,6 @@ body {
 }
 
 #subheader #navigation-container-titel {
-	width:100%;
 	background: #294064;
 	height: 26px;
 	margin: 0;
@@ -135,8 +135,8 @@ body {
 
 #tree-navigation {
 	background: white;
-	margin: 10px;
-	min-height: 700px;
+	margin: 0 0 10px 10px;
+	min-height: 708px;
 	margin-top: 0;
 }
 
