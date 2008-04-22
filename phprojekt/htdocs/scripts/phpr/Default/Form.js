@@ -114,7 +114,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
 			content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data){
-               if (this.id < 1) {
+               if (!this.id) {
                    this.id = data['id'];
                } 
                phpr.send({
