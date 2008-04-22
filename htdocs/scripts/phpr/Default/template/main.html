@@ -4,25 +4,24 @@
         <div id="search-bar" class="last right align-right">
             <input name="searchfield" value="Search" />
         </div>
-		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar" >
+		<div id="mainNavigation"  class="span-10 right align-right" dojoType="dijit.Toolbar" >
     		<a class="dijitToolbar" href='javascript:dojo.publish("Administration.reload")'>Administrator</a>
-    		<span dojoType="dijit.ToolbarSeparator"></span>
-    		<a class="dijitToolbar" href='javascript:dojo.publish("Login.load")'>Login/out</a>
-    		<span dojoType="dijit.ToolbarSeparator"></span>
-    		<a class="dijitToolbar" href='javascript:dojo.publish("Settings.load")'>Settings</a>
-    		<span dojoType="dijit.ToolbarSeparator"></span>
-    		<a class="dijitToolbar" href='javascript:dojo.publish("Help.load")'>Help</a>
+    		| <a class="dijitToolbar" href='javascript:dojo.publish("Login.load")'>Login/out</a>
+    		| <a class="dijitToolbar" href='javascript:dojo.publish("Settings.load")'>Settings</a>
+    		| <a class="dijitToolbar" href='javascript:dojo.publish("Help.load")'>Help</a>
 		</div>
  	</div>
  	<!-- Border Container which splits page in navigation and form/list view: -->
 	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
 		<!-- navigation panel -->
-    	<div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" style="width: 20%; border-left: 10px solid #294064;" region="leading" splitter="true">
+    	<div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" region="leading" splitter="true" class="column span-5 left" id="navigation-container">
     		<div id="subheader" class="block">
- 				<div id="navigation-container-titel" class="column span-5">
+ 				<div id="navigation-container-titel">
         		</div>
         	</div>
+        	      <div id="tree-navigation">
 			<div id="treeBox">
+			</div>
 			</div>
     	</div>
     	<!-- Border Container which splits main content in listview and formview -->
@@ -33,12 +32,15 @@
         			<div class="column">
         				<img src="{{webpath}}img/subheaderborder.png" alt="" />
         			</div>
-        			<div class="align-left" style="margin: 5px 0 5px 20px;" id="subModuleNavigation">        				
-        			</div>
+        			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
+					</div>
  				</div>
         		<div dojoType="dijit.layout.ContentPane" style="margin-left:20px;">
         			<!-- Exception Form -->
         			<div id="serverFeedback"></div>
+        			<!-- spaces -->
+        			<hr class="space"/>
+        			<hr>
         	 		<!-- Filter form: -->
             		<form id="gridFilterForm" dojoType="dijit.form.Form">
                 		Title <input name="title" type="text" size="10" dojoType="dijit.form.TextBox"/>
@@ -53,6 +55,9 @@
                 		</select>
                 		<button id="gridFilterSubmitButton" dojoType="dijit.form.Button">Search</button>
             		</form>
+            		<!-- spaces -->
+        			<hr class="space"/>
+        			<hr>
             		<!-- List View: -->            	 
             		<div id="gridBox" dojoType="dijit.layout.ContentPane" style="height:300px" region="center"  >
             		</div>

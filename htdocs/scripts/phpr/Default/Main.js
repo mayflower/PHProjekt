@@ -114,22 +114,28 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             handleAs: "json-comment-filtered",
             onSuccess: dojo.hitch(this,function(data){
                             self.availableModules = data;
-                            var navigation ="";
+                            var navigation ='<ul id="nav_main">';
                             dojo.forEach(this.availableModules,function(modules) {
+                                var liclass ='';
                                 var moduleName  = modules.name;
                                 var moduleLabel = modules.label;
+                                if(moduleName == phpr.module){
+                                    liclass='class = active';
+                                }
                                 if (modules.permission >0) {
                                     navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
-                                        moduleName: moduleName,
-                                        moduleLabel: moduleLabel
+                                        moduleName : moduleName,
+                                        moduleLabel: moduleLabel,
+                                        liclass    : liclass
                                     });
                                 }   
                                 if (modules.permission > 3 && moduleName == phpr.module) {
-                                    newEntry = "<br><br><button dojoType='dijit.form.Button' id='newEntry' type='link'>New "+
-                                                moduleLabel+"</button>";
+                                    newEntry = "<br><span style='margin:0pt 1.5em 1.5em'><button dojoType='dijit.form.Button' id='newEntry' type='link'>New "+
+                                                moduleLabel+"</button><span>";                            
                                     this.writePermissions = true;
                                 }
                             });
+                            navigation += "</ul>";
                             dojo.byId("subModuleNavigation").innerHTML = navigation+newEntry;
                             phpr.initWidgets(dojo.byId("subModuleNavigation"));
                             dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));  
