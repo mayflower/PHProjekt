@@ -163,6 +163,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_colInfo;
 
     /**
+     * Array with the parameters for use the join
+     * Table relation and Field relation
+     *
+     * @var array
+     */
+    protected $_joinData = array();
+
+    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -486,6 +494,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
         && is_array($this->_relations['hasManyAndBelongsToMany'])) {
             return $this->_fetchHasManyAndBelongsToMany($where);
+        } else if (!empty($this->_joinData)) {
+            return $this->_fetchWithJoin($where, $order, $count, $offset);
         } else {
             return parent::_fetch($where, $order, $count, $offset);
         }
@@ -1037,5 +1047,103 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function getTableName()
     {
         return $this->_translateClassNameToTable(get_class($this));
+    }
+
+    /**
+     * Set the join Data used for change the _fetch
+     * The joinData is an array witn the values like:
+     *
+     * tableRelation => array|string => The table name.
+     * fieldRelation => string       => Join on this condition.
+     * columns       => array|string => The columns to select from the joined table.
+     * type          => string       => Type of the joinType setted as a constant on Zend_Db_Select
+     *
+     * @see _fetch
+     *
+     * @param array $joinData
+     *
+     * @return void
+     */
+    public function setJoin($joinData)
+    {
+        $this->_joinData = (array)$joinData;
+    }
+
+    /**
+     * Overwrite the fetch method if we have a joinData stuff
+     *
+     * The joinData can have many different joins.
+     *
+     * @see _fetch
+     *
+     * @param string|array $where  Where clause
+     * @param string|array $order  Order by
+     * @param string|array $count  Limit query
+     * @param string|array $offset Query offset
+     *
+     * @return Zend_Db_Table_Rowset
+     */
+    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null)
+    {
+        // selection tool
+        $select = $this->_db->select();
+
+        // the FROM clause
+        $select->from(array($this->_name => $this->_name), $this->_cols, $this->_schema);
+
+        // Join clause
+        foreach ($this->_joinData as $joinData) {
+            switch ($joinData['type']) {
+                default:
+                case Zend_Db_Select::INNER_JOIN:
+                    $select->joinInner($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
+                    break;
+                case Zend_Db_Select::LEFT_JOIN:
+                    $select->joinLeft($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
+                    break;
+                case Zend_Db_Select::RIGHT_JOIN:
+                    $select->joinRight($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
+                    break;
+                case Zend_Db_Select::FULL_JOIN:
+                    $select->joinFull($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
+                    break;
+                case Zend_Db_Select::CROSS_JOIN:
+                    $select->joinCross($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
+                    break;
+                case Zend_Db_Select::NATURAL_JOIN:
+                    $select->joinNatural($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
+                    break;
+            }
+        }
+
+        // the WHERE clause
+        $where = (array) $where;
+        foreach ($where as $key => $val) {
+            // is $key an int?
+            if (is_int($key)) {
+                // $val is the full condition
+                $select->where($val);
+            } else {
+                // $key is the condition with placeholder,
+                // and $val is quoted into the condition
+                $select->where($key, $val);
+            }
+        }
+
+        // the ORDER clause
+        if (!is_array($order)) {
+            $order = array($order);
+        }
+        foreach ($order as $val) {
+            $select->order($val);
+        }
+
+        // the LIMIT clause
+        $select->limit($count, $offset);
+
+        // return the results
+        $stmt = $this->_db->query($select);
+        $data = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+        return $data;
     }
 }
