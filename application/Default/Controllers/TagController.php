@@ -127,5 +127,15 @@ class TagController extends IndexController
 
         $moduleName = $this->getRequest()->getModuleName();
         $this->_tags->saveTags($moduleName, $id, $string);
+
+        $translate = Zend_Registry::get('translate');
+
+        $message = $translate->translate('The Tags was added correctly');
+
+        $return    = array('type'    => 'success',
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => 0);
+        echo Phprojekt_Converter_Json::convertValue($return);
     }
 }
