@@ -108,10 +108,22 @@
  	border:1px solid #C6D880;
   	color:#529214;
 }
+.phprojekt .positiveActive .dijitButtonNode,
+.phprojekt .positiveFocusedHover .dijitButtonNode {
+  background-color:#529214;
+  border:1px solid #529214;
+  color:#fff;
+}
 .phprojekt .negativeHover .dijitButtonNode {
 	background:#fbe3e4;
   	border:1px solid #fbc2c4;
   	color:#d12f19;
+}
+.phprojekt .negativeActive .dijitButtonNode,
+.phprojekt .neagtiveFocusedHover .dijitButtonNode {
+  background-color:#d12f19;
+  border:1px solid #d12f19;
+  color:#fff;
 }
 .phprojekt .dijitSpinnerUpArrowActive .dijitUpArrowButton,
 .phprojekt .dijitSpinnerDownArrowActive .dijitDownArrowButton,
@@ -124,7 +136,7 @@
 	/* active state - inner (for when you are pressing a normal button, or
 	 * when a toggle button is in a depressed state
 	 */
-	float:right;
+  float:right;
   background-color:#6299c5;
   border:1px solid #6299c5;
   color:#fff;

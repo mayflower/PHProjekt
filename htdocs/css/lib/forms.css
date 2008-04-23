@@ -9,7 +9,7 @@
    
 -------------------------------------------------------------- */
 
-label { font-weight: bold; }
+label { font-weight: bold;color:#CBCBCB;text-transform:uppercase;align right;}
 
 
 /* Fieldsets */

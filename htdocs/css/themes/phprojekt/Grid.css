@@ -9,7 +9,7 @@
 }
 
 .dojoxGrid table {
-	 margin-bottom: 1.4em; 
+	 margin-bottom: 0.2em; 
 }
 
 .dojoxGrid td {
@@ -114,10 +114,7 @@
 }
 
 .dojoxGrid-rowbar-over {
-	background-image: none;
-	background-color: white;
-	border-top-color: #FEBE47;
-	border-bottom-color: #FEBE47;
+
 }
 
 .dojoxGrid-rowbar-selected {
@@ -135,18 +132,24 @@
 	background-color: #D9E8F9;
 	border-bottom: 1px solid #ddd;
 }
-
-.dojoxGrid-row-over {
-
-}
-
 .dojoxGrid-row-odd {
 	background-color: #ffffff;
 	border-bottom: 1px solid #ddd;
 	/*background-color: #F9F7E8;*/
 }
-
+.dojoxGrid-row-over {
+    background-image: none;
+	background-color: #8392AB;;
+	border-top-color: #8392AB;;
+	border-bottom-color: #8392AB;
+    color:#fff;
+}
 .dojoxGrid-row-selected {
+    background-image: none;
+	background-color: #8392AB;;
+	border-top-color: #8392AB;;
+	border-bottom-color: #8392AB;;  
+    color:#fff;  
 
 }
 
