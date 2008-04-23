@@ -287,6 +287,17 @@ CREATE TABLE `Configuration` (
   PRIMARY KEY  (`id`)
 );
 
+DROP TABLE IF EXISTS `ItemRights`;
+CREATE TABLE `ItemRights` (
+  `module` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `adminAccess` int(1) NOT NULL,
+  `writeAccess` int(1) NOT NULL,
+  `readAccess` int(1) NOT NULL,
+  PRIMARY KEY  (`module`,`itemId`,`userId`)
+);
+
 --
 -- INSERT DATA
 --
@@ -354,4 +365,6 @@ INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `module`, `permission`) VAL
 (1, 1, 'Project', 'write'),
 (2, 1, 'Todo', 'write');
 
+INSERT INTO `ItemRights` (`module`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
+('Project', 1, 1, 1, 1, 1);
 COMMIT;

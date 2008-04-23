@@ -62,6 +62,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     protected $_search = null;
 
     /**
+     * Rights class object
+     *
+     * @var array
+     */
+    protected $_rights = null;
+
+    /**
      * History data of the fields
      *
      * @var array
@@ -82,6 +89,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_history   = new Phprojekt_History($db);
         $this->_search    = new Phprojekt_SearchWords($db);
         $this->_config    = Zend_Registry::get('config');
+        $this->_rights    = new Phprojekt_Item_Rights($db);
     }
 
     /**
@@ -324,10 +332,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $result = true;
         if ($this->id > 0) {
+            $this->_saveRights();
             $this->_history->saveFields($this, 'edit');
             $result = parent::save();
         } else {
             $result = parent::save();
+            $this->_saveRights();
             $this->_history->saveFields($this, 'add');
         }
 
@@ -367,7 +377,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getFieldsForFilter()
     {
-        return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST, 
+        return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST,
                                                 Phprojekt_DatabaseManager::COLUMN_NAME);
     }
 
@@ -384,30 +394,29 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null)
     {
-        //only fetch records with read access
-        $wheres      = array();
-        $groupwhere  = array();
-        $groupwheres ='';
-        $groups      = Phprojekt_Loader::getModel('Groups', 'Groups');
-        $usergroups  = $groups->getUserGroups();
+        // only fetch records with read access
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
-        foreach ($usergroups as $groupId) {
-            $groupwhere[] = $this ->getAdapter()->quoteInto('?', $groupId);
-        }
+        // Set join stuff
+        $joinData = array('rights' => array('tableRelation' => array('itemrights' => 'itemrights'),
+                                            'fieldRelation' => sprintf('(%s = %s AND %s = "%s" AND %s = %d)',
+                                                               "itemrights.itemId",
+                                                               $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
+                                                               "itemrights.module",
+                                                               $this->getTableName(),
+                                                               "itemrights.userId",
+                                                               $authNamespace->userId),
+                                            'columns'       => array(),
+                                            'type'          => Zend_Db_Select::INNER_JOIN));
 
-        $in = (count($groupwhere) > 0) ? implode(',', $groupwhere) : null;
+        $this->setJoin($joinData);
 
-        $groupwheres = '('.$this ->getAdapter()->quoteInto('ownerId = ?', $groups->getUserId()).
-        $groupwheres.= ($in) ? ' OR `read` IN ('.$in.')  OR `write` IN ('.$in.')  OR `admin` IN ('.$in.'))' :')';
-
-        $wheres[] = $groupwheres;
-
+        // Set where
         if (null !== $where) {
-            $wheres[] = $where;
+            $where .= ' AND ';
         }
-
-        $where = (is_array($wheres) && count($wheres) > 0) ?
-                    implode(' AND ', $wheres) : null;
+        $where .= ' ' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(), $authNamespace->userId, $this->getTableName());
+        $where .= ' OR (itemrights.adminAccess = 1 OR itemrights.writeAccess = 1 OR itemrights.readAccess = 1)';
 
         return parent::fetchAll($where, $order, $count, $offset);
     }
@@ -479,5 +488,21 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 break;
         }
         return $right;
+    }
+
+    /**
+     * Save the rigths for the current item
+     * The users are a POST array with userIds
+     * There is one save for each user.
+     *
+     * @return void
+     */
+    private function _saveRights()
+    {
+        $writeUsers = array(1);
+        $readUsers  = array(1);
+        $adminUsers = array(1);
+
+        $this->_rights->_save($this->getTableName(), $this->id, $adminUsers, $writeUsers, $readUsers);
     }
 }
