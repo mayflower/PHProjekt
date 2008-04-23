@@ -79,7 +79,7 @@ padding-left:4%;
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv {
 	padding:0px 25px 0px 25px;
-	color: #fff;
+	color: #000;
 	background: url("../images/tabContainerSprite2.gif") no-repeat right -250px;
 	border: none;
 }
@@ -87,14 +87,14 @@ padding-left:4%;
 .phprojekt .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
 	background: url("../images/tabContainerSprite2.gif") repeat-x 0 -200px;
 	padding:8px 10px 5px 10px;
-	color: #ffffff;
+	color: #000000;
 }
 
 /* top specific classes */
 
 .phprojekt .dijitTabLabels-top {
 
-	padding-top: 2px;
+	padding-top: 0;
 	padding-left: 3px;	
 	padding-right: 3px;	
 	padding-bottom: 4px;
