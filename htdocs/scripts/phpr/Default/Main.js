@@ -108,7 +108,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self =this;
         var newEntry ="";
-        phpr.destroyWidgets(dojo.byId("subModuleNavigation"));
+        phpr.destroyWidgets("subModuleNavigation");
         phpr.send({
             url:       subModuleUrl,
             handleAs: "json-comment-filtered",
