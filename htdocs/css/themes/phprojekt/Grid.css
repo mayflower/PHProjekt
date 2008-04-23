@@ -139,16 +139,16 @@
 }
 .dojoxGrid-row-over {
     background-image: none;
-	background-color: #8392AB;;
-	border-top-color: #8392AB;;
+	background-color: #8392AB;
+	border-top-color: #8392AB;
 	border-bottom-color: #8392AB;
     color:#fff;
 }
 .dojoxGrid-row-selected {
     background-image: none;
-	background-color: #8392AB;;
-	border-top-color: #8392AB;;
-	border-bottom-color: #8392AB;;  
+	background-color: #8392AB;
+	border-top-color: #8392AB;
+	border-bottom-color: #8392AB;  
     color:#fff;  
 
 }
@@ -206,11 +206,11 @@
 /* editing */
 
 .dojoxGrid-row-editing td {
-	background-color: #F4FFF4;
+	background-color: #8392AB;;
 }
 
 .dojoxGrid-row-inserting td {
-	background-color: #F4FFF4;
+	background-color: #8392AB;;
 }
 .dojoxGrid-row-inflight td {
 	background-color: #F2F7B7;
