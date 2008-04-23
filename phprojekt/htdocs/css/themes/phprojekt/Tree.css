@@ -2,9 +2,9 @@
 /* Tree */
 
 .phprojekt .dijitTreeNode {
-    padding-left: 19px;
     zoom: 1;	/* MOW: what the heck is this doing in here? */
 }
+
 
 /* left vertical line (grid) for all nodes */
 .phprojekt .dijitTreeIsLast {
@@ -26,16 +26,27 @@
 .phprojekt .dijitTreeExpando {
     width: 18px;
     height: 18px;
+    margin-left: 19px;
 }
 
 .phprojekt .dijitTreeContent {
     min-height: 18px;
     min-width: 18px;
     padding-top:3px;
-    padding-left:1px;
 	border-bottom: 1px #ddd solid;
+    padding-left: 19px;
 }
 
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeContent {
+    min-height: 18px;
+    min-width: 18px;
+    padding-top:3px;
+	border-bottom: 1px #ddd solid;
+    padding-left: 38px;
+}
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
+    margin-left: 38px;
+}
 
 .phprojekt .dijitTreeExpand {
     width: 18px;
