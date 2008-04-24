@@ -6,7 +6,7 @@
         </div>
 		<div id="mainNavigation"  class="span-10 right align-right" dojoType="dijit.Toolbar" >
     		<a class="dijitToolbar" href='javascript:dojo.publish("Administration.reload")'>Administrator</a>
-    		| <a class="dijitToolbar" href='javascript:dojo.publish("Login.load")'>Login/out</a>
+    		| <a class="dijitToolbar" href='{{webpath}}index.php/Login/logout'>Login/out</a>
     		| <a class="dijitToolbar" href='javascript:dojo.publish("Settings.load")'>Settings</a>
     		| <a class="dijitToolbar" href='javascript:dojo.publish("Help.load")'>Help</a>
 		</div>
@@ -24,10 +24,11 @@
 			</div>
 			</div>
     	</div>
-    	<!-- Border Container which splits main content in listview and formview -->
-    	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;">
-    		<!-- Submodule navigation: -->
-    		<div dojoType="dijit.layout.ContentPane" region="center" >
+    	<!-- Border Container which splits main content in navigation, listview and formview -->
+    	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent">
+    		<!-- Top Area navigation and messages -->
+    		<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="top" id="centerNavContent">
+    			<!-- Submodule navigation: -->
     			<div class="block">
         			<div class="column">
         				<img src="{{webpath}}img/subheaderborder.png" alt="" />
@@ -35,20 +36,22 @@
         			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
 					</div>
  				</div>
-        		<div dojoType="dijit.layout.ContentPane" style="margin-left:20px;">
-        			<!-- Exception Form -->
-        			<div id="serverFeedback"></div>
-            		<!-- spaces -->
-        			<hr class="space"/>
-        			<hr>
-            		<!-- List View: -->            	 
-            		<div id="gridBox" dojoType="dijit.layout.ContentPane" style="" region="center"  >
-            		</div>
+        		<!-- Exception Form -->
+        		<div id="serverFeedback" class="prepend-24"></div>
+            	<!-- spaces -->
+        		<hr class="space"/>
+        		<hr>
+        		<hr class="space"/>
+        	</div>
+        	<!-- Center Area Grid and Form -->
+        	<div id="centerMainContent"  dojoType="dijit.layout.BorderContainer" region="center" liveSplitters="false">
+            	<!-- List View: -->            	 
+            	<div id="gridBox" dojoType="dijit.layout.ContentPane"region="center"class="prepend-24">
             	</div>
-            </div>
-            <!-- Form View: -->
- 			<div id="detailsBox" dojoType="dijit.layout.ContentPane" style="height:300px;margin-left:20px;" region="bottom"  splitter="true">
+            	<!-- Form View: -->
+ 				<div id="detailsBox" dojoType="dijit.layout.ContentPane" style="height:350px;" class="prepend-24" region="bottom"  splitter="true">
+         		</div>
          	</div>
-		</div>
+         </div>
 	</div>
 </div>
