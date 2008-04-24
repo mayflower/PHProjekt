@@ -202,7 +202,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '"numRows":6} ') > 0);
 
     }
-    
+
     /**
      * Test if the list json response is ok
      */
@@ -254,7 +254,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
             if (is_dir(!$dir)) {
                 continue;
             }
-    
+
             if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
                 $front->addModuleDirectory($dir);
             }
@@ -288,8 +288,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":')) > 0);
-        $this->assertTrue(strpos($response, '"tags":{"this":1},"numRows":2}') > 0);
-
     }
 
     /**
@@ -380,7 +378,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '"numRows":1} ') > 0);
 
     }
-    
+
     /**
      * Test of json detail model
      */
@@ -463,7 +461,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = ob_get_contents();
 
         ob_end_clean();
- 
+
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '[{"id":"1","name":"Invisible Root"}') > 0);
         $this->assertTrue(strpos($response, '{"id":"5","name":"........Test Project"}') > 0);
@@ -740,7 +738,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Todo","label":"Todo"}]')) > 0);
 
     }
-    
+
     /**
      * Test of json get submodules
      */
@@ -823,7 +821,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = ob_get_contents();
 
         ob_end_clean();
-       
+
         // write permission modules
         $this->assertTrue(strpos($response, '{"name":"History","label":"History","access":false,"read":false,"write":false,"create":false,"permission":0}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
@@ -831,7 +829,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
 
     }
-    
+
     /**
      * Test of json get submodules -without a project Id-
      */
@@ -918,7 +916,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking the response for invalid project
         $this->assertTrue(strpos($response, '* "" *') > 0);
     }
-    
+
     /**
      * Test of json delete project -without a project Id-
      */
@@ -996,12 +994,12 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $error_produced = false;
-        
+
         try {
           $front->dispatch($request, $response);
-          
+
         }
         catch (Phprojekt_PublishedException $e) {
             $error_produced = true;
@@ -1012,7 +1010,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking the response for invalid project
         $this->assertTrue($error_produced);
     }
-    
+
     /**
      * Test of json save project -without a project Id-
      */
@@ -1090,12 +1088,12 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // Getting the output, otherwise the home page will be displayed
         ob_start();
-        
+
         $error_produced = false;
-        
+
         try {
           $front->dispatch($request, $response);
-          
+
         }
         catch (Phprojekt_PublishedException $e) {
             $error_produced = true;
@@ -1106,7 +1104,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking the response for invalid project
         $this->assertTrue($error_produced);
     }
-    
-    
+
+
 
 }
