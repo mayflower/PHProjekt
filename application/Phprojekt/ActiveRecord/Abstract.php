@@ -163,14 +163,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_colInfo;
 
     /**
-     * Array with the parameters for use the join
-     * Table relation and Field relation
-     *
-     * @var array
-     */
-    protected $_joinData = array();
-
-    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -212,19 +204,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     function __destruct()
     {
-    }
-
-    /**
-     * Iterator implementation.
-     * Returns the current element from the data array.
-     *
-     * @see Iterator::current()
-     *
-     * @return mixed
-     */
-    public function current ()
-    {
-        return $this->_data[$this->key()];
     }
 
     /**
@@ -494,8 +473,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
         && is_array($this->_relations['hasManyAndBelongsToMany'])) {
             return $this->_fetchHasManyAndBelongsToMany($where);
-        } else if (!empty($this->_joinData)) {
-            return $this->_fetchWithJoin($where, $order, $count, $offset);
         } else {
             return parent::_fetch($where, $order, $count, $offset);
         }
@@ -952,10 +929,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @param string|array $order  Order by
      * @param string|array $count  Limit query
      * @param string|array $offset Query offset
+     * @param string       $join   Join Statements
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null, $count = null, $offset = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $join = null)
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
@@ -972,7 +950,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->_log->debug($where);
         }
 
-        $rows = parent::fetchAll($where, $order, $count, $offset);
+        if (null != $join) {
+            $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $join);
+        } else {
+            $rows = parent::fetchAll($where, $order, $count, $offset);
+        }
 
         $result = array();
         foreach ($rows as $row) {
@@ -1050,26 +1032,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Set the join Data used for change the _fetch
-     * The joinData is an array witn the values like:
-     *
-     * tableRelation => array|string => The table name.
-     * fieldRelation => string       => Join on this condition.
-     * columns       => array|string => The columns to select from the joined table.
-     * type          => string       => Type of the joinType setted as a constant on Zend_Db_Select
-     *
-     * @see _fetch
-     *
-     * @param array $joinData
-     *
-     * @return void
-     */
-    public function setJoin($joinData)
-    {
-        $this->_joinData = (array)$joinData;
-    }
-
-    /**
      * Overwrite the fetch method if we have a joinData stuff
      *
      * The joinData can have many different joins.
@@ -1080,41 +1042,18 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @param string|array $order  Order by
      * @param string|array $count  Limit query
      * @param string|array $offset Query offset
+     * @param string       $join   Join statement
      *
      * @return Zend_Db_Table_Rowset
      */
-    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null)
+    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null, $join)
     {
         // selection tool
         $select = $this->_db->select();
 
         // the FROM clause
-        $select->from(array($this->_name => $this->_name), $this->_cols, $this->_schema);
-
-        // Join clause
-        foreach ($this->_joinData as $joinData) {
-            switch ($joinData['type']) {
-                default:
-                case Zend_Db_Select::INNER_JOIN:
-                    $select->joinInner($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
-                    break;
-                case Zend_Db_Select::LEFT_JOIN:
-                    $select->joinLeft($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
-                    break;
-                case Zend_Db_Select::RIGHT_JOIN:
-                    $select->joinRight($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
-                    break;
-                case Zend_Db_Select::FULL_JOIN:
-                    $select->joinFull($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
-                    break;
-                case Zend_Db_Select::CROSS_JOIN:
-                    $select->joinCross($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
-                    break;
-                case Zend_Db_Select::NATURAL_JOIN:
-                    $select->joinNatural($joinData['tableRelation'], $joinData['fieldRelation'], $joinData['columns']);
-                    break;
-            }
-        }
+        $this->_log->debug($select);
+        $select->from($this->_name, $this->_cols, $this->_schema);
 
         // the WHERE clause
         $where = (array) $where;
@@ -1140,10 +1079,25 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         // the LIMIT clause
         $select->limit($count, $offset);
+        
+        $sqlStr    = $select->__toString();
+        $statement = explode("FROM", $sqlStr);
+        $sqlStr    = "SELECT * FROM " . $statement[1];
+        
+        if (preg_match('/WHERE/i', $sqlStr)) {
+            $joinPart = ' ' . $join . ' WHERE ';
+            $sqlStr   = preg_replace('/WHERE/i', $joinPart, $sqlStr);
+        } else if (preg_match('/ORDER/i', $sqlStr)) {
+            $joinPart = ' ' . $join . ' ORDER ';
+            $sqlStr   = preg_replace('/ORDER/i', $joinPart, $sqlStr);
+        } else {
+            $sqlStr .= ' ' . $join; 
+        }
 
         // return the results
-        $stmt = $this->_db->query($select);
+        $stmt = $this->_db->query($sqlStr);
         $data = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+        print_r($data);
         return $data;
     }
 }
