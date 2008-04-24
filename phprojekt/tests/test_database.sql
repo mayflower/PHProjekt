@@ -276,7 +276,7 @@ CREATE TABLE `Tags` (
   PRIMARY KEY  (`id`)
 );
 
-INSERT INTO Tags (`id`, `word`, `crc32`) VALUES 
+INSERT INTO Tags (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),
 (2,'todo',1510913696);
 
@@ -292,7 +292,7 @@ CREATE TABLE `TagsUsers` (
   PRIMARY KEY  (`id`)
 );
 
-INSERT INTO TagsUsers (`id`, `userId`, `tagId`) VALUES 
+INSERT INTO TagsUsers (`id`, `userId`, `tagId`) VALUES
 (1, 1, 1),
 (2, 1, 2);
 
@@ -307,8 +307,17 @@ CREATE TABLE `TagsModules` (
   PRIMARY KEY  (`module`, `itemId`, `tagUserId`)
 );
 
-INSERT INTO TagsModules (`module`, `itemId`, `tagUserId`) VALUES 
-('Default', 1, 1);
+
+DROP TABLE IF EXISTS `ItemRights`;
+CREATE TABLE `ItemRights` (
+  `module` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `adminAccess` int(1) NOT NULL,
+  `writeAccess` int(1) NOT NULL,
+  `readAccess` int(1) NOT NULL,
+  PRIMARY KEY  (`module`,`itemId`,`userId`)
+);
 
 --
 -- INSERT DATA
@@ -362,13 +371,13 @@ UNLOCK TABLES;
 LOCK TABLES `Project` WRITE;
 /*!40000 ALTER TABLE `Project` DISABLE KEYS */;
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`, `read`, `write`, `admin`) VALUES
-(1,NULL,'/','Invisible Root','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL, 1, 1, 1),
-(2,1,'/1/','Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL, 1, 1, NULL),
-(3,1,'/1/','Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL, NULL, NULL, NULL),
-(4,2,'/1/2/','Sub Project','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL, 3, NULL, NULL),
-(5,2,'/1/2/','Test Project','Test note',NULL,NULL,NULL,NULL,'ordered',0,NULL,NULL, 3, NULL, NULL),
-(6,4,'/1/2/4/','Sub Sub Project 1','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL, 1, NULL, NULL),
-(7,4,'/1/2/4/','Sub Sub Project 2','',NULL,NULL,NULL,NULL,'working',0,NULL,NULL, 1, NULL, NULL);
+(1,NULL,'/','Invisible Root','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, 1, 1),
+(2,1,'/1/','Project 1','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, 1, NULL),
+(3,1,'/1/','Project 2','',2,NULL,NULL,NULL,'working',0,NULL,NULL, NULL, NULL, NULL),
+(4,2,'/1/2/','Sub Project','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 3, NULL, NULL),
+(5,2,'/1/2/','Test Project','Test note',1,NULL,NULL,NULL,'ordered',0,NULL,NULL, 3, NULL, NULL),
+(6,4,'/1/2/4/','Sub Sub Project 1','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, NULL, NULL),
+(7,4,'/1/2/4/','Sub Sub Project 2','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, NULL, NULL);
 /*!40000 ALTER TABLE `Project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -429,6 +438,21 @@ INSERT INTO `ModuleInstance` VALUES
 /*!40000 ALTER TABLE `ModuleInstance` ENABLE KEYS */;
 UNLOCK TABLES;
 
+INSERT INTO TagsModules (`module`, `itemId`, `tagUserId`) VALUES
+('Default', 1, 1);
+
+INSERT INTO `ItemRights` (`module`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
+('Project', 1, 1, 1, 1, 1),
+('Project', 2, 1, 1, 1, 1),
+('Project', 4, 1, 0, 0, 1),
+('Project', 4, 3, 0, 0, 1),
+('Project', 5, 1, 0, 0, 1),
+('Project', 5, 3, 0, 0, 1),
+('Project', 6, 1, 1, 1, 1),
+('Project', 7, 1, 1, 1, 1),
+('Project', 8, 1, 1, 1, 1),
+('Project', 9, 1, 1, 1, 1),
+('Project', 10, 1, 1, 1, 1);
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

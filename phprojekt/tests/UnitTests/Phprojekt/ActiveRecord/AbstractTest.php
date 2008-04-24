@@ -157,7 +157,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $user->firstname = 'Gustavo';
             $user->lastname  = 'Solt';
             $user->language  = 'es_AR';
-            
+
             $this->assertTrue($user->save());
 
             $gustavo = new User_Models_User(array('db' => $this->sharedFixture));
@@ -209,7 +209,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
 
         $this->assertEquals(3, $project->instances->count());
-        $this->assertEquals(7, $project->count());
+        $this->assertEquals(6, $project->count());
 
         // same but with fetch all
         $rows = $project->fetchAll();
