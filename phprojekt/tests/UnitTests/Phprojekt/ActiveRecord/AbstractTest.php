@@ -34,6 +34,35 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
  */
 class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     *
+     */
+    public function testFetchAllWithJoins() 
+    {
+        try {
+            $user  = new User_Models_User(array('db' => $this->sharedFixture));
+            $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'),
+                                     null,
+                                     null, 
+                                     null,
+                                     'left join UserModuleSetting ums ON ums.userId = User.id');
+                                     
+            error_log(var_dump($users));
+            
+            if ($users == NULL) {
+                $this->fail ('No user found');
+            }
+
+            $david        = $users[0];
+            $group        = $david->groups->create();
+            $group->name  = 'TEST GROUP';
+            $this->assertTrue($group->save());
+
+            $this->assertNotNull($group->id);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage().$e->getTraceAsString());
+        }
+    }
 
     /**
      *
