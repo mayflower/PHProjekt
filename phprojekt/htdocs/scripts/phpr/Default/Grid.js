@@ -114,7 +114,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
                     this.gridLayout.push({
                         name:   meta[i]["label"],
                         field:  meta[i]["key"],
-                        styles: "text-align:center;",
+                        styles: "text-align:left;",
                         width:  "auto",
                         editor: dojox.grid.editors.Input
                         });

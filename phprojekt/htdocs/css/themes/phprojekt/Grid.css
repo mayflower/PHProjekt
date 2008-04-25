@@ -189,7 +189,9 @@
 }
 
 .dojoxGrid-cell-over {
-	border: 1px dotted #FEBE47;
+	border: 1px dotted #fffff;
+    cursor:pointer;
+    cursor:hand;
 }
 
 .dojoxGrid-cell-focus.dojoxGrid-cell-over {
@@ -227,7 +229,15 @@
 	font-size: 100%;
 	font-family: inherit;
 }
-
+.dojoxGrid-cell .dijitInputField{
+    margin: 0;
+	padding: 0;
+	border-style: none;
+	width: 100%;
+	font-size: 100%;
+	font-family: inherit;
+    color:#000
+}
 .dojoxGrid-hidden-focus {
 	position: absolute;
 	left: -1000px;
