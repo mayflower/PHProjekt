@@ -205,7 +205,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     function __destruct()
     {
     }
-    
+
 	/**
      * Iterator implementation.
      * Returns the current element from the data array.
@@ -218,7 +218,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         return $this->_data[$this->key()];
     }
-    
+
     /**
      * Returns the name of the current field
      *
@@ -1091,11 +1091,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         // the LIMIT clause
         $select->limit($count, $offset);
-        
+
         $sqlStr    = $select->__toString();
         $statement = explode("FROM", $sqlStr);
-        $sqlStr    = "SELECT * FROM " . $statement[1];
-        
+        $sqlStr    = "SELECT ". $this->_name . ".* FROM " . $statement[1];
+
         if (preg_match('/WHERE/i', $sqlStr)) {
             $joinPart = ' ' . $join . ' WHERE ';
             $sqlStr   = preg_replace('/WHERE/i', $joinPart, $sqlStr);
@@ -1103,13 +1103,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $joinPart = ' ' . $join . ' ORDER ';
             $sqlStr   = preg_replace('/ORDER/i', $joinPart, $sqlStr);
         } else {
-            $sqlStr .= ' ' . $join; 
+            $sqlStr .= ' ' . $join;
         }
 
         // return the results
         $stmt 	   = $this->_db->query($sqlStr);
         $dataArray = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
-        
+
         $data  = array(
             'table'    => $this,
             'data'     => $dataArray,
