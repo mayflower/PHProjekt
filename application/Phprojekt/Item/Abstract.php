@@ -392,24 +392,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null, $count = null, $offset = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $join = null)
     {
         // only fetch records with read access
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
-        // Set join stuff
-        $joinData = array('rights' => array('tableRelation' => array('ItemRights' => 'ItemRights'),
-                                            'fieldRelation' => sprintf('(%s = %s AND %s = "%s" AND %s = %d)',
-                                                               "ItemRights.itemId",
-                                                               $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-                                                               "ItemRights.module",
-                                                               $this->getTableName(),
-                                                               "ItemRights.userId",
-                                                               $authNamespace->userId),
-                                            'columns'       => array(),
-                                            'type'          => Zend_Db_Select::INNER_JOIN));
-
-        $this->setJoin($joinData);
+        $join .= 'INNER JOIN ItemRights On 
+        		  ItemRights.itemId ='.$this->getAdapter()->quoteIdentifier($this->getTableName().'.id').'
+        	      AND ItemRights.module = "'. $this->getTableName().'"
+        	      AND ItemRights.userId = '.$authNamespace->userId;
 
         // Set where
         if (null !== $where) {
@@ -418,7 +409,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(), $authNamespace->userId, $this->getTableName());
         $where .= ' OR (ItemRights.adminAccess = 1 OR ItemRights.writeAccess = 1 OR ItemRights.readAccess = 1))';
 
-        return parent::fetchAll($where, $order, $count, $offset);
+        return parent::fetchAll($where, $order, $count, $offset, $join);
     }
 
     /**

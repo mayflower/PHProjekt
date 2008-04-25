@@ -205,7 +205,20 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     function __destruct()
     {
     }
-
+    
+	/**
+     * Iterator implementation.
+     * Returns the current element from the data array.
+     *
+     * @see Iterator::current()
+     *
+     * @return mixed
+     */
+    public function current ()
+    {
+        return $this->_data[$this->key()];
+    }
+    
     /**
      * Returns the name of the current field
      *
@@ -1052,7 +1065,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $select = $this->_db->select();
 
         // the FROM clause
-        $this->_log->debug($select);
         $select->from($this->_name, $this->_cols, $this->_schema);
 
         // the WHERE clause
@@ -1095,9 +1107,17 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         // return the results
-        $stmt = $this->_db->query($sqlStr);
-        $data = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
-        print_r($data);
-        return $data;
+        $stmt 	   = $this->_db->query($sqlStr);
+        $dataArray = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+        
+        $data  = array(
+            'table'    => $this,
+            'data'     => $dataArray,
+            'rowClass' => $this->_rowClass,
+            'stored'   => true
+        );
+
+        Zend_Loader::loadClass($this->_rowsetClass);
+        return new $this->_rowsetClass($data);
     }
 }
