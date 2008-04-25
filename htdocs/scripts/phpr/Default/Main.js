@@ -68,6 +68,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:phpr.webpath, currentModule:phpr.module});
+        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.setSubmoduleNavigation();
@@ -87,6 +88,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
+        if (dijit.byId("centerMainContent")) {
+            phpr.destroyWidgets("centerMainContent");
+        }
+        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+
         this.setSubmoduleNavigation();
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSave/nodeId/' + phpr.currentProjectId;

@@ -1,15 +1,39 @@
 <div dojoType="dijit.layout.BorderContainer" style="width:100%; height:800px;" id="completeContent">
     <div id="header" region="top" class="block" style="height:55px;" >
-    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" />
+    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='dojo.publish("Project.reload")'>
         <div id="search-bar" class="last right align-right">
             <input name="searchfield" value="Search" />
         </div>
-		<div id="mainNavigation"  class="span-10 right align-right" dojoType="dijit.Toolbar" >
-    		<a class="dijitToolbar" href='javascript:dojo.publish("Administration.reload")'>Administrator</a>
-    		| <a class="dijitToolbar" href='{{webpath}}index.php/Login/logout'>Login/out</a>
-    		| <a class="dijitToolbar" href='javascript:dojo.publish("Settings.load")'>Settings</a>
-    		| <a class="dijitToolbar" href='javascript:dojo.publish("Help.load")'>Help</a>
-		</div>
+		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar" >
+			<div dojoType="dijit.form.DropDownButton">
+				<span>Administration</span>
+				<div dojoType="dijit.Menu">
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Administration.reload")'>
+						Administrator
+					</div>
+					<div dojoType="dijit.MenuItem" onClick='javascript:dojo.publish("Settings.load")'>
+						Settings
+					</div>
+				</div>
+			</div>
+			<button dojoType="dijit.form.Button" type='link' href='{{webpath}}index.php/Login/logout'>
+				Logout
+			</button>
+    		<div dojoType="dijit.form.DropDownButton">
+				<span>Timecard</span>
+				<div dojoType="dijit.Menu">
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
+						Overview
+					</div>
+					<div dojoType="dijit.MenuSeparator"></div>
+					<div dojoType="dijit.MenuItem">Workingtimes Start</div>
+					<div dojoType="dijit.MenuItem">Workingtimes Stop</div>
+				</div>
+			</div>
+    		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
+				Help
+    		</button>
+    	</div>
  	</div>
  	<!-- Border Container which splits page in navigation and form/list view: -->
 	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
@@ -44,14 +68,8 @@
         		<hr class="space"/>
         	</div>
         	<!-- Center Area Grid and Form -->
-        	<div id="centerMainContent"  dojoType="dijit.layout.BorderContainer" region="center" liveSplitters="false">
-            	<!-- List View: -->            	 
-            	<div id="gridBox" dojoType="dijit.layout.ContentPane"region="center"class="prepend-24">
-            	</div>
-            	<!-- Form View: -->
- 				<div id="detailsBox" dojoType="dijit.layout.ContentPane" style="height:350px;" class="prepend-24" region="bottom"  splitter="true">
-         		</div>
-         	</div>
+        	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">
+           	</div>
          </div>
 	</div>
 </div>

@@ -31,6 +31,7 @@ a:focus.dijitToolbar{
 	margin: 1px;
 	border: 1px solid transparent;
 	background: none;
+    color: #FFFFFF;
 	_margin: 1px;
 	_padding: 0px 1px 0px 1px;
 	_border: 0px;
@@ -52,13 +53,7 @@ a:focus.dijitToolbar{
 .phprojekt .dijitToolbar .dijitButtonHover .dijitButtonNode,
 .phprojekt .dijitToolbar .dijitToggleButtonHover .dijitButtonNode,
 .phprojekt .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode {
-	/* TODO: change this from Hover to Selected so that button is still highlighted while drop down is being used */
-	border-color: #366dba;
-	background-color: #9abbea !important;
-	/* IE hackery */
-	_border: 1px solid #366dba;
-	_margin: -1px 0px 0px 0px;
-	_padding: 0px;
+    color: #F1CE47;
 }
 
 .phprojekt .dijitToolbar .dijitToolbarSeparator {

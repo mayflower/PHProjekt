@@ -28,6 +28,8 @@
 
 .phprojekt #header img {
     margin: 0;
+    cursor:pointer;
+    cursor:hand;
 }
 
 .phprojekt #header #search-bar {
