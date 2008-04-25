@@ -397,10 +397,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         // only fetch records with read access
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
-        $join .= 'INNER JOIN ItemRights On 
-        		  ItemRights.itemId ='.$this->getAdapter()->quoteIdentifier($this->getTableName().'.id').'
-        	      AND ItemRights.module = "'. $this->getTableName().'"
-        	      AND ItemRights.userId = '.$authNamespace->userId;
+        $join .= ' LEFT JOIN ItemRights ON
+        		   (ItemRights.itemId ='.$this->getAdapter()->quoteIdentifier($this->getTableName().'.id').'
+        	       AND ItemRights.module = "'. $this->getTableName().'"
+        	       AND ItemRights.userId = '.$authNamespace->userId.')';
 
         // Set where
         if (null !== $where) {
