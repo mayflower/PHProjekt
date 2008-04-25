@@ -22,5 +22,4 @@ reload:function(){
 			phpr.destroyWidgets("detailsBox");
 		}		
 	}
-
 });

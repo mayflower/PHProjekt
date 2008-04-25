@@ -1,17 +1,17 @@
-dojo.provide("phpr.Administration.Users.Main");
+dojo.provide("phpr.Administration.User.Main");
 
 dojo.require("phpr.Default.Main");
 // app specific files
-dojo.require("phpr.Administration.Users.Grid");
-dojo.require("phpr.Administration.Users.Form");
+dojo.require("phpr.Administration.User.Grid");
+dojo.require("phpr.Administration.User.Form");
 
-dojo.declare("phpr.Administration.Users.Main", phpr.Default.Main, {
+dojo.declare("phpr.Administration.User.Main", phpr.Default.Main, {
 	 constructor: function(){
-	 	this.module = "Users";
-		this.gridWidget = phpr.Administration.Users.Grid;
-		this.formWidget = phpr.Administration.Users.Form;
+	 	this.module = "User";
+		this.gridWidget = phpr.Administration.User.Grid;
+		this.formWidget = phpr.Administration.User.Form;
 		this.treeWidget = null;
-		dojo.subscribe("Administration.Users.load", this, "reload");
+		dojo.subscribe("Administration.User.load", this, "reload");
 	 },
 
 reload:function(){

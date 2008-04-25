@@ -27,7 +27,6 @@ dojo.declare("phpr.Administration.Tree", phpr.Component, {
 		if(!item) { 
 		  item = [];
 	    }
-		  
-		this.publish("changeAdminSection", [item]); 
+		dojo.publish("changeAdminSection", [item]); 
     }
 });
