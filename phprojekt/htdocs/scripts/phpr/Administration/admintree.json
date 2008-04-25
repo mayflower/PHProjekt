@@ -1,2 +1,2 @@
-/* {"identifier":"id","label":"name","items":[{"name":"Benutzer","id":"Users","parent":null,"children":[]},{"name":"Gruppen","id":"Groups","parent":null,"children":[]},{"name":"Rollen","id":"Role","parent":null,"children":[]},
+/* {"identifier":"id","label":"name","items":[{"name":"Benutzer","id":"User","parent":null,"children":[]},{"name":"Gruppen","id":"Groups","parent":null,"children":[]},{"name":"Rollen","id":"Role","parent":null,"children":[]},
 {"name":"Moduldesigner","id":"Md","parent":null,"children":[]}]}  */

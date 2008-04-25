@@ -11,7 +11,7 @@ dojo.declare("phpr.Administration.Role.Main", phpr.Default.Main, {
 		this.gridWidget = phpr.Administration.Role.Grid;
 		this.formWidget = phpr.Administration.Role.Form;
 		this.treeWidget = null;
-		dojo.subscribe("Role.load", this, "reload");
+		dojo.subscribe("Administration.Role.load", this, "reload");
 	 },
 
 reload:function(){
@@ -22,5 +22,4 @@ reload:function(){
 			phpr.destroyWidgets("detailsBox");
 		}		
 	}
-
 });

@@ -4,6 +4,5 @@ dojo.require("phpr.Default.Form");
 
 dojo.declare("phpr.Administration.Groups.Form", phpr.Default.Form, {
 	 constructor: function(){
-	 },
-
+	 }
 });
