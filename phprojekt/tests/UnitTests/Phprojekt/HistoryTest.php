@@ -51,9 +51,6 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $project->endDate = '1981-05-12';
         $project->priority = 1;
         $project->currentStatus = 2;
-        $project->read = 1;
-        $project->write = 1;
-        $project->admin = 1;
         $project->save();
         Zend_Registry::set('insertedId', $project->id);
 

@@ -119,9 +119,6 @@ CREATE TABLE `Project` (
   `completePercent` float default '0',
   `hourlyWageRate` float default NULL,
   `budget` float default NULL,
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY(`id`)
 ) ENGINE=InnoDB;
 CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
@@ -180,9 +177,6 @@ CREATE TABLE `Todo` (
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
  ) ENGINE=InnoDB;
 
@@ -245,9 +239,6 @@ CREATE TABLE `Note` (
   `comments` text,
   `category` varchar(50) default NULL,
   `ownerId` int(11) default NULL,
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB;
 
@@ -370,14 +361,14 @@ UNLOCK TABLES;
 
 LOCK TABLES `Project` WRITE;
 /*!40000 ALTER TABLE `Project` DISABLE KEYS */;
-INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`, `read`, `write`, `admin`) VALUES
-(1,NULL,'/','Invisible Root','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, 1, 1),
-(2,1,'/1/','Project 1','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, 1, NULL),
-(3,1,'/1/','Project 2','',2,NULL,NULL,NULL,'working',0,NULL,NULL, NULL, NULL, NULL),
-(4,2,'/1/2/','Sub Project','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 3, NULL, NULL),
-(5,2,'/1/2/','Test Project','Test note',1,NULL,NULL,NULL,'ordered',0,NULL,NULL, 3, NULL, NULL),
-(6,4,'/1/2/4/','Sub Sub Project 1','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, NULL, NULL),
-(7,4,'/1/2/4/','Sub Sub Project 2','',1,NULL,NULL,NULL,'working',0,NULL,NULL, 1, NULL, NULL);
+INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
+(1,NULL,'/','Invisible Root','',1,NULL,NULL,NULL,'working',0,NULL,NULL),
+(2,1,'/1/','Project 1','',1,NULL,NULL,NULL,'working',0,NULL,NULL),
+(3,1,'/1/','Project 2','',2,NULL,NULL,NULL,'working',0,NULL,NULL),
+(4,2,'/1/2/','Sub Project','',1,NULL,NULL,NULL,'working',0,NULL,NULL),
+(5,2,'/1/2/','Test Project','Test note',1,NULL,NULL,NULL,'ordered',0,NULL,NULL),
+(6,4,'/1/2/4/','Sub Sub Project 1','',1,NULL,NULL,NULL,'working',0,NULL,NULL),
+(7,4,'/1/2/4/','Sub Sub Project 2','',1,NULL,NULL,NULL,'working',0,NULL,NULL);
 /*!40000 ALTER TABLE `Project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -425,8 +416,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `Todo` WRITE;
 /*!40000 ALTER TABLE `Todo` DISABLE KEYS */;
-INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`, `read`, `write`, `admin`) VALUES
-(1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,'working',NULL,NULL,NULL);
+INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`) VALUES
+(1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,'working');
 /*!40000 ALTER TABLE `Todo` ENABLE KEYS */;
 UNLOCK TABLES;
 

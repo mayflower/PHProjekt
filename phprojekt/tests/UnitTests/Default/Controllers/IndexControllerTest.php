@@ -200,7 +200,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset"')) > 0);
         $this->assertTrue(strpos($response, '"numRows":6} ') > 0);
-
     }
 
     /**
@@ -553,7 +552,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '{"identifier":"id","label":"name","items":[{"name":"Invisible Root",') > 0);
-        $this->assertTrue(strpos($response, '"parent":"1","children":[]}]}') > 0);
+        $this->assertTrue(strpos($response, '"parent":"2","children":[]}]}') > 0);
     }
 
     /**
