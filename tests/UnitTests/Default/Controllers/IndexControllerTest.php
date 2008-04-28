@@ -553,8 +553,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '{"identifier":"id","label":"name","items":[{"name":"Invisible Root",') > 0);
-        $this->assertTrue(strpos($response, '"parent":"2","children":[]}]}') > 0);
-
+        $this->assertTrue(strpos($response, '"parent":"1","children":[]}]}') > 0);
     }
 
     /**
@@ -644,7 +643,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project"}') > 0);
         $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Todo","label":"Todo"}]')) > 0);
-
     }
 
      /**
@@ -736,7 +734,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note"}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project"}') > 0);
         $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Todo","label":"Todo"}]')) > 0);
-
     }
 
     /**
@@ -827,7 +824,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
-
     }
 
     /**
@@ -1104,7 +1100,4 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking the response for invalid project
         $this->assertTrue($error_produced);
     }
-
-
-
 }

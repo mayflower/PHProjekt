@@ -6,7 +6,7 @@
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    
+ * @version
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
@@ -31,7 +31,7 @@ class Phprojekt_RoleTest extends PHPUnit_Framework_TestCase
      */
     protected $object;
 
-    
+
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -53,13 +53,16 @@ class Phprojekt_RoleTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
     }
-    
+
 
     /**
      * returns the role of a user in a project
      */
     public function testFetchUserRole()
     {
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace->userId = 1;
+
         $this->assertEquals($this->object->fetchUserRole(1, 1), 1);
         $this->assertFalse($this->object->fetchUserRole(2, 2)==1);
     }

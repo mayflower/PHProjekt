@@ -37,28 +37,23 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testFetchAllWithJoins() 
+    public function testFetchAllWithJoins()
     {
         try {
-            $user  = new User_Models_User(array('db' => $this->sharedFixture));
-            $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'),
-                                     null,
-                                     null, 
-                                     null,
-                                     'left join UserModuleSetting ums ON ums.userId = User.id');
-                                     
-            error_log(var_dump($users));
-            
-            if ($users == NULL) {
-                $this->fail ('No user found');
-            }
+            $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
+            $project->fetchAll();
+            $this->assertEquals(7,$project->count());
 
-            $david        = $users[0];
-            $group        = $david->groups->create();
-            $group->name  = 'TEST GROUP';
-            $this->assertTrue($group->save());
+            $project->find(3);
+            $this->assertNull($project->title);
 
-            $this->assertNotNull($group->id);
+            $projects = $project->fetchAll(null, null, null, null,
+                            'RIGHT JOIN projectuserrolerelation ON projectuserrolerelation.projectId = Project.id');
+            $this->assertEquals(1,count($projects));
+
+            $projects = $project->fetchAll(null, null, null, null,
+                            'LEFT JOIN projectuserrolerelation ON projectuserrolerelation.projectId = Project.id');
+            $this->assertEquals(6,count($projects));
         } catch (Exception $e) {
             $this->fail($e->getMessage().$e->getTraceAsString());
         }
@@ -238,7 +233,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
 
         $this->assertEquals(3, $project->instances->count());
-        $this->assertEquals(6, $project->count());
+        $this->assertEquals(7, $project->count());
 
         // same but with fetch all
         $rows = $project->fetchAll();
