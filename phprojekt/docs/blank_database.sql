@@ -109,9 +109,6 @@ CREATE TABLE `Project` (
   `completePercent` float default '0',
   `hourlyWageRate` float default NULL,
   `budget` float default NULL,
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY(`id`)
 );
 CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
@@ -170,9 +167,6 @@ CREATE TABLE `Todo` (
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
  );
 
@@ -272,9 +266,6 @@ CREATE TABLE `Note` (
   `comments` text,
   `category` varchar(50) default NULL,
   `ownerId` int(11) default NULL,
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -307,9 +298,6 @@ CREATE TABLE `timecard` (
   `date` date default NULL,
   `startTime` time default NULL,
   `endTime` time default NULL,
-  `read` int(11) default NULL,
-  `write` int(11) default NULL,
-  `admin` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) ;
 --
@@ -357,11 +345,11 @@ INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLa
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
 (1,'dsp','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A');
 
-INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`, `read`, `write`, `admin`) VALUES
-(1, NULL, '/', 'Invisible Root', '', NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL, 1, 1, 1),
-(2, 1, '/1/', 'Project 1', '', NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL, 1, 1, NULL),
-(3, 1, '/1/', 'Project 2', '', NULL, NULL, NULL, NULL, 'working' ,0, NULL, NULL, NULL, NULL, NULL),
-(4, 2, '/1/2/', 'Sub Project', '',NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL, 3, NULL, NULL);
+INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
+(1, NULL, '/', 'Invisible Root', '', NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL),
+(2, 1, '/1/', 'Project 1', '', NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL),
+(3, 1, '/1/', 'Project 2', '', NULL, NULL, NULL, NULL, 'working' ,0, NULL, NULL),
+(4, 2, '/1/2/', 'Sub Project', '',NULL, NULL, NULL, NULL, 'working', 0, NULL, NULL);
 
 INSERT INTO `Groups` (`id`, `name`) VALUES
 (1, 'default'),
@@ -385,5 +373,7 @@ INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `module`, `permission`) VAL
 (2, 1, 'Todo', 'write');
 
 INSERT INTO `ItemRights` (`module`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
-('Project', 1, 1, 1, 1, 1);
+('Project', 1, 1, 1, 1, 1),
+('Project', 2, 1, 1, 1, 1),
+('Project', 3, 1, 1, 1, 1);
 COMMIT;

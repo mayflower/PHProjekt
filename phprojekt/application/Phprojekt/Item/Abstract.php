@@ -328,7 +328,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
                     break;
                 case 'time':
-                    
+
                     $timeZone = (int)$this->_config->timeZone;
                     $u = strtotime($value);
 
@@ -338,7 +338,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'datetime':
                 case 'timestamp':
-                    
+
                     $timeZone = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
@@ -438,10 +438,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         // only fetch records with read access
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
-        $join .= ' LEFT JOIN ItemRights ON
-        		   (ItemRights.itemId ='.$this->getAdapter()->quoteIdentifier($this->getTableName().'.id').'
-        	       AND ItemRights.module = "'. $this->getTableName().'"
-        	       AND ItemRights.userId = '.$authNamespace->userId.')';
+        $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
+                         AND ItemRights.module = "%s" AND ItemRights.userId = %d) ',
+        		         $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
+        	             $this->getTableName(),
+                         $authNamespace->userId);
 
         // Set where
         if (null !== $where) {
