@@ -100,7 +100,8 @@ final class Default_Helpers_Save
         if ($model->recordValidate()) {
             return $model->save();
         } else {
-            throw new Exception('Validation failed');
+            $error = array_pop($model->getError());
+            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         }
     }
 
