@@ -37,7 +37,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
         $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisible Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree->setup($filter);
-        $this->assertEquals(2, count($tree->getRootNode()->getChildren()));
+        $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
     }
 
     public function testSaveToFilter()
