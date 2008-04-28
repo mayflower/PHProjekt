@@ -198,6 +198,7 @@ class IndexController extends Zend_Controller_Action
 
         if (empty($id)) {
             $model   = $this->getModelObject();
+            
             $message = $translate->translate('The Item was added correctly');
         } else {
             $model   = $this->getModelObject()->find($id);
