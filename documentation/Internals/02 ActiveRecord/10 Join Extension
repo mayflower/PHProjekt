@@ -1,0 +1,15 @@
+Since the Zend select is not nice for the jois stuff,
+the ActiveRecord offer to add a join string in the fecthall.
+
+The fetchAll function is called with
+fetchAll($where = null, $order = null, $count = null, $offset = null, $join = null)
+So When you use is, you can specific all of these strings for construct the sql query.
+
+Examples:
+
+$projects = $project->fetchAll(null, null, null, null, 'LEFT JOIN projectuserrolerelation ON projectuserrolerelation.projectId = Project.id');
+
+$projects = $project->fetchAll('Project.id = 1', 'title DESC', null, null, 'LEFT JOIN projectuserrolerelation ON projectuserrolerelation.projectId = Project.id');
+
+The query will return only the fields for the current activerecord table,
+and not the fields of the other relations tables.
