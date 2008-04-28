@@ -45,7 +45,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/', $this->_tree->path);
         $this->assertEquals('Invisible Root', $this->_tree->title);
         $this->assertNotNull($this->_tree->id);
-        $this->assertEquals(1, count($this->_tree->getChildren()));
+        $this->assertEquals(2, count($this->_tree->getChildren()));
         $this->assertNotNull($this->_tree->isSetup());
     }
 
