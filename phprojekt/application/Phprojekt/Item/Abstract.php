@@ -110,8 +110,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function current()
     {
         return new Phprojekt_DatabaseManager_Field($this->getInformation(),
-                                                   $this->key(),
-                                                   parent::current());
+        $this->key(),
+        parent::current());
         // return parent::current();
     }
 
@@ -150,9 +150,31 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'time':
                     $value = Inspector::sanitize('time', $value, $messages, false);
+
+                    // moving the value to UTC
+                    $timeZomeComplement = (int)$this->_config->timeZone * -1;
+                    $u = strtotime($value);
+
+                    $value = mktime(date("H",$u) + $timeZomeComplement, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
+                    $value = date("H:i:m",$value);
+
+                    // running again the sanitizer to normalize the format
+                    $value = Inspector::sanitize('timestamp', $value, $messages, false);
+
                     break;
+                case 'datetime':
                 case 'timestamp':
                     $value = Inspector::sanitize('timestamp', $value, $messages, false);
+
+                    // moving the value to UTC
+                    $timeZomeComplement = (int)$this->_config->timeZone * -1;
+                    $u = strtotime($value);
+
+                    $value = mktime(date("H",$u) + $timeZomeComplement, date("i",$u), date("s",$u), date("m",$u), date("d",$u), date("Y",$u));
+
+                    // running again the sanitizer to normalize the format
+                    $value = Inspector::sanitize('timestamp', $value, $messages, false);
+
                     break;
                 default:
                     $value = Inspector::sanitize('string', $value, $messages, false);
@@ -192,8 +214,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                             if (null != $error) {
                                 $validated = false;
                                 $this->_error->addError(array(
-                                    'field'   => $varname,
-                                    'message' => $error));
+                                'field'   => $varname,
+                                'message' => $error));
                                 break;
                             }
                         }
@@ -201,9 +223,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                         $error = $this->validateValue($varname, $value);
                         if (false === $error) {
                             $validated = false;
-                             $this->_error->addError(array(
-                                'field'   => $varname,
-                                'message' => "Invalid Format"));
+                            $this->_error->addError(array(
+                            'field'   => $varname,
+                            'message' => "Invalid Format"));
                         }
                         break;
                     }
@@ -217,8 +239,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                         if (null != $error) {
                             $validated = false;
                             $this->_error->addError(array(
-                                'field'   => $varname,
-                                'message' => $error));
+                            'field'   => $varname,
+                            'message' => $error));
                         }
                     }
                 }
@@ -301,8 +323,27 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
         if (true == isset($info['metadata'][$varname])) {
             $type = $info['metadata'][$varname]['DATA_TYPE'];
-            if ($type == 'float') {
-                $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
+            switch ($type) {
+                case 'float':
+                    $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
+                    break;
+                case 'time':
+                    
+                    $timeZone = (int)$this->_config->timeZone;
+                    $u = strtotime($value);
+
+                    $value = mktime(date("H",$u) + $timeZone, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
+                    $value = date("H:i:m",$value);
+
+                    break;
+                case 'datetime':
+                case 'timestamp':
+                    
+                    $timeZone = (int)$this->_config->timeZone * -1;
+                    $u = strtotime($value);
+
+                    $value = mktime(date("H",$u) + $timeZone, date("i",$u), date("s",$u), date("m",$u), date("d",$u), date("Y",$u));
+                    break;
             }
         }
 
@@ -378,7 +419,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function getFieldsForFilter()
     {
         return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST,
-                                                Phprojekt_DatabaseManager::COLUMN_NAME);
+        Phprojekt_DatabaseManager::COLUMN_NAME);
     }
 
 
@@ -454,26 +495,26 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
         switch ($itemRight) {
             case'read':
-                if ($roleRightRead || $roleRightWrite) {
-                    $right = 'read';
-                }
-                break;
+            if ($roleRightRead || $roleRightWrite) {
+                $right = 'read';
+            }
+            break;
             case'write':
-                if ($roleRightRead) {
-                    $right = 'read';
-                }
-                if ($roleRightWrite) {
-                    $right ='write';
-                }
-                break;
+            if ($roleRightRead) {
+                $right = 'read';
+            }
+            if ($roleRightWrite) {
+                $right ='write';
+            }
+            break;
             case'admin':
-                if ($roleRightRead) {
-                    $right = 'read';
-                }
-                if ($roleRightWrite) {
-                    $right = 'admin';
-                }
-                break;
+            if ($roleRightRead) {
+                $right = 'read';
+            }
+            if ($roleRightWrite) {
+                $right = 'admin';
+            }
+            break;
             default:
                 $right = '';
                 break;
