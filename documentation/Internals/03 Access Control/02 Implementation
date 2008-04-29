@@ -67,3 +67,21 @@ Therefore Phprojekt 6 already provides a class which calculates the current priv
 by retrieving the current role and item right and calculating its intersection.
 This method is called  getRights() and is stored within the class Phprojekt_Item_Abstract.
 That way you can access this method for every Phprojekt Item and it automatically returns it rights.
+
+[emph]Item permission bitmap[/emph]
+The user permission over an item will be returned as a bitmap of his permission, with the following encoding:
+0 => no permission
+1 => access 
+2 => read 
+4 => write
+8 => item administration
+
+[emph]Module permission bitmap[/emph]
+The user permission over a module is similar than Item Permission bitmap.
+
+0 => no permission
+1 => access 
+2 => read 
+4 => write
+8 => new item creation permission
+

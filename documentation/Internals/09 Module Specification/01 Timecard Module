@@ -1,0 +1,4 @@
+The timecard module is based on default module with the following contrloller methods customizated:
+
+[emph]jsonListAction[/emph]
+This method will accept startDate and endDate as parameter to limit the dates of the records to be listed.

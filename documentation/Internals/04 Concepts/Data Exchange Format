@@ -23,7 +23,9 @@ textarea:  	    a multiple row textfeld,
 selectbox: 	    a dropdown box to select exactly one record,
 checkbox: 	    a box the select a value
 date: 		    a date without a time in the format YYYY-MM-DD,
-time: 		    a time in the format HH:MM:SS,
+time: 		    a time in the format HH:MM:SS,  the time is stored on PHProjekt_Item class as UTC timezone. It
+                is converted and restored from UTC to client date time.
+timestamp:      a date and time in the format YYYY-MM-DD HH:MM:SS stored on PHProjekt_Item as UTC timezone.
 file: 		    just a simple file. Client: Select a file from the file system and send it to the server
 multipleselect: a list that allows more selections
 label: 		    label of a form or fieldset
