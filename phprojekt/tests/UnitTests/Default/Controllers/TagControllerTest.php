@@ -108,7 +108,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],"data":[{"string":"') > 0);
+        $this->assertTrue(strpos($response, '{"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Anzahl"}],"data":[{"string":"this","count":1}],"numRows":1}') > 0);
 
     }
 

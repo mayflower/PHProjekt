@@ -561,10 +561,10 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $userId = $authNamespace->userId;
 
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-        $this->assertEquals('write',$module->getRights($userId));
+        $this->assertEquals(4, $module->getRights($userId));
 
         $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
-        $this->assertEquals('write',$module->getRights($userId));
+        $this->assertEquals(4, $module->getRights($userId));
 
     }
 }

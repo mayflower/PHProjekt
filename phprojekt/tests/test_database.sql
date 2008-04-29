@@ -310,6 +310,20 @@ CREATE TABLE `ItemRights` (
   PRIMARY KEY  (`module`,`itemId`,`userId`)
 );
 
+DROP TABLE IF EXISTS `timecard`;
+CREATE TABLE `timecard` (
+  `id` int(11) NOT NULL auto_increment,
+  `notes` text,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) default NULL,
+  `date` date default NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+
+
 --
 -- INSERT DATA
 --
@@ -347,7 +361,12 @@ INSERT INTO DatabaseManager (`id`, `tableName`, `tableField`, `formTab`, `formLa
 (25, 'Note', 'projectId', 1, 'project', 'project', 'tree', 1, 1, NULL, 'Project', '', 2, 'left', 1, 1, '1', 0, 1, 0),
 (26, 'Note', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (27, 'Note', 'comments', 1, 'comments', 'comments', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 1, 0),
-(28, 'Note', 'category', 1, 'category', 'category', 'selectSqlAddOne', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0);
+(28, 'Note', 'category', 1, 'category', 'category', 'selectSqlAddOne', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
+(29, 'Timecard', 'notes'    , 1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
+(30, 'Timecard', 'date'     , 1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
+(31, 'Timecard', 'startTime', 1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(32, 'Timecard', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
+(33, 'Timecard', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 0, 0, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 0, 0);
 /*!40000 ALTER TABLE `DatabaseManager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -443,7 +462,23 @@ INSERT INTO `ItemRights` (`module`, `itemId`, `userId`, `adminAccess`, `writeAcc
 ('Project', 7, 1, 1, 1, 1),
 ('Project', 8, 1, 1, 1, 1),
 ('Project', 9, 1, 1, 1, 1),
-('Project', 10, 1, 1, 1, 1);
+('Project', 10, 1, 1, 1, 1),
+('Timecard', 1, 1, 1, 1, 1),
+('Timecard', 2, 1, 1, 1, 1),
+('Timecard', 3, 1, 1, 1, 1),
+('Timecard', 4, 1, 1, 1, 1),
+('Timecard', 5, 1, 1, 1, 1),
+('Timecard', 6, 1, 1, 1, 1);
+
+
+INSERT INTO `timecard` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTime`, `endTime`) VALUES
+(1, 'Timecard row', 1, 1, '2008-04-29', '08:00:00', '13:00:00'),
+(2, 'Timecard row 2', 1, 1, '2008-04-29', '14:00:00', '18:00:00'),
+(3, 'Timecard row 3', 1, 1, '2008-04-30', '08:00:00', '13:00:00'),
+(4, 'Timecard row 4', 1, 1, '2008-04-30', '14:00:00', '18:00:00'),
+(5, 'Timecard row 6', 1, 1, '2008-05-02', '08:00:00', '13:00:00'),
+(6, 'Timecard row 7', 1, 1, '2008-05-02', '14:00:00', '18:00:00');
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
