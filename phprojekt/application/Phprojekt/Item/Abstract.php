@@ -459,7 +459,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @todo Make sure that this doesnot need any database query
      *
-     * @return string $right
+     * @return integer $right bitmap
+     *                        0 => no permission
+     *                        1 => access
+     *                        2 => read
+     *                        4 => write
+     *                        8 => administration
      */
     public function getRights($userId)
     {
@@ -490,37 +495,38 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $relationField = (int) $session->currentProjectId;
         }
 
-        $roleRights     = new Phprojekt_RoleRights($relationField, $class, $this->id);
-        $roleRightRead  = $roleRights->hasRight('read');
-        $roleRightWrite = $roleRights->hasRight('write');
-
+        $roleRights      = new Phprojekt_RoleRights($relationField, $class, $this->id);
+        $roleRightRead   = $roleRights->hasRight('read');
+        $roleRightWrite  = $roleRights->hasRight('write');
+        
         switch ($itemRight) {
             case'read':
             if ($roleRightRead || $roleRightWrite) {
-                $right = 'read';
+                $right = 2; // 'read'
             }
             break;
             case'write':
             if ($roleRightRead) {
-                $right = 'read';
+                $right = 2; // 'read'
             }
             if ($roleRightWrite) {
-                $right ='write';
+                $right = 4; // 'write'
             }
             break;
             case'admin':
             if ($roleRightRead) {
-                $right = 'read';
+                $right = 2; // 'read'
             }
             if ($roleRightWrite) {
-                $right = 'admin';
+                $right = 8; // 'admin'
             }
             break;
             default:
-                $right = '';
+                $right = 0; // 'nothing'
                 break;
         }
-        return $right;
+                
+        return (int)$right;
     }
 
     /**
