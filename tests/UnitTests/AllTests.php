@@ -46,6 +46,7 @@ require_once 'PHPUnit/Util/Filter.php';
 
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
+require_once 'Timecard/AllTests.php';
 require_once 'Selenium/AllTests.php';
 
 /**
@@ -164,6 +165,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->sharedFixture  = &$db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
+        $suite->addTest(Timecard_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());
 
         // add here additional test suites
