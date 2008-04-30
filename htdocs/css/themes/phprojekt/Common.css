@@ -206,6 +206,17 @@ h1,h2,h3,h4,h5,h6 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+/* Success, error & notice boxes for messages and errors. */
+.phprojekt .error,
+.phprojekt .notice,
+.phprojekt .success    { padding: .8em; margin-bottom: 1em; border: 2px solid #ddd; }
+.phprojekt .error      { background: #FBE3E4; color: #D12F19; border-color: #FBC2C4; }
+.phprojekt .notice     { background: #FFF6BF; color: #817134; border-color: #FFD324; }
+.phprojekt .success    { background: #E6EFC2; color: #529214; border-color: #C6D880; }
+.phprojekt .error a    { color: #D12F19; }
+.phprojekt .notice a   { color: #817134; }
+.phprojekt .success a  { color: #529214; }
+
 
 /* DnD avatar-specific settings */
 /* For now it uses a default set of rules. Some other DnD classes can be modified as well. */

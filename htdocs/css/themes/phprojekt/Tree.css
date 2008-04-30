@@ -75,6 +75,11 @@
     background-color:#8392AB;
     color: #fff;
 }
+/* don't use :focus due to opera and IE's lack of support on div's */
+.phprojekt .dijitTreeNode .dijitTreeContentFocused {
+    background-color:#8392AB;
+    color: #fff;
+}
 
 /**** Level 3 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
