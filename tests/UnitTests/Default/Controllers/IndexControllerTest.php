@@ -819,10 +819,11 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // write permission modules
-        $this->assertTrue(strpos($response, '{"name":"History","label":"History","access":false,"read":false,"write":false,"create":false,"permission":0}') > 0);
-        $this->assertTrue(strpos($response, '{"name":"Note","label":"Note","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
-        $this->assertTrue(strpos($response, '{"name":"Project","label":"Project","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
-        $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo","access":false,"read":false,"write":true,"create":false,"permission":4}') > 0);
+        $this->assertTrue(strpos($response, '{"name":"History","label":"History","permission":0}') > 0);
+        $this->assertTrue(strpos($response, '{"name":"Note","label":"Note","permission":4}') > 0);
+        $this->assertTrue(strpos($response, '{"name":"Project","label":"Project","permission":4}') > 0);
+        $this->assertTrue(strpos($response, '{"name":"Timecard","label":"Timecard","permission":0}') > 0);
+        $this->assertTrue(strpos($response, '{"name":"Todo","label":"Todo","permission":4}') > 0);
     }
 
     /**

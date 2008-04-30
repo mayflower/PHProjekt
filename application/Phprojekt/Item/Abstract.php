@@ -500,33 +500,33 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $roleRightWrite  = $roleRights->hasRight('write');
         
         switch ($itemRight) {
-            case'read':
-            if ($roleRightRead || $roleRightWrite) {
-                $right = 2; // 'read'
-            }
-            break;
-            case'write':
-            if ($roleRightRead) {
-                $right = 2; // 'read'
-            }
-            if ($roleRightWrite) {
-                $right = 4; // 'write'
-            }
-            break;
-            case'admin':
-            if ($roleRightRead) {
-                $right = 2; // 'read'
-            }
-            if ($roleRightWrite) {
-                $right = 8; // 'admin'
-            }
-            break;
+            case 'read':
+                if ($roleRightRead || $roleRightWrite) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
+                }
+                break;
+            case 'write':
+                if ($roleRightRead) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
+                }
+                if ($roleRightWrite) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ | Phprojekt_Acl::WRITE;
+                }
+                break;
+            case 'admin':
+                if ($roleRightRead) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
+                }
+                if ($roleRightWrite) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ | Phprojekt_Acl::WRITE | Phprojekt_Acl::ADMIN;
+                }
+                break;
             default:
-                $right = 0; // 'nothing'
+                $right = Phprojekt_Acl::NO_ACCESS;
                 break;
         }
                 
-        return (int)$right;
+        return $right;
     }
 
     /**
