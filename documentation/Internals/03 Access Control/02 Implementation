@@ -69,19 +69,23 @@ This method is called  getRights() and is stored within the class Phprojekt_Item
 That way you can access this method for every Phprojekt Item and it automatically returns it rights.
 
 [emph]Item permission bitmap[/emph]
-The user permission over an item will be returned as a bitmap of his permission, with the following encoding:
-0 => no permission
-1 => access 
-2 => read 
-4 => write
-8 => item administration
+The user permission over an item or module will be returned as a bitmap of his permission.
 
-[emph]Module permission bitmap[/emph]
-The user permission over a module is similar than Item Permission bitmap.
+The constants for the different permission are defined on Phproject_Acl class and the names are:
 
-0 => no permission
-1 => access 
-2 => read 
-4 => write
-8 => new item creation permission
+Phprojet_Acl::NO_ACCESS (default value 0)
+Phprojet_Acl::ACCESS (default value 1 or 1st bit)
+Phprojet_Acl::READ (default value 2 or 2nd bit)
+Phprojet_Acl::WRITE (default value 4 or 3rd bit)
+Phprojet_Acl::ADMIN (default value 8 or 4th bit).
 
+The permission bitmap will be the sum of each permision. S so, an user with access, 
+read and write permission will have permission 7: 
+(Phprojet_Acl::ACCESS | Phprojet_Acl::READ | Phprojet_Acl::WRITE).
+
+It is possible to check a permission using the & operator:
+[code]
+if ($returnedPermission & Phprojet_Acl::ACCESS == Phprojet_Acl::ACCESS) {
+    // user has access permission
+}
+[/code]
