@@ -290,12 +290,23 @@ class IndexController extends Zend_Controller_Action
             $allowedSubModules = array();
             $rights = new Phprojekt_RoleRights($projectId, 'Project');
             foreach ($subModules as $subModuleData) {
+                
+                $tmpPermission = Phprojekt_Acl::NO_ACCESS;
+                
+                if ($rights->hasRight('access', $subModuleData['name'])) {
+                    $tmpPermission = Phprojekt_Acl::ACCESS;
+                }
+                if ($rights->hasRight('read', $subModuleData['name'])) {
+                    $tmpPermission = Phprojekt_Acl::READ;
+                }
+                if ($rights->hasRight('write', $subModuleData['name'])) {
+                    $tmpPermission = Phprojekt_Acl::WRITE;
+                }
+                if ($rights->hasRight('create', $subModuleData['name'])) {
+                    $tmpPermission = Phprojekt_Acl::ADMIN;
+                }
 
-                $subModuleData['access']     = $rights->hasRight('access', $subModuleData['name']);
-                $subModuleData['read']       = $rights->hasRight('read', $subModuleData['name']);
-                $subModuleData['write']      = $rights->hasRight('write', $subModuleData['name']);
-                $subModuleData['create']     = $rights->hasRight('create', $subModuleData['name']);
-                $subModuleData['permission'] = (int) (1 *$subModuleData['access'] + 2 * $subModuleData['read'] + 4 * $subModuleData['write'] + 8 * $subModuleData['create']);
+                $subModuleData['permission']= $tmpPermission;
 
                 $allowedSubModules[]    = $subModuleData;
 

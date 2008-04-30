@@ -27,6 +27,16 @@
 class Phprojekt_Acl extends Zend_Acl
 {
     /**
+     * Fixed permission values for items and modules
+     *
+     */
+    const NO_ACCESS = 0;
+    const ACCESS    = 1;
+    const READ      = 2;
+    const WRITE     = 4;
+    const ADMIN     = 8;
+    
+    /**
      * Singleton instance
      * @var PHProjekt_Acl
      */
