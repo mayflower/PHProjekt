@@ -453,6 +453,7 @@ INSERT INTO TagsModules (`module`, `itemId`, `tagUserId`) VALUES
 
 INSERT INTO `ItemRights` (`module`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
 ('Project', 1, 1, 1, 1, 1),
+('Project', 1, 3, 0, 0, 1),
 ('Project', 2, 1, 1, 1, 1),
 ('Project', 4, 1, 0, 0, 1),
 ('Project', 4, 3, 0, 0, 1),
@@ -468,7 +469,9 @@ INSERT INTO `ItemRights` (`module`, `itemId`, `userId`, `adminAccess`, `writeAcc
 ('Timecard', 3, 1, 1, 1, 1),
 ('Timecard', 4, 1, 1, 1, 1),
 ('Timecard', 5, 1, 1, 1, 1),
-('Timecard', 6, 1, 1, 1, 1);
+('Timecard', 6, 1, 1, 1, 1),
+('Todo', 1, 1, 0, 0, 1),
+('Todo', 1, 3, 0, 1, 1);
 
 
 INSERT INTO `timecard` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTime`, `endTime`) VALUES

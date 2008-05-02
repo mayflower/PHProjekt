@@ -140,4 +140,35 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
+
+    /**
+     * Return the right
+     *
+     * @param string  $module The module
+     * @param integer $itemId The item ID
+     * @param integer $userId The user ID
+     * @param string  $right  Field to check
+     *
+     * @return integer
+     */
+    public function hasRight($module, $itemId, $userId, $right) {
+        // Cache the query
+        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$module.'-'.$itemId.'-'.$userId);
+        if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
+            $value = $rightNamespace->right;
+        } else {
+            $rows = $this->find($module, $itemId, $userId);
+            $value = 0;
+            foreach ($rows as $row) {
+                foreach ($row->toArray() as $k => $v) {
+                    if ($k == $right) {
+                        $value = $v;
+                        break;
+                    }
+                }
+            }
+            $rightNamespace->right = $value;
+        }
+        return $value;
+    }
 }
