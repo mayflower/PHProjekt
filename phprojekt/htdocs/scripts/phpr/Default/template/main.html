@@ -11,14 +11,16 @@
 					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Administration.reload")'>
 						Administrator
 					</div>
-					<div dojoType="dijit.MenuItem" onClick='javascript:dojo.publish("Settings.load")'>
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Settings.load")'>
 						Settings
 					</div>
 				</div>
 			</div>
-			<button dojoType="dijit.form.Button" type='link' href='{{webpath}}index.php/Login/logout'>
+			<span dojoType="dijit.ToolbarSeparator"></span>
+			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
 				Logout
 			</button>
+			<span dojoType="dijit.ToolbarSeparator"></span>
     		<div dojoType="dijit.form.DropDownButton">
 				<span>Timecard</span>
 				<div dojoType="dijit.Menu">
@@ -30,6 +32,7 @@
 					<div dojoType="dijit.MenuItem">Workingtimes Stop</div>
 				</div>
 			</div>
+			<span dojoType="dijit.ToolbarSeparator"></span>
     		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
 				Help
     		</button>
