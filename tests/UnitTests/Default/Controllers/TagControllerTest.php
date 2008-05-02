@@ -35,7 +35,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-
+        $config->language = "de";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
@@ -121,7 +121,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-
+        $config->language = "de";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
@@ -204,7 +204,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-
+        $config->language = "de";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
