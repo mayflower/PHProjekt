@@ -468,37 +468,30 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getRights($userId)
     {
-        $itemRight = '';
+        $itemRight = null;
+        $right     = null;
+
         // TODO: class name and table name can differ
         $class     = $this->getTableName();
 
         if ($this->id > 0) {
-            $groups = Phprojekt_Loader::getModel('Groups', 'Groups', $userId);
-            if ($this->read && $groups->isUserInGroup($this->read)) {
+            if ($this->ownerId == $userId) {
+                $itemRight = 'admin';
+            } else if ($this->_rights->hasRight($class, $this->id, $userId, 'adminAccess')) {
+                $itemRight = 'admin';
+            } else if ($this->_rights->hasRight($class, $this->id, $userId, 'writeAccess')) {
+                $itemRight = 'write';
+            } else if ($this->_rights->hasRight($class, $this->id, $userId, 'readAccess')) {
                 $itemRight = 'read';
             }
-            if ($this->write && $groups->isUserInGroup($this->write)) {
-                $itemRight = 'write';
-            }
-            if ($this->admin && $groups->isUserInGroup($this->admin)) {
-                $itemRight = 'admin';
-            }
-            if ($this->ownerId == $groups->getUserId()) {
-                $itemRight = 'admin';
-            }
-
-            $relationField = $this->projectId;
-
         } else {
             $itemRight     = 'write';
-            $session       = new Zend_Session_Namespace();
-            $relationField = (int) $session->currentProjectId;
         }
 
-        $roleRights      = new Phprojekt_RoleRights($relationField, $class, $this->id);
+        $roleRights      = new Phprojekt_RoleRights($this->projectId, $class, $this->id);
         $roleRightRead   = $roleRights->hasRight('read');
         $roleRightWrite  = $roleRights->hasRight('write');
-        
+
         switch ($itemRight) {
             case 'read':
                 if ($roleRightRead || $roleRightWrite) {
@@ -506,26 +499,24 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 }
                 break;
             case 'write':
-                if ($roleRightRead) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
-                }
                 if ($roleRightWrite) {
                     $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ | Phprojekt_Acl::WRITE;
+                } else if ($roleRightRead) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
                 }
                 break;
             case 'admin':
-                if ($roleRightRead) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
-                }
                 if ($roleRightWrite) {
                     $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ | Phprojekt_Acl::WRITE | Phprojekt_Acl::ADMIN;
+                } else if ($roleRightRead) {
+                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
                 }
                 break;
             default:
                 $right = Phprojekt_Acl::NO_ACCESS;
                 break;
         }
-                
+
         return $right;
     }
 
