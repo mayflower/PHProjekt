@@ -195,21 +195,36 @@ class IndexController extends Zend_Controller_Action
     {
         $translate = Zend_Registry::get('translate');
         $id        = (int) $this->getRequest()->getParam('id');
+        $data      = (array) $this->getRequest()->getParam('data');
 
-        if (empty($id)) {
-            $model   = $this->getModelObject();
-            $message = $translate->translate('The Item was added correctly');
+        // Multiple save
+        if (!empty($data)) {
+            $message = $translate->translate('The Items was edited correctly');
+            $showId = array();
+            foreach ($data as $id => $fields) {
+                $model   = $this->getModelObject()->find($id);
+                Default_Helpers_Save::save($model, $fields);
+                $showId[] = $id;
+            }
+            $showId = implode(',', $showId);
+        // Single save
         } else {
-            $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate('The Item was edited correctly');
+            if (empty($id)) {
+                $model   = $this->getModelObject();
+                $message = $translate->translate('The Item was added correctly');
+            } else {
+                $model   = $this->getModelObject()->find($id);
+                $message = $translate->translate('The Item was edited correctly');
+            }
+
+            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
+            $showId = $model->id;
         }
-
-        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
         $return    = array('type'    => 'success',
                            'message' => $message,
                            'code'    => 0,
-                           'id'      => $model->id);
+                           'id'      => $showId);
         echo Phprojekt_Converter_Json::convertValue($return);
     }
 
@@ -290,9 +305,9 @@ class IndexController extends Zend_Controller_Action
             $allowedSubModules = array();
             $rights = new Phprojekt_RoleRights($projectId, 'Project');
             foreach ($subModules as $subModuleData) {
-                
+
                 $tmpPermission = Phprojekt_Acl::NO_ACCESS;
-                
+
                 if ($rights->hasRight('access', $subModuleData['name'])) {
                     $tmpPermission = Phprojekt_Acl::ACCESS;
                 }
