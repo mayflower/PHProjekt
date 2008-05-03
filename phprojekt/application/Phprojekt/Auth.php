@@ -87,6 +87,24 @@ class Phprojekt_Auth extends Zend_Auth
         /* please, put any extra info of user to be saved on session here */
         return true;
     }
+    
+    /**
+     * Gets from auth namespace the user id logged in
+     *
+     * @return integet user ID or false if there isn't user logged
+     */
+    public function getUserId() {
+        
+        $returnValue = false;
+        
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        
+        if (isset($authNamespace->userId)) {
+            $returnValue = $authNamespace->userId;
+        }
+        
+        return $returnValue;
+    }
 
     /**
      * Makes the logout process
