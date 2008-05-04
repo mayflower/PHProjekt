@@ -91,7 +91,7 @@ class Phprojekt_LoginController_Test extends PHPUnit_Framework_TestCase
             $this->assertEquals(0,$e->getCode());
             return;
         }
-
+        
         $this->fail('An error occurs on login action');
 
 
