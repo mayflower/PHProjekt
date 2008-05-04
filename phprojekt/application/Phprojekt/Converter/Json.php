@@ -73,8 +73,6 @@ class Phprojekt_Converter_Json
             foreach ($information->getFieldDefinition($order) as $field) {
                $data['id'] = $models->id;
                
-               
-               
                $key   = $field['key'];
                $value = $models->$key;
                if (is_scalar($value)) {
