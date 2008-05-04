@@ -174,6 +174,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 case 'checkbox':
                 case 'date':
                 case 'upload':
+                case 'time':
+                case 'datetime':
+                case 'timestamp':
                     $converted[] = $this->_convertStandard($field);
                     break;
                 case 'multipleselect':
