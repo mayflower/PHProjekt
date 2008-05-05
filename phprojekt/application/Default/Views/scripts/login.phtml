@@ -1,59 +1,77 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
- <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <title>Login</title>
-   <style type="text/css">
-    table th,
-    table td {
-      padding: 2px;
-      font-family: Helvetica, sans;
-    }
-
-    table tbody th {
-      text-align: left;
-      color: white;
-      background-color: #C3C3C3;
-      border-bottom: 1px solid black;
-    }
-
-    table tbody td {
-      background-color: #EFEFEF;
-    }
-
-    table tfoot td {
-      text-align: center;
-      font-size: 8px;
-    }
-   </style>
- </head>
- <body>
-   <table align="center" width="80%">
-    <tbody>
-     <tr>
-      <th>Login</th>
-     </tr>
-     <tr>
-      <td><blockquote><?php echo $this->message; ?></blockquote></td>
-     </tr>
-    </tbody>
-    <tfoot>
-     <td>
-     <span class="error"><?php echo $this->errors; ?></span><br />
-     <table width="100%" align="center">
-         <form method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
-    <tr>
-        <td>Username: <input type="text" name="username" value="<?php echo $this->username; ?>" /></td>
-    </tr>
-    <tr>
-        <td>Password:<input type="password" name="password" value="" /></td>
-    <tr>
-    </table>
-    <br/>
-    <input type="submit" value="Send">
-     </td>
-    </tfoot>
-   </table>
-
- </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+    <style>
+        @import "<?php echo $this->webpath; ?>scripts/dojo/dojo/resources/dojo.css";
+        @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojekt.css";
+    </style>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>scripts/dojo/dojo/dojo.js"
+     djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dijit.form.Form");
+    	dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.Textarea");
+		dojo.require("dijit.form.TextBox");
+	</script>
+</head>
+	<body class="phprojekt">
+    	<div id="header" region="top" class="block" style="height:55px;" >
+    		<img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
+ 		</div>
+		<div style="width:20%;float:left;height:745px;" id="navigation-container">
+			<div id="subheader" class="block">
+ 	    		<div id="navigation-container-titel">
+ 	    			<center>Startseite</center>
+        		</div>
+			</div>        		
+     	</div>
+   		<div id="centerNavContent" style="width:80%;float:right;">
+    		<!-- Submodule navigation: -->
+    			<div class="block">
+        			<div class="column">
+        				<img src="<?php echo $this->webpath; ?>img/subheaderborder.png" alt="" />
+        			</div>
+        			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
+					</div>
+ 				</div>
+        		<!-- Exception Form -->
+        		<div id="serverFeedback" class="prepend-24">
+        		<?php 
+        			if($this->message){
+        				echo '<div class="error">'.$this->message.'</div>';
+        			}
+        			if($this->errors){
+        				echo '<div class="error">'.$this->errors.'</div>';
+        			}
+        		?>
+        		</div>
+            	<!-- spaces -->
+        		<hr class="space"/>
+        		<hr>
+        		<hr class="space"/>
+			    <form method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
+     				<table width="100%" align="center" class="form">
+     				<col class="col1" />
+    					<tr>
+        					<td><label for="username">Username:</label></td>
+        					<td><input dojoType="dijit.form.TextBox" type="text" name="username" value="<?php echo $this->username; ?>" /></td>
+    					</tr>
+    					<tr>
+        					<td><label for="password">Password:</label></td>
+        					<td><input dojoType="dijit.form.TextBox" type="password" name="password" value="" /></td>
+    					<tr>
+    				</table>
+    				<center>
+    					<button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
+							Login
+						</button>
+					</center>
+    			</form>
+         	</div>
+		</div>
+	</body>
 </html>
