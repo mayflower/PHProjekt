@@ -55,6 +55,7 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
                     this.toggleSaveButtons(false);
                     new phpr.handleResponse('serverFeedback',response);
                     return response;
+                    this.publish("reload");
             }),
             error: function(response, ioArgs) {
                 new phpr.handleResponse('serverFeedback',response);
