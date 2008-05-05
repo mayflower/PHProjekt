@@ -19,13 +19,13 @@ padding-left:4%;
 }
 .phprojekt .dijitTab { 
 	line-height:normal;
-	margin-right:3px;	/* space between one tab and the next in top/bottom mode */
+	margin-right:5px;	/* space between one tab and the next in top/bottom mode */
 	padding:0px;
-	background: url("../images/tabContainerSprite2.gif") no-repeat 0 -300px;
-	font-size: 0.9em;
+    color: #8392AB;
+	background: #d9e8f9 url(../images/tab-left.gif) no-repeat scroll left bottom;
+	font-size: 0.95em;
 	font-weight: bold;
-	color: #fff;
-	margin-bottom: -1px;	
+	margin-bottom: 0px;	
 }
 
 .phprojekt dijitTabChecked {
@@ -33,61 +33,61 @@ padding-left:4%;
 }
 
 .phprojekt .dijitTabInnerDiv .dijitTabContent {
-	padding:8px 10px 4px 10px;
-	background: url("../images/tabContainerSprite2.gif") repeat-x 0 -350px;
+	padding:8px 5px 4px 5px;
+	background: none;
 }
 
 .phprojekt .dijitTabInnerDiv {
-	padding:0px 25px 0px 25px;
-	background: url("../images/tabContainerSprite2.gif") no-repeat;
-	background-position: right -400px;
+	padding:0px 5px 0px 5px;
+	background: transparent url(../images/tab-right.gif) no-repeat scroll right bottom;
 	border: none;
 }
 
 .phprojekt .dijitTabHover,
 .phprojekt .dijitTabCloseButtonHover {
-	color: #ffffff;
-	background: url("../images/tabContainerSprite2.gif") no-repeat 0px -150px;
+	background: #8392AB url(../images/tab-left-active.gif) no-repeat scroll left bottom;
+	color: #d9e8f9;
 }
 
 .phprojekt .dijitTabHover .dijitTabInnerDiv,
 .phprojekt .dijitTabCloseButtonHover .dijitTabInnerDiv {
-	color: #ffffff;
-	background: url("../images/tabContainerSprite2.gif") no-repeat right -250px;
-	border: none;
+    color: #d9e8f9;
+	background: transparent url(../images/tab-right-active.gif) no-repeat scroll right bottom;
 }
 
 .phprojekt .dijitTabHover .dijitTabInnerDiv .dijitTabContent,
 .phprojekt .dijitTabCloseButtonHover .dijitTabInnerDiv .dijitTabContent {
-	color: #fff;
-	background: url("../images/tabContainerSprite2.gif") repeat-x 0 -200px;
-	padding:8px 25px 4px 25px;
+	color: #d9e8f9;
+	background: none;
+	padding:8px 5px 4px 5px;
 }
 
 .dj_ie6 .phprojekt .dijitTabHover,
 .dj_ie6 .phprojekt .dijitTabCloseButtonHover {
 	color: #fff;
-	background: url("../images/tabContainerSprite2.gif") no-repeat 0px -0px;
+	background: none;
 }
-
+.phprojekt .dijitTabChecked .dijitTab{
+        
+}
 .phprojekt .dijitTabChecked,
 .phprojekt .dijitTabCloseButtonChecked
 {
-	/* the selected tab (with or without hover) */
-	background: url("../images/tabContainerSprite2.gif") no-repeat 0px -150px;
+   	background: #8392AB url(../images/tab-left-active.gif) no-repeat scroll left bottom;
+	color: #d9e8f9;
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv {
-	padding:0px 25px 0px 25px;
-	color: #000;
-	background: url("../images/tabContainerSprite2.gif") no-repeat right -250px;
+	padding:0px 5px 0px 5px;
+	color: #d9e8f9;
+	background: transparent url(../images/tab-right-active.gif) no-repeat scroll right bottom;
 	border: none;
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabContainerSprite2.gif") repeat-x 0 -200px;
+	background: none;
 	padding:8px 10px 5px 10px;
-	color: #000000;
+	color: #d9e8f9;
 }
 
 /* top specific classes */
@@ -171,7 +171,7 @@ padding-left:4%;
 	line-height:normal;
 	margin-right:3px;	/* space between one tab and the next in top/bottom mode */
 	padding:0px;
-	background: url("../images/tabBottomEnabledSpriteLR.gif") no-repeat bottom left;
+	background: none;
 	font-size: 0.9em;
 	font-weight: bold;
 	color: #373941;
@@ -186,53 +186,53 @@ padding-left:4%;
 
 .phprojekt .dijitAlignBottom .dijitTabInnerDiv .dijitTabContent {
 	padding:6px 10px 6px 10px;
-	background: url("../images/tabBottomEnabledC.gif") repeat-x bottom left;
+	background: none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabInnerDiv {
 	padding:0px 10px 0px 10px;
-	background: url("../images/tabBottomEnabledSpriteLR.gif") no-repeat bottom right;
+	background:none;
 	border: none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabHover,
 .phprojekt .dijitAlignBottom .dijitTabCloseButtonHover {
 	color: #243C5F;
-	background: url("../images/tabBottomHoverSpriteLR.gif") no-repeat bottom left;
+	background: none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabHover .dijitTabInnerDiv,
 .phprojekt .dijitAlignBottom .dijitTabCloseButtonHover .dijitTabInnerDiv {
-	background: url("../images/tabBottomHoverSpriteLR.gif") no-repeat bottom right;
+	background: none;
 	border: none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabHover .dijitTabInnerDiv .dijitTabContent,
 .phprojekt .dijitAlignBottom .dijitTabCloseButtonHover .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabBottomHoverC.gif") repeat-x bottom left;
+	background: none;
 	padding:6px 10px 6px 10px;
 }
 
 .dj_ie6 .phprojekt .dijitAlignBottom .dijitTabHover,
 .dj_ie6 .phprojekt .dijitAlignBottom .dijitTabCloseButtonHover {
-	background-image: url("../images/tabHover.gif");
+	background-image: none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabChecked,
 .phprojekt .dijitAlignBottom .dijitTabCloseButtonChecked
 {
 	/* the selected tab (with or without hover) */
-	background: url("../images/tabBottomActiveSpriteLR.gif") no-repeat bottom left;
+	background:none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabChecked .dijitTabInnerDiv {
 	padding:0px 10px 0px 10px;
-	background: url("../images/tabBottomActiveSpriteLR.gif") no-repeat bottom right;
+	background: none;
 	border: none;
 }
 
 .phprojekt .dijitAlignBottom .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabBottomActiveC.gif") repeat-x bottom left;
+	background: none;
 	padding:7px 10px 6px 10px;
 }
 
@@ -246,7 +246,7 @@ padding-left:4%;
 }
 
 .phprojekt .dijitAlignLeft .dijitTabChecked .dijitTabInnerDiv {
-	background: url("../images/tabLeftChecked.gif") no-repeat right top !important;
+	background: none;
 	padding-left: 10px;
 	border-bottom: 1px solid #8ba0bd !important;
 }

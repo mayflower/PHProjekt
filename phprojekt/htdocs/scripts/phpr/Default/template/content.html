@@ -1,9 +1,10 @@
 <form dojoType="dijit.form.Form" id="{{formId}}" name="{{formId}}" style="height:100%"  onsubmit="return false;">
-	<div dojoType="dijit.layout.TabContainer" region="center" id="{{id}}" style="height:80%">
+	<div dojoType="dijit.layout.TabContainer" region="center" id="{{id}}" style="height:85%">
 		{{tabsContent}}
 	</div>
+	<br>
 	<center>
-		{% if writePermissions %}
+		{% if writePermissions > 3 %}
 		<button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
 					Speichern
 		</button>

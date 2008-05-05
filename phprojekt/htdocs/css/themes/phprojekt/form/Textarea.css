@@ -10,9 +10,11 @@
 	*/
 	background:#fff url("../images/validationInputBg.png") repeat-x top left;
 	padding: 0 0.3em 0.1em 0.3em;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
 }
 
 .phprojekt .dijitTextArea{
-	width: 305px; 
-	height: 150px; 
+	width:100%; 
+	height: 250px; 
+    border:1px solid #c0c0c0;
 }
