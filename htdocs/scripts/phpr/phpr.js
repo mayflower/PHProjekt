@@ -87,9 +87,6 @@ phpr.send = function(/*Object*/paramsIn) {
         _onSuccess = function(data) {
             new phpr.handleResponse('serverFeedback',data);
             _onEnd();
-            if (!data.ret && (data.error || data.errors)) {
-                alert(data.error || data.errors);
-            }
         };
     }
     dojo.xhrPost({
@@ -102,10 +99,7 @@ phpr.send = function(/*Object*/paramsIn) {
     });
 };
 phpr.handleResponse = function(resultArea,result)
-{
-    if (dijit.byId("resultDiv")) {
-        dijit.byId("resultDiv").destroy();
-    }	
+{	
     var css = 'error';
     if(result.type =='success'){
         css = 'success'; 
@@ -115,8 +109,9 @@ phpr.handleResponse = function(resultArea,result)
         css = '';
         message = "";
     }
-    dojo.byId(resultArea).innerHTML = '<div id="resultDiv"></div>';
-    new phpr.ServerFeedback({cssClass: css, output:message},dojo.byId("resultDiv"));
+    var widget = new phpr.ServerFeedback({cssClass: css, output:message});
+    dojo.byId(resultArea).appendChild(widget.domNode);
+
     
 };
 phpr.getCurrent = function(data, identifier, value){
@@ -184,6 +179,9 @@ dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
 dojo.declare("phpr.ServerFeedback",
     [dijit._Widget, dijit._Templated],
     {
+        constructor:function(){
+          //dojo.publish(phpr.module + ".reload");
+        },
         // summary:
         //     A class for displaying the ServerFeedback
         // description:

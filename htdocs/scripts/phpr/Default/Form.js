@@ -37,9 +37,15 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		if (dijit.byId("detailsBox")) {
 			phpr.destroyWidgets("detailsBox");
 		}		
+        // destroy serverFeedback
+        phpr.destroyWidgets("serverFeedback");
 		this.formdata="";
 		meta = this.formStore.getValue(items[0], "metadata");
 		data = this.formStore.getValue(items[1], "data");
+        var itemwrite = 15;
+        if(this.id > 0){
+            itemwrite    = data[0]["rights"];            
+        }
 		newStore = [];
 		this.fieldTemplate = new phpr.Default.field();
 		for (var i = 0; i < meta.length; i++) {
@@ -52,7 +58,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			itemlabel    = meta[i]["label"];
 			itemvalue    = data[0][itemid];
             itemrange    = meta[i]["range"];
-            itemwrite    = true;
             //special workaround for new projects - set parent to current ProjectId
             if(itemid == 'projectId' && !itemvalue){
                 itemvalue = phpr.currentProjectId;
@@ -97,11 +102,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		formtabs ="";
 		//later on we need to provide different tabs depending on the metadata
 		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'First Tab'});
-		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Secon dummy Tab'});
+		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Second dummy Tab'});
+        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab3',title:'third dummy Tab'});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{formId:'detailForm'+this.id, id:'formtab',tabsContent:formtabs,
         writePermissions:itemwrite});
 		this.formWidget = dijit.byId('detailForm'+this.id);
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
+        dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
 	},
 	submitForm: function(){
         // summary: 
@@ -117,13 +124,25 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                if (!this.id) {
                    this.id = data['id'];
                } 
+               new phpr.handleResponse('serverFeedback',data);
                phpr.send({
                     url: phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonSaveTags/id/' + this.id,
                     content:   this.sendData,
-                    onSuccess: this.publish("form.Submitted", [this.id, this.sendData['projectId']])
+                    onSuccess: this.publish("reload")
                 });  
             })
         });
+	},
+	deleteForm: function(){
+        // summary: 
+        //    This function is responsible for deleting a dojo element
+        // description:
+        //    This function calls jsonDeleteAction
+		this.sendData = this.formWidget.getValues();
+		phpr.send({
+			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
+            onSuccess: this.publish("reload")
+                });  
 	},
     displayTagInput: function(){
         // summary:

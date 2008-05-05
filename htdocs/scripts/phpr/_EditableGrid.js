@@ -13,31 +13,22 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
     
     onLoaded:function() {
         // onApplyEdit is called every time a cell in a row was edited and looses focus.
-        dojo.connect(this.grid.widget, "onApplyCellEdit", dojo.hitch(this, "cellEdited"))
-        dojo.connect(this.grid.widget, "onStartEdit", dojo.hitch(this, function() {
-            this.toggleSaveButtons(true);
-        }));
+        dojo.connect(this.grid.widget, "onApplyCellEdit", dojo.hitch(this, "cellEdited"));
     },
-    
     toggleSaveButtons:function(activate) {
-        //// Deactivate all the other button.
-        //var btns = dojo.query("input[type=button]", this.grid.widget.domNode.parentNode);
-        //for (var i=0, l=btns.length; i<l; i++) {
-        //    btns[i].disabled = activate ? "disabled" : "";
-        //}
-        // Activate "save changes" buttons.
-        var saveBtns = dojo.query("input.saveChanges", this.grid.widget.domNode.parentNode);
-        for (var i=0, l=saveBtns.length; i<l; i++) {
-            saveBtns[i].disabled = activate ? "" : "disabled";
-        }
+        // Activate/Deactivate "save changes" buttons.
+        saveBtn =dijit.byId('saveChanges');
+        saveBtn.disabled = activate ? false : true;  
+        saveBtn =dojo.byId('saveChanges');
+        saveBtn.disabled = activate ? false : true;  
     },
-
     cellEdited:function(value, rowNum, fieldNum) {
         if (!this._newRowValues[rowNum]) {
             this._newRowValues[rowNum] = {};
         }
         var fieldName = this.grid.widget.model.fields.get(fieldNum).name;
-        this._newRowValues[rowNum][fieldName] = value;
+        this._newRowValues[rowNum][fieldName] = value;  
+        this.toggleSaveButtons(true);
     },
     
     saveChanges:function() {
@@ -63,7 +54,6 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
                     this._newRowValues = {};
                     this.toggleSaveButtons(false);
                     new phpr.handleResponse('serverFeedback',response);
-                    alert(dojo.toJson(response));
                     return response;
             }),
             error: function(response, ioArgs) {

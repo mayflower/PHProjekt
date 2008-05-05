@@ -46,6 +46,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         });
         
         this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
+        
     },
     
 
@@ -58,7 +59,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.grid.widget = dijit.byId("gridNode");
         
         dojo.connect(dijit.byId("saveChanges"), "onClick",         dojo.hitch(this, "saveChanges"));
-        dojo.connect(this.grid.widget,          "onRowClick",   dojo.hitch(this, "onRowClick"));
+        dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
         dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
         
         window["gridHeaderContextMenu"] = dijit.byId("headerContext");
@@ -73,6 +74,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
             };
             
         this.grid.widget.setModel(this.grid.model);
+        this.grid.widget.singleClickEdit = true;
         
         meta = this.grid.widget.model.store.metaData;
         
@@ -127,9 +129,6 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
             }];
             
         this.grid.widget.setStructure(gridStructure);
-        
-        this._filterForm = dijit.byId("gridFilterForm");
-        dojo.connect(dijit.byId("gridFilterSubmitButton"),"onClick", dojo.hitch(this, "onSubmitFilter"));
         
     },
 

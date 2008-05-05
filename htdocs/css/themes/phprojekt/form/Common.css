@@ -17,6 +17,7 @@
 	border:1px solid #bbb; 
 	background:#eee; 
 	margin: 0em 0.1em 0.1em;
+    width:100%;
 }
 .phprojekt .dijitTextBox,
 .phprojekt .dijitComboBox,
