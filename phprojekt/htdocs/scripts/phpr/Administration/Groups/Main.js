@@ -15,7 +15,7 @@ dojo.declare("phpr.Administration.Groups.Main", phpr.Default.Main, {
 	 },
 
 reload:function(){
-	var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/';
+	var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSaveMultiple/nodeId/';
     this.grid     = new this.gridWidget(updateUrl, this, null, this.module);
 		// destroy form if exists
 		if (dijit.byId("detailsBox")) {

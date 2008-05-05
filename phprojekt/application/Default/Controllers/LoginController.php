@@ -56,6 +56,7 @@ class LoginController extends Zend_Controller_Action
     {
         $username = $this->getRequest()->getParam('username');
         $password = $this->getRequest()->getParam('password');
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
 
         try {
             $success = Phprojekt_Auth::login($username, $password);

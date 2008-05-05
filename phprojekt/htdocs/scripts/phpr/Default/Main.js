@@ -38,7 +38,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.currentProjectId = project.id;
         if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
         this.setSubmoduleNavigation();
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/navId/'+phpr.currentProjectId;
+        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         if (dijit.byId("detailsBox")) {
             phpr.destroyWidgets("detailsBox");
@@ -53,7 +53,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description: 
         //    after submitting a form this function takes care of updating
         //    the tree and the grid, so that the changes are displayed
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/';
+        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/id/';
         this.tree     = new this.treeWidget(this,'Project');
         this.grid     = new this.gridWidget(updateUrl,this,parent);
     },
@@ -72,7 +72,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.setSubmoduleNavigation();
-                var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSave/nodeId/' + phpr.currentProjectId;
+                var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
                 this.tree     = new this.treeWidget(this);
                 this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
             })
@@ -95,7 +95,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         this.setSubmoduleNavigation();
         this.tree     = new this.treeWidget(this);
-        var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSave/nodeId/' + phpr.currentProjectId;
+        var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         // destroy form if exists
         if (dijit.byId("detailsBox")) {

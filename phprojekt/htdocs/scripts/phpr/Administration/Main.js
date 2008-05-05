@@ -26,7 +26,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
 		this.User 	  = new this.userWidget(phpr.webpath);
 		this.Role 	  = new this.roleWidget(phpr.webpath);
 		this.Groups	  = new this.groupsWidget(phpr.webpath);
-        var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/';
+        var updateUrl = this.webpath + 'index.php/'+this.module+'/index/jsonSaveMultiple/nodeId/';
         this.grid     = new this.gridWidget(updateUrl, this, null, this.module);
 	},
 	loadSubElements: function(project){
