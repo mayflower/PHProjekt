@@ -42,7 +42,9 @@ dojo.extend(dojox.gfx.Shape, {
 			switch(fill.type){
 				case "linear":
 					var matrix = this._getRealMatrix(), m = dojox.gfx.matrix;
-					s = [], a = f.colors, f = dojox.gfx.makeParameters(dojox.gfx.defaultLinearGradient, fill);
+					s = [];
+					f = dojox.gfx.makeParameters(dojox.gfx.defaultLinearGradient, fill);
+					a = f.colors;
 					this.fillStyle = f;
 					dojo.forEach(a, function(v, i, a){
 						a[i].color = dojox.gfx.normalizeColor(v.color);
@@ -74,10 +76,14 @@ dojo.extend(dojox.gfx.Shape, {
 						w = parseFloat(this.rawNode.style.width),
 						h = parseFloat(this.rawNode.style.height),
 						c = isNaN(w) ? 1 : 2 * f.r / w;
-					a = new Array(f.colors.length);
+					a = [];
+					// add a color at the offset 0 (1 in VML coordinates)
+					if(f.colors[0].offset > 0){
+						a.push({offset: 1, color: dojox.gfx.normalizeColor(f.colors[0].color)});
+					}
 					// massage colors
 					dojo.forEach(f.colors, function(v, i){
-						a[i] = {offset: 1 - v.offset * c, color: dojox.gfx.normalizeColor(v.color)};
+						a.push({offset: 1 - v.offset * c, color: dojox.gfx.normalizeColor(v.color)});
 					});
 					i = a.length - 1;
 					while(i >= 0 && a[i].offset < 0){ --i; }
@@ -95,9 +101,6 @@ dojo.extend(dojox.gfx.Shape, {
 					}
 					for(; i >= 0; --i){
 						s.push(a[i].offset.toFixed(8) + " " + a[i].color.toHex());
-					}
-					if(a[0].offset < 1){
-						s.push("1 " + a[0].color.toHex());
 					}
 					fo = this.rawNode.fill;
 					fo.colors.value = s.join(";");
@@ -135,6 +138,8 @@ dojo.extend(dojox.gfx.Shape, {
 		}
 		// color object
 		this.fillStyle = dojox.gfx.normalizeColor(fill);
+		this.rawNode.fill.method = "any";
+		this.rawNode.fill.type = "solid";
 		this.rawNode.fillcolor = this.fillStyle.toHex();
 		this.rawNode.fill.opacity = this.fillStyle.a;
 		this.rawNode.filled = true;
@@ -431,25 +436,54 @@ dojo.declare("dojox.gfx.Image", dojox.gfx.shape.Image, {
 		// newShape: Object: an image shape object
 		var shape = this.shape = dojox.gfx.makeParameters(this.shape, newShape);
 		this.bbox = null;
-		var firstChild = this.rawNode.firstChild;
-        firstChild.src = shape.src;
-        if(shape.width || shape.height){
-			firstChild.style.width  = shape.width;
-			firstChild.style.height = shape.height;
-        }
+		this.rawNode.firstChild.src = shape.src;
 		return this.setTransform(this.matrix);	// self
 	},
+	_setDimensions: function(s, w, h){
+		if(w || h){
+			s.width  = w + "px";
+			s.height = h + "px";
+		}
+	},
+	_resetImage: function(){
+		var s = this.rawNode.firstChild.style,
+			shape = this.shape;
+		s.left = "0px";
+		s.top  = "0px";
+		this._setDimensions(s, shape.width, shape.height);
+	},
 	_applyTransform: function() {
-		var matrix = this._getRealMatrix();
-		if(!matrix) return this;
-		matrix = dojox.gfx.matrix.multiply(matrix, {dx: this.shape.x, dy: this.shape.y});
-		var f = this.rawNode.filters["DXImageTransform.Microsoft.Matrix"];
-		f.M11 = matrix.xx;
-		f.M12 = matrix.xy;
-		f.M21 = matrix.yx;
-		f.M22 = matrix.yy;
-		f.Dx  = matrix.dx;
-		f.Dy  = matrix.dy;
+		var matrix = this._getRealMatrix(),
+			img = this.rawNode.firstChild,
+			s = img.style,
+			shape = this.shape;
+		if(matrix){
+			matrix = dojox.gfx.matrix.multiply(matrix, {dx: shape.x, dy: shape.y});
+		}else{
+			matrix = dojox.gfx.matrix.normalize({dx: shape.x, dy: shape.y});
+		}
+		if(matrix.xy == 0 && matrix.yx == 0 && matrix.xx > 0 && matrix.yy > 0){
+			// special case to avoid filters
+			this.rawNode.style.filter = "";
+			s.left = Math.floor(matrix.dx) + "px";
+			s.top  = Math.floor(matrix.dy) + "px";
+			this._setDimensions(s, Math.floor(matrix.xx * shape.width), Math.floor(matrix.yy * shape.height));
+		}else{
+			this._resetImage();
+			var f = this.rawNode.filters["DXImageTransform.Microsoft.Matrix"];
+			if(f){
+				f.M11 = matrix.xx;
+				f.M12 = matrix.xy;
+				f.M21 = matrix.yx;
+				f.M22 = matrix.yy;
+				f.Dx = matrix.dx;
+				f.Dy = matrix.dy;
+			}else{
+				this.rawNode.style.filter = "progid:DXImageTransform.Microsoft.Matrix(M11=" + matrix.xx + 
+					", M12=" + matrix.xy + ", M21=" + matrix.yx + ", M22=" + matrix.yy + 
+					", Dx=" + matrix.dx + ", Dy=" + matrix.dy + ")";
+			}
+		}
 		return this;
 	}
 });
@@ -1078,8 +1112,9 @@ dojo.mixin(dojox.gfx.shape.Creator, {
 		node.style.position = "absolute";
 		node.style.width  = this.rawNode.style.width;
 		node.style.height = this.rawNode.style.height;
-		node.style.filter = "progid:DXImageTransform.Microsoft.Matrix(M11=1, M12=0, M21=0, M22=1, Dx=0, Dy=0)";
+		//node.style.filter = "progid:DXImageTransform.Microsoft.Matrix(M11=1, M12=0, M21=0, M22=1, Dx=0, Dy=0)";
 		var img  = this.rawNode.ownerDocument.createElement('img');
+		img.style.position = "relative";
 		node.appendChild(img);
 		shape.setRawNode(node);
 		this.rawNode.appendChild(node);
