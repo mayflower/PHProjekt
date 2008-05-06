@@ -1,6 +1,7 @@
 dojo.provide("dojox.dtl.tests.text.tag");
 
 dojo.require("dojox.dtl");
+dojo.require("dojox.dtl.Context");
 
 doh.register("dojox.dtl.text.tag", 
 	[
@@ -152,7 +153,7 @@ doh.register("dojox.dtl.text.tag",
 				banana: "Cavendish",
 				lemon: "Citrus"
 			};
-			template = new dd.Template("{% for key, value in items %}<li>{{ value }} {{ key|title }}</li>{% endfor %}");
+			template = new dd.Template("{% for key, value in items.items %}<li>{{ value }} {{ key|title }}</li>{% endfor %}");
 			t.is("<li>Red Delicious Apple</li><li>Cavendish Banana</li><li>Citrus Lemon</li>", template.render(context));
 
 			// The same thing above, but using "zipped" sets
@@ -312,7 +313,7 @@ doh.register("dojox.dtl.text.tag",
 				template = new dd.Template("{% ifequal user.id comment.user_id %}You posted this{% endif %}");
 			}catch(e){
 				found = true;
-				t.is("'tag' of name 'endif' does not exist", e.message);
+				t.is("No tag found for endif", e.message);
 			}
 			t.t(found);
 		},
@@ -331,34 +332,145 @@ doh.register("dojox.dtl.text.tag",
 			t.is("Your favorite", template.render(context));
 		},
 		function test_tag_include(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var context = new dd.Context({
+				hello: dojo.moduleUrl("dojox.dtl.tests.templates", "hello.html"),
+				person: "Bob",
+				people: ["Charles", "Ralph", "Julia"]
+			});
+
+			var template = new dd.Template("{% include hello %}");
+			t.is("Hello, <span>Bob</span>", template.render(context));
+
+			template = new dd.Template('{% include "../../dojox/dtl/tests/templates/hello.html" %}');
+			t.is("Hello, <span>Bob</span>", template.render(context));
+
+			template = new dd.Template('{% for person in people %}{% include hello %} {% endfor %}');
+			t.is("Hello, <span>Charles</span> Hello, <span>Ralph</span> Hello, <span>Julia</span> ", template.render(context));
 		},
 		function test_tag_load(t){
-			t.t(false);
+			t.f(dojox.dtl.tests.text.load);
+			new dojox.dtl.Template("{% load dojox.dtl.tests.text.load %}");
+			t.t(dojox.dtl.tests.text.load);
 		},
 		function test_tag_now(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var template = new dd.Template('It is {% now "jS F Y H:i" %}');
+			t.t(template.render().match(/^It is \d{1,2}[a-z]{2} [A-Z][a-z]+ [0-9]{4,} \d{2}:\d{2}$/));
+
+			template = new dd.Template('It is the {% now "jS \\o\\f F" %}');
+			t.t(template.render().match(/^It is the \d{1,2}[a-z]{2} of [A-Z][a-z]+$/));
+
+			template = new dd.Template("It is the {% now 'jS \\o\\f F' %}");
+			t.t(template.render().match(/^It is the \d{1,2}[a-z]{2} of [A-Z][a-z]+$/));
+
+			var found = false;
+			try{
+				template = new dd.Template("It is the {% now 'jS \\o\\f F %}");
+			}catch(e){
+				found = true;
+				t.is("'now' statement takes one argument", e.message);
+			}
+			t.t(found);
+
+			found = false;
+			try{
+				template = new dd.Template('It is the {% now "jS \\o\\f F %}');
+			}catch(e){
+				found = true;
+				t.is("'now' statement takes one argument", e.message);
+			}
+			t.t(found);
 		},
 		function test_tag_regroup(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var context = new dd.Context({
+				people: [
+					{ firstName: "Bill", lastName: "Clinton", gender: "Male" },
+					{ firstName: "Margaret", lastName: "Thatcher", gender: "Female" },
+					{ firstName: "Path", lastName: "Smith", gender: "Unkown" },
+					{ firstName: "Condoleezza", lastName: "Rice", gender: "Female" },
+					{ firstName: "George", lastName: "Bush", gender: "Male" }
+				]
+			});
+
+			var template = new dd.Template("{% regroup people|dictsort:'gender' by gender as grouped %}<ul>{% for group in grouped %}<li>{{ group.grouper }}<ul>{% for item in group.list %}<li>{{ item.firstName }} {{ item.lastName }}</li>{% endfor %}</ul></li>{% endfor %}</ul>");
+			t.t(template.render(context).match(new RegExp("^<ul><li>Female<ul><li>(Condoleezza Rice|Margaret Thatcher)</li><li>(Condoleezza Rice|Margaret Thatcher)</li></ul></li><li>Male<ul><li>(Bill Clinton|George Bush)</li><li>(Bill Clinton|George Bush)</li></ul></li><li>Unkown<ul><li>Path Smith</li></ul></li></ul>$")));
 		},
 		function test_tag_spaceless(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var template = new dd.Template("{% spaceless %}<ul> \n <li>Hot</li> \n\n<li>Pocket </li>\n </ul>{% endspaceless %}");
+			t.is("<ul><li>Hot</li><li>Pocket </li></ul>", template.render());
 		},
 		function test_tag_ssi(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var context = new dd.Context({
+				hello: dojo.moduleUrl("dojox.dtl.tests.templates", "hello.html"),
+				person: "Bob",
+				people: ["Charles", "Ralph", "Julia"]
+			});
+
+			var template = new dd.Template("{% ssi hello parsed %}");
+			t.is("Hello, <span>Bob</span>", template.render(context));
+
+			template = new dd.Template("{% ssi hello %}");
+			t.is("Hello, <span>{{ person }}</span>", template.render(context));
+
+			template = new dd.Template('{% ssi "../../dojox/dtl/tests/templates/hello.html" parsed %}');
+			t.is("Hello, <span>Bob</span>", template.render(context));
+
+			template = new dd.Template('{% for person in people %}{% ssi hello parsed %} {% endfor %}');
+			t.is("Hello, <span>Charles</span> Hello, <span>Ralph</span> Hello, <span>Julia</span> ", template.render(context));
 		},
 		function test_tag_templatetag(t){
-			t.t(false);
-		},
-		function test_tag_url(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var template = new dd.Template("{% templatetag openblock %}");
+			t.is("{%", template.render());
+			template = new dd.Template("{% templatetag closeblock %}");
+			t.is("%}", template.render());
+			template = new dd.Template("{% templatetag openvariable %}");
+			t.is("{{", template.render());
+			template = new dd.Template("{% templatetag closevariable %}");
+			t.is("}}", template.render());
+			template = new dd.Template("{% templatetag openbrace %}");
+			t.is("{", template.render());
+			template = new dd.Template("{% templatetag closebrace %}");
+			t.is("}", template.render());
+			template = new dd.Template("{% templatetag opencomment %}");
+			t.is("{#", template.render());
+			template = new dd.Template("{% templatetag closecomment %}");
+			t.is("#}", template.render());
 		},
 		function test_tag_widthratio(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var context = new dd.Context({
+				this_value: 175,
+				max_value: 200
+			});
+
+			var template = new dd.Template('<img src="bar.gif" height="10" width="{% widthratio this_value max_value 100 %}" />');
+			t.is('<img src="bar.gif" height="10" width="88" />', template.render(context));
 		},
 		function test_tag_with(t){
-			t.t(false);
+			var dd = dojox.dtl;
+
+			var context = new dd.Context({
+				person: {
+					someSqlMethod: function(){
+						return 4815162342;
+					}
+				}
+			});
+
+			var template = new dd.Template('{% with person.someSqlMethod as total %}{{ total }} object{{ total|pluralize }}{% endwith %}')
+			t.is("4815162342 objects", template.render(context));
 		}
 	]
 );

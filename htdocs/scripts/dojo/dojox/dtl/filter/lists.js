@@ -11,13 +11,19 @@ dojo.mixin(dojox.dtl.filter.lists, {
 		// summary: Takes a list of dicts, returns that list sorted by the property given in the argument.
 		if(!arg) return value;
 
-		var items = [];
-		for(var key in value){
-			items.push([dojox.dtl.resolveVariable('var.' + arg, new dojox.dtl.Context({ 'var' : value[key]})), value[key]]);
+		var i, item, items = [];
+		if(!dojo.isArray(value)){
+			var obj = value, value = [];
+			for(var key in obj){
+				value.push(obj[k]);
+			}
+		}
+		for(i = 0; i < value.length; i++){
+			items.push([new dojox.dtl._Filter('var.' + arg).resolve(new dojox.dtl._Context({ 'var' : value[i]})), value[i]]);
 		}
 		items.sort(dojox.dtl.filter.lists._dictsort);
 		var output = [];
-		for(var i = 0, item; item = items[i]; i++){
+		for(i = 0; item = items[i]; i++){
 			output.push(item[1]);
 		}
 		return output;
@@ -88,13 +94,13 @@ dojo.mixin(dojox.dtl.filter.lists, {
 	},
 	_unordered_list: function(value, tabs){
 		var ddl = dojox.dtl.filter.lists;
-		var indent = "";
-		for(var i = 0; i < tabs; i++){
+		var i, indent = "";
+		for(i = 0; i < tabs; i++){
 			indent += "\t";
 		}
 		if(value[1] && value[1].length){
 			var recurse = [];
-			for(var i = 0; i < value[1].length; i++){
+			for(i = 0; i < value[1].length; i++){
 				recurse.push(ddl._unordered_list(value[1][i], tabs + 1))
 			}
 			return indent + "<li>" + value[0] + "\n" + indent + "<ul>\n" + recurse.join("\n") + "\n" + indent + "</ul>\n" + indent + "</li>";
@@ -111,17 +117,17 @@ dojo.mixin(dojox.dtl.filter.lists, {
 		//		``['States', [['Kansas', [['Lawrence', []], ['Topeka', []]]], ['Illinois', []]]]``,
 		//		then ``{{ var|unordered_list }}`` would return::
 		//
-		//		<li>States
-		//		<ul>
-		//			<li>Kansas
-		//			<ul>
-		//				<li>Lawrence</li>
-		//				<li>Topeka</li>
-		//			</ul>
-		//			</li>
-		//			<li>Illinois</li>
-		//		</ul>
-		//		</li>
+		//		|	<li>States
+		//		|	<ul>
+		//		|		<li>Kansas
+		//		|		<ul>
+		//		|			<li>Lawrence</li>
+		//		|			<li>Topeka</li>
+		//		|		</ul>
+		//		|		</li>
+		//		|		<li>Illinois</li>
+		//		|	</ul>
+		//		|	</li>
 		return dojox.dtl.filter.lists._unordered_list(value, 1);
 	}
 });
