@@ -1,6 +1,6 @@
 dojo.provide('dojox.grid._grid.scroller');
 
-dojo.declare('dojox.grid.scroller.base', null, {
+dojo.declare('dojox.grid._grid.ScrollerBase', null, {
 	// summary:
 	//	virtual scrollbox, abstract class
 	//	Content must in /rows/
@@ -37,13 +37,17 @@ dojo.declare('dojox.grid.scroller.base', null, {
 		this.defaultPageHeight = this.defaultRowHeight * this.rowsPerPage;
 		//this.defaultPageHeight = this.defaultRowHeight * Math.min(this.rowsPerPage, this.rowCount);
 		this.pageCount = Math.ceil(this.rowCount / this.rowsPerPage);
-		this.keepPages = Math.max(Math.ceil(this.keepRows / this.rowsPerPage), 2);
+		this.setKeepInfo(this.keepRows);
 		this.invalidate();
 		if(this.scrollboxNode){
 			this.scrollboxNode.scrollTop = 0;
 			this.scroll(0);
 			this.scrollboxNode.onscroll = dojo.hitch(this, 'onscroll');
 		}
+	},
+	setKeepInfo: function(inKeepRows){
+		this.keepRows = inKeepRows;
+		this.keepPages = !this.keepRows ? this.keepRows : Math.max(Math.ceil(this.keepRows / this.rowsPerPage), 2);
 	},
 	// updating
 	invalidate: function(){
@@ -56,7 +60,7 @@ dojo.declare('dojox.grid.scroller.base', null, {
 		this.invalidateNodes();
 		this.rowCount = inRowCount;
 		// update page count, adjust document height
-		oldPageCount = this.pageCount;
+		var oldPageCount = this.pageCount;
 		this.pageCount = Math.ceil(this.rowCount / this.rowsPerPage);
 		if(this.pageCount < oldPageCount){
 			for(var i=oldPageCount-1; i>=this.pageCount; i--){
@@ -189,7 +193,7 @@ dojo.declare('dojox.grid.scroller.base', null, {
 	needPage: function(inPageIndex, inPos){
 		var h = this.getPageHeight(inPageIndex), oh = h;
 		if(!this.pageExists(inPageIndex)){
-			this.buildPage(inPageIndex, (this.keepPages)&&(this.stack.length >= this.keepPages), inPos);
+			this.buildPage(inPageIndex, this.keepPages&&(this.stack.length >= this.keepPages), inPos);
 			h = this.measurePage(inPageIndex) || h;
 			this.pageHeights[inPageIndex] = h;
 			if(h && (oh != h)){
@@ -243,7 +247,7 @@ dojo.declare('dojox.grid.scroller.base', null, {
 	dummy: 0
 });
 
-dojo.declare('dojox.grid.scroller', dojox.grid.scroller.base, {
+dojo.declare('dojox.grid._grid.Scroller', dojox.grid._grid.ScrollerBase, {
 	// summary:
 	//	virtual scroller class, makes no assumption about shape of items being scrolled
 	constructor: function(){
@@ -303,7 +307,7 @@ dojo.declare('dojox.grid.scroller', dojox.grid.scroller.base, {
 	preparePageNode: function(inPageIndex, inReusePageIndex, inNodes){
 		var p = (inReusePageIndex === null ? this.createPageNode() : this.invalidatePageNode(inReusePageIndex, inNodes));
 		p.pageIndex = inPageIndex;
-		p.id = 'page-' + inPageIndex;
+		p.id = (this._pageIdPrefix || "") + 'page-' + inPageIndex;
 		inNodes[inPageIndex] = p;
 	},
 	// implementation for page manager
@@ -412,7 +416,7 @@ dojo.declare('dojox.grid.scroller', dojox.grid.scroller.base, {
 	dummy: 0
 });
 
-dojo.declare('dojox.grid.scroller.columns', dojox.grid.scroller, {
+dojo.declare('dojox.grid._grid.ColumnScroller', dojox.grid._grid.Scroller, {
 	// summary:
 	//	Virtual scroller class that scrolls list of columns. Owned by grid and used internally
 	//	for virtual scrolling.
@@ -433,7 +437,7 @@ dojo.declare('dojox.grid.scroller.columns', dojox.grid.scroller, {
 	},
 	scroll: function(inTop) {
 		if(this.colCount){
-			dojox.grid.scroller.prototype.scroll.call(this, inTop);
+			dojox.grid._grid.Scroller.prototype.scroll.call(this, inTop);
 		}
 	},
 	// resize

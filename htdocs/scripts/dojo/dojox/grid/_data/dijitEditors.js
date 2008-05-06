@@ -3,6 +3,7 @@ dojo.require("dojox.grid._data.editors");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.TimeTextBox");
 dojo.require("dijit.form.ComboBox");
+dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.NumberSpinner");
@@ -11,7 +12,7 @@ dojo.require("dijit.form.CurrencyTextBox");
 dojo.require("dijit.form.Slider");
 dojo.require("dijit.Editor");
 
-dojo.declare("dojox.grid.editors.Dijit", dojox.grid.editors.base, {
+dojo.declare("dojox.grid._data.editors.Dijit", dojox.grid._data.editors.base, {
 	editorClass: "dijit.form.TextBox",
 	constructor: function(inCell){
 		this.editor = null;
@@ -77,7 +78,7 @@ dojo.declare("dojox.grid.editors.Dijit", dojox.grid.editors.base, {
 	}
 });
 
-dojo.declare("dojox.grid.editors.ComboBox", dojox.grid.editors.Dijit, {
+dojo.declare("dojox.grid._data.editors.ComboBox", dojox.grid._data.editors.Dijit, {
 	editorClass: "dijit.form.ComboBox",
 	getEditorProps: function(inDatum){
 		var items=[];
@@ -98,7 +99,7 @@ dojo.declare("dojox.grid.editors.ComboBox", dojox.grid.editors.Dijit, {
 	}
 });
 
-dojo.declare("dojox.grid.editors.DateTextBox", dojox.grid.editors.Dijit, {
+dojo.declare("dojox.grid._data.editors.DateTextBox", dojox.grid._data.editors.Dijit, {
 	editorClass: "dijit.form.DateTextBox",
 	setValue: function(inRowIndex, inValue){
 		if(this.editor){
@@ -115,15 +116,25 @@ dojo.declare("dojox.grid.editors.DateTextBox", dojox.grid.editors.Dijit, {
 });
 
 
-dojo.declare("dojox.grid.editors.CheckBox", dojox.grid.editors.Dijit, {
+dojo.declare("dojox.grid._data.editors.CheckBox", dojox.grid._data.editors.Dijit, {
 	editorClass: "dijit.form.CheckBox",
 	getValue: function(){
 		return this.editor.checked;
+	},
+	setValue: function(inRowIndex, inValue){
+		if(this.editor&&this.editor.setAttribute){
+			this.editor.setAttribute("checked", inValue);
+		}else{
+			this.inherited(arguments);
+		}
+	},
+	sizeEditor: function(inNode, inDatum, inRowIndex){
+		return;
 	}
 });
 
 
-dojo.declare("dojox.grid.editors.Editor", dojox.grid.editors.Dijit, {
+dojo.declare("dojox.grid._data.editors.Editor", dojox.grid._data.editors.Dijit, {
 	editorClass: "dijit.Editor",
 	getEditorProps: function(inDatum){
 		return dojo.mixin({}, this.cell.editorProps||{}, {
@@ -133,16 +144,23 @@ dojo.declare("dojox.grid.editors.Editor", dojox.grid.editors.Dijit, {
 	createEditor: function(inNode, inDatum, inRowIndex){
 		// editor needs its value set after creation
 		var editor = new this.editorClass(this.getEditorProps(inDatum), inNode);
-		editor.setValue(inDatum);
+		dojo.connect(editor, 'onLoad', dojo.hitch(this, 'populateEditor'));
 		return editor;
 	},
 	formatNode: function(inNode, inDatum, inRowIndex){
+		this.content = inDatum;
 		this.inherited(arguments);
-		// FIXME: seem to need to reopen the editor and display the toolbar
-		var e = this.editor;
-		e.open();
-		if(this.cell.editorToolbar){
-			dojo.place(e.toolbar.domNode, e.editingArea, "before");
+		if(dojo.isMoz){
+			// FIXME: seem to need to reopen the editor and display the toolbar
+			var e = this.editor;
+			e.open();
+			if(this.cell.editorToolbar){
+				dojo.place(e.toolbar.domNode, e.editingArea, "before");
+			}
 		}
+	},
+	populateEditor: function(){
+		this.editor.setValue(this.content);
+		this.editor.placeCursorAtEnd();
 	}
 });
