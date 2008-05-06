@@ -47,7 +47,7 @@ dojo.declare("dojox.widget.FileInputAuto",
 		// summary: add our extra blur listeners
 		this._blurListener = dojo.connect(this.fileInput,"onblur",this,"_onBlur");
 		this._focusListener = dojo.connect(this.fileInput,"onfocus",this,"_onFocus"); 
-		this.inherited("startup",arguments);
+		this.inherited(arguments);
 	},
 
 	_onFocus: function(){
@@ -67,14 +67,18 @@ dojo.declare("dojox.widget.FileInputAuto",
 	setMessage: function(/*String*/title){
 		// summary: set the text of the progressbar
 		
-		// FIXME: this throws errors in IE?!?!?!? egads.		
-		if(!dojo.isIE){ this.overlay.innerHTML = title;	}
+		// innerHTML throws errors in IE! so use DOM manipulation instead
+		//this.overlay.innerHTML = title;
+		this.overlay.removeChild(this.overlay.firstChild);
+		this.overlay.appendChild(document.createTextNode(title));
 	},
 	
 	_sendFile: function(/* Event */e){
 		// summary: triggers the chain of events needed to upload a file in the background.
-		if(!this.fileInput.value || this._sent){ return; }
-		
+		if(this._sent || this._sending || !this.fileInput.value){ return; }
+
+		this._sending = true;
+
 		dojo.style(this.fakeNodeHolder,"display","none");
 		dojo.style(this.overlay,"opacity","0");
 		dojo.style(this.overlay,"display","block");
@@ -98,7 +102,7 @@ dojo.declare("dojox.widget.FileInputAuto",
 		dojo.body().appendChild(_newForm);
 	
 		dojo.io.iframe.send({
-			url: this.url+"?name="+this.name,
+			url: this.url,
 			form: _newForm,
 			handleAs: "json",
 			handle: dojo.hitch(this,"_handleSend")
@@ -107,12 +111,12 @@ dojo.declare("dojox.widget.FileInputAuto",
 
 	_handleSend: function(data,ioArgs){
 		// summary: The callback to toggle the progressbar, and fire the user-defined callback
-		if(!dojo.isIE){
-			// otherwise, this throws errors in ie? FIXME:
-			this.overlay.innerHTML = "";
-		}
+
+		// innerHTML throws errors in IE! so use DOM manipulation instead
+		this.overlay.removeChild(this.overlay.firstChild);
 		
 		this._sent = true;
+		this._sending = false;
 		dojo.style(this.overlay,"opacity","0");
 		dojo.style(this.overlay,"border","none");
 		dojo.style(this.overlay,"background","none"); 
@@ -125,18 +129,25 @@ dojo.declare("dojox.widget.FileInputAuto",
 		dojo.disconnect(this._blurListener);
 		dojo.disconnect(this._focusListener);
 
+		//remove the form used to send the request
+		dojo.body().removeChild(ioArgs.args.form);
+		this.fileInput = null;
+
 		this.onComplete(data,ioArgs,this);
 	},
 
-	_onClick: function(e){
+	reset: function(e){
 		// summary: accomodate our extra focusListeners
 		if(this._blurTimer){ clearTimeout(this._blurTimer); }
 
 		dojo.disconnect(this._blurListener);
 		dojo.disconnect(this._focusListener);
 
-		this.inherited("_onClick",arguments);
-
+		this.overlay.style.display = "none";
+		this.fakeNodeHolder.style.display = "";
+		this.inherited(arguments);
+		this._sent = false;
+		this._sending = false;
 		this._blurListener = dojo.connect(this.fileInput,"onblur",this,"_onBlur");
 		this._focusListener = dojo.connect(this.fileInput,"onfocus",this,"_onFocus"); 
 	},
@@ -158,7 +169,7 @@ dojo.declare("dojox.widget.FileInputBlind",
 	
 	startup: function(){
 		// summary: hide our fileInput input field
-		this.inherited("startup",arguments);
+		this.inherited(arguments);
 		this._off = dojo.style(this.inputNode,"width");
 		this.inputNode.style.display = "none";
 		this._fixPosition();
@@ -173,9 +184,9 @@ dojo.declare("dojox.widget.FileInputBlind",
 		}
 	},
 
-	_onClick: function(e){
+	reset: function(e){
 		// summary: onclick, we need to reposition our newly created input type="file"
-		this.inherited("_onClick",arguments);
+		this.inherited(arguments);
 		this._fixPosition(); 
 	}
 });
