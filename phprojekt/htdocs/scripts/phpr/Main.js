@@ -15,6 +15,7 @@ dojo.require("dojo.date.locale");
 
 //Load widgets from Lib
 dojo.require("phpr.Component");
+dojo.require("phpr.roundedContentPane");
 
 //Load all module mains
 //When a new Module is created please add here
