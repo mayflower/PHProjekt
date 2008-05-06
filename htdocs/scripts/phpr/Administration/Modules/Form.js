@@ -1,8 +1,8 @@
-dojo.provide("phpr.Administration.Role.Form");
+dojo.provide("phpr.Administration.Modules.Form");
 
-dojo.require("phpr.Default.Form");
+dojo.require("phpr.Administration.Default.Form");
 
-dojo.declare("phpr.Administration.Role.Form", phpr.Default.Form, {
+dojo.declare("phpr.Administration.Modules.Form", phpr.Administration.Default.Form, {
 	 constructor: function(){
 	 }
 });

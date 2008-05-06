@@ -13,6 +13,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		this.gridWidget = phpr.Timecard.Grid;
 		this.formWidget = phpr.Timecard.Form;
 		this.treeWidget = phpr.Timecard.Tree;
+        this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
 		
 		//subscribe to all topics which concern this module
 		dojo.subscribe("Timecard.load", this, "load");
@@ -39,6 +40,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.tree     = new this.treeWidget(this);
+                this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
+                this.form     = new this.formWidget(this);
             })
         );
     },
@@ -60,6 +63,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         // destroy serverFeedback
         phpr.destroyWidgets("serverFeedback");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
+        this.form     = new this.formWidget(this);
 
     }
 
