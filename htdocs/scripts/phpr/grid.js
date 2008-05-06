@@ -58,7 +58,7 @@ phpr.grid.updateRows = function(gridWidget, rowNumbers) {
     model.store.fetch(params);
 };
 
-dojo.declare("phpr.grid.Model", dojox.grid.data.DojoData, {
+dojo.declare("phpr.grid.Model", dojox.grid._data.DojoData, {
     // Thanks to Maine for the kick start: http://dojotoolkit.org/book/dojo-book-0-9-1-0/part-2-dijit-dojo-widget-library/advanced-editing-and-display/grid-1-0/sortin#comment-9112
     
     // The number of items to load per request.
@@ -143,7 +143,7 @@ dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
     }
 });
 
-dojo.declare("phpr.grid.editors.MultiComboBox", dojox.grid.editors.Dijit, {
+dojo.declare("phpr.grid._data.editors.MultiComboBox", dojox.grid._data.editors.Dijit, {
     editorClass: "dojox.widget.MultiComboBox",
     getEditorProps: function(inDatum){
         var store = new dojo.data.ItemFileReadStore({data: {identifier:"id", items: this.cell.options}});
