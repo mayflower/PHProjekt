@@ -47,7 +47,7 @@ dojo.declare(
 			if(this.disabled || this.readOnly){ return; }
 			this._arrowState(nodePressed, true);
 			this.setValue(this.adjust(this.getValue(), direction*this.smallDelta), false);
-			dijit.focus(this.textbox);
+			dijit.selectInputText(this.textbox, this.textbox.value.length);
 		},
 
 		_arrowReleased: function(/*Node*/ node){
@@ -57,34 +57,28 @@ dojo.declare(
 		},
 
 		_typematicCallback: function(/*Number*/ count, /*DOMNode*/ node, /*Event*/ evt){
-			if(node == this.textbox){ node = (evt.keyCode == dojo.keys.UP_ARROW) ? this.upArrowNode : this.downArrowNode; }
+			if(node == this.textbox){ node = (evt.charOrCode == dojo.keys.UP_ARROW) ? this.upArrowNode : this.downArrowNode; }
 			if(count == -1){ this._arrowReleased(node); }
 			else{ this._arrowPressed(node, (node == this.upArrowNode) ? 1 : -1); }
 		},
 
 		_wheelTimer: null,
 		_mouseWheeled: function(/*Event*/ evt){
-			dojo.stopEvent(evt);
-			var scrollAmount = 0;
-			if(typeof evt.wheelDelta == 'number'){ // IE
-				scrollAmount = evt.wheelDelta;
-			}else if(typeof evt.detail == 'number'){ // Mozilla+Firefox
-				scrollAmount = -evt.detail;
+
+			dojo.stopEvent(evt);			
+			var scrollAmount = evt[(dojo.isIE ? "wheelDelta" : "detail")] * (dojo.isIE ? 1 : -1);
+			if(scrollAmount !== 0){
+				var node = this[(scrollAmount > 0 ? "upArrowNode" : "downArrowNode" )];
+				var dir = (scrollAmount > 0 ? 1 : -1);
+				
+				this._arrowPressed(node, dir);
+
+				if(!this._wheelTimer){
+					clearTimeout(this._wheelTimer);
+				}
+				this._wheelTimer = setTimeout(dojo.hitch(this,"_arrowReleased",node), 50);
 			}
-			var node, dir;
-			if(scrollAmount > 0){
-				node = this.upArrowNode;
-				dir = +1;
-			}else if(scrollAmount < 0){
-				node = this.downArrowNode;
-				dir = -1;
-			}else{ return; }
-			this._arrowPressed(node, dir);
-			if(this._wheelTimer != null){
-				clearTimeout(this._wheelTimer);
-			}
-			var _this = this;
-			this._wheelTimer = setTimeout(function(){_this._arrowReleased(node);}, 50);
+			
 		},
 
 		postCreate: function(){
@@ -92,7 +86,22 @@ dojo.declare(
 
 			// extra listeners
 			this.connect(this.textbox, dojo.isIE ? "onmousewheel" : 'DOMMouseScroll', "_mouseWheeled");
-			this._connects.push(dijit.typematic.addListener(this.upArrowNode, this.textbox, {keyCode:dojo.keys.UP_ARROW,ctrlKey:false,altKey:false,shiftKey:false}, this, "_typematicCallback", this.timeoutChangeRate, this.defaultTimeout));
-			this._connects.push(dijit.typematic.addListener(this.downArrowNode, this.textbox, {keyCode:dojo.keys.DOWN_ARROW,ctrlKey:false,altKey:false,shiftKey:false}, this, "_typematicCallback", this.timeoutChangeRate, this.defaultTimeout));
+			this._connects.push(dijit.typematic.addListener(this.upArrowNode, this.textbox, {charOrCode:dojo.keys.UP_ARROW,ctrlKey:false,altKey:false,shiftKey:false}, this, "_typematicCallback", this.timeoutChangeRate, this.defaultTimeout));
+			this._connects.push(dijit.typematic.addListener(this.downArrowNode, this.textbox, {charOrCode:dojo.keys.DOWN_ARROW,ctrlKey:false,altKey:false,shiftKey:false}, this, "_typematicCallback", this.timeoutChangeRate, this.defaultTimeout));
+			if(dojo.isIE){
+				// When spinner is moved from hidden to visible, call _setStateClass to remind IE to render it. (#6123)
+				var _this = this;
+				this.connect(this.domNode, "onresize", 
+					function(){ setTimeout(dojo.hitch(_this,
+						function(){
+							// cause the IE expressions to rerun
+							this.upArrowNode.style.behavior = '';
+							this.downArrowNode.style.behavior = '';
+							// cause IE to rerender
+							this._setStateClass();
+						}), 0);
+					}
+				);
+			}
 		}
 });
