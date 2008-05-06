@@ -1,16 +1,42 @@
 /*=====
 // this file is in place as a quick way to give summaries to all available dojox projects.
 
-dojox.charting = { 
-	// summary: Vector Data Driven graphs and charts 
+dojox = {
+	// summary:
+	//	DojoX: the home for Dojo eXtensions
+	//
+	// description:
+	//	DojoX is a collection of subprojects provided by Dojo committers and subject to
+	//	the generous licensing and policies of the [Dojo CLA](http://dojotoolkit.org/cla)
+	//	Each subproject in DojoX has its own top-level directory and a README file with
+	//	status information and project status and a stability rating (experimental, beta, stable)
+	//
+	//	Projects may or may not depend on other top-level Dojo projects, like Dojo or Dijit.
+	//	Unlike Dojo and Dijit, code is not subject to i18n and a11y restrictions and may vary
+	//	in quality (experimental code is encouraged in DojoX, but currently prohibited in Dojo
+	//	and Dijit)
+	//
+	//	DojoX projects may mature to a stable state and stay in DojoX, or on occasion
+	//	after proving themselves may migrate to Dojo Core or Dijit.  Dojo and Dijit projects
+	//	are constrained both by development resources as well as design goals, so DojoX is
+	//	a natural place to provide enhanced behavior or extend Dojo Core or Dijit primitives.
+	//	DojoX can also be an incubator for entirely new projects.
+}
+
+dojox._sql = { 
+	// summary: objects to support Dojo Offline (dojox.off)
 };
 
-dojox.collections = { // FIXME:
+dojox.charting = { 
+	// summary: Vector graphic, data-driven graphs and charts 
+};
 
+dojox.collections = { 
+	// summary: A set of lists and hashes for easy use within your applications.
 };
 
 dojox.color = { 
-	// summary: Advanced color methods, including HSV, HSL, CMYK, etc.
+	// summary: Advanced color methods, including HSV, HSL, and CMYK conversion, a color generator and advanced colorspace calculations.
 };
 
 dojox.cometd = { 
@@ -18,7 +44,7 @@ dojox.cometd = {
 };
 
 dojox.crypto = { 
-	// summary: A cryptography project 
+	// summary: Cryptography in JS.  DEPRECATED: use dojox.encoding instead.
 };	
 
 dojox.data = { 
@@ -34,11 +60,11 @@ dojox.dtl = {
 };
 
 dojox.encoding = { 
-	// summary: Experimental encoding project	
+	// summary: Various encoding algorithms, including crypto and digests.
 };
 
-dojox.flash = { // FIXME:
-
+dojox.flash = { 
+	// summary: Utilities to embed and communicate with Flash-based objects
 };
 
 dojox.fx = {
@@ -63,13 +89,12 @@ dojox.fx["ext-dojo"] = {
 };
 
 dojox.gfx = { 
-	// summary: Cross-browser vector drawing API
+	// summary: Cross-browser vector graphics API
 	// description: 
 	//
 	//	dojox.gfx is an advanced API providing normalized vector drawing
 	//	in a variety of browsers. It has individual renderers for SVG, VML,
 	//	Canvas, and Silverlight.
-	//
 };
 
 dojox.gfx3d = { 
@@ -77,7 +102,7 @@ dojox.gfx3d = {
 };
 
 dojox.grid = { 
-	// summary: An advanced Grid project
+	// summary: An advanced Grid widget with virtual scrolling, cell editing, and much more 
 };	
 
 dojox.highlight = { 
@@ -107,18 +132,22 @@ dojox.jsonPath = {
 };
 
 dojox.layout = { 
-	// summary: A Collection of layout related Widgets
+	// summary: A collection of layout related Widgets
 };
 
 dojox.lang = { 
 	// summary: Language specific extensions
+	functional: {
+		// summary: Functional language constructs, including currying and lambda.
+	}
 };
 
-dojox.math = { // FIXME:
-
+dojox.math = { 
+	// summary: A collection of various advanced math functions.
 };
 
-dojox.off = { // summary: the Dojo Offline project
+dojox.off = { 
+	// summary: the Dojo Offline project
 };
 
 dojox.presentation = {
@@ -129,24 +158,20 @@ dojox.regexp = {
 	// summary: Additional pre-made regular expressions for use
 };
 
-dojox.sql = { // FIXME:
-
+dojox.storage = { 
+	// summary: Objects for mass storage within the browser.  For when cookies just aren't enough.
 };
 
-dojox.storage = { // FIXME:
-
+dojox.string = {
+	// summary: A collection of various objects for advanced string manipulation, including a Builder and a tokenizer.
 };
 
-dojox.string = { // FIXME:
-
+dojox.timing = {
+	// summary: A set of objects to perform advanced time-based tasks, including a basic Timer.
 };
 
-dojox.timing = { // FIXME:
-
-};
-
-dojox.uuid = { // FIXME:
-
+dojox.uuid = { 
+	// summary: Universally Unique Identifier (UUID) implementations, including an implementation of UUID 2
 };
 
 dojox.validate = { 
@@ -160,21 +185,20 @@ dojox.validate = {
 };
 
 dojox.widget = { 
-	// summary: A Collection of un-categorized widgets, or code not requiring it's own package.
+	// summary: A collection of un-categorized widgets, or code not requiring it's own package.
 	// 
 	// description: 
 	// 	These are standalone widgets with varying levels of stability. Some are useful, 
 	//	some were created for demonstration purposes, and learning tools. The each maintain
 	//	their own .css file (typically dojox/widget/WidgetName/WidgetName.css)
-	//
-	//	
 };
 
-dojox.wire = { // FIXME:
-
+dojox.wire = {
+	// summary:
+	//	Declarative data binding and action tags for simplified MVC
 };
 
-dojox.xml = { // FIXME:
-
+dojox.xml = {
+	// summary: XML utilities.  Currently only includes a DomParser, which returns a psuedo-XML document in JSON-like form.
 };
 =====*/

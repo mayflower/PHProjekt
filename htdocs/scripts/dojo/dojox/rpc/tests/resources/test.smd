@@ -1,7 +1,6 @@
 {
 	transport: "POST",
 	envelope: "URL",
-	target: "../../dojox/rpc/tests/resources",
 	strictParameters: false,
 	parameters: {
                 appId: {},
@@ -30,6 +29,41 @@
                                 {name: "message", type: "string", optional: true}
                         ]
                 },
+                getEchoJson: {
+			transport: "GET",
+                        target: "echoJson.php",
+			contentType:"application/json",
+                        parameters: [
+                                {name: "message", type: "string", optional: true}
+                        ]
+                },
+                getPathEcho: {
+			transport: "GET",
+			envelope: "PATH",
+			target: "echo.php?message=",
+
+			parameters: [
+                                {name: "message", type: "string", optional: true}
+                        ]
+                },
+		restStore: {
+			transport: "REST",
+			contentType:"text/plain",
+			target: "fakestore.php", 
+                        parameters: [
+                                {name: "location", type: "string", optional: true}
+                        ]
+                },
+		jsonRestStore: {
+				transport: "REST",
+                        target: "fakestore.php",
+						contentType:"application/json",
+                        parameters: [
+                                {name: "location", type: "string", optional: true}
+                        ]
+                },
+
+
 
                 postJsonEcho: {
 			transport: "POST",
@@ -73,7 +107,7 @@
 
                 jsonpJsonRpc12Echo: {
 			transport: "JSONP",
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			target: "jsonpJsonRpcEcho.php",
 
                         parameters: [
@@ -83,7 +117,7 @@
 
                 jsonpJsonRpc12EchoNamed: {
 			transport: "JSONP",
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			target: "jsonpJsonRpcEcho.php",
 
                         parameters: [
@@ -103,7 +137,7 @@
 
                 postJsonRpc12Echo: {
 			transport: "POST",
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			target: "jsonRpc12.php",
 
                         parameters: [
@@ -113,7 +147,7 @@
 
                 getJsonRpc12Echo: {
 			transport: "GET",
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			target: "jsonRpcPostGetEcho.php",
 
                         parameters: [
@@ -123,7 +157,7 @@
 
                 postJsonRpc12EchoNamed: {
 			transport: "POST",
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			target: "jsonRpcPostGetEcho.php",
 
                         parameters: [
@@ -133,7 +167,7 @@
 
                 getJsonRpc12EchoNamed: {
 			transport: "GET",
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			target: "jsonRpcPostGetEcho.php",
 
                         parameters: [
@@ -143,7 +177,7 @@
 
 
                 postJsonRpc12ForcedError: {
-			envelope: "JSON-RPC-1.2",
+			envelope: "JSON-RPC-2.0",
 			transport: "POST",
 			target: "jsonRpc12.php",
 

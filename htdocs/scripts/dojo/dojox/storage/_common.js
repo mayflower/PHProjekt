@@ -2,12 +2,16 @@ dojo.provide("dojox.storage._common");
 dojo.require("dojox.storage.Provider");
 dojo.require("dojox.storage.manager");
 
+/*
+  Note: if you are doing Dojo Offline builds you _must_
+  have offlineProfile=true when you run the build script:
+  ./build.sh action=release profile=offline offlineProfile=true
+*/
 dojo.require("dojox.storage.GearsStorageProvider");
-
-// FIXME: Find way to set isGears from offline.profile.js file; it didn't
-// work for me
-//dojo.requireIf(!dojo.isGears, "dojox.storage.FlashStorageProvider");
-//dojo.requireIf(!dojo.isGears, "dojox.storage.WhatWGStorageProvider");
+//>>excludeStart("offlineProfileExclude", kwArgs.dojoxStorageBuildOption == "offline");
+dojo.require("dojox.storage.WhatWGStorageProvider");
+dojo.require("dojox.storage.FlashStorageProvider");
+//>>excludeEnd("offlineProfileExclude");
 
 // now that we are loaded and registered tell the storage manager to
 // initialize itself
