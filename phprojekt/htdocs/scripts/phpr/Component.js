@@ -1,4 +1,5 @@
 dojo.provide("phpr.Component");
+dojo.require("dojox.dtl.Context");
 
 // A global cache
 var __phpr_templateCache = {};

@@ -95,7 +95,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
                         field:   meta[i]["key"],
                         styles:  "text-align:center;",
                         width:   "auto",
-                        editor:  dojox.grid.editors.Select,
+                        editor:  dojox.grid._data.editors.Select,
                         options: opts,
                         values:  vals
                     });
@@ -108,7 +108,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
                         styles:    "text-align:center;",
                         width:     "auto",
                         formatter: phpr.grid.formatDate,
-                        editor:    dojox.grid.editors.DateTextBox
+                        editor:    dojox.grid._data.editors.DateTextBox
                     });
                     break;
                 
@@ -118,7 +118,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
                         field:  meta[i]["key"],
                         styles: "text-align:left;",
                         width:  "auto",
-                        editor: dojox.grid.editors.Input
+                        editor: dojox.grid._data.editors.Input
                         });
                     break;
             }
