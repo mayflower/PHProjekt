@@ -37,7 +37,7 @@ dojo.requireLocalization("dojo.cldr", "gregorian");
 								s = String(s); s = s.substr(s.length - 2);
 								break;
 							}
-							// falthrough
+							// fallthrough
 						default:
 							pad = true;
 					}
@@ -116,7 +116,7 @@ dojo.requireLocalization("dojo.cldr", "gregorian");
 				case 'k':
 					var h = dateObject.getHours();
 					// strange choices in the date format make it impossible to write this succinctly
-					switch (c) {
+					switch (c){
 						case 'h': // 1-12
 							s = (h % 12) || 12;
 							break;
@@ -139,7 +139,7 @@ dojo.requireLocalization("dojo.cldr", "gregorian");
 					s = dateObject.getSeconds(); pad = true;
 					break;
 				case 'S':
-					s = Math.round(dateObject.getMilliseconds() * Math.pow(10, l-3));
+					s = Math.round(dateObject.getMilliseconds() * Math.pow(10, l-3)); pad = true;
 					break;
 				case 'v': // FIXME: don't know what this is. seems to be same as z?
 				case 'z':
@@ -171,7 +171,39 @@ dojo.requireLocalization("dojo.cldr", "gregorian");
 		});
 	}
 
-dojo.date.locale.format = function(/*Date*/dateObject, /*Object?*/options){
+/*=====
+	dojo.date.locale.__FormatOptions = function(){
+	//	selector: String
+	//		choice of 'time','date' (default: date and time)
+	//	formatLength: String
+	//		choice of long, short, medium or full (plus any custom additions).  Defaults to 'short'
+	//	datePattern:String
+	//		override pattern with this string
+	//	timePattern:String
+	//		override pattern with this string
+	//	am: String
+	//		override strings for am in times
+	//	pm: String
+	//		override strings for pm in times
+	//	locale: String
+	//		override the locale used to determine formatting rules
+	//	fullYear: Boolean
+	//		(format only) use 4 digit years whenever 2 digit years are called for
+	//	strict: Boolean
+	//		(parse only) strict parsing, off by default
+		this.selector = selector;
+		this.formatLength = formatLength;
+		this.datePattern = datePattern;
+		this.timePattern = timePattern;
+		this.am = am;
+		this.pm = pm;
+		this.locale = locale;
+		this.fullYear = fullYear;
+		this.strict = strict;
+	}
+=====*/
+
+dojo.date.locale.format = function(/*Date*/dateObject, /*dojo.date.locale.__FormatOptions?*/options){
 	// summary:
 	//		Format a Date object as a String, using locale-specific settings.
 	//
@@ -181,22 +213,14 @@ dojo.date.locale.format = function(/*Date*/dateObject, /*Object?*/options){
 	//		Formatting patterns are chosen appropriate to the locale.  Different
 	//		formatting lengths may be chosen, with "full" used by default.
 	//		Custom patterns may be used or registered with translations using
-	//		the addCustomFormats method.
-	//		Formatting patterns are implemented using the syntax described at
-	//		http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns
+	//		the dojo.date.locale.addCustomFormats method.
+	//		Formatting patterns are implemented using [the syntax described at
+	//		unicode.org](http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns)
 	//
 	// dateObject:
 	//		the date and/or time to be formatted.  If a time only is formatted,
 	//		the values in the year, month, and day fields are irrelevant.  The
 	//		opposite is true when formatting only dates.
-	//
-	// options: object {selector: string, formatLength: string, datePattern: string, timePattern: string, locale: string}
-	//		selector- choice of 'time','date' (default: date and time)
-	//		formatLength- choice of long, short, medium or full (plus any custom additions).  Defaults to 'short'
-	//		datePattern,timePattern- override pattern with this string
-	//		am,pm- override strings for am/pm in times
-	//		locale- override the locale used to determine formatting rules
-	//		fullYear- use 4 digit years whenever 2 digit years are called for
 
 	options = options || {};
 
@@ -225,20 +249,14 @@ dojo.date.locale.format = function(/*Date*/dateObject, /*Object?*/options){
 	return result; // String
 };
 
-dojo.date.locale.regexp = function(/*Object?*/options){
+dojo.date.locale.regexp = function(/*dojo.date.locale.__FormatOptions?*/options){
 	// summary:
 	//		Builds the regular needed to parse a localized date
-	//
-	// options: object {selector: string, formatLength: string, datePattern: string, timePattern: string, locale: string, strict: boolean}
-	//		selector- choice of 'time', 'date' (default: date and time)
-	//		formatLength- choice of long, short, medium or full (plus any custom additions).  Defaults to 'short'
-	//		datePattern,timePattern- override pattern with this string
-	//		locale- override the locale used to determine formatting rules
 
 	return dojo.date.locale._parseInfo(options).regexp; // String
 };
 
-dojo.date.locale._parseInfo = function(/*Object?*/options){
+dojo.date.locale._parseInfo = function(/*dojo.date.locale.__FormatOptions?*/options){
 	options = options || {};
 	var locale = dojo.i18n.normalizeLocale(options.locale);
 	var bundle = dojo.date.locale._getGregorianBundle(locale);
@@ -259,7 +277,7 @@ dojo.date.locale._parseInfo = function(/*Object?*/options){
 	return {regexp: re, tokens: tokens, bundle: bundle};
 };
 
-dojo.date.locale.parse = function(/*String*/value, /*Object?*/options){
+dojo.date.locale.parse = function(/*String*/value, /*dojo.date.locale.__FormatOptions?*/options){
 	// summary:
 	//		Convert a properly formatted string to a primitive Date object,
 	//		using locale-specific settings.
@@ -270,23 +288,16 @@ dojo.date.locale.parse = function(/*String*/value, /*Object?*/options){
 	//		Formatting patterns are chosen appropriate to the locale.  Different
 	//		formatting lengths may be chosen, with "full" used by default.
 	//		Custom patterns may be used or registered with translations using
-	//		the addCustomFormats method.
-	//		Formatting patterns are implemented using the syntax described at
-	//		http://www.unicode.org/reports/tr35/#Date_Format_Patterns
+	//		the dojo.date.locale.addCustomFormats method.
+	//	
+	//		Formatting patterns are implemented using [the syntax described at
+	//		unicode.org](http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns)
 	//		When two digit years are used, a century is chosen according to a sliding 
-	//		window of 80 years before and 20 years after present year, for both yy and yyyy patterns.
+	//		window of 80 years before and 20 years after present year, for both `yy` and `yyyy` patterns.
 	//		year < 100CE requires strict mode.
 	//
 	// value:
 	//		A string representation of a date
-	//
-	// options: object {selector: string, formatLength: string, datePattern: string, timePattern: string, locale: string, strict: boolean}
-	//		selector- choice of 'time', 'date' (default: date and time)
-	//		formatLength- choice of long, short, medium or full (plus any custom additions).  Defaults to 'short'
-	//		datePattern,timePattern- override pattern with this string
-	//		am,pm- override strings for am/pm in times
-	//		locale- override the locale used to determine formatting rules
-	//		strict- strict parsing, off by default
 
 	var info = dojo.date.locale._parseInfo(options);
 	var tokens = info.tokens, bundle = info.bundle;
@@ -422,7 +433,7 @@ dojo.date.locale.parse = function(/*String*/value, /*Object?*/options){
 		return true;
 	});
 
-	var hours = result[3]*1;
+	var hours = +result[3];
 	if(amPm === 'p' && hours < 12){
 		result[3] = hours + 12; //e.g., 3pm -> 15
 	}else if(amPm === 'a' && hours == 12){
@@ -433,6 +444,9 @@ dojo.date.locale.parse = function(/*String*/value, /*Object?*/options){
 	//validity of input strings containing 'EEE' or 'EEEE'...
 
 	var dateObject = new Date(result[0], result[1], result[2], result[3], result[4], result[5], result[6]); // Date
+	if(options.strict){
+		dateObject.setFullYear(result[0]);
+	}
 
 	// Check for overflow.  The Date() constructor normalizes things like April 32nd...
 	//TODO: why isn't this done for times as well?
@@ -491,13 +505,13 @@ function _buildDateTimeRE(tokens, bundle, options, pattern){
 				s = '\\d{2,4}';
 				break;
 			case 'M':
-				s = (l>2) ? '\\S+' : p2+'[1-9]|1[0-2]';
+				s = (l>2) ? '\\S+?' : p2+'[1-9]|1[0-2]';
 				break;
 			case 'D':
 				s = p2+'[1-9]|'+p3+'[1-9][0-9]|[12][0-9][0-9]|3[0-5][0-9]|36[0-6]';
 				break;
 			case 'd':
-				s = p2+'[1-9]|[12]\\d|3[01]';
+				s = '[12]\\d|'+p2+'[1-9]|3[01]';
 				break;
 			case 'w':
 				s = p2+'[1-9]|[1-4][0-9]|5[0-3]';
@@ -559,9 +573,9 @@ dojo.date.locale.addCustomFormats = function(/*String*/packageName, /*String*/bu
 	//
 	// description:
 	//		The user may add custom localized formats where the bundle has properties following the
-	//		same naming convention used by dojo for the CLDR data: dateFormat-xxxx / timeFormat-xxxx
+	//		same naming convention used by dojo.cldr: `dateFormat-xxxx` / `timeFormat-xxxx`
 	//		The pattern string should match the format used by the CLDR.
-	//		See dojo.date.format for details.
+	//		See dojo.date.locale.format() for details.
 	//		The resources must be loaded by dojo.requireLocalization() prior to use
 
 	_customFormats.push({pkg:packageName,name:bundleName});
@@ -583,10 +597,14 @@ dojo.date.locale.getNames = function(/*String*/item, /*String*/type, /*String?*/
 	// summary:
 	//		Used to get localized strings from dojo.cldr for day or month names.
 	//
-	// item: 'months' || 'days'
-	// type: 'wide' || 'narrow' || 'abbr' (e.g. "Monday", "Mon", or "M" respectively, in English)
-	// use: 'standAlone' || 'format' (default)
-	// locale: override locale used to find the names
+	// item:
+	//	'months' || 'days'
+	// type:
+	//	'wide' || 'narrow' || 'abbr' (e.g. "Monday", "Mon", or "M" respectively, in English)
+	// use:
+	//	'standAlone' || 'format' (default)
+	// locale:
+	//	override locale used to find the names
 
 	var label;
 	var lookup = dojo.date.locale._getGregorianBundle(locale);

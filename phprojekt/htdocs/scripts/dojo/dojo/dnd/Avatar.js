@@ -29,16 +29,26 @@ dojo.declare("dojo.dnd.Avatar", null, {
 		dojo.style(tr, "opacity", 0.9);
 		b.appendChild(tr);
 		var k = Math.min(5, this.manager.nodes.length);
-		var source = this.manager.source;
+		var source = this.manager.source, node;
 		for(var i = 0; i < k; ++i){
 			tr = dojo.doc.createElement("tr");
 			tr.className = "dojoDndAvatarItem";
 			td = dojo.doc.createElement("td");
-			var node = source.creator ?
+			if(source.creator){
 				// create an avatar representation of the node
-				node = source._normalizedCreator(source.getItem(this.manager.nodes[i].id).data, "avatar").node :
+				node = source._normalizedCreator(source.getItem(this.manager.nodes[i].id).data, "avatar").node;
+			}else{
 				// or just clone the node and hope it works
 				node = this.manager.nodes[i].cloneNode(true);
+				if(node.tagName.toLowerCase() == "tr"){
+					// insert extra table nodes
+					var table = dojo.doc.createElement("table"),
+						tbody = dojo.doc.createElement("tbody");
+					tbody.appendChild(node);
+					table.appendChild(tbody);
+					node = table;
+				}
+			}
 			node.id = "";
 			td.appendChild(node);
 			tr.appendChild(td);
@@ -57,14 +67,9 @@ dojo.declare("dojo.dnd.Avatar", null, {
 		// summary: updates the avatar to reflect the current DnD state
 		dojo[(this.manager.canDropFlag ? "add" : "remove") + "Class"](this.node, "dojoDndAvatarCanDrop");
 		// replace text
-		var t = this.node.getElementsByTagName("td");
-		for(var i = 0; i < t.length; ++i){
-			var n = t[i];
-			if(dojo.hasClass(n.parentNode, "dojoDndAvatarHeader")){
-				n.innerHTML = this._generateText();
-				break;
-			}
-		}
+		dojo.query("tr.dojoDndAvatarHeader td").forEach(function(node){
+			node.innerHTML = this._generateText();
+		}, this);
 	},
 	_generateText: function(){
 		// summary: generates a proper text to reflect copying or moving of items

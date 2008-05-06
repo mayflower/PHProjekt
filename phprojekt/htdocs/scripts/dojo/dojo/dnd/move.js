@@ -29,17 +29,21 @@ dojo.declare("dojo.dnd.move.constrainedMoveable", dojo.dnd.Moveable, {
 	onFirstMove: function(/* dojo.dnd.Mover */ mover){
 		// summary: called during the very first move notification,
 		//	can be used to initialize coordinates, can be overwritten.
-		var c = this.constraintBox = this.constraints.call(this, mover), m = mover.marginBox;
-		c.r = c.l + c.w - (this.within ? m.w : 0);
-		c.b = c.t + c.h - (this.within ? m.h : 0);
+		var c = this.constraintBox = this.constraints.call(this, mover);
+		c.r = c.l + c.w;
+		c.b = c.t + c.h;
+		if(this.within){
+			var mb = dojo.marginBox(mover.node);
+			c.r -= mb.w;
+			c.b -= mb.h;
+		}
 	},
 	onMove: function(/* dojo.dnd.Mover */ mover, /* Object */ leftTop){
 		// summary: called during every move notification,
 		//	should actually move the node, can be overwritten.
-		var c = this.constraintBox;
-		leftTop.l = leftTop.l < c.l ? c.l : c.r < leftTop.l ? c.r : leftTop.l;
-		leftTop.t = leftTop.t < c.t ? c.t : c.b < leftTop.t ? c.b : leftTop.t;
-		dojo.marginBox(mover.node, leftTop);
+		var c = this.constraintBox, s = mover.node.style;
+		s.left = (leftTop.l < c.l ? c.l : c.r < leftTop.l ? c.r : leftTop.l) + "px";
+		s.top  = (leftTop.t < c.t ? c.t : c.b < leftTop.t ? c.b : leftTop.t) + "px";
 	}
 });
 
@@ -115,6 +119,7 @@ dojo.dnd.move.constrainedMover = function(fun, within){
 	// fun: Function: called on drag, and returns a constraint box
 	// within: Boolean: if true, constraints the whole dragged object withtin the rectangle, 
 	//	otherwise the constraint is applied to the left-top corner
+	dojo.deprecated("dojo.dnd.move.constrainedMover, use dojo.dnd.move.constrainedMoveable instead");
 	var mover = function(node, e, notifier){
 		dojo.dnd.Mover.call(this, node, e, notifier);
 	};
@@ -133,9 +138,14 @@ dojo.dnd.move.constrainedMover = function(fun, within){
 		onFirstMove: function(){
 			// summary: called once to initialize things; it is meant to be called only once
 			dojo.dnd.Mover.prototype.onFirstMove.call(this);
-			var c = this.constraintBox = fun.call(this), m = this.marginBox;
-			c.r = c.l + c.w - (within ? m.w : 0);
-			c.b = c.t + c.h - (within ? m.h : 0);
+			var c = this.constraintBox = fun.call(this);
+			c.r = c.l + c.w;
+			c.b = c.t + c.h;
+			if(within){
+				var mb = dojo.marginBox(this.node);
+				c.r -= mb.w;
+				c.b -= mb.h;
+			}
 		}
 	});
 	return mover;	// Object
@@ -146,6 +156,7 @@ dojo.dnd.move.boxConstrainedMover = function(box, within){
 	// box: Object: a constraint box (l, t, w, h)
 	// within: Boolean: if true, constraints the whole dragged object withtin the rectangle, 
 	//	otherwise the constraint is applied to the left-top corner
+	dojo.deprecated("dojo.dnd.move.boxConstrainedMover, use dojo.dnd.move.boxConstrainedMoveable instead");
 	return dojo.dnd.move.constrainedMover(function(){ return box; }, within);	// Object
 };
 
@@ -155,6 +166,7 @@ dojo.dnd.move.parentConstrainedMover = function(area, within){
 	//	"padding" for the padding box, and "content" for the content box; "content" is the default value.
 	// within: Boolean: if true, constraints the whole dragged object withtin the rectangle, 
 	//	otherwise the constraint is applied to the left-top corner
+	dojo.deprecated("dojo.dnd.move.parentConstrainedMover, use dojo.dnd.move.parentConstrainedMoveable instead");
 	var fun = function(){
 		var n = this.node.parentNode, 
 			s = dojo.getComputedStyle(n), 

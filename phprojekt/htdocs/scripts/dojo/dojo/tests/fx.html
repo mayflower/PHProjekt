@@ -36,7 +36,6 @@
 							var d = new doh.Deferred();
 							var s = dojo.fx.wipeOut({
 								node: "foo",
-								duration: 500,
 								onEnd: function(){
 									doh.t(dojo.style("foo", "height") < 5);
 									d.callback(true);
@@ -46,19 +45,20 @@
 						},
 						
 						function wipeIn(t){
-							dojo.byId("foo").style.height = "0px";
 							var d = new doh.Deferred();
-							dojo.fx.wipeIn({
-								node: "foo", 
-								duration: 500,
-								onEnd: function(){
-									doh.t(dojo.style("foo", "height") != 0);
-									d.callback(true);
-								}
-							}).play();
+							setTimeout(function(){
+								dojo.fx.wipeIn({
+									node: "foo", 
+									onEnd: function(){
+										console.debug(dojo.style("foo", "height"));
+										doh.t(dojo.style("foo", "height") >  10);
+										d.callback(true);
+									}
+								}).play();
+							}, 10);
 							return d;
 						},
-						
+
 						{
 							name: "chain",
 							timeout: 1500,
@@ -106,12 +106,125 @@
 								return d;
 							}
 						},
+						{
+							name:"combineBeforeBegin",
+							timeout:1500,
+							runTest: function(t){
+								var d = new doh.Deferred();
+								var a = dojo.fadeOut({ node:"foo2", duration:400 });
+								var b = dojo.fadeIn({ node:"foo2", duration:400 });
+								var chain = dojo.fx.combine([a,b]);
+								dojo.connect(chain,"beforeBegin",dojo.hitch(d,"callback",true));
+								chain.play();
+								return d;
+							}
+							
+						},
+						{
+							name:"delayTest",
+							timeout:2000,
+							runTest:function(t){
+								var d = new doh.Deferred();
+								var delay = 100;
+								var _anims = [];
+								var nodes = ["a","b","c","d"];
+								dojo.forEach(nodes,function(n){
+									_anims.push(dojo.fadeOut({ node:n, duration:100, delay: delay += 100 }));
+								});
+								var a = dojo.fx.combine(_anims);
+								var timer = (new Date()).getTime();
+								dojo.connect(a,"onEnd",function(){
+									console.warn("delayTest running time:", (new Date()).getTime() - timer, "ms, expected:", a.duration, "ms");
+									d.callback(true);
+								});
+								a.play();
+								return d;	
+							}
+						},
+						{
+							name:"delayTestChain",
+							timeout:2200,
+							runTest:function(t){
+								var d = new doh.Deferred();
+								var delay = 100;
+								var _anims = [];
+								var nodes = ["a","b","c","d"];
+								dojo.forEach(nodes,function(n){
+									_anims.push(dojo.fadeIn({ node:n, duration:100, delay: delay += 100 }));
+								});
+								var a = dojo.fx.chain(_anims);
+								var timer = (new Date()).getTime();
+								dojo.connect(a,"onEnd",function(){
+									console.warn("delayTestChain running time:", (new Date()).getTime() - timer, "ms, expected:", a.duration, "ms");
+									d.callback(true);
+								});
+								a.play();
+								return d;
+							}
+						},
+						{
+							name:"combineOnEnd",
+							timeout:1500,
+							runTest: function(t){
+								var d = new doh.Deferred();
+								var a = dojo.fadeOut({ node:"foo2", duration:400 });
+								var b = dojo.fadeIn({ node:"foo2", duration:400 });
+								var combine = dojo.fx.combine([a,b]);
+								dojo.connect(combine,"onEnd",dojo.hitch(d,"callback",true));
+								combine.play();
+								return d;
+							}
+							
+						},
+						{
+							name:"combineOnPlay",
+							timeout:1500,
+							runTest: function(t){
+								var d = new doh.Deferred();
+								var a = dojo.fadeOut({ node:"foo2", duration:400 });
+								var b = dojo.fadeIn({ node:"foo2", duration:400 });
+								var combine = dojo.fx.combine([a,b]);
+								dojo.connect(combine,"onPlay",dojo.hitch(d,"callback",true));
+								combine.play();
+								return d;
+							}
+							
+						},
+						{
+							name:"chainOnEnd",
+							timeout:1500,
+							runTest: function(t){
+								var d = new doh.Deferred();
+								var a = dojo.fadeOut({ node:"foo2", duration:400 });
+								var b = dojo.fadeIn({ node:"foo2", duration:400 });
+								var chain = dojo.fx.chain([a,b]);
+								dojo.connect(chain,"onEnd",dojo.hitch(d,"callback",true));
+								chain.play();
+								return d;
+							}
+							
+						},
+						{
+							name:"chainOnPlay",
+							timeout:1500,
+							runTest: function(t){
 
+								var d = new doh.Deferred();
+								var a = dojo.fadeOut({ node:"foo2", duration:200 });
+								var b = dojo.fadeIn({ node:"foo2", duration:200 });
+								var chain = dojo.fx.chain([a,b]);
+								dojo.connect(chain,"onPlay",dojo.hitch(d,"callback",true));
+								chain.play();
+								return d;
+							}
+							
+						},
+						
 						function Toggler(){
 							var d = new doh.Deferred();
 							var t = new dojo.fx.Toggler({
 							    node: "foo",
-							    hideDuration: 1000,
+							    hideDuration: 100,
 								hideFunc: dojo.fx.wipeOut,
 								showFunc: dojo.fx.wipeIn 
 							});
@@ -119,7 +232,7 @@
 							setTimeout(function(){
 								var sa = t.show();
 								dojo.connect(sa, "onEnd", dojo.hitch(d, "callback", true));
-							}, 500);
+							}, 50);
 							return d;
 						}
 					]
@@ -164,6 +277,9 @@
 		</style>
 	</head>
 	<body>
+		<div class="box" id="a">a</div><div class="box" id="b">b</div>
+		<div class="box" id="c">c</div><div class="box" id="d">d</div>
+	
 		<div id="foo" class="box">
 			<p>
 			Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
@@ -189,5 +305,6 @@
 			Suspendisse pulvinar.
 			</p>
 		</div>
+		<div id="foo2">foo2</div>
 	</body>
 </html>

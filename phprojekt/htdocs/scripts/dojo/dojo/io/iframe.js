@@ -99,7 +99,11 @@ dojo.io.iframe = {
 		//summary: Returns the document object associated with the iframe DOM Node argument.
 		var doc = iframeNode.contentDocument || // W3
 			(
-				(iframeNode.contentWindow)&&(iframeNode.contentWindow.document)
+				(
+					(iframeNode.name) && (iframeNode.document) && 
+					(document.getElementsByTagName("iframe")[iframeNode.name].contentWindow) &&
+					(document.getElementsByTagName("iframe")[iframeNode.name].contentWindow.document)
+				)
 			) ||  // IE
 			(
 				(iframeNode.name)&&(document.frames[iframeNode.name])&&
@@ -121,14 +125,16 @@ dojo.io.iframe = {
 		//		defaults to POST.
 		//	handleAs: String?
 		//		Specifies what format the result data should be given to the
-		//		load/handle callback. Valid values are: text, html, javascript,
-		//		json. IMPORTANT: For all values EXCEPT html, The server
-		//		response should be an HTML file with a textarea element. The
-		//		response data should be inside the textarea element. Using an
+		//		load/handle callback. Valid values are: text, html, xml, json,
+		//		javascript. IMPORTANT: For all values EXCEPT html and xml, The
+		//		server response should be an HTML file with a textarea element.
+		//		The response data should be inside the textarea element. Using an
 		//		HTML document the only reliable, cross-browser way this
 		//		transport can know when the response has loaded. For the html
 		//		handleAs value, just return a normal HTML document.  NOTE: xml
-		//		or any other XML type is NOT supported by this transport.
+		//		is now supported with this transport (as of 1.1+); a known issue
+		//		is if the XML document in question is malformed, Internet Explorer
+		//		will throw an uncatchable error.
 		//	content: Object?
 		//		If "form" is one of the other args properties, then the content
 		//		object properties become hidden form form elements. For
@@ -168,11 +174,43 @@ dojo.io.iframe = {
 					//Assign correct value based on handleAs value.
 					value = ifd; //html
 					if(handleAs != "html"){
-						value = ifd.getElementsByTagName("textarea")[0].value; //text
-						if(handleAs == "json"){
-							value = dojo.fromJson(value); //json
-						}else if(handleAs == "javascript"){
-							value = dojo.eval(value); //javascript
+						if(handleAs == "xml"){
+							//	FF, Saf 3+ and Opera all seem to be fine with ifd being xml.  We have to
+							//	do it manually for IE.  Refs #6334.
+							if(dojo.isIE){
+								dojo.query("a", dii._frame.contentWindow.document.documentElement).orphan();
+								var xmlText=(dii._frame.contentWindow.document).documentElement.innerText;
+								xmlText=xmlText.replace(/>\s+</g, "><");
+
+								//	do the manual "find the prefix".
+								if(!this._ieXmlDom){
+									for(var i=0, a=["MSXML2", "Microsoft", "MSXML", "MSXML3"], l=a.length; i<l; i++){
+										try{
+											var test=new ActiveXObject(a[i]+".XmlDom");
+											this._ieXmlDom=a[i]+".XmlDom";
+											break;
+										} catch(e){ /* squash it */}
+									}
+									
+									//	recheck to make sure we have XML support.
+									if(!this._ieXmlDom){
+										throw new Error("dojo.io.iframe.send (return handler): your copy of Internet Explorer does not support XML documents.");
+									}
+								}
+
+								//	create the document manually
+								var _xml=new ActiveXObject(this._ieXmlDom);
+								_xml.async=false;
+								_xml.loadXML(xmlText);
+								value=_xml;
+							}
+						} else {
+							value = ifd.getElementsByTagName("textarea")[0].value; //text
+							if(handleAs == "json"){
+								value = dojo.fromJson(value); //json
+							}else if(handleAs == "javascript"){
+								value = dojo.eval(value); //javascript
+							}
 						}
 					}
 				}catch(e){
@@ -240,7 +278,7 @@ dojo.io.iframe = {
 			var args = ioArgs.args;
 
 			ioArgs._contentToClean = [];
-			var fn = args["form"];
+			var fn = dojo.byId(args["form"]);
 			var content = args["content"] || {};
 			if(fn){
 				if(content){
@@ -312,7 +350,7 @@ dojo.io.iframe = {
 
 		var ioArgs = dfd.ioArgs;
 		var args = ioArgs.args;
-		var fNode = args.form;
+		var fNode = dojo.byId(args.form);
 	
 		if(fNode){
 			// remove all the hidden content inputs

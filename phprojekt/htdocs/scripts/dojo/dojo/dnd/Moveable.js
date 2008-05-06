@@ -58,7 +58,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		}else{
 			new this.mover(this.node, e, this);
 		}
-		dojo.stopEvent(e);
+		e.preventDefault();
 	},
 	onMouseMove: function(e){
 		// summary: event processor for onmousemove, used only for delayed drags
@@ -106,7 +106,9 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		// summary: called during every move notification,
 		//	should actually move the node, can be overwritten.
 		this.onMoving(mover, leftTop);
-		dojo.marginBox(mover.node, leftTop);
+		var s = mover.node.style;
+		s.left = leftTop.l + "px";
+		s.top  = leftTop.t + "px";
 		this.onMoved(mover, leftTop);
 	},
 	onMoving: function(/* dojo.dnd.Mover */ mover, /* Object */ leftTop){
