@@ -6,8 +6,7 @@ dojo.require("dojo.data.api.Read");
 
 dojox.data.tests.stores.QueryReadStore.getStore = function(){
 	return new dojox.data.QueryReadStore({
-			url: dojo.moduleUrl("dojox.data.tests", "stores/QueryReadStore.php").toString(),
-			doClientPaging:true // "true" is actually also the default, but make sure :-).
+			url: dojo.moduleUrl("dojox.data.tests", "stores/QueryReadStore.php").toString()
 		});
 };
 
@@ -69,9 +68,15 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 
 				// Test for not-existing attributes without defaultValues and invalid items.
 				// TODO
-				//dojox.data.tests.stores.QueryReadStore.assertError(dojox.data.QueryReadStore.InvalidAttributeError, store, "getValues", [item, "NOT THERE"]);
-				//dojox.data.tests.stores.QueryReadStore.assertError(dojox.data.QueryReadStore.InvalidItemError, store, "getValues", ["not an item", "NOT THERE"]);
-				
+				t.assertEqual([], store.getValues(item, "NOT THERE"));
+				var errThrown = false;
+				try{
+					//Should throw an exception.
+					var values = store.getValues("not an item", "NOT THERE");
+				}catch (e){
+					errThrown = true;
+				}
+				t.assertTrue(errThrown);
 				d.callback(true);
 			}
 			store.fetch({query:{q:"Alabama"}, onComplete: onComplete});
@@ -87,9 +92,22 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			function onComplete(items, request){
 				var item = items[0];
 				// The good case(s).
-				t.assertEqual(['name', 'label', 'abbreviation'], store.getAttributes(item));
-				t.assertError(dojox.data.QueryReadStore.InvalidItemError, store, "getAttributes", [{}]);
+				t.assertEqual(['id', 'name', 'label', 'abbreviation', 'capital'], store.getAttributes(item));
+				t.assertError(Error, store, "getAttributes", [{}]);
 				
+				d.callback(true);
+			}
+			store.fetch({query:{q:"Alabama"}, onComplete: onComplete});
+			return d; //Object
+		},
+
+		function testReadApi_getLabel(t){
+			var store = dojox.data.tests.stores.QueryReadStore.getStore();
+			var d = new doh.Deferred();
+			function onComplete(items, request){
+				var item = items[0];
+				// The good cases.
+				t.assertEqual(["<img src='images/Alabama.jpg'/>Alabama"], store.getLabel(item));
 				d.callback(true);
 			}
 			store.fetch({query:{q:"Alabama"}, onComplete: onComplete});
@@ -189,13 +207,13 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 
 			var d = new doh.Deferred();
 			function onComplete(items, request) {
-				t.assertEqual(8, items.length);
+				t.assertEqual(12, items.length);
 				d.callback(true);
 			}
 			function onError(error, request) {
 				d.errback(error);
 			}
-			store.fetch({query:{q:"a"}, onComplete: onComplete, onError: onError});
+			store.fetch({query:{q:"m"}, onComplete: onComplete, onError: onError});
 			return d; //Object
 		},
 		
@@ -209,13 +227,13 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			var d = new doh.Deferred();
 			var passed = false;
 			function onBegin(size, request){
-				t.assertEqual(8, size);
+				t.assertEqual(12, size);
 				passed = true;
 			}
 			function onComplete(items, request) {
-				t.assertEqual(3, items.length);
+				t.assertEqual(5, items.length);
 				if(passed){
-                    d.callback(true);
+					d.callback(true);
 				}else{
 					d.errback(new Error("Store did not return proper number of rows, regardless of page size"));
 				}
@@ -223,7 +241,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			function onError(error, request) {
 				d.errback(error);
 			}
-			store.fetch({query:{q:"a"}, start: 5, count: 5, onBegin: onBegin, onComplete: onComplete, onError: onError});
+			store.fetch({query:{q:"m"}, start: 0, count: 5, onBegin: onBegin, onComplete: onComplete, onError: onError});
 			return d; //Object
 		},
 
@@ -237,13 +255,13 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			var d = new doh.Deferred();
 			var passed = false;
 			function onBegin(size, request){
-				t.assertEqual(8, size);
+				t.assertEqual(12, size);
 				passed = true;
 			}
 			function onComplete(items, request) {
-				t.assertEqual(3, items.length);
+				t.assertEqual(5, items.length);
 				if(passed){
-                    d.callback(true);
+					d.callback(true);
 				}else{
 					d.errback(new Error("Store did not return proper number of rows, regardless of page size"));
 				}
@@ -251,8 +269,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			function onError(error, request) {
 				d.errback(error);
 			}
-            store.doClientPaging = false;
-			store.fetch({query:{q:"a"}, start: 5, count: 5, onBegin: onBegin, onComplete: onComplete, onError: onError});
+			store.fetch({query:{q:"m"}, start: 5, count: 5, onBegin: onBegin, onComplete: onComplete, onError: onError});
 			return d; //Object
 		},
 
@@ -262,17 +279,18 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			//	description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
+			store.doClientPaging = true;
 
 			var d = new doh.Deferred();
 			var passed = false;
 			function onBegin(size, request){
-				t.assertEqual(8, size);
+				t.assertEqual(12, size);
 				passed = true;
 			}
 			function onComplete(items, request) {
-				t.assertEqual(3, items.length);
+				t.assertEqual(5, items.length);
 				if(passed){
-                    d.callback(true);
+					d.callback(true);
 				}else{
 					d.errback(new Error("Store did not return proper number of rows, regardless of page size"));
 				}
@@ -280,7 +298,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			function onError(error, request) {
 				d.errback(error);
 			}
-			store.fetch({query:{q:"a"}, start: 5, count: 5, onBegin: onBegin, onComplete: onComplete, onError: onError});
+			store.fetch({query:{q:"m"}, start: 0, count: 5, onBegin: onBegin, onComplete: onComplete, onError: onError});
 			return d; //Object
 		},
 
@@ -307,6 +325,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			//		server requests.
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
+			store.doClientPaging = true;
 
 			var lastRequestHash = null;
 			var firstItems = [];
@@ -331,7 +350,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			function onError(error, request) {
 				d.errback(error);
 			}
-			var req = {query:{q:"a"}, start:0, count:5,
+			var req = {query:{q:"m"}, start:0, count:5,
 						onComplete: onComplete, onError: onError};
 			store.fetch(req);
 			return d; //Object

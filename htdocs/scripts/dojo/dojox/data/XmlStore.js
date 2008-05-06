@@ -154,9 +154,9 @@ dojo.declare("dojox.data.XmlStore", null, {
 			}
 			return values; //array
 		}else if(attribute === "text()"){
-			var values = [];
-			for(var i = 0; i < element.childNodes.length; i++){
-				var node = childNodes[i];
+			var values = [], ec=element.childNodes;
+			for(var i = 0; i < ec.length; i++){
+				var node = ec[i];
 				if(node.nodeType === 3){
 					values.push(node.nodeValue);
 				}
@@ -878,6 +878,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 	},
 
 	_saveItem: function(item, keywordArgs, method){
+		var url;
 		if(method === "PUT"){
 			url = this._getPutUrl(item);
 		}else if(method === "DELETE"){
@@ -887,7 +888,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		}
 		if(!url){
 			if(keywordArgs.onError){
-				keywordArgs.onError.call(scope, new Error("No URL for saving content: " + postContent));
+				keywordArgs.onError.call(scope, new Error("No URL for saving content: " + this._getPostContent(item)));
 			}
 			return;
 		}
@@ -898,7 +899,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 			contentType: "text/xml",
 			handleAs: "xml"
 		};
-		var saveHander;
+		var saveHandler;
 		if(method === "PUT"){
 			saveArgs.putData = this._getPutContent(item);
 			saveHandler = dojo.rawXhrPut(saveArgs);
@@ -961,14 +962,13 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//		An item to delete
 		// 	returns:
 		//		A delete URL
-		if (!this.url !== "") {
-			return this.url; //string
-		}
 		var url = this.url;
 		if (item && this.keyAttribute !== "") {
 			var value = this.getValue(item, this.keyAttribute);
 			if (value) {
-				url = url + '?' + this.keyAttribute + '=' + value;
+				var key = this.keyAttribute.charAt(0) ==='@' ? this.keyAttribute.substring(1): this.keyAttribute;
+				url += url.indexOf('?') < 0 ? '?' : '&';
+				url += key + '=' + value;
 			}
 		}
 		return url;	//string
