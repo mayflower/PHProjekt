@@ -1,4 +1,5 @@
 dojo.provide("dojox.dtl.render.html");
+dojo.require("dojox.dtl.Context");
 
 dojox.dtl.render.html.sensitivity = {
 	// summary:
@@ -35,11 +36,12 @@ dojo.extend(dojox.dtl.render.html.Render, {
 	setAttachPoint: function(/*Node*/ node){
 		this.domNode = node;
 	},
-	render: function(/*dojox.dtl.HtmlTemplate*/ tpl, /*Object*/ context, /*dojox.dtl.HtmlBuffer?*/ buffer){
+	render: function(/*Object*/ context, /*dojox.dtl.HtmlTemplate?*/ tpl, /*dojox.dtl.HtmlBuffer?*/ buffer){
 		if(!this.domNode){
 			throw new Error("You cannot use the Render object without specifying where you want to render it");
 		}
 
+		tpl = tpl || this._tpl;
 		buffer = buffer || tpl.getBuffer();
 		context = context || new dojox.dtl.Context();
 
