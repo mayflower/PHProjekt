@@ -12,7 +12,7 @@
 	border:1px solid #c0c0c0;
 	border-bottom:1px solid #9b9b9b;
 	border-right:1px solid #9b9b9b;
-	padding: 0.2em;
+	padding: 0px 0.2em;
 	background:#fff url("../images/buttonEnabled.png") repeat-x bottom left;
 }
 .dj_ie .tundra .dijitButtonNode {
@@ -49,19 +49,12 @@
 .tundra .dijitSpinnerDisabled .dijitButtonNode {
 	/* disabled state - inner */
 	border-color: #d5d5d5 #bdbdbd #bdbdbd #d5d5d5;
-	/*color:#b4b4b4;*/
 	background:#e4e4e4 url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60; /* Safari, Opera and Mozilla */
 }
-.dj_ie .tundra .dijitButtonDisabled .dijitButtonNode *,
-.dj_ie .tundra .dijitToggleButtonDisabled .dijitButtonNode *,
-.dj_ie .tundra .dijitDropDownButtonDisabled .dijitButtonNode *,
-.dj_ie .tundra .dijitComboButtonDisabled .dijitButtonNode *,
-.dj_ie .tundra .dijitSpinnerDisabled .dijitButtonNode * {
-	filter: gray() alpha(opacity=50); /* IE */
-}
 
 .tundra .dijitButtonHover .dijitButtonNode,
+.tundra .dijitButtonNodeHover,
 .tundra .dijitToggleButtonHover .dijitButtonNode,
 .tundra .dijitDropDownButtonHover .dijitButtonNode,
 .tundra .dijitComboButtonHover .dijitButtonContents,

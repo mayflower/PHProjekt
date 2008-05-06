@@ -4,10 +4,11 @@
 	/* next/prev month buttons */
 	width:15px;
 	height:15px;
-	font-size: 1px;
+
 }
 .dj_ie6 .tundra .dijitCalendarIncrementControl {
 	padding:.1em;
+	font-size:.1em;
 }
 
 .tundra .dijitCalendarIncreaseInner,
@@ -117,6 +118,10 @@
 	/* cell for today's date */
 	text-decoration:underline;
 	font-weight:bold;
+}
+
+.tundra .dijitCalendarHoveredDate {
+	background-color: #e2ebf2 !important;
 }
 
 .tundra .dijitCalendarSelectedDate {
