@@ -4,6 +4,12 @@
 	<head>
 		<title>Dojo Spinner Widget Test</title>
 
+		<style type="text/css">
+			@import "../../../dojo/resources/dojo.css";
+			@import "../css/dijitTests.css";
+			.dj_ie INPUT#integerspinner2 { font-family: Courier; } /* help IE with font inheritance */
+		</style>
+
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true, extraLocale: ['de-de', 'en-us']"></script>
 		<script type="text/javascript" src="../_testCommon.js"></script>
@@ -12,33 +18,6 @@
 			dojo.require("dijit.form.NumberSpinner");
 			dojo.require("dojo.parser"); // scan page for widgets
 		</script>
-		<style type="text/css">
-			@import "../../../dojo/resources/dojo.css";
-			@import "../css/dijitTests.css";
-
-			#integerspinner2 .dojoSpinnerUpArrow {
-				border-bottom-color: blue;
-			}
-			#integerspinner2 .dojoSpinnerDownArrow {
-				border-top-color: red;
-			}
-			#integerspinner2 .dojoSpinnerButton {
-				background-color: yellow;
-			}
-			#integerspinner2 .dojoSpinnerButtonPushed {
-				background-color: gray;
-			}
-			#integerspinner2 .dojoSpinnerButtonPushed .dojoSpinnerDownArrow {
-				border-top-color: blue;
-			}
-			#integerspinner2 .dojoSpinnerButtonPushed .dojoSpinnerUpArrow {
-				border-bottom-color: red;
-			}
-			.dojoInputFieldValidationNormal#integerspinner2 {
-				color:blue;
-				background-color:pink;
-			}
-		</style>
 	</head>
 
 	<body>

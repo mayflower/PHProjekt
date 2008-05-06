@@ -3,6 +3,12 @@
 <html>
 	<head>
 		<title>Dojo Textarea Widget Demo</title>
+
+		<style type="text/css">
+			@import "../../../dojo/resources/dojo.css";
+			@import "../css/dijitTests.css";
+		</style>
+
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true"></script>
 		<script type="text/javascript" src="../_testCommon.js"></script>
@@ -11,11 +17,6 @@
 			dojo.require("dijit.form.Textarea");
 			dojo.require("dojo.parser");
 		</script>
-		<style type="text/css">
-			@import "../../../dojo/resources/dojo.css";
-			@import "../css/dijitTests.css";
-		</style>
-
 	</head>
 	<body>
 		<h2 class="pageSubContentTitle">Test Auto-sizing Textarea Widget</h2>
@@ -41,13 +42,20 @@
 		</script>
 		<br><label for="simple">Inline:</label><div name="simpleTextArea" dojoType="dijit.form.Textarea" id="simple" style="width:33%;border:20px solid red;"
          		onChange="dojo.byId('ocSimple').value=arguments[0]"
+         		onFocus="console.log('user focus handler')"
+         		onBlur="console.log('user blur handler')"
 			>this is a very simple resizable text area</div>
 		onChange:<textarea id="ocSimple" readOnly>not fired yet!</textarea>
 		<br>
-		<input type="button" onclick="dijit.byId('simple').setAttribute('readOnly',false);" value="Remove readOnly">
-		<input type="button" onclick="dijit.byId('simple').setAttribute('readOnly',true);" value="Set readOnly">
-		<input type="button" onclick="dijit.byId('simple').setAttribute('disabled',true);" value="Disable">
-		<input type="button" onclick="dijit.byId('simple').setAttribute('disabled',false);" value="Enable">
+		<script>
+			function setAttr(attr, value){
+				dijit.registry.byClass('dijit.form.Textarea').forEach(function(widget){ widget.setAttribute(attr, value);});
+			}
+		</script>
+		<input type="button" onclick="setAttr('readOnly', false);" value="Remove readOnly">
+		<input type="button" onclick="setAttr('readOnly', false);" value="Set readOnly">
+		<input type="button" onclick="setAttr('disabled', true);" value="Disable">
+		<input type="button" onclick="setAttr('disabled', false);" value="Enable">
 		<br>
 		<textarea dojoType="dijit.form.Textarea" name="largeTextArea">
 this is a textarea with a LOT of content

@@ -3,12 +3,17 @@
 <html>
 <head>
 	<title>Dialog Widget Dojo Tests</title>
+
 	<style type="text/css">
 		@import "../../dojo/resources/dojo.css";
 		@import "css/dijitTests.css";
+
+		body { font-family : sans-serif; }
+		form { margin-bottom : 0; }
 		table { border: none; }
 		#dialog3_underlay { background-color: #027 }
-	</style>		
+	</style>
+
 	<script type="text/javascript"
 		djConfig="parseOnLoad: true, isDebug: true"
 		src="../../dojo/dojo.js"></script>
@@ -17,9 +22,7 @@
 	<script type="text/javascript">
 		dojo.require("dijit.Dialog");
 		dojo.require("dijit.form.Button");
-	</script>
 
-	<script type="text/javascript">
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
 		function createAndShow() {
 			var node = document.createElement("div");
@@ -41,17 +44,12 @@
 			dlg.show();
 		}
 	</script>
-	<style type="text/css">
-		body { font-family : sans-serif; }
-		form { margin-bottom : 0; }
-	</style>
-
 </head>
 <body>
 <h1 class="testTitle">Dijit layout.Dialog tests</h1>
 
 <p>If you input this box, you can type. You should be able to type and use backspace/etc
-when you destroy the visible dialog. refs <a href="http://trac.dojotoolkit.org/5351">#5351</a>
+when you destroy the visible dialog. refs <a href="http://trac.dojotoolkit.org/ticket/5351">#5351</a>
 </p>
 
 <input id="testInput" name="foo" value="bar" />
