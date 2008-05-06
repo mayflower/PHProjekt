@@ -26,15 +26,14 @@
 @import url("form/ComboBox.css");
 @import url("form/Checkbox.css");
 @import url("form/RadioButton.css");
-@import url("form/Textarea.css");
 @import url("form/Slider.css");
 @import url("Tree.css");
 @import url("ProgressBar.css");
 @import url("TitlePane.css");
 @import url("Calendar.css");
+@import url("TimePicker.css");
 @import url("Toolbar.css");
 @import url("Dialog.css");
 @import url("Menu.css");
 @import url("Editor.css");
-
-:focus { -moz-outline-style: none; }
+@import url("ColorPalette.css");

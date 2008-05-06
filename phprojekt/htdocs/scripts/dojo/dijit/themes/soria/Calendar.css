@@ -2,11 +2,12 @@
 	
 .soria .dijitCalendarIncrementControl {
 	/* next/prev month buttons */
-	width:16px;
-	height:16px;
+	width:15px;
+	height:15px;
 }
 .dj_ie6 .soria .dijitCalendarIncrementControl {
 	padding:.1em;
+	font-size:.1em;	
 }
 
 .soria .dijitCalendarIncreaseInner,

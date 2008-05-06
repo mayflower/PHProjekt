@@ -12,7 +12,7 @@
 	border:1px solid #dedede;
 	border-bottom:1px solid #dedede;
 	border-right:1px solid #dedede;
-	padding: 0.2em;
+	padding: 0px 0.2em;
 	background:#fff url("../images/buttonEnabled.png") repeat-x top left;
 }
 .dj_ie .nihilo .dijitButtonNode {
@@ -35,6 +35,11 @@
 	padding-right:4px;
 }
 
+.dj_ff2 .nihilo .dijitComboButton .dijitButtonContentsFocused,
+.dj_ff2 .nihilo .dijitComboButton .dijitDownArrowButtonFocused {
+	border: 1px black dotted !important;
+}
+
 .nihilo .dijitButtonDisabled .dijitButtonNode,
 .nihilo .dijitToggleButtonDisabled .dijitButtonNode,
 .nihilo .dijitDropDownButtonDisabled .dijitButtonNode,
@@ -44,19 +49,12 @@
 .nihilo .dijitSpinnerDisabled .dijitButtonNode {
 	/* disabled state - inner */
 	border-color: #dedede;
-	/*color:#b4b4b4;*/
 	background:#fafafa url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60; /* Safari, Opera and Mozilla */
 }
-.dj_ie .nihilo .dijitButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitToggleButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitDropDownButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitComboButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitSpinnerDisabled .dijitButtonNode * {
-	filter: gray() alpha(opacity=50); /* IE */
-}
 
 .nihilo .dijitButtonHover .dijitButtonNode,
+.nihilo .dijitButtonNodeHover,
 .nihilo .dijitToggleButtonHover .dijitButtonNode,
 .nihilo .dijitDropDownButtonHover .dijitButtonNode,
 .nihilo .dijitComboButtonHover .dijitButtonContents,
@@ -89,12 +87,10 @@
 .nihilo .dijitArrowButtonInner {
 	background:url("../images/spriteArrows.png") no-repeat left top;
 	width: 11px;
-	margin: 0 auto 0 auto;
 }
 .nihilo .dijitUpArrowButton .dijitArrowButtonInner { 
 	background:url("../images/spriteArrows.png") no-repeat -22px top; 
 	width: 11px;
-	margin: 0 auto 2px auto;
 }
 .dj_ie6 .nihilo .dijitArrowButtonInner {
 	background:url("../images/spriteArrows.gif") no-repeat left top;

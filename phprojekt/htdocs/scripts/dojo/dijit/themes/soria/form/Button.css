@@ -12,7 +12,7 @@
 	border:1px solid #8ba0bd;
 	border-bottom:1px solid #657c9c;
 	border-right:1px solid #657c9c;
-	padding: 0.2em;
+	padding: 0px 0.2em;
 	background:#bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
 }
 .dj_ie .soria .dijitButtonNode {
@@ -35,6 +35,11 @@
 	padding-right:4px;
 }
 
+.dj_ff2 .soria .dijitComboButton .dijitButtonContentsFocused,
+.dj_ff2 .soria .dijitComboButton .dijitDownArrowButtonFocused {
+	border: 1px black dotted !important;
+}
+
 .soria .dijitButtonDisabled .dijitButtonNode,
 .soria .dijitToggleButtonDisabled .dijitButtonNode,
 .soria .dijitDropDownButtonDisabled .dijitButtonNode,
@@ -44,19 +49,12 @@
 .soria .dijitSpinnerDisabled .dijitButtonNode {
 	/* disabled state - inner */
 	border-color: #b9bbdd #b9bbdd #b9bbdd #b9bbdd;
-	/*color:#b4b4b4;*/
 	background:#c3d3e5 url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60; /* Safari, Opera and Mozilla */
 }
-.dj_ie .soria .dijitButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitToggleButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitDropDownButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitComboButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitSpinnerDisabled .dijitButtonNode * {
-	filter: gray() alpha(opacity=50); /* IE */
-}
 
 .soria .dijitButtonHover .dijitButtonNode,
+.soria .dijitButtonNodeHover,
 .soria .dijitToggleButtonHover .dijitButtonNode,
 .soria .dijitDropDownButtonHover .dijitButtonNode,
 .soria .dijitComboButtonHover .dijitButtonContents,
@@ -89,12 +87,10 @@
 .soria .dijitArrowButtonInner {
 	background:url("../images/spriteArrows.png") no-repeat left top;
 	width: 11px;
-	margin: 0 auto 0 auto;
 }
 .soria .dijitUpArrowButton .dijitArrowButtonInner { 
 	background:url("../images/spriteArrows.png") no-repeat -22px top; 
 	width: 11px;
-	margin: 0 auto 2px auto;
 }
 .dj_ie6 .soria .dijitArrowButtonInner {
 	background:url("../images/spriteArrows.gif") no-repeat left top;

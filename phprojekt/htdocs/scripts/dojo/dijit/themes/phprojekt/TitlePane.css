@@ -1,0 +1,77 @@
+/** 
+ * dijit.layout.TitlePane 
+ *
+ */ 
+ 
+.phprojekt .dijitTitlePane .dijitTitlePaneTitle {
+	background: #cccccc;
+	background:#fff url("images/titleBar.png") repeat-x top left;
+	border:1px solid #bfbfbf;
+	padding:4px 4px 2px 4px;
+	cursor: pointer;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #6d6d6d;
+}
+
+/* TODO: merge these, and all other icons to a series of background-image:() and background-position: -16*n px styles */
+.phprojekt .dijitTitlePane .dijitArrowNode {
+	width:15px;
+	height:15px;
+	float:right;
+	margin-top: -2px;
+}
+
+.phprojekt .dijitTitlePaneFocused .dijitTitlePaneTextNode {
+	color: #243C5F;
+}
+
+
+.phprojekt .dijitOpen .dijitTitlePaneTextNode {
+	color: #243C5F;
+}
+
+.phprojekt .dijitTitlePane .dijitClosed .dijitArrowNode {
+	background: url('images/spriteRoundedIconsSmall.png') no-repeat top left;
+}
+.dj_ie6 .phprojekt .dijitTitlePane .dijitClosed .dijitArrowNode {
+	background:url('images/spriteRoundedIconsSmall.gif') no-repeat top left;
+}
+.phprojekt .dijitTitlePane .dijitOpen .dijitArrowNode {
+	background:url('images/spriteRoundedIconsSmall.png') no-repeat -15px top;
+}
+.dj_ie6 .phprojekt .dijitTitlePane .dijitOpen .dijitArrowNode {
+	background:url('images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
+}
+.phprojekt .dijitTitlePane .dijitArrowNodeInner {
+	visibility:hidden;
+}
+.dijit_a11y .dijitTitlePane .dijitArrowNodeInner {
+	visibility:visible;
+}
+
+.phprojekt .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
+	margin-right:5px;
+}
+
+.phprojekt .dijitOpen .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
+	position:relative;
+	top:2px;
+}
+
+.phprojekt .dijitTitlePaneContentOuter {
+	background: #ffffff;
+	border:1px solid #bfbfbf;
+	border-top: 0px solid #3d3d3d;	/* w/out this, an <h1> on the top line causes a gap between the .content and .label */
+}
+.phprojekt .dijitTitlePaneContentInner {
+	padding:10px;
+}
+/* force hasLayout to ensure borders etc, show up */
+.dj_ie6 .phprojekt .dijitTitlePaneContentOuter,
+.dj_ie6 .phprojekt .dijitTitlePane .dijitTitlePaneTitle {
+	zoom: 1;
+}
+.phprojekt .dijitClickableRegion {
+	background-color : #ffc !important;
+}
