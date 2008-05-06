@@ -1,6 +1,6 @@
 ﻿<html>
 <head>
-<title>Chart 2D</title>
+<title>Chart 2D labels</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style type="text/css">
 	@import "../../../dojo/resources/dojo.css";
@@ -14,7 +14,7 @@ The next line should include Microsoft's Silverligth.js, if you plan to use the 
 <script type="text/javascript" src="../../lang/functional.js"></script>
 <script type="text/javascript" src="../../lang/utils.js"></script>
 <script type="text/javascript" src="../Theme.js"></script>
-<script type="text/javascript" src="../scaler.js"></script>
+<script type="text/javascript" src="../scaler/linear.js"></script>
 <script type="text/javascript" src="../Element.js"></script>
 <script type="text/javascript" src="../axis2d/common.js"></script>
 <script type="text/javascript" src="../axis2d/Base.js"></script>
@@ -64,14 +64,33 @@ makeObjects = function(){
 	});
 	chart2.addAxis("y", {
 		vertical: true, fixLower: "major", fixUpper: "major", natural: true,
-		labels: [{value: 0, text: ""}, {value: 1, text: "Jan"}, {value: 2, text: "Feb"}, 
-			{value: 3, text: "Mar"}, {value: 4, text: "Apr"}, 
+		labels: [{value: 0, text: ""},
+			{value: 1, text: "Jan"}, {value: 2, text: "Feb"},
+			{value: 3, text: "Mar"}, {value: 4, text: "Apr"},
 			{value: 5, text: "May"}, {value: 6, text: "Jun"}]
 	});
 	chart2.addPlot("default", {type: "Bars"});
 	chart2.addSeries("Series A", [1, 2, 3, 4, 5], {stroke: {color: "red"}, fill: "lightpink"});
 	chart2.addSeries("Series B", [5, 4, 3, 2, 1], {stroke: {color: "blue"}, fill: "lightblue"});
 	chart2.render();
+
+	
+	var chart3 = new dojox.charting.Chart2D("test3");
+	chart3.addAxis("x", {
+		fixLower: "major", fixUpper: "major", includeZero: true, 
+		labels: [{value: 0, text: "z e r o"}, {value: 2, text: "t w o"}, {value: 4, text: "f o u r"}]
+	});
+	chart3.addAxis("y", {
+		vertical: true, fixLower: "major", fixUpper: "major", natural: true,
+		labels: [{value: 0, text: ""},
+			{value: 1, text: "J A N"}, {value: 2, text: "F E B"},
+			{value: 3, text: "M A R"}, {value: 4, text: "A P R"},
+			{value: 5, text: "M A Y"}, {value: 6, text: "J U N"}]
+	});
+	chart3.addPlot("default", {type: "Bars"});
+	chart3.addSeries("Series A", [1, 2, 3, 4, 5], {stroke: {color: "red"}, fill: "lightpink"});
+	chart3.addSeries("Series B", [5, 4, 3, 2, 1], {stroke: {color: "blue"}, fill: "lightblue"});
+	chart3.render();
 };
 
 dojo.addOnLoad(makeObjects);
@@ -79,12 +98,14 @@ dojo.addOnLoad(makeObjects);
 </script>
 </head>
 <body>
-<h1>Chart 2D</h1>
+<h1>Chart 2D labels</h1>
 <!--<p><button onclick="makeObjects();">Go</button></p>-->
 <p>1: Bars, axes aligned on major ticks, no minor ticks, custom strokes and fills.</p>
 <div id="test1" style="width: 200px; height: 200px;"></div>
 <p>2: Bars, axes aligned on major ticks, no minor ticks, custom strokes and fills, custom labels.</p>
 <div id="test2" style="width: 200px; height: 200px;"></div>
+<p>3: Bars, axes aligned on major ticks, no minor ticks, custom strokes and fills, custom labels with spaces.</p>
+<div id="test3" style="width: 200px; height: 200px;"></div>
 <p>That's all Folks!</p>
 </body>
 </html>

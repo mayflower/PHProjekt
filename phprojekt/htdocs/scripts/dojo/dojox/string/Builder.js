@@ -12,7 +12,48 @@ dojo.provide("dojox.string.Builder");
 	var m = {
 	 	append: function(/*String*/s){ 
 			// summary: Append all arguments to the end of the buffer 
-			return this.appendArray(dojo._toArray(arguments)); // dojox.string.Builder
+			if(arguments.length>1){
+				/*  
+					This is a loop unroll designed specifically for Firefox;
+					it would seem that static index access on an Arguments
+					object is a LOT faster than doing dynamic index access.
+					Therefore, we create a buffer string and take advantage
+					of JS's switch fallthrough.  The peformance of this method
+					comes very close to straight up string concatenation (+=).
+
+					If the arguments object length is greater than 9, we fall
+					back to standard dynamic access.
+
+					This optimization seems to have no real effect on either
+					Safari or Opera, so we just use it for all.
+
+					Loop unroll per suggestion from Kris Zyp, implemented by 
+					Tom Trenka.
+				 */
+				var tmp="", l=arguments.length;
+				switch(l){
+					case 9: tmp=arguments[8]+tmp;
+					case 8: tmp=arguments[7]+tmp;
+					case 7: tmp=arguments[6]+tmp;
+					case 6: tmp=arguments[5]+tmp;
+					case 5: tmp=arguments[4]+tmp;
+					case 4: tmp=arguments[3]+tmp;
+					case 3: tmp=arguments[2]+tmp;
+					case 2: {
+						this.b+=arguments[0]+arguments[1]+tmp;
+						break;
+					}
+					default: {
+						var i=0;
+						while(i<arguments.length){
+							this.b += arguments[i++];
+						}
+					}
+				}
+			} else {
+				this.b += s;
+			}
+			return this;	//	dojox.string.Builder
 		},
 		concat: function(/*String*/s){
 			return this.append(s);
@@ -79,6 +120,30 @@ dojo.provide("dojox.string.Builder");
 			toString: function(){ 
 				// Summary: Get the buffer as a string
 				return this.b.join(""); 
+			},
+			append: function(/*String*/s){ 
+				// summary: Append all arguments to the end of the buffer 
+				if(arguments.length>1){
+					//	Some Duff's device love here.
+					var n = Math.floor(arguments.length/8), r = arguments.length%8, i=0;
+					do {
+						switch(r){
+							case 0: this.b[this.b.length]=arguments[i++];
+							case 7: this.b[this.b.length]=arguments[i++];
+							case 6: this.b[this.b.length]=arguments[i++];
+							case 5: this.b[this.b.length]=arguments[i++];
+							case 4: this.b[this.b.length]=arguments[i++];
+							case 3: this.b[this.b.length]=arguments[i++];
+							case 2: this.b[this.b.length]=arguments[i++];
+							case 1: this.b[this.b.length]=arguments[i++];
+						}
+						r = 0;
+					} while(--n>0);
+				} else {
+					//	this seems to shave off a little time over .push().
+					this.b[this.b.length]=s;
+				}
+				return this;	//	dojox.string.Builder
 			},
 			appendArray: function(strings){
 				this.b = this.b.concat(strings);

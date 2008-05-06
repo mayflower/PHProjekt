@@ -43,9 +43,9 @@ dojo.declare("dojox.layout.FloatingPane",
 	title: "",
 
 	// dockTo: DomNode?
-	//		if null, will create private layout.Dock that scrolls with viewport
+	//		if empty, will create private layout.Dock that scrolls with viewport
 	//		on bottom span of viewport.	
-	dockTo: null,
+	dockTo: "",
 
 	// duration: Integer
 	//		Time is MS to spend toggling in/out node
@@ -80,7 +80,7 @@ dojo.declare("dojox.layout.FloatingPane",
 	postCreate: function(){
 	
 		this.setTitle(this.title);
-		this.inherited("postCreate",arguments);
+		this.inherited(arguments);
 		var move = new dojo.dnd.Moveable(this.domNode,{ handle: this.focusNode });
 		//this._listener = dojo.subscribe("/dnd/move/start",this,"bringToTop"); 
 
@@ -103,16 +103,16 @@ dojo.declare("dojox.layout.FloatingPane",
 	startup: function(){
 		if(this._started){ return; }
 		
-		this.inherited("startup",arguments);
+		this.inherited(arguments);
 
 		if(this.resizable){
 			if(dojo.isIE){
-				this.canvas.style.overflow = "auto";
-			} else {
-				this.containerNode.style.overflow = "auto";
+					this.canvas.style.overflow = "auto";
+			}else{
+					this.containerNode.style.overflow = "auto";
 			}
 			
-			new dojox.layout.ResizeHandle({ 
+			this._resizeHandle = new dojox.layout.ResizeHandle({ 
 				targetId: this.id, 
 				resizeAxis: this.resizeAxis 
 			},this.resizeHandle);
@@ -121,7 +121,7 @@ dojo.declare("dojox.layout.FloatingPane",
 
 		if(this.dockable){ 
 			// FIXME: argh.
-			tmpName = this.dockTo; 
+			var tmpName = this.dockTo; 
 
 			if(this.dockTo){
 				this.dockTo = dijit.byId(this.dockTo); 
@@ -290,9 +290,11 @@ dojo.declare("dojox.layout.FloatingPane",
 	destroy: function(){
 		// summary: Destroy this FloatingPane completely
 		this._allFPs.splice(dojo.indexOf(this._allFPs, this), 1);
-		this.inherited("destroy", arguments);
+		if(this._resizeHandle){
+			this._resizeHandle.destroy();
+		}
+		this.inherited(arguments);
 	}
-	
 });
 
 
@@ -333,7 +335,7 @@ dojo.declare("dojox.layout.Dock",
 			}
 		}
 		this._positionDock(null);
-		this.inherited("startup",arguments);
+		this.inherited(arguments);
 
 	},
 	

@@ -5,11 +5,12 @@ Version 0.9
 Release date: 5/17/2007
 -------------------------------------------------------------------------------
 Project state:
-expermental
+experimental
 -------------------------------------------------------------------------------
 Credits
-	Adam Peller (dojox.date.posix)
+	Paul Sowden (dojox.date.posix)
 	Neil Roberts (dojox.date.php)
+	Hossam Aldin Katory (dojox.date.IslamicCalendar, dojox.date.HebrewCalendar)
 -------------------------------------------------------------------------------
 Project description
 
