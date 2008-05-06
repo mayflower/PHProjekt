@@ -15,7 +15,7 @@ dojo.declare("dijit.form.Button",
 	// example:
 	// |	var button1 = new dijit.form.Button({label: "hello world", onClick: foo});
 	// |	dojo.body().appendChild(button1.domNode);
-	//
+
 	// label: String
 	//	text to display in button
 	label: "",
@@ -32,12 +32,12 @@ dojo.declare("dijit.form.Button",
 	baseClass: "dijitButton",
 	templatePath: dojo.moduleUrl("dijit.form", "templates/Button.html"),
 
+	_onChangeMonitor: '',
 	// TODO: set button's title to this.containerNode.innerText
 
 	_onClick: function(/*Event*/ e){
 		// summary: internal function to handle click actions
 		if(this.disabled || this.readOnly){
-			dojo.stopEvent(e); // needed for checkbox
 			return false;
 		}
 		this._clicked(); // widget click actions
@@ -47,9 +47,9 @@ dojo.declare("dijit.form.Button",
 	_onButtonClick: function(/*Event*/ e){
 		// summary: callback when the user mouse clicks the button portion
 		if(this._onClick(e) === false){ // returning nothing is same as true
-			dojo.stopEvent(e);
-		}else if(this.type=="submit"){ // see if a nonform widget needs to be signalled
-			for(var node=this.domNode; node; node=node.parentNode){
+			e.preventDefault(); // needed for checkbox
+		}else if(this.type=="submit" && !this.focusNode.form){ // see if a nonform widget needs to be signalled
+			for(var node=this.domNode; node.parentNode/*#5935*/; node=node.parentNode){
 				var widget=dijit.byNode(node);
 				if(widget && typeof widget._onSubmit == "function"){
 					widget._onSubmit(e);
@@ -182,7 +182,7 @@ dojo.declare("dijit.form.DropDownButton", [dijit.form.Button, dijit._Container],
 	_onKey: function(/*Event*/ e){
 		// summary: callback when the user presses a key on menu popup node
 		if(this.disabled || this.readOnly){ return; }
-		if(e.keyCode == dojo.keys.DOWN_ARROW){
+		if(e.charOrCode == dojo.keys.DOWN_ARROW){
 			if(!this.dropDown || this.dropDown.domNode.style.visibility=="hidden"){
 				dojo.stopEvent(e);
 				this._toggleDropDown();
@@ -194,6 +194,7 @@ dojo.declare("dijit.form.DropDownButton", [dijit.form.Button, dijit._Container],
 		// summary: called magically when focus has shifted away from this widget and it's dropdown
 		this._closeDropDown();
 		// don't focus on button.  the user has explicitly focused on something else.
+		this.inherited(arguments);
 	},
 
 	_toggleDropDown: function(){
@@ -202,7 +203,7 @@ dojo.declare("dijit.form.DropDownButton", [dijit.form.Button, dijit._Container],
 		dijit.focus(this.popupStateNode);
 		var dropDown = this.dropDown;
 		if(!dropDown){ return; }
-		if(!dropDown.isShowingNow){
+		if(!this._opened){
 			// If there's an href, then load that first, so we don't get a flicker
 			if(dropDown.href && !dropDown.isLoaded){
 				var self = this;
@@ -307,8 +308,10 @@ dojo.declare("dijit.form.ComboButton", dijit.form.DropDownButton, {
 		dojo.forEach(this._focalNodes, dojo.hitch(this, function(node){
 			if(dojo.isIE){
 				this.connect(node, "onactivate", this._onNodeFocus);
+				this.connect(node, "ondeactivate", this._onNodeBlur);
 			}else{
 				this.connect(node, "onfocus", this._onNodeFocus);
+				this.connect(node, "onblur", this._onNodeBlur);
 			}
 		}));
 	},
@@ -354,9 +357,16 @@ dojo.declare("dijit.form.ComboButton", dijit.form.DropDownButton, {
 
 	_onNodeFocus: function(evt){
 		this._focusedNode = evt.currentTarget;
+		var fnc = this._focusedNode == this.focusNode ? "dijitDownArrowButtonFocused" : "dijitButtonContentsFocused";
+		dojo.addClass(this._focusedNode, fnc);
 	},
 
-	_onBlur: function(evt){
+	_onNodeBlur: function(evt){
+		var fnc = evt.currentTarget == this.focusNode ? "dijitDownArrowButtonFocused" : "dijitButtonContentsFocused";
+		dojo.removeClass(evt.currentTarget, fnc);
+	},
+
+	_onBlur: function(){
 		this.inherited(arguments);
 		this._focusedNode = null;
 	}
@@ -401,5 +411,10 @@ dojo.declare("dijit.form.ToggleButton", dijit.form.Button, {
 		//	Programatically deselect the button
 		dojo.deprecated("setChecked("+checked+") is deprecated. Use setAttribute('checked',"+checked+") instead.", "", "2.0");
 		this.setAttribute('checked', checked);
+	},
+	
+	postCreate: function(){
+		this.inherited(arguments);
+		this.setAttribute('checked', this.checked); //to initially set wai pressed state 
 	}
 });

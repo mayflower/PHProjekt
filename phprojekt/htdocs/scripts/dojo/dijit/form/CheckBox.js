@@ -32,7 +32,50 @@ dojo.declare(
 		// value: Value
 		//	equivalent to value field on normal checkbox (if checked, the value is passed as
 		//	the value when form is submitted)
-		value: "on"
+		value: "on",
+
+		setValue: function(/*String or Boolean*/ newValue){
+			// summary:
+			//		When passed a boolean, controls whether or not the CheckBox is checked.
+			//		If passed a string, changes the value attribute of the CheckBox (the one
+			//		specified as "value" when the CheckBox was constructed (ex: <input
+			//		dojoType="dijit.CheckBox" value="chicken">)
+			if(typeof newValue == "string"){
+				this.setAttribute('value', newValue);
+				newValue = true;
+			}
+			this.setAttribute('checked', newValue);
+		},
+
+		_getValueDeprecated: false, // remove when _FormWidget:_getValueDeprecated is removed
+		getValue: function(){
+			// summary:
+			//		If the CheckBox is checked, returns the value attribute.
+			//		Otherwise returns false.
+			return (this.checked ? this.value : false);
+		},
+
+		reset: function(){
+			this.inherited(arguments);
+			this.setAttribute('value', this._resetValueAttr);
+		},
+
+		postCreate: function(){
+			this.inherited(arguments);
+			this._resetValueAttr = this.value;
+		},
+		
+		_onFocus: function(){
+			if(this.id){
+				dojo.query("label[for='"+this.id+"']").addClass("dijitFocusedLabel");
+			}
+		},
+
+		_onBlur: function(){
+			if(this.id){
+				dojo.query("label[for='"+this.id+"']").removeClass("dijitFocusedLabel");
+			}
+		}
 	}
 );
 

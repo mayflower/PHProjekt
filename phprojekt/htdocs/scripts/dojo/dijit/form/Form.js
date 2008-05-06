@@ -25,6 +25,37 @@ dojo.declare("dijit.form._FormMixin", null,
 	//
 	//	
 
+		reset: function(){
+			dojo.forEach(this.getDescendants(), function(widget){
+				if(widget.reset){
+					widget.reset();
+				}
+			});
+		},
+
+		validate: function(){
+			// summary: returns if the form is valid - same as isValid - but
+			//			provides a few additional (ui-specific) features.
+			//			1 - it will highlight any sub-widgets that are not
+			//				valid
+			//			2 - it will call focus() on the first invalid 
+			//				sub-widget
+			var didFocus = false;
+			return dojo.every(dojo.map(this.getDescendants(), function(widget){
+				// Need to set this so that "required" widgets get their 
+				// state set.
+				widget._hasBeenBlurred = true;
+				var valid = !widget.validate || widget.validate();
+				if (!valid && !didFocus) {
+					// Set focus of the first non-valid widget
+					dijit.scrollIntoView(widget.containerNode||widget.domNode);
+					widget.focus();
+					didFocus = true;
+				}
+	 			return valid;
+	 		}), "return item;");
+		},
+		
 		setValues: function(/*object*/obj){
 			// summary: fill in form values from a JSON structure
 
@@ -38,19 +69,26 @@ dojo.declare("dijit.form._FormMixin", null,
 
 			// call setValue() or setAttribute('checked') for each widget, according to obj
 			for(var name in map){
+				if(!map.hasOwnProperty(name)){
+					continue;
+				}
 				var widgets = map[name],						// array of widgets w/this name
 					values = dojo.getObject(name, false, obj);	// list of values for those widgets
+
+				if(values===undefined){
+					continue;
+				}
 				if(!dojo.isArray(values)){
 					values = [ values ];
 				}
 				if(typeof widgets[0].checked == 'boolean'){
 					// for checkbox/radio, values is a list of which widgets should be checked
 					dojo.forEach(widgets, function(w, i){
-						w.setAttribute('checked', (dojo.indexOf(values, w.value) != -1));
+						w.setValue(dojo.indexOf(values, w.value) != -1);
 					});
-				}else if(widgets[0].setValues){
-					// it's a multi-select
-					widgets[0].setValues(values);
+				}else if(widgets[0]._multiValue){
+					// it takes an array (e.g. multi-select)
+					widgets[0].setValue(values);
 				}else{
 					// otherwise, values is a list of values to be assigned sequentially to each widget
 					dojo.forEach(widgets, function(w, i){
@@ -140,35 +178,30 @@ dojo.declare("dijit.form._FormMixin", null,
 				var name = widget.name;
 				if(!name){ return; }
 
-				if(widget.getValues){
-					// A multi-value widget (ex: MultiSelect)
-					dojo.setObject(name, widget.getValues(), obj);
-				}else{
-					// Single value widget (checkbox, radio, or plain <input> type widget
-					var value = (widget.getValue && !widget._getValueDeprecated) ? widget.getValue() : widget.value;
+				// Single value widget (checkbox, radio, or plain <input> type widget
+				var value = (widget.getValue && !widget._getValueDeprecated) ? widget.getValue() : widget.value;
 
-					// Store widget's value(s) as a scalar, except for checkboxes which are automatically arrays
-					if(typeof widget.checked == 'boolean'){
-						if(/Radio/.test(widget.declaredClass)){
-							// radio button
-							if(widget.checked){
-								dojo.setObject(name, value, obj);
-							}
-						}else{
-							// checkbox/toggle button
-							var ary=dojo.getObject(name, false, obj);
-							if(!ary){
-								ary=[];
-								dojo.setObject(name, ary, obj);
-							}
-							if(widget.checked){
-								ary.push(value);
-							}
+				// Store widget's value(s) as a scalar, except for checkboxes which are automatically arrays
+				if(typeof widget.checked == 'boolean'){
+					if(/Radio/.test(widget.declaredClass)){
+						// radio button
+						if(value !== false){
+							dojo.setObject(name, value, obj);
 						}
 					}else{
-						// plain input
-						dojo.setObject(name, value, obj);
+						// checkbox/toggle button
+						var ary=dojo.getObject(name, false, obj);
+						if(!ary){
+							ary=[];
+							dojo.setObject(name, ary, obj);
+						}
+						if(value !== false){
+							ary.push(value);
+						}
 					}
+				}else{
+					// plain input
+					dojo.setObject(name, value, obj);
 				}
 			});
 
@@ -233,9 +266,9 @@ dojo.declare("dijit.form._FormMixin", null,
 			return obj;
 		},
 
+		// TODO: ComboBox might need time to process a recently input value.  This should be async?
 	 	isValid: function(){
-	 		// TODO: ComboBox might need time to process a recently input value.  This should be async?
-	 		// make sure that every widget that has a validator function returns true
+	 		// summary: make sure that every widget that has a validator function returns true
 	 		return dojo.every(this.getDescendants(), function(widget){
 	 			return !widget.isValid || widget.isValid();
 	 		});
@@ -246,6 +279,9 @@ dojo.declare(
 	"dijit.form.Form",
 	[dijit._Widget, dijit._Templated, dijit.form._FormMixin],
 	{
+		// summary:
+		// Adds conveniences to regular HTML form
+
 		// HTML <FORM> attributes
 		name: "",
 		action: "",
@@ -255,18 +291,20 @@ dojo.declare(
 		accept: "",
 		target: "",
 
-		templateString: "<form dojoAttachPoint='containerNode' name='${name}'></form>",
+		templateString: "<form dojoAttachPoint='containerNode' dojoAttachEvent='onreset:_onReset,onsubmit:_onSubmit' name='${name}'></form>",
 
 		attributeMap: dojo.mixin(dojo.clone(dijit._Widget.prototype.attributeMap),
-			{onSubmit: "", action: "", method: "", encType: "", "accept-charset": "", accept: "", target: ""}),
+			{action: "", method: "", encType: "", "accept-charset": "", accept: "", target: ""}),
 
-		// execute: Function
-		//	Deprecated: use onSubmit
-		execute: function(/*Object*/ formContents){},
+		execute: function(/*Object*/ formContents){
+			//	summary:
+			//		Deprecated: use submit()
+		},
 
-		// onExecute: Function
-		//	Deprecated: use onSubmit
-		onExecute: function(){},
+		onExecute: function(){
+			// summary:
+			//		Deprecated: use onSubmit()
+		},
 
 		setAttribute: function(/*String*/ attr, /*anything*/ value){
 			this.inherited(arguments);
@@ -287,23 +325,61 @@ dojo.declare(
 			this.inherited(arguments);
 		},
 
-		// TODO: remove ths function beginning with 2.0
-		_onSubmit: function(){
-			if(this.execute != dijit.form.Form.prototype.execute || this.onExecute != dijit.form.Form.prototype.onExecute){
+		onReset: function(/*Event?*/e){ 
+			//	summary:
+			//		Callback when user resets the form. This method is intended
+			//		to be over-ridden. When the `reset` method is called
+			//		programmatically, the return value from `onReset` is used
+			//		to compute whether or not resetting should proceed
+			return true; // Boolean
+		},
+
+		_onReset: function(e){
+			// create fake event so we can know if preventDefault() is called
+			var faux = {
+				returnValue: true, // the IE way
+				preventDefault: function(){  // not IE
+							this.returnValue = false;
+						},
+				stopPropagation: function(){}, currentTarget: e.currentTarget, target: e.target
+			};
+			// if return value is not exactly false, and haven't called preventDefault(), then reset
+			if(!(this.onReset(faux) === false) && faux.returnValue){
+				this.reset();
+			}
+			dojo.stopEvent(e);
+			return false;
+		},
+
+		_onSubmit: function(e){
+			var fp = dijit.form.Form.prototype;
+			// TODO: remove ths if statement beginning with 2.0
+			if(this.execute != fp.execute || this.onExecute != fp.onExecute){
 				dojo.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.", "", "2.0");
 				this.onExecute();
 				this.execute(this.getValues());
 			}
+			if(this.onSubmit(e) === false){ // only exactly false stops submit
+				dojo.stopEvent(e);
+			}
 		},
 		
-		// onSubmit: Function
-		//	Callback when user submits the form
-		//	(user can override - return false to cancel the default action)
-		onSubmit: function(){ return this.isValid(); },
+		onSubmit: function(/*Event?*/e){ 
+			//	summary:
+			//		Callback when user submits the form. This method is
+			//		intended to be over-ridden, but by default it checks and
+			//		returns the validity of form elements. When the `submit`
+			//		method is called programmatically, the return value from
+			//		`onSubmit` is used to compute whether or not submission
+			//		should proceed
+
+			return this.isValid(); // Boolean
+		},
 
 		submit: function(){
-			// summary: programatically submit form
-			if(this.onSubmit() !== false){ // form submit() does not call onsubmit
+			// summary:
+			//		programmatically submit form if and only if the `onSubmit` returns true
+			if(!(this.onSubmit() === false)){
 				this.containerNode.submit();
 			}
 		}

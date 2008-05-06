@@ -179,7 +179,7 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 		}
 
 		// Compute new set of classes
-		var classes = [ this.baseClass ];
+		var classes = this.baseClass.split(" ");
 
 		function multiply(modifier){
 			classes=classes.concat(dojo.map(classes, function(c){ return c+modifier; }), "dijit"+modifier);
@@ -223,8 +223,8 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	_handleOnChange: function(/*anything*/ newValue, /*Boolean, optional*/ priorityChange){
 		// summary: set the value of the widget.
 		this._lastValue = newValue;
-		if(this._lastValueReported == undefined && priorityChange === null){
-			this._lastValueReported = newValue;
+		if(this._lastValueReported == undefined && (priorityChange === null || !this._onChangeActive)){
+			this._resetValue = this._lastValueReported = newValue;
 		}
 		if((this.intermediateChanges || priorityChange || priorityChange === undefined) && 
 			((newValue && newValue.toString)?newValue.toString():newValue) !== ((this._lastValueReported && this._lastValueReported.toString)?this._lastValueReported.toString():this._lastValueReported)){
@@ -233,14 +233,26 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 		}
 	},
 
+	reset: function(){
+		this._hasBeenBlurred = false;
+		if(this.setValue && !this._getValueDeprecated){
+			this.setValue(this._resetValue, true);
+		}else if(this._onChangeMonitor){
+			this.setAttribute(this._onChangeMonitor, (this._resetValue !== undefined && this._resetValue !== null)? this._resetValue : '');
+		}
+	},
+
 	create: function(){
 		this.inherited(arguments);
 		this._onChangeActive = true;
 		this._setStateClass();
 	},
-
-	postCreate: function(){
-		this._lastValueReported = this[this._onChangeMonitor];
+	
+	destroy: function(){
+		if(this._layoutHackHandle){
+			clearTimeout(this._layoutHackHandle);
+		}
+		this.inherited(arguments);
 	},
 
 	setValue: function(/*String*/ value){
@@ -257,14 +269,13 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	_layoutHack: function(){
 		// summary: work around table sizing bugs on FF2 by forcing redraw
 		if(dojo.isFF == 2){
-			setTimeout(dojo.hitch(this, function() {
-				var node=this.domNode;
-				var old = node.style.opacity;
-				node.style.opacity = "0.999";
-				setTimeout(function(){
-					node.style.opacity = old;
-				}, 0);
-			}), 50); // don't set this timeout too high or test_ComboBox.html has intermittent rendering problems
+			var node=this.domNode;
+			var old = node.style.opacity;
+			node.style.opacity = "0.999";
+			this._layoutHackHandle = setTimeout(dojo.hitch(this, function(){
+				this._layoutHackHandle = null;
+				node.style.opacity = old;
+			}), 0);
 		}
 	}
 });
@@ -288,6 +299,7 @@ dojo.declare("dijit.form._FormValueWidget", dijit.form._FormWidget,
 
 	setValue: function(/*anything*/ newValue, /*Boolean, optional*/ priorityChange){
 		// summary: set the value of the widget.
+		this.value = newValue;
 		this._handleOnChange(newValue, priorityChange);
 	},
 
@@ -302,18 +314,27 @@ dojo.declare("dijit.form._FormValueWidget", dijit.form._FormWidget,
 		this.setValue(this._lastValueReported, false);
 	},
 
+	_valueChanged: function(){
+		var v = this.getValue();
+		var lv = this._lastValueReported;
+		// Equality comparison of objects such as dates are done by reference so
+		// two distinct objects are != even if they have the same data. So use
+		// toStrings in case the values are objects.
+		return ((v !== null && (v !== undefined) && v.toString)?v.toString():'') !== ((lv !== null && (lv !== undefined) && lv.toString)?lv.toString():'');
+	},
+
 	_onKeyPress: function(e){
-		if(e.keyCode == dojo.keys.ESCAPE && !e.shiftKey && !e.ctrlKey && !e.altKey){
-			var v = this.getValue();
-			var lv = this._lastValueReported;
-			// Equality comparison of objects such as dates are done by reference so
-			// two distinct objects are != even if they have the same data. So use
-			// toStrings in case the values are objects.
-			if(((v !== null && (v !== undefined) && v.toString)?v.toString():null) !== ((lv !== null && (lv !== undefined) && lv.toString)?lv.toString():null)){
+		if(e.charOrCode == dojo.keys.ESCAPE && !e.shiftKey && !e.ctrlKey && !e.altKey){
+			if(this._valueChanged()){
 				this.undo();
 				dojo.stopEvent(e);
 				return false;
 			}
+		}
+		else if(this.intermediateChanges){
+			var _this = this;
+			// the setTimeout allows the key to post to the widget input box
+			setTimeout(function(){ _this._handleOnChange(_this.getValue(), false); }, 0);
 		}
 		return true;
 	}

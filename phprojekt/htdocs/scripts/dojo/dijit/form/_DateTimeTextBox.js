@@ -5,36 +5,53 @@ dojo.require("dojo.date.locale");
 dojo.require("dojo.date.stamp");
 dojo.require("dijit.form.ValidationTextBox");
 
+/*=====
+dojo.declare(
+	"dijit.form._DateTimeTextBox.__Constraints",
+	[dijit.form.RangeBoundTextBox.__Constraints, dojo.date.locale.__FormatOptions]
+);
+=====*/
+
 dojo.declare(
 	"dijit.form._DateTimeTextBox",
 	dijit.form.RangeBoundTextBox,
 	{
 		// summary:
 		//		A validating, serializable, range-bound date or time text box.
+		//
+		// constraints: dijit.form._DateTimeTextBox.__Constraints 
 
-		// constraints object: min, max
+		/*=====
+		constraints: {},
+		======*/
 		regExpGen: dojo.date.locale.regexp,
 		compare: dojo.date.compare,
-		format: function(/*Date*/ value, /*Object*/ constraints){
+		format: function(/*Date*/ value, /*dojo.date.locale.__FormatOptions*/ constraints){
+			//	summary: formats the value as a Date, according to constraints
 			if(!value){ return ''; }
 			return dojo.date.locale.format(value, constraints);
 		},
-		parse: function(/*String*/ value, /*Object*/ constraints){
+		parse: function(/*String*/ value, /*dojo.date.locale.__FormatOptions*/ constraints){
+			//	summary: parses the value as a Date, according to constraints
 			return dojo.date.locale.parse(value, constraints) || undefined; /* can't return null to getValue since that's special */
 		},
 
 		serialize: dojo.date.stamp.toISOString,
 
+		//	value: Date
+		//		The value of this widget as a JavaScript Date object.  Use `getValue`/`setValue` to manipulate.
+		//		When passed to the parser in markup, must be specified according to `dojo.date.stamp.fromISOString`
 		value: new Date(""),	// value.toString()="NaN"
 
-		// popupClass: String
-		//              Name of the popup widget class used to select a date/time
+		//	popupClass: String
+		//		Name of the popup widget class used to select a date/time
 		popupClass: "", // default is no popup = text only
+		
 		_selector: "",
 
 		postMixInProperties: function(){
 			//dijit.form.RangeBoundTextBox.prototype.postMixInProperties.apply(this, arguments);
-			this.inherited("postMixInProperties",arguments);
+			this.inherited(arguments);
 			if(!this.value || this.value.toString() == dijit.form._DateTimeTextBox.prototype.value.toString()){
 				this.value = undefined;
 			}
@@ -45,16 +62,16 @@ dojo.declare(
 			if(typeof constraints.min == "string"){ constraints.min = fromISO(constraints.min); }
  			if(typeof constraints.max == "string"){ constraints.max = fromISO(constraints.max); }
 		},
-
+		
 		_onFocus: function(/*Event*/ evt){
 			// summary: open the TimePicker popup
 			this._open();
 		},
 
-		setValue: function(/*Date*/ value, /*Boolean, optional*/ priorityChange, /*String, optional*/ formattedValue){
+		setValue: function(/*Date*/ value, /*Boolean?*/ priorityChange, /*String?*/ formattedValue){
 			// summary:
-			//	Sets the date on this textbox
-			this.inherited('setValue', arguments);
+			//	Sets the date on this textbox.  Note that `value` must be a Javascript Date object.
+			this.inherited(arguments);
 			if(this._picker){
 				// #3948: fix blank date on popup only
 				if(!value){value=new Date();}
@@ -71,11 +88,14 @@ dojo.declare(
 			var textBox = this;
 
 			if(!this._picker){
-				var popupProto=dojo.getObject(this.popupClass, false);
-				this._picker = new popupProto({
+				var PopupProto=dojo.getObject(this.popupClass, false);
+				this._picker = new PopupProto({
 					onValueSelected: function(value){
-
-						textBox.focus(); // focus the textbox before the popup closes to avoid reopening the popup
+						if(textBox._tabbingAway){
+							delete textBox._tabbingAway;
+						}else{
+							textBox.focus(); // focus the textbox before the popup closes to avoid reopening the popup
+						}
 						setTimeout(dojo.hitch(textBox, "_close"), 1); // allow focus time to take
 
 						// this will cause InlineEditBox and other handlers to do stuff so make sure it's last
@@ -118,7 +138,12 @@ dojo.declare(
 		_onBlur: function(){
 			// summary: called magically when focus has shifted away from this widget and it's dropdown
 			this._close();
-			this.inherited('_onBlur', arguments);
+			if(this._picker){
+				// teardown so that constraints will be rebuilt next time (redundant reference: #6002)
+				this._picker.destroy();
+				delete this._picker;
+			}
+			this.inherited(arguments);
 			// don't focus on <input>.  the user has explicitly focused on something else.
 		},
 
@@ -126,8 +151,8 @@ dojo.declare(
 			return this.textbox.value;
 		},
 
-		setDisplayedValue:function(/*String*/ value){
-			this.setValue(this.parse(value, this.constraints), true, value);
+		setDisplayedValue:function(/*String*/ value, /*Boolean?*/ priorityChange){
+			this.setValue(this.parse(value, this.constraints), priorityChange, value);
 		},
 
 		destroy: function(){
@@ -136,6 +161,32 @@ dojo.declare(
 				delete this._picker;
 			}
 			this.inherited(arguments);
+		},
+
+		_onKeyPress: function(/*Event*/e){
+			var p = this._picker, dk = dojo.keys;
+			// Handle the key in the picker, if it has a handler.  If the handler
+			// returns false, then don't handle any other keys.
+			if(p && this._opened && p.handleKey){
+				if(p.handleKey(e) === false){ return; }
+			}
+			if(this._opened && e.charOrCode == dk.ESCAPE && !e.shiftKey && !e.ctrlKey && !e.altKey){
+				this._close();
+				dojo.stopEvent(e);
+			}else if(!this._opened && e.charOrCode == dk.DOWN_ARROW){
+				this._open();
+				dojo.stopEvent(e);
+			}else if(dijit.form._DateTimeTextBox.superclass._onKeyPress.apply(this, arguments)){
+				if(e.charOrCode == dk.TAB){
+					this._tabbingAway = true;
+				}else if(this._opened && (e.keyChar || e.charOrCode == dk.BACKSPACE || e.charOrCode == dk.DELETE)){
+					// Replace the element - but do it after a delay to allow for 
+					// filtering to occur
+					setTimeout(dojo.hitch(this, function(){
+						dijit.placeOnScreenAroundElement(p.domNode.parentNode, this.domNode, {'BL':'TL', 'TL':'BL'}, p.orient ? dojo.hitch(p, "orient") : null);
+					}), 1);
+				}
+			}
 		}
 	}
 );

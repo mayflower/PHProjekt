@@ -34,7 +34,7 @@ dojo.declare(
 	discreteValues: Infinity,
 
 	// pageIncrement: integer
-	//	The amount of change with shift+arrow
+	//	The amount of change via pageup/down
 	pageIncrement: 2,
 
 	// clickSelect: boolean
@@ -43,7 +43,7 @@ dojo.declare(
 
 	// slideDuration: Number
 	//	The time in ms to take to animate the slider handle from 0% to 100%
-	slideDuration: 1000,
+	slideDuration: dijit.defaultDuration,
 
 	widgetsInTemplate: true,
 
@@ -58,25 +58,26 @@ dojo.declare(
 	_startingPixelCount: "l",
 	_handleOffsetCoord: "left",
 	_progressPixelSize: "width",
-	_upsideDown: false,
 
 	_onKeyPress: function(/*Event*/ e){
 		if(this.disabled || this.readOnly || e.altKey || e.ctrlKey){ return; }
-		switch(e.keyCode){
+		switch(e.charOrCode){
 			case dojo.keys.HOME:
-				this.setValue(this.minimum, false);
+				this.setValue(this.minimum, true);
 				break;
 			case dojo.keys.END:
-				this.setValue(this.maximum, false);
+				this.setValue(this.maximum, true);
 				break;
-			case dojo.keys.UP_ARROW:
-			case (this._isReversed() ? dojo.keys.LEFT_ARROW : dojo.keys.RIGHT_ARROW):
-			case dojo.keys.PAGE_UP:
+			// this._descending === false: if ascending vertical (min on top)
+			// (this._descending || this.isLeftToRight()): if left-to-right horizontal or descending vertical
+			case ((this._descending || this.isLeftToRight()) ? dojo.keys.RIGHT_ARROW : dojo.keys.LEFT_ARROW):
+			case (this._descending === false ? dojo.keys.DOWN_ARROW : dojo.keys.UP_ARROW):
+			case (this._descending === false ? dojo.keys.PAGE_DOWN : dojo.keys.PAGE_UP):
 				this.increment(e);
 				break;
-			case dojo.keys.DOWN_ARROW:
-			case (this._isReversed() ? dojo.keys.RIGHT_ARROW : dojo.keys.LEFT_ARROW):
-			case dojo.keys.PAGE_DOWN:
+			case ((this._descending || this.isLeftToRight()) ? dojo.keys.LEFT_ARROW : dojo.keys.RIGHT_ARROW):
+			case (this._descending === false ? dojo.keys.UP_ARROW : dojo.keys.DOWN_ARROW):
+			case (this._descending === false ? dojo.keys.PAGE_UP : dojo.keys.PAGE_DOWN):
 				this.decrement(e);
 				break;
 			default:
@@ -96,8 +97,8 @@ dojo.declare(
 		dojo.stopEvent(e);
 	},
 	
-	_isReversed: function() {
-		return !(this._upsideDown || this.isLeftToRight());
+	_isReversed: function(){
+		return !this.isLeftToRight();
 	},
 
 	_onBarClick: function(e){
@@ -106,7 +107,7 @@ dojo.declare(
 		dojo.stopEvent(e);
 		var abspos = dojo.coords(this.sliderBarContainer, true);
 		var pixelValue = e[this._mousePixelCoord] - abspos[this._startingPixelCoord];
-		this._setPixelValue(this._isReversed() || this._upsideDown ? (abspos[this._pixelCount] - pixelValue) : pixelValue, abspos[this._pixelCount], true);
+		this._setPixelValue(this._isReversed() ? (abspos[this._pixelCount] - pixelValue) : pixelValue, abspos[this._pixelCount], true);
 	},
 
 	_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean, optional*/ priorityChange){
@@ -125,22 +126,25 @@ dojo.declare(
 		dijit.setWaiState(this.focusNode, "valuenow", value);
 		this.inherited(arguments);
 		var percent = (value - this.minimum) / (this.maximum - this.minimum);
-		if(priorityChange && this.slideDuration > 0 && this.progressBar.style[this._progressPixelSize]){
+		var progressBar = (this._descending === false) ? this.remainingBar : this.progressBar;
+		var remainingBar = (this._descending === false) ? this.progressBar : this.remainingBar;
+		if(priorityChange && this.slideDuration > 0 && progressBar.style[this._progressPixelSize]){
 			// animate the slider
 			var _this = this;
 			var props = {};
-			var start = parseFloat(this.progressBar.style[this._progressPixelSize]);
+			var start = parseFloat(progressBar.style[this._progressPixelSize]);
 			var duration = this.slideDuration * (percent-start/100);
+			if(duration == 0){ return; }
 			if(duration < 0){ duration = 0 - duration; }
 			props[this._progressPixelSize] = { start: start, end: percent*100, units:"%" };
-			dojo.animateProperty({ node: this.progressBar, duration: duration, 
-				onAnimate: function(v){_this.remainingBar.style[_this._progressPixelSize] = (100-parseFloat(v[_this._progressPixelSize])) + "%";},
+			dojo.animateProperty({ node: progressBar, duration: duration, 
+				onAnimate: function(v){ remainingBar.style[_this._progressPixelSize] = (100-parseFloat(v[_this._progressPixelSize])) + "%"; },
 			        properties: props
 			}).play();
 		}
 		else{
-			this.progressBar.style[this._progressPixelSize] = (percent*100) + "%";
-			this.remainingBar.style[this._progressPixelSize] = ((1-percent)*100) + "%";
+			progressBar.style[this._progressPixelSize] = (percent*100) + "%";
+			remainingBar.style[this._progressPixelSize] = ((1-percent)*100) + "%";
 		}
 	},
 
@@ -159,21 +163,23 @@ dojo.declare(
 	},
 
 	_onClkIncBumper: function(){
-		this.setValue((this.isLeftToRight() || this._upsideDown)?this.maximum:this.minimum, true);
+		this.setValue(this._descending === false ? this.minimum : this.maximum, true);
 	},
+
 	_onClkDecBumper: function(){
-		this.setValue((this.isLeftToRight() || this._upsideDown)?this.minimum:this.maximum, true);
+		this.setValue(this._descending === false ? this.maximum : this.minimum, true);
 	},
+
 	decrement: function(e){
 		// summary
 		//	decrement slider by 1 unit
-		this._bumpValue(e.keyCode == dojo.keys.PAGE_DOWN?-this.pageIncrement:-1);
+		this._bumpValue(e.charOrCode == dojo.keys.PAGE_DOWN?-this.pageIncrement:-1);
 	},
 
 	increment: function(e){
 		// summary
 		//	increment slider by 1 unit
-		this._bumpValue(e.keyCode == dojo.keys.PAGE_UP?this.pageIncrement:1);
+		this._bumpValue(e.charOrCode == dojo.keys.PAGE_UP?this.pageIncrement:1);
 	},
 
 	_mouseWheeled: function(/*Event*/ evt){
@@ -197,10 +203,6 @@ dojo.declare(
 				this[child.container].appendChild(child.domNode);
 			}
 		}, this);
-	},
-
-	_onBlur: function(){
-		dijit.form.HorizontalSlider.superclass.setValue.call(this, this.value, true);
 	},
 
 	postCreate: function(){
@@ -245,12 +247,16 @@ dojo.declare(
 	_startingPixelCount: "t",
 	_handleOffsetCoord: "top",
 	_progressPixelSize: "height",
-	_upsideDown: true,
+
+	// _descending: boolean
+	//      Specifies if the slider values go from high-on-top (true), or low-on-top (false)
+	//	TODO: expose this in 1.2 - the css progress/remaining bar classes need to be reversed
+	_descending: true,
 
 	startup: function(){
 		if(this._started){ return; }
 
-		if(!dojo._isBodyLtr() && dojo.isMoz){
+		if(!this.isLeftToRight() && dojo.isMoz){
 			if(this.leftDecoration){this._rtlRectify(this.leftDecoration);}
 			if(this.rightDecoration){this._rtlRectify(this.rightDecoration);}
 		}
@@ -258,7 +264,27 @@ dojo.declare(
 		this.inherited(arguments);
 	},
 		
-	_rtlRectify:function(decorationNode/*NodeList*/){
+	_isReversed: function(){
+		return this._descending;
+	},
+
+	_topButtonClicked: function(e){
+		if(this._descending){
+			this.increment(e);
+		}else{
+			this.decrement(e);
+		}
+	},
+
+	_bottomButtonClicked: function(e){
+		if(this._descending){
+			this.decrement(e);
+		}else{
+			this.increment(e);
+		}
+	},
+
+	_rtlRectify: function(decorationNode/*NodeList*/){
 		// summary:
 		//      Rectify children nodes for left/right decoration in rtl case.
 		//		Simply switch the rule and label child for each decoration node.
@@ -280,19 +306,14 @@ dojo.declare("dijit.form._SliderMover",
 {
 	onMouseMove: function(e){
 		var widget = this.widget;
-		var c = this.constraintBox;
-		if(!c){
-			var container = widget.sliderBarContainer;
-			var s = dojo.getComputedStyle(container);
-			c = dojo._getContentBox(container, s);
-			c[widget._startingPixelCount] = 0;
-			this.constraintBox = c;
+		var abspos = widget._abspos;
+		if(!abspos){
+			abspos = widget._abspos = dojo.coords(widget.sliderBarContainer, true);
+			widget._setPixelValue_ = dojo.hitch(widget, "_setPixelValue");
+			widget._isReversed_ = widget._isReversed();
 		}
-		var m = this.marginBox;
-		var pixelValue = widget._isReversed() ?
-			e[widget._mousePixelCoord] - dojo._abs(widget.sliderBarContainer).x : 
-			m[widget._startingPixelCount] + e[widget._mousePixelCoord];
-		dojo.hitch(widget, "_setPixelValue")(widget._isReversed() || widget._upsideDown? (c[widget._pixelCount]-pixelValue) : pixelValue, c[widget._pixelCount], false);
+		var pixelValue = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
+		widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false);
 	},
 	
 	destroy: function(e){
@@ -307,7 +328,7 @@ dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
 {
 	//	Summary:
 	//		Create hash marks for the Horizontal slider
-	templateString: '<div class="RuleContainer HorizontalRuleContainer"></div>',
+	templateString: '<div class="dijitRuleContainer dijitRuleContainerH"></div>',
 
 	// count: Integer
 	//		Number of hash marks to generate
@@ -321,7 +342,7 @@ dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
 	//		CSS style to apply to individual hash marks
 	ruleStyle: "",
 
-	_positionPrefix: '<div class="RuleMark HorizontalRuleMark" style="left:',
+	_positionPrefix: '<div class="dijitRuleMark dijitRuleMarkH" style="left:',
 	_positionSuffix: '%;',
 	_suffix: '"></div>',
 
@@ -360,8 +381,8 @@ dojo.declare("dijit.form.VerticalRule", dijit.form.HorizontalRule,
 {
 	//	Summary:
 	//		Create hash marks for the Vertical slider
-	templateString: '<div class="RuleContainer VerticalRuleContainer"></div>',
-	_positionPrefix: '<div class="RuleMark VerticalRuleMark" style="top:',
+	templateString: '<div class="dijitRuleContainer dijitRuleContainerV"></div>',
+	_positionPrefix: '<div class="dijitRuleMark dijitRuleMarkV" style="top:',
 	
 	_isHorizontal: false
 });
@@ -370,7 +391,7 @@ dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule,
 {
 	//	Summary:
 	//		Create labels for the Horizontal slider
-	templateString: '<div class="RuleContainer HorizontalRuleContainer"></div>',
+	templateString: '<div class="dijitRuleContainer dijitRuleContainerH"></div>',
 
 	// labelStyle: String
 	//		CSS style to apply to individual text labels
@@ -396,8 +417,8 @@ dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule,
 	//	pattern, places, lang, et al (see dojo.number) for generated numeric labels when labels[] are not specified
 	constraints: {pattern:"#%"},
 
-	_positionPrefix: '<div class="RuleLabelContainer HorizontalRuleLabelContainer" style="left:',
-	_labelPrefix: '"><span class="RuleLabel HorizontalRuleLabel">',
+	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerH" style="left:',
+	_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelH">',
 	_suffix: '</span></div>',
 
 	_calcPosition: function(pos){
@@ -443,10 +464,10 @@ dojo.declare("dijit.form.VerticalRuleLabels", dijit.form.HorizontalRuleLabels,
 {
 	//	Summary:
 	//		Create labels for the Vertical slider
-	templateString: '<div class="RuleContainer VerticalRuleContainer"></div>',
+	templateString: '<div class="dijitRuleContainer dijitRuleContainerV"></div>',
 
-	_positionPrefix: '<div class="RuleLabelContainer VerticalRuleLabelContainer" style="top:',
-	_labelPrefix: '"><span class="RuleLabel VerticalRuleLabel">',
+	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerV" style="top:',
+	_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelV">',
 
 	_calcPosition: function(pos){
 		return 100-pos;
