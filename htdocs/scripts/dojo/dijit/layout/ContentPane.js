@@ -82,18 +82,31 @@ dojo.declare(
 	//			however big the ContentPane is
 	doLayout: "auto",
 
+	postMixInProperties: function(){
+		this.inherited(arguments);
+		var messages = dojo.i18n.getLocalization("dijit", "loading", this.lang);
+		this.loadingMessage = dojo.string.substitute(this.loadingMessage, messages);
+		this.errorMessage = dojo.string.substitute(this.errorMessage, messages);
+	},
+
 	postCreate: function(){
 		// remove the title attribute so it doesn't show up when i hover
 		// over a node
 		this.domNode.title = "";
 
+		if(!this.containerNode){
+			// make getDescendants() work
+			this.containerNode = this.domNode;
+		}
+
 		if(this.preload){
 			this._loadCheck();
 		}
 
-		var messages = dojo.i18n.getLocalization("dijit", "loading", this.lang);
-		this.loadingMessage = dojo.string.substitute(this.loadingMessage, messages);
-		this.errorMessage = dojo.string.substitute(this.errorMessage, messages);
+		var curRole = dijit.getWaiRole(this.domNode);
+		if (!curRole){
+			dijit.setWaiRole(this.domNode, "group");
+		}
 
 		// for programatically created ContentPane (with <span> tag), need to muck w/CSS
 		// or it's as though overflow:visible is set
@@ -119,7 +132,7 @@ dojo.declare(
 
 		// TODO: if there are two child widgets (a data store and a TabContainer, for example),
 		//	should still find the TabContainer
-		var childNodes = dojo.query(">", this.containerNode || this.domNode),
+		var childNodes = dojo.query(">", this.containerNode),
 			childWidgets = childNodes.filter("[widgetId]");
 
 		if(childNodes.length == 1 && childWidgets.length == 1){
@@ -179,7 +192,7 @@ dojo.declare(
 			this._checkIfSingleChild();
 			if(this._singleChild && this._singleChild.resize){
 				this._singleChild.startup();
-				this._singleChild.resize(this._contentBox || dojo.contentBox(this.containerNode || this.domNode));
+				this._singleChild.resize(this._contentBox || dojo.contentBox(this.containerNode));
 			}
 		}
 
@@ -203,7 +216,7 @@ dojo.declare(
 		// make sure we call onUnload
 		this._onUnloadHandler();
 		this._beingDestroyed = true;
-		this.inherited("destroy",arguments);
+		this.inherited(arguments);
 	},
 
 	resize: function(size){
@@ -213,7 +226,7 @@ dojo.declare(
 		// If either height or width wasn't specified by the user, then query node for it.
 		// But note that setting the margin box and then immediately querying dimensions may return
 		// inaccurate results, so try not to depend on it.
-		var node = this.containerNode || this.domNode,
+		var node = this.containerNode,
 			mb = dojo.mixin(dojo.marginBox(node), size||{});
 
 		this._contentBox = dijit.layout.marginBox2contentBox(node, mb);
@@ -232,7 +245,17 @@ dojo.declare(
 		this._loadCheck(forceLoad);
 	},
 
-	_loadCheck: function(forceLoad){
+	_isShown: function(){
+		// summary: returns true if the content is currently shown
+		if("open" in this){
+			return this.open;		// for TitlePane, etc.
+		}else{
+			var node = this.domNode;
+			return (node.style.display != 'none')  && (node.style.visibility != 'hidden');
+		}
+	},
+
+	_loadCheck: function(/*Boolean*/ forceLoad){
 		// call this when you change onShow (onSelected) status when selected in parent container
 		// it's used as a trigger for href download when this.domNode.display != 'none'
 
@@ -245,7 +268,7 @@ dojo.declare(
 		// else -> load when download not in progress, if this.open !== false (undefined is ok) AND
 		//						domNode display != 'none', isLoaded must be false
 
-		var displayState = ((this.open !== false) && (this.domNode.style.display != 'none'));
+		var displayState = this._isShown();
 
 		if(this.href &&	
 			(forceLoad ||
@@ -320,10 +343,12 @@ dojo.declare(
 	},
 
 	_setContent: function(cont){
+		// first get rid of child widgets
 		this.destroyDescendants();
 
 		try{
-			var node = this.containerNode || this.domNode;
+			// ... and then get rid of child dom nodes
+			var node = this.containerNode;
 			while(node.firstChild){
 				dojo._destroyElement(node.firstChild);
 			}
@@ -332,7 +357,7 @@ dojo.declare(
 				// No pathAdjustments, script retrieval, style clean etc
 				// some of these should be available in the dojox.layout.ContentPane
 				if(this.extractContent){
-					match = cont.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
+					var match = cont.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
 					if(match){ cont = match[1]; }
 				}
 				node.innerHTML = cont;
@@ -371,9 +396,8 @@ dojo.declare(
 
 	_createSubWidgets: function(){
 		// summary: scan my contents and create subwidgets
-		var rootNode = this.containerNode || this.domNode;
 		try{
-			dojo.parser.parse(rootNode, true);
+			dojo.parser.parse(this.containerNode, true);
 		}catch(e){
 			this._onError('Content', e, "Couldn't create widgets in "+this.id
 				+(this.href ? " from "+this.href : ""));

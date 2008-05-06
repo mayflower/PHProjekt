@@ -16,13 +16,14 @@ dojo.declare(
 	//		A simple GUI for choosing a date in the context of a monthly calendar.
 	//
 	//	description:
+	//		A simple GUI for choosing a date in the context of a monthly calendar.
 	//		This widget is used internally by other widgets and is not accessible
 	//		as a standalone widget.
 	//		This widget can't be used in a form because it doesn't serialize the date to an
-	//		<input> field.  For a form element, use DateTextBox instead.
+	//		`<input>` field.  For a form element, use dijit.form.DateTextBox instead.
 	//
-	//		Note that the parser takes all dates attributes passed in the `RFC 3339` format:
-	//		http://www.faqs.org/rfcs/rfc3339.html (2005-06-30T08:05:00-07:00)
+	//		Note that the parser takes all dates attributes passed in the
+	//		[RFC 3339 format](http://www.faqs.org/rfcs/rfc3339.html), e.g. `2005-06-30T08:05:00-07:00`
 	//		so that they are serializable and locale-independent.
 	//
 	//	example:
@@ -113,7 +114,7 @@ dojo.declare(
 
 				var clazz2 = this.getClassForDate(date, this.lang);
 				if(clazz2){
-					clazz += clazz2 + " " + clazz;
+					clazz = clazz2 + " " + clazz;
 				}
 
 				template.className =  clazz + "Month dijitCalendarDateTemplate";
@@ -205,6 +206,28 @@ dojo.declare(
 			}
 		},
 
+		_onDayMouseOver: function(/*Event*/evt){
+			var node = evt.target;
+			if(node && (node.dijitDateValue || node == this.previousYearLabelNode || node == this.nextYearLabelNode) ){
+				dojo.addClass(node, "dijitCalendarHoveredDate");
+				this._currentNode = node;
+			}
+		},
+
+		_onDayMouseOut: function(/*Event*/evt){
+			if(!this._currentNode){ return; }
+			for(var node = evt.relatedTarget; node;){
+				if(node == this._currentNode){ return; }
+				try{
+					node = node.parentNode;
+				}catch(x){
+					node = null;
+				}
+			}
+			dojo.removeClass(this._currentNode, "dijitCalendarHoveredDate");
+			this._currentNode = null;
+		},
+
 		onValueSelected: function(/*Date*/date){
 			// summary: a date cell was selected.  It may be the same as the previous value.
 		},
@@ -215,7 +238,7 @@ dojo.declare(
 
 		isDisabledDate: function(/*Date*/dateObject, /*String?*/locale){
 			// summary:
-			//	May be overridden to disable certain dates in the calendar e.g. isDisabledDate=dojo.date.locale.isWeekend
+			//	May be overridden to disable certain dates in the calendar e.g. `isDisabledDate=dojo.date.locale.isWeekend`
 /*=====
 			return false; // Boolean
 =====*/

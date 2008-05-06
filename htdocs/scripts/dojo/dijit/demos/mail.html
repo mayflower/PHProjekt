@@ -10,16 +10,16 @@
 		@import "mail/mail.css";
 	</style>
 	<style type="text/css">
-		#inbox .dijitSplitterHorizontal { height: 5px }
-		#inbox .dijitSplitterVertical { width: 5px }
+		#inbox .dijitSplitterH { height: 5px }
+		#inbox .dijitSplitterV { width: 5px }
 	</style>
 
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		djConfig="isDebug: false, parseOnLoad: true, defaultTestTheme: 'tundra'"></script>
+		djConfig="isDebug: false, parseOnLoad: true, defaultTestTheme: 'soria'"></script>
 	<script type="text/javascript" src="../tests/_testCommon.js"></script>
 	<!--
 	<script type="text/javascript" src="../dijit.js"></script>
-	<script type="text/javascript" src="../dijit-all.js"></script>
+	<script type="text/javascript" src="../dijit-all.js" charset="utf-8"></script>
 	-->
 	<script type="text/javascript">
 		// Use profile builds, if available.  Since we use pretty much all of the widgets, just use dijit-all.
@@ -42,6 +42,7 @@
 		dojo.require("dijit.ColorPalette");
 		dojo.require("dijit.Editor");
 		dojo.require("dijit._editor.plugins.LinkDialog");
+		dojo.require("dijit._editor.plugins.FontChoice");
 		dojo.require("dijit.ProgressBar");
 
 		dojo.require("dijit.form.ComboBox");
@@ -95,7 +96,7 @@
 			dijit.byId('fakeFetch').update({ maximum: numMails, progress:0 });
 			dojo.fadeIn({ node: 'fetchMail', duration:300 }).play();
 			for (var i=0; i<=numMails; i++){
-				setTimeout("updateFetchStatus("+i+")",((i+1)*(Math.floor(Math.random()*100)+400)));
+				setTimeout(function(){updateFetchStatus(i);},((i+1)*(Math.floor(Math.random()*100)+400)));
 			}
 		}
 		// fake sending dialog progress bar 
@@ -109,12 +110,12 @@
 		var showSendBar = function(){
 			dijit.byId('fakeSend').update({ indeterminate: true });
 			dijit.byId('sendDialog').show();
-			setTimeout("stopSendBar()", 3000);
+			setTimeout(function(){stopSendBar();}, 3000);
 		}
 
 	</script>
 </head>
-<body class="tundra">
+<body class="soria">
 	<div dojoType="dojo.data.ItemFileWriteStore" jsId="mailStore"
 		url="mail/mail.json"></div>
 
@@ -289,7 +290,7 @@
 			<span dojoType="dijit.Tooltip" connectId="newMsg">Click to compose new message.</span>
 
 			<button id="options" dojoType="dijit.form.Button" iconClass="mailIconOptions">
-			Options	
+			 &nbsp;Options	
 				<script type="dojo/method" event="onClick">
 					dijit.byId('optionsDialog').show();
 				</script>
@@ -303,7 +304,7 @@
 				<div dojoType="dijit.layout.AccordionContainer" region="leading" minSize="20" style="width:20%;" splitter="true">
 					<div dojoType="dijit.layout.AccordionPane" title="Folders">
 						<div dojoType="dijit.Tree" id="mytree" store="mailStore"
-							labelAttr="label" childrenAttr="folders" query="{type:'folder'}" label="Folders">
+							childrenAttr="folders" query="{type:'folder'}" label="Folders">
 							<script type="dojo/method" event="onClick" args="item">
 								if(!item){
 									return;	// top level node in tree doesn't correspond to any item

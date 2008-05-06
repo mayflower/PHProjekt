@@ -10,7 +10,7 @@ dojo.declare("dijit.Menu",
 	// summary
 	//	A context menu you can assign to multiple elements
 
-	constructor: function() {
+	constructor: function(){
 		this._bindings = [];
 	},
 
@@ -29,6 +29,10 @@ dojo.declare("dijit.Menu",
 	//	if false, must specify targetNodeIds
 	contextMenuForWindow: false,
 
+	// leftClickToOpen: Boolean
+	//	If true, menu will open on left click instead of right click, similiar to a file menu.
+	leftClickToOpen: false,
+	
 	// parentMenu: Widget
 	// pointer to menu that displayed me
 	parentMenu: null,
@@ -78,7 +82,7 @@ dojo.declare("dijit.Menu",
 		// summary: Handle keyboard based menu navigation.
 		if(evt.ctrlKey || evt.altKey){ return; }
 
-		switch(evt.keyCode){
+		switch(evt.charOrCode){
 			case dojo.keys.RIGHT_ARROW:
 				this._moveToPopup(evt);
 				dojo.stopEvent(evt);
@@ -144,7 +148,7 @@ dojo.declare("dijit.Menu",
 	},
 
 	// thanks burstlib!
-	_iframeContentWindow: function(/* HTMLIFrameElement */iframe_el) {
+	_iframeContentWindow: function(/* HTMLIFrameElement */iframe_el){
 		// summary:
 		//	Returns the window reference of the passed iframe
 		var win = dijit.getDocumentWindow(dijit.Menu._iframeContentDocument(iframe_el)) ||
@@ -180,7 +184,7 @@ dojo.declare("dijit.Menu",
 		var cn = (node == dojo.body() ? dojo.doc : node);
 
 		node[this.id] = this._bindings.push([
-			dojo.connect(cn, "oncontextmenu", this, "_openMyself"),
+			dojo.connect(cn, (this.leftClickToOpen)?"onclick":"oncontextmenu", this, "_openMyself"),
 			dojo.connect(cn, "onkeydown", this, "_contextKey"),
 			dojo.connect(cn, "onmousedown", this, "_contextMouse")
 		]);
@@ -189,16 +193,18 @@ dojo.declare("dijit.Menu",
 	unBindDomNode: function(/*String|DomNode*/ nodeName){
 		// summary: detach menu from given node
 		var node = dojo.byId(nodeName);
-		var bid = node[this.id]-1, b = this._bindings[bid];
-		dojo.forEach(b, dojo.disconnect);
-		delete this._bindings[bid];
+		if(node){
+			var bid = node[this.id]-1, b = this._bindings[bid];
+			dojo.forEach(b, dojo.disconnect);
+			delete this._bindings[bid];
+		}
 	},
 
 	_contextKey: function(e){
 		this._contextMenuWithMouse = false;
-		if (e.keyCode == dojo.keys.F10) {
+		if(e.keyCode == dojo.keys.F10){
 			dojo.stopEvent(e);
-			if (e.shiftKey && e.type=="keydown") {
+			if(e.shiftKey && e.type=="keydown"){
 				// FF: copying the wrong property from e will cause the system
 				// context menu to appear in spite of stopEvent. Don't know
 				// exactly which properties cause this effect.
@@ -220,6 +226,9 @@ dojo.declare("dijit.Menu",
 		//		Internal function for opening myself when the user
 		//		does a right-click or something similar
 
+		if(this.leftClickToOpen&&e.button>0){
+			return;
+		}
 		dojo.stopEvent(e);
 
 		// Get coordinates.
@@ -257,6 +266,7 @@ dojo.declare("dijit.Menu",
 		this.focus();
 
 		this._onBlur = function(){
+			this.inherited('_onBlur', arguments);
 			// Usually the parent closes the child widget but if this is a context
 			// menu then there is no parent
 			dijit.popup.close(this);
@@ -326,9 +336,9 @@ dojo.declare("dijit.MenuItem",
 	// Make 3 columns
 	//   icon, label, and expand arrow (BiDi-dependent) indicating sub-menu
 	templateString:
-		 '<tr class="dijitReset dijitMenuItem"'
+		 '<tr class="dijitReset dijitMenuItem" '
 		+'dojoAttachEvent="onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick">'
-		+'<td class="dijitReset"><div class="dijitMenuItemIcon ${iconClass}" dojoAttachPoint="iconNode" ></div></td>'
+		+'<td class="dijitReset"><div class="dijitMenuItemIcon ${iconClass}" dojoAttachPoint="iconNode"></div></td>'
 		+'<td tabIndex="-1" class="dijitReset dijitMenuItemLabel" dojoAttachPoint="containerNode,focusNode" waiRole="menuitem"></td>'
 		+'<td class="dijitReset" dojoAttachPoint="arrowCell">'
 			+'<div class="dijitMenuExpand" dojoAttachPoint="expand" style="display:none">'
@@ -354,7 +364,7 @@ dojo.declare("dijit.MenuItem",
 		dojo.setSelectable(this.domNode, false);
 		this.setDisabled(this.disabled);
 		if(this.label){
-			this.containerNode.innerHTML=this.label;
+			this.setLabel(this.label);
 		}
 	},
 
@@ -376,7 +386,7 @@ dojo.declare("dijit.MenuItem",
 		dojo.stopEvent(evt);
 	},
 
-	onClick: function(/*Event*/ evt) {
+	onClick: function(/*Event*/ evt){
 		// summary: User defined function to handle clicks
 	},
 
@@ -391,6 +401,10 @@ dojo.declare("dijit.MenuItem",
 
 	_blur: function(){
 		dojo.removeClass(this.domNode, 'dijitMenuItemHover');
+	},
+	
+	setLabel: function(/*String*/ value){
+		this.containerNode.innerHTML=this.label=value;
 	},
 
 	setDisabled: function(/*Boolean*/ value){

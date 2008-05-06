@@ -15,7 +15,7 @@ dojo.declare(
 
 		// duration: Integer
 		//		Milliseconds to fade in/fade out
-		duration: 200,
+		duration: dijit.defaultDuration,
 
 		templatePath: dojo.moduleUrl("dijit", "templates/Tooltip.html"),
 
@@ -174,9 +174,8 @@ dojo.declare(
 		position: [],
 
 		postCreate: function(){
-			if(this.srcNodeRef){
-				this.srcNodeRef.style.display = "none";
-			}
+			
+			dojo.addClass(this.domNode,"dijitTooltipData");
 
 			this._connectNodes = [];
 			
@@ -210,11 +209,13 @@ dojo.declare(
 		_onFocus: function(/*Event*/ e){
 			this._focus = true;
 			this._onHover(e);
+			this.inherited(arguments);
 		},
 		
 		_onBlur: function(/*Event*/ e){
 			this._focus = false;
 			this._onUnHover(e);
+			this.inherited(arguments);
 		},
 
 		_onHover: function(/*Event*/ e){

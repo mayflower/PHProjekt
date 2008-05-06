@@ -7,8 +7,9 @@ dojo.require("dojo.parser");
 dojo.declare("dijit._Templated",
 	null,
 	{
-		// summary: Mixin for widgets that are instantiated from a template
-
+		//	summary:
+		//		Mixin for widgets that are instantiated from a template
+		// 
 		// templateNode: DomNode
 		//		a node that represents the widget template. Pre-empts both templateString and templatePath.
 		templateNode: null,
@@ -29,17 +30,29 @@ dojo.declare("dijit._Templated",
 		//		declared in markup inside it? false by default.
 		widgetsInTemplate: false,
 
-		// containerNode: DomNode
-		//		holds child elements. "containerNode" is generally set via a
-		//		dojoAttachPoint assignment and it designates where children of
-		//		the src dom node will be placed
-		containerNode: null,
-
 		// skipNodeCache: Boolean
 		//		if using a cached widget template node poses issues for a
 		//		particular widget class, it can set this property to ensure
 		//		that its template is always re-built from a string
 		_skipNodeCache: false,
+
+		_stringRepl: function(tmpl){
+			var className = this.declaredClass, _this = this;
+			// Cache contains a string because we need to do property replacement
+			// do the property replacement
+			return dojo.string.substitute(tmpl, this, function(value, key){
+				if(key.charAt(0) == '!'){ value = _this[key.substr(1)]; }
+				if(typeof value == "undefined"){ throw new Error(className+" template:"+key); } // a debugging aide
+				if(!value){ return ""; }
+
+				// Substitution keys beginning with ! will skip the transform step,
+				// in case a user wishes to insert unescaped markup, e.g. ${!foo}
+				return key.charAt(0) == "!" ? value :
+					// Safer substitution, see heading "Attribute values" in
+					// http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3.2
+					value.toString().replace(/"/g,"&quot;"); //TODO: add &amp? use encodeXML method?
+			}, this);
+		},
 
 		// method over-ride
 		buildRendering: function(){
@@ -53,23 +66,7 @@ dojo.declare("dijit._Templated",
 
 			var node;
 			if(dojo.isString(cached)){
-				var className = this.declaredClass, _this = this;
-				// Cache contains a string because we need to do property replacement
-				// do the property replacement
-				var tstr = dojo.string.substitute(cached, this, function(value, key){
-					if(key.charAt(0) == '!'){ value = _this[key.substr(1)]; }
-					if(typeof value == "undefined"){ throw new Error(className+" template:"+key); } // a debugging aide
-					if(!value){ return ""; }
-
-					// Substitution keys beginning with ! will skip the transform step,
-					// in case a user wishes to insert unescaped markup, e.g. ${!foo}
-					return key.charAt(0) == "!" ? value :
-						// Safer substitution, see heading "Attribute values" in
-						// http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3.2
-						value.toString().replace(/"/g,"&quot;"); //TODO: add &amp? use encodeXML method?
-				}, this);
-
-				node = dijit._Templated._createNodesFromText(tstr)[0];
+				node = dijit._Templated._createNodesFromText(this._stringRepl(cached))[0];
 			}else{
 				// if it's a node, all we have to do is clone it
 				node = cached.cloneNode(true);
@@ -86,8 +83,8 @@ dojo.declare("dijit._Templated",
 
 			this.domNode = node;
 			if(this.widgetsInTemplate){
-				var childWidgets = dojo.parser.parse(node);
-				this._attachTemplateNodes(childWidgets, function(n,p){
+				var cw = this._supportingWidgets  = dojo.parser.parse(node);
+				this._attachTemplateNodes(cw, function(n,p){
 					return n[p];
 				});
 			}
@@ -136,7 +133,7 @@ dojo.declare("dijit._Templated",
 				var attachPoint = getAttrFunc(baseNode, "dojoAttachPoint");
 				if(attachPoint){
 					var point, points = attachPoint.split(/\s*,\s*/);
-					while(point=points.shift()){
+					while((point = points.shift())){
 						if(dojo.isArray(this[point])){
 							this[point].push(baseNode);
 						}else{
@@ -152,7 +149,7 @@ dojo.declare("dijit._Templated",
 					// "domEvent: nativeEvent; ..."
 					var event, events = attachEvent.split(/\s*,\s*/);
 					var trim = dojo.trim;
-					while(event=events.shift()){
+					while((event = events.shift())){
 						if(event){
 							var thisFunc = null;
 							if(event.indexOf(":") != -1){
@@ -222,7 +219,7 @@ dijit._Templated.getCachedTemplate = function(templatePath, templateString, alwa
 
 	templateString = dojo.string.trim(templateString);
 
-	if(templateString.match(/\$\{([^\}]+)\}/g) || alwaysUseString){
+	if(alwaysUseString || templateString.match(/\$\{([^\}]+)\}/g)){
 		// there are variables in the template so all we can do is cache the string
 		return (tmplts[key] = templateString); //String
 	}else{

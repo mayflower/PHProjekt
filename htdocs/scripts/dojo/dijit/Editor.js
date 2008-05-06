@@ -2,6 +2,7 @@ dojo.provide("dijit.Editor");
 dojo.require("dijit._editor.RichText");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit._editor._Plugin");
+dojo.require("dijit._editor.range");
 dojo.require("dijit._Container");
 dojo.require("dojo.i18n");
 dojo.requireLocalization("dijit._editor", "commands");
@@ -27,6 +28,9 @@ dojo.declare(
 				"insertOrderedList","insertUnorderedList","indent","outdent","|","justifyLeft","justifyRight","justifyCenter","justifyFull"/*"createLink"*/];
 			}
 
+			/*if(dojo.isIE){
+				this.events.push("onBeforeDeactivate");
+			}*/
 			this._plugins=[];
 			this._editInterval = this.editActionInterval * 1000;
 		},
@@ -59,6 +63,8 @@ dojo.declare(
 			dojo.forEach(this.plugins, this.addPlugin, this);
 			this.onNormalizedDisplayChanged(); //update toolbar button status
 //			}catch(e){ console.debug(e); }
+
+			this.toolbar.startup();
 		},
 		destroy: function(){
 			dojo.forEach(this._plugins, function(p){
@@ -145,16 +151,16 @@ dojo.declare(
 			if(this.customUndo && (cmd=='undo' || cmd=='redo')){
 				return this[cmd]();
 			}else{
+				if(this.customUndo){
+					this.endEditing();
+					this._beginEditing();
+				}
 				try{
-					if(this.customUndo){
-						this.endEditing();
-						this._beginEditing();
-					}
 					var r = this.inherited('execCommand',arguments);
-					if(this.customUndo){
-						this._endEditing();
-					}
-					return r;
+                    if(dojo.isSafari && cmd=='paste' && !r){ //see #4598: safari does not support invoking paste from js
+                        var su = dojo.string.substitute, _isM = navigator.userAgent.indexOf("Macintosh") != -1;
+                        alert(su(this.commands.pasteShortcutSafari,[su(this.commands[_isM ? 'appleKey' : 'ctrlKey'], ['V'])]));
+                    }
 				}catch(e){
 					if(dojo.isMoz && /copy|cut|paste/.test(cmd)){
 						// Warn user of platform limitation.  Cannot programmatically access keyboard. See ticket #4136
@@ -164,8 +170,12 @@ dojo.declare(
 						alert(sub(this.commands.systemShortcutFF,
 							[this.commands[cmd], sub(this.commands[isMac ? 'appleKey' : 'ctrlKey'], [accel[cmd]])]));
 					}
-					return false;
+					r = false;
 				}
+				if(this.customUndo){
+					this._endEditing();
+				}
+				return r;
 			}
 		},
 		queryCommandEnabled: function(cmd){
@@ -175,8 +185,33 @@ dojo.declare(
 				return this.inherited('queryCommandEnabled',arguments);
 			}
 		},
+		/*onBeforeDeactivate: function(){
+	        //in IE, the selection will be lost when other elements get focus,
+	        //let's save focus before the editor is deactivated
+	        this._savedSelection = this._getBookmark();
+		},
+		focus: function(){
+		    this.inherited(arguments);
+		    if(this._savedSelection){
+		    	var s=this.document.selection;
+		    	var restore=true;
+		    	if(s.type=='Text'){
+		    		var r=s.createRange();
+		    		if(r.htmlText){
+		    			//only restore the focus for IE if the current range is collapsed
+		    			//if not collapsed, then it means the editor does not lose focus
+		    			//and there is no need to restore it
+		    			restore=false;
+		    		}
+		    	}
+		    	if(restore){
+		        	this._moveToBookmark(this._savedSelection);
+		    	}
+		        delete this._savedSelection;
+		    }
+		},*/
 		_moveToBookmark: function(b){
-			var bookmark;
+			var bookmark=b;
 			if(dojo.isIE){
 				if(dojo.isArray(b)){//IE CONTROL
 					bookmark=[];
@@ -261,20 +296,20 @@ dojo.declare(
 			var v=this.getValue(true);
 
 			this._undoedSteps=[];//clear undoed steps
-			this._steps.push({'text':v,'bookmark':this._getBookmark()});
+			this._steps.push({text: v, bookmark: this._getBookmark()});
 		},
 		onKeyDown: function(e){
 			if(!this.customUndo){
 				this.inherited('onKeyDown',arguments);
 				return;
 			}
-			var k=e.keyCode,ks=dojo.keys;
-			if(e.ctrlKey){
-				if(k===90||k===122){ //z
+			var k = e.keyCode, ks = dojo.keys;
+			if(e.ctrlKey && !e.altKey){//undo and redo only if the special right Alt + z/y are not pressed #5892
+				if(k == 90 || k == 122){ //z
 					dojo.stopEvent(e);
 					this.undo();
 					return;
-				}else if(k===89||k===121){ //y
+				}else if(k == 89 || k == 121){ //y
 					dojo.stopEvent(e);
 					this.redo();
 					return;
@@ -331,8 +366,26 @@ dojo.declare(
 				}	
 		},
 		_onBlur: function(){
+			if(dojo.isIE || !this.useIframe){
+				this._savedSelection=this._getBookmark();
+			}
 			this.inherited('_onBlur',arguments);
 			this.endEditing(true);
+		},
+		_restoreSelection: function(){
+			if(this._savedSelection){
+				//only restore the selection if the current range is collapsed
+    			//if not collapsed, then it means the editor does not lose 
+    			//selection and there is no need to restore it
+    			if(dojo.withGlobal(this.window,'isCollapsed',dijit)){
+					this._moveToBookmark(this._savedSelection);
+				}
+				delete this._savedSelection;
+			}
+		},
+		_onFocus: function(){
+			this._restoreSelection();
+			this.inherited(arguments);
 		},
 		onClick: function(){
 			this.endEditing(true);
@@ -345,14 +398,15 @@ dojo.declare(
 /* the following code is to registered a handler to get default plugins */
 dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
-	var args=o.args, p;
+	var args = o.args, p;
 	var _p = dijit._editor._Plugin;
-	var name=args.name;
+	var name = args.name;
 	switch(name){
 		case "undo": case "redo": case "cut": case "copy": case "paste": case "insertOrderedList":
 		case "insertUnorderedList": case "indent": case "outdent": case "justifyCenter":
 		case "justifyFull": case "justifyLeft": case "justifyRight": case "delete":
 		case "selectAll": case "removeFormat":
+		case "insertHorizontalRule":
 			p = new _p({ command: name });
 			break;
 
@@ -362,19 +416,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 			break;
 		case "|":
 			p = new _p({ button: new dijit.ToolbarSeparator() });
-			break;
-		case "createLink":
-//					dojo['require']('dijit._editor.plugins.LinkDialog');
-			p = new dijit._editor.plugins.LinkDialog({ command: name });
-			break;
-		case "foreColor": case "hiliteColor":
-			p = new dijit._editor.plugins.TextColor({ command: name });
-			break;
-		case "fontName": case "fontSize": case "formatBlock":
-			p = new dijit._editor.plugins.FontChoice({ command: name });
-			break;
-		case "toggleDir" :
-			p = new dijit._editor.plugins.ToggleDir({ command: name});
 	}
 //	console.log('name',name,p);
 	o.plugin=p;

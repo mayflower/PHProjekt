@@ -54,7 +54,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 			if(dojo.withGlobal(this.editor.window, 'isCollapsed', dijit)){
 				if(!dojo.withGlobal(this.editor.window, 'hasAncestorElement', dijit._editor.selection, ['LI'])){
 					//circulate the undo detection code by calling RichText::execCommand directly
-					dijit._editor.RichText.prototype.execCommand.apply(this.editor, ['formatblock',this.blockNodeForEnter]);
+					dijit._editor.RichText.prototype.execCommand.call(this.editor, 'formatblock',this.blockNodeForEnter);
 					//set the innerHTML of the new block node
 					var block = dojo.withGlobal(this.editor.window, 'getAncestorElement', dijit._editor.selection, [this.blockNodeForEnter]);
 					if(block){
@@ -77,9 +77,12 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 				}
 			}
 			this._checkListLater = false;
-		}else if(this._pressedEnterInBlock){
+		}
+		if(this._pressedEnterInBlock){
 			//the new created is the original current P, so we have previousSibling below
-			this.removeTrailingBr(this._pressedEnterInBlock.previousSibling);
+			if(this._pressedEnterInBlock.previousSibling){
+			    this.removeTrailingBr(this._pressedEnterInBlock.previousSibling);
+			}
 			delete this._pressedEnterInBlock;
 		}
 	},
@@ -134,12 +137,19 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 		var block = dijit.range.getBlockAncestor(range.endContainer, null, this.editor.editNode);
 
 		if((this._checkListLater = (block.blockNode && block.blockNode.tagName == 'LI'))){
+		    if(dojo.isMoz){
+				//press enter in middle of P may leave a trailing <br/>, let's remove it later
+				this._pressedEnterInBlock = block.blockNode;
+			}
+			if(/^(?:\s|&nbsp;)$/.test(block.blockNode.innerHTML)){
+				block.blockNode.innerHTML='';
+			}
 			return true;
 		}
 
 		//text node directly under body, let's wrap them in a node
-		if(!block.blockNode){
-			this.editor.document.execCommand('formatblock', false, this.blockNodeForEnter);
+		if(!block.blockNode || block.blockNode===this.editor.editNode){
+			dijit._editor.RichText.prototype.execCommand.call(this.editor, 'formatblock',this.blockNodeForEnter);
 			//get the newly created block node
 			// FIXME
 			block = {blockNode:dojo.withGlobal(this.editor.window, "getAncestorElement", dijit._editor.selection, [this.blockNodeForEnter]),

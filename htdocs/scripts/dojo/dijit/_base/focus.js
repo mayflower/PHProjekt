@@ -25,11 +25,16 @@ dojo.mixin(dijit,
 
 	isCollapsed: function(){
 		// summary: tests whether the current selection is empty
-		var _window = dojo.global;
 		var _document = dojo.doc;
 		if(_document.selection){ // IE
-			return !_document.selection.createRange().text; // Boolean
-		}else if(_window.getSelection){
+			var s=_document.selection;
+			if(s.type=='Text'){
+				return !s.createRange().htmlText.length; // Boolean
+			}else{ //Control range
+				return !s.createRange().length; // Boolean
+			}
+		}else{
+			var _window = dojo.global;
 			var selection = _window.getSelection();
 			if(dojo.isString(selection)){ // Safari
 				return !selection; // Boolean
@@ -45,7 +50,15 @@ dojo.mixin(dijit,
 		if(selection){ // IE
 			var range = selection.createRange();
 			if(selection.type.toUpperCase()=='CONTROL'){
-				bookmark = range.length ? dojo._toArray(range) : null;
+				if(range.length){
+					bookmark=[];
+					var i=0,len=range.length;
+					while(i<len){
+						bookmark.push(range.item(i++));
+					}
+				}else{
+					bookmark=null;
+				}
 			}else{
 				bookmark = range.getBookmark();
 			}
@@ -53,11 +66,11 @@ dojo.mixin(dijit,
 			if(window.getSelection){
 				selection = dojo.global.getSelection();
 				if(selection){
-					var range = selection.getRangeAt(0);
+					range = selection.getRangeAt(0);
 					bookmark = range.cloneRange();
 				}
 			}else{
-				console.debug("No idea how to store the current selection for this browser!");
+				console.warn("No idea how to store the current selection for this browser!");
 			}
 		}
 		return bookmark; // Array
@@ -65,13 +78,17 @@ dojo.mixin(dijit,
 
 	moveToBookmark: function(/*Object*/bookmark){
 		// summary: Moves current selection to a bookmark
-		// bookmark: this should be a returned object from dojo.html.selection.getBookmark()
+		// bookmark: This should be a returned object from dojo.html.selection.getBookmark()
 		var _document = dojo.doc;
 		if(_document.selection){ // IE
 			var range;
 			if(dojo.isArray(bookmark)){
 				range = _document.body.createControlRange();
-				dojo.forEach(bookmark, range.addElement);
+				//range.addElement does not have call/apply method, so can not call it directly
+				//range is not available in "range.addElement(item)", so can't use that either
+				dojo.forEach(bookmark, function(n){
+					range.addElement(n);
+				});
 			}else{
 				range = _document.selection.createRange();
 				range.moveToBookmark(bookmark);
@@ -83,7 +100,7 @@ dojo.mixin(dijit,
 				selection.removeAllRanges();
 				selection.addRange(bookmark);
 			}else{
-				console.debug("No idea how to restore selection for this browser!");
+				console.warn("No idea how to restore selection for this browser!");
 			}
 		}
 	},
@@ -95,13 +112,13 @@ dojo.mixin(dijit,
 		//	or when a toolbar/menubar receives focus
 		//
 		// menu:
-		//	the menu that's being opened
+		//	The menu that's being opened
 		//
 		// openedForWindow:
 		//	iframe in which menu was opened
 		//
 		// returns:
-		//	a handle to restore focus/selection
+		//	A handle to restore focus/selection
 
 		return {
 			// Node to return focus to
@@ -153,14 +170,15 @@ dojo.mixin(dijit,
 				openedForWindow.focus();
 			}
 			try{
-				dojo.withGlobal(openedForWindow||dojo.global, moveToBookmark, null, [bookmark]);
+				dojo.withGlobal(openedForWindow||dojo.global, dijit.moveToBookmark, null, [bookmark]);
 			}catch(e){
 				/*squelch IE internal error, see http://trac.dojotoolkit.org/ticket/1984 */
 			}
 		}
 	},
 
-	// List of currently active widgets (focused widget and it's ancestors)
+	// _activeStack: Array
+	//		List of currently active widgets (focused widget and it's ancestors)
 	_activeStack: [],
 
 	registerWin: function(/*Window?*/targetWindow){
@@ -173,7 +191,7 @@ dojo.mixin(dijit,
 			targetWindow = window;
 		}
 
-		dojo.connect(targetWindow.document, "onmousedown", null, function(evt){
+		dojo.connect(targetWindow.document, "onmousedown", function(evt){
 			dijit._justMouseDowned = true;
 			setTimeout(function(){ dijit._justMouseDowned = false; }, 0);
 			dijit._onTouchNode(evt.target||evt.srcElement);
@@ -218,11 +236,14 @@ dojo.mixin(dijit,
 			clearTimeout(dijit._clearActiveWidgetsTimer);
 		}
 		dijit._clearActiveWidgetsTimer = setTimeout(function(){
-			delete dijit._clearActiveWidgetsTimer; dijit._setStack([]); }, 100);
+			delete dijit._clearActiveWidgetsTimer;
+			dijit._setStack([]);
+			dijit._prevFocus = null;
+		}, 100);
 	},
 
 	_onTouchNode: function(/*DomNode*/ node){
-		// summary
+		// summary:
 		//		Callback when node is focused or mouse-downed
 
 		// ignore the recent blurNode event
@@ -244,8 +265,8 @@ dojo.mixin(dijit,
 						break;
 					}
 					// otherwise, find the iframe this node refers to (can't access it via parentNode,
-					// need to do this trick instead) and continue tracing up the document
-					node=dojo.query("iframe").filter(function(iframe){ return iframe.contentDocument.body===node; })[0];
+					// need to do this trick instead). window.frameElement is supported in IE/FF/Webkit
+					node=dijit.getDocumentWindow(node.ownerDocument).frameElement;
 				}else{
 					var id = node.getAttribute && node.getAttribute("widgetId");
 					if(id){
@@ -266,8 +287,11 @@ dojo.mixin(dijit,
 			return;
 		}
 		dijit._onTouchNode(node);
+
 		if(node==dijit._curFocus){ return; }
-		dijit._prevFocus = dijit._curFocus;
+		if(dijit._curFocus){
+			dijit._prevFocus = dijit._curFocus;
+		}
 		dijit._curFocus = node;
 		dojo.publish("focusNode", [node]);
 	},
@@ -291,6 +315,7 @@ dojo.mixin(dijit,
 			var widget = dijit.byId(oldStack[i]);
 			if(widget){
 				widget._focused = false;
+				widget._hasBeenBlurred = true;
 				if(widget._onBlur){
 					widget._onBlur();
 				}
@@ -302,8 +327,8 @@ dojo.mixin(dijit,
 		}
 
 		// for all element that have come into focus, send focus event
-		for(var i=nCommon; i<newStack.length; i++){
-			var widget = dijit.byId(newStack[i]);
+		for(i=nCommon; i<newStack.length; i++){
+			widget = dijit.byId(newStack[i]);
 			if(widget){
 				widget._focused = true;
 				if(widget._onFocus){
