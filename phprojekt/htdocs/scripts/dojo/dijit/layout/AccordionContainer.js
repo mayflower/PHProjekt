@@ -26,7 +26,7 @@ dojo.declare(
 		//
 		// duration: Integer
 		//		Amount of time (in ms) it takes to slide panes
-		duration: 250,
+		duration: dijit.defaultDuration,
 
 		_verticalSpace: 0,
 
@@ -125,7 +125,7 @@ inside the AccordionPane??
 			if(this.disabled || e.altKey || !(e._dijitWidget || e.ctrlKey)){ return; }
 			var k = dojo.keys;
 			var fromTitle = e._dijitWidget;
-			switch(e.keyCode){
+			switch(e.charOrCode){
 				case k.LEFT_ARROW:
 				case k.UP_ARROW:
 					if (fromTitle){
@@ -153,7 +153,7 @@ inside the AccordionPane??
 					}
 					break;
 				default:
-					if(e.ctrlKey && e.keyCode == k.TAB){
+					if(e.ctrlKey && e.charOrCode == k.TAB){
 						this._adjacent(e._dijitWidget, !e.shiftKey)._onTitleClick();
 						dojo.stopEvent(e);
 					}
@@ -194,6 +194,16 @@ dojo.declare("dijit.layout.AccordionPane",
 		}
 	},
 
+	_onTitleEnter: function(){
+		// summary: callback when someone hovers over my title
+		dojo.addClass(this.focusNode, "dijitAccordionTitle-hover");
+	},
+
+	_onTitleLeave: function(){
+		// summary: callback when someone stops hovering over my title
+		dojo.removeClass(this.focusNode, "dijitAccordionTitle-hover");
+	},
+
 	_onTitleKeyPress: function(/*Event*/ evt){
 		evt._dijitWidget = this;
 		return this.getParent()._onKeyPress(evt);
@@ -204,7 +214,7 @@ dojo.declare("dijit.layout.AccordionPane",
 		dojo[(isSelected ? "addClass" : "removeClass")](this.titleNode,"dijitAccordionTitle-selected");
 		this.focusNode.setAttribute("tabIndex", isSelected ? "0" : "-1");
 	},
-	
+
 	_handleFocus: function(/*Event*/e){
 		// summary: handle the blur and focus state of this widget
 		dojo[(e.type=="focus" ? "addClass" : "removeClass")](this.focusNode,"dijitAccordionFocused");		
@@ -213,7 +223,10 @@ dojo.declare("dijit.layout.AccordionPane",
 	setSelected: function(/*Boolean*/ isSelected){
 		// summary: change the selected state on this pane
 		this._setSelectedState(isSelected);
-		if(isSelected){ this.onSelected(); }
+		if(isSelected){
+			this.onSelected();
+			this._loadCheck(true); // if href specified, trigger load
+		}
 	},
 
 	onSelected: function(){

@@ -15,7 +15,7 @@ dojo.declare("dijit.InlineEditBox",
 	// summary: An element with in-line edit capabilitites
 	//
 	// description:
-	//		Behavior for an existing node (<p>, <div>, <span>, etc.) so that
+	//		Behavior for an existing node (`<p>`, `<div>`, `<span>`, etc.) so that
 	// 		when you click it, an editor shows up in place of the original
 	//		text.  Optionally, Save and Cancel button are displayed below the edit widget.
 	//		When Save is clicked, the text is pulled from the edit
@@ -75,7 +75,7 @@ dojo.declare("dijit.InlineEditBox",
 	noValueIndicator: "<span style='font-family: wingdings; text-decoration: underline;'>&nbsp;&nbsp;&nbsp;&nbsp;&#x270d;&nbsp;&nbsp;&nbsp;&nbsp;</span>",
 
 	postMixInProperties: function(){
-		this.inherited('postMixInProperties', arguments);
+		this.inherited(arguments);
 
 		// save pointer to original source node, since Widget nulls-out srcNodeRef
 		this.displayNode = this.srcNodeRef;
@@ -174,22 +174,27 @@ dojo.declare("dijit.InlineEditBox",
 
 		// display the read-only text and then quickly hide the editor (to avoid screen jitter)
 		this.displayNode.style.display="";
-		var ews = this.editWidget.domNode.style;
+		var ew = this.editWidget;
+		var ews = ew.domNode.style;
 		ews.position="absolute";
 		ews.visibility="hidden";
 
 		this.domNode = this.displayNode;
 
+		if(focus){
+			dijit.focus(this.displayNode);
+		}
+		ews.display = "none";
 		// give the browser some time to render the display node and then shift focus to it
-		// and hide the edit widget
-		var _this = this;
+		// and hide the edit widget before garbage collecting the edit widget
 		setTimeout(function(){
-			if(focus){
-				dijit.focus(_this.displayNode);
+			ew.destroy();
+			delete ew;
+			if(dojo.isIE){
+				// messing with the DOM tab order can cause IE to focus the body - so restore
+				dijit.focus(dijit.getFocus());
 			}
-			_this.editWidget.destroy();
-			delete _this.editWidget;
-		}, 100);
+		}, 1000); // no hurry - wait for things to quiesce
 	},
 
 	save: function(/*Boolean*/ focus){
@@ -251,7 +256,7 @@ dojo.declare(
 	widgetsInTemplate: true,
 
 	postMixInProperties: function(){
-		this.inherited('postMixInProperties', arguments);
+		this.inherited(arguments);
 		this.messages = dojo.i18n.getLocalization("dijit", "common", this.lang);
 		dojo.forEach(["buttonSave", "buttonCancel"], function(prop){
 			if(!this[prop]){ this[prop] = this.messages[prop]; }
@@ -288,10 +293,8 @@ dojo.declare(
 		// so this is the only way we can see the key press event.
 		this.connect(ew.focusNode || ew.domNode, "onkeypress", "_onKeyPress");
 
-		// setting the value of the edit widget will cause a possibly asynchronous onChange() call.
-		// we need to ignore it, since we are only interested in when the user changes the value.
-		this._ignoreNextOnChange = true;
-		(this.editWidget.setDisplayedValue||this.editWidget.setValue).call(this.editWidget, this.value);
+		// priorityChange=false will prevent bogus onChange event
+		(this.editWidget.setDisplayedValue||this.editWidget.setValue).call(this.editWidget, this.value, false);
 
 		this._initialText = this.getValue();
 
@@ -320,15 +323,31 @@ dojo.declare(
 			return;
 		}
 		if(this.autoSave){
+			if(e.altKey || e.ctrlKey){ return; }
 			// If Enter/Esc pressed, treat as save/cancel.
-			if(e.keyCode == dojo.keys.ESCAPE){
+			if(e.charOrCode == dojo.keys.ESCAPE){
 				dojo.stopEvent(e);
 				this._exitInProgress = true;
 				this.cancel(true);
-			}else if(e.keyCode == dojo.keys.ENTER){
+			}else if(e.charOrCode == dojo.keys.ENTER){
 				dojo.stopEvent(e);
 				this._exitInProgress = true;
 				this.save(true);
+			}else if(e.charOrCode == dojo.keys.TAB){
+				this._exitInProgress = true;
+				// allow the TAB to change focus before we mess with the DOM: #6227
+				// Expounding by request:
+				// 	The current focus is on the edit widget input field.
+				//	save() will hide and destroy this widget.
+				//	We want the focus to jump from the currently hidden
+				//	displayNode, but since it's hidden, it's impossible to
+				//	unhide it, focus it, and then have the browser focus
+				//	away from it to the next focusable element since each
+				//	of these events is asynchronous and the focus-to-next-element
+				//	is already queued.
+				//	So we allow the browser time to unqueue the move-focus event 
+				//	before we do all the hide/show stuff.
+				setTimeout(dojo.hitch(this, "save", false), 0);
 			}
 		}else{
 			var _this = this;
@@ -344,6 +363,7 @@ dojo.declare(
 	_onBlur: function(){
 		// summary:
 		//	Called when focus moves outside the editor
+		this.inherited(arguments);
 		if(this._exitInProgress){
 			// when user clicks the "save" button, focus is shifted back to display text, causing this
 			// function to be called, but in that case don't do anything
@@ -369,10 +389,6 @@ dojo.declare(
 		// summary:
 		//	Called when the underlying widget fires an onChange event,
 		//	which means that the user has finished entering the value
-		if(this._ignoreNextOnChange){
-			delete this._ignoreNextOnChange;
-			return;
-		}
 		if(this._exitInProgress){
 			// TODO: the onChange event might happen after the return key for an async widget
 			// like FilteringSelect.  Shouldn't be deleting the edit widget on end-of-edit
@@ -400,28 +416,3 @@ dojo.declare(
 		dijit.selectInputText(this.editWidget.focusNode);
 	}
 });
-
-dijit.selectInputText = function(/*DomNode*/element){
-	// summary: select all the text in an input element 
-
-	// TODO: use functions in _editor/selection.js?
-	var _window = dojo.global;
-	var _document = dojo.doc;
-	element = dojo.byId(element);
-	if(_document["selection"] && dojo.body()["createTextRange"]){ // IE
-		if(element.createTextRange){
-			var range = element.createTextRange();
-			range.moveStart("character", 0);
-			range.moveEnd("character", element.value.length);
-			range.select();
-		}
-	}else if(_window["getSelection"]){
-		var selection = _window.getSelection();
-		// FIXME: does this work on Safari?
-		if(element.setSelectionRange){
-			element.setSelectionRange(0, element.value.length);
-		}
-	}
-	element.focus();
-};
-

@@ -1,5 +1,4 @@
 dojo.provide("dijit.layout.SplitContainer");
-dojo.deprecated("dijit.layout.SplitContainer is deprecated", "use BorderContainer with splitter instead", 2.0);
 
 //
 // FIXME: make it prettier
@@ -20,7 +19,11 @@ dojo.declare("dijit.layout.SplitContainer",
 	//		and you can adjust the relative size of each child by dragging the bars.
 	//
 	//		You must specify a size (width and height) for the SplitContainer.
-	//
+
+	constructor: function(){
+		dojo.deprecated("dijit.layout.SplitContainer is deprecated", "use BorderContainer with splitter instead", 2.0);
+	},
+
 	// activeSizing: Boolean
 	//		If true, the children's size changes as you drag the bar;
 	//		otherwise, the sizes don't change until you drop the bar (by mouse-up)
@@ -134,6 +137,9 @@ dojo.declare("dijit.layout.SplitContainer",
 		if(this.sizers.length){
 			var i=dojo.indexOf(this.getChildren(), widget)
 			if(i != -1){
+				if(i==this.sizers.length){
+					i--;
+				}
 				dojo._destroyElement(this.sizers[i]);
 				this.sizers.splice(i,1);
 			}

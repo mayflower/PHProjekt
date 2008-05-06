@@ -56,23 +56,41 @@ dojo.declare("dijit._Container",
 	null,
 	{
 		// summary:
-		//		Mixin for widgets that contain a list of children.
+		//		Mixin for widgets that contain a set of widget children.
 		// description:
-		//		Use this mixin when the widget needs to know about and
-		//		keep track of it's widget children. Widgets like SplitContainer
-		//		and TabContainer.  
+		//		Use this mixin for widgets that needs to know about and
+		//		keep track of their widget children. Suitable for widgets like BorderContainer
+		//		and TabContainer which contain (only) a set of child widgets.
+		//
+		//		It's not suitable for widgets like ContentPane
+		//		which contains mixed HTML (plain DOM nodes in addition to widgets),
+		//		and where contained widgets are not necessarily directly below
+		//		this.containerNode.   In that case calls like addChild(node, position)
+		//		wouldn't make sense.
 
+		// isContainer: Boolean
+		//		Just a flag indicating that this widget descends from dijit._Container
 		isContainer: true,
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			if(!this.containerNode){
+				// all widgets with descendants must set containerNode
+   				this.containerNode = this.domNode;
+			}
+		},
 
 		addChild: function(/*Widget*/ widget, /*int?*/ insertIndex){
 			// summary:
-			//		Process the given child widget, inserting it's dom node as
-			//		a child of our dom node
+			//		Makes the given widget a child of this widget.
+			// description:
+			//		Inserts specified child widget's dom node as a child of this widget's
+			//		container node, and possibly does otherprocessing (such as layout).
 
 			if(insertIndex === undefined){
 				insertIndex = "last";
 			}
-			var refNode = this.containerNode || this.domNode;
+			var refNode = this.containerNode;
 			if(insertIndex && typeof insertIndex == "number"){
 				var children = dojo.query("> [widgetid]", refNode);
 				if(children && children.length >= insertIndex){
@@ -93,7 +111,7 @@ dojo.declare("dijit._Container",
 		removeChild: function(/*Widget*/ widget){
 			// summary:
 			//		Removes the passed widget instance from this widget but does
-			//		not destroy it
+			//		not destroy it.
 			var node = widget.domNode;
 			node.parentNode.removeChild(node);	// detach but don't destroy
 		},
@@ -115,15 +133,16 @@ dojo.declare("dijit._Container",
 
 		getChildren: function(){
 			// summary:
-			//		Returns array of children widgets
-			return dojo.query("> [widgetId]", this.containerNode || this.domNode).map(dijit.byNode); // Array
+			//		Returns array of children widgets.
+			// description:
+			//		Returns the widgets that are directly under this.containerNode.
+			return dojo.query("> [widgetId]", this.containerNode).map(dijit.byNode); // Widget[]
 		},
 
 		hasChildren: function(){
 			// summary:
-			//		Returns true if widget has children
-			var cn = this.containerNode || this.domNode;
-			return !!this._firstElement(cn); // Boolean
+			//		Returns true if widget has children, i.e. if this.containerNode contains something.
+			return !!this._firstElement(this.containerNode); // Boolean
 		},
 
 		_getSiblingOfChild: function(/*Widget*/ child, /*int*/ dir){
@@ -175,25 +194,19 @@ dojo.declare("dijit._KeyNavContainer",
 			dojo.forEach(prevKeyCodes, function(code){ keyCodes[code] = prev });
 			dojo.forEach(nextKeyCodes, function(code){ keyCodes[code] = next });
 			this.connect(this.domNode, "onkeypress", "_onContainerKeypress");
-			if(dojo.isIE){
-				this.connect(this.domNode, "onactivate", "_onContainerFocus");
-				this.connect(this.domNode, "ondeactivate", "_onContainerBlur");
-			}else{
-				this.connect(this.domNode, "onfocus", "_onContainerFocus");
-				this.connect(this.domNode, "onblur", "_onContainerBlur");
-			}
+			this.connect(this.domNode, "onfocus", "_onContainerFocus");
 		},
 
 		startupKeyNavChildren: function(){
 			// summary:
 			//		Call in startup() to set child tabindexes to -1
-			dojo.forEach(this.getChildren(), dojo.hitch(this, "_setTabIndexMinusOne"));
+			dojo.forEach(this.getChildren(), dojo.hitch(this, "_startupChild"));
 		},
 
 		addChild: function(/*Widget*/ widget, /*int?*/ insertIndex){
 			// summary: Add a child to our _Container
 			dijit._KeyNavContainer.superclass.addChild.apply(this, arguments);
-			this._setTabIndexMinusOne(widget);
+			this._startupChild(widget);
 		},
 
 		focus: function(){
@@ -254,41 +267,67 @@ dojo.declare("dijit._KeyNavContainer",
 			}
 		},
 
-		_setTabIndexMinusOne: function(/*Widget*/ widget){
+		_startupChild: function(/*Widget*/ widget){
+			// summary:
+			//		Set tabindex="-1" on focusable widgets so that we
+			// 		can focus them programmatically and by clicking.
+			//		Connect focus and blur handlers.
 			if(widget.getFocalNodes){
 				dojo.forEach(widget.getFocalNodes(), function(node){
-					node.setAttribute("tabIndex", -1);
-				});
+					dojo.attr(node, "tabindex", -1);
+					this._connectNode(node);
+				}, this);
 			}else{
-				(widget.focusNode || widget.domNode).setAttribute("tabIndex", -1);
+				var node = widget.focusNode || widget.domNode;
+				if(widget.isFocusable()){
+					dojo.attr(node, "tabindex", -1);
+				}
+				this._connectNode(node);
 			}
+		},
+
+		_connectNode: function(/*Element*/ node){
+			this.connect(node, "onfocus", "_onNodeFocus");
+			this.connect(node, "onblur", "_onNodeBlur");
 		},
 
 		_onContainerFocus: function(evt){
-			this.domNode.setAttribute("tabIndex", -1);
+			// focus bubbles on Firefox,
+			// so just make sure that focus has really gone to the container
 			if(evt.target === this.domNode){
 				this.focusFirstChild();
-			}else{
-				var widget = dijit.getEnclosingWidget(evt.target);
-				if(widget && widget.isFocusable()){
-					this.focusedChild = widget;
-				}
-			}
-		},
-
-		_onContainerBlur: function(evt){
-			if(this.tabIndex){
-				this.domNode.setAttribute("tabIndex", this.tabIndex);
 			}
 		},
 
 		_onContainerKeypress: function(evt){
 			if(evt.ctrlKey || evt.altKey){ return; }
-			var func = this._keyNavCodes[evt.keyCode];
+			var func = this._keyNavCodes[evt.charOrCode];
 			if(func){
 				func();
 				dojo.stopEvent(evt);
 			}
+		},
+
+		_onNodeFocus: function(evt){
+			// while focus is on a child,
+			// take the container out of the tab order so that
+			// we can shift-tab to the element before the container
+			dojo.attr(this.domNode, "tabindex", -1);
+			// record the child that has been focused
+			var widget = dijit.getEnclosingWidget(evt.target);
+			if(widget && widget.isFocusable()){
+				this.focusedChild = widget;
+			}
+			dojo.stopEvent(evt);
+		},
+
+		_onNodeBlur: function(evt){
+			// when focus leaves a child,
+			// reinstate the container's tabindex
+			if(this.tabIndex){
+				dojo.attr(this.domNode, "tabindex", this.tabIndex);
+			}
+			dojo.stopEvent(evt);
 		},
 
 		_onChildBlur: function(/*Widget*/ widget){
@@ -315,6 +354,8 @@ dojo.declare("dijit._KeyNavContainer",
 				}
 				child = this._getSiblingOfChild(child, dir);
 			}
+			// no focusable child found
+			return null;
 		}
 	}
 );
