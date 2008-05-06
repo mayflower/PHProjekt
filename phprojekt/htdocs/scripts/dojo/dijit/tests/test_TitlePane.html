@@ -4,6 +4,11 @@
 <head>
 	<title>TitlePane Test</title>
 
+	<style type="text/css">
+		@import "../../dojo/resources/dojo.css";
+		@import "css/dijitTests.css";
+	</style>
+	
 	<script type="text/javascript" src="../../dojo/dojo.js"
 		djConfig="parseOnLoad: true, isDebug: true"></script>
 	<script type="text/javascript" src="_testCommon.js"></script>
@@ -19,12 +24,23 @@
 		function randomMessageId(){
 			return Math.floor(Math.random() * 3) + 3;
 		}
-	</script>
 
-	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
-		@import "css/dijitTests.css";
-	</style>
+		dojo.declare("dijit.TestTitlePane", dijit.TitlePane, {
+			templateString: '<div class="dijitTitlePane">' +
+							'    <div class="dijitTitlePaneTitle" dojoAttachPoint="titleBarNode" style="cursor: default;">' +
+							'        <div dojoAttachEvent="onclick:toggle,onkeypress: _onTitleKey,onfocus:_handleFocus,onblur:_handleFocus" tabindex="0"' +
+							'                waiRole="button" dojoAttachPoint="focusNode,arrowNode" class="dijitInline dijitArrowNode" style="cursor: pointer;"><span dojoAttachPoint="arrowNodeInner" class="dijitArrowNodeInner"></span></div>' +
+							'        <div dojoAttachPoint="titleNode" class="dijitTitlePaneTextNode"></div>' +
+							'    </div>' +
+							'    <div class="dijitTitlePaneContentOuter" dojoAttachPoint="hideNode">' +
+							'        <div class="dijitReset" dojoAttachPoint="wipeNode">' +
+							'            <div class="dijitTitlePaneContentInner" dojoAttachPoint="containerNode" waiRole="region" tabindex="-1">' +
+							'            </div>' +
+							'        </div>' +
+							'    </div>' +
+							'</div>'
+		});
+	</script>
 </head>
 <body>
 	<h1 class="testTitle">Dijit TitlePane Test</h1>
@@ -55,7 +71,7 @@
 	<div id="closed" dojoType="dijit.TitlePane" title="Initially closed pane" open="false" width="200">
 		<form>
 			<title for="age">Age: </title><input id="age"><br>
-			<title for="discount">Discount card </title><input type=checkbox id="discount"><br>
+			<title for="discount">Discount card </title><input type="checkbox" id="discount"><br>
 			<button>Submit</button><br>
 		</form>
 	</div>
@@ -63,13 +79,13 @@
 
 	<h1>Test #4: title pane with href (initially closed)</h1>
 	<p>The pane should open to "Loading..." message and then 2 seconds later it should slide open more to show loaded data.</p>
-	<div dojoType="dijit.TitlePane" duration=1000 title="Pane from href" href="layout/getResponse.php?delay=3000&messId=3" open="false">
+	<div dojoType="dijit.TitlePane" duration="1000" title="Pane from href" href="layout/getResponse.php?delay=3000&messId=3" open="false">
 		Loading...
 	</div>
 
 	<h1>Test #5: title pane with href (initially closed)</h1>
 	<p>The pane should start to open to "Loading..." but halfway through href data will be loaded, and it should expand correctly.</p>
-	<div dojoType="dijit.TitlePane" duration=1000 title="Pane from href" href="layout/getResponse.php?delay=500&messId=3" open="false">
+	<div dojoType="dijit.TitlePane" duration="1000" title="Pane from href" href="layout/getResponse.php?delay=500&messId=3" open="false">
 		Loading...
 	</div>
 
@@ -85,6 +101,17 @@ More Ipsum...
 		</div>
 
 		<p>And this is the closing line for the outer title pane.
+	</div>
+
+	<h1>Test #7: subclassed title pane (only arrow is selectable and focusable)</h1>
+	<div dojoType="dijit.TestTitlePane" title="Title Pane #7" style="width: 300px;">
+		Lorem Ipsum Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque
+		iaculis, nulla id semper faucibus, pede tellus nonummy magna, vitae adipiscing
+		orci arcu ut augue. Nunc condimentum, magna a vestibulum convallis, libero purus
+		pulvinar orci, sed vestibulum urna sem ut pede. More Ipsum...
+		Sed sollicitudin suscipit risus. Nam ullamcorper. Sed nisl lectus, pellentesque
+		nec, malesuada eget, ornare a, libero. Lorem ipsum dolor sit amet,
+		consectetuer adipiscing elit.
 	</div>
 
 	<table style="border: solid blue 2px; margin-top: 1em;">

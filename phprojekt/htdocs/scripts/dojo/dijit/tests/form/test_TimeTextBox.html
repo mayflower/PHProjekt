@@ -4,6 +4,28 @@
 	<head>
 		<title>Test TimeTextBox Widget</title>
 
+		<style type="text/css">
+			@import "../../../dojo/resources/dojo.css";
+			@import "../css/dijitTests.css";
+
+			.testExample {
+				background-color:#fbfbfb;
+				padding:1em;
+				margin-bottom:1em;
+				border:1px solid #bfbfbf;
+			}
+
+			.noticeMessage {
+				color:#093669;
+				font-size:0.95em;
+				margin-left:0.5em;
+			}
+
+			.dojoTitlePaneLabel label {
+				font-weight:bold;
+			}
+		</style>
+		
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true, extraLocale: ['de-de', 'en-us']"></script>
 		<script type="text/javascript" src="../_testCommon.js"></script>
@@ -19,40 +41,6 @@
 			dojo.require("dojo.date.locale");
 			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 		</script>
-		<style type="text/css">
-			@import "../../../dojo/resources/dojo.css";
-			@import "../css/dijitTests.css";
-
-			.testExample {
-				background-color:#fbfbfb;
-				padding:1em;
-				margin-bottom:1em;
-				border:1px solid #bfbfbf;
-			}
-
-			.small {
-				width: 3em;
-			}
-			.medium {
-				width: 10em;
-			}
-			.long {
-				width: 20em;
-			}
-			.verylong {
-				width: 700px;
-			}
-
-			.noticeMessage {
-				color:#093669;
-				font-size:0.95em;
-				margin-left:0.5em;
-			}
-
-			.dojoTitlePaneLabel label {
-				font-weight:bold;
-			}
-		</style>
 	</head>
 
 	<body>
@@ -67,7 +55,7 @@
 			Attributes: {formatLength:'medium'}</span>
 	</div>
 	<div class="testExample">
-		<input id="q1" type="text" name="time1" class="medium" value="T17:45:00"
+		<input id="q1" type="text" name="time1" value="T17:45:00"
 			dojoType="dijit.form.TimeTextBox"
 			constraints="{formatLength:'medium'}"
 			required="true"
@@ -82,7 +70,7 @@
 			Attributes: {formatLength:'short'}</span>
 	</div>
 	<div class="testExample">
-		<input id="q2" type="text" name="time1a" class="medium" value="T17:45:00"
+		<input id="q2" type="text" name="time1a" value="T17:45:00"
 			dojoType="dijit.form.TimeTextBox"
 			constraints="{formatLength:'short'}"
 			required="true"
@@ -95,7 +83,7 @@
 			Attributes: {timePattern:'h:mm:ss a'}</span>
 	</div>
 	<div class="testExample">
-		<input id="q3" type="text" name="time1b" class="medium" value="T17:45:00"
+		<input id="q3" type="text" name="time1b" value="T17:45:00"
 			dojoType="dijit.form.TimeTextBox"
 			constraints="{timePattern:'h:mm:ss a'}"
 			required="true"
@@ -108,11 +96,39 @@
 			Attributes: {timePattern:'HH:mm:ss'}</span>
 	</div>
 	<div class="testExample">
-		<input id="q4" type="text" name="time2" class="medium" value="T17:45:00"
+		<input id="q4" type="text" name="time2" value="T17:45:00"
 			dojoType="dijit.form.TimeTextBox"
 			constraints="{timePattern:'HH:mm:ss'}"
 			required="true"
 			invalidMessage="Invalid time. Use HH:mm:ss where HH is 00 - 23 hours.">
+	</div>
+
+	<div class="dojoTitlePaneLabel">
+		<label for="q5">24 Hour Time with 1 Hour TimePicker</label>
+		<span class="noticeMessage">TimeTextBox class,
+			Attributes: {timePattern:'HH:mm:ss', clickableIncrement:'T00:15:00', visibleIncrement:'T00:15:00', visibleRange:'T01:00:00'}</span>
+	</div>
+	<div class="testExample">
+		<input id="q5" type="text" name="time2" value="T17:45:00"
+			dojoType="dijit.form.TimeTextBox"
+			constraints="{timePattern:'HH:mm:ss', clickableIncrement:'T00:15:00', visibleIncrement:'T00:15:00', visibleRange:'T01:00:00'}"
+			required="true"
+			invalidMessage="Invalid time. Use HH:mm:ss where HH is 00 - 23 hours.">
+	</div>
+
+	<div class="dojoTitlePaneLabel">
+		<label for="q6">Initially empty time text box</label>
+		<span class="noticeMessage">TimeTextBox class,
+			Attributes: {formatLength:'medium'}</span>
+	</div>
+	<div class="testExample">
+		<input id="q6" type="text" name="time6"
+			dojoType="dijit.form.TimeTextBox"
+			constraints="{formatLength:'medium'}"
+			required="true"
+			onChange="dojo.byId('oc6').value=arguments[0]"
+			invalidMessage="Invalid time." />
+		onChange:<input id="oc6" size="34" disabled value="not fired yet!" autocomplete="off">
 	</div>
 
 	<script>

@@ -4,19 +4,6 @@
 	<head>
 		<title>Test TextBox Validation Widgets</title>
 
-
-		<script type="text/javascript" src="../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true, extraLocale: ['de-de', 'en-us']"></script>
-		<script type="text/javascript" src="../_testCommon.js"></script>
-
-		<script type="text/javascript">
-			dojo.require("dijit.form.TextBox");
-			dojo.require("dijit.form.ValidationTextBox");
-			dojo.require("dijit.form.NumberTextBox");
-			dojo.require("dijit.form.CurrencyTextBox");
-			dojo.require("dojo.currency");
-			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
-		</script>
 		<style type="text/css">
 			@import "../../../dojo/resources/dojo.css";
 			@import "../css/dijitTests.css";
@@ -28,16 +15,16 @@
 				border:1px solid #bfbfbf;
 			}
 
-			.small {
+			body .small {
 				width: 3em;
 			}
-			.medium {
+			body .medium {
 				width: 10em;
 			}
-			.long {
+			body .long {
 				width: 20em;
 			}
-			.verylong {
+			body .verylong {
 				width: 90%;
 			}
 
@@ -51,6 +38,19 @@
 				font-weight:bold;
 			}
 		</style>
+
+		<script type="text/javascript" src="../../../dojo/dojo.js"
+			djConfig="isDebug: true, parseOnLoad: true, extraLocale: ['de-de', 'en-us']"></script>
+		<script type="text/javascript" src="../_testCommon.js"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.form.TextBox");
+			dojo.require("dijit.form.ValidationTextBox");
+			dojo.require("dijit.form.NumberTextBox");
+			dojo.require("dijit.form.CurrencyTextBox");
+			dojo.require("dojo.currency");
+			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+		</script>
 	</head>
 
 	<body>
@@ -61,13 +61,16 @@
 
 			<div class="dojoTitlePaneLabel">
 				<label for="q01">First Name:  </label>
-				<span class="noticeMessage"> TextBox class, <b>tabIndex=2</b>, Attributes: {trim: true, propercase: true, style: 'width:700px'}, First letter of each word is upper case.</span>
+				<span class="noticeMessage"> TextBox class, <b>tabIndex=2</b>, Attributes: {trim: true, propercase: true, intermediateChanges: true, style: 'width:700px'}, First letter of each word is upper case.</span>
 			</div>
 			<div class="testExample">
 				<input id="q01" type="text" name="firstname" value="testing testing" style="width: 700px;" tabIndex=2
 					dojoType="dijit.form.TextBox"
 					trim="true"
+					onfocus="console.log('user onfocus handler')"
+					onblur="console.log('user onblur handler')"
 				        onChange="dojo.byId('oc1').value=arguments[0]"
+					intermediateChanges="true"
 					propercase="true" />
 				<br>onChange:<input id="oc1" size="34" disabled value="not fired yet!" autocomplete="off">
 			</div>
@@ -91,7 +94,7 @@
 				<input id="q03" type="text" name="age" tabIndex=1
 					dojoType="dijit.form.NumberTextBox"
 					promptMessage="(optional) Enter an age between 0 and 120"
-					maxLength=3
+					maxLength="3"
 					class="small"
 					constraints="{places:0,min:0,max:120}"
 					onChange="console.debug('onChange fired for widget id = ' + this.id + ' with value = ' + arguments[0]);"
@@ -219,6 +222,7 @@
 					invalidMessage="Invalid amount.  Include dollar sign, commas, and cents." />EUR
 				<button onclick="dijit.byId('q08eur').setAttribute('disabled',true);return false">Disable</button>
 				<button onclick="dijit.byId('q08eur').setAttribute('disabled',false);return false">Enable</button>
+				<button onclick="dijit.byId('q08eur').reset();return false">Reset</button>
 			</div>
 		
 			<!--

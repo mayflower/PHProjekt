@@ -4,6 +4,22 @@
 <head>
 	<title>TabContainer Demo</title>
 
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+
+		body {
+			font-family : sans-serif;
+			margin:20px;
+		}
+
+		/* add padding to each contentpane inside the tab container, and scrollbar if necessary */
+		.dojoTabPane {
+			padding : 10px 10px 10px 10px;
+			overflow: auto;
+		}
+	</style>
+	
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		djConfig="isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -37,22 +53,6 @@
 			tc.addChild(cp, 3);
 		});
 	</script>
-
-	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
-		@import "../css/dijitTests.css";
-
-		body {
-			font-family : sans-serif;
-			margin:20px;
-		}
-
-		/* add padding to each contentpane inside the tab container, and scrollbar if necessary */
-		.dojoTabPane {
-			padding : 10px 10px 10px 10px;
-			overflow: auto;
-		}
-	</style>
 </head>
 <body>
 
@@ -116,10 +116,13 @@
 		Tab 1 and Tab 3 can be closed; Tab 3 has a confirm box.
 	</p>
 
-	<div id="ttabs" dojoType="dijit.layout.TabContainer" tabPosition="top" style="width: 100%; height: 10em;">
-		<div id="ttab1" dojoType="dijit.layout.ContentPane" href="tab1.html" title="Tab 1" closable="true"></div>
-		<div id="ttab2" dojoType="dijit.layout.ContentPane" href="tab2.html" refreshOnShow="true" title="Tab 2"></div>
-		<div dojoType="dijit.layout.ContentPane" title="Tab 3" onClose="testClose" closable="true">
+	<div id="ttabs" dojoType="dijit.layout.TabContainer" tabPosition="top" style="width: 100%; height: 10em;"
+		onfocus="console.log('user focus handler')"
+		onblur="console.log('user blur handler')"
+	>
+		<div id="ttab1" dojoType="dijit.layout.ContentPane" href="tab1.html" title="First" closable="true"></div>
+		<div id="ttab2" dojoType="dijit.layout.ContentPane" href="tab2.html" refreshOnShow="true" title="Second"></div>
+		<div dojoType="dijit.layout.ContentPane" title="Third" onClose="testClose" closable="true">
 			<h1>I am tab 3</h1>
 			<p>And I was already part of the page! That's cool, no?</p>
 			<p>If you try to close me there should be a confirm dialog.</p>
@@ -145,6 +148,28 @@
 	<div id="lrtabs" dojoType="dijit.layout.TabContainer" tabPosition="right-h" style="width: 100%; height: 10em;">
 		<div id="rhtab1" dojoType="dijit.layout.ContentPane" href="tab1.html" title="Tab 1"></div>
 		<div id="rhtab2" dojoType="dijit.layout.ContentPane" href="tab2.html" refreshOnShow="true" title="Tab 2" closable="true"></div>
+	</div>
+
+<p></p>
+	<div dojoType="dijit.layout.TabContainer" style="width:500px;height:100px" tabPosition="left-h">
+      <div id="LittleRed" dojoType="dijit.layout.ContentPane" title="Little Red Cap">
+      Once upon a time there was a dear little girl who was loved by
+      every one who looked at her, but most of all by her grandmother,
+      and there was nothing that she would not have given to the child.
+      </div>
+      <div id="HanselGretel" dojoType="dijit.layout.ContentPane"
+           title="Hansel and Gretel" closable="true" selected="true">
+      Hard by a great forest dwelt a poor wood-cutter with his wife
+      and his two children. The boy was called Hansel and the girl Gretel.
+      He had little to bite and to break, and once when great dearth fell
+      on the land, he could no longer procure even daily bread.
+      </div>
+      <div id="GreenTwigs" dojoType="dijit.layout.ContentPane"
+             title="The Three Green Twigs">
+      There was once upon a time a hermit who lived in a forest at the foot
+      of a mountain, and passed his time in prayer and good works,
+      and every evening he carried, to the glory of God, two pails of water
+      up the mountain.
 	</div>
 
 	<h3>Typical rendering time</h3>

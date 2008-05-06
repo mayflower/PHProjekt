@@ -4,6 +4,18 @@
 	<head>
 		<title>Inline Edit Box Test</title>
 
+		<style type="text/css">
+			@import "../../dojo/resources/dojo.css";
+			@import "css/dijitTests.css";
+
+			.inlineEdit { background-color: #CCC76A; }
+
+			/* some style rules on nodes just to test that style gets copied to the edit widget */
+			p { font-family: cursive; }
+			.letter p { font-family: monospace; }
+			h3 { font-family: helvetica; font-style: italic; }
+		</style>
+		
 		<script type="text/javascript" src="../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true"></script>
 		<script type="text/javascript" src="_testCommon.js"></script>
@@ -41,17 +53,6 @@
 			});
 			*/
 		</script>
-		<style type="text/css">
-			@import "../../dojo/resources/dojo.css";
-			@import "css/dijitTests.css";
-
-			.inlineEdit { background-color: #CCC76A; }
-
-			/* some style rules on nodes just to test that style gets copied to the edit widget */
-			p { font-family: cursive; }
-			.letter p { font-family: monospace; }
-			h3 { font-family: helvetica; font-style: italic; }
-		</style>
 	</head>
 	<body>
 		<h1 class="testTitle">Dijit InlineEditBox Test</h1>
@@ -81,16 +82,13 @@
 			<p class="letter">
 				Thank you for your recent order.
 				Please remit
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.CurrencyTextBox" editorParams="{currency: 'USD'}" width="100px" title="dollar amount"></span>
-				for your purchase of
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.NumberSpinner" editorParams="{constraints: {places:0} }" width="70px" title="quantity"></span>
-				deluxe
+				<span dojoType="dijit.InlineEditBox" editor="dijit.form.CurrencyTextBox" editorParams="{currency: 'USD'}" width="100px" title="dollar amount"></span>&nbsp;for
+				your purchase of
+				<span dojoType="dijit.InlineEditBox" editor="dijit.form.NumberSpinner" editorParams="{constraints: {places:0} }" width="70px" title="quantity"></span>&nbsp;deluxe
 				<span dojoType="dijit.InlineEditBox" editor="dijit.form.ComboBox" title="item name"
 					editorParams="{searchAttr: 'name', store: productStore, autocomplete: false, hasDownArrow: false}"
-					 width="200px"></span>
-				on
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="200px" title="purchase date as mm/dd/yy"></span>
-				in
+					 width="200px"></span>&nbsp;on
+				<span dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="200px" title="purchase date as mm/dd/yy"></span>&nbsp;in
 				<span dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
 					editorParams="{searchAttr: 'name', keyAttr: 'abbreviation', store: stateStore, autocomplete: true, hasDownArrow: true}"
 					 width="200px" title="state of purchase"></span>.
@@ -193,7 +191,8 @@ tortor pharetra congue. Suspendisse pulvinar.
 		<hr style="width:100%;">
 
 		<h2>Editor</h2>
-		<p id="inlineRTE" dojoType="dijit.InlineEditBox" autoSave="false" editor="dijit.Editor"
+		<p id="inlineRTE" dojoType="dijit.InlineEditBox" editor="dijit.Editor"
+			autoSave="false" renderAsHtml="true"
 			editorParams="{height: '', extraPlugins: ['dijit._editor.plugins.AlwaysShowToolbar']}">
 			<b>Aliquam</b> vitae enim. <i>Duis</i> scelerisque metus auctor est venenatis
 imperdiet. <u>Fusce</u> dignissim porta augue. Nulla vestibulum. Integer lorem

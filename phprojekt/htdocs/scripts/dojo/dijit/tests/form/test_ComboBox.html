@@ -3,10 +3,13 @@
 <html>
 <head>
 	<title>Dojo ComboBox Widget Test</title>
+
 	<style>
 		@import "../../../dojo/resources/dojo.css";
 		@import "../css/dijitTests.css";
+		.dj_ie INPUT#setvaluetest { font-family: Courier; } /* help IE with font inheritance */
 	</style>
+
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		djConfig="isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -69,7 +72,7 @@ The drop down list is filtered by the data you have already typed in.
 <form action="#" method="GET">
 
 	<p>ComboBox #1: inlined data, autoComplete=false, default value of Iowa, pageSize=30</p>
-	<label for="setvaluetest">US State test 1 (200% Courier font):</label>
+	<label for="setvaluetest">US State test 1</label> (200% Courier font):
 	<select id="setvaluetest"
 			name="state1"
 			dojoType="dijit.form.ComboBox"
@@ -143,7 +146,9 @@ The drop down list is filtered by the data you have already typed in.
 		<option>Wisconsin</option>
 		<option>Wyoming</option>
 	</select>
-	onChange:<input id="oc1" disabled value="not fired yet!" autocomplete="off">
+	<br>onChange:<input id="oc1" disabled value="not fired yet!" autocomplete="off">
+	<input type="button" value="Set displayed value to Kentucky" onClick="dijit.byId('setvaluetest').setDisplayedValue('Kentucky')">
+        <input type="button" value="Set displayed value to Canada" onClick="dijit.byId('setvaluetest').setDisplayedValue('Canada')">
 
 	<hr>
 
@@ -154,7 +159,7 @@ The drop down list is filtered by the data you have already typed in.
 		url="../_data/dijits.json"></div>
 
 	<p>ComboBox #2: url, autoComplete=true:</p>
-	<label for="datatest">US State test 2 (8pt font): </label>
+	<label for="datatest">US State test 2</label> (8pt font): 
 	<input dojoType="dijit.form.ComboBox"
 			value="California"
 			class="medium"
@@ -167,7 +172,7 @@ The drop down list is filtered by the data you have already typed in.
 	>
 	<span>Value: <input id="value2" disabled value="California"></span>
 	<hr>
-	<label for="datatestDijit">Dijit List test #1 (150% font): </label>
+	<label for="datatestDijit">Dijit List test #1</label> (150% font): 
 	<input dojoType="dijit.form.ComboBox"
 			value="dijit.Editor"
 			class="medium"
@@ -199,7 +204,7 @@ The drop down list is filtered by the data you have already typed in.
 		<button id="but" onclick='toggleDisabled("but", "combo3"); return false;'>Enable</button>
 	</div>
 	<hr>
-	<p>ComboBox #4: url, autoComplete=false required=true:</p>
+	<p>ComboBox #4: url, autoComplete=false required=true and highlightMatch=false</p>
 	<label for="combobox4">US State test 4: </label>
 	<input dojoType="dijit.form.ComboBox"
 			value=""
@@ -212,6 +217,7 @@ The drop down list is filtered by the data you have already typed in.
 			autoComplete="false"
 			id="combobox4"
 			required="true"
+			highlightMatch="false"
 	>
 	<span>Value: <input id="value4" disabled></span>
 	<hr>

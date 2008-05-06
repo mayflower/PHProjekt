@@ -2,13 +2,17 @@
 		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<title>Dialog Widget Dojo Tests</title>
+	<title>TooltipDialog Widget Tests</title>
+
 	<style type="text/css">
 		@import "../../dojo/resources/dojo.css";
 		@import "css/dijitTests.css";
+
+		body { font-family : sans-serif; }
+		form { margin-bottom : 0; }
 		table { border: none; }
-		#dialog3_underlay { background-color: #027 }
-	</style>		
+	</style>
+
 	<script type="text/javascript"
 		djConfig="parseOnLoad: true, isDebug: true"
 		src="../../dojo/dojo.js"></script>
@@ -30,15 +34,10 @@
 			[dijit._Widget, dijit._Templated], {
 			templateString: "<div style='margin: 10px; border: inset #700 4px; padding: 5px;' dojoAttachPoint='containerNode'></div>"
 		});
-	</script>
-	<script type="text/javascript">
+
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
 		Date.prototype.json = function(){ return dojo.date.stamp.toISOString(this, {selector: 'date'});};
 	</script>
-	<style type="text/css">
-		body { font-family : sans-serif; }
-		form { margin-bottom : 0; }
-	</style>
 </head>
 <body>
 <h1 class="testTitle">Dijit layout.TooltipDialog tests</h1>
@@ -106,7 +105,7 @@
 					This is the second tab.
 				</p>
 				<p>
-				Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+				<a href="http://www.lipsum.com/">ipsum dolor sit amet</a>, consectetuer adipiscing elit. Aenean
 				semper sagittis velit. Cras in mi. Duis porta mauris ut ligula. Proin
 				porta rutrum lacus. Etiam consequat scelerisque quam. Nulla facilisi.
 				Maecenas luctus venenatis nulla. In sit amet dui non mi semper iaculis.
@@ -120,8 +119,8 @@
 
 <div dojoType="dijit.form.DropDownButton">
 	<span>Test slowloading HREF Tooltip Dialog</span>
-	<div dojoType="dijit.TooltipDialog" href="layout/getResponse.php?delay=500&messId=2" title="tooltip dialog with no focusable items">
-	</div>
+	<div dojoType="dijit.TooltipDialog" id="slowLoad" href="layout/getResponse.php?delay=500&messId=2"
+		title="tooltip dialog with no focusable items"></div>
 </div> |
 
 <p><b><i>(scroll down to see more links to click, for testing positioning / scroll handling)</i></b></p>

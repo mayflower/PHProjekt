@@ -3,6 +3,7 @@
 <html>
 <head>
 	<title>StackContainer Demo</title>
+
 	<style>
 		@import "../../../dojo/resources/dojo.css";
 		@import "../css/dijitTests.css";
@@ -14,6 +15,7 @@
 			border-style: dashed !important;
 		}
 	</style>
+
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		djConfig="isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -27,10 +29,10 @@
 		function selected(page){
 			console.debug("page selected " + page.id);
 			var widget=dijit.byId("myStackContainer");
-			dijit.byId("previous").setDisabled(page.isFirstChild);
-			dijit.byId("next").setDisabled(page.isLastChild);
-			dijit.byId("previous2").setDisabled(page.isFirstChild);
-			dijit.byId("next2").setDisabled(page.isLastChild);
+			dijit.byId("previous").setAttribute("disabled", page.isFirstChild);
+			dijit.byId("next").setAttribute("disabled", page.isLastChild);
+			dijit.byId("previous2").setAttribute("disabled", page.isFirstChild);
+			dijit.byId("next2").setAttribute("disabled", page.isLastChild);
 		}
 		dojo.subscribe("myStackContainer-selectChild", selected);
 	</script>
