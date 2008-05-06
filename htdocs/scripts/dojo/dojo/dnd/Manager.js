@@ -66,7 +66,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 	},
 	canDrop: function(flag){
 		// summary: called to notify if the current target can accept items
-		var canDropFlag = this.target && flag;
+		var canDropFlag = Boolean(this.target && flag);
 		if(this.canDropFlag != canDropFlag){
 			this.canDropFlag = canDropFlag;
 			this.avatar.update();
@@ -97,9 +97,11 @@ dojo.declare("dojo.dnd.Manager", null, {
 		// e: Event: mouse event
 		var a = this.avatar;
 		if(a){
-			//dojo.dnd.autoScrollNodes(e);
-			dojo.dnd.autoScroll(e);
-			dojo.marginBox(a.node, {l: e.pageX + this.OFFSET_X, t: e.pageY + this.OFFSET_Y});
+			dojo.dnd.autoScrollNodes(e);
+			//dojo.dnd.autoScroll(e);
+			var s = a.node.style;
+			s.left = (e.pageX + this.OFFSET_X) + "px";
+			s.top  = (e.pageY + this.OFFSET_Y) + "px";
 			var copy = Boolean(this.source.copyState(dojo.dnd.getCopyKeyState(e)));
 			if(this.copy != copy){ 
 				this._setCopyStatus(copy);

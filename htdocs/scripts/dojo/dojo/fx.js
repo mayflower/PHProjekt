@@ -29,8 +29,8 @@ dojo.fx = {
 		}, this);
 	};
 	dojo.extend(_chain, {
-		_onAnimate: function(arg){
-			this._fire("onAnimate", arg);
+		_onAnimate: function(){
+			this._fire("onAnimate", arguments);
 		},
 		_onEnd: function(){
 			dojo.disconnect(this._onAnimateCtx);
@@ -49,15 +49,15 @@ dojo.fx = {
 		play: function(/*int?*/ delay, /*Boolean?*/ gotoStart){
 			if(!this._current){ this._current = this._animations[this._index = 0]; }
 			if(!gotoStart && this._current.status() == "playing"){ return this; }
-			var onBeforeBegin = dojo.connect(this._current, "onBeforeBegin", this, function(){
-					this._fire("onBeforeBegin");
+			var beforeBegin = dojo.connect(this._current, "beforeBegin", this, function(){
+					this._fire("beforeBegin");
 				}),
 				onBegin = dojo.connect(this._current, "onBegin", this, function(arg){
-					this._fire("onBegin", arg);
+					this._fire("onBegin", arguments);
 				}),
 				onPlay = dojo.connect(this._current, "onPlay", this, function(arg){
-					this._fire("onPlay", arg);
-					dojo.disconnect(onBeforeBegin);
+					this._fire("onPlay", arguments);
+					dojo.disconnect(beforeBegin);
 					dojo.disconnect(onBegin);
 					dojo.disconnect(onPlay);
 				});
@@ -75,7 +75,7 @@ dojo.fx = {
 		pause: function(){
 			if(this._current){
 				var e = dojo.connect(this._current, "onPause", this, function(arg){
-						this._fire("onPause", arg);
+						this._fire("onPause", arguments);
 						dojo.disconnect(e);
 					});
 				this._current.pause();
@@ -95,7 +95,7 @@ dojo.fx = {
 				return false;
 			});
 			if(this._current){
-				this._current.gotoPercent(offset / _current.duration, andPlay);
+				this._current.gotoPercent(offset / this._current.duration, andPlay);
 			}
 			return this;
 		},
@@ -108,7 +108,7 @@ dojo.fx = {
 					this._current = this._animations[this._index];
 				}
 				var e = dojo.connect(this._current, "onStop", this, function(arg){
-						this._fire("onStop", arg);
+						this._fire("onStop", arguments);
 						dojo.disconnect(e);
 					});
 				this._current.stop();
@@ -139,6 +139,7 @@ dojo.fx = {
 	var _combine = function(animations){
 		this._animations = animations||[];
 		this._connects = [];
+		this._finished = 0;
 
 		this.duration = 0;
 		dojo.forEach(animations, function(a){
@@ -149,7 +150,7 @@ dojo.fx = {
 		}, this);
 		
 		this._pseudoAnimation = new dojo._Animation({curve: [0, 1], duration: this.duration});
-		dojo.forEach(["onBeforeBegin", "onBegin", "onPlay", "onAnimate", "onPause", "onStop"], 
+		dojo.forEach(["beforeBegin", "onBegin", "onPlay", "onAnimate", "onPause", "onStop"], 
 			function(evt){
 				this._connects.push(dojo.connect(this._pseudoAnimation, evt, dojo.hitch(this, "_fire", evt)));
 			},
@@ -164,27 +165,37 @@ dojo.fx = {
 			return this;
 		},
 		_onEnd: function(){
-			var all = dojo.every(this._animations, function(a){
-				return a.status() == "stopped";
-			});
-			if(all){ this._fire("onEnd"); }
+			if(++this._finished == this._animations.length){
+				this._fire("onEnd");
+			}
+		},
+		_call: function(action, args){
+			var t = this._pseudoAnimation;
+			t[action].apply(t, args);
 		},
 		play: function(/*int?*/ delay, /*Boolean?*/ gotoStart){
-			return this._doAction("play", arguments);
+			this._finished = 0;
+			this._doAction("play", arguments);
+			this._call("play", arguments);
+			return this;
 		},
 		pause: function(){
-			return this._doAction("pause", arguments);
+			this._doAction("pause", arguments);
+			this._call("pause", arguments);
+			return this;
 		},
 		gotoPercent: function(/*Decimal*/percent, /*Boolean?*/ andPlay){
-			this._pseudoAnimation[action].apply(this._pseudoAnimation, args);
 			var ms = this.duration * percent;
 			dojo.forEach(this._animations, function(a){
 				a.gotoPercent(a.duration < ms ? 1 : (ms / a.duration), andPlay);
 			});
+			this._call("gotoProcent", arguments);
 			return this;
 		},
 		stop: function(/*boolean?*/ gotoEnd){
-			return this._doAction("stop", arguments);
+			this._doAction("stop", arguments);
+			this._call("stop", arguments);
+			return this;
 		},
 		status: function(){
 			return this._pseudoAnimation.status();

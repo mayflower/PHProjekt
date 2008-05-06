@@ -9,23 +9,20 @@ dojo.require("dojo._base.connect");
 		add: function(/*DOMNode*/node, /*String*/name, /*Function*/fp){
 			if(!node){return;} 
 			name = del._normalizeEventName(name);
-
 			fp = del._fixCallback(name, fp);
-
 			var oname = name;
 			if(!dojo.isIE && (name == "mouseenter" || name == "mouseleave")){
-				var oname = name;
 				var ofp = fp;
+				//oname = name;
 				name = (name == "mouseenter") ? "mouseover" : "mouseout";
 				fp = function(e){
 					// thanks ben!
 					if(!dojo.isDescendant(e.relatedTarget, node)){
-						// e.type = oname; // FIXME: doesn't take?
-						return ofp.call(this, e);
+						// e.type = oname; // FIXME: doesn't take? SJM: event.type is generally immutable.
+						return ofp.call(this, e); 
 					}
 				}
 			}
-
 			node.addEventListener(name, fp, false);
 			return fp; /*Handle*/
 		},
@@ -38,7 +35,9 @@ dojo.require("dojo._base.connect");
 			//		the name of the handler to remove the function from
 			// handle:
 			//		the handle returned from add
-			node && node.removeEventListener(del._normalizeEventName(event), handle, false);
+			if (node){
+				node.removeEventListener(del._normalizeEventName(event), handle, false);
+			}
 		},
 		_normalizeEventName: function(/*String*/name){
 			// Generally, name should be lower case, unless it is special
@@ -67,6 +66,7 @@ dojo.require("dojo._base.connect");
 		},
 		_setKeyChar: function(evt){
 			evt.keyChar = evt.charCode ? String.fromCharCode(evt.charCode) : '';
+			evt.charOrCode = evt.keyChar || evt.keyCode;
 		}
 	});
 
@@ -223,10 +223,10 @@ dojo.require("dojo._base.connect");
 				},
 				// remove a listener from an object
 				remove: function(/*Object*/ source, /*String*/ method, /*Handle*/ handle){
-					var f = (source||dojo.global)[method], l = f&&f._listeners;
+					var f = (source||dojo.global)[method], l = f && f._listeners;
 					if(f && l && handle--){
 						delete ieh[l[handle]];
-						delete l[handle]; 
+						delete l[handle];
 					}
 				}
 			};
@@ -239,22 +239,31 @@ dojo.require("dojo._base.connect");
 				if(!node){return;} // undefined
 				event = del._normalizeEventName(event);
 				if(event=="onkeypress"){
-					// we need to listen to onkeydown to synthesize 
+					// we need to listen to onkeydown to synthesize
 					// keypress events that otherwise won't fire
 					// on IE
 					var kd = node.onkeydown;
-					if(!kd || !kd._listeners || !kd._stealthKeydown){
-						// we simply ignore this connection when disconnecting
-						// because it's side-effects are harmless 
-						del.add(node, "onkeydown", del._stealthKeyDown);
-						// we only want one stealth listener per node
-						node.onkeydown._stealthKeydown = true;
+					if(!kd || !kd._listeners || !kd._stealthKeydownHandle){
+						var h = del.add(node, "onkeydown", del._stealthKeyDown);
+						kd = node.onkeydown;
+						kd._stealthKeydownHandle = h;
+						kd._stealthKeydownRefs = 1;
+					}else{
+						kd._stealthKeydownRefs++;
 					}
 				}
 				return iel.add(node, event, del._fixCallback(fp));
 			},
 			remove: function(/*DOMNode*/node, /*String*/event, /*Handle*/handle){
-				iel.remove(node, del._normalizeEventName(event), handle); 
+				event = del._normalizeEventName(event);
+				iel.remove(node, event, handle); 
+				if(event=="onkeypress"){
+					var kd = node.onkeydown;
+					if(--kd._stealthKeydownRefs <= 0){
+						iel.remove(node, "onkeydown", kd._stealthKeydownHandle);
+						delete kd._stealthKeydownHandle;
+					}
+				}
 			},
 			_normalizeEventName: function(/*String*/eventName){
 				// Generally, eventName should be lower case, unless it is
@@ -493,19 +502,21 @@ if(dojo.isIE){
 	// keep this out of the closure
 	// closing over 'iel' or 'ieh' b0rks leak prevention
 	// ls[i] is an index into the master handler array
-	dojo._getIeDispatcher = function(){
-		return function(){
-			var ap=Array.prototype, h=dojo._ie_listener.handlers, c=arguments.callee, ls=c._listeners, t=h[c.target];
-			// return value comes from original target function
-			var r = t && t.apply(this, arguments);
-			// invoke listeners after target function
-			for(var i in ls){
-				if(!(i in ap)){
-					h[ls[i]].apply(this, arguments);
-				}
+	dojo._ieDispatcher = function(args, sender){
+		var ap=Array.prototype, h=dojo._ie_listener.handlers, c=args.callee, ls=c._listeners, t=h[c.target];
+		// return value comes from original target function
+		var r = t && t.apply(sender, args);
+		// invoke listeners after target function
+		for(var i in ls){
+			if(!(i in ap)){
+				h[ls[i]].apply(sender, args);
 			}
-			return r;
 		}
+		return r;
+	}
+	dojo._getIeDispatcher = function(){
+		// ensure the returned function closes over nothing
+		return new Function(dojo._scopeName + "._ieDispatcher(arguments, this)"); // function
 	}
 	// keep this out of the closure to reduce RAM allocation
 	dojo._event_listener._fixCallback = function(fp){

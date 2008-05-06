@@ -6,18 +6,4 @@ dojo.require("dojo._base.Deferred");
 dojo.require("dojo._base.json");
 dojo.require("dojo._base.array");
 dojo.require("dojo._base.Color");
-dojo.requireIf(dojo.isBrowser, "dojo._base.window");
-dojo.requireIf(dojo.isBrowser, "dojo._base.event");
-dojo.requireIf(dojo.isBrowser, "dojo._base.html");
-dojo.requireIf(dojo.isBrowser, "dojo._base.NodeList");
-dojo.requireIf(dojo.isBrowser, "dojo._base.query");
-dojo.requireIf(dojo.isBrowser, "dojo._base.xhr");
-dojo.requireIf(dojo.isBrowser, "dojo._base.fx");
-
-(function(){
-	if(dojo.config.require){
-		for(var x=0; x<dojo.config.require.length; x++){
-			dojo["require"](dojo.config.require[x]);
-		}
-	}
-})();
+dojo.requireIf(dojo.isBrowser, "dojo._base.browser");

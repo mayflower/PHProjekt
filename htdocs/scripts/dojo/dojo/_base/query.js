@@ -25,7 +25,7 @@ dojo.require("dojo._base.NodeList");
 				  statement dispatchers are cached (to prevent re-definition)
 				  as are entire dispatch chains (to make re-execution of the
 				  same query fast)
-				- in the xpath path, tokenization yeilds a concatenation of
+				- in the xpath path, tokenization yields a concatenation of
 				  parameterized xpath selectors. As with the DOM version, both
 				  simple selector blocks and overall evaluators are cached to
 				  prevent re-defintion
@@ -35,84 +35,6 @@ dojo.require("dojo._base.NodeList");
 				- xpath queries can, thankfully, be executed in one shot
 			5.) matched nodes are pruned to ensure they are unique
 */
-
-/*=====
-		//	summary:
-		//		returns nodes which match the given CSS3 selector, searching the
-		//		entire document by default but optionally taking a node to scope
-		//		the search by. Returns an instance of dojo.NodeList.
-		//	description:
-		//		dojo.query() is the swiss army knife of DOM node manipulation in
-		//		Dojo. Much like Prototype's "$$" (bling-bling) function or JQuery's
-		//		"$" function, dojo.query provides robust, high-performance
-		//		CSS-based node selector support with the option of scoping searches
-		//		to a particular sub-tree of a document.
-		//
-		//		Supported Selectors:
-		//		--------------------
-		//
-		//		dojo.query() supports a rich set of CSS3 selectors, including:
-		//
-		//			* class selectors (e.g., ".foo")
-		//			* node type selectors like "span"
-		//			* " " descendant selectors
-		//			* ">" child element selectors 
-		//			* "#foo" style ID selectors
-		//			* "*" universal selector
-		//			* attribute queries:
-		//				* "[foo]" attribute presence selector
-		//				* "[foo='bar']" attribute value exact match
-		//				* "[foo~='bar']" attribute value list item match
-		//				* "[foo^='bar']" attribute start match
-		//				* "[foo$='bar']" attribute end match
-		//				* "[foo*='bar']" attribute substring match
-		//			* ":first-child", ":last-child" positional selectors
-		//			* ":nth-child(n)", ":nth-child(2n+1)" style positional calculations
-		//			* ":nth-child(even)", ":nth-child(odd)" positional selectors
-		//			* ":not(...)" negation pseudo selectors
-		//
-		//		Any legal combination of those selector types as per the CSS 3 sepc
-		//		will work with dojo.query(), including compound selectors (","
-		//		delimited). Very complex and useful searches can be constructed
-		//		with this palette of selectors and when combined with functions for
-		//		maniplation presented by dojo.NodeList, many types of DOM
-		//		manipulation operations become very straightforward.
-		//		
-		//		Unsupported Selectors:
-		//		--------------------
-		//
-		//		While dojo.query handles many CSS3 selectors, some fall outside of
-		//		what's resaonable for a programmatic node querying engine to
-		//		handle. Currently unsupported selectors include:
-		//		
-		//			* namespace-differentiated selectors of any form
-		//			* "~", the immediately preceeded-by sibling selector
-		//			* "+", the preceeded-by sibling selector
-		//			* all "::" pseduo-element selectors
-		//			* certain pseduo-selectors which don't get a lot of day-to-day use:
-		//				* :root, :lang(), :target, :focus
-		//			* all visual and state selectors:
-		//				* :root, :active, :hover, :visisted, :link, :enabled, :disabled, :checked
-		//			* :*-of-type pseudo selectors
-		//		
-		//		dojo.query and XML Documents:
-		//		-----------------------------
-		//		FIXME
-		//		
-		// NOTE: elementsById is not currently supported
-		// NOTE: ignores xpath-ish queries for now
-		//
-		//	query: String
-		//		The CSS3 expression to match against. For details on the syntax of
-		//		CSS3 selectors, see:
-		//			http://www.w3.org/TR/css3-selectors/#selectors
-		//	root: String|DOMNode?
-		//		A node (or string ID of a node) to scope the search from. Optional.
-		//	returns:
-		//		An instance of dojo.NodeList. Many methods are available on
-		//		NodeLists for searching, iterating, manipulating, and handling
-		//		events on the matched nodes in the returned list.
-=====*/
 
 ;(function(){
 	// define everything in a closure for compressability reasons. "d" is an
@@ -125,6 +47,7 @@ dojo.require("dojo._base.NodeList");
 
 	var d = dojo;
 	var childNodesName = dojo.isIE ? "children" : "childNodes";
+	var caseSensitive = false;
 
 	var getQueryParts = function(query){
 		// summary: state machine for query tokenization
@@ -332,7 +255,6 @@ dojo.require("dojo._base.NodeList");
 			var tqp = qparts.shift();
 			var prefix;
 			var postfix = "";
-			// FIXME: need to add support for ~ and +
 			if(tqp.oper == ">"){
 				prefix = "/";
 				// prefix = "/child::*";
@@ -394,8 +316,7 @@ dojo.require("dojo._base.NodeList");
 		}
 
 		var doc = d.doc;
-		// var parent = d.body(); // FIXME
-		// FIXME: don't need to memoize. The closure scope handles it for us.
+		// don't need to memoize. The closure scope handles it for us.
 		var xpath = buildPath(path);
 
 		var tf = function(parent){
@@ -426,7 +347,6 @@ dojo.require("dojo._base.NodeList");
 		// selectors, subset is identical to the non-XPath version of this
 		// function. 
 
-		// FIXME: need to add support for alternate roots
 		return getXPathFunc(query)();
 	}
 	*/
@@ -452,8 +372,8 @@ dojo.require("dojo._base.NodeList");
 
 	var _childElements = function(root){
 		var ret = [];
-		var te, x=0, tret = root[childNodesName];
-		while(te=tret[x++]){
+		var te, x = 0, tret = root[childNodesName];
+		while((te = tret[x++])){
 			if(te.nodeType == 1){ ret.push(te); }
 		}
 		return ret;
@@ -462,7 +382,7 @@ dojo.require("dojo._base.NodeList");
 	var _nextSiblings = function(root, single){
 		var ret = [];
 		var te = root;
-		while(te = te.nextSibling){
+		while((te = te.nextSibling)){
 			if(te.nodeType == 1){
 				ret.push(te);
 				if(single){ break; }
@@ -533,7 +453,7 @@ dojo.require("dojo._base.NodeList");
 		// for every root, get the elements that match the descendant selector
 		// for(var x=elements.length-1, te; x>=0, te=elements[x]; x--){
 		var x = elements.length - 1, te;
-		while(te = elements[x--]){
+		while((te = elements[x--])){
 			_filterDown(te, queryParts, ret, 0);
 		}
 		return ret;
@@ -763,6 +683,9 @@ dojo.require("dojo._base.NodeList");
 				// based version might be more accurate, but since
 				// jQuery and DomQuery also potentially get this wrong,
 				// I'm leaving it for now.
+				if(condition.charAt(0)=='"' || condition.charAt(0)=="'"){//remove quote
+					condition=condition.substr(1,condition.length-2);
+				}
 				return (elem.innerHTML.indexOf(condition) >= 0);
 			}
 		},
@@ -775,34 +698,44 @@ dojo.require("dojo._base.NodeList");
 		"nth-child": function(name, condition){
 			var pi = parseInt;
 			if(condition == "odd"){
-				return function(elem){
-					return (
-						((getNodeIndex(elem)) % 2) == 1
-					);
+				condition = "2n+1";
+			}else if(condition == "even"){
+				condition = "2n";
+			}
+			if(condition.indexOf("n") != -1){
+				var tparts = condition.split("n", 2);
+				var pred = tparts[0] ? (tparts[0]=='-'?-1:pi(tparts[0])) : 1;
+				var idx = tparts[1] ? pi(tparts[1]) : 0;
+				var lb = 0, ub = -1;
+				if(pred>0){
+					if(idx<0){
+						idx = (idx % pred) && (pred + (idx % pred));
+					}else if(idx>0){
+						if(idx >= pred){
+							lb = idx - idx % pred;
+						}
+						idx = idx % pred;
+					}
+				}else if(pred<0){
+					pred *= -1;
+					if(idx>0){
+						ub = idx;
+						idx = idx % pred;
+					} //idx has to be greater than 0 when pred is negative; shall we throw an error here?
 				}
-			}else if((condition == "2n")||
-				(condition == "even")){
-				return function(elem){
-					return ((getNodeIndex(elem) % 2) == 0);
+				if(pred>0){
+					return function(elem){
+						var i=getNodeIndex(elem);
+						return (i>=lb) && (ub<0 || i<=ub) && ((i % pred) == idx);
+					}
+				}else{
+					condition=idx;
 				}
-			}else if(condition.indexOf("0n+") == 0){
-				var ncount = pi(condition.substr(3));
-				return function(elem){
-					return (elem.parentNode[childNodesName][ncount-1] === elem);
-				}
-			}else if(	(condition.indexOf("n+") > 0) &&
-						(condition.length > 3) ){
-				var tparts = condition.split("n+", 2);
-				var pred = pi(tparts[0]);
-				var idx = pi(tparts[1]);
-				return function(elem){
-					return ((getNodeIndex(elem) % pred) == idx);
-				}
-			}else if(condition.indexOf("n") == -1){
-				var ncount = pi(condition);
-				return function(elem){
-					return (getNodeIndex(elem) == ncount);
-				}
+			}
+			//if(condition.indexOf("n") == -1){
+			var ncount = pi(condition);
+			return function(elem){
+				return (getNodeIndex(elem) == ncount);
 			}
 		}
 	};
@@ -889,7 +822,7 @@ dojo.require("dojo._base.NodeList");
 		if(query.tag && query.id && !query.hasLoops){
 			// we got a filtered ID search (e.g., "h4#thinger")
 			retFunc = function(root){
-				var te = d.byId(query.id);
+				var te = d.byId(query.id, (root.ownerDocument||root)); //root itself may be a document
 				if(filterFunc(te)){
 					return [ te ];
 				}
@@ -902,7 +835,7 @@ dojo.require("dojo._base.NodeList");
 				retFunc = function(root){
 					var ret = [];
 					var te, x=0, tret = root.getElementsByTagName(query.tag);
-					while(te=tret[x++]){
+					while((te = tret[x++])){
 						ret.push(te);
 					}
 					return ret;
@@ -910,8 +843,8 @@ dojo.require("dojo._base.NodeList");
 			}else{
 				retFunc = function(root){
 					var ret = [];
-					var te, x=0, tret = root.getElementsByTagName(query.tag);
-					while(te=tret[x++]){
+					var te, x = 0, tret = root.getElementsByTagName(query.tag);
+					while((te = tret[x++])){
 						if(filterFunc(te)){
 							ret.push(te);
 						}
@@ -1026,6 +959,19 @@ dojo.require("dojo._base.NodeList");
 	// future
 	var getQueryFunc = function(query){
 		// return a cached version if one is available
+		var qcz = query.charAt(0);
+		if(d.doc["querySelectorAll"] && 
+			( (!d.isSafari) || (d.isSafari > 3.1) ) && // see #5832
+			// as per CSS 3, we can't currently start w/ combinator:
+			//		http://www.w3.org/TR/css3-selectors/#w3cselgrammar
+			(">+~".indexOf(qcz) == -1)
+		){
+			return function(root){
+				var r = root.querySelectorAll(query);
+				r.nozip = true; // skip expensive duplication checks and just wrap in a NodeList
+				return r;
+			};
+		}
 		if(_queryFuncCache[query]){ return _queryFuncCache[query]; }
 		if(0 > query.indexOf(",")){
 			// if it's not a compound query (e.g., ".foo, .bar"), cache and return a dispatcher
@@ -1040,7 +986,7 @@ dojo.require("dojo._base.NodeList");
 				var pindex = 0; // avoid array alloc for every invocation
 				var ret = [];
 				var tp;
-				while(tp = parts[pindex++]){
+				while((tp = parts[pindex++])){
 					ret = ret.concat(_getQueryFunc(tp, tp.indexOf(" "))(root));
 				}
 				return ret;
@@ -1051,7 +997,7 @@ dojo.require("dojo._base.NodeList");
 	}
 
 	// FIXME: 
-	//		Dean's new Base2 uses a system whereby queries themselves note if
+	//		Dean's Base2 uses a system whereby queries themselves note if
 	//		they'll need duplicate filtering. We need to get on that plan!!
 
 	// attempt to efficiently determine if an item in a list is a dupe,
@@ -1067,7 +1013,7 @@ dojo.require("dojo._base.NodeList");
 		if(arr.length < 2){ return ret; }
 		_zipIdx++;
 		arr[0]["_zipIdx"] = _zipIdx;
-		for(var x=1, te; te = arr[x]; x++){
+		for(var x = 1, te; te = arr[x]; x++){
 			if(arr[x]["_zipIdx"] != _zipIdx){ 
 				ret.push(te);
 			}
@@ -1078,8 +1024,148 @@ dojo.require("dojo._base.NodeList");
 	}
 
 	// the main executor
-	d.query = function(query, root){
-		// see dojo.query for docs
+	d.query = function(/*String*/ query, /*String|DOMNode?*/ root){
+		//	summary:
+		//		Returns nodes which match the given CSS3 selector, searching the
+		//		entire document by default but optionally taking a node to scope
+		//		the search by. Returns an instance of dojo.NodeList.
+		//	description:
+		//		dojo.query() is the swiss army knife of DOM node manipulation in
+		//		Dojo. Much like Prototype's "$$" (bling-bling) function or JQuery's
+		//		"$" function, dojo.query provides robust, high-performance
+		//		CSS-based node selector support with the option of scoping searches
+		//		to a particular sub-tree of a document.
+		//
+		//		Supported Selectors:
+		//		--------------------
+		//
+		//		dojo.query() supports a rich set of CSS3 selectors, including:
+		//
+		//			* class selectors (e.g., `.foo`)
+		//			* node type selectors like `span`
+		//			* ` ` descendant selectors
+		//			* `>` child element selectors 
+		//			* `#foo` style ID selectors
+		//			* `*` universal selector
+		//			* `~`, the immediately preceeded-by sibling selector
+		//			* `+`, the preceeded-by sibling selector
+		//			* attribute queries:
+		//			|	* `[foo]` attribute presence selector
+		//			|	* `[foo='bar']` attribute value exact match
+		//			|	* `[foo~='bar']` attribute value list item match
+		//			|	* `[foo^='bar']` attribute start match
+		//			|	* `[foo$='bar']` attribute end match
+		//			|	* `[foo*='bar']` attribute substring match
+		//			* `:first-child`, `:last-child` positional selectors
+		//			* `:empty` content emtpy selector
+		//			* `:empty` content emtpy selector
+		//			* `:nth-child(n)`, `:nth-child(2n+1)` style positional calculations
+		//			* `:nth-child(even)`, `:nth-child(odd)` positional selectors
+		//			* `:not(...)` negation pseudo selectors
+		//
+		//		Any legal combination of these selectors will work with
+		//		`dojo.query()`, including compound selectors ("," delimited).
+		//		Very complex and useful searches can be constructed with this
+		//		palette of selectors and when combined with functions for
+		//		maniplation presented by dojo.NodeList, many types of DOM
+		//		manipulation operations become very straightforward.
+		//		
+		//		Unsupported Selectors:
+		//		----------------------
+		//
+		//		While dojo.query handles many CSS3 selectors, some fall outside of
+		//		what's resaonable for a programmatic node querying engine to
+		//		handle. Currently unsupported selectors include:
+		//		
+		//			* namespace-differentiated selectors of any form
+		//			* all `::` pseduo-element selectors
+		//			* certain pseduo-selectors which don't get a lot of day-to-day use:
+		//			|	* `:root`, `:lang()`, `:target`, `:focus`
+		//			* all visual and state selectors:
+		//			|	* `:root`, `:active`, `:hover`, `:visisted`, `:link`,
+		//				  `:enabled`, `:disabled`, `:checked`
+		//			* `:*-of-type` pseudo selectors
+		//		
+		//		dojo.query and XML Documents:
+		//		-----------------------------
+		//		
+		//		`dojo.query` currently only supports searching XML documents
+		//		whose tags and attributes are 100% lower-case. This is a known
+		//		limitation and will [be addressed soon](http://trac.dojotoolkit.org/ticket/3866)
+		//		Non-selector Queries:
+		//		---------------------
+		//
+		//		If something other than a String is passed for the query,
+		//		`dojo.query` will return a new `dojo.NodeList` constructed from
+		//		that parameter alone and all further processing will stop. This
+		//		means that if you have a reference to a node or NodeList, you
+		//		can quickly construct a new NodeList from the original by
+		//		calling `dojo.query(node)` or `dojo.query(list)`.
+		//
+		//	query:
+		//		The CSS3 expression to match against. For details on the syntax of
+		//		CSS3 selectors, see <http://www.w3.org/TR/css3-selectors/#selectors>
+		//	root:
+		//		A DOMNode (or node id) to scope the search from. Optional.
+		//	returns: dojo.NodeList
+		//		An instance of `dojo.NodeList`. Many methods are available on
+		//		NodeLists for searching, iterating, manipulating, and handling
+		//		events on the matched nodes in the returned list.
+		//	example:
+		//		search the entire document for elements with the class "foo":
+		//	|	dojo.query(".foo");
+		//		these elements will match:
+		//	|	<span class="foo"></span>
+		//	|	<span class="foo bar"></span>
+		//	|	<p class="thud foo"></p>
+		//	example:
+		//		search the entire document for elements with the classes "foo" *and* "bar":
+		//	|	dojo.query(".foo.bar");
+		//		these elements will match:
+		//	|	<span class="foo bar"></span>
+		//		while these will not:
+		//	|	<span class="foo"></span>
+		//	|	<p class="thud foo"></p>
+		//	example:
+		//		find `<span>` elements which are descendants of paragraphs and
+		//		which have a "highlighted" class:
+		//	|	dojo.query("p span.highlighted");
+		//		the innermost span in this fragment matches:
+		//	|	<p class="foo">
+		//	|		<span>...
+		//	|			<span class="highlighted foo bar">...</span>
+		//	|		</span>
+		//	|	</p>
+		//	example:
+		//		set an "odd" class on all odd table rows inside of the table
+		//		`#tabular_data`, using the `>` (direct child) selector to avoid
+		//		affecting any nested tables:
+		//	|	dojo.query("#tabular_data > tbody > tr:nth-child(odd)").addClass("odd");
+		//	example:
+		//		remove all elements with the class "error" from the document
+		//		and store them in a list:
+		//	|	var errors = dojo.query(".error").orphan();
+		//	example:
+		//		add an onclick handler to every submit button in the document
+		//		which causes the form to be sent via Ajax instead:
+		//	|	dojo.query("input[type='submit']").onclick(function(e){
+		//	|		dojo.stopEvent(e); // prevent sending the form
+		//	|		var btn = e.target;
+		//	|		dojo.xhrPost({
+		//	|			form: btn.form,
+		//	|			load: function(data){
+		//	|				// replace the form with the response
+		//	|				var div = dojo.doc.createElement("div");
+		//	|				dojo.place(div, btn.form, "after");
+		//	|				div.innerHTML = data;
+		//	|				dojo.style(btn.form, "display", "none");
+		//	|			}
+		//	|		});
+		//	|	});
+
+
+		// NOTE: elementsById is not currently supported
+		// NOTE: ignores xpath-ish queries for now
 
 		if(query.constructor == d.NodeList){
 			return query;
@@ -1091,8 +1177,7 @@ dojo.require("dojo._base.NodeList");
 			root = d.byId(root);
 		}
 
-		// FIXME: should support more methods on the return than the stock array.
-		return _zip(getQueryFunc(query)(root||d.doc));
+		return _zip(getQueryFunc(query)(root||d.doc)); // dojo.NodeList
 	}
 
 	/*
@@ -1107,7 +1192,7 @@ dojo.require("dojo._base.NodeList");
 	d._filterQueryResult = function(nodeList, simpleFilter){
 		var tnl = new d.NodeList();
 		var ff = (simpleFilter) ? getFilterFunc(getQueryParts(simpleFilter)[0]) : function(){ return true; };
-		for(var x=0, te; te = nodeList[x]; x++){
+		for(var x = 0, te; te = nodeList[x]; x++){
 			if(ff(te)){ tnl.push(te); }
 		}
 		return tnl;

@@ -152,7 +152,8 @@
 								baz: [
 									{ thonk: "blarg" },
 									"xyzzy!"
-								]
+								],
+								documentElement: "Element" //Added to make IE happy.
 							};
 							t.is(fauxObj,
 								dojo._contentHandlers["xml"]({ responseXML: fauxObj })
@@ -298,7 +299,7 @@
 							var d = new doh.Deferred();
 							var td = dojo.rawXhrPost({
 								url: "xhr.html", // self
-								postContent: "foo=bar&color=blue&height=average",
+								postData: "foo=bar&color=blue&height=average",
 								handle: function(res, ioArgs){
 									if((dojo._isDocumentOk(ioArgs.xhr))||
 										(ioArgs.xhr.status == 405)

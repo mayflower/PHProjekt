@@ -74,6 +74,9 @@ if(typeof dojo == "undefined"){
 			hostEnv = "spidermonkey";
 		}
 		var tmps = ["bootstrap.js", "loader.js", "hostenv_"+hostEnv+".js"];
+		if (this.Jaxer && this.Jaxer.isOnServer) {
+			this.load = Jaxer.load;
+		}
 	
 		if(
 			(this["djConfig"])&&
@@ -128,7 +131,7 @@ if(typeof dojo == "undefined"){
 		tmps.push(root+"_base.js");
 	
 		for(var x=0; x < tmps.length; x++){
-			if(isRhino||isSpidermonkey){
+			if(isRhino || isSpidermonkey || (this.Jaxer && this.Jaxer.isOnServer)){
 				load(tmps[x]);
 			}else{
 				try{

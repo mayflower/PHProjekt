@@ -10,7 +10,7 @@ dojo.deprecated = function(/*String*/ behaviour, /*String?*/ extra, /*String?*/ 
 	var message = "DEPRECATED: " + behaviour;
 	if(extra){ message += " " + extra; }
 	if(removal){ message += " -- will be removed in version: " + removal; }
-	console.debug(message);
+	console.warn(message);
 }
 
 dojo.experimental = function(/* String */ moduleName, /* String? */ extra){
@@ -32,7 +32,7 @@ dojo.experimental = function(/* String */ moduleName, /* String? */ extra){
 	//	|	dojo.experimental("dojo.weather.toKelvin()", "PENDING approval from NOAA");
 	var message = "EXPERIMENTAL: " + moduleName + " -- APIs subject to change without notice.";
 	if(extra){ message += " " + extra; }
-	console.debug(message);
+	console.warn(message);
 }
 
 // FIREBUG LITE
@@ -58,15 +58,9 @@ dojo.experimental = function(/* String */ moduleName, /* String? */ extra){
 	//		Option for console height (ignored for popup)
 	//		|	var djConfig = {isDebug: true, debugHeight:100 };
 	
-if(
-	(
-		(!("console" in window)) || 
-		(!("firebug" in console))
-	)&&
-	(
-		(dojo.config["noFirebugLite"] !== true)
-	)
-){
+if((!("console" in window) || !("firebug" in console)) &&
+	dojo.config.noFirebugLite !== true){
+
 (function(){
 	// don't build a firebug frame in iframes
 	try{
@@ -77,7 +71,7 @@ if(
 			}
 			return; 
 		}
-	}catch(e){}
+	}catch(e){/*squelch*/}
 
 	window.console = {
 		_connects: [],
@@ -126,43 +120,17 @@ if(
 			}
 		},
 		
-		dir: function(object){
-			// summary: 
-			//		Traces object. Only partially implemented.
-						
-			var pairs = [];
-			for(var prop in object){
-				try{
-					pairs.push([prop, object[prop]]);
-				}catch(e){
-					/* squelch */
-				}
-			}
-			
-			pairs.sort(function(a, b){ 
-				return a[0] < b[0] ? -1 : 1; 
-			});
-			
-			var html = ['<table>'];
-			for(var i = 0; i < pairs.length; ++i){
-				var name = pairs[i][0], value = pairs[i][1];
-				
-				html.push('<tr>', 
-				'<td class="propertyNameCell"><span class="propertyName">',
-					escapeHTML(name), '</span></td>', '<td><span class="propertyValue">');
-				appendObject(value, html);
-				html.push('</span></td></tr>');
-			}
-			html.push('</table>');
-			
-			logRow(html, "dir");
+		dir: function(obj){
+			var str = printObject( obj );
+			str = str.replace(/\n/g, "<br />");
+			str = str.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+			logRow([str], "dir");
 		},
 		
 		dirxml: function(node){
 			// summary: 
 			//
 			var html = [];
-			
 			appendNode(node, html);
 			logRow(html, "dirxml");
 		},
@@ -220,11 +188,13 @@ if(
 		},
 		
 		profileEnd: function(){ },
-		
+
 		clear: function(){
 			// summary: 
 			//		Clears message console. Do not call this directly
-			consoleBody.innerHTML = "";
+			while(consoleBody.childNodes.length){
+				dojo._destroyElement(consoleBody.firstChild);	
+			}
 			dojo.forEach(this._connects,dojo.disconnect);
 		},
 
@@ -241,18 +211,85 @@ if(
 				toggleConsole();
 			}
 		},
-		closeObjectInspector:function(){
+		_restoreBorder: function(){
+			if(_inspectCurrentNode){
+				_inspectCurrentNode.style.border = _restoreBorderStyle;
+			}
+		},
+		openDomInspector: function(){
+			_inspectionEnabled = true;
+			consoleBody.style.display = "none";
+			consoleDomInspector.style.display = "block";
+			consoleObjectInspector.style.display = "none";
+			document.body.style.cursor = "pointer";
+			_inspectionMoveConnection = dojo.connect(document, "mousemove", function(evt){
+				if(!_inspectionEnabled){ return; }
+				if(!_inspectionTimer){
+					_inspectionTimer = setTimeout(function(){ _inspectionTimer = null; }, 50);
+				}else{
+					return;
+				}
+				var node = evt.target;
+				if(node && (_inspectCurrentNode !== node)){
+					var parent = true;
+					
+					console._restoreBorder();
+					var html = [];
+					appendNode(node, html);
+					consoleDomInspector.innerHTML = html.join("");
+						
+					_inspectCurrentNode = node;
+					_restoreBorderStyle = _inspectCurrentNode.style.border;
+					_inspectCurrentNode.style.border = "#0000FF 1px solid";
+				}
+			});
+			setTimeout(function(){
+				_inspectionClickConnection = dojo.connect(document, "click", function(evt){
+					document.body.style.cursor = "";
+					_inspectionEnabled = !_inspectionEnabled;																  
+					dojo.disconnect(_inspectionClickConnection);
+					// console._restoreBorder();
+				});
+			}, 30);
+		},
+		_closeDomInspector: function(){
+			document.body.style.cursor = "";
+			dojo.disconnect(_inspectionMoveConnection);
+			dojo.disconnect(_inspectionClickConnection);
+			_inspectionEnabled = false;
+			console._restoreBorder();
+		},
+		openConsole:function(){
 			// summary: 
 			//		Closes object inspector and opens message console. Do not call this directly
-			consoleObjectInspector.innerHTML = "";
+			consoleBody.style.display = "block";
+			consoleDomInspector.style.display = "none";
 			consoleObjectInspector.style.display = "none";
-			consoleBody.style.display = "block";	
+			console._closeDomInspector();
+		},
+		openObjectInspector:function(){
+			consoleBody.style.display = "none";
+			consoleDomInspector.style.display = "none";
+			consoleObjectInspector.style.display = "block";
+			console._closeDomInspector();
+		},
+		recss: function(){
+			// http://turtle.dojotoolkit.org/~david/recss.html
+			// this is placed in dojo since the console is most likely
+			// in another window and dojo is easilly accessible
+			var i,a,s;a=document.getElementsByTagName('link');
+			for(i=0;i<a.length;i++){
+				s=a[i];
+				if(s.rel.toLowerCase().indexOf('stylesheet')>=0&&s.href) {
+					var h=s.href.replace(/(&|%5C?)forceReload=\d+/,'');
+					s.href=h+(h.indexOf('?')>=0?'&':'?')+'forceReload='+(new Date().valueOf())
+				}
+			}
 		}
 	};
- 
+	
 	// ***************************************************************************
 	
-	// using global objects so they can be accessed
 	// most of the objects in this script are run anonomously
 	var _firebugDoc = document;
 	var _firebugWin = window;
@@ -260,14 +297,26 @@ if(
 	
 	var consoleFrame = null;
 	var consoleBody = null;
+	var consoleObjectInspector = null;
+	var fireBugTabs = null;
 	var commandLine = null;
+	var consoleToolbar = null;
 	
 	var frameVisible = false;
 	var messageQueue = [];
 	var groupStack = [];
 	var timeMap = {};
 	
-	var clPrefix = ">>> ";
+	var consoleDomInspector = null;
+	var _inspectionMoveConnection;
+	var _inspectionClickConnection;
+	var _inspectionEnabled = false;
+	var _inspectionTimer = null;
+	var _inspectTempNode = document.createElement("div");
+			
+			
+	var _inspectCurrentNode;
+	var _restoreBorderStyle;
 
 	// ***************************************************************************
 
@@ -285,32 +334,91 @@ if(
 		}
 	}
 	
-	function openWin(){
-		var win = window.open("","_firebug","status=0,menubar=0,resizable=1,width=640,height=480,scrollbars=1,addressbar=0");
+	function openWin(x,y,w,h){
+		var win = window.open("","_firebug","status=0,menubar=0,resizable=1,top="+y+",left="+x+",width="+w+",height="+h+",scrollbars=1,addressbar=0");
+		if(!win){
+			var msg = "Firebug Lite could not open a pop-up window, most likely because of a blocker.\n" +
+				"Either enable pop-ups for this domain, or change the djConfig to popup=false.";
+			alert(msg);
+		}
+		createResizeHandler(win);
 		var newDoc=win.document;
-		HTMLstring='<html><head><title>Firebug Lite</title></head>\n';
-		HTMLstring+='<body bgColor="#CCCCCC">\n';
-		//Testing access to dojo from the popup window
-		/*HTMLstring+='<button onclick="(function(){ console.log(dojo.version.toString()); })()">Test Parent Dojo</button>\n';*/
-		HTMLstring+='<div id="fb"></div>';
-		HTMLstring+='</body></html>';
-
+		//Safari needs an HTML height
+		var HTMLstring=	'<html style="height:100%;"><head><title>Firebug Lite</title></head>\n' +
+					'<body bgColor="#ccc" style="height:97%;" onresize="opener.onFirebugResize()">\n' +
+					'<div id="fb"></div>' +
+					'</body></html>';
+	
 		newDoc.write(HTMLstring);
 		newDoc.close();
 		return win;
 	}
+
+	function createResizeHandler(wn){
+		// summary
+		//		Creates handle for onresize window. Called from script in popup's body tag (so that it will work with IE).
+		//
+		
+		var d = new Date();
+			d.setTime(d.getTime()+(60*24*60*60*1000)); // 60 days
+			d = d.toUTCString();
+			
+			var dc = wn.document,
+				getViewport;
+				
+			if (wn.innerWidth){
+				getViewport = function(){
+					return{w:wn.innerWidth, h:wn.innerHeight};
+				}
+			}else if (dc.documentElement && dc.documentElement.clientWidth){
+				getViewport = function(){
+					return{w:dc.documentElement.clientWidth, h:dc.documentElement.clientHeight};
+				}
+			}else if (dc.body){
+				getViewport = function(){
+					return{w:dc.body.clientWidth, h:dc.body.clientHeight};
+				}
+			}
+			
+
+		window.onFirebugResize = function(){ 
+			
+			//resize the height of the console log body
+			layout(getViewport().h);
+			
+			clearInterval(wn._firebugWin_resize);
+			wn._firebugWin_resize = setTimeout(function(){
+				var x = wn.screenLeft,
+					y = wn.screenTop,
+					w = wn.outerWidth  || wn.document.body.offsetWidth,
+					h = wn.outerHeight || wn.document.body.offsetHeight;
+				
+				document.cookie = "_firebugPosition=" + [x,y,w,h].join(",") + "; expires="+d+"; path=/";
+					 
+			 }, 5000); //can't capture window.onMove - long timeout gives better chance of capturing a resize, then the move
+		
+		}
+	}
+	
+	
+	/*****************************************************************************/
+	
 	
 	function createFrame(){
 		if(consoleFrame){
 			return;
 		}
 		
-		var containerHeight = "100%";
 		if(dojo.config.popup){
-			_firebugWin = openWin();
-			_firebugDoc = _firebugWin.document;
-			dojo.config.debugContainerId = 'fb';
-			
+			var containerHeight = "100%";
+			var cookieMatch = document.cookie.match(/(?:^|; )_firebugPosition=([^;]*)/);
+			var p = cookieMatch ? cookieMatch[1].split(",") : [2,2,320,480];
+
+			_firebugWin = openWin(p[0],p[1],p[2],p[3]);	// global
+			_firebugDoc = _firebugWin.document;			// global
+
+			djConfig.debugContainerId = 'fb';
+		
 			// connecting popup
 			_firebugWin.console = window.console;
 			_firebugWin.dojo = window.dojo;
@@ -336,7 +444,7 @@ if(
 			styleParent.appendChild(styleElement);
 		}
 		
-		if(dojo.config["debugContainerId"]){
+		if(dojo.config.debugContainerId){
 			consoleFrame = _firebugDoc.getElementById(dojo.config.debugContainerId);
 		}
 		if(!consoleFrame){
@@ -347,21 +455,30 @@ if(
 		consoleFrame.style.height = containerHeight;
 		consoleFrame.style.display = (frameVisible ? "block" : "none");	  
 		
-		var closeStr = (dojo.config.popup) ? "" : '    <a href="#" onclick="console.close(); return false;">Close</a>';
+		var buildLink = function(label, title, method, _class){
+			return '<li class="'+_class+'"><a href="javascript:void(0);" onclick="console.'+ method +'(); return false;" title="'+title+'">'+label+'</a></li>'
+		}
 		consoleFrame.innerHTML = 
 			  '<div id="firebugToolbar">'
-			+ '  <a href="#" onclick="console.clear(); return false;">Clear</a>'
-			+ '  <span class="firebugToolbarRight">'
-			+ closeStr
-			+ '  </span>'
+			+ '  <ul id="fireBugTabs" class="tabs">'
+			
+			+ buildLink("Clear", "Remove All Console Logs", "clear", "")
+			+ buildLink("ReCSS", "Refresh CSS without reloading page", "recss", "")
+			
+			+ buildLink("Close", "Close the console", "close", "right")
+			+ buildLink("Console", "Show Console Logs", "openConsole", "right")
+			+ buildLink("Object", "Show Object Inspector", "openObjectInspector", "right")
+			+ buildLink("DOM", "Show DOM Inspector", "openDomInspector", "right")
+			
+			+ '	</ul>'
 			+ '</div>'
-			+ '<input type="text" id="firebugCommandLine">'
+			+ '<input type="text" id="firebugCommandLine" />'
 			+ '<div id="firebugLog"></div>'
-			+ '<div id="objectLog" style="display:none;"></div>';
+			+ '<div id="objectLog" style="display:none;">Click on an object in the Log display</div>'
+			+ '<div id="domInspect" style="display:none;">Hover over HTML elements in the main page. Click to hold selection.</div>';
 
 
-		var toolbar = _firebugDoc.getElementById("firebugToolbar");
-		toolbar.onmousedown = onSplitterMouseDown;
+		consoleToolbar = _firebugDoc.getElementById("firebugToolbar");
 
 		commandLine = _firebugDoc.getElementById("firebugCommandLine");
 		addEvent(commandLine, "keydown", onCommandLineKeyDown);
@@ -370,7 +487,8 @@ if(
 		
 		consoleBody = _firebugDoc.getElementById("firebugLog");
 		consoleObjectInspector = _firebugDoc.getElementById("objectLog");
-
+		consoleDomInspector = _firebugDoc.getElementById("domInspect");
+		fireBugTabs = _firebugDoc.getElementById("fireBugTabs");
 		layout();
 		flush();
 	}
@@ -379,11 +497,15 @@ if(
 
 	function clearFrame(){
 		_firebugDoc = null;
-		_firebugWin.console.clear();
+		
+		if(_firebugWin.console){
+			_firebugWin.console.clear();
+		}
 		_firebugWin = null;
 		consoleFrame = null;
 		consoleBody = null;
 		consoleObjectInspector = null;
+		consoleDomInspector = null;
 		commandLine = null;
 		messageQueue = [];
 		groupStack = [];
@@ -395,26 +517,31 @@ if(
 		var text = commandLine.value;
 		commandLine.value = "";
 
-		logRow([clPrefix, text], "command");
+		logRow([">  ", text], "command");
 		
 		var value;
 		try{
 			value = eval(text);
 		}catch(e){
-			console.debug(e);
-			/* squelch */
+			console.debug(e); // put exception on the console
 		}
 
 		console.log(value);
 	}
 	
-	function layout(){
-		var toolbar = consoleBody.ownerDocument.getElementById("firebugToolbar");
-		var height = consoleFrame.offsetHeight - (toolbar.offsetHeight + commandLine.offsetHeight);
-		consoleBody.style.top = toolbar.offsetHeight + "px";
-		consoleBody.style.height = height + "px";
+	function layout(h){
+		var tHeight = 25; //consoleToolbar.offsetHeight; // tab style not ready on load - throws off layout
+		var height = h ? 
+			h  - (tHeight + commandLine.offsetHeight +25 + (h*.01)) + "px" : 
+			(consoleFrame.offsetHeight - tHeight - commandLine.offsetHeight) + "px";
 		
-		commandLine.style.top = (consoleFrame.offsetHeight - commandLine.offsetHeight) + "px";
+		consoleBody.style.top = tHeight + "px";
+		consoleBody.style.height = height;
+		consoleObjectInspector.style.height = height;
+		consoleObjectInspector.style.top = tHeight + "px";
+		consoleDomInspector.style.height = height;
+		consoleDomInspector.style.top = tHeight + "px";
+		commandLine.style.bottom = 0;
 	}
 	
 	function logRow(message, className, handler){
@@ -502,7 +629,7 @@ if(
 		
 		var ids = [];
 		var obs = [];
-		for(var i = objIndex+1; i < objects.length; ++i){
+		for(i = objIndex+1; i < objects.length; ++i){
 			appendText(" ", html);
 			
 			var object = objects[i];
@@ -511,21 +638,20 @@ if(
 
 			}else if(typeof(object) == "string"){
 				appendText(object, html);
-		
+			
+			}else if(object instanceof Date){
+				appendText(object.toString(), html);
+				
 			}else if(object.nodeType == 9){
 				appendText("[ XmlDoc ]", html);
 
-			}else if(object.nodeType == 1){
-				// simple tracing of dom nodes
-				appendText("< "+object.tagName+" id=\""+ object.id+"\" />", html);
-				
 			}else{
 				// Create link for object inspector
 				// need to create an ID for this link, since it is currently text
 				var id = "_a" + __consoleAnchorId__++;
 				ids.push(id);
 				// need to save the object, so the arrays line up
-				obs.push(object)
+				obs.push(object);
 				var str = '<a id="'+id+'" href="javascript:void(0);">'+getObjectAbbr(object)+'</a>';
 				
 				appendLink( str , html);
@@ -535,7 +661,7 @@ if(
 		logRow(html, className);
 		
 		// Now that the row is inserted in the DOM, loop through all of the links that were just created
-		for(var i=0; i<ids.length; i++){
+		for(i=0; i<ids.length; i++){
 			var btn = _firebugDoc.getElementById(ids[i]);
 			if(!btn){ continue; }
 	
@@ -544,12 +670,15 @@ if(
 			btn.obj = obs[i];
 	
 			_firebugWin.console._connects.push(dojo.connect(btn, "onclick", function(){
-				// hide rows
-				consoleBody.style.display = "none";
-				consoleObjectInspector.style.display = "block";
-				// create a back button
-				var bkBtn = '<a href="javascript:console.closeObjectInspector();">&nbsp;<<&nbsp;Back</a>';
-				consoleObjectInspector.innerHTML = bkBtn + "<pre>" + printObject( this.obj ) + "</pre>";
+				
+				console.openObjectInspector();
+				
+				try{
+					printObject(this.obj);
+				}catch(e){
+					this.obj = e;
+				}
+				consoleObjectInspector.innerHTML = "<pre>" + printObject( this.obj ) + "</pre>";
 			}));
 		}
 	}
@@ -631,17 +760,14 @@ if(
 	}
 
 	function appendFunction(object, html){
-		var reName = /function ?(.*?)\(/;
-		var m = reName.exec(objectToString(object));
-		var name = m ? m[1] : "function";
-		html.push('<span class="objectBox-function">', escapeHTML(name), '()</span>');
+		html.push('<span class="objectBox-function">', getObjectAbbr(object), '</span>');
 	}
 	
 	function appendObject(object, html){
 		try{
-			if(object == undefined){
+			if(object === undefined){
 				appendNull("undefined", html);
-			}else if(object == null){
+			}else if(object === null){
 				appendNull("null", html);
 			}else if(typeof object == "string"){
 				appendString(object, html);
@@ -666,7 +792,7 @@ if(
 		var reObject = /\[object (.*?)\]/;
 
 		var m = reObject.exec(text);
-		html.push('<span class="objectBox-object">', m ? m[1] : text, '</span>')
+		html.push('<span class="objectBox-object">', m ? m[1] : text, '</span>');
 	}
 	
 	function appendSelector(object, html){
@@ -695,7 +821,7 @@ if(
 				
 				html.push('&nbsp;<span class="nodeName">', attr.nodeName.toLowerCase(),
 					'</span>=&quot;<span class="nodeValue">', escapeHTML(attr.nodeValue),
-					'</span>&quot;')
+					'</span>&quot;');
 			}
 
 			if(node.firstChild){
@@ -781,55 +907,92 @@ if(
 		}
 	}
 
+	function onCommandLineKeyDown(e){
+		var dk = dojo.keys;
+		if(e.keyCode == 13 && commandLine.value){
+			addToHistory(commandLine.value);
+			evalCommandLine();
+		}else if(e.keyCode == 27){
+			commandLine.value = "";
+		}else if(e.keyCode == dk.UP_ARROW || e.charCode == dk.UP_ARROW){
+			navigateHistory("older");
+		}else if(e.keyCode == dk.DOWN_ARROW || e.charCode == dk.DOWN_ARROW){
+			navigateHistory("newer");
+		}else if(e.keyCode == dk.HOME || e.charCode == dk.HOME){
+			historyPosition = 1;
+			navigateHistory("older");
+		}else if(e.keyCode == dk.END || e.charCode == dk.END){
+			historyPosition = 999999;
+			navigateHistory("newer");
+		}
+	}
 
-	function onSplitterMouseDown(event){
-		if(dojo.isSafari || dojo.isOpera){
+	var historyPosition = -1;
+	var historyCommandLine = null;
+
+	function addToHistory(value){
+		var history = cookie("firebug_history");
+		history = (history) ? dojo.fromJson(history) : [];
+		var pos = dojo.indexOf(history, value);
+		if (pos != -1){
+			history.splice(pos, 1);
+		}
+		history.push(value);
+		cookie("firebug_history", dojo.toJson(history), 30);
+		while(history.length && !cookie("firebug_history")){
+			history.shift();
+			cookie("firebug_history", dojo.toJson(history), 30);
+		}
+		historyCommandLine = null;
+		historyPosition = -1;
+	}
+
+	function navigateHistory(direction){
+		var history = cookie("firebug_history");
+		history = (history) ? dojo.fromJson(history) : [];
+		if(!history.length){
 			return;
 		}
-		
-		addEvent(document, "mousemove", onSplitterMouseMove);
-		addEvent(document, "mouseup", onSplitterMouseUp);
 
-		for(var i = 0; i < frames.length; ++i){
-			addEvent(frames[i].document, "mousemove", onSplitterMouseMove);
-			addEvent(frames[i].document, "mouseup", onSplitterMouseUp);
+		if(historyCommandLine === null){
+			historyCommandLine = commandLine.value;
 		}
-	}
-	
-	function onSplitterMouseMove(event){
-		var win = document.all
-			? event.srcElement.ownerDocument.parentWindow
-			: event.target.ownerDocument.defaultView;
 
-		var clientY = event.clientY;
-		if(win != win.parent){
-			clientY += win.frameElement ? win.frameElement.offsetTop : 0;
+		if(historyPosition == -1){
+			historyPosition = history.length;
 		}
-		
-		var height = consoleFrame.offsetTop + consoleFrame.clientHeight;
-		var y = height - clientY;
-		
-		consoleFrame.style.height = y + "px";
-		layout();
-	}
-	
-	function onSplitterMouseUp(event){
-		removeEvent(document, "mousemove", onSplitterMouseMove);
-		removeEvent(document, "mouseup", onSplitterMouseUp);
 
-		for(var i = 0; i < frames.length; ++i){
-			removeEvent(frames[i].document, "mousemove", onSplitterMouseMove);
-			removeEvent(frames[i].document, "mouseup", onSplitterMouseUp);
+		if(direction == "older"){
+			--historyPosition;
+			if(historyPosition < 0){
+				historyPosition = 0;
+			}
+		}else if(direction == "newer"){
+			++historyPosition;
+			if(historyPosition > history.length){
+				historyPosition = history.length;
+			}
+		}
+
+		if(historyPosition == history.length){
+			commandLine.value = historyCommandLine;
+			historyCommandLine = null;
+		}else{
+			commandLine.value = history[historyPosition];
 		}
 	}
-	
-	function onCommandLineKeyDown(event){
-		if(event.keyCode == 13){
-			evalCommandLine();
-		}else if(event.keyCode == 27){
-			commandLine.value = "";
+
+	function cookie(name, value){
+		var c = document.cookie;
+		if(arguments.length == 1){
+			var matches = c.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+			return matches ? decodeURIComponent(matches[1]) : undefined; // String or undefined
+		}else{
+			var d = new Date();
+			d.setMonth(d.getMonth()+1);
+			document.cookie = name + "=" + encodeURIComponent(value) + ((d.toUtcString) ? "; expires=" + d.toUTCString() : "");
 		}
-	}
+	};
 
 	function isArray(it){
 		return it && it instanceof Array || typeof it == "array";
@@ -837,32 +1000,76 @@ if(
 
 	//***************************************************************************************************
 	// Print Object Helpers
-	function getAtts(o){
-		//Get amount of items in an object
-		if(isArray(o)){
-			return "[array with " + o.length + " slots]"; 
-		}else{
-			var i = 0;
-			for(var nm in o){
-				i++;
-			}
-			return "{object with " + i + " items}";
+	function objectLength(o){
+		var cnt = 0;
+		for(var nm in o){
+			cnt++	
 		}
+		return cnt;
 	}
-
-	function printObject(o, i, txt){
+	
+	function printObject(o, i, txt, used){
 		// Recursively trace object, indenting to represent depth for display in object inspector
-		// TODO: counter to prevent overly complex or looped objects (will probably help with dom nodes)
-		var br = "\n"; // using a <pre>... otherwise we'd need a <br />
-		var ind = "  ";
+		var ind = " \t";
 		txt = txt || "";
 		i = i || ind;
+		used = used || [];
+		var opnCls;
+		
+		if(o && o.nodeType == 1){
+			var html = [];
+			appendNode(o, html);
+			return html.join("");
+		}
+		if(o instanceof Date){
+			return i + o.toString() + br;
+		}
+		
+		var br=",\n", cnt = 0, length = objectLength(o)
+		
+		looking:
 		for(var nm in o){
-			if(typeof(o[nm]) == "object"){
-				txt += i+nm +" -> " + getAtts(o[nm]) + br;
-				txt += printObject(o[nm], i+ind);
+			cnt++;
+			if(cnt==length){br = "\n"};
+			if(o[nm] === window || o[nm] === document){
+				continue;
+			}else if(o[nm] && o[nm].nodeType){
+				if(o[nm].nodeType == 1){
+					//txt += i+nm + " : < "+o[nm].tagName+" id=\""+ o[nm].id+"\" />" + br;
+				}else if(o[nm].nodeType == 3){
+					txt += i+nm + " : [ TextNode "+o[nm].data + " ]" + br;
+				}
+			
+			}else if(typeof o[nm] == "object" && (o[nm] instanceof String || o[nm] instanceof Number || o[nm] instanceof Boolean)){
+				txt += i+nm + " : " + o[nm] + "," + br;
+			
+			}else if(o[nm] instanceof Date){
+				txt += i+nm + " : " + o[nm].toString() + br;
+				
+			}else if(typeof(o[nm]) == "object" && o[nm]){
+				for(var j = 0, seen; seen = used[j]; j++){
+					if(o[nm] === seen){
+						txt += i+nm + " : RECURSION" + br;
+						continue looking;
+					}
+				}
+				used.push(o[nm]);
+				
+				opnCls = (isArray(o))?["[","]"]:["{","}"]
+				txt += i+nm +" : " + opnCls[0] + "\n";//non-standard break, (no comma)
+				txt += printObject(o[nm], i+ind, "", used);
+				txt += i + opnCls[1] + br;
+			
+			}else if(typeof o[nm] == "undefined"){
+				txt += i+nm + " : undefined" + br;
+			}else if(nm == "toString" && typeof o[nm] == "function"){
+				var toString = o[nm]();
+				if(typeof toString == "string" && toString.match(/function ?(.*?)\(/)){
+					toString = escapeHTML(getObjectAbbr(o[nm]));
+				}
+				txt += i+nm +" : " + toString + br;
 			}else{
-				txt += i+nm +" : "+o[nm] + br;
+				txt += i+nm +" : "+ escapeHTML(getObjectAbbr(o[nm])) + br;
 			}
 		}
 		return txt;
@@ -874,7 +1081,10 @@ if(
 		// X items in an array
 		// TODO: Firebug Sr. actually goes by char count
 		var isError = (obj instanceof Error);
-		var nm = obj.id || obj.name || obj.ObjectID || obj.widgetId;
+		if(obj.nodeType == 1 || obj.nodeType == 3){
+			return escapeHTML('< '+obj.tagName.toLowerCase()+' id=\"'+ obj.id+ '\" />');
+		}
+		var nm = (obj && (obj.id || obj.name || obj.ObjectID || obj.widgetId));
 		if(!isError && nm){ return "{"+nm+"}";	}
 
 		var obCnt = 2;
@@ -889,16 +1099,28 @@ if(
 				nm += " ... ("+obj.length+" items)";
 			}
 			nm += "]";
+		}else if(typeof obj == "function"){
+			nm = obj + "";
+			var reg = /function\s*([^\(]*)(\([^\)]*\))[^\{]*\{/;
+			var m = reg.exec(nm);
+			if(m){
+				if(!m[1]){
+					m[1] = "function";
+				}
+				nm = m[1] + m[2];
+			}else{
+				nm = "function()";
+			}
 		}else if(typeof obj != "object" || typeof obj == "string"){
 			nm = obj + "";
 		}else{
 			nm = "{";
 			for(var i in obj){
-				cnt++
-				if(cnt > obCnt) break;
+				cnt++;
+				if(cnt > obCnt){ break; }
 				nm += i+"="+obj[i]+"  ";
 			}
-			nm+="}"
+			nm+="}";
 		}
 		
 		return nm;
