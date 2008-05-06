@@ -2,8 +2,12 @@ dojo.provide("dojox.grid.Grid");
 dojo.require("dojox.grid.VirtualGrid");
 dojo.require("dojox.grid._data.model");
 dojo.require("dojox.grid._data.editors");
+dojo.require("dojox.grid._data.dijitEditors");
 
-dojo.declare('dojox.Grid', dojox.VirtualGrid, {
+// FIXME: 
+//		we are at the wrong location! 
+
+dojo.declare('dojox.grid.Grid', dojox.grid.VirtualGrid, {
 	//	summary:
 	//		A grid widget with virtual scrolling, cell editing, complex rows,
 	//		sorting, fixed columns, sizeable columns, etc.
@@ -22,15 +26,15 @@ dojo.declare('dojox.Grid', dojox.VirtualGrid, {
 	//	|	];
 	//	  	
 	//		define a grid data model
-	//	|	var model = new dojox.grid.data.table(null, data);
+	//	|	var model = new dojox.grid._data.Table(null, data);
 	//	|
 	//	|	<div id="grid" model="model" structure="structure" 
-	//	|		dojoType="dojox.VirtualGrid"></div>
+	//	|		dojoType="dojox.grid.VirtualGrid"></div>
 	//	
 
 	//	model:
 	//		string or object grid data model
-	model: 'dojox.grid.data.Table',
+	model: 'dojox.grid._data.Table',
 	
 	// life cycle
 	postCreate: function(){
@@ -71,7 +75,7 @@ dojo.declare('dojox.Grid', dojox.VirtualGrid, {
 		// summary:
 		//		Set the grid's data model
 		// inModel: Object
-		//		Model object, usually an instance of a dojox.grid.data.Model
+		//		Model object, usually an instance of a dojox.grid._data.Model
 		//		subclass
 		if(this.model){
 			this.model.notObserver(this);
@@ -177,6 +181,9 @@ dojo.declare('dojox.Grid', dojox.VirtualGrid, {
 		for(var j=0, c; ((c=this.getCell(j)) && !c.editor); j++){}
 		if(c&&c.editor){
 			this.edit.setEditCell(c, i);
+			this.focus.setFocusCell(c, i);
+		}else{
+			this.focus.setFocusCell(this.getCell(0), i);
 		}
 	},
 
@@ -204,12 +211,8 @@ dojo.declare('dojox.Grid', dojox.VirtualGrid, {
 	},
 
 	doStartEdit: function(inCell, inRowIndex){
-		var edit = this.canEdit(inCell, inRowIndex);
-		if(edit){
-			this.model.beginModifyRow(inRowIndex);
-			this.onStartEdit(inCell, inRowIndex);
-		}
-		return edit;
+		this.model.beginModifyRow(inRowIndex);
+		this.onStartEdit(inCell, inRowIndex);
 	},
 
 	doApplyCellEdit: function(inValue, inRowIndex, inFieldIndex){
@@ -244,9 +247,109 @@ dojo.declare('dojox.Grid', dojox.VirtualGrid, {
 	onStyleRow: function(inRow){
 		this.styleRowState(inRow);
 		this.inherited(arguments);
-	},
-
-	// FIXME: why?
-	junk: 0
+	}
 
 });
+
+dojox.grid.Grid.markupFactory = function(props, node, ctor){
+	// handle setting up a data model for a store if one
+	// isn't provided. There are some caveats:
+	//		* we only really handle dojo.data sources well. They're the future
+	//		  so it's no big deal, but it's something to be aware of.
+	//		* I'm pretty sure that colgroup introspection is missing some of
+	//		  the available settable properties. 
+	//		* No handling of cell formatting and content getting is done
+	var d = dojo;
+	var widthFromAttr = function(n){
+		var w = d.attr(n, "width")||"auto";
+		if((w != "auto")&&(w.substr(-2) != "em")){
+			w = parseInt(w)+"px";
+		}
+		return w;
+	}
+	if(!props.model && d.hasAttr(node, "store")){
+		// if a model isn't specified and we point to a store, assume
+		// we're also folding the definition for a model up into the
+		// inline ctor for the Grid. This will then take properties
+		// like "query", "rowsPerPage", and "clientSort" from the grid
+		// definition.
+		var mNode = node.cloneNode(false);
+		d.attr(mNode, {
+			"jsId": null,
+			"dojoType": d.attr(node, "dataModelClass") || "dojox.grid._data.DojoData"
+		});
+		props.model = d.parser.instantiate([mNode])[0];
+	}
+	// if(!props.model){ console.debug("no model!"); }
+	// if a structure isn't referenced, do we have enough
+	// data to try to build one automatically?
+	if(	!props.structure && 
+		node.nodeName.toLowerCase() == "table"){
+
+		// try to discover a structure
+		props.structure = d.query("> colgroup", node).map(function(cg){
+			var sv = d.attr(cg, "span");
+			var v = { 
+				noscroll: (d.attr(cg, "noscroll") == "true") ? true : false,
+				__span: (!!sv ? parseInt(sv) : 1),
+				cells: []
+			};
+			if(d.hasAttr(cg, "width")){
+				v.width = widthFromAttr(cg);
+			}
+			return v; // for vendetta
+		});
+		if(!props.structure.length){
+			props.structure.push({
+				__span: Infinity,
+				cells: [] // catch-all view
+			}); 
+		}
+		// check to see if we're gonna have more than one view
+		
+		// for each tr in our th, create a row of cells
+		d.query("thead > tr", node).forEach(function(tr, tr_idx){
+			var cellCount = 0;
+			var viewIdx = 0;
+			var lastViewIdx;
+			var cView = null;
+			d.query("> th", tr).map(function(th){
+				// what view will this cell go into?
+
+				// NOTE:
+				//		to prevent extraneous iteration, we start counters over
+				//		for each row, incrementing over the surface area of the
+				//		structure that colgroup processing generates and
+				//		creating cell objects for each <th> to place into those
+				//		cell groups.  There's a lot of state-keepking logic
+				//		here, but it is what it has to be.
+				if(!cView){ // current view book keeping
+					lastViewIdx = 0;
+					cView = props.structure[0];
+				}else if(cellCount >= (lastViewIdx+cView.__span)){
+					viewIdx++;
+					// move to allocating things into the next view
+					lastViewIdx += cView.__span;
+					lastView = cView;
+					cView = props.structure[viewIdx];
+				}
+
+				// actually define the cell from what markup hands us
+				var cell = {
+					name: d.trim(d.attr(th, "name")||th.innerHTML),
+					field: d.trim(d.attr(th, "field")||""),
+					colSpan: parseInt(d.attr(th, "colspan")||1)
+				};
+				cellCount += cell.colSpan;
+				cell.field = cell.field||cell.name;
+				cell.width = widthFromAttr(th);
+				if(!cView.cells[tr_idx]){
+					cView.cells[tr_idx] = [];
+				}
+				cView.cells[tr_idx].push(cell);
+			});
+		});
+		// console.debug(dojo.toJson(props.structure, true));
+	}
+	return new dojox.grid.Grid(props, node);
+}

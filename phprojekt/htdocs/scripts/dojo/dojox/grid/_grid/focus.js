@@ -1,7 +1,7 @@
 dojo.provide("dojox.grid._grid.focus");
 
 // focus management
-dojo.declare("dojox.grid.focus", null, {
+dojo.declare("dojox.grid._grid.Focus", null, {
 	// summary:
 	//	Controls grid cell focus. Owned by grid and used internally for focusing.
 	//	Note: grid cell actually receives keyboard input only when cell is being edited.
@@ -78,11 +78,9 @@ dojo.declare("dojox.grid.focus", null, {
 		}else if(rt < sr.t){
 			this.grid.setScrollTop(rt);
 		}
-},
+	},
 	styleRow: function(inRow){
-		if(inRow.index == this.rowIndex){
-			this._focusifyCellNode(true);
-		}
+		return;
 	},
 	setFocusIndex: function(inRowIndex, inCellIndex){
 		// summary:

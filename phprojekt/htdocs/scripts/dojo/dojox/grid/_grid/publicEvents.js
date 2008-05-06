@@ -36,9 +36,8 @@ dojox.grid.publicEvents = {
 		// 		customStyles to control row css classes and styles; both properties are strings.
 		//
 		// example: onStyleRow({ selected: true, over:true, odd:false })
-		with(inRow){
-			customClasses += (odd?" dojoxGrid-row-odd":"") + (selected?" dojoxGrid-row-selected":"") + (over?" dojoxGrid-row-over":"");
-		}
+		var i = inRow;
+			i.customClasses += (i.odd?" dojoxGrid-row-odd":"") + (i.selected?" dojoxGrid-row-selected":"") + (i.over?" dojoxGrid-row-over":"");
 		this.focus.styleRow(inRow);
 		this.edit.styleRow(inRow);
 	},
@@ -47,7 +46,7 @@ dojox.grid.publicEvents = {
 		// summary:
 		// 		Grid key event handler. By default enter begins editing and applies edits, escape cancels and edit,
 		// 		tab, shift-tab, and arrow keys move grid cell focus.
-		if(e.altKey || e.ctrlKey || e.metaKey ){
+		if(e.altKey || e.ctrlKey || e.metaKey){
 			return;
 		}
 		var dk = dojo.keys;
@@ -56,7 +55,7 @@ dojox.grid.publicEvents = {
 				this.edit.cancel();
 				break;
 			case dk.ENTER:
-				if (!e.shiftKey) {
+				if(!e.shiftKey){
 					var isEditing = this.edit.isEditing();
 					this.edit.apply();
 					if(!isEditing){
@@ -68,23 +67,46 @@ dojox.grid.publicEvents = {
 				this.focus[e.shiftKey ? 'previousKey' : 'nextKey'](e);
 				break;
 			case dk.LEFT_ARROW:
-				if(!this.edit.isEditing()){
-				this.focus.move(0, -1);
-				}
-				break;
 			case dk.RIGHT_ARROW:
 				if(!this.edit.isEditing()){
-					this.focus.move(0, 1);
+					dojo.stopEvent(e);
+					var offset = (e.keyCode == dk.LEFT_ARROW) ? 1 : -1;
+					if(dojo._isBodyLtr()){ offset *= -1; }
+					this.focus.move(0, offset);
 				}
 				break;
 			case dk.UP_ARROW:
-				if(!this.edit.isEditing()){
+				if(!this.edit.isEditing() && this.focus.rowIndex != 0){
+					dojo.stopEvent(e);
 					this.focus.move(-1, 0);
 				}
 				break;
 			case dk.DOWN_ARROW:
-				if(!this.edit.isEditing()){
+				if(!this.edit.isEditing() && this.focus.rowIndex+1 != this.model.count){
+					dojo.stopEvent(e);
 					this.focus.move(1, 0);
+				}
+				break;
+			case dk.PAGE_UP:
+				if(!this.edit.isEditing() && this.focus.rowIndex != 0){
+					dojo.stopEvent(e);
+					if(this.focus.rowIndex != this.scroller.firstVisibleRow+1){
+						this.focus.move(this.scroller.firstVisibleRow-this.focus.rowIndex, 0);
+					}else{
+						this.setScrollTop(this.scroller.findScrollTop(this.focus.rowIndex-1));
+						this.focus.move(this.scroller.firstVisibleRow-this.scroller.lastVisibleRow+1, 0);
+					}
+				}
+				break;
+			case dk.PAGE_DOWN:
+				if(!this.edit.isEditing() && this.focus.rowIndex+1 != this.model.count){
+					dojo.stopEvent(e);
+					if(this.focus.rowIndex != this.scroller.lastVisibleRow-1){
+						this.focus.move(this.scroller.lastVisibleRow-this.focus.rowIndex-1, 0);
+					}else{
+						this.setScrollTop(this.scroller.findScrollTop(this.focus.rowIndex+1));
+						this.focus.move(this.scroller.lastVisibleRow-this.scroller.firstVisibleRow-1, 0);
+					}
 				}
 				break;
 		}
@@ -105,6 +127,15 @@ dojox.grid.publicEvents = {
 		//		Decorated event object that contains reference to grid, cell, and rowIndex
 		e.rowIndex == -1 ? this.onHeaderCellMouseOut(e) : this.onCellMouseOut(e);
 	},
+	
+	onMouseDown: function(e){
+		// summary:
+		//		Event fired when mouse is down inside grid.
+		// e: Event
+		//		Decorated event object that contains reference to grid, cell, and rowIndex
+		e.rowIndex == -1 ? this.onHeaderCellMouseDown(e) : this.onCellMouseDown(e);
+	},
+	
 	onMouseOverRow: function(e){
 		// summary:
 		//		Event fired when mouse is over any row (data or header).
@@ -127,6 +158,15 @@ dojox.grid.publicEvents = {
 			this.onRowMouseOut(e);
 		}
 	},
+	
+	onMouseDownRow: function(e){
+		// summary:
+		//		Event fired when mouse is down inside grid row
+		// e: Event
+		//		Decorated event object that contains reference to grid, cell, and rowIndex
+		if(e.rowIndex != -1)
+			this.onRowMouseDown(e);
+	},
 
 	// cell events
 	onCellMouseOver: function(e){
@@ -144,13 +184,24 @@ dojox.grid.publicEvents = {
 		//		Decorated event object which contains reference to grid, cell, and rowIndex
 		dojo.removeClass(e.cellNode, this.cellOverClass);
 	},
+	
+	onCellMouseDown: function(e){
+		// summary:
+		//		Event fired when mouse is down in a header cell.
+		// e: Event
+		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+	},
 
 	onCellClick: function(e){
 		// summary:
 		//		Event fired when a cell is clicked.
 		// e: Event
 		//		Decorated event object which contains reference to grid, cell, and rowIndex
-		this.focus.setFocusCell(e.cell, e.rowIndex);
+		this._click[0] = this._click[1];
+		this._click[1] = e;
+		if(!this.edit.isEditCell(e.rowIndex, e.cellIndex)){
+			this.focus.setFocusCell(e.cell, e.rowIndex);
+		}
 		this.onRowClick(e);
 	},
 
@@ -159,7 +210,13 @@ dojox.grid.publicEvents = {
 		//		Event fired when a cell is double-clicked.
 		// e: Event
 		//		Decorated event object contains reference to grid, cell, and rowIndex
-		this.edit.setEditCell(e.cell, e.rowIndex); 
+		if(dojo.isIE){
+			this.edit.setEditCell(this._click[1].cell, this._click[1].rowIndex);
+		}else if(this._click[0].rowIndex != this._click[1].rowIndex){
+			this.edit.setEditCell(this._click[0].cell, this._click[0].rowIndex);
+		}else{
+			this.edit.setEditCell(e.cell, e.rowIndex);
+		}
 		this.onRowDblClick(e);
 	},
 
@@ -211,6 +268,13 @@ dojox.grid.publicEvents = {
 		// e: Event
 		// 		Decorated event object contains reference to grid, cell, and rowIndex
 	},
+	
+	onRowMouseDown: function(e){
+		// summary:
+		//		Event fired when mouse is down in a row.
+		// e: Event
+		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+	},
 
 	onRowContextMenu: function(e){
 		// summary:
@@ -249,6 +313,13 @@ dojox.grid.publicEvents = {
 		// e: Event
 		// 		Decorated event object which contains reference to grid, cell, and rowIndex
 		dojo.removeClass(e.cellNode, this.cellOverClass);
+	},
+	
+	onHeaderCellMouseDown: function(e) {
+		// summary:
+		//		Event fired when mouse is down in a header cell.
+		// e: Event
+		// 		Decorated event object which contains reference to grid, cell, and rowIndex
 	},
 
 	onHeaderClick: function(e){
