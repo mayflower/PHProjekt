@@ -32,7 +32,6 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
             phpr.destroyWidgets("gridContext");
         }		
         this.render(["phpr.Default.template", "grid.html"], this._node);
-        
         this.grid = {
             widget:null,
             model:null,
@@ -56,9 +55,19 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         // description: 
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
-        this.grid.widget = dijit.byId("gridNode");
         
-        dojo.connect(dijit.byId("saveChanges"), "onClick",         dojo.hitch(this, "saveChanges"));
+        this.grid.widget = dijit.byId("gridNode");
+  
+        //first of all render save Button
+        var params = {
+                baseClass: "positive",
+                id: "saveChanges",
+                iconClass: "disk",
+                disabled: true
+            };
+        var saveButton = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(saveButton.domNode);
+        dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
         dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
         dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
         

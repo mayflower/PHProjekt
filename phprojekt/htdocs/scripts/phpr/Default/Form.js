@@ -105,7 +105,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Second dummy Tab'});
         formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab3',title:'third dummy Tab'});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{formId:'detailForm'+this.id, id:'formtab',tabsContent:formtabs,
-        writePermissions:itemwrite});
+        writePermissions:itemwrite, itemDelete:this.id});
 		this.formWidget = dijit.byId('detailForm'+this.id);
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
