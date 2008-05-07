@@ -52,7 +52,7 @@
 			</div>
     	</div>
     	<!-- Border Container which splits main content in navigation, listview and formview -->
-    	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent">
+    	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent" >
     		<!-- Top Area navigation and messages -->
     		<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="top" id="centerNavContent">
     			<!-- Submodule navigation: -->
@@ -61,14 +61,14 @@
         				<img src="{{webpath}}img/subheaderborder.png" alt="" />
         			</div>
         			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
-					</div>
+				    </div>
+				    <div id="buttonRow" class="align-right append-2"></div>
  				</div>
+ 				<!-- spaces -->
+        		<hr>
         		<!-- Exception Form -->
         		<div id="serverFeedback" class="prepend-24"></div>
-            	<!-- spaces -->
-        		<hr class="space"/>
-        		<hr>
-        		<hr class="space"/>
+            	
         	</div>
         	<!-- Center Area Grid and Form -->
         	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">

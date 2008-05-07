@@ -1,6 +1,6 @@
 dojo.provide("phpr._EditableGrid");
 dojo.require("phpr.grid");
-
+dojo.require("dojox.fx");
 dojo.declare("phpr._EditableGrid", phpr.grid, {
     
     _updateUrl:"",
@@ -16,11 +16,17 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
         dojo.connect(this.grid.widget, "onApplyCellEdit", dojo.hitch(this, "cellEdited"));
     },
     toggleSaveButtons:function(activate) {
+        //highlight when button gets avtivated  
+        saveBtn =dijit.byId('saveChanges');      
+        if (activate && (saveBtn.disabled == true)) {
+            dojox.fx.highlight({node:'saveChanges', color:'#ffff99', duration:1600}).play()
+        }
         // Activate/Deactivate "save changes" buttons.
-        saveBtn =dijit.byId('saveChanges');
         saveBtn.disabled = activate ? false : true;  
         saveBtn =dojo.byId('saveChanges');
         saveBtn.disabled = activate ? false : true;  
+
+
     },
     cellEdited:function(value, rowNum, fieldNum) {
         if (!this._newRowValues[rowNum]) {

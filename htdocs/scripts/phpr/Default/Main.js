@@ -113,8 +113,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    are received from the server and the Navigation is rendered accordingly
         var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self =this;
-        var newEntry ="";
+        var newEntry = null;
         phpr.destroyWidgets("subModuleNavigation");
+        phpr.destroyWidgets("buttonRow");        
         phpr.send({
             url:       subModuleUrl,
             handleAs: "json-comment-filtered",
@@ -136,13 +137,18 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                                     });
                                 }   
                                 if (modules.permission > 3 && moduleName == phpr.module) {
-                                    newEntry = "<br><span style='margin:0pt 1.5em 1.5em'><button dojoType='dijit.form.Button' id='newEntry' type='link'>New "+
-                                                moduleLabel+"</button><span>";                            
+                                    var params = {
+			                            label:     '',
+			                            id:        'newEntry',
+                                        iconClass: 'add' 
+		                                };
+		                            newEntry = new dijit.form.Button(params);                                                               
                                     this.writePermissions = true;
                                 }
                             });
                             navigation += "</ul>";
-                            dojo.byId("subModuleNavigation").innerHTML = navigation+newEntry;
+                            dojo.byId("subModuleNavigation").innerHTML = navigation;
+                            dojo.byId("buttonRow").appendChild(newEntry.domNode);
                             phpr.initWidgets(dojo.byId("subModuleNavigation"));
                             dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));  
                          })

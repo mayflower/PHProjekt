@@ -16,12 +16,16 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
 				// handle: String
 				// 		a CSS3 selector query to match the handle for this node, scoped to this.domNode
 				handle:".handle",
+                
+                //color
+                color:[200,232,249, 0.5],
+                strokeColor:[217,232,249, 1],
 				
 				// template:
 				templateString:
 					'<div><div style="position:relative;">' +
 						'<div dojoAttachPoint="surfaceNode"></div>' +
-						'<div dojoAttachPoint="containerNode"></div>' +
+						'<div dojoAttachPoint="containerNode" class="roundedPaneInner"></div>' +
 					'</div></div>',
 				
 				startup:function(){
@@ -46,7 +50,7 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
 				_initSurface: function(){
 			
 					var s = dojo.marginBox(this.domNode);
-					var stroke = 2;
+					var stroke = 5;
 					
 					this.surface = dojox.gfx.createSurface(this.surfaceNode, s.w + stroke * 2, s.h + stroke * 2);
 					this.roundedShape = this.surface.createRect({
@@ -54,8 +58,8 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
 							width: s.w,
 							height: s.h
 						})
-						.setFill([0, 0, 0, 0.5]) // black, 50% transparency
-						.setStroke({ color:[255,255,255,1], width:stroke }) // solid white
+						.setFill(this.color) // black, 50% transparency
+						.setStroke({ color:this.strokeColor, width:stroke }) // solid white
 					;
 					this.resize(s);
 					
@@ -73,13 +77,12 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
 			
 					var _offset = Math.floor(this.radius / 2);		
 					dojo.style(this.containerNode,{
-						color: "#fff",
 						position: "absolute",
 						overflow: "auto",
 						top: _offset + "px",
 						left: _offset + "px",
-						height: (size.h - _offset * 2) + "px",
-						width: (size.w - _offset * 2) + "px"
+						height: (size.h - _offset * 4) + "px",
+						width: (size.w - _offset * 4) + "px"
 					});
 					
 				}

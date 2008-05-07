@@ -19,6 +19,18 @@
 	width: 16px;
 	height: 16px;
 }
+.disk {
+	background-image: url(../images/disk.png);
+	background-repeat: no-repeat; 
+	width: 16px;
+	height: 16px;
+}
+.add {
+	background-image: url(../images/add.png);
+	background-repeat: no-repeat; 
+	width: 16px;
+	height: 16px;
+}
 .phprojekt .dijitButtonNode {
 	display:block;
   	float:left;
