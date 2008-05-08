@@ -1,4 +1,4 @@
-<div dojoType="dijit.layout.BorderContainer" style="width:100%; height:800px;" id="completeContent">
+<div dojoType="dijit.layout.BorderContainer" id="completeContent">
     <div id="header" region="top" class="block" style="height:55px;" >
     	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='dojo.publish("Project.reload")'>
         <div id="search-bar" class="last right align-right">
@@ -73,6 +73,8 @@
         	<!-- Center Area Grid and Form -->
         	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">
            	</div>
+           		<div dojoType="dijit.layout.ContentPane" class="block" id="bottomContent" region="bottom">
+    </div>
          </div>
 	</div>
 </div>
