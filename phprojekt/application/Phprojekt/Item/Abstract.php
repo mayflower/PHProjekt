@@ -439,9 +439,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
-                         AND ItemRights.module = "%s" AND ItemRights.userId = %d) ',
+                         AND ItemRights.moduleId = %d AND ItemRights.userId = %d) ',
         		         $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-        	             $this->getTableName(),
+        	             Phprojekt_Module::getId($this->getTableName()),
                          $authNamespace->userId);
 
         // Set where
@@ -471,24 +471,23 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $itemRight = null;
         $right     = null;
 
-        // TODO: class name and table name can differ
-        $class     = $this->getTableName();
+        $moduleId = Phprojekt_Module::getId($this->getTableName());
 
         if ($this->id > 0) {
             if ($this->ownerId == $userId) {
                 $itemRight = 'admin';
-            } else if ($this->_rights->hasRight($class, $this->id, $userId, 'adminAccess')) {
+            } else if ($this->_rights->hasRight($moduleId, $this->id, $userId, 'adminAccess')) {
                 $itemRight = 'admin';
-            } else if ($this->_rights->hasRight($class, $this->id, $userId, 'writeAccess')) {
+            } else if ($this->_rights->hasRight($moduleId, $this->id, $userId, 'writeAccess')) {
                 $itemRight = 'write';
-            } else if ($this->_rights->hasRight($class, $this->id, $userId, 'readAccess')) {
+            } else if ($this->_rights->hasRight($moduleId, $this->id, $userId, 'readAccess')) {
                 $itemRight = 'read';
             }
         } else {
             $itemRight     = 'write';
         }
 
-        $roleRights      = new Phprojekt_RoleRights($this->projectId, $class, $this->id);
+        $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
         $roleRightRead   = $roleRights->hasRight('read');
         $roleRightWrite  = $roleRights->hasRight('write');
 
@@ -533,6 +532,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $readUsers  = array(1);
         $adminUsers = array(1);
 
-        $this->_rights->_save($this->getTableName(), $this->id, $adminUsers, $writeUsers, $readUsers);
+        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $adminUsers, $writeUsers, $readUsers);
     }
 }

@@ -362,7 +362,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower(' {"metadata":[{"key":"projectId","label":"projectId","type":"selectbox","hint":"projectId","order":0')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower(' {"metadata":[{"key":"projectId","label":"Parent","type":"selectbox","hint":"Parent","order":0')) > 0);
         $this->assertTrue(strpos($response, '"numRows":1} ') > 0);
     }
 

@@ -56,13 +56,13 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
         $data = $history->getHistoryData($project, $project->id);
-        $array = array('userId' => '1',
-                       'module' => 'Project',
-                       'dataobjectId' => $project->id,
-                       'field' => 'currentStatus',
+        $array = array('userId'   => '1',
+                       'moduleId' => '1',
+                       'itemId'   => $project->id,
+                       'field'    => 'currentStatus',
                        'oldValue' => '',
                        'newValue' => '2',
-                       'action' => 'add',
+                       'action'   => 'add',
                        'datetime' => date("Y-m-d"));
         $found = 0;
         foreach ($data as $key => $values) {
@@ -95,13 +95,13 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
         $data = $history->getHistoryData($project,$project->id);
-        $array = array('userId' => '1',
-                       'module' => 'Project',
-                       'dataobjectId' => Zend_Registry::get('insertedId'),
-                       'field' => 'title',
+        $array = array('userId'   => '1',
+                       'moduleId' => '1',
+                       'itemId'   => Zend_Registry::get('insertedId'),
+                       'field'    => 'title',
                        'oldValue' => 'TEST',
                        'newValue' => 'EDITED TEST',
-                       'action' => 'edit',
+                       'action'   => 'edit',
                        'datetime' => date("Y-m-d"));
         $found = 0;
         foreach ($data as $key => $values) {
@@ -124,13 +124,13 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
         $data = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
-        $array = array('userId' => '1',
-                       'module' => 'Project',
-                       'dataobjectId' => Zend_Registry::get('insertedId'),
-                       'field' => 'title',
+        $array = array('userId'   => '1',
+                       'moduleId' => '1',
+                       'itemId'   => Zend_Registry::get('insertedId'),
+                       'field'    => 'title',
                        'oldValue' => 'TEST',
                        'newValue' => 'EDITED TEST',
-                       'action' => 'edit',
+                       'action'   => 'edit',
                        'datetime' => date("Y-m-d"));
         $found = 0;
         foreach ($data as $key => $values) {
@@ -161,13 +161,13 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
         $data = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
-        $array = array('userId' => '1',
-                       'module' => 'Project',
-                       'dataobjectId' => Zend_Registry::get('insertedId'),
-                       'field' => 'title',
+        $array = array('userId'   => '1',
+                       'moduleId' => '1',
+                       'itemId'   => Zend_Registry::get('insertedId'),
+                       'field'    => 'title',
                        'oldValue' => 'EDITED TEST',
                        'newValue' => '',
-                       'action' => 'delete',
+                       'action'   => 'delete',
                        'datetime' => date("Y-m-d"));
         $found = 0;
         foreach ($data as $key => $values) {

@@ -281,20 +281,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testUpdateHasManyAndBelongsToMany()
     {
         try {
-            $user = new User_Models_User(array('db' => $this->sharedFixture));
-            $user->find(1);
-            $user->id = 2;
-            $user->username = 'dsp';
-            $user->save();
+            $group = new Groups_Models_Groups(array('db' => $this->sharedFixture));
+            $group->find(2);
+            $group->id = 10;
+            $group->save();
 
-            $groups = $user->groups->fetchAll();
-            $this->assertEquals(2, $groups[0]->userId);
-            $this->assertEquals('ninatest', $groups[1]->name);
+            $users = $group->users->fetchAll();
+            $this->assertEquals(2, $users[0]->userId);
+            $this->assertEquals('gus', $users[0]->username);
 
-            $user->find(2);
-            $user->id = 1;
-            $user->username = 'david';
-            $user->save();
+            $group->find(10);
+            $group->id = 2;
+            $group->save();
         }
         catch(Exception $e) {
             $this->fail($e->getMessage());

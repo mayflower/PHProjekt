@@ -206,7 +206,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
     }
 
-	/**
+    /**
      * Iterator implementation.
      * Returns the current element from the data array.
      *
@@ -1107,7 +1107,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         // return the results
-        $stmt 	   = $this->_db->query($sqlStr);
+        $stmt      = $this->_db->query($sqlStr);
         $dataArray = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
 
         $data  = array(

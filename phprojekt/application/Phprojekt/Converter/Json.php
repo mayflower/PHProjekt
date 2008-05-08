@@ -72,7 +72,7 @@ class Phprojekt_Converter_Json
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
             foreach ($information->getFieldDefinition($order) as $field) {
                $data['id'] = $models->id;
-               
+
                $key   = $field['key'];
                $value = $models->$key;
                if (is_scalar($value)) {
@@ -81,7 +81,7 @@ class Phprojekt_Converter_Json
                    $data[$key] = (string) $value;
                }
                $data['rights'] = $model->getRights(Phprojekt_Auth::getUserId());
-               
+
             }
             $datas[] = $data;
         } else {
@@ -95,7 +95,7 @@ class Phprojekt_Converter_Json
                     } else {
                         $data[$key] = (string) $value;
                     }
-                    
+
                     $data['rights'] = $model->getRights(Phprojekt_Auth::getUserId());
                 }
                 $datas[] = $data;

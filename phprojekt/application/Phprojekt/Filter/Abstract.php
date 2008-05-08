@@ -82,12 +82,12 @@ abstract class Phprojekt_Filter_Abstract
      * Saves the current filter chain to backing store, aka database
      * (so why is it called "backing store", and not "database" ;-) )
      *
-     * @param User_Models_User  $user   user for whom this filter is saved
-     * @param mixed             $module module for this filter chain
+     * @param User_Models_User  $user     User for whom this filter is saved
+     * @param integer           $moduleId Module id for this filter chain
      *
      * @return boolean
      */
-    public function saveToBackingStore($user, $module = null)
+    public function saveToBackingStore($user, $moduleId = 1)
     {
         $record = null;
         $pairs  = array();
@@ -101,9 +101,8 @@ abstract class Phprojekt_Filter_Abstract
                 throw Exception('No valid backing store pair given');
             }
 
-            // Phprojekt_Loader::getModelFactory('User', 'UserModuleSetting');
             $record             = $user->settings->create();
-            $record->module     = $module;
+            $record->moduleId   = $moduleId;
             $record->keyValue   = $pairs['key'];
             $record->value      = $pairs['value'];
             $record->identifier = self::MODULESETTINGS_IDENTIFIER;

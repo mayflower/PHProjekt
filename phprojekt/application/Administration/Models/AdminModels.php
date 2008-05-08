@@ -35,11 +35,11 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     protected $_name;
 
     /**
-     * The module name
+     * The module Id
      *
-     * @var string
+     * @var integer
      */
-    protected $_module;
+    protected $_moduleId;
 
     /**
      * The standard information manager with hardcoded
@@ -80,12 +80,12 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
                                                                            array('id'   => 2,
                                                                                  'name' => 'Off')),
                                                           'label' => 'Module activated?'),
-                                                   array('type'  => 'label',
-                                                         'key'   => 'name',
-                                                         'label' => ''),
-                                                   array('type'  => 'label',
-                                                         'key'   => 'module',
-                                                         'label' => ''));
+                                                    array('type'  => 'label',
+                                                          'key'   => 'name',
+                                                          'label' => ''),
+                                                    array('type'  => 'label',
+                                                          'key'   => 'module',
+                                                          'label' => ''));
 
     /**
      * The actual configuration, merged from the default configuration and the module configuration
@@ -112,9 +112,9 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @return boolean
      */
-    public function ignoreModule ($name)
+    public function ignoreModule($name)
     {
-        if (! in_array($name, self::$_excludePattern)) {
+        if (!in_array($name, self::$_excludePattern)) {
             self::$_excludePattern[] = $name;
             return true;
         }
@@ -130,7 +130,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @return boolean
      */
-    public function unignoreModule ($name)
+    public function unignoreModule($name)
     {
         if (($key = array_search($name, self::$_defaultConfiguration)) !== false) {
             unset(self::$_excludePattern[$key]);
@@ -227,7 +227,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             $this->_objects[$key]->value = $value;
         } else if (array_key_exists($key, $this->_configuration)) {
             $object         = Phprojekt_Loader::getModel('Default', 'Configuration');
-            $object->module = $this->_module;
+            $object->module = $this->_moduleId;
             $object->key    = $key;
             $object->value  = $value;
 
@@ -243,7 +243,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
      *
      * @return Phprojekt_Model_Interface
      */
-    public function find ()
+    public function find()
     {
         $module = ucfirst(func_get_arg(0));
         $moduleClass = sprintf('%s_AdminController', $module);
@@ -253,7 +253,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             /* workaround as php 5.2 doesnot support late static bindings */
             $vars            = get_class_vars($moduleClass);
             $this->_name     = (empty($vars['name'])) ? $module : $vars['name'];
-            $this->_module   = $module;
+            $this->_moduleId = Phprojekt_Module::getId($module);
             $this->setConfiguration($vars['configuration']);
             $this->_loadFromDatabase();
             return $this;
@@ -271,7 +271,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     protected function _loadFromDatabase()
     {
         $model   = Phprojekt_Loader::getModel('Default', 'Configuration');
-        $quoted  = $model->getAdapter()->quoteInto('module = ?', $this->_module);
+        $quoted  = $model->getAdapter()->quoteInto('moduleId = ?', $this->_moduleId);
         $fetched = $model->fetchAll($quoted);
 
         if (is_array($fetched)) {
@@ -326,8 +326,8 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
         $model = Phprojekt_Loader::getModel('Default', 'Configuration');
 
         $result = 0;
-        if ($this->_module) {
-            $result += $db->delete($model->getTableName(), $db->quoteInto('module = ?', $this->_module));
+        if ($this->_moduleId) {
+            $result += $db->delete($model->getTableName(), $db->quoteInto('moduleId = ?', $this->_moduleId));
         }
 
         return $result;

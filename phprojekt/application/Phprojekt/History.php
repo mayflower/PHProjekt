@@ -57,8 +57,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             foreach ($differences as $fieldName => $difference) {
                 $history               = clone($this);
                 $history->userId       = $authNamespace->userId;
-                $history->module       = $object->getTableName();
-                $history->dataobjectId = $object->id;
+                $history->moduleId     = Phprojekt_Module::getId($object->getTableName());
+                $history->itemId       = $object->id;
                 $history->field        = $fieldName;
                 $history->oldValue     = $difference['oldValue'];
                 $history->newValue     = $difference['newValue'];
@@ -133,16 +133,15 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      */
     public function getHistoryData($object, $itemId)
     {
-        $table  = $object->getTableName();
-        $where  = $this->getAdapter()->quoteInto('module = ?', $table);
-        $where .= $this->getAdapter()->quoteInto('AND dataobjectId = ?', $itemId);
-        $order  = 'datetime DESC';
+        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $where  = $this->getAdapter()->quoteInto('moduleId = ?', $moduleId);
+        $where .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
         $result = array();
 
-        foreach ($this->fetchAll($where, $order) as $row) {
+        foreach ($this->fetchAll($where, 'datetime DESC') as $row) {
             $result[] = array('userId'       => $row->userId,
-                              'module'       => $row->module,
-                              'dataobjectId' => $row->dataobjectId,
+                              'moduleId'     => $row->moduleId,
+                              'itemId'       => $row->itemId,
                               'field'        => $row->field,
                               'oldValue'     => $row->oldValue,
                               'newValue'     => $row->newValue,

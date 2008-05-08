@@ -95,15 +95,17 @@ class IndexController extends Zend_Controller_Action
             $data = $subModules;
         } else {
             $allowedSubModules = array();
-            $rights = new Phprojekt_RoleRights($projectId, 'Project');
+            $rights = new Phprojekt_RoleRights($projectId);
             foreach ($subModules as $subModuleData) {
-                $right = ($rights->hasRight('read', $subModuleData['name'])) ? true : $rights->hasRight('write', $subModuleData['name']);
+                $subModuleId = Phprojekt_Module::getId($subModuleData['name']);
+                $right = ($rights->hasRight('read', $subModuleId)) ? true : $rights->hasRight('write', $subModuleId);
                 if ($right) {
                     $allowedSubModules[] = $subModuleData;
                 }
             }
             $data = $allowedSubModules;
         }
+
         echo Phprojekt_Converter_Json::convertValue($data);
     }
 
@@ -195,36 +197,56 @@ class IndexController extends Zend_Controller_Action
     {
         $translate = Zend_Registry::get('translate');
         $id        = (int) $this->getRequest()->getParam('id');
-        $data      = (array) $this->getRequest()->getParam('data');
 
-        // Multiple save
-        if (!empty($data)) {
-            $message = $translate->translate('The Items was edited correctly');
-            $showId = array();
-            foreach ($data as $id => $fields) {
-                $model   = $this->getModelObject()->find($id);
-                Default_Helpers_Save::save($model, $fields);
-                $showId[] = $id;
-            }
-            $showId = implode(',', $showId);
-        // Single save
+        if (empty($id)) {
+            $model   = $this->getModelObject();
+            $message = $translate->translate('The Item was added correctly');
         } else {
-            if (empty($id)) {
-                $model   = $this->getModelObject();
-                $message = $translate->translate('The Item was added correctly');
-            } else {
-                $model   = $this->getModelObject()->find($id);
-                $message = $translate->translate('The Item was edited correctly');
-            }
-
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
-            $showId = $model->id;
+            $model   = $this->getModelObject()->find($id);
+            $message = $translate->translate('The Item was edited correctly');
         }
+
+        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
         $return    = array('type'    => 'success',
                            'message' => $message,
                            'code'    => 0,
-                           'id'      => $showId);
+                           'id'      => $model->id);
+
+        echo Phprojekt_Converter_Json::convertValue($return);
+    }
+
+    /**
+     * Save some fields for many items
+     * Only edit exists items
+     * Use the model module for get the data
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException
+     * If not, the return is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
+     *
+     * @requestparam string data Array with fields and values
+     *
+     * @return void
+     */
+    public function jsonSaveMultipleAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $data      = (array) $this->getRequest()->getParam('data');
+
+        $message = $translate->translate('The Items was edited correctly');
+        $showId = array();
+        foreach ($data as $id => $fields) {
+            $model   = $this->getModelObject()->find($id);
+            Default_Helpers_Save::save($model, $fields);
+            $showId[] = $id;
+        }
+
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => implode(',', $showId));
+
         echo Phprojekt_Converter_Json::convertValue($return);
     }
 
@@ -258,6 +280,7 @@ class IndexController extends Zend_Controller_Action
                              'message' => $message,
                              'code'    => 0,
                              'id'      => $id);
+
             echo Phprojekt_Converter_Json::convertValue($return);
         } else {
             throw new Phprojekt_PublishedException('Item not found');
@@ -303,32 +326,33 @@ class IndexController extends Zend_Controller_Action
 
         } else {
             $allowedSubModules = array();
-            $rights = new Phprojekt_RoleRights($projectId, 'Project');
+            $rights = new Phprojekt_RoleRights($projectId);
             foreach ($subModules as $subModuleData) {
 
                 $tmpPermission = Phprojekt_Acl::NO_ACCESS;
 
-                if ($rights->hasRight('access', $subModuleData['name'])) {
+                if ($rights->hasRight('access', Phprojekt_Module::getId($subModuleData['name']))) {
                     $tmpPermission = Phprojekt_Acl::ACCESS;
                 }
-                if ($rights->hasRight('read', $subModuleData['name'])) {
+                if ($rights->hasRight('read', Phprojekt_Module::getId($subModuleData['name']))) {
                     $tmpPermission = Phprojekt_Acl::READ;
                 }
-                if ($rights->hasRight('write', $subModuleData['name'])) {
+                if ($rights->hasRight('write', Phprojekt_Module::getId($subModuleData['name']))) {
                     $tmpPermission = Phprojekt_Acl::WRITE;
                 }
-                if ($rights->hasRight('create', $subModuleData['name'])) {
+                if ($rights->hasRight('create', Phprojekt_Module::getId($subModuleData['name']))) {
                     $tmpPermission = Phprojekt_Acl::ADMIN;
                 }
 
-                $subModuleData['permission']= $tmpPermission;
+                $subModuleData['permission'] = $tmpPermission;
 
-                $allowedSubModules[]    = $subModuleData;
+                $allowedSubModules[] = $subModuleData;
 
             }
             $data = $allowedSubModules;
 
         }
+
         echo Phprojekt_Converter_Json::convertValue($data);
     }
 }

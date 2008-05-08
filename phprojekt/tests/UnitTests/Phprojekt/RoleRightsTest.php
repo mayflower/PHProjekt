@@ -6,7 +6,7 @@
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
- * @version    
+ * @version
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
@@ -31,8 +31,6 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     protected $object;
 
-    
-
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -41,7 +39,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Phprojekt_RoleRights(1,'Todo',0,1);
+        $this->object = new Phprojekt_RoleRights(1, 2, 0, 1);
     }
 
     /**
@@ -59,77 +57,56 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testHasRight()
     {
-        $this->assertEquals(
-            true,
-            $this->object->hasRight('write','Project')
-        );
+        $this->assertEquals(true, $this->object->hasRight('write',1));
     }
 
     /**
      * testGetId() tests the GetId function.
      */
-    public function testGetId() 
+    public function testGetId()
     {
-        $this->assertEquals(
-            0,
-            $this->object->getId()
-        );
+        $this->assertEquals(0, $this->object->getId());
     }
 
     /**
      * testGetProject() tests the getProject function.
      */
-    public function testGetProject() 
+    public function testGetProject()
     {
         // Remove the following lines when you implement this test.
-        $this->assertEquals(
-            1,
-            $this->object->getProject()
-        );
+        $this->assertEquals(1, $this->object->getProject());
     }
 
     /**
      * testGetModule().
      */
-    public function testGetModule() 
+    public function testGetModule()
     {
-        $this->assertEquals(
-            'Todo',
-            $this->object->getModule()
-        );
+        $this->assertEquals(2, $this->object->getModule());
     }
 
     /**
      * test whether right user is found.
-     * 
+     *
      */
-    public function testGetUser() 
+    public function testGetUser()
     {
-       $this->assertEquals(
-          1,
-          $this->object->getUser()
-        );
+       $this->assertEquals(1, $this->object->getUser());
     }
 
     /**
      *  testGetAcl().
      */
-    public function testGetAcl() 
+    public function testGetAcl()
     {
-        $this->assertSame(
-            Phprojekt_Acl::getInstance(),
-            $this->object->getAcl()
-       );
+        $this->assertSame(Phprojekt_Acl::getInstance(), $this->object->getAcl());
     }
 
     /**
      *  testGetUserRole().
      */
-    public function testGetUserRole() 
+    public function testGetUserRole()
     {
-        $this->assertEquals(
-          1,
-          $this->object->getUserRole()
-        );
-    }    
+        $this->assertEquals(1, $this->object->getUserRole());
+    }
 }

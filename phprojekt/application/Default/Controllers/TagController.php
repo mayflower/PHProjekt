@@ -75,15 +75,15 @@ class TagController extends IndexController
      */
     public function jsonGetTagsByModuleAction()
     {
-        $id         = (int) $this->getRequest()->getParam('id', 0);
-        $moduleName = $this->getRequest()->getModuleName();
-        $limit      = (int) $this->getRequest()->getParam('limit', 0);
+        $id       = (int) $this->getRequest()->getParam('id', 0);
+        $moduleId = (int) Phprojekt_Module::getId($this->getRequest()->getModuleName());
+        $limit    = (int) $this->getRequest()->getParam('limit', 0);
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
-        $tags   = $this->_tags->getTagsByModule($moduleName, $id, $limit);
+        $tags   = $this->_tags->getTagsByModule($moduleId, $id, $limit);
         $fields = $this->_tags->getFieldDefinition();
 
         echo Phprojekt_Converter_Json::convertTag($tags, $fields);
@@ -125,8 +125,8 @@ class TagController extends IndexController
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
-        $moduleName = $this->getRequest()->getModuleName();
-        $this->_tags->saveTags($moduleName, $id, $string);
+        $moduleId = Phprojekt_Module::getId($this->getRequest()->getModuleName());
+        $this->_tags->saveTags($moduleId, $id, $string);
 
         $translate = Zend_Registry::get('translate');
 

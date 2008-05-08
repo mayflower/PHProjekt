@@ -33,10 +33,10 @@ class Phprojekt_RoleRights
     protected $_id = 0;
 
     /**
-     * name of current module
-     * @var string
+     * id of current module
+     * @var int
      */
-    protected $_module='';
+    protected $_moduleId = 1;
 
     /**
      * Id of user
@@ -65,15 +65,15 @@ class Phprojekt_RoleRights
     /**
      * Constructor
      *
-     * @param integer $project Project ID
-     * @param string  $module  Current module
-     * @param integer $id      Current ID
-     * @param integer $user    Current user
+     * @param integer $project  Project Id
+     * @param string  $moduleId Current module Id
+     * @param integer $id       Current Id
+     * @param integer $user     Current user
      */
-    public function __construct($project, $module, $id=0, $user=0)
+    public function __construct($project, $moduleId = 1, $id = 0, $user = 0)
     {
         $this->_setId($id);
-        $this->_setModule($module);
+        $this->_setModule($moduleId);
         $this->_setUser($user);
         $this->_setProject($project);
         $this->_setAcl();
@@ -81,26 +81,26 @@ class Phprojekt_RoleRights
     }
 
     /**
-     * checks whether user has a certain right on an item
+     * Checks whether user has a certain right on an item
      *
-     * @param string $right  Name of right
-     * @param string $module Name of module
+     * @param string $right    Name of right
+     * @param string $moduleId Module Id
      *
      * @return boolean
      */
-    public function hasRight($right, $module=null)
+    public function hasRight($right, $moduleId = null)
     {
-        if ($module != null) {
-            $this->_setModule($module);
+        if ($moduleId != null) {
+            $this->_setModule($moduleId);
         }
 
         $role = $this->getUserRole();
         $acl  = $this->getAcl();
-        if (null === $module) {
-            $module = $this->getModule();
+        if (null === $moduleId) {
+            $moduleId = $this->getModule();
         }
         try {
-            return $acl->isAllowed($role, $module, $right);
+            return $acl->isAllowed($role, $moduleId, $right);
         }
         catch(Zend_Acl_Exception $e) {
             $logger = Zend_Registry::get('log');
@@ -161,13 +161,13 @@ class Phprojekt_RoleRights
     /**
      * Sets the module
      *
-     * @param string $module Current module
+     * @param string $moduleId Current module Id
      *
      * @return void
      */
-    private function _setModule($module)
+    private function _setModule($moduleId)
     {
-        $this->_module = $module;
+        $this->_module = $moduleId;
     }
 
     /**

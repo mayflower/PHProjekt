@@ -46,7 +46,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save a new relation User-Tag <-> Module-Item
+     * Save a new relation User-Tag <-> ModuleId-ItemId
      *
      * Is  nessesary check if exists,
      * since the relations are delete before insert it
@@ -54,16 +54,16 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      *
      * This function use the Zend_DB insert
      *
-     * @param string  $module    The module to store
-     * @param integer $itemId    The item ID
+     * @param string  $moduleId  The module Id to store
+     * @param integer $itemId    The item Id
      * @param integer $tagUserId The User-Tag relation Id
      *
      * @return void
      */
-    public function saveTags($module, $itemId, $tagUserId)
+    public function saveTags($moduleId, $itemId, $tagUserId)
     {
-        if ($this->find($module, $itemId, $tagUserId)->count() == 0) {
-            $data['module']     = $module;
+        if ($this->find($moduleId, $itemId, $tagUserId)->count() == 0) {
+            $data['moduleId']   = $moduleId;
             $data['itemId']     = $itemId;
             $data['tagUserId']  = $tagUserId;
             $this->insert($data);
@@ -87,26 +87,26 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $modules = $this->fetchAll($where);
         foreach ($modules as $moduleData) {
             $foundResults[] = array('id'     => $moduleData->itemId,
-                                    'module' => $moduleData->module);
+                                    'module' => Phprojekt_Module::getModuleName($moduleData->moduleId));
         }
 
         return $foundResults;
     }
 
     /**
-     * Return all the relations with the pair module-itemId
+     * Return all the relations with the pair moduleId-itemId
      *
-     * @param string  $module    The module to store
-     * @param integer $itemId    The item ID
+     * @param string  $moduleId  The module Id to store
+     * @param integer $itemId    The item Id
      *
      * @return integer
      */
-    public function getRelationIdByModule($module, $itemId)
+    public function getRelationIdByModule($moduleId, $itemId)
     {
         $where        = array();
         $foundResults = array();
 
-        $where[] = 'module  = '. $this->getAdapter()->quote($module);
+        $where[] = 'moduleId  = '. $this->getAdapter()->quote($moduleId);
         $where[] = 'itemId  = '. $this->getAdapter()->quote($itemId);
 
         $modules = $this->fetchAll($where);
@@ -118,20 +118,20 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the entries for one userId-module-itemId pair
+     * Delete all the entries for one userId-moduleId-itemId pair
      *
-     * @param string  $module     The module to store
-     * @param integer $itemId     The item ID
+     * @param string  $moduleId   The module Id to store
+     * @param integer $itemId     The item Id
      * @param array   $tagUserIds All the relationsId for delete
      *
      * @return void
      */
-    public function deleteRelations($module, $itemId, $tagUserIds)
+    public function deleteRelations($moduleId, $itemId, $tagUserIds)
     {
         $clone = clone($this);
         foreach ($tagUserIds as $tagUserId) {
             $where = array();
-            $where[] = 'module = '. $clone->getAdapter()->quote($module);
+            $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
             $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
             $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
             $clone->delete($where);
