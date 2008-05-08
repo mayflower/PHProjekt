@@ -27,7 +27,7 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
     /**
      * Test if the limits work
      */
-    
+
     public function testJsonListAction()
     {
         $request = new Zend_Controller_Request_Http();
@@ -108,5 +108,4 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '"numRows":4} ') > 0);
     }
-
 }

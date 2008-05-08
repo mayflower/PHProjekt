@@ -14,7 +14,7 @@
 
 /**
  * This class manage the rights for each item per user.
- * Return and save the rights using the module-itemId relation.
+ * Return and save the rights using the moduleId-itemId relation.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -58,18 +58,18 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      * Save all the access for each user
      * The function will re-order the user and access for save it
      *
-     * @param string  $module     The module to store
-     * @param integer $itemId     The item ID
+     * @param string  $moduleId   The module Id to store
+     * @param integer $itemId     The item Id
      * @param array   $adminUsers Array of userIds with admin access
      * @param array   $writeUsers Array of userIds with write access
      * @param array   $readUsers  Array of userIds with read access
      *
      * @return void
      */
-    public function _save($module, $itemId, $adminUsers, $writeUsers, $readUsers)
+    public function _save($moduleId, $itemId, $adminUsers, $writeUsers, $readUsers)
     {
-        // Delete the entries for this module-item and re-inserted the changes
-        $this->_delete($module, $itemId);
+        // Delete the entries for this moduleId-itemId and re-inserted the changes
+        $this->_delete($moduleId, $itemId);
 
         $userData = array();
         foreach ($adminUsers as $user) {
@@ -94,7 +94,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             if (isset($accessData['read'])) {
                 $readAccess = 1;
             }
-            $this->_saveRight($module, $itemId, $userId, $adminAccess, $writeAccess, $readAccess);
+            $this->_saveRight($moduleId, $itemId, $userId, $adminAccess, $writeAccess, $readAccess);
         }
     }
 
@@ -103,18 +103,18 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * This function use the Zend_DB insert
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param integer $userId The user to save
-     * @param integer $admin  Value of the admin access
-     * @param integer $write  Value of the write access
-     * @param integer $read   Value of the read access
+     * @param string  $moduleId The module Id to store
+     * @param integer $itemId   The item ID
+     * @param integer $userId   The user to save
+     * @param integer $admin    Value of the admin access
+     * @param integer $write    Value of the write access
+     * @param integer $read     Value of the read access
      *
      * @return void
      */
-    private function _saveRight($module, $itemId, $userId, $admin, $write, $read)
+    private function _saveRight($moduleId, $itemId, $userId, $admin, $write, $read)
     {
-        $data['module']       = $module;
+        $data['moduleId']     = (int)$moduleId;
         $data['itemId']       = (int)$itemId;
         $data['userId']       = (int)$userId;
         $data['adminAccess']  = $admin;
@@ -126,17 +126,17 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     /**
      * Delete all the users for one object
      *
-     * @param string  $module The module to delete
-     * @param integer $itemId The item ID
+     * @param string  $moduleId The moduleId to delete
+     * @param integer $itemId   The item ID
      *
      * @return void
      */
-    private function _delete($module, $itemId)
+    private function _delete($moduleId, $itemId)
     {
         $where = array();
         $clone = clone($this);
 
-        $where[] = 'module = '. $clone->getAdapter()->quote($module);
+        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
         $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
@@ -144,20 +144,20 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     /**
      * Return the right
      *
-     * @param string  $module The module
-     * @param integer $itemId The item ID
-     * @param integer $userId The user ID
-     * @param string  $right  Field to check
+     * @param string  $moduleId The module Id
+     * @param integer $itemId   The item Id
+     * @param integer $userId   The user Id
+     * @param string  $right    Field to check
      *
      * @return integer
      */
-    public function hasRight($module, $itemId, $userId, $right) {
+    public function hasRight($moduleId, $itemId, $userId, $right) {
         // Cache the query
-        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$module.'-'.$itemId.'-'.$userId);
+        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId.'-'.$userId);
         if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
             $value = $rightNamespace->right;
         } else {
-            $rows = $this->find($module, $itemId, $userId);
+            $rows = $this->find($moduleId, $itemId, $userId);
             $value = 0;
             foreach ($rows as $row) {
                 foreach ($row->toArray() as $k => $v) {

@@ -73,18 +73,18 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     public function indexObjectItem($object)
     {
-        $module = $object->getTableName();
-        $itemId = $object->id;
+        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $itemId   = $object->id;
 
-        $this->_delete($module, $itemId);
+        $this->_delete($moduleId, $itemId);
 
         $data = $this->_getObjectDataToIndex($object);
         foreach ($data as $key => $value) {
             $type = $object->getInformation()->find($key);
             if (isset($type->formType) && $type->formType == 'file') {
-                $this->_indexFile($module, $itemId, $value);
+                $this->_indexFile($moduleId, $itemId, $value);
             } else {
-                $this->_index($module, $itemId, $value);
+                $this->_index($moduleId, $itemId, $value);
             }
         }
     }
@@ -98,10 +98,10 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     public function deleteObjectItem($object)
     {
-        $module = $object->getTableName();
-        $itemId = $object->id;
+        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $itemId   = $object->id;
 
-        $this->_delete($module, $itemId);
+        $this->_delete($moduleId, $itemId);
     }
 
     /**
@@ -143,8 +143,8 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                         foreach ($result as $tmp => $values) {
                             $found = false;
                             foreach ($tmpResult as $data) {
-                                if (($data['module'] == $values['module']) &&
-                                    ($data['itemId'] == $values['itemId'])) {
+                                if (($data['moduleId'] == $values['moduleId']) &&
+                                    ($data['itemId']   == $values['itemId'])) {
                                     $found = true;
                                     break;
                                 }
@@ -158,8 +158,8 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
                         foreach ($tmpResult as $tmp => $data) {
                             $found = false;
                             foreach ($result as $values) {
-                                if (($data['module'] == $values['module']) &&
-                                    ($data['itemId'] == $values['itemId'])) {
+                                if (($data['moduleId'] == $values['moduleId']) &&
+                                    ($data['itemId']   == $values['itemId'])) {
                                     $found = true;
                                     break;
                                 }
@@ -173,10 +173,10 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
             }
         }
 
-        // Convert result to array per module
+        // Convert result to array per moduleId
         $foundResults = array();
         foreach ($result as $tmp => $data) {
-            $foundResults[$data['module']][] = $data['itemId'];
+            $foundResults[$data['moduleId']][] = $data['itemId'];
         }
         return $foundResults;
     }
@@ -209,24 +209,24 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Index a string with the module and the item ID
+     * Index a string with the moduleId and the item Id
      * First check if exists, if not, insert it.
      * The function get a string and separate into many words
      * And store each of them.
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param string  $data   String to save
+     * @param string  $moduleId The moduleId to store
+     * @param integer $itemId   The item Id
+     * @param string  $data     String to save
      *
      * @return void
      */
-    private function _index($module, $itemId, $data)
+    private function _index($moduleId, $itemId, $data)
     {
         $array = $this->_getWordsFromText($data);
         foreach ($array as $word) {
             $crc32 = crc32($word);
-            if (!$this->_exists($module, $itemId, $crc32)) {
-                $this->_save($module, $itemId, $crc32, $word);
+            if (!$this->_exists($moduleId, $itemId, $crc32)) {
+                $this->_save($moduleId, $itemId, $crc32, $word);
             }
         }
     }
@@ -237,36 +237,36 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      * The function get a string and separate into many words
      * And store each of them.
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param string  $file   The name of the file
+     * @param string  $moduleId The moduleId to store
+     * @param integer $itemId   The item Id
+     * @param string  $file     The name of the file
      *
      * @return void
      */
-    private function _indexFile($module, $itemId, $file)
+    private function _indexFile($moduleId, $itemId, $file)
     {
         $array = $this->_getWordsFromFile($file, $this->_getFileType($file));
         foreach ($array as $word) {
             $crc32 = crc32($word);
-            if (!$this->_exists($module, $itemId, $crc32)) {
-                $this->_save($module, $itemId, $crc32, $word);
+            if (!$this->_exists($moduleId, $itemId, $crc32)) {
+                $this->_save($moduleId, $itemId, $crc32, $word);
             }
         }
     }
 
     /**
-     * Check if the module-item-crc32 pair was already inserted
+     * Check if the moduleId-item-crc32 pair was already inserted
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param integer $crc32  The crc32 number of the word
+     * @param string  $moduleId The moduleId to store
+     * @param integer $itemId   The item Id
+     * @param integer $crc32    The crc32 number of the word
      *
      * @return boolean
      */
-    private function _exists($module, $itemId, $crc32)
+    private function _exists($moduleId, $itemId, $crc32)
     {
         // $clone = clone($this);
-        return ($this->find($module, $itemId, $crc32)->count() > 0);
+        return ($this->find($moduleId, $itemId, $crc32)->count() > 0);
     }
 
     /**
@@ -309,17 +309,17 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
     /**
      * Delete all the entries for one object
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
+     * @param string  $moduleId The moduleId to delete
+     * @param integer $itemId   The item Id
      *
      * @return void
      */
-    private function _delete($module, $itemId)
+    private function _delete($moduleId, $itemId)
     {
         $where = array();
         $clone = clone($this);
 
-        $where[] = 'module = '. $clone->getAdapter()->quote($module);
+        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
         $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
@@ -329,19 +329,19 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      *
      * This function use the Zend_DB insert
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param integer $crc32  The crc32 number of the word
-     * @param string  $word   The word itself
+     * @param string  $moduleId The moduleId to store
+     * @param integer $itemId   The item Id
+     * @param integer $crc32    The crc32 number of the word
+     * @param string  $word     The word itself
      *
      * @return void
      */
-    private function _save($module, $itemId, $crc32, $word)
+    private function _save($moduleId, $itemId, $crc32, $word)
     {
-        $data['crc32']  = $crc32;
-        $data['module'] = $module;
-        $data['itemId'] = $itemId;
-        $data['word']   = $word;
+        $data['crc32']    = $crc32;
+        $data['moduleId'] = $moduleId;
+        $data['itemId']   = $itemId;
+        $data['word']     = $word;
         $this->insert($data);
     }
 

@@ -35,7 +35,7 @@ class Phprojekt_Acl extends Zend_Acl
     const READ      = 2;
     const WRITE     = 4;
     const ADMIN     = 8;
-    
+
     /**
      * Singleton instance
      * @var PHProjekt_Acl
@@ -90,12 +90,10 @@ class Phprojekt_Acl extends Zend_Acl
     private function _registerRights()
     {
         $role  = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
-        $order = array(0 => 'roleId',
-                       1 => 'module ASC');
-        foreach ($role->fetchAll(null, $order) as $right) {
-            if (!$this->has($right->module)) {
-                $this->add(new Zend_Acl_Resource($right->module));
-                $this->allow($right->roleId, $right->module, $right->permission);
+        foreach ($role->fetchAll(null, 'roleId ASC') as $right) {
+            if (!$this->has($right->moduleId)) {
+                $this->add(new Zend_Acl_Resource($right->moduleId));
+                $this->allow($right->roleId, $right->moduleId, $right->permission);
             }
         }
     }

@@ -50,6 +50,6 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree->setup($filter);
 
-        $filter->saveToBackingStore($user, 'Project');
+        $filter->saveToBackingStore($user);
     }
 }

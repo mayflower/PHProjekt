@@ -91,7 +91,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         } else if (isset($activeRecord->id)) {
             $this->_requestedId = $activeRecord->id;
         }
-
     }
 
     /**
@@ -167,7 +166,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $this->_index = array();
         foreach ($rows as $record) {
             $node   = null;
-            $rights = new Phprojekt_RoleRights($record->id, 'Project');
+            $rights = new Phprojekt_RoleRights($record->id);
             $right  =  $rights->hasRight('read') ? true : $rights->hasRight('write');
             if ($right) {
                 if ($record->id == $this->_requestedId) {

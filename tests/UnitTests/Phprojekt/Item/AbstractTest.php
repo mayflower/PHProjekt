@@ -553,12 +553,13 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     /**
      * test getrights function
      */
-    public function testGetRights(){
+    public function testGetRights()
+    {
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $userId = $authNamespace->userId;
 
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-        $module->find(1);
+        $module->find(2);
         $this->assertEquals(15, $module->getRights($userId));
         $this->assertEquals(3, $module->getRights(3));
 

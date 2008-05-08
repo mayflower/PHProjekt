@@ -58,14 +58,10 @@ class Default_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
-        // $suite->addTestSuite('BaseTest');
-        // ...
-        
         $suite->addTestSuite('Phprojekt_LoginController_Test');
         $suite->addTestSuite('Phprojekt_IndexController_Test');
         // $suite->addTestSuite('Phprojekt_ErrorController_Test');
         $suite->addTestSuite('Phprojekt_TagController_Test');
-        
 
         return $suite;
     }

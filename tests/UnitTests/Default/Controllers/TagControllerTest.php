@@ -24,8 +24,6 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
 {
-
-
     /**
      * Test of json get tags
      */
@@ -37,11 +35,11 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $config = Zend_Registry::get('config');
         $config->language = "de";
 
-        $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
+        $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Project'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Tags/jsonGetTags/limit/2');
-        $request->setPathInfo('/Tag/jsonGetTags/limit/2');
-        $request->setRequestUri('Tag/jsonGetTags/limit/2');
+        $request->setBaseUrl($config->webpath.'index.php/Project/Tags/jsonGetTags/limit/2');
+        $request->setPathInfo('/Project/Tag/jsonGetTags/limit/2');
+        $request->setRequestUri('/Project/Tag/jsonGetTags/limit/2');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -109,7 +107,6 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '{"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Anzahl"}],"data":[{"string":"this","count":1}],"numRows":1}') > 0);
-
     }
 
     /**
@@ -123,11 +120,11 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $config = Zend_Registry::get('config');
         $config->language = "de";
 
-        $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
+        $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Project'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Tags/jsonSaveTags/string/test/id/1');
-        $request->setPathInfo('/Tag/jsonSaveTags/string/test/id/1');
-        $request->setRequestUri('Tag/jsonSaveTags/string/test/id/1');
+        $request->setBaseUrl($config->webpath.'index.php/Project/Tags/jsonSaveTags/string/test/id/1');
+        $request->setPathInfo('/Project/Tag/jsonSaveTags/string/test/id/1');
+        $request->setRequestUri('/Project/Tag/jsonSaveTags/string/test/id/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -194,7 +191,6 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
     }
 
-
     /**
      * Test of GetModulesByTag
      */
@@ -206,11 +202,11 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $config = Zend_Registry::get('config');
         $config->language = "de";
 
-        $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
+        $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Project'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Tags/jsonGetModulesByTag/tag/test/limit/2');
-        $request->setPathInfo('/Tag/jsonGetModulesByTag/tag/test/limit/2');
-        $request->setRequestUri('Tag/jsonGetModulesByTag/tag/test/limit/2');
+        $request->setBaseUrl($config->webpath.'index.php/Project/Tags/jsonGetModulesByTag/tag/test/limit/2');
+        $request->setPathInfo('/Project/Tag/jsonGetModulesByTag/tag/test/limit/2');
+        $request->setRequestUri('/Project/Tag/jsonGetModulesByTag/tag/test/limit/2');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -277,6 +273,6 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"id":"1","module":"Default"}]') > 0);
+        $this->assertTrue(strpos($response, '{"id":"1","module":"Project"}]') > 0);
     }
 }

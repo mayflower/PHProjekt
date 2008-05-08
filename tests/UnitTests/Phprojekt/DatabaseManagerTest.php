@@ -36,8 +36,16 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
                         'projectId','title','notes','startDate','endDate',
                         'priority','currentStatus','completePercent','budget');
 
+        $this->_formLabelResult = array(
+                        'parent','title','notes','startDate','endDate',
+                        'priority','currentStatus','completePercent','budget');
+
         $this->_listResult = array(
                         'title','projectId','startDate','endDate','priority',
+                        'currentStatus','completePercent');
+
+        $this->_listLabelResult = array(
+                        'title','parent','startDate','endDate','priority',
                         'currentStatus','completePercent');
     }
 
@@ -82,12 +90,12 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
         $fields = $db->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST, Phprojekt_DatabaseManager::COLUMN_TITLE);
-        $this->assertEquals($this->_listResult, $fields);
+        $this->assertEquals($this->_listLabelResult, $fields);
 
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
         $fields = $db->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM, Phprojekt_DatabaseManager::COLUMN_TITLE);
-        $this->assertEquals($this->_formResult, $fields);
+        $this->assertEquals($this->_formLabelResult, $fields);
     }
 
     /**
@@ -99,6 +107,6 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
         $fields = $db->getTitles();
-        $this->assertEquals($this->_listResult, $fields);
+        $this->assertEquals($this->_listLabelResult, $fields);
     }
 }

@@ -89,15 +89,15 @@ class Phprojekt_Tags_Default
      *
      * Index all the strings.
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param string  $data   Strings to save separated by spaces/coma
+     * @param string  $moduleId The module Id to store
+     * @param integer $itemId   The item Id
+     * @param string  $data     Strings to save separated by spaces/coma
      *
      * @return void
      */
-    public function saveTags($module, $itemId, $data)
+    public function saveTags($moduleId, $itemId, $data)
     {
-        $this->_index($module, $itemId, $data);
+        $this->_index($moduleId, $itemId, $data);
     }
 
     /**
@@ -188,23 +188,23 @@ class Phprojekt_Tags_Default
     }
 
     /**
-     * Get all tags that have a module-itemId
+     * Get all tags that have a moduleId-itemId
      *
      * If the $limit is set,
      * the returned array is limited to the $limit tags
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param integer $limit  The number of modules for return, 0 for all
+     * @param string  $moduleId The module Id to store
+     * @param integer $itemId   The item Id
+     * @param integer $limit    The number of modules for return, 0 for all
      *
      * @return array
      */
-    public function getTagsByModule($module, $itemId, $limit = 0)
+    public function getTagsByModule($moduleId, $itemId, $limit = 0)
     {
         $foundResults = array();
 
-        // Found all the relations module-itemId <-> userId
-        $tagUserRelations = $this->getRelationIdByModule($module, $itemId);
+        // Found all the relations moduleId-itemId <-> userId
+        $tagUserRelations = $this->getRelationIdByModule($moduleId, $itemId);
 
         foreach ($tagUserRelations as $tagUserId) {
             // Find the tagid
@@ -232,25 +232,25 @@ class Phprojekt_Tags_Default
     }
 
     /**
-     * Index a string with the module and the item ID
+     * Index a string with the moduleId and the itemId
      * The function get a string and separate into many words
      * And store each of them.
      *
-     * @param string  $module The module to store
-     * @param integer $itemId The item ID
-     * @param string  $data   String to save
+     * @param string  $moduleId The module Id to store
+     * @param integer $itemId   The item Id
+     * @param string  $data     String to save
      *
      * @return void
      */
-    private function _index($module, $itemId, $data)
+    private function _index($moduleId, $itemId, $data)
     {
         $array = $this->_getWordsFromText($data);
 
-        // Found all the relations module-itemId <-> userId-tagId
-        $oldTagUserRelations = $this->getRelationIdByModule($module, $itemId);
+        // Found all the relations moduleId-itemId <-> userId-tagId
+        $oldTagUserRelations = $this->getRelationIdByModule($moduleId, $itemId);
 
-        // Delete the entries for the module-itemId <-> userId
-        $this->_tagsModules->deleteRelations($module, $itemId, $oldTagUserRelations);
+        // Delete the entries for the moduleId-itemId <-> userId
+        $this->_tagsModules->deleteRelations($moduleId, $itemId, $oldTagUserRelations);
 
         foreach ($array as $word) {
             $crc32 = crc32($word);
@@ -260,23 +260,23 @@ class Phprojekt_Tags_Default
             // Save the tag-user relation
             $tagUserId = $this->_tagsUsers->saveTags($tagId);
 
-            // Save the tag-user-module relation
-            $this->_tagsModules->saveTags($module, $itemId, $tagUserId);
+            // Save the tag-user-moduleId relation
+            $this->_tagsModules->saveTags($moduleId, $itemId, $tagUserId);
         }
     }
 
     /**
-     * Get all the relations module-item that are for the current user
+     * Get all the relations moduleId-itemId that are for the current user
      *
-     * @param string  $module The module to get
-     * @param integer $itemId The item ID
+     * @param string  $moduleId The module Id to get
+     * @param integer $itemId   The item Id
      *
      * @return array
      */
-    public function getRelationIdByModule($module, $itemId)
+    public function getRelationIdByModule($moduleId, $itemId)
     {
-        // Found all the relations module-itemId <-> userId-tagId
-        $moduleUserTagRelation = $this->_tagsModules->getRelationIdByModule($module, $itemId);
+        // Found all the relations moduleId-itemId <-> userId-tagId
+        $moduleUserTagRelation = $this->_tagsModules->getRelationIdByModule($moduleId, $itemId);
 
         // Select only the relation with the current user
         $tagUserRelations = array();

@@ -42,42 +42,59 @@ class Project_IndexController extends IndexController
     {
         $translate = Zend_Registry::get('translate');
         $id        = (int) $this->getRequest()->getParam('id');
-        $data      = (array) $this->getRequest()->getParam('data');
 
-        // Multiple save
-        if (!empty($data)) {
-            $message = $translate->translate('The Items was added correctly');
-            $showId = array();
-            foreach ($data as $id => $fields) {
-                $model   = $this->getModelObject()->find($id);
-                $node    = new Phprojekt_Tree_Node_Database($model, $id);
-                $newNode = Default_Helpers_Save::save($node, $fields, (int) $this->getRequest()->getParam('nodeId', null));
-                $showId[] = $id;
-            }
-            $showId = implode(',', $showId);
+        if (empty($id)) {
+            $model   = $this->getModelObject();
+            $message = $translate->translate('The Item was added correctly');
         } else {
-            if (empty($id)) {
-                $model   = $this->getModelObject();
-                $message = $translate->translate('The Item was added correctly');
-            } else {
-                $model   = $this->getModelObject()->find($id);
-                $message = $translate->translate('The Item was edited correctly');
-            }
-            $node    = new Phprojekt_Tree_Node_Database($model, $id);
-            $newNode = Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
-
-            // Set the id since the Tree save
-            // return differents values from insert and update
-            if (empty($id)) {
-                $showId = $newNode->id;
-            } else {
-                $showId = $id;
-            }
+            $model   = $this->getModelObject()->find($id);
+            $message = $translate->translate('The Item was edited correctly');
         }
+        $node    = new Phprojekt_Tree_Node_Database($model, $id);
+        $newNode = Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
+
+        // Set the id since the Tree save
+        // return differents values from insert and update
+        if (empty($id)) {
+            $showId = $newNode->id;
+        } else {
+            $showId = $id;
+        }
+
         $return    = array('type'    => 'success',
                            'message' => $message,
                            'code'    => 0,
                            'id'      => $showId);
+
+        echo Phprojekt_Converter_Json::convertValue($return);
+    }
+
+    /**
+     * Save Multiple items Action
+     *
+     * The save is redefined for use with tree in the project module
+     *
+     * @return void
+     */
+    public function jsonSaveMultipleAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $data      = (array) $this->getRequest()->getParam('data');
+
+        $message = $translate->translate('The Items was added correctly');
+        $showId = array();
+        foreach ($data as $id => $fields) {
+            $model   = $this->getModelObject()->find($id);
+            $node    = new Phprojekt_Tree_Node_Database($model, $id);
+            $newNode = Default_Helpers_Save::save($node, $fields, (int) $this->getRequest()->getParam('nodeId', null));
+            $showId[] = $id;
+        }
+
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => implode(',', $showId));
+
         echo Phprojekt_Converter_Json::convertValue($return);
     }
 }

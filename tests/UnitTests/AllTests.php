@@ -47,7 +47,7 @@ require_once 'PHPUnit/Util/Filter.php';
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
 require_once 'Timecard/AllTests.php';
-require_once 'Selenium/AllTests.php';
+// require_once 'Selenium/AllTests.php';
 
 /**
  * AllTests merges all test from the modules
@@ -70,7 +70,6 @@ class AllTests extends PHPUnit_Framework_TestSuite
     {
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
-
 
         PHPUnit_TextUI_TestRunner::run(self::suite($config));
     }
@@ -164,8 +163,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite                 = new PHPUnit_Framework_TestSuite('PHPUnit');
         $suite->sharedFixture  = &$db;
         $suite->addTest(Default_AllTests::suite());
-        $suite->addTest(Phprojekt_AllTests::suite());
         $suite->addTest(Timecard_AllTests::suite());
+        $suite->addTest(Phprojekt_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());
 
         // add here additional test suites
@@ -225,7 +224,6 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
             $whiteListing = ! $whiteListing;
         }
     }
-
 
     $config = new Zend_Config_Ini($configFile, $configSect, array("allowModifications" => true));
     Zend_Registry::set('config', $config);

@@ -48,7 +48,6 @@ require_once 'AuthTest.php';
 require_once 'AclTest.php';
 require_once 'RoleRightsTest.php';
 require_once 'GroupTest.php';
-require_once 'RoleTest.php';
 require_once 'Converter/ConverterTest.php';
 require_once 'ModelInformation/DefaultTest.php';
 require_once 'LoaderTest.php';
@@ -104,7 +103,6 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_AuthTest');
         $suite->addTestSuite('Phprojekt_AclTest');
         $suite->addTestSuite('Phprojekt_RoleRightsTest');
-        $suite->addTestSuite('Phprojekt_RoleTest');
         $suite->addTestSuite('Phprojekt_ConverterTest');
         $suite->addTestSuite('Phprojekt_ModelInformation_DefaultTest');
         $suite->addTestSuite('Phprojekt_Tags_DefaultTest');
