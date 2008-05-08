@@ -18,6 +18,7 @@
 	border-bottom: 4px #f3f3f3 solid;
 	text-transform: uppercase;
     margin-left: -19px;
+
 }
 
 .phprojekt .dijitTreeNode .dijitTreeIsRoot .dijitTreeContent {
@@ -52,12 +53,12 @@
     min-width: 18px;
     padding-top:3px;
 	border-bottom: 1px #ddd solid;
-    padding-left: 38px;
-    background-color: #f8f8f8;
-    color: #666;
-    font-weight: normal;
-    text-transform:none;
-    text-decoration: none;
+    padding-left: 19px;
+    font-weight: bold;
+	color: #fff;
+	background-color: #f1ce47;
+	border-bottom: 4px #f3f3f3 solid;
+	text-transform: uppercase;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
@@ -86,10 +87,10 @@
     min-height: 18px;
     min-width: 18px;
     padding-top:3px;
-    border-bottom: 1px #ddd solid;
-    padding-left: 57px;
-    background-color: #fcfcfc;
-    color: #888;
+	border-bottom: 1px #ddd solid;
+    padding-left: 38px;
+    background-color: #f8f8f8;
+    color: #666;
     font-weight: normal;
     text-transform:none;
     text-decoration: none;
