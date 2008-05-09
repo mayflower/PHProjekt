@@ -8,6 +8,7 @@ BEGIN;
 
 -- Drop table if exists
 DROP TABLE IF EXISTS `Timecard`;
+DROP TABLE IF EXISTS `Timeproj`;
 DROP TABLE IF EXISTS `ItemRights`;
 DROP TABLE IF EXISTS `Configuration`;
 DROP TABLE IF EXISTS `Note`;
@@ -334,6 +335,19 @@ CREATE TABLE `Timecard` (
   PRIMARY KEY  (`id`)
 );
 
+--
+-- Table structure for table `Timeproj`
+--
+CREATE TABLE `Timeproj` (
+  `id` int(11) NOT NULL auto_increment,
+  `notes` text,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) default NULL,
+  `date` date default NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
+  PRIMARY KEY  (`id`)
+);
 
 --
 -- Table structure for table `ModuleInstance`
@@ -356,7 +370,8 @@ INSERT INTO `Module` (`id`, `module`) VALUES
 (1, 'Project'),
 (2, 'Todo'),
 (3, 'Note'),
-(4, 'Timecard');
+(4, 'Timecard'),
+(5, 'Timeproj');
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
@@ -393,8 +408,13 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Timecard', 'notes'    , 1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
 (0, 'Timecard', 'date'     , 1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
 (0, 'Timecard', 'startTime', 1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Timecard', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Timecard', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 0, 0, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 0, 0);
+(0, 'Timecard', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Timecard', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 0, 0, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 0, 0),
+(0, 'Timeproj', 'notes'    , 1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
+(0, 'Timeproj', 'date'     , 1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
+(0, 'Timeproj', 'startTime', 1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Timeproj', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Timeproj', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0);
 
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
 (1,'david','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'test@example.com','de_DE','A'),
@@ -453,7 +473,13 @@ INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `adminAccess`, `writeA
 (4, 5, 1, 1, 1, 1),
 (4, 6, 1, 1, 1, 1),
 (2, 1, 1, 1, 1, 1),
-(2, 1, 3, 0, 1, 1);
+(2, 1, 3, 0, 1, 1),
+(5, 1, 1, 1, 1, 1),
+(5, 2, 1, 1, 1, 1),
+(5, 3, 1, 1, 1, 1),
+(5, 4, 1, 1, 1, 1),
+(5, 5, 1, 1, 1, 1),
+(5, 6, 1, 1, 1, 1);
 
 INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,'working');
@@ -465,6 +491,14 @@ INSERT INTO `Timecard` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTim
 (4, 'Timecard row 4', 1, 1, '2008-04-30', '14:00:00', '18:00:00'),
 (5, 'Timecard row 6', 1, 1, '2008-05-02', '08:00:00', '13:00:00'),
 (6, 'Timecard row 7', 1, 1, '2008-05-02', '14:00:00', '18:00:00');
+
+INSERT INTO `Timeproj` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTime`, `endTime`) VALUES
+(1, 'Timeproj row', 1, 1, '2008-04-29', '08:00:00', '13:00:00'),
+(2, 'Timeproj row 2', 1, 1, '2008-04-29', '14:00:00', '18:00:00'),
+(3, 'Timeproj row 3', 1, 1, '2008-04-30', '08:00:00', '13:00:00'),
+(4, 'Timeproj row 4', 1, 1, '2008-04-30', '14:00:00', '18:00:00'),
+(5, 'Timeproj row 6', 1, 1, '2008-05-02', '08:00:00', '13:00:00'),
+(6, 'Timeproj row 7', 1, 1, '2008-05-02', '14:00:00', '18:00:00');
 
 INSERT INTO Tags (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),

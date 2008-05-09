@@ -47,13 +47,13 @@ class Timecard_IndexController extends IndexController
         $itemId    = (int) $this->getRequest()->getParam('id',        null);
         $startDate = $this->getRequest()->getParam('startDate', null);
         $endDate   = $this->getRequest()->getParam('endDate',   null);
-        
+
         $startDate = Inspector::sanitize('date', $startDate, $messages, false);
         $endDate   = Inspector::sanitize('date', $endDate,   $messages, false);
-        
+
         // Date filter for timecard
         $dateFilter = array();
-        
+
         if (!empty($startDate)) {
             $dateFilter[] = 'date >= "'.$startDate.'"';
         }
@@ -64,7 +64,7 @@ class Timecard_IndexController extends IndexController
             $dateFilter = implode ($dateFilter, " AND " );
         }
         else {
-            $dateFilter = "";
+            $dateFilter = null;
         }
 
         if (!empty($itemId)) {
@@ -77,5 +77,80 @@ class Timecard_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
-    
+
+    /**
+     * Creates a new timecard record with the current date and time.
+     *
+     * @return void
+     */
+    public function jsonStartAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
+        $data      = (array) $this->getRequest()->getParam('data');
+
+
+        $model   = $this->getModelObject();
+        $message = $translate->translate('The Item was added correctly');
+
+        $this->getRequest()->setParam('date',date("Y-m-d"));
+        $this->getRequest()->setParam('startTime',date("h:i:s"));
+        $this->getRequest()->setParam('notes','Timecard started');
+        $this->getRequest()->setParam('projectId','1');
+
+
+
+        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
+        $showId = $model->id;
+
+        $return    = array('type'    => 'success',
+        'message' => $message,
+        'code'    => 0,
+        'id'      => $showId);
+        echo Phprojekt_Converter_Json::convertValue($return);
+    }
+
+    /**
+     * Closes the first timecard record of the current date.
+     *
+     * @return void
+     */
+    public function jsonStopAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $offset    = (int) $this->getRequest()->getParam('start',     null);
+
+        // Date filter to find the open register
+        $dateFilter = array();
+
+        $dateFilter[] = 'date = "'.date("Y-m-d").'"';
+        $dateFilter[] = '(endTime = "" OR endTime is null)';
+        $dateFilter = implode ($dateFilter, " AND " );
+
+        $this->getRequest()->setParam('endTime',date("H:i:s"));
+
+        $records = $this->getModelObject()->fetchAll($dateFilter, null, 1, $offset);
+
+        if (isset($records[0])) {
+            $model = $records[0];
+            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            $type    = 'success';
+            $message = $translate->translate('The Item was saved correctly');
+            $showId  = $model->id;
+        }
+        else {
+            $type    = 'error';
+            $message = $translate->translate('The Item was not found');
+            $showId  = null;
+        }
+
+        $return    = array('type'    => 'success',
+        'message' => $message,
+        'code'    => 0,
+        'id'      => $showId);
+        echo Phprojekt_Converter_Json::convertValue($return);
+    }
+
+
 }
