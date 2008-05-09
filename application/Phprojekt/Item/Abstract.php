@@ -276,7 +276,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $valid = Inspector::validate('date', $value, $messages, false);
                     break;
                 case 'time':
-                    $valid = Inspector::validate('time', $value, $messages, false);
+                    // $valid = Inspector::validate('timestamp', $value, $messages, false);
                     break;
                 case 'timestamp':
                     $valid = Inspector::validate('timestamp', $value, $messages, false);
