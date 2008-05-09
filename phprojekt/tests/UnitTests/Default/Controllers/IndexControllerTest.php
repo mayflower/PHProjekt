@@ -191,7 +191,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2,')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2')) > 0);
         $this->assertTrue(strpos($response, '"numRows":6} ') > 0);
     }
 
@@ -277,7 +277,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2,"fieldset":')) > 0);
     }
 
     /**
