@@ -55,7 +55,7 @@ dojo.declare("phpr._EditableGrid", phpr.grid, {
         dojo.rawXhrPost( {
             url: this._updateUrl,
             postData: content,
-            handleAs: "json-comment-filtered",
+            handleAs: "json",
             load: dojo.hitch(this,function(response, ioArgs) {
                     this._newRowValues = {};
                     this.toggleSaveButtons(false);
