@@ -28,7 +28,6 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
             phpr.destroyWidgets("headerContext");
         }
         if (dijit.byId("gridContext")) {
-            alert("destroy:!!!");
             phpr.destroyWidgets("gridContext");
         }		
         this.render(["phpr.Default.template", "grid.html"], this._node);

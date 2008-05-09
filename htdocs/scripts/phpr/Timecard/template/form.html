@@ -1,7 +1,39 @@
-<div>
-		
-</div>
-
-<div dojoType="phpr.roundedContentPane" radius="20" style="overflow:hidden;width:0.8 em; margin:10px; height:500px;">
-huhu
-</div>
+<div id="tcFormHeader">Zeiterfassung f&uuml; den{{dateForm}}</div>
+<form dojoType="dijit.form.Form" id="bookingForm" name="bookingForm" style="height:100%"  onsubmit="return false;">
+	<div> 
+		Datum &Auml;ndern <input type="text" id=""  name="date" dojoType="phpr.DateTextBox" constraints="{datePattern:'dd.MM.yyyy'}" promptMessage = "dd.mm.yy"
+			   invalidMessage = "Invalid date. Use dd.mm.yy format." value="{{date}}" />
+	</div>
+	<div dojoType="phpr.roundedContentPane" radius="20" style="overflow:hidden;width:0.8 em; height:400px;">
+		<div>Arbeitszeiten</div>
+		<div>Anfang <input type="text" id="" name="startTime" dojoType="dijit.form.TimeTextBox" />  Ende
+			 <input type="text" id="" name="endTime" dojoType="dijit.form.TimeTextBox" /></div>
+		<div>Projekt</div>
+		<div> <select
+		       id="tcProjectId"
+		       name="projectId"
+		       dojoType="dijit.form.FilteringSelect"
+			   autocomplete="true"
+			   value="{{value}}" 
+               searchAttr="name"
+			   invalidMessage="" >
+			{% for item in values %}
+			<option value ="{{item.id}}">{{item.name}}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div>Notizen</div>
+		<div><textarea dojoType="dijit.form.Textarea" id="" name="notes">
+		</textarea></div>
+		<div>Projektzeiten</div>
+		<div><input type="text" id="" name="projecth" dojoType="dijit.form.TextBox" value="{{tcProjecthValue}}" /> h 
+			<input type="text" id="" name="projectm" dojoType="dijit.form.TextBox" value="{{tcProjectmValue}}" /> m
+		</div>
+		<button dojoType="dijit.form.Button" baseClass="positive" id="tcSubmitButton" type="submit" iconClass="tick">
+					Speichern
+		</button>
+	<div dojoAttachPoint="tcBookingsSummary">
+		Zeit die am {{dateForm}} erfasst wurde:
+	</div>
+	</div>
+</form>

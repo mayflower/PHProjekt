@@ -46,7 +46,7 @@ phpr.send = function(/*Object*/paramsIn) {
     var params = {
         url:"",
         content:"",
-        handleAs: "json-comment-filtered",
+        handleAs: "json",
         onSuccess:null,
         onError:null,
         onEnd:null,

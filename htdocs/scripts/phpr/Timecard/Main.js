@@ -17,10 +17,12 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		
 		//subscribe to all topics which concern this module
 		dojo.subscribe("Timecard.load", this, "load");
-		//dojo.subscribe("Timecard.changeProjekt",this, "loadSubElements"); 
+		dojo.subscribe("Timecard.changeProjekt",this, "setProject"); 
 		dojo.subscribe("Timecard.reload", this, "reload");
 		//dojo.subscribe("Timecard.openForm", this, "openForm");
 		dojo.subscribe("Timecard.form.Submitted", this, "submitForm");
+        dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
+        dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");       
 	},
         load:function(){
         // summary:     
@@ -33,15 +35,12 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.module = this.module;
         // destroy form if exists
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:phpr.webpath, currentModule:phpr.module});
-        if (dijit.byId("centerMainContent")) {
-            phpr.destroyWidgets("centerMainContent");
-        }
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.tree     = new this.treeWidget(this);
                 this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-                this.form     = new this.formWidget(this);
+                //this.form     = new this.formWidget(this,{},dojo.byId("tcBookings"));
             })
         );
     },
@@ -55,17 +54,51 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        this.tree     = new this.treeWidget(this);
-         // destroy form if exists
+        // destroy serverFeedback
+        phpr.destroyWidgets("serverFeedback");        
+        // destroy form if exists
+        // destroy Buttons 
+        phpr.destroyWidgets("buttonRow");        
         if (dijit.byId("centerMainContent")) {
             phpr.destroyWidgets("centerMainContent");
         }
-        // destroy serverFeedback
-        phpr.destroyWidgets("serverFeedback");
+        this.tree     = new this.treeWidget(this);
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-        this.form     = new this.formWidget(this);
+       // this.form     = new this.formWidget({},dojo.byId("tcBookings"));
 
+    },
+    setProject: function(project){
+        // summary:     
+        //    this function changes the Project in the Timecard form
+        // description: 
+        //    When a new submodule is called, the new grid is displayed,
+        //    the navigation changed and the Detail View is resetted
+        phpr.currentProjectId = project.id;
+        if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
+        dijit.byId('tcProjectId').setValue(project.id);
+      
+    },
+    workingtimesStop: function(){
+        // summary: 
+        //    This function deactivates the Timecard stopwatch
+        // description:
+        //    This function calls jsonStop
+		phpr.send({
+			url:       phpr.webpath + 'index.php/Timecard/index/jsonStop'            
+            //onSuccess: this.publish("reload")
+        });          
+    },
+    workingtimesStart: function(){
+        // summary: 
+        //    This function deactivates the Timecard startwatch
+        // description:
+        //    This function calls jsonStart
+		phpr.send({
+			url:       phpr.webpath + 'index.php/Timecard/index/jsonStart'            
+            //onSuccess: this.publish("reload")
+        });  
+        
     }
 
 });

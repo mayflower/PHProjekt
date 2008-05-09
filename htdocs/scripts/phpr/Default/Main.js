@@ -40,8 +40,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.setSubmoduleNavigation();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-        if (dijit.byId("detailsBox")) {
-            phpr.destroyWidgets("detailsBox");
+        if (dijit.byId("centerMainContent")) {
+            phpr.destroyWidgets("centerMainContent");
         }		
         // destroy serverFeedback
         phpr.destroyWidgets("serverFeedback");
@@ -118,7 +118,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("buttonRow");        
         phpr.send({
             url:       subModuleUrl,
-            handleAs: "json-comment-filtered",
+            handleAs: "json",
             onSuccess: dojo.hitch(this,function(data){
                             self.availableModules = data;
                             var navigation ='<ul id="nav_main">';

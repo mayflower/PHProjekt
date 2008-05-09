@@ -28,8 +28,8 @@
 						Overview
 					</div>
 					<div dojoType="dijit.MenuSeparator"></div>
-					<div dojoType="dijit.MenuItem">Workingtimes Start</div>
-					<div dojoType="dijit.MenuItem">Workingtimes Stop</div>
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>Workingtimes Start</div>
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>Workingtimes Stop</div>
 				</div>
 			</div>
 			<span dojoType="dijit.ToolbarSeparator"></span>
@@ -67,8 +67,7 @@
  				<!-- spaces -->
         		<hr>
         		<!-- Exception Form -->
-        		<div id="serverFeedback" class="prepend-24"></div>
-            	
+        		<div id="serverFeedback" class="prepend-24"></div>           	
         	</div>
         	<!-- Center Area Grid and Form -->
         	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">
