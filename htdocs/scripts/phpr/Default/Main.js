@@ -1,8 +1,5 @@
 dojo.provide("phpr.Default.Main");
 
-// We need the dtl for rendering the template (Default.html).
-dojo.require("dojox.dtl");
-
 dojo.require("phpr.Component");
 
 // Load the widgets the template uses.

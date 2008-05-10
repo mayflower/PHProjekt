@@ -40,7 +40,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                 // Load the components, tree, list and details.
                 this.tree     = new this.treeWidget(this);
                 this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-                //this.form     = new this.formWidget(this,{},dojo.byId("tcBookings"));
+                this.form     = new this.formWidget(this);
             })
         );
     },
@@ -62,10 +62,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         if (dijit.byId("centerMainContent")) {
             phpr.destroyWidgets("centerMainContent");
         }
-        this.tree     = new this.treeWidget(this);
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-       // this.form     = new this.formWidget({},dojo.byId("tcBookings"));
+        this.form     = new this.formWidget(this);
 
     },
     setProject: function(project){

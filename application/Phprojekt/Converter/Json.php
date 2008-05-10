@@ -43,7 +43,7 @@ class Phprojekt_Converter_Json
     public static function convert($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (null === $models) {
-            return '{"metadata":[]}';
+            return '{}&&{"metadata":[]}';
         }
 
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
@@ -51,7 +51,7 @@ class Phprojekt_Converter_Json
         } else if (is_array($models) && !empty($models)) {
             $model = current((array) $models);
         } else {
-            return '{"metadata":[]}';
+            return '{}&&{"metadata":[]}';
         }
 
         if (!$model instanceof Phprojekt_Model_Interface) {
@@ -109,7 +109,8 @@ class Phprojekt_Converter_Json
 
         // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
         // the content-type dojo expects is: json-comment-filtered
-        return Zend_Json_Encoder::encode($data);
+        header('Content-Type','application/json');
+        return '{}&&'.Zend_Json_Encoder::encode($data);
     }
 
     /**
