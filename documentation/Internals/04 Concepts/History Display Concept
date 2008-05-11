@@ -17,7 +17,9 @@ the key 'history'.
 On 'History' tab the user will be able to get all history referred to
 that specific item. The json request will be:
 
-[code]/<Module>/jsonHistory/itemId/<itemId>/[/code]
+[code]
+/History/jsonList/moduleId/<Module>/itemId/<itemId>/
+[/code]
 
 Additional filters could be added:
 
@@ -40,7 +42,9 @@ On the item detail form it could be possible to get all changes for an
 item asking for the field history on the context menu. The json
 message to get the field changes history will be:
 
-[code]/<Module>/jsonHistory/itemId/<itemId>/fieldName/<fieldName>[/code].
+[code]
+/History/jsonList/module/<moduleId>/itemId/<itemId>/fieldName/<fieldName>
+[/code]
 
 
 [emph]Configuration values for history[/emph]
