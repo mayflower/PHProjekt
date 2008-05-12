@@ -64,19 +64,22 @@
      				<table width="100%" align="center" class="form">
      				<col class="col1" />
     					<tr>
-        					<td><label for="username">Username:</label></td>
+        					<td class="label"><label for="username">Username:</label></td>
         					<td><input dojoType="dijit.form.TextBox" type="text" name="username" value="<?php echo $this->username; ?>" /></td>
     					</tr>
     					<tr>
-        					<td><label for="password">Password:</label></td>
+        					<td class="label"><label for="password">Password:</label></td>
         					<td><input dojoType="dijit.form.TextBox" type="password" name="password" value="" /></td>
     					<tr>
+    					<tr>
+    						<td  class="label"><button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
+									Login
+								</button>
+							</td>
+    						<td></td>
+    					</tr>
     				</table>
-    				<center>
-    					<button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
-							Login
-						</button>
-					</center>
+    				
     			</form>
          	</div>
 		</div>

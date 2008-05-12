@@ -19,7 +19,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		dojo.subscribe("Timecard.load", this, "load");
 		dojo.subscribe("Timecard.changeProjekt",this, "setProject"); 
 		dojo.subscribe("Timecard.reload", this, "reload");
-		//dojo.subscribe("Timecard.openForm", this, "openForm");
+		dojo.subscribe("Timecard.changeDate", this, "setDate");
 		dojo.subscribe("Timecard.form.Submitted", this, "submitForm");
         dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
         dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");       
@@ -45,7 +45,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         );
     },
     
-    reload:function(){
+    reload:function(ParamsIn){
         // summary:
         //    This function reloads the current module
         // description: 
@@ -65,7 +65,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-        this.form     = new this.formWidget(this);
+        this.form     = new this.formWidget(this,ParamsIn);
 
     },
     setProject: function(project){
@@ -78,6 +78,13 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
         dijit.byId('tcProjectId').setValue(project.id);
       
+    },
+    setDate: function(date){
+         dateFormatted = dojo.date.locale.format(date, {formatLength:'full',selector:'date', locale:this.lang});
+         dojo.byId("tcFormHeader").innerHTML = "<h3>Zeiterfassung f&uuml;r den "+dateFormatted+"</h3>";
+         dojo.byId("tcBookingsSummary").innerHTML = "<h4>Zeit die am "+dateFormatted+" erfasst wurde:</h4>";
+         dojo.byId('tcProjectDate').value = date;
+         dojo.byId('tcDate').value = date;
     },
     workingtimesStop: function(){
         // summary: 

@@ -1,15 +1,28 @@
-<div id="tcFormHeader">Zeiterfassung f&uuml; den{{dateForm}}</div>
-<form dojoType="dijit.form.Form" id="bookingForm" name="bookingForm" style="height:100%"  onsubmit="return false;">
-	<div> 
-		Datum &Auml;ndern <input type="text" id=""  name="date" dojoType="phpr.DateTextBox" constraints="{datePattern:'dd.MM.yyyy'}" promptMessage = "dd.mm.yy"
-			   invalidMessage = "Invalid date. Use dd.mm.yy format." value="{{date}}" />
-	</div>
-	<div dojoType="phpr.roundedContentPane" radius="20" style="overflow:hidden;width:0.8 em; height:400px;">
-		<div>Arbeitszeiten</div>
-		<div>Anfang <input type="text" id="" name="startTime" dojoType="dijit.form.TimeTextBox" />  Ende
-			 <input type="text" id="" name="endTime" dojoType="dijit.form.TimeTextBox" /></div>
+<div id="tcFormHeader"><h3>Zeiterfassung f&uuml;r den {{dateForm}}</h3></div>
+<div> 
+	Datum &Auml;ndern <input type="text" id="date"  name="date" dojoType="phpr.DateTextBox" constraints="{datePattern:'dd.MM.yyyy'}" promptMessage = "dd.mm.yy"
+	invalidMessage = "Invalid date. Use dd.mm.yy format." value="{{date}}" />
+</div>
+<div dojoType="phpr.roundedContentPane" radius="20" style="overflow:hidden;width:0.8 em; height:400px;">
+	<form dojoType="dijit.form.Form" id="tcBookingForm" name="tcBookingForm" style="display:inline;" onsubmit="return false;">
+		<input dojoType="dijit.form.TextBox" type="hidden" id="tcDate" name="date" value="{{date}}" />
+		<input dojoType="dijit.form.TextBox" type="hidden" id="tcNote" name="notes" value="dummy" />
+		<input dojoType="dijit.form.TextBox" type="hidden" id="tcProj" name="projectId" value="1" />
+		<div><h4>Arbeitszeiten Buchen</h4></div>
+		<div>Anfang <input type="text" id="" name="startTime" dojoType="dijit.form.TextBox" />  Ende
+			 <input type="text" id="" name="endTime" dojoType="dijit.form.TextBox" />
+			 <button dojoType="dijit.form.Button" baseClass="positive" id="tcSubmitButton" type="submit" iconClass="disk">
+			</button>
+		</div>
+		
+	</form>
+	<br>
+	<form dojoType="dijit.form.Form" id="tcProjectBookingForm" name="projBookingForm" style="display:inline;" onsubmit="return false;">
+		<input dojoType="dijit.form.TextBox"  type="hidden" name="date" id="tcProjectDate" value="{{date}}" />
+		<div><h4>Projektzeiten Buchen</h4></div>
 		<div>Projekt</div>
-		<div> <select
+		<div>
+			 <select
 		       id="tcProjectId"
 		       name="projectId"
 		       dojoType="dijit.form.FilteringSelect"
@@ -17,23 +30,23 @@
 			   value="{{value}}" 
                searchAttr="name"
 			   invalidMessage="" >
-			{% for item in values %}
-			<option value ="{{item.id}}">{{item.name}}</option>
-			{% endfor %}
+				{% for item in values %}
+					<option value ="{{item.id}}">{{item.name}}</option>
+				{% endfor %}
 			</select>
 		</div>
 		<div>Notizen</div>
 		<div><textarea dojoType="dijit.form.Textarea" id="" name="notes">
 		</textarea></div>
 		<div>Projektzeiten</div>
-		<div><input type="text" id="" name="projecth" dojoType="dijit.form.TextBox" value="{{tcProjecthValue}}" /> h 
-			<input type="text" id="" name="projectm" dojoType="dijit.form.TextBox" value="{{tcProjectmValue}}" /> m
+		<div><input type="text" id="" name="tcProjecth" dojoType="dijit.form.TextBox" value="{{tcProjecthValue}}" /> h 
+			<input type="text" id="" name="tcProjectm" dojoType="dijit.form.TextBox" value="{{tcProjectmValue}}" /> m
 		</div>
-		<button dojoType="dijit.form.Button" baseClass="positive" id="tcSubmitButton" type="submit" iconClass="tick">
+		<button dojoType="dijit.form.Button" baseClass="positive" id="tcProjectSubmitButton" type="submit" iconClass="tick">
 					Speichern
 		</button>
-	<div dojoAttachPoint="tcBookingsSummary">
-		Zeit die am {{dateForm}} erfasst wurde:
+	<div id="tcBookingsSummary">
+		<h4>Zeit die am {{dateForm}} erfasst wurde:</h4>
 	</div>
-	</div>
-</form>
+	</form>
+</div>

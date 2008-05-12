@@ -42,9 +42,10 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         // summary:     
         //    This function is called when the grid is loaded
         // description: 
-        //    It takes care of setting the grid headers to the right format, displays the contextmenu
-        //    and renders the filter for the grid
+        //    It takes care of setting the grid headers to the right format
         this.grid.widget = dijit.byId("tcGridNode");
+        //connect doubleClick
+        dojo.connect(this.grid.widget, "onRowDblClick",dojo.hitch(this, "onRowClick"));
         this.grid.widget.setModel(this.grid.model);
         this.gridLayout = [];
         this.gridLayout.push({
@@ -71,6 +72,17 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
             }];
             
         this.grid.widget.setStructure(gridStructure);
+        
+    },
+        onRowClick: function(e) {
+        // summary:     
+        //    This function changes the date
+        // description: 
+        //    As soon as a row is clicked the changeDate Topic is published
+        var date = this.grid.model.getDatum(e.rowIndex,3);
+        date = dojo.date.stamp.fromISOString(date);
+        dijit.byId('date').setValue(date);
+        this.publish("changeDate", [date]); 
         
     }
 });
