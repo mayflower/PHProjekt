@@ -1,0 +1,16 @@
+Since many tables use a reference to a Module,
+the PHProjekt have an own table and class for manage them.
+
+Function Phprojekt_Module::getId($module,$projectId).
+This function will return the internal moduleId used for the name $module.
+The projectId is needed because the modules can be actived or desactived
+for each project.
+For manage that, there is a table ModuleProjectRelation.
+This table is used by the class with a the inner join when is looking for all the modules.
+If not $projectId is setted, the class will use the projectId 1 (Invisible Root).
+
+Function Phprojekt_Module::getModuleName($id,$projectId).
+Work in the same way that getId when is looking for the modules.
+But this function return the name of the module using the $id.
+
+The class contain an internal cache for reduce the amount of queries.
