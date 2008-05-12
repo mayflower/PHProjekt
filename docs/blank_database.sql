@@ -159,6 +159,8 @@ CREATE TABLE `ModuleProjectRelation` (
     `isActive` int(1) NOT NULL DEFAULT 1,
     FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
     FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 
@@ -437,4 +439,26 @@ INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `adminAccess`, `writeA
 (1, 1, 1, 1, 1, 1),
 (1, 2, 1, 1, 1, 1),
 (1, 3, 1, 1, 1, 1);
+
+INSERT INTO `ModuleProjectRelation` (`moduleId`, `projectId`, `isActive`) VALUES
+(1, 1, 1),
+(1, 2, 1),
+(1, 3, 1),
+(1, 4, 1),
+(2, 1, 1),
+(2, 2, 1),
+(2, 3, 1),
+(2, 4, 1),
+(3, 1, 1),
+(3, 2, 1),
+(3, 3, 1),
+(3, 4, 1),
+(4, 1, 1),
+(4, 2, 1),
+(4, 3, 1),
+(4, 4, 1),
+(5, 1, 1),
+(5, 2, 1),
+(5, 3, 1),
+(5, 4, 1);
 COMMIT;

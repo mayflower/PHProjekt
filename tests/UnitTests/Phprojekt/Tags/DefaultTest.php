@@ -67,7 +67,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'count'  => 1),
                         '2' => array('string' => 'this',
                                      'count'  => 1));
-        $this->assertEquals($tag->getTags(), $result);
+        $this->assertEquals($tag->getTags(1), $result);
 
         $tag->saveTags(1, 2, 'This is other test');
         $tag->saveTags(2, 1, 'This is other test for todo');
@@ -83,7 +83,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'count'  => 1),
                         '5' => array('string' => 'todo',
                                      'count'  => 1));
-        $this->assertEquals($tag->getTags(), $result);
+        $this->assertEquals($tag->getTags(1), $result);
 
         // Limit
         $result = array('0' => array('string' => 'this',
@@ -92,7 +92,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'count'  => 3),
                         '2' => array('string' => 'other',
                                      'count'  => 2));
-        $this->assertEquals($tag->getTags(3), $result);
+        $this->assertEquals($tag->getTags(1,3), $result);
     }
 
     /**
@@ -110,18 +110,18 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                         '2' => array('id' => 1,
                                      'module' => 'Todo'));
 
-        $this->assertEquals($tag->getModulesByTag('this'), $result);
+        $this->assertEquals($tag->getModulesByTag('this',1), $result);
 
         // limit
         $result = array('0' => array('id' => 1,
                                      'module' => 'Project'),
                         '1' => array('id' => 2,
                                      'module' => 'Project'));
-        $this->assertEquals($tag->getModulesByTag('this', 2), $result);
+        $this->assertEquals($tag->getModulesByTag('this', 1, 2), $result);
 
         // None
-        $this->assertEquals($tag->getModulesByTag('', 2), array());
-        $this->assertEquals($tag->getModulesByTag('wordthatnotsaved', 2), array());
+        $this->assertEquals($tag->getModulesByTag('', 1, 2), array());
+        $this->assertEquals($tag->getModulesByTag('wordthatnotsaved', 1, 2), array());
     }
 
     /**

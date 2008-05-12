@@ -253,7 +253,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             /* workaround as php 5.2 doesnot support late static bindings */
             $vars            = get_class_vars($moduleClass);
             $this->_name     = (empty($vars['name'])) ? $module : $vars['name'];
-            $this->_moduleId = Phprojekt_Module::getId($module);
+            $this->_moduleId = Phprojekt_Module::getId($module, 1);
             $this->setConfiguration($vars['configuration']);
             $this->_loadFromDatabase();
             return $this;

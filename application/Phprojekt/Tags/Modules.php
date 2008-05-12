@@ -73,11 +73,12 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     /**
      * Return all the modules with the relation User-Tag
      *
-     * @param integer $tagUserId - Relation User-Tag Id
+     * @param integer $tagUserId Relation User-Tag Id
+     * @param integer $projectId Current Project Id
      *
      * @return array
      */
-    public function getModulesByRelationId($tagUserId)
+    public function getModulesByRelationId($tagUserId, $projectId)
     {
         $where        = array();
         $foundResults = array();
@@ -87,7 +88,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $modules = $this->fetchAll($where);
         foreach ($modules as $moduleData) {
             $foundResults[] = array('id'     => $moduleData->itemId,
-                                    'module' => Phprojekt_Module::getModuleName($moduleData->moduleId));
+                                    'module' => Phprojekt_Module::getModuleName($moduleData->moduleId, $projectId));
         }
 
         return $foundResults;
@@ -96,8 +97,8 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     /**
      * Return all the relations with the pair moduleId-itemId
      *
-     * @param string  $moduleId  The module Id to store
-     * @param integer $itemId    The item Id
+     * @param string  $moduleId The module Id to store
+     * @param integer $itemId   The item Id
      *
      * @return integer
      */

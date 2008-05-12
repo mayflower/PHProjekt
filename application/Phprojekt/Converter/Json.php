@@ -109,7 +109,7 @@ class Phprojekt_Converter_Json
 
         // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
         // the content-type dojo expects is: json-comment-filtered
-        header('Content-Type','application/json');
+        // header('Content-Type','application/json');
         return '{}&&'.Zend_Json_Encoder::encode($data);
     }
 

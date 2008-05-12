@@ -54,6 +54,7 @@ require_once 'LoaderTest.php';
 require_once 'Tags/DefaultTest.php';
 require_once 'Filter/ParseTreeTest.php';
 require_once 'SearchWordsTest.php';
+require_once 'ModuleTest.php';
 
 /**
  * Test suite for the default module
@@ -87,6 +88,7 @@ class Phprojekt_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
+        $suite->addTestSuite('Phprojekt_ModuleTest');
         $suite->addTestSuite('Phprojekt_GroupTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');
