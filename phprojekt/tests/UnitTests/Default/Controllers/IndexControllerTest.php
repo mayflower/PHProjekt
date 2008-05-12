@@ -124,7 +124,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonList/nodeId/');
         $request->setPathInfo('/Project/index/jsonList/nodeId/');
-        $request->setRequestUri('Project/index/jsonList/nodeId/');
+        $request->setRequestUri('/Project/index/jsonList/nodeId/');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -192,7 +192,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2')) > 0);
-        $this->assertTrue(strpos($response, '"numRows":6} ') > 0);
+        $this->assertTrue(strpos($response, '"numRows":6}') > 0);
     }
 
     /**
@@ -210,7 +210,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonList/nodeId/2');
         $request->setPathInfo('/Project/index/jsonList/nodeId/2');
-        $request->setRequestUri('Project/index/jsonList/nodeId/2');
+        $request->setRequestUri('/Project/index/jsonList/nodeId/2');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -295,7 +295,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonDetail/id/1');
         $request->setPathInfo('/Project/index/jsonDetail/id/1');
-        $request->setRequestUri('Project/index/jsonDetail/id/1');
+        $request->setRequestUri('/Project/index/jsonDetail/id/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -362,8 +362,8 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower(' {"metadata":[{"key":"projectId","label":"Parent","type":"selectbox","hint":"Parent","order":0')) > 0);
-        $this->assertTrue(strpos($response, '"numRows":1} ') > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"projectId","label":"Parent","type":"selectbox","hint":"Parent","order":0')) > 0);
+        $this->assertTrue(strpos($response, '"numRows":1}') > 0);
     }
 
     /**
@@ -381,7 +381,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonDetail');
         $request->setPathInfo('/Project/index/jsonDetail');
-        $request->setRequestUri('Project/index/jsonDetail');
+        $request->setRequestUri('/Project/index/jsonDetail');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -467,7 +467,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonTree');
         $request->setPathInfo('/Project/index/jsonTree');
-        $request->setRequestUri('Project/index/jsonTree');
+        $request->setRequestUri('/Project/index/jsonTree');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -534,7 +534,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"identifier":"id","label":"name","items":[{"name":"Invisible Root",') > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('"identifier":"id","label":"name","items":[{"name":"Invisible Root"')) > 0);
         $this->assertTrue(strpos($response, '"parent":"2","children":[]}]}') > 0);
     }
 
@@ -553,7 +553,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonGetSubmodules/nodeId/1');
         $request->setPathInfo('/Project/index/jsonGetSubmodules/nodeId/1');
-        $request->setRequestUri('Project/index/jsonGetSubmodules/nodeId/1');
+        $request->setRequestUri('/Project/index/jsonGetSubmodules/nodeId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -640,7 +640,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonGetSubmodules/nodeId/');
         $request->setPathInfo('/Project/index/jsonGetSubmodules/nodeId/');
-        $request->setRequestUri('Project/index/jsonGetSubmodules/nodeId/');
+        $request->setRequestUri('/Project/index/jsonGetSubmodules/nodeId/');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -729,7 +729,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonGetModulesPermission/nodeId/1');
         $request->setPathInfo('/Project/index/jsonGetModulesPermission/nodeId/1');
-        $request->setRequestUri('Project/index/jsonGetModulesPermission/nodeId/1');
+        $request->setRequestUri('/Project/index/jsonGetModulesPermission/nodeId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -818,7 +818,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonGetModulesPermission/nodeId/');
         $request->setPathInfo('/Project/index/jsonGetModulesPermission/nodeId/');
-        $request->setRequestUri('Project/index/jsonGetModulesPermission/nodeId/');
+        $request->setRequestUri('/Project/index/jsonGetModulesPermission/nodeId/');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -885,7 +885,8 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking the response for invalid project
-        $this->assertTrue(strpos($response, '* "" *') > 0);
+        // Check for []
+        $this->assertTrue(strlen($response) == 2);
     }
 
     /**
@@ -903,7 +904,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonDelete');
         $request->setPathInfo('/Project/index/jsonDelete');
-        $request->setRequestUri('Project/index/jsonDelete');
+        $request->setRequestUri('/Project/index/jsonDelete');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -995,7 +996,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonSave');
         $request->setPathInfo('/Project/index/jsonSave');
-        $request->setRequestUri('Project/index/jsonSave');
+        $request->setRequestUri('/Project/index/jsonSave');
 
         // getting the view information
         $request->setModuleKey('module');

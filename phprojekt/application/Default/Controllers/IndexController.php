@@ -97,7 +97,7 @@ class IndexController extends Zend_Controller_Action
             $allowedSubModules = array();
             $rights = new Phprojekt_RoleRights($projectId);
             foreach ($subModules as $subModuleData) {
-                $subModuleId = Phprojekt_Module::getId($subModuleData['name']);
+                $subModuleId = Phprojekt_Module::getId($subModuleData['name'], $projectId);
                 $right = ($rights->hasRight('read', $subModuleId)) ? true : $rights->hasRight('write', $subModuleId);
                 if ($right) {
                     $allowedSubModules[] = $subModuleData;
@@ -322,8 +322,7 @@ class IndexController extends Zend_Controller_Action
         $projectId  = (int) $this->getRequest()->getParam('nodeId');
 
         if ($projectId == 0) {
-            $data = ""; // there is no rights on invalid projects
-
+            $data = array(); // there is no rights on invalid projects
         } else {
             $allowedSubModules = array();
             $rights = new Phprojekt_RoleRights($projectId);
@@ -331,16 +330,16 @@ class IndexController extends Zend_Controller_Action
 
                 $tmpPermission = Phprojekt_Acl::NO_ACCESS;
 
-                if ($rights->hasRight('access', Phprojekt_Module::getId($subModuleData['name']))) {
+                if ($rights->hasRight('access', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
                     $tmpPermission = Phprojekt_Acl::ACCESS;
                 }
-                if ($rights->hasRight('read', Phprojekt_Module::getId($subModuleData['name']))) {
+                if ($rights->hasRight('read', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
                     $tmpPermission = Phprojekt_Acl::READ;
                 }
-                if ($rights->hasRight('write', Phprojekt_Module::getId($subModuleData['name']))) {
+                if ($rights->hasRight('write', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
                     $tmpPermission = Phprojekt_Acl::WRITE;
                 }
-                if ($rights->hasRight('create', Phprojekt_Module::getId($subModuleData['name']))) {
+                if ($rights->hasRight('create', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
                     $tmpPermission = Phprojekt_Acl::ADMIN;
                 }
 
@@ -350,7 +349,6 @@ class IndexController extends Zend_Controller_Action
 
             }
             $data = $allowedSubModules;
-
         }
 
         echo Phprojekt_Converter_Json::convertValue($data);

@@ -438,10 +438,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         // only fetch records with read access
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
+        // Get the projectId if is set
+        if (strstr($where, 'projectId = ')) {
+            $projectId = (int) ereg_replace('projectId = ','',$where);
+        } else {
+            $projectId = 1;
+        }
         $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
                          AND ItemRights.moduleId = %d AND ItemRights.userId = %d) ',
         		         $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-        	             Phprojekt_Module::getId($this->getTableName()),
+        	             Phprojekt_Module::getId($this->getTableName(), $projectId),
                          $authNamespace->userId);
 
         // Set where
@@ -471,7 +477,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $itemRight = null;
         $right     = null;
 
-        $moduleId = Phprojekt_Module::getId($this->getTableName());
+        $moduleId = Phprojekt_Module::getId($this->getTableName(), $this->projectId);
 
         if ($this->id > 0) {
             if ($this->ownerId == $userId) {
@@ -532,6 +538,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $readUsers  = array(1);
         $adminUsers = array(1);
 
-        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $adminUsers, $writeUsers, $readUsers);
+        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName(), $this->projectId), $this->id, $adminUsers, $writeUsers, $readUsers);
     }
 }

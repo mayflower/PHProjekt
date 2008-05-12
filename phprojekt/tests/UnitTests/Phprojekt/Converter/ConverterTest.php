@@ -30,42 +30,41 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
      */
     public function testConvert()
     {
-        $converted = substr('/* {"metadata":[{"key":"title","label":"Title","type":',0,23);
-        
+        $converted = substr('{}&&{"metadata":[{"key":"title","label":"Title","type":',0,23);
+
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
-        
-        $object = Phprojekt_Loader::getModel('Project', 'Project'); 
-        
+
+        $object = Phprojekt_Loader::getModel('Project', 'Project');
+
         $records = $object->fetchAll(null, null, 20, 0);
-       
+
         $data = Phprojekt_Converter_Json::convert($records);
-        
+
         $this->assertEquals($converted, substr($data,0,23));
     }
-    
+
     /**
      * Test json convert tree
      *
      */
     public function testConvertTree()
     {
-        $converted = substr('/* {"identifier":"id","label":"name","items":[{"name"',0,23);
-        
+        $converted = substr('{"identifier":"id","label":"name","items":[{"name"',0,23);
+
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
-        
-        $object = Phprojekt_Loader::getModel('Project', 'Project'); 
-        
+
+        $object = Phprojekt_Loader::getModel('Project', 'Project');
+
         $tree = new Phprojekt_Tree_Node_Database($object, 1);
         $tree->setup();
 
-       
         $data = Phprojekt_Converter_Json::convertTree($tree);
-        
+
         $this->assertEquals($converted, substr($data,0,23));
     }
-        
+
     /**
      * Test json convertion of single value
      *
@@ -73,12 +72,10 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
     public function testConvertValue()
     {
         $data = 'This is a test of convetion';
-        $converted = '/* "This is a test of convetion" */';
-        
-               
+        $converted = '"This is a test of convetion"';
+
         $result = Phprojekt_Converter_Json::convertValue($data);
-        
+
         $this->assertEquals($converted, $result);
     }
-
 }

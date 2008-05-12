@@ -106,9 +106,9 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"numRows":4} ') > 0);
+        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
     }
-    
+
     public function testJsonStartAction()
     {
         $request = new Zend_Controller_Request_Http();
@@ -187,9 +187,9 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, 'The Item was added correctly"') > 0);
+        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
     }
-    
+
     public function testJsonStopAction()
     {
         $request = new Zend_Controller_Request_Http();
@@ -270,7 +270,7 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was saved correctly') > 0);
     }
-    
+
     public function testJsonStopActionNoRecordOpen()
     {
         $request = new Zend_Controller_Request_Http();

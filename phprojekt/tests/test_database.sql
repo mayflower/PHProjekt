@@ -160,6 +160,8 @@ CREATE TABLE `ModuleProjectRelation` (
     `isActive` int(1) NOT NULL DEFAULT 1,
     FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
     FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 
@@ -514,3 +516,40 @@ INSERT INTO TagsModules (`moduleId`, `itemId`, `tagUserId`) VALUES
 INSERT INTO `ModuleInstance` VALUES
 (1,5,'Task','Developer Tasks'),
 (2,5,'Tasks','Project Tasks');
+
+INSERT INTO `ModuleProjectRelation` (`moduleId`, `projectId`, `isActive`) VALUES
+(1,1,1),
+(2,1,1),
+(3,1,1),
+(4,1,1),
+(5,1,1),
+(1,2,1),
+(2,2,1),
+(3,2,1),
+(4,2,1),
+(5,2,1),
+(1,3,1),
+(2,3,1),
+(3,3,1),
+(4,3,1),
+(5,3,1),
+(1,4,1),
+(2,4,1),
+(3,4,1),
+(4,4,1),
+(5,4,1),
+(1,5,1),
+(2,5,1),
+(3,5,1),
+(4,5,1),
+(5,5,1),
+(1,6,1),
+(2,6,0),
+(3,6,1),
+(4,6,1),
+(5,6,1),
+(1,7,1),
+(2,7,1),
+(3,7,1),
+(4,7,1),
+(5,7,1);

@@ -73,7 +73,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     public function indexObjectItem($object)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $moduleId = Phprojekt_Module::getId($object->getTableName(), $object->projectId);
         $itemId   = $object->id;
 
         $this->_delete($moduleId, $itemId);
@@ -98,7 +98,7 @@ class Phprojekt_SearchWords extends Zend_Db_Table_Abstract
      */
     public function deleteObjectItem($object)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $moduleId = Phprojekt_Module::getId($object->getTableName(), $object->projectId);
         $itemId   = $object->id;
 
         $this->_delete($moduleId, $itemId);

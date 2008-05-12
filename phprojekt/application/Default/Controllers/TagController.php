@@ -51,14 +51,17 @@ class TagController extends IndexController
      * Get an array with tags
      * order by number of ocurrences
      *
-     * @requestparam integer $limit Limit the number of tags for return
+     * @requestparam integer $projectId The current project Id
+     * @requestparam integer $limit     Limit the number of tags for return
      *
      * @return void
      */
     public function jsonGetTagsAction()
     {
-        $limit  = (int) $this->getRequest()->getParam('limit', 0);
-        $tags   = $this->_tags->getTags($limit);
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
+        $limit     = (int) $this->getRequest()->getParam('limit', 0);
+
+        $tags   = $this->_tags->getTags($projectId, $limit);
         $fields = $this->_tags->getFieldDefinition();
 
         echo Phprojekt_Converter_Json::convertTag($tags, $fields);
@@ -69,15 +72,17 @@ class TagController extends IndexController
      * order by number of ocurrences
      *
      * @requestparam integer $id    Item id
+     * @requestparam integer $projectId The current project Id
      * @requestparam integer $limit Limit the number of tags for return
      *
      * @return void
      */
     public function jsonGetTagsByModuleAction()
     {
-        $id       = (int) $this->getRequest()->getParam('id', 0);
-        $moduleId = (int) Phprojekt_Module::getId($this->getRequest()->getModuleName());
-        $limit    = (int) $this->getRequest()->getParam('limit', 0);
+        $id        = (int) $this->getRequest()->getParam('id', 0);
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
+        $limit     = (int) $this->getRequest()->getParam('limit', 0);
+        $moduleId  = (int) Phprojekt_Module::getId($this->getRequest()->getModuleName(), $projectId);
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
@@ -92,17 +97,19 @@ class TagController extends IndexController
     /**
      * Get an array with all the modules with a tag
      *
-     * @requestparam string  $tag   Tag to search
-     * @requestparam integer $limit Limit the number of tags for return
+     * @requestparam string  $tag       Tag to search
+     * @requestparam integer $projectId The current project Id
+     * @requestparam integer $limit     Limit the number of tags for return
      *
      * @return void
      */
     public function jsonGetModulesByTagAction()
     {
-        $tag   = $this->getRequest()->getParam('tag', '');
-        $limit = (int) $this->getRequest()->getParam('limit', 0);
+        $tag       = $this->getRequest()->getParam('tag', '');
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
+        $limit     = (int) $this->getRequest()->getParam('limit', 0);
 
-        $tags   = $this->_tags->getModulesByTag($tag, $limit);
+        $tags   = $this->_tags->getModulesByTag($tag, $projectId, $limit);
         $fields = $this->_tags->getModuleFieldDefinition();
 
         echo Phprojekt_Converter_Json::convertTag($tags, $fields);
@@ -111,21 +118,23 @@ class TagController extends IndexController
     /**
      * Saves the tags for the current item
      *
-     * @requestparam integer $id     Item id
-     * @requestparam string  $string All the tags separated by space
+     * @requestparam integer $id        Item id
+     * @requestparam integer $projectId The current project Id
+     * @requestparam string  $string    All the tags separated by space
      *
      * @return void
      */
     public function jsonSaveTagsAction()
     {
-        $id     = (int) $this->getRequest()->getParam('id');
-        $string = $this->getRequest()->getParam('string','');
+        $id        = (int) $this->getRequest()->getParam('id');
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
+        $string    = $this->getRequest()->getParam('string','');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
 
-        $moduleId = Phprojekt_Module::getId($this->getRequest()->getModuleName());
+        $moduleId = Phprojekt_Module::getId($this->getRequest()->getModuleName(), $projectId);
         $this->_tags->saveTags($moduleId, $id, $string);
 
         $translate = Zend_Registry::get('translate');

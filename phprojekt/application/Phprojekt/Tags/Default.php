@@ -107,11 +107,12 @@ class Phprojekt_Tags_Default
      * If the $limit is set,
      * the returned array is limited to the $limit tags
      *
-     * @param integer $limit The number of tags for return, 0 for all
+     * @param integer $projectId The current Project Id
+     * @param integer $limit     The number of tags for return, 0 for all
      *
      * @return array
      */
-    public function getTags($limit = 0)
+    public function getTags($projectId, $limit = 0)
     {
         $foundResults = array();
 
@@ -123,7 +124,7 @@ class Phprojekt_Tags_Default
         foreach ($tmpResults as $tagUserId => $tagId) {
             $tagName = $this->_tags->getTagName($tagId);
 
-            $modules = $this->_tagsModules->getModulesByRelationId($tagUserId);
+            $modules = $this->_tagsModules->getModulesByRelationId($tagUserId, $projectId);
             foreach ($modules as $moduleData) {
                 if (!isset($foundResults[$tagName])) {
                     $foundResults[$tagName] = 0;
@@ -157,12 +158,13 @@ class Phprojekt_Tags_Default
      * If the $limit is set,
      * the returned array is limited to the $limit tags
      *
-     * @param string  $tag   The tag for search
-     * @param integer $limit The number of modules for return, 0 for all
+     * @param string  $tag       The tag for search
+     * @param integer $projectId The current Project Id
+     * @param integer $limit     The number of modules for return, 0 for all
      *
      * @return array
      */
-    public function getModulesByTag($tag, $limit = 0)
+    public function getModulesByTag($tag, $projectId, $limit = 0)
     {
         $foundResults = array();
 
@@ -175,7 +177,7 @@ class Phprojekt_Tags_Default
                 $tagUserId = $this->_tagsUsers->getUserTagIds($tagId);
 
                 // Get The modules data
-                $foundResults = $this->_tagsModules->getModulesByRelationId($tagUserId);
+                $foundResults = $this->_tagsModules->getModulesByRelationId($tagUserId, $projectId);
 
                 // Return the $limit tags
                 if ($limit > 0) {
