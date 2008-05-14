@@ -430,10 +430,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @param string|array $order  Order by
      * @param string|array $count  Limit query
      * @param string|array $offset Query offset
+     * @param string       $select The comma-separated columns of the joined columns
+     * @param string       $join   The join statements
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $join = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         // only fetch records with read access
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
@@ -457,7 +459,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(), $authNamespace->userId, $this->getTableName());
         $where .= ' OR (ItemRights.adminAccess = 1 OR ItemRights.writeAccess = 1 OR ItemRights.readAccess = 1))';
 
-        return parent::fetchAll($where, $order, $count, $offset, $join);
+        return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
 
     /**
