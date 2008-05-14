@@ -43,7 +43,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * History object
      *
-     * @var Phprojekt_Histoy
+     * @var Phprojekt_History
      */
     protected $_history = null;
 

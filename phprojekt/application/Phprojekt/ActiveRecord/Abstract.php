@@ -163,14 +163,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_colInfo;
 
     /**
-     * A flag for setting the object to read only state in case of usage of 
-     * join strings in fetchAll function.
-     *
-     * @var boolean
-     */
-    protected $_readOnly = false;
-    
-    /**
      * Initialize new object
      *
      * @param array $config Configuration for Zend_Db_Table
@@ -845,15 +837,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @return boolean
      */
     public function save()
-    {
-    	if ($this->_readOnly) {
-    		return false;
-    	}
-    	
+    {	
         $data = array();
-
+        
         foreach ($this->_data as $k => $v) {
-            if (is_scalar($v)) {
+            if (in_array($k, $this->_colInfo) && is_scalar($v)) {
                 $data[$k] = $v;
             }
         }
@@ -980,7 +968,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
          * In case of join strings please note that the resultset is read only. 
          */
         if (null != $join) {
-        	$this->_readOnly = true;
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
         } else {
             $rows = parent::fetchAll($where, $order, $count, $offset);
