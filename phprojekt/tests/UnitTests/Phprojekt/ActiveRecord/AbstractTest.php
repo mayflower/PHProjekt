@@ -47,17 +47,14 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $project->find(3);
             $this->assertNull($project->title);
 
-            $projects = $project->fetchAll(null, null, null, null, null,
+            $projects = $project->fetchAll(null, null, null, null,
                             'RIGHT JOIN projectuserrolerelation ON projectuserrolerelation.projectId = Project.id');
             $this->assertEquals(1,count($projects));
 
-            $projects = $project->fetchAll(null, null, null, null, "projectuserrolerelation.roleId",
+            $projects = $project->fetchAll(null, null, null, null,
                             'LEFT JOIN projectuserrolerelation ON projectuserrolerelation.projectId = Project.id');
             
             $this->assertEquals(6,count($projects));
-            
-            $saveResult = $project->save();
-            $this->assertFalse($saveResult);
             
         } catch (Exception $e) {
             $this->fail($e->getMessage().$e->getTraceAsString());

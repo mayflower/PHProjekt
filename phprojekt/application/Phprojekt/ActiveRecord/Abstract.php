@@ -161,14 +161,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * pointer as this is used by the iterator implementation.
      */
     protected $_colInfo;
-
-    /**
-     * A flag for setting the object to read only state in case of usage of 
-     * join strings in fetchAll function.
-     *
-     * @var boolean
-     */
-    protected $_readOnly = false;
     
     /**
      * Initialize new object
@@ -846,10 +838,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function save()
     {
-    	if ($this->_readOnly) {
-    		return false;
-    	}
-    	
         $data = array();
 
         foreach ($this->_data as $k => $v) {
@@ -954,12 +942,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @param string|array $order  Order by
      * @param string|array $count  Limit query
      * @param string|array $offset Query offset
-     * @param string       $select The comma-separated columns of the joined tables
      * @param string       $join   Join Statements
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null , $join = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $join = null)
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
@@ -976,12 +963,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->_log->debug($where);
         }
 
-        /*
-         * In case of join strings please note that the resultset is read only. 
-         */
         if (null != $join) {
-        	$this->_readOnly = true;
-            $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
+            $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $join);
         } else {
             $rows = parent::fetchAll($where, $order, $count, $offset);
         }
@@ -1072,12 +1055,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @param string|array $order  Order by
      * @param string|array $count  Limit query
      * @param string|array $offset Query offset
-     * @param string       $select The columns of the joined tables
      * @param string       $join   Join statement
      *
      * @return Zend_Db_Table_Rowset
      */
-    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null, $select = null, $join)
+    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null, $join)
     {
         // selection tool
         $selectObj = $this->_db->select();
@@ -1113,20 +1095,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $sqlStr    = $selectObj->__toString();
         $statement = explode("FROM", $sqlStr);
         
-        if (null == $select) {
-            $sqlStr = "SELECT * FROM " . $statement[1];
-            
-        } else {
-        	$selectStmt = $statement[0] . ", ";
-            $columns    = explode(",", trim($select));
-        	
-            foreach ($columns as $column) {
-            	$selectStmt .= " " . $column . " ";
-            }
-            
-            $selectStmt .= " FROM ";
-            $sqlStr      = $selectStmt . $statement[1];
-        }
+        $sqlStr = "SELECT ".$this->_name.".* FROM " . $statement[1];
 
         if (preg_match('/WHERE/i', $sqlStr)) {
             $joinPart = ' ' . $join . ' WHERE ';
@@ -1137,15 +1106,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         } else {
             $sqlStr .= ' ' . $join;
         }
-
-        $this->_log->debug("BLUB " . $sqlStr);
         
         // return the results
         $stmt      = $this->_db->query($sqlStr);
         $dataArray = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
         
-        $this->_log->debug("BLUB " . var_dump($dataArray));
-
         $data  = array(
             'table'    => $this,
             'data'     => $dataArray,
