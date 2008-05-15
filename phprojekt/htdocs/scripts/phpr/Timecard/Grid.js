@@ -17,10 +17,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         this.main   = main;
         this.id     = id;
         this.url    = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/1";
-        
-        if (dijit.byId(this._node)) {
-            phpr.destroyWidgets(this._node);
-        }
+        phpr.destroyWidgets("tcSummary");
         this.render(["phpr.Timecard.template", "grid.html"], this._node);
         
         this.grid = {

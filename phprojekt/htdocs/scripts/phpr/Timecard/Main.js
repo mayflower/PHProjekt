@@ -58,10 +58,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroyWidgets("serverFeedback");        
         // destroy form if exists
         // destroy Buttons 
-        phpr.destroyWidgets("buttonRow");        
-        if (dijit.byId("centerMainContent")) {
-            phpr.destroyWidgets("centerMainContent");
-        }
+        phpr.destroyWidgets("buttonRow");
+        phpr.destroyWidgets("centerMainContent");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);

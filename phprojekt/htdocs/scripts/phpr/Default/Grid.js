@@ -21,15 +21,9 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.main   = main;
         this.id     = id;
         
-        if (dijit.byId(this._node)) {
-            phpr.destroyWidgets(this._node);
-        }
-        if (dijit.byId("headerContext")) {
-            phpr.destroyWidgets("headerContext");
-        }
-        if (dijit.byId("gridContext")) {
-            phpr.destroyWidgets("gridContext");
-        }		
+        phpr.destroyWidgets("gridBox");
+        phpr.destroyWidgets("headerContext");
+        phpr.destroyWidgets("gridContext");
         this.render(["phpr.Default.template", "grid.html"], this._node);
         this.grid = {
             widget:null,

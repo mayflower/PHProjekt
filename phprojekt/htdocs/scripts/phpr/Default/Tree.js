@@ -19,7 +19,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         this._treeNode = dojo.byId("treeBox");
 
         if (dijit.byId(this._treeNode)) {
-            phpr.destroyWidgets(this._treeNode);
+            phpr.destroyWidgets("treeBox");
         }
         
         this.render(["phpr.Default.template", "tree.html"], this._treeNode, {url: treepath});
