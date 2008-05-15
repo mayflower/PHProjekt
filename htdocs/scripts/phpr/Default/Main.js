@@ -94,12 +94,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-        // destroy form if exists
-        if (dijit.byId("detailsBox")) {
-            phpr.destroyWidgets("detailsBox");
-        }
-        // destroy serverFeedback
-        phpr.destroyWidgets("serverFeedback");
     },
 
     setSubmoduleNavigation: function(){
@@ -111,8 +105,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self =this;
         var newEntry = null;
-        phpr.destroyWidgets("subModuleNavigation");
-        phpr.destroyWidgets("buttonRow");        
+        if (dojo.byId("subModuleNavigation")) {
+        	phpr.destroyWidgets("subModuleNavigation");
+        }
+        if (dojo.byId("buttonRow")) {
+        	phpr.destroyWidgets("buttonRow");      
+		} 
         phpr.send({
             url:       subModuleUrl,
             handleAs: "json",

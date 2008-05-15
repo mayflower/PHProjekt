@@ -85,7 +85,10 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.grid.widget.singleClickEdit = true;
         
         meta = this.grid.widget.model.store.metaData;
-        
+        this.gridLayout.push({
+				type: 'dojox.grid._RowSelector', 
+				width: '30px'
+	    });
         for (var i = 0; i < meta.length; i++) {
             switch(meta[i]["type"]){
                 case'selectbox':
