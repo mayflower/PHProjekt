@@ -20,7 +20,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
         //    this function receives the form data from the server and renders the corresponding form
         
         this.date = new Date()
-        dateFormatted = dojo.date.locale.format(this.date, {formatLength:'full',selector:'date', locale:this.lang});
+        
         range =[{"id"
                 :"1","name":"Invisible Root"},{"id":"2","name":"....Intern"},{"id":"3","name":"....Extern"},{"id":"5"
                 ,"name":"....Default"}]
@@ -33,13 +33,13 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
         var params = {
             values:options, 
             date: this.date,
-            dateForm: dateFormatted,
             tcProjecthValue: 0,
             tcProjectmValue:0
         };
         if (dojo.isObject(paramsIn)) {
             dojo.mixin(params, paramsIn);
         }
+        params.dateForm = dojo.date.locale.format(params.date, {formatLength:'full',selector:'date', locale:this.lang});
         this.render(["phpr.Timecard.template", "form.html"], dojo.byId("tcBookings"),params);
         dojo.addOnLoad(dojo.hitch(this, "onLoaded"));
     },
@@ -61,7 +61,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/',
 			content:   this.sendData,
-            onSuccess: this.publish("reload",[{date:this.sendData.date, dateForm:dojo.date.locale.format(this.sendData.date, {formatLength:'full',selector:'date', locale:this.lang})}])
+            onSuccess: this.publish("reload",[{date: this.sendData.date}])
          });  
          
     },
@@ -75,7 +75,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
 		phpr.send({
 			url:       phpr.webpath + 'index.php/Timeproj/index/jsonSave/',
 			content:   this.sendData,
-            onSuccess: this.publish("reload",[{date:this.sendData.date, dateForm:dojo.date.locale.format(this.sendData.date, {formatLength:'full',selector:'date', locale:this.lang})}])
+            onSuccess: this.publish("reload",[{date: this.sendData.date}])
          });  
          
     }

@@ -27,10 +27,16 @@ dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {
 	},
     renderButton:function(){
         //render new button
-        var newEntry ="";
+        var newEntry =null;
         phpr.destroyWidgets("subModuleNavigation");
-        dojo.byId("subModuleNavigation").innerHTML = "<br><span style='margin:0pt 1.5em 1.5em'><button dojoType='dijit.form.Button' id='newEntry' type='link'>New "+
-                                                      phpr.module +"</button><span>"; 
+        phpr.destroyWidgets("buttonRow"); 
+        var params = {
+            label:     '',
+            id:        'newEntry',
+            iconClass: 'add' 
+           };
+        newEntry = new dijit.form.Button(params);    
+        dojo.byId("buttonRow").appendChild(newEntry.domNode);
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
         dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
     },

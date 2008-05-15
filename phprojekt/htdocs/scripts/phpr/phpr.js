@@ -4,6 +4,7 @@ dojo.registerModulePath("phpr", "../../phpr");
 
 dojo.require("dojo.parser");
 dojo.require("dojox.data.QueryReadStore");
+dojo.require("dojox.dtl._Templated");
 
 // global vars
 var module = null;
@@ -109,10 +110,7 @@ phpr.handleResponse = function(resultArea,result)
         css = '';
         message = "";
     }
-    var widget = new phpr.ServerFeedback({cssClass: css, output:message});
-    dojo.byId(resultArea).appendChild(widget.domNode);
-
-    
+    dijit.byId(resultArea).addMessage({cssClass: css, output:message});  
 };
 phpr.getCurrent = function(data, identifier, value){
     var current = null;
@@ -176,19 +174,29 @@ dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
         return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
     }
 });
-dojo.declare("phpr.ServerFeedback",
-    [dijit._Widget, dijit._Templated],
+dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._Templated],
     {
-        constructor:function(){
-          //dojo.publish(phpr.module + ".reload");
-        },
         // summary:
         //     A class for displaying the ServerFeedback
         // description:
         //     This class receives the Server Feedback and displays it to the User
+        widgetsInTemplate: true,
+        messages:[],
+        displayedMessages:[],
+        serverFeedback: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
+
+        addMessage: function(message){
+            this.messages.push(message);
+            this.displayedMessages = [];
+            this.displayedMessages.push(message);
+            this.render();
+        },
+        deleteLastMessage: function(message){
+            this.messages.pop();
+        },
+        postCreate: function(){
+        },
         
-        cssClass:     null,
-        output:       null,		
-        templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html")
+        templateString: '<div style="position:relative;" dojoAttachPoint="test">{% for message in displayedMessages %}{% include serverFeedback%}{% endfor %}</div>'
     }
 );
