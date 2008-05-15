@@ -16,9 +16,8 @@ dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {
 	 	phpr.module   = this.module;
         
         // important set the global phpr.module to the module which is currently loaded!!!
-        if (dijit.byId("centerMainContent")) {
-            phpr.destroyWidgets("centerMainContent");
-        }
+        phpr.destroyWidgets("centerMainContent");
+        phpr.destroyWidgets("bottomContent");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.renderButton();
         var updateUrl = phpr.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/';

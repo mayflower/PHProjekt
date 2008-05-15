@@ -34,9 +34,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description: 
         //    This function processes the form data which is stored in a phpr.ReadStore and
         //    renders the actual form according to the received data    
-		if (dijit.byId("detailsBox")) {
-			phpr.destroyWidgets("detailsBox");
-		}		
+		phpr.destroyWidgets("detailsBox");
         // destroy serverFeedback
         phpr.destroyWidgets("serverFeedback");
 		this.formdata="";

@@ -37,9 +37,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.setSubmoduleNavigation();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-        if (dijit.byId("centerMainContent")) {
-            phpr.destroyWidgets("centerMainContent");
-        }		
+        phpr.destroyWidgets("centerMainContent");
         // destroy serverFeedback
         phpr.destroyWidgets("serverFeedback");
     },
@@ -85,10 +83,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        if (dijit.byId("centerMainContent")) {
-            phpr.destroyWidgets("centerMainContent");
-        }
+        phpr.destroyWidgets("centerMainContent");
+        console.debug(1);
+        phpr.destroyWidgets("bottomContent");
+        console.debug(2);
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        console.debug(3);
 
         this.setSubmoduleNavigation();
         this.tree     = new this.treeWidget(this);
@@ -105,12 +105,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self =this;
         var newEntry = null;
-        if (dojo.byId("subModuleNavigation")) {
-        	phpr.destroyWidgets("subModuleNavigation");
-        }
-        if (dojo.byId("buttonRow")) {
-        	phpr.destroyWidgets("buttonRow");      
-		} 
+      	phpr.destroyWidgets("subModuleNavigation");
+       	phpr.destroyWidgets("buttonRow");      
         phpr.send({
             url:       subModuleUrl,
             handleAs: "json",
