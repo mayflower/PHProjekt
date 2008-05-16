@@ -4,7 +4,9 @@ dojo.registerModulePath("phpr", "../../phpr");
 
 dojo.require("dojo.parser");
 dojo.require("dojox.data.QueryReadStore");
-dojo.require("dojox.dtl._Templated");
+dojo.require("dojox.dtl._HtmlTemplated");
+dojo.require("dojox.fx");
+dojo.require("dojo.fx");
 
 // global vars
 var module = null;
@@ -23,10 +25,12 @@ phpr.initWidgets = function(el) {
 
 phpr.destroyWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
-    var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
-    for (var i = 0; i < oldWidgetNodes.length; i++) {
-        if (dijit.byNode(oldWidgetNodes[i])) {
-            dijit.byNode(oldWidgetNodes[i]).destroy();
+    if (dojo.byId(el)) {
+        var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
+        for (var i = 0; i < oldWidgetNodes.length; i++) {
+            if (dijit.byNode(oldWidgetNodes[i])) {
+                dijit.byNode(oldWidgetNodes[i]).destroy();
+            }
         }
     }
 };
@@ -174,7 +178,7 @@ dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
         return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
     }
 });
-dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._Templated],
+dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated],
     {
         // summary:
         //     A class for displaying the ServerFeedback
@@ -183,20 +187,37 @@ dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._Templated],
         widgetsInTemplate: true,
         messages:[],
         displayedMessages:[],
-        serverFeedback: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
-
+        
+        templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
+		base: {
+			url: dojo.moduleUrl("phpr.Default", "template/serverFeedbackContent.html"),
+			shared: true
+		},
+        
         addMessage: function(message){
             this.messages.push(message);
-            this.displayedMessages = [];
-            this.displayedMessages.push(message);
-            this.render();
+            this.displayMessage(message);
         },
         deleteLastMessage: function(message){
             this.messages.pop();
         },
-        postCreate: function(){
+        displayMessage: function(message){
+            this.displayedMessages = [message];
+            this.setTemplate(dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"));
+            this.render();
+            fadeIn = dojo.fadeIn({
+                  node:this.serverFeedbackContainer,
+                  duration:500});
+            fadeOut= dojo.fadeOut({
+                node: this.serverFeedbackContainer,
+                duration: 5000
+            });
+            combine = dojo.fx.combine([fadeIn,fadeOut]);
+            combine.play();
+                    
         },
-        
-        templateString: '<div style="position:relative;" dojoAttachPoint="test">{% for message in displayedMessages %}{% include serverFeedback%}{% endfor %}</div>'
+        postCreate: function(){
+            this.render();
+        }      
     }
 );
