@@ -57,7 +57,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Full text Search object
      *
-     * @var Phprojekt_SearchWords
+     * @var Phprojekt_Search_Words
      */
     protected $_search = null;
 
@@ -76,6 +76,20 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public $history = array();
 
     /**
+     * Field for display in the search results
+     *
+     * @var string
+     */
+    public $searchFirstDisplayField = 'title';
+
+    /**
+     * Field for display in the search results
+     *
+     * @var string
+     */
+    public $searchSecondDisplayField = 'notes';
+
+    /**
      * Initialize new object
      *
      * @param array $db Configuration for Zend_Db_Table
@@ -87,9 +101,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
         $this->_error     = new Phprojekt_Error();
         $this->_history   = new Phprojekt_History($db);
-        $this->_search    = new Phprojekt_SearchWords($db);
+        $this->_search    = new Phprojekt_Search_Default();
         $this->_config    = Zend_Registry::get('config');
-        $this->_rights    = new Phprojekt_Item_Rights($db);
+        $this->_rights    = new Phprojekt_Item_Rights();
     }
 
     /**

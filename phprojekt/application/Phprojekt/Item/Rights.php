@@ -34,23 +34,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * @param array $config The config array for the database
      */
-    public function __construct($config = array())
+    public function __construct()
     {
-        if (null === $config) {
-            $config = array('db' => Zend_Registry::get('db'));
-        }
+        $config = array('db' => Zend_Registry::get('db'));
 
-        if (!is_array($config)) {
-            $config = array('db' => $config);
-        }
-
-        if (!array_key_exists('db', $config) ||
-            !is_a($config['db'], 'Zend_Db_Adapter_Abstract')) {
-            throw new Phprojekt_ActiveRecord_Exception("Phprojekt_Item_Rights class must "
-                                                     . "be initialized using a valid "
-                                                     . "Zend_Db_Adapter_Abstract");
-
-        }
         parent::__construct($config);
     }
 

@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `TagsModules`;
 DROP TABLE IF EXISTS `TagsUsers`;
 DROP TABLE IF EXISTS `Tags`;
 DROP TABLE IF EXISTS `SearchWords`;
+DROP TABLE IF EXISTS `SearchDisplay`;
 DROP TABLE IF EXISTS `UserModuleSetting`;
 DROP TABLE IF EXISTS `Todo`;
 DROP TABLE IF EXISTS `RoleModulePermissions`;
@@ -244,8 +245,19 @@ CREATE TABLE `SearchWords` (
   `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `word` varchar(255) NOT NULL,
-  `crc32` bigint NOT NULL,
-  PRIMARY KEY  (`itemId`,`moduleId`,`crc32`)
+  PRIMARY KEY  (`itemId`,`moduleId`,`word`)
+);
+
+
+--
+-- Table structure for table `SearchDisplay`
+--
+CREATE TABLE `SearchDisplay` (
+  `moduleId` int(11) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `firstDisplay` varchar(255),
+  `secondDisplay` varchar(255),
+  PRIMARY KEY  (`itemId`,`moduleId`)
 );
 
 

@@ -1,0 +1,174 @@
+<?php
+/**
+ * Display Searchs class
+ *
+ * LICENSE: Licensed under the terms of the PHProjekt 6 License
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @version    CVS: $Id:
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @package    PHProjekt
+ * @subpackage Core
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ */
+
+/**
+ * The class provide the functions for display the item data of the results
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt
+ * @subpackage Core
+ * @license    http://phprojekt.com/license PHProjekt 6 License
+ * @version    Release: @package_version@
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ * @author     Gustavo Solt <solt@mayflower.de>
+ */
+class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
+{
+    /**
+     * Name of the table
+     *
+     * @var string
+     */
+    protected $_name = 'SearchDisplay';
+
+    /**
+    /**
+     * Chaneg the tablename for use with the Zend db class
+     *
+     * This function is only for PHProjekt6
+     *
+     * @param array $config The config array for the database
+     */
+    public function __construct()
+    {
+        $config = array('db' => Zend_Registry::get('db'));
+
+        parent::__construct($config);
+    }
+
+    /**
+     * Return the display data for a moduleId-ItemId pair
+     *
+     * @param integer $moduleId The module Id for search
+     * @param integer $itemId   The item Id for search
+     *
+     * @return array
+     */
+    public function getDisplay($moduleId, $itemId)
+    {
+        $where = array();
+
+        $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
+        $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
+
+        $tmpResult = $this->fetchAll($where)->toArray();
+
+        $result = array('moduleId'      => $moduleId,
+                        'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
+                        'id'            => $itemId,
+                        'firstDisplay'  => $tmpResult[0]['firstDisplay'],
+                        'secondDisplay' => $tmpResult[0]['secondDisplay']);
+
+        return $result;
+    }
+
+    /**
+     * Save the display data, insert or update
+     *
+     * @param Phprojekt_Item_Abstract $object The item object
+     * @param integer The module Id to store
+     * @param integer The item Id to store
+     *
+     * @return void
+     */
+    public function saveDisplay($object, $moduleId, $itemId)
+    {
+        $firstDisplay  = $object->{$object->searchFirstDisplayField};
+        $secondDisplay = $object->{$object->searchSecondDisplayField};
+        if (!$this->_exists($moduleId, $itemId)) {
+            $this->_save($moduleId, $itemId, $firstDisplay, $secondDisplay);
+        } else {
+            $this->_update($moduleId, $itemId, $firstDisplay, $secondDisplay);
+        }
+    }
+
+    /**
+     * Delete the entry for one object
+     *
+     * @param integer $moduleId The moduleId to delete
+     * @param integer $itemId   The item Id
+     *
+     * @return void
+     */
+    public function deleteDisplay($moduleId, $itemId)
+    {
+        $where = array();
+        $clone = clone($this);
+
+        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
+        $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+        $clone->delete($where);
+    }
+
+    /**
+     * Check if the moduleId-itemId pair was already inserted
+     *
+     * @param integer $moduleId The moduleId to store
+     * @param integer $itemId   The item Id
+     *
+     * @return boolean
+     */
+    private function _exists($moduleId, $itemId)
+    {
+        return ($this->find($moduleId, $itemId)->count() > 0);
+    }
+
+    /**
+     * Save the new moduleId-item pair
+     *
+     * This function use the Zend_DB insert
+     *
+     * @param integer $moduleId      The moduleId to store
+     * @param integer $itemId        The item Id
+     * @param string  $firstDisplay  Text for the first display
+     * @param string  $secondDisplay Text for the second display
+     *
+     * @return void
+     */
+    private function _save($moduleId, $itemId, $firstDisplay, $secondDisplay)
+    {
+        $data['moduleId']       = $moduleId;
+        $data['itemId']         = $itemId;
+        $data['firstDisplay']   = $firstDisplay;
+        $data['secondDisplay']  = $secondDisplay;
+        $this->insert($data);
+    }
+
+    /**
+     * Update a moduleId-item pair
+     *
+     * This function use the Zend_DB update
+     *
+     * @param integer $moduleId      The moduleId to store
+     * @param integer $itemId        The item Id
+     * @param string  $firstDisplay  Text for the first display
+     * @param string  $secondDisplay Text for the second display
+     *
+     * @return void
+     */
+    private function _update($moduleId, $itemId, $firstDisplay, $secondDisplay)
+    {
+        $data['firstDisplay']   = $firstDisplay;
+        $data['secondDisplay']  = $secondDisplay;
+
+        $where   = array();
+        $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
+        $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
+
+        $this->update($data, $where);
+    }
+}
