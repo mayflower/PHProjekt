@@ -53,7 +53,8 @@ require_once 'ModelInformation/DefaultTest.php';
 require_once 'LoaderTest.php';
 require_once 'Tags/DefaultTest.php';
 require_once 'Filter/ParseTreeTest.php';
-require_once 'SearchWordsTest.php';
+require_once 'Search/DefaultTest.php';
+require_once 'Search/WordsTest.php';
 require_once 'ModuleTest.php';
 
 /**
@@ -109,7 +110,8 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_ModelInformation_DefaultTest');
         $suite->addTestSuite('Phprojekt_Tags_DefaultTest');
         //$suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
-        $suite->addTestSuite('Phprojekt_SearchWordsTest');
+        $suite->addTestSuite('Phprojekt_Search_DefaultTest');
+        $suite->addTestSuite('Phprojekt_Search_WordsTest');
 
         return $suite;
     }

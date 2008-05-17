@@ -26,4 +26,10 @@
  */
 class Note_Models_Note extends Phprojekt_Item_Abstract
 {
+    /**
+     * Field for display in the search results
+     *
+     * @var string
+     */
+    public $searchSecondDisplayField = 'comments';
 }
