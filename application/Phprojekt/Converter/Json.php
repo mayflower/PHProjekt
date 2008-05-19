@@ -32,6 +32,49 @@
 class Phprojekt_Converter_Json
 {
     /**
+     * The function check the parameters type
+     * and choose which convert function must use
+     *
+     * @param mix $param1 - Tree class / Item class / Array
+     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
+     *
+     * @return string
+     */
+    public function convert($param1, $param2 = null)
+    {
+        // Convert a Tree class
+        if ($param1 instanceof Phprojekt_Tree_Node_Database) {
+            return $this->_convertTree($param1);
+
+        // Convert Models
+        } else if (is_array($param1) && isset($param1[0]) && $param1[0] instanceof Phprojekt_Model_Interface) {
+            if (null == $param2) {
+                $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
+            }
+            return $this->_convertModel($param1, $param2);
+
+        // Convert normal values
+        } else if (is_array($param1) && !empty($param1) && null == $param2) {
+            return $this->_convertValue($param1);
+
+        // Convert tags
+        } else if (is_array($param1) && is_array($param2) && !empty($param2)) {
+            return $this->_convertTag($param1, $param2);
+
+        // Convert Models
+        } else if ($param1 instanceof Phprojekt_Model_Interface) {
+            if (null == $param2) {
+                $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
+            }
+            return $this->_convertModel($param1, $param2);
+
+        // Default, text values
+        } else {
+            return $this->_convertValue($param1);
+        }
+    }
+
+    /**
      * Convert a model or a model information into a json stream
      *
      * @param Phprojekt_Interface_Model|array $models The model to convert
@@ -40,10 +83,10 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public static function convert($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    private function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (null === $models) {
-            return '{}&&{"metadata":[]}';
+            return $this->_makeJsonString(array('metadata' => array()));
         }
 
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
@@ -51,7 +94,7 @@ class Phprojekt_Converter_Json
         } else if (is_array($models) && !empty($models)) {
             $model = current((array) $models);
         } else {
-            return '{}&&{"metadata":[]}';
+            return $this->_makeJsonString(array('metadata' => array()));
         }
 
         if (!$model instanceof Phprojekt_Model_Interface) {
@@ -107,10 +150,7 @@ class Phprojekt_Converter_Json
                       'data'     => $datas,
                       'numRows'  => (int)$numRows);
 
-        // Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
-        // the content-type dojo expects is: json-comment-filtered
-        // header('Content-Type','application/json');
-        return '{}&&'.Zend_Json_Encoder::encode($data);
+        return $this->_makeJsonString($data);
     }
 
     /**
@@ -120,7 +160,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public static function convertTree(Phprojekt_Tree_Node_Database $tree)
+    private function _convertTree(Phprojekt_Tree_Node_Database $tree)
     {
         $treeNodes = array();
         foreach ($tree as $node) {
@@ -139,7 +179,7 @@ class Phprojekt_Converter_Json
         $data['label']      = 'name';
         $data['items']      = $treeNodes;
 
-        return Zend_Json_Encoder::encode($data);
+        return $this->_makeJsonString($data);
     }
 
     /**
@@ -150,9 +190,9 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public function convertValue($data)
+    private function _convertValue($data)
     {
-        return Zend_Json_Encoder::encode($data);
+        return $this->_makeJsonString($data);
     }
 
     /**
@@ -163,13 +203,26 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public function convertTag($data, $fieldDefinition)
+    private function _convertTag($data, $fieldDefinition)
     {
         $numRows = count($data);
         $data = array('metadata' => $fieldDefinition,
                       'data'     => $data,
                       'numRows'  => (int)$numRows);
 
-        return Zend_Json_Encoder::encode($data);
+        return $this->_makeJsonString($data);
+    }
+
+    /**
+     * Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
+     * the content-type dojo expects is: json-comment-filtered
+     *
+     * @param array $data Data to convert
+     *
+     * @return string
+     */
+    private function _makeJsonString($data)
+    {
+        return '{}&&('.Zend_Json_Encoder::encode($data).')';
     }
 }

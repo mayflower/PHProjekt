@@ -63,6 +63,6 @@ class SearchController extends IndexController
         $results = array();
         $results  = $this->_search->search($words, $operator);
 
-        echo Phprojekt_Converter_Json::convertValue($results);
+        echo $this->_json->convert($results);
     }
 }

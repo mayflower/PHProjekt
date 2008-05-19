@@ -75,7 +75,7 @@ class Timecard_IndexController extends IndexController
             $records = $this->getModelObject()->fetchAll($dateFilter, null, $count, $offset);
         }
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        echo $this->_json->convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -105,10 +105,11 @@ class Timecard_IndexController extends IndexController
         $showId = $model->id;
 
         $return    = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => $showId);
-        echo Phprojekt_Converter_Json::convertValue($return);
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $showId);
+
+        echo $this->_json->convert($return);
     }
 
     /**
@@ -146,11 +147,10 @@ class Timecard_IndexController extends IndexController
         }
 
         $return    = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => $showId);
-        echo Phprojekt_Converter_Json::convertValue($return);
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $showId);
+
+        echo $this->_json->convert($return);
     }
-
-
 }

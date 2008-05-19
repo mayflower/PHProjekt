@@ -34,6 +34,13 @@
 class IndexController extends Zend_Controller_Action
 {
     /**
+     * Json converter class
+     *
+     * @var Phprojekt_Converter_Json
+     */
+    public $_json = null;
+
+    /**
      * Init function
      *
      * First check if is a logued user, if not is redirect to the login form.
@@ -49,18 +56,17 @@ class IndexController extends Zend_Controller_Action
         try {
             Phprojekt_Auth::isLoggedIn();
         } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
-            /* user not logged in, display login page */
+            // User not logged in, display login page
             $logger = Zend_Registry::get('log');
             $logger->debug((string) $ae);
             $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
             exit;
         }
 
-        /*
-        * this is a work around as we cannot set this in the front /*
-        */
+        // This is a work around as we cannot set this in the front
         $this->_helper->viewRenderer->setNoRender();
 
+        $this->_json = new Phprojekt_Converter_Json();
     }
 
     /**
@@ -106,7 +112,7 @@ class IndexController extends Zend_Controller_Action
             $data = $allowedSubModules;
         }
 
-        echo Phprojekt_Converter_Json::convertValue($data);
+        echo $this->_json->convert($data);
     }
 
     /**
@@ -122,7 +128,7 @@ class IndexController extends Zend_Controller_Action
         $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
         $tree->setup();
 
-        echo Phprojekt_Converter_Json::convertTree($tree);
+        echo $this->_json->convert($tree);
     }
 
     /**
@@ -154,7 +160,7 @@ class IndexController extends Zend_Controller_Action
             $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
         }
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        echo $this->_json->convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -177,7 +183,7 @@ class IndexController extends Zend_Controller_Action
             $record = $this->getModelObject()->find($id);
         }
 
-        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        echo $this->_json->convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -213,7 +219,7 @@ class IndexController extends Zend_Controller_Action
                            'code'    => 0,
                            'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convertValue($return);
+        echo $this->_json->convert($return);
     }
 
     /**
@@ -247,7 +253,7 @@ class IndexController extends Zend_Controller_Action
                         'code'    => 0,
                         'id'      => implode(',', $showId));
 
-        echo Phprojekt_Converter_Json::convertValue($return);
+        echo $this->_json->convert($return);
     }
 
     /**
@@ -281,7 +287,7 @@ class IndexController extends Zend_Controller_Action
                              'code'    => 0,
                              'id'      => $id);
 
-            echo Phprojekt_Converter_Json::convertValue($return);
+            echo $this->_json->convert($return);
         } else {
             throw new Phprojekt_PublishedException('Item not found');
         }
@@ -314,7 +320,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @requestparam integer projectId
      *
-     * @return array
+     * @return void
      */
     public function jsonGetModulesPermissionAction()
     {
@@ -351,6 +357,18 @@ class IndexController extends Zend_Controller_Action
             $data = $allowedSubModules;
         }
 
-        echo Phprojekt_Converter_Json::convertValue($data);
+        echo $this->_json->convert($data);
+    }
+
+    /**
+     * Return a list of all the projects
+     *
+     * @return void
+     */
+    public function jsonGetProjectsAction()
+    {
+        $object = Phprojekt_Loader::getModel('Project', 'Project');
+        $records = $object->fetchAll();
+        echo $this->_json->convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 }

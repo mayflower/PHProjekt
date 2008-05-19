@@ -9,7 +9,7 @@
         @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojekt.css";
     </style>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>scripts/dojo/dojo/dojo.js"
-     djConfig="isDebug: true, parseOnLoad: true"></script>
+     djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
 	<script type="text/javascript">
 		dojo.require("dojo.parser");
 		dojo.require("dijit.form.Form");
@@ -25,7 +25,7 @@
     		<div id="header" region="top" class="block" style="height:55px;" >
     		    <img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
 			</div>
-			
+
 			<!-- Border Container which splits page in navigation and form/list view: -->
 			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
 			<!-- navigation panel -->
@@ -34,7 +34,7 @@
  	    			<div id="navigation-container-titel">
  	    				<center>Startseite</center>
         			</div>
-				</div>        		
+				</div>
      		</div>
    			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent" >
     		<!-- Submodule navigation: -->
@@ -51,7 +51,7 @@
         		<hr class="space"/>
         		<!-- Exception Form -->
         		<div id="serverFeedback" class="prepend-24">
-        		<?php 
+        		<?php
         			if($this->message){
         				echo '<div class="error">'.$this->message.'</div>';
         			}
@@ -79,11 +79,11 @@
     						<td></td>
     					</tr>
     				</table>
-    				
+
     			</form>
          	</div>
 		</div>
 		</div>
-		
+
 	</body>
 </html>
