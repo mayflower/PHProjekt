@@ -885,8 +885,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking the response for invalid project
-        // Check for []
-        $this->assertTrue(strlen($response) == 2);
+        $this->assertTrue(strpos($response, '&&([])') > 0);
     }
 
     /**
