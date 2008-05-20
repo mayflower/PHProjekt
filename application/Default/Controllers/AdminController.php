@@ -84,6 +84,6 @@ abstract class AdminController extends IndexController
             throw new Phprojekt_PublishedException('Module not found');
         }
 
-        echo $this->_json->convert($result);
+        echo Phprojekt_Converter_Json::convert($result);
     }
 }
