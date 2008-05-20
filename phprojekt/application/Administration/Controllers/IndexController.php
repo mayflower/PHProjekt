@@ -35,6 +35,6 @@ class Administration_IndexController extends IndexController
     {
         $modules = Phprojekt_Loader::getModel('Administration', 'AdminModels');
 
-        echo $this->_json->convert($modules->fetchAll());
+        echo Phprojekt_Converter_Json::convert($modules->fetchAll());
     }
 }

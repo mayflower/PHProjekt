@@ -66,7 +66,7 @@ class Project_IndexController extends IndexController
                            'code'    => 0,
                            'id'      => $showId);
 
-        echo $this->_json->convert($return);
+        echo Phprojekt_Converter_Json::convert($return);
     }
 
     /**
@@ -95,6 +95,6 @@ class Project_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => implode(',', $showId));
 
-        echo $this->_json->convert($return);
+        echo Phprojekt_Converter_Json::convert($return);
     }
 }

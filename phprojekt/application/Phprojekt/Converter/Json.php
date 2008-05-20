@@ -40,37 +40,37 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    public function convert($param1, $param2 = null)
+    static function convert($param1, $param2 = null)
     {
         // Convert a Tree class
         if ($param1 instanceof Phprojekt_Tree_Node_Database) {
-            return $this->_convertTree($param1);
+            return self::_convertTree($param1);
 
         // Convert Models
         } else if (is_array($param1) && isset($param1[0]) && $param1[0] instanceof Phprojekt_Model_Interface) {
             if (null == $param2) {
                 $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
             }
-            return $this->_convertModel($param1, $param2);
+            return self::_convertModel($param1, $param2);
 
         // Convert normal values
         } else if (is_array($param1) && !empty($param1) && null == $param2) {
-            return $this->_convertValue($param1);
+            return self::_convertValue($param1);
 
         // Convert tags
         } else if (is_array($param1) && is_array($param2) && !empty($param2)) {
-            return $this->_convertTag($param1, $param2);
+            return self::_convertTag($param1, $param2);
 
         // Convert Models
         } else if ($param1 instanceof Phprojekt_Model_Interface) {
             if (null == $param2) {
                 $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
             }
-            return $this->_convertModel($param1, $param2);
+            return self::_convertModel($param1, $param2);
 
         // Default, text values
         } else {
-            return $this->_convertValue($param1);
+            return self::_convertValue($param1);
         }
     }
 
@@ -83,10 +83,10 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    private function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (null === $models) {
-            return $this->_makeJsonString(array('metadata' => array()));
+            return self::makeJsonString(array('metadata' => array()));
         }
 
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
@@ -94,7 +94,7 @@ class Phprojekt_Converter_Json
         } else if (is_array($models) && !empty($models)) {
             $model = current((array) $models);
         } else {
-            return $this->_makeJsonString(array('metadata' => array()));
+            return self::_makeJsonString(array('metadata' => array()));
         }
 
         if (!$model instanceof Phprojekt_Model_Interface) {
@@ -150,7 +150,7 @@ class Phprojekt_Converter_Json
                       'data'     => $datas,
                       'numRows'  => (int)$numRows);
 
-        return $this->_makeJsonString($data);
+        return self::_makeJsonString($data);
     }
 
     /**
@@ -160,7 +160,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    private function _convertTree(Phprojekt_Tree_Node_Database $tree)
+    private static function _convertTree(Phprojekt_Tree_Node_Database $tree)
     {
         $treeNodes = array();
         foreach ($tree as $node) {
@@ -179,7 +179,7 @@ class Phprojekt_Converter_Json
         $data['label']      = 'name';
         $data['items']      = $treeNodes;
 
-        return $this->_makeJsonString($data);
+        return self::_makeJsonString($data);
     }
 
     /**
@@ -190,9 +190,9 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    private function _convertValue($data)
+    private static function _convertValue($data)
     {
-        return $this->_makeJsonString($data);
+        return self::_makeJsonString($data);
     }
 
     /**
@@ -203,14 +203,14 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    private function _convertTag($data, $fieldDefinition)
+    private static function _convertTag($data, $fieldDefinition)
     {
         $numRows = count($data);
         $data = array('metadata' => $fieldDefinition,
                       'data'     => $data,
                       'numRows'  => (int)$numRows);
 
-        return $this->_makeJsonString($data);
+        return self::_makeJsonString($data);
     }
 
     /**
@@ -221,7 +221,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    private function _makeJsonString($data)
+    private static function _makeJsonString($data)
     {
         return '{}&&('.Zend_Json_Encoder::encode($data).')';
     }
