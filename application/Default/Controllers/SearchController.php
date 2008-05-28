@@ -50,18 +50,20 @@ class SearchController extends IndexController
     /**
      * Search for words
      *
-     * @requestparam string $words    The words for seach
-     * @requestparam string $operator AND/OR
+     * @requestparam string  $words    The words for seach
+     * @requestparam integer $count    Number of results
+     * @requestparam integer $start    Number of page
      *
      * @return void
      */
     public function jsonSearchAction()
     {
         $words    = $this->getRequest()->getParam('words');
-        $operator = $this->getRequest()->getParam('operator', 'AND');
+        $count    = (int) $this->getRequest()->getParam('count',  null);
+        $offset   = (int) $this->getRequest()->getParam('start',  null);
 
         $results = array();
-        $results  = $this->_search->search($words, $operator);
+        $results  = $this->_search->search($words, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($results);
     }

@@ -15,7 +15,10 @@ DROP TABLE IF EXISTS `Note`;
 DROP TABLE IF EXISTS `TagsModules`;
 DROP TABLE IF EXISTS `TagsUsers`;
 DROP TABLE IF EXISTS `Tags`;
+DROP TABLE IF EXISTS `TabModuleRelation`;
+DROP TABLE IF EXISTS `Tabs`;
 DROP TABLE IF EXISTS `SearchWords`;
+DROP TABLE IF EXISTS `SearchWordModule`;
 DROP TABLE IF EXISTS `SearchDisplay`;
 DROP TABLE IF EXISTS `UserModuleSetting`;
 DROP TABLE IF EXISTS `Todo`;
@@ -236,15 +239,25 @@ CREATE TABLE `UserModuleSetting` (
 );
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
-
 --
 -- Table structure for table `SearchWords`
 --
 CREATE TABLE `SearchWords` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word` varchar(255) NOT NULL,
+  `count` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+
+--
+-- Table structure for table `SearchWordModule`
+--
+CREATE TABLE `SearchWordModule` (
   `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
-  `word` varchar(255) NOT NULL,
-  PRIMARY KEY  (`itemId`,`moduleId`,`word`)
+  `wordId` int(11) NOT NULL,
+  PRIMARY KEY  (`itemId`,`moduleId`,`wordId`)
 );
 
 
@@ -290,6 +303,25 @@ CREATE TABLE `TagsModules` (
   `itemId` int(11) NOT NULL,
   `tagUserId` int(11) NOT NULL,
   PRIMARY KEY  (`moduleId`, `itemId`, `tagUserId`)
+);
+
+--
+-- Table structure for table `Tabs`
+--
+CREATE TABLE `Tabs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+--
+-- Table structure for table `TabModuleRelation`
+--
+CREATE TABLE `TabModuleRelation` (
+  `tabId` int(11) NOT NULL,
+  `moduleId` int(11) NOT NULL,
+  PRIMARY KEY (`tabId`, `moduleId`)
 );
 
 

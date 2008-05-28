@@ -43,10 +43,10 @@ phpr.send = function(/*Object*/paramsIn) {
     //
     //  Example call:
     //      phpr.send({url:"/live-save/", content:{data:1}, chunkMap:{tags:"tagsEl"}, onSuccess:function() {...}});
-    
+
     // onEnd: Is always called after the onSuccess and onError have finished.
     //     This might be used for resetting things that are common for both cases.
-    
+
     //
     var params = {
         url:"",
@@ -74,7 +74,7 @@ phpr.send = function(/*Object*/paramsIn) {
             _onEnd();
         }
     }
-    
+
     if (params.onSuccess) {
         // If you define onSuccess, make sure to also show the error, for ret=False!!!!!!!
         _onSuccess = function(data, ioArgs) {
@@ -98,23 +98,23 @@ phpr.send = function(/*Object*/paramsIn) {
         url		:	params.url,
         content	:	params.content,
         handleAs:   params.handleAs,
-        sync    :   params.sync,        
+        sync    :   params.sync,
         error	:	_onError,
         load	:	_onSuccess
     });
 };
 phpr.handleResponse = function(resultArea,result)
-{	
+{
     var css = 'error';
     if(result.type =='success'){
-        css = 'success'; 
-    } 
+        css = 'success';
+    }
     var message= result.message
     if (!message) {
         css = '';
         message = "";
     }
-    dijit.byId(resultArea).addMessage({cssClass: css, output:message});  
+    dijit.byId(resultArea).addMessage({cssClass: css, output:message});
 };
 phpr.getCurrent = function(data, identifier, value){
     var current = null;
@@ -157,7 +157,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
-    
+
     _filterResponse: function(data){
         ret = {
             items: [{
@@ -165,7 +165,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
                 {"data": data.data}]
         };
         return ret;
-    }    
+    }
 });
 dojo.require("dijit.form.DateTextBox");
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
@@ -174,7 +174,7 @@ dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
         //     This function overwrites the dijit.form.DateTextBox display
         //     description:
         //     Make sure that the date is not only displayed localized, but also
-        //     the value which is returned is set to this date format    
+        //     the value which is returned is set to this date format
         return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
     }
 });
@@ -187,13 +187,13 @@ dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated],
         widgetsInTemplate: true,
         messages:[],
         displayedMessages:[],
-        
+
         templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
 		base: {
 			url: dojo.moduleUrl("phpr.Default", "template/serverFeedbackContent.html"),
 			shared: true
 		},
-        
+
         addMessage: function(message){
             this.messages.push(message);
             this.displayMessage(message);
@@ -214,10 +214,10 @@ dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated],
             });
             combine = dojo.fx.combine([fadeIn,fadeOut]);
             combine.play();
-                    
+
         },
         postCreate: function(){
             this.render();
-        }      
+        }
     }
 );

@@ -1,9 +1,11 @@
 <div dojoType="dijit.layout.BorderContainer" id="completeContent">
     <div id="header" region="top" class="block" style="height:55px;" >
     	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='dojo.publish("Project.reload")'>
+    	<form dojoType="dijit.form.Form" id="searchform" name="searchform" style="display:inline" onsubmit='dojo.publish("{{currentModule}}.submitSearchForm"); return false;'>
         <div id="search-bar" class="last right align-right">
-            <input name="searchfield" value="Search" />
+            <input id="searchfield" name="searchfield" value="Search" onmousedown="this.value = ''; this.focus();" />
         </div>
+        </form>
 		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar" >
 			<div dojoType="dijit.form.DropDownButton">
 				<span>Administration</span>
@@ -61,13 +63,13 @@
         				<img src="{{webpath}}img/subheaderborder.png" alt="" />
         			</div>
         			<div class="column left span-17 append-1 align-left" id="subModuleNavigation"></div>
-				    <div id="buttonRow" class="align-right append-2"></div>				    
+				    <div id="buttonRow" class="align-right append-2"></div>
  					<!-- spaces -->
 				    <hr>
  				</div>
  				<!-- Exception Form -->
  				<div id="serverFeedback" dojoType="phpr.ServerFeedback" sytle="display:block;height:55px;"></div>
-        		         	
+
         	</div>
         	<!-- Center Area Grid and Form -->
         	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">

@@ -57,9 +57,9 @@ class Phprojekt_Converter_Json
         } else if (is_array($param1) && !empty($param1) && null == $param2) {
             return self::_convertValue($param1);
 
-        // Convert tags
+        // Convert tags or Search
         } else if (is_array($param1) && is_array($param2) && !empty($param2)) {
-            return self::_convertTag($param1, $param2);
+            return self::_convertMetadataAndData($param1, $param2);
 
         // Convert Models
         } else if ($param1 instanceof Phprojekt_Model_Interface) {
@@ -86,7 +86,7 @@ class Phprojekt_Converter_Json
     private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (null === $models) {
-            return self::makeJsonString(array('metadata' => array()));
+            return self::_makeJsonString(array('metadata' => array()));
         }
 
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
@@ -192,18 +192,21 @@ class Phprojekt_Converter_Json
      */
     private static function _convertValue($data)
     {
+        if (is_array($data) && empty($data)) {
+            $data = array('metadata' => array());
+        }
         return self::_makeJsonString($data);
     }
 
     /**
-     * Convert the tag data to json-format
+     * Convert the tag or search data to json-format
      *
-     * @param array $data            The tags values
+     * @param array $data            The data values
      * @param array $fieldDefinition The definition of each field
      *
      * @return string
      */
-    private static function _convertTag($data, $fieldDefinition)
+    private static function _convertMetadataAndData($data, $fieldDefinition)
     {
         $numRows = count($data);
         $data = array('metadata' => $fieldDefinition,

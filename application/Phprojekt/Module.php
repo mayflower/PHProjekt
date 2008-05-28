@@ -77,7 +77,11 @@ class Phprojekt_Module
            self::$_cache[$projectId][$row['module']] = $row['id'];
         }
 
-        return self::$_cache[$projectId];
+        if (isset(self::$_cache[$projectId])) {
+            return self::$_cache[$projectId];
+        } else {
+            return array();
+        }
     }
 
     /**

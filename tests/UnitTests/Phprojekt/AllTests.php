@@ -16,8 +16,6 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'Phprojekt_AllTests::main');
 }
 
-
-
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
@@ -25,7 +23,6 @@ set_include_path('.' . PATH_SEPARATOR
                . PHPR_LIBRARY_PATH . PATH_SEPARATOR
                . PHPR_CORE_PATH . PATH_SEPARATOR
                . get_include_path());
-
 
 require_once 'Zend/Loader.php';
 Zend_Loader::registerAutoload();
@@ -54,8 +51,8 @@ require_once 'LoaderTest.php';
 require_once 'Tags/DefaultTest.php';
 require_once 'Filter/ParseTreeTest.php';
 require_once 'Search/DefaultTest.php';
-require_once 'Search/WordsTest.php';
 require_once 'ModuleTest.php';
+require_once 'TabsTest.php';
 
 /**
  * Test suite for the default module
@@ -111,7 +108,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Tags_DefaultTest');
         //$suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
         $suite->addTestSuite('Phprojekt_Search_DefaultTest');
-        $suite->addTestSuite('Phprojekt_Search_WordsTest');
+        $suite->addTestSuite('Phprojekt_TabsTest');
 
         return $suite;
     }
