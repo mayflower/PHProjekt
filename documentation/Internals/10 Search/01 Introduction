@@ -6,18 +6,30 @@ fast. Usually it is desireable that people are able
 to search for substrings and can combine search strings.
 
 Database layout
-Search is based on two tables. On is a table that only
-contains a list of words and a the relationship with the model.
-A second table contains the display fields for the model.
+Search is based on three tables. On is a table that only
+contains a list of words and the count of ocurrences,
+other contains the relationship between the wordId and the model.
+A third table contains the display fields for the model.
 
 Table: SearchWords
-+-----+-------+--------+------+
-| moduleId  | itemId   | word |
-+-----------+----------+------+
-| 1         | 1        | foo  |
-+-----------+----------+------+
-| 1         | 2        | test |
-+-----------+----------+------+
++----+-------+-------+
+| id | word  | count |
++----+-------+-------+
+| 1  | foo   |   1   |
++----+-------+-------+
+| 2  | test  |   2   |
++----+-------+-------+
+
+Table: SearchWordModule
++-----+-------+--------+--------+
+| moduleId  | itemId   | wordId |
++-----------+----------+--------+
+| 1         | 1        |    1   |
++-----------+----------+--------+
+| 1         | 2        |    1   |
++-----------+----------+--------+
+| 1         | 2        |    2   |
++-----------+----------+--------+
 
 Table: SearchDisplay
 +-----+-------+--------+---------------+------------------+
@@ -34,14 +46,15 @@ Indexing data and the actual search.
 
 For index data, the itme class will call the search index function
 in each save call.
-The index function takes a model as an argument and inserts or updates both
-the SearchWords and SearchDisplay table with the found words.
+The index function takes a model as an argument and inserts or updates
+the three tables with the found words.
 To determine what is a word, the class uses heuristics.
 It can be enhanced by adding additional heurstics.
 
 For the search, the class returns a set of founded entries.
 Only is returned the items where the user have read access.
-The search can used with many words and the operators "OR" and "AND".
+The search can used with many words.
+Pero now, only work the "OR" operator.
 
 Heuristics
 To figure out what are words in a string, PHProjekt implements a set of

@@ -36,6 +36,13 @@ class Phprojekt_Search_Default
     protected $_words = null;
 
     /**
+     * Class for manage the words-module Relation
+     *
+     * @var Phprojekt_Search_WordModule
+     */
+    protected $_wordModule = null;
+
+    /**
      * Class for manage the words in files
      *
      * @var Phprojekt_Search_Words
@@ -58,9 +65,10 @@ class Phprojekt_Search_Default
      */
     public function __construct()
     {
-        $this->_words   = new Phprojekt_Search_Words();
-        $this->_files   = new Phprojekt_Search_Files();
-        $this->_display = new Phprojekt_Search_Display();
+        $this->_words      = new Phprojekt_Search_Words();
+        $this->_wordModule = new Phprojekt_Search_WordModule();
+        $this->_files      = new Phprojekt_Search_Files();
+        $this->_display    = new Phprojekt_Search_Display();
     }
 
     /**
@@ -81,7 +89,8 @@ class Phprojekt_Search_Default
         $moduleId = Phprojekt_Module::getId($object->getTableName(), $object->projectId);
         $itemId   = $object->id;
 
-        $this->_words->deleteWords($moduleId, $itemId);
+        $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
+        $this->_words->decreaseWords($wordsId);
 
         $data = $this->_getObjectDataToIndex($object);
 
@@ -92,7 +101,8 @@ class Phprojekt_Search_Default
             if (isset($type->formType) && $type->formType == 'file') {
                 $value = $this->_files->getWordsFromFile($value);
             }
-            $this->_words->indexWords($moduleId, $itemId, $value);
+            $wordsId = $this->_words->indexWords($value);
+            $this->_wordModule->indexWords($moduleId, $itemId, $wordsId);
         }
     }
 
@@ -108,7 +118,8 @@ class Phprojekt_Search_Default
         $moduleId = Phprojekt_Module::getId($object->getTableName(), $object->projectId);
         $itemId   = $object->id;
 
-        $this->_words->deleteWords($moduleId, $itemId);
+        $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
+        $this->_words->decreaseWords($wordsId);
         $this->_display->deleteDisplay($moduleId, $itemId);
     }
 
@@ -118,35 +129,55 @@ class Phprojekt_Search_Default
      *                         or  => the item can contain any word.
      * Only the items with readAccess are returned
      *
-     * @param string $words    Some words separated by space
-     * @param string $operator Operator AND/OR
+     * @param string  $words    Some words separated by space
+     * @param integer $count    Limit query
+     * @param integer $offset   Query offset
      *
      * @uses:
      *      $db = Zend_Registry::get('db');
-     *      $search = new Phprojekt_Search_Words(array('db' => $db));
+     *      $search = new Phprojekt_Search_Default(array('db' => $db));
      *      $search->search('text1 text2 text3','OR');
      *
      * @return array
      */
-    public function search($words, $operator = 'AND')
+    public function search($words, $count = null, $offset = null)
     {
         $rights = new Phprojekt_Item_Rights();
-
-        $result = $this->_words->searchWords($words, $operator);
-
+        $result = $this->_words->searchWords($words, $count, $offset);
         // Convert result to array and add the display data
         // only fetch records with read access
         $foundResults = array();
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $userId        = $authNamespace->userId;
-
-        foreach ($result as $tmp => $data) {
-            if ($rights->hasRight($data['moduleId'], $data['itemId'], $userId, 'readAccess')) {
-                $foundResults[] = $this->_display->getDisplay($data['moduleId'], $data['itemId']);
+        $authNamespace   = new Zend_Session_Namespace('PHProjekt_Auth');
+        $userId          = $authNamespace->userId;
+        $tmpFoundResults = array();
+        foreach ($result as $wordData) {
+            $tmpResult = $this->_wordModule->searchModuleByWordId($wordData['id'], $count, $offset);
+            // Prevent the same moduleId-itemId twise
+            if (empty($tmpFoundResults)) {
+                $tmpFoundResults = $tmpResult;
+            } else {
+                foreach ($tmpResult as $data) {
+                    $found = false;
+                    foreach ($tmpFoundResults as $values) {
+                        if (($data['moduleId'] == $values['moduleId']) &&
+                            ($data['itemId']   == $values['itemId'])) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        $tmpFoundResults[] = $data;
+                    }
+                }
             }
         }
 
+        foreach ($tmpFoundResults as $moduleData) {
+            if ($rights->hasRight($moduleData['moduleId'], $moduleData['itemId'], $userId, 'readAccess')) {
+                $foundResults[] = $this->_display->getDisplay($moduleData['moduleId'], $moduleData['itemId']);
+            }
+        }
         return $foundResults;
     }
 

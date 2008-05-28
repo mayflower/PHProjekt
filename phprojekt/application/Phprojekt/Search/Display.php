@@ -67,9 +67,9 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
 
         $tmpResult = $this->fetchAll($where)->toArray();
 
-        $result = array('moduleId'      => $moduleId,
+        $result = array('id'            => $itemId,
+                        'moduleId'      => $moduleId,
                         'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                        'id'            => $itemId,
                         'firstDisplay'  => $tmpResult[0]['firstDisplay'],
                         'secondDisplay' => $tmpResult[0]['secondDisplay']);
 

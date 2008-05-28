@@ -51,43 +51,25 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Index a string with the moduleId and the item Id
+     * Index a string
      * First check if exists, if not, insert it.
+     * Keep and update the number of ocurrences of each word
      * The function get a string and separate into many words
      * And store each of them.
      *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id to store
-     * @param string  $data     String to save
+     * @param string $data String to save
      *
-     * @return void
+     * @return array() Array with wordIds
      */
-    public function indexWords($moduleId, $itemId, $data)
+    public function indexWords($data)
     {
+        $ids = array();
         $array = $this->_getWordsFromText($data);
         foreach ($array as $word) {
-            if (!$this->_exists($moduleId, $itemId, $word)) {
-                $this->_save($moduleId, $itemId, $word);
-            }
+            $ids[] = $this->_save($word);
         }
-    }
 
-    /**
-     * Delete all the entries for one object
-     *
-     * @param integer $moduleId The moduleId to delete
-     * @param integer $itemId   The item Id to delete
-     *
-     * @return void
-     */
-    public function deleteWords($moduleId, $itemId)
-    {
-        $where = array();
-        $clone = clone($this);
-
-        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
-        $clone->delete($where);
+        return $ids;
     }
 
     /**
@@ -95,97 +77,81 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      * The operator work like: and => the item must contain all the words.
      *                         or  => the item can contain any word.
      *
-     * @param string $words    Some words separated by space
-     * @param string $operator Operator AND/OR
+     * @param string  $words    Some words separated by space
+     * @param integer $count    Limit query
+     * @param integer $offset   Query offset
      *
      * @return array
      */
-    public function searchWords($words, $operator)
+    public function searchWords($words, $count = null, $offset = null)
     {
-        $result = array();
-        $words = $this->_getWordsFromText($words);
+        $result    = array();
+        $words     = $this->_getWordsFromText($words);
+        $where     = array();
         foreach ($words as $word) {
-            $where     = array();
-            $where[]   = 'word LIKE '. $this->getAdapter()->quote('%'.$word.'%');
-            $tmpResult = $this->fetchAll($where)->toArray();
-
-            foreach ($tmpResult as $tmp => $values) {
-                unset($tmpResult[$tmp]['word']);
-            }
-
-            if (empty($result)) {
-                $result = $tmpResult;
-            } else {
-                switch ($operator) {
-                    default:
-                    case 'AND':
-                        foreach ($result as $tmp => $values) {
-                            $found = false;
-                            foreach ($tmpResult as $data) {
-                                if (($data['moduleId'] == $values['moduleId']) &&
-                                    ($data['itemId']   == $values['itemId'])) {
-                                    $found = true;
-                                    break;
-                                }
-                            }
-                            if (!$found) {
-                                unset($result[$tmp]);
-                            }
-                        }
-                        break;
-                    case 'OR':
-                        foreach ($tmpResult as $tmp => $data) {
-                            $found = false;
-                            foreach ($result as $values) {
-                                if (($data['moduleId'] == $values['moduleId']) &&
-                                    ($data['itemId']   == $values['itemId'])) {
-                                    $found = true;
-                                    break;
-                                }
-                            }
-                            if (!$found) {
-                                $result[] = $data;
-                            }
-                        }
-                        break;
-                }
-            }
+            $where[] = '(word LIKE '. $this->getAdapter()->quote('%'.$word.'%').')';
         }
-
-        return $result;
+        $where = implode('OR', $where);
+        return $this->fetchAll($where, 'count DESC', $count, $offset)->toArray();
     }
 
     /**
-     * Check if the moduleId-item-word pair was already inserted
+     * Save or update the new word
      *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id to store
-     * @param integer $word     The word
+     * This function use the Zend_DB insert/update
      *
-     * @return boolean
+     * @param string $word The word string
+     *
+     * @return integer
      */
-    private function _exists($moduleId, $itemId, $word)
+    private function _save($word)
     {
-        return ($this->find($moduleId, $itemId, $word)->count() > 0);
+        $data = array();
+        $where = array('word = '. $this->getAdapter()->quote($word));
+        $result = $this->fetchAll($where);
+        $clone = clone($this);
+        if ($result->count() > 0) {
+            $result = $result->current();
+            $data['count'] = $result->count + 1;
+            $where = array('id = '. $this->getAdapter()->quote($result->id));
+            $clone->update($data, $where);
+            $id = $result->id;
+        } else {
+            $data['word']  = $word;
+            $data['count'] = 1;
+            $id = $clone->insert($data);
+        }
+        return $id;
     }
 
-    /**
-     * Save the new word
+   /**
+     * Decrease the ocurrences of the word
      *
-     * This function use the Zend_DB insert
+     * This function use the Zend_DB update
      *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id to store
-     * @param string  $word     The word itself
+     * @param array $words Array with wordId
      *
      * @return void
      */
-    private function _save($moduleId, $itemId, $word)
+    public function decreaseWords($words)
     {
-        $data['moduleId'] = $moduleId;
-        $data['itemId']   = $itemId;
-        $data['word']     = $word;
-        $this->insert($data);
+        foreach ($words as $id) {
+            $clone = clone($this);
+            $data = array();
+            $where = array('id = '. $this->getAdapter()->quote($id));
+            $result = $this->fetchAll($where);
+            if ($result->count() > 0) {
+                $result = $result->current();
+                if ($result->count == 1) {
+                    $where = array('id = '. $this->getAdapter()->quote($result->id));
+                    $clone->delete($where);
+                } else {
+                    $data['count'] = $result->count - 1;
+                    $where = array('id = '. $this->getAdapter()->quote($result->id));
+                    $clone->update($data, $where);
+                }
+            }
+        }
     }
 
     /**

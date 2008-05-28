@@ -30,7 +30,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
     public function testIndex()
     {
         $project = new Project_Models_Project();
-        $project->title = 'Hello World Project to delete';
+        $project->title = 'CCCC DDDD TTTT';
         $project->startDate = '1981-05-12';
         $project->endDate = '1981-05-12';
         $project->priority = 1;
@@ -40,7 +40,10 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $search = new Phprojekt_Search_Default();
         $search->indexObjectItem($project);
 
-        $result = $search->search('HELLO WORLD PROJECT DELETE', 'AND');
+        $result = $search->search('CCCC');
+        $this->assertEquals(1, count($result));
+
+        $result = $search->search('CCCC DDDD');
         $this->assertEquals(1, count($result));
     }
 
@@ -50,14 +53,14 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
     public function testSearch()
     {
         $search = new Phprojekt_Search_Default();
-        $result = (array)$search->search('HELLO WORLD PROJECT DELETE','AND');
+        $result = (array)$search->search('CCCC DDDD');
         $this->assertEquals(1, count($result));
 
-        $result = (array)$search->search('HELLO WORLD PROJECT DELETE','OR');
-        $this->assertEquals(6, count($result));
+        $result = (array)$search->search('HELLO CCCC');
+        $this->assertEquals(2, count($result));
 
-        $result = (array)$search->search('HEL WOR PRO DEL','OR');
-        $this->assertEquals(6, count($result));
+        $result = (array)$search->search('HEL CCC');
+        $this->assertEquals(2, count($result));
     }
 
     /**
@@ -71,7 +74,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $search = new Phprojekt_Search_Default();
         $search->deleteObjectItem($project);
 
-        $result = (array)$search->search('HELLO WORLD PROJECT DELETE','OR');
-        $this->assertEquals(5, count($result));
+        $result = (array)$search->search('CCCC DDDD TTTT');
+        $this->assertEquals(0, count($result));
     }
 }
