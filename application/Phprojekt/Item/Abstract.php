@@ -170,10 +170,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $u = strtotime($value);
 
                     $value = mktime(date("H",$u) + $timeZomeComplement, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
-                    $value = date("H:i:m",$value);
-
+                    $value = date("H:i:s",$value);
+                    
                     // running again the sanitizer to normalize the format
-                    $value = Inspector::sanitize('timestamp', $value, $messages, false);
+                    $value = Inspector::sanitize('time', $value, $messages, false);
+                    
 
                     break;
                 case 'datetime':
