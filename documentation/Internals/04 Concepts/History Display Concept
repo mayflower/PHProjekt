@@ -6,8 +6,11 @@ rows and information.
 
 [emph]Item History tab[/emph]
 
-One of the ways to show the changes could be the 'History' tab, on
-item detail panel, which has to be enabled on the configuration file.
+Every item will have avalable a fixed tab named 'History' where last changes 
+will be loaded. The content of the tab will be requested to server when user
+enters th tab, minimizing the size of the original request of the item detail.
+
+This tab has to be enabled enabled on the configuration file.
 
 The history tab will have all the changes produced on the last 30 days
 (by default, configurable) on all fields of an item. The information
@@ -18,7 +21,7 @@ On 'History' tab the user will be able to get all history referred to
 that specific item. The json request will be:
 
 [code]
-/History/jsonList/moduleId/<Module>/itemId/<itemId>/
+/History/jsonList/moduleId/<ModuleId>/itemId/<itemId>/
 [/code]
 
 Additional filters could be added:
@@ -43,7 +46,7 @@ item asking for the field history on the context menu. The json
 message to get the field changes history will be:
 
 [code]
-/History/jsonList/module/<moduleId>/itemId/<itemId>/fieldName/<fieldName>
+/History/jsonList/moduleId/<moduleId>/itemId/<itemId>/fieldName/<fieldName>
 [/code]
 
 

@@ -25,6 +25,7 @@ dojo.require("phpr.Project.Main");
 dojo.require("phpr.Note.Main");
 dojo.require("phpr.Administration.Main");
 dojo.require("phpr.Timecard.Main");
+dojo.require("phpr.Calendar.Main");
 dojo.declare("phpr.Main", null, {
     // summary: Main class for PHProjekt Gui
         
@@ -52,6 +53,7 @@ dojo.declare("phpr.Main", null, {
         this.Project        = new phpr.Project.Main();
         this.Administration = new phpr.Administration.Main();
         this.Timecard       = new phpr.Timecard.Main();
+        this.Calendar       = new phpr.Calendar.Main();
         
         //The load method of the currentModule is called
         dojo.publish(phpr.module + ".load");

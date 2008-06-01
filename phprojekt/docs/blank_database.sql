@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
+DROP TABLE IF EXISTS `Calendar`;
 
 --
 -- Table structure for table `DatabaseManager`
@@ -395,6 +396,24 @@ CREATE TABLE `Timeproj` (
 );
 
 --
+-- Table structure for table `Calenadr`
+--
+CREATE TABLE `Calendar` (
+  `id` int(11) NOT NULL auto_increment,
+  `title` varchar(255) default NULL,
+  `notes` text,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) default NULL,
+  `startDate` date default NULL,
+  `endDate` date default NULL,
+  `userId` int(11) default NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
+  `calendarGroup` varchar(32) default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+--
 -- INSERT DATA
 --
 
@@ -403,7 +422,8 @@ INSERT INTO `Module` (`id`, `module`) VALUES
 (2, 'Todo'),
 (3, 'Note'),
 (4, 'Timecard'),
-(5, 'Timeproj');
+(5, 'Timeproj'),
+(6, 'Calendar');
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
@@ -446,7 +466,15 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Timeproj', 'date'     , 1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
 (0, 'Timeproj', 'startTime', 1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Timeproj', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Timeproj', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0);
+(0, 'Timeproj', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Calendar', 'title',     1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
+(0, 'Calendar', 'notes',     1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'startDate', 1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
+(0, 'Calendar', 'endDate',   1, 'endDate'  , 'endDate'  , 'date'    , 5, 1, NULL, NULL     , '', 5, 'center', 1, 3, '1', 0, 1, 0),
+(0, 'Calendar', 'userId',    1, 'UserId'   , 'UserId'   , 'userId'  , 8, 1, NULL, NULL     , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'startTime', 1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'endTime',   1, 'endTime'  , 'endTime'  , 'time'    , 6, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'projectId', 1, 'project' , 'project'   , 'tree'    , 7, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0);
 
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
 (1,'dsp','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
@@ -477,7 +505,8 @@ INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES
 
 INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `moduleId`, `permission`) VALUES
 (1, 1, 1, 'write'),
-(2, 1, 2, 'write');
+(2, 1, 2, 'write'),
+(3, 1, 6, 'write');
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
 (1, 1, 1, 1, 1, 1),
@@ -504,5 +533,9 @@ INSERT INTO `ModuleProjectRelation` (`moduleId`, `projectId`, `isActive`) VALUES
 (5, 1, 1),
 (5, 2, 1),
 (5, 3, 1),
-(5, 4, 1);
+(5, 4, 1),
+(6, 1, 1),
+(6, 2, 1),
+(6, 3, 1),
+(6, 4, 1);
 COMMIT;

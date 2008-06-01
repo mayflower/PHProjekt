@@ -162,7 +162,21 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         ret = {
             items: [{
                 "metadata": data.metadata},
-                {"data": data.data}]
+                {"data": data.data},
+                {"history": data.history}]
+        };
+        return ret;
+    }
+});
+dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
+    // We need the store explicitly here, since we have to pass it to the grid model.
+    requestMethod:"post",
+    doClientPaging:false,
+
+    _filterResponse: function(data){
+        ret = {
+            items: [{
+               "history": data.history}]
         };
         return ret;
     }

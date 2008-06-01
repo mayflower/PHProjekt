@@ -14,6 +14,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 	range: new Array(),
     sendData: new Array(),
 	formdata:'',
+	historyData:'',
 
     constructor:function(main, id, module) {
         // summary:
@@ -33,6 +34,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			url: phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id
 		});
 		this.formStore.fetch({onComplete: dojo.hitch(this, "getFormData" )});
+		
+		
+		// Render the history information
+		this.historyStore = new phpr.ReadHistory({
+			url: phpr.webpath+"index.php/History/index/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+		});
+		this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData" )});
     },
 
 	getFormData: function(items, request){
@@ -45,6 +53,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // destroy serverFeedback
         phpr.destroyWidgets("serverFeedback");
 		this.formdata="";
+		this.historyData="";
 		meta = this.formStore.getValue(items[0], "metadata");
 		data = this.formStore.getValue(items[1], "data");
         var itemwrite = 15;
@@ -105,10 +114,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
 		this.formdata += this.displayTagInput();
 		formtabs ="";
+		
+		// add history on history tab
+		this
+		
+		
 		//later on we need to provide different tabs depending on the metadata
 		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'First Tab'});
 		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Second dummy Tab'});
         formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab3',title:'third dummy Tab'});
+        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.historyData,id:'tab4',title:'History'});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
             formId: 'detailForm' + this.id,
             id: 'formtab',
@@ -122,7 +137,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
 	},
-
+	
 	submitForm: function(){
         // summary:
         //    This function is responsible for submitting the formdata
@@ -184,5 +199,37 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             data.push({"id":tags['data'][i]['string'],"name":tags['data'][i]['string']});
         }
         return this.fieldTemplate.MultipleSelectRender(data ,meta['label'], meta['key'], value, false, false);
-    }
+    },
+    
+    getHistoryData: function(items, request){
+        // summary:
+        //    This function renders the history data 
+        // description:
+        //    This function processes the form data which is stored in a phpr.ReadStore and
+        //    renders the actual form according to the received data
+        var history = "";
+        
+        this.historyData="<table>";
+        
+		history = this.historyStore.getValue(items[0], "history");
+		
+		newStore = [];
+		for (var i = 0; i < history.length; i++) {
+
+			historyUser     = history[i]["userId"];
+			historyModule   = history[i]["moduleId"];
+			historyItemId   = history[i]["itemId"];
+			historyField    = history[i]["field"];
+			historyOldValue = history[i]["oldValue"];
+			historyNewValue = history[i]["newValue"];
+			historyAction   = history[i]["action"];
+			historyDate     = history[i]["datetime"];	
+			
+			this.historyData += "<tr><td>" + historyDate + "</td><td>" + historyUser + "</td><td>" + historyField + "</td><td>" + historyOldValue;
+		}
+		
+		this.historyData += "</table>";
+		
+	}
 });
+

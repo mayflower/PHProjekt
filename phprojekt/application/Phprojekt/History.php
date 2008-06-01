@@ -126,16 +126,34 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      * The data result is for use with a template
      * that correct the values for the user.
      *
-     * @param Phprojekt_Item_Abstract $object The item object
-     * @param int                     $itemId The item ID
+     * @param Phprojekt_Item_Abstract $object    The item object
+     * @param int                     $itemId    The item ID
+     * @param int                     $moduleId  The id of the module (optional)
+     * @param date                    $startDate Start date of the history list
+     * @param date                    $endDate   End date of the history list
+     * @param int                     $userId    User filter
      *
      * @return array
      */
-    public function getHistoryData($object, $itemId)
+    public function getHistoryData($object, $itemId, $moduleId = null, $startDate = null, $endDate = null, $userId = null)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName());
-        $where  = $this->getAdapter()->quoteInto('moduleId = ?', $moduleId);
+        if (!isset($moduleId)) {
+            $moduleId = Phprojekt_Module::getId($object->getTableName());
+        }
+        $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
         $where .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
+        
+        if (!empty($startDate)) {
+          $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
+        }
+        if (!empty($endDate)) {
+            $where .= $this->getAdapter()->quoteInto(' AND datetime <= ?', $endDate);
+        }
+        if (!empty($userId)) {
+            $where .= $this->getAdapter()->quoteInto(' AND userId = ?', $userId);
+        }
+        
+        
         $result = array();
 
         foreach ($this->fetchAll($where, 'datetime DESC') as $row) {
