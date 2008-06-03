@@ -12,6 +12,9 @@ dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dojo.date.locale");
+dojo.require("dojo.dnd.Mover");
+dojo.require("dojo.dnd.Moveable");
+dojo.require("dojo.dnd.move");
 
 //Load widgets from Lib
 dojo.require("phpr.Component");
@@ -28,7 +31,7 @@ dojo.require("phpr.Timecard.Main");
 dojo.require("phpr.Calendar.Main");
 dojo.declare("phpr.Main", null, {
     // summary: Main class for PHProjekt Gui
-        
+
     constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId){
         // summary:
         //    Initialize all components for the javascript Userinterfae.
@@ -41,12 +44,12 @@ dojo.declare("phpr.Main", null, {
         //    The module which should be displayed on start
         // rootProjectId): Int
         //    The Id of the root Project - This is important as user rights depend on Project
-        
+
         phpr.module           = currentModule;
         phpr.webpath          = webpath;
-        phpr.rootProjectId    = rootProjectId; 
+        phpr.rootProjectId    = rootProjectId;
         phpr.currentProjectId = rootProjectId ;
-        
+
         //All modules are initialized in the constructor
         this.Todo           = new phpr.Todo.Main();
         this.Note           = new phpr.Note.Main();
@@ -54,7 +57,7 @@ dojo.declare("phpr.Main", null, {
         this.Administration = new phpr.Administration.Main();
         this.Timecard       = new phpr.Timecard.Main();
         this.Calendar       = new phpr.Calendar.Main();
-        
+
         //The load method of the currentModule is called
         dojo.publish(phpr.module + ".load");
 
