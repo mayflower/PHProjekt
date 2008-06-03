@@ -75,7 +75,8 @@
     margin-top: 5px;
     margin-right: 10px;
 }
-.phprojekt #header #searchsuggest {
+
+.phprojekt #searchsuggest {
     width: auto;
     border: none;
     height: auto;
@@ -95,6 +96,29 @@
     margin-top: 45px;
     margin-right: 5px;
     background: #294064;
+    position: absolute;
+	border: 1px solid black;
+    cursor: pointer;
+    radius:8pt;
+    -moz-border-radius:8pt 8pt;
+    left: 80%;
+    top:  42px;
+    padding: 10px 20px;
+    margin: 10px 20px;
+}
+
+.phprojekt #searchsuggest a {
+    font-size: 9px;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    font-style: normal;
+    color: #FFFFFF;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-align: start;
+    vertical-align: baseline;
 }
 
 .phprojekt #header #toolbar {

@@ -17,6 +17,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     module:           null,
     availableModules: null,
     writePermissions: false,
+    search:           null,
 
     constructor:function(){
     },
@@ -64,6 +65,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.module = this.module;
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:phpr.webpath, currentModule:phpr.module});
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+
+        this.search = new dojo.dnd.Moveable("searchsuggest");
+
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.setSubmoduleNavigation();
@@ -165,7 +169,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if(window.mytimeout) {
             window.clearTimeout(window.mytimeout);
             // Show the suggestBox
-            dojo.byId("searchsuggest").style.display = 'none';
+            this.search.node.style.display = 'none';
         }
         window.mytimeout = window.setTimeout(dojo.hitch(this,"showSearchSuggest"), 500);
     },
@@ -179,8 +183,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         if (words.length >= 3) {
             // Show the suggestBox
-            dojo.byId("searchsuggest").style.display = 'inline';
-            dojo.byId("searchsuggest").innerHTML = '';
+            this.search.node.style.display = 'none';
+            this.search.node.innerHTML = '';
 
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words + '/count/10';
             var self = this;
@@ -200,7 +204,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         });
                     });
                     search += "</ul>";
-                    dojo.byId("searchsuggest").innerHTML = search;
+                    this.search.node.style.display = 'inline';
+                    this.search.node.innerHTML = search;
                 })
             });
         }
@@ -246,7 +251,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("gridContext");
 
         // Hide the suggestBox
-        dojo.byId("searchsuggest").style.display = 'none';
+        this.search.node.style.display = 'none';
+        this.search.node.style.innerHTML = 'none';
 
         phpr.send({
             url:       getDataUrl,
@@ -267,7 +273,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             })
         });
 
-        // Show the suggestBox if is still displayed
-        dojo.byId("searchsuggest").style.display = 'none';
+        // Hide the suggestBox if is still displayed
+        this.search.node.style.display = 'none';
     }
 });
