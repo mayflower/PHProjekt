@@ -25,10 +25,13 @@
 					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
 						Overview
 					</div>
-					<div dojoType="dijit.MenuSeparator">
+                    <div dojoType="dijit.PopupMenuItem">
+                        <span>Working time</span>
+                        <div dojoType="dijit.Menu">
+                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>Stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    					</div>
 					</div>
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>Working time Start</div>
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>Working time Stop</div>
 				</div>
 			</div>
 			<span dojoType="dijit.ToolbarSeparator"></span>
