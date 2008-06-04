@@ -50,38 +50,41 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 
         //first of all render save Button
         var params = {
-                baseClass: "positive",
-                id: "saveChanges",
-                iconClass: "disk",
-                disabled: true
-            };
+            baseClass: "positive",
+            id: "saveChanges",
+            iconClass: "disk",
+            alt: "Save",
+            disabled: true
+        };
         var saveButton = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(saveButton.domNode);
         dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
+
         dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
         dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
 
-        window["gridHeaderContextMenu"] = dijit.byId("headerContext");
-        gridHeaderContextMenu.bindDomNode(this.grid.widget.domNode);
+        //gridHeaderContextMenu = dijit.byId("headerContext");
+        //gridHeaderContextMenu.bindDomNode(this.grid.widget.domNode);
 
         this.grid.widget.onCellContextMenu = function(e) {
-                cellNode = e.cellNode;
-            };
+            cellNode = e.cellNode;
+        };
 
         this.grid.widget.onHeaderContextMenu = function(e) {
-                cellNode = e.cellNode;
-            };
+            cellNode = e.cellNode;
+        };
 
         this.grid.widget.setModel(this.grid.model);
         this.grid.widget.singleClickEdit = true;
 
         meta = this.grid.widget.model.store.metaData;
         this.gridLayout.push({
-				type: 'dojox.grid._RowSelector',
-				width: '30px'
+            type: 'dojox.grid._RowSelector',
+            width: '30px'
 	    });
+
         for (var i = 0; i < meta.length; i++) {
-            switch(meta[i]["type"]){
+            switch(meta[i]["type"]) {
                 case'selectbox':
                     var range = meta[i]["range"];
                     var opts  = new Array();
@@ -131,7 +134,6 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
             }];
 
         this.grid.widget.setStructure(gridStructure);
-
     },
 
     onSubmitFilter: function() {
@@ -171,5 +173,5 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.publish("grid.CellEdit", [value, inRowIndex, inFieldIndex]);
         this.cellEdited(value, inRowIndex, inFieldIndex);
 
-    }
+    },
 });

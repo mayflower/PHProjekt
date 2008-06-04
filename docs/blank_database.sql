@@ -49,7 +49,7 @@ CREATE TABLE `DatabaseManager` (
   `formPosition` int(11) default NULL,
   `formColumns` int(11) default NULL,
   `formRegexp` varchar(255) default NULL,
-  `formRange` text,
+  `formRange` text default NULL,
   `defaultValue` varchar(255) default NULL,
   `listPosition` int(11) default NULL,
   `listAlign` varchar(20) default NULL,
@@ -213,7 +213,7 @@ CREATE TABLE `RoleModulePermissions` (
 CREATE TABLE `Todo` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,
@@ -333,7 +333,7 @@ CREATE TABLE `Note` (
   `id` int(11) NOT NULL auto_increment,
   `projectId` int(11) default NULL,
   `title` varchar(255) NOT NULL,
-  `comments` text,
+  `comments` text default NULL,
   `category` varchar(50) default NULL,
   `ownerId` int(11) default NULL,
   PRIMARY KEY  (`id`)
@@ -347,7 +347,7 @@ CREATE TABLE `Configuration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `moduleId` int(11) NOT NULL,
   `key` varchar(255) NOT NULL,
-  `value` text,
+  `value` text default NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
 );
@@ -372,7 +372,7 @@ CREATE TABLE `ItemRights` (
 --
 CREATE TABLE `Timecard` (
   `id` int(11) NOT NULL auto_increment,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `date` date default NULL,
@@ -386,7 +386,7 @@ CREATE TABLE `Timecard` (
 --
 CREATE TABLE `Timeproj` (
   `id` int(11) NOT NULL auto_increment,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `date` date default NULL,
@@ -396,12 +396,12 @@ CREATE TABLE `Timeproj` (
 );
 
 --
--- Table structure for table `Calenadr`
+-- Table structure for table `Calendar`
 --
 CREATE TABLE `Calendar` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) default NULL,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,
@@ -477,11 +477,11 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'projectId', 1, 'project' , 'project'   , 'tree'    , 7, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0);
 
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
-(1,'dsp','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
+(1,'test','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
 (2,'gus','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A');
 
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
-(1, NULL, '/', 'Invisible Root', '', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),
+(1, NULL, '/', 'PHProjekt', '', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),
 (2, 1, '/1/', 'Project 1', '', 1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL),
 (3, 1, '/1/', 'Project 2', '', 1, '2008-05-02', '2008-07-02', 2, 'working' ,0, NULL, NULL),
 (4, 2, '/1/2/', 'Sub Project', '',1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL);

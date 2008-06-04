@@ -6,7 +6,7 @@ dojo.require("dojox.grid.Grid");
 dojo.require("dojox.grid._data.dijitEditors");
 dojo.require("dojox.grid._data.model"); // dojox.grid.data.DojoData is in there
 dojo.require("dojox.data.QueryReadStore");
-dojo.require("dojox.widget.MultiComboBox"); 
+dojo.require("dojox.widget.MultiComboBox");
 
 phpr.grid.formatDateTime = function(date) {
     if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
@@ -60,7 +60,7 @@ phpr.grid.updateRows = function(gridWidget, rowNumbers) {
 
 dojo.declare("phpr.grid.Model", dojox.grid._data.DojoData, {
     // Thanks to Maine for the kick start: http://dojotoolkit.org/book/dojo-book-0-9-1-0/part-2-dijit-dojo-widget-library/advanced-editing-and-display/grid-1-0/sortin#comment-9112
-    
+
     // The number of items to load per request.
     // This is also the number of items (rows) initially shown.
     rowsPerPage:20,
@@ -71,7 +71,7 @@ dojo.declare("phpr.grid.Model", dojox.grid._data.DojoData, {
     getRowCount:function() {
         return this._numRows;
     },
-    
+
     requestRows:function(inRowIndex, inCount, onComplete) {
         // creates serverQuery-parameter
         var row  = inRowIndex || 0;
@@ -103,11 +103,11 @@ dojo.declare("phpr.grid.Model", dojox.grid._data.DojoData, {
         }
         this.store.fetch(params);
     },
-    
+
     canSort:function() {
         return true;
     },
-    
+
     sort:function(colIndex) {
         // clears old data to force loading of new, then requests new rows
         var name = this.fields.get(Math.abs(colIndex)-1).name;
@@ -117,7 +117,7 @@ dojo.declare("phpr.grid.Model", dojox.grid._data.DojoData, {
             this.clearData();
         }
     },
-    
+
     setData: function(inData){
         // edited not to reset the store
         this.data = [];
@@ -129,7 +129,7 @@ dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
     // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
-    
+
     _filterResponse: function(data){
         this.metaData=data.metadata;
         // We need to pre-process the data before passing them to the QueryReadStore,

@@ -26,39 +26,4 @@
  */
 class Calendar_IndexController extends IndexController
 {
-    /**
-     * Saves the current item
-     * Save if you are add one or edit one.
-     * Use the model module for get the data
-     *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
-     *
-     * @requestparam integer id ...
-     *
-     * @return void
-     */
-    public function jsonSaveAction()
-    {
-        $translate = Zend_Registry::get('translate');
-        $id        = (int) $this->getRequest()->getParam('id');
-
-        if (empty($id)) {
-            $model   = $this->getModelObject();
-            $message = $translate->translate('The Item was added correctly');
-        } else {
-            $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate('The Item was edited correctly');
-        }
-
-        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
-
-        echo Phprojekt_Converter_Json::convert($return);
-    }
 }

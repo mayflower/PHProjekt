@@ -71,12 +71,13 @@ class Phprojekt_SubModules
         if ($handle = opendir(PHPR_CORE_PATH)) {
             while (false !== ($file = readdir($handle))) {
                 if (!in_array($file, $this->_ommited)) {
-                    $this->_subModules[] = array('name'  => $file,
-                                                 'label' => $file);
+                    $this->_subModules[Phprojekt_Module::getId($file)] = array('name'  => $file,
+                                                                               'label' => $file);
                 }
             }
         }
         closedir($handle);
+        ksort($this->_subModules);
     }
 
     /**

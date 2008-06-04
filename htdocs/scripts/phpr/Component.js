@@ -23,7 +23,7 @@ dojo.declare("phpr.Component", null, {
             return tpl.render(context);
         }
     },
-    
+
     publish:function(/*String*/ name, /*array*/args){
         // summary:
         //    Publish the topic for the current module, its always prefixed with the module.
@@ -36,7 +36,7 @@ dojo.declare("phpr.Component", null, {
         //    Arguments that should be published with the topic
         dojo.publish(phpr.module+"."+name, args);
     },
-    
+
     subscribe:function(/*String*/name, /*String or null*/ context, /*String or function*/ method ){
         // summary:
         //    Subcribe topic which was published for the current module, its always prefixed with the module.
@@ -49,5 +49,4 @@ dojo.declare("phpr.Component", null, {
         //    Arguments that should be published with the topic
         dojo.subscribe(phpr.module+"."+name, context, method);
     }
-    
 });

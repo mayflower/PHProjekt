@@ -14,27 +14,30 @@ dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {
 
 	 reload:function(){
 	 	phpr.module   = this.module;
-        
+
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.destroyWidgets("centerMainContent");
         phpr.destroyWidgets("bottomContent");
+        phpr.destroyWidgets("submitButton");
+        phpr.destroyWidgets("deleteButton");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.renderButton();
         var updateUrl = phpr.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/';
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(updateUrl, this, null, this.module);
 	},
+
     renderButton:function(){
         //render new button
         var newEntry =null;
         phpr.destroyWidgets("subModuleNavigation");
-        phpr.destroyWidgets("buttonRow"); 
+        phpr.destroyWidgets("buttonRow");
         var params = {
             label:     '',
             id:        'newEntry',
-            iconClass: 'add' 
+            iconClass: 'add'
            };
-        newEntry = new dijit.form.Button(params);    
+        newEntry = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(newEntry.domNode);
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
         dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));

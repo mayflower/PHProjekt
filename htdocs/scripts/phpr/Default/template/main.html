@@ -18,26 +18,27 @@
 					</div>
 				</div>
 			</div>
-			<span dojoType="dijit.ToolbarSeparator"></span>
-			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
-				Logout
-			</button>
-			<span dojoType="dijit.ToolbarSeparator"></span>
+            <span dojoType="dijit.ToolbarSeparator"></span>
     		<div dojoType="dijit.form.DropDownButton">
 				<span>Timecard</span>
 				<div dojoType="dijit.Menu">
 					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
 						Overview
 					</div>
-					<div dojoType="dijit.MenuSeparator"></div>
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>Workingtimes Start</div>
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>Workingtimes Stop</div>
+					<div dojoType="dijit.MenuSeparator">
+					</div>
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>Working time Start</div>
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>Working time Stop</div>
 				</div>
 			</div>
 			<span dojoType="dijit.ToolbarSeparator"></span>
     		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
 				Help
     		</button>
+			<span dojoType="dijit.ToolbarSeparator"></span>
+			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
+				Logout
+			</button>
     	</div>
  	</div>
  	<!-- Border Container which splits page in navigation and form/list view: -->
@@ -48,9 +49,9 @@
  				<div id="navigation-container-titel">
         		</div>
         	</div>
-        	      <div id="tree-navigation">
-			<div id="treeBox">
-			</div>
+            <div id="tree-navigation">
+                <div id="treeBox">
+                </div>
 			</div>
     	</div>
     	<!-- Border Container which splits main content in navigation, listview and formview -->
@@ -62,22 +63,25 @@
         			<div class="column">
         				<img src="{{webpath}}img/subheaderborder.png" alt="" />
         			</div>
-        			<div class="column left span-17 append-1 align-left" id="subModuleNavigation"></div>
-				    <div id="buttonRow" class="align-right append-2"></div>
+        			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
+        			</div>
+				    <div id="buttonRow" class="align-right append-2">
+				    </div>
  					<!-- spaces -->
 				    <hr>
  				</div>
  				<!-- Exception Form -->
- 				<div id="serverFeedback" dojoType="phpr.ServerFeedback" sytle="display:block;height:55px;"></div>
-
+ 				<div id="serverFeedback" dojoType="phpr.ServerFeedback" sytle="display:block;height:55px;">
+ 				</div>
         	</div>
         	<!-- Center Area Grid and Form -->
         	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">
            	</div>
-           		<div dojoType="dijit.layout.ContentPane" class="block" id="bottomContent" region="bottom">
-    </div>
+            <div dojoType="dijit.layout.ContentPane" class="block" id="bottomContent" region="bottom">
+            </div>
          </div>
 	</div>
 </div>
 <!-- Suggest seacrh -->
-<div id="searchsuggest" class="last right align-right" style="display:none"></div>
+<div id="searchsuggest" class="last right align-right" style="display:none">
+</div>

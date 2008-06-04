@@ -50,7 +50,7 @@ CREATE TABLE `DatabaseManager` (
   `formPosition` int(11) default NULL,
   `formColumns` int(11) default NULL,
   `formRegexp` varchar(255) default NULL,
-  `formRange` text,
+  `formRange` text default NULL,
   `defaultValue` varchar(255) default NULL,
   `listPosition` int(11) default NULL,
   `listAlign` varchar(20) default NULL,
@@ -214,7 +214,7 @@ CREATE TABLE `RoleModulePermissions` (
 CREATE TABLE `Todo` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,
@@ -334,7 +334,7 @@ CREATE TABLE `Note` (
   `id` int(11) NOT NULL auto_increment,
   `projectId` int(11) default NULL,
   `title` varchar(255) NOT NULL,
-  `comments` text,
+  `comments` text default NULL,
   `category` varchar(50) default NULL,
   `ownerId` int(11) default NULL,
   PRIMARY KEY  (`id`)
@@ -348,7 +348,7 @@ CREATE TABLE `Configuration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `moduleId` int(11) NOT NULL,
   `key` varchar(255) NOT NULL,
-  `value` text,
+  `value` text default NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
 );
@@ -373,7 +373,7 @@ CREATE TABLE `ItemRights` (
 --
 CREATE TABLE `Timecard` (
   `id` int(11) NOT NULL auto_increment,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `date` date default NULL,
@@ -387,7 +387,7 @@ CREATE TABLE `Timecard` (
 --
 CREATE TABLE `Timeproj` (
   `id` int(11) NOT NULL auto_increment,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `date` date default NULL,
@@ -409,12 +409,12 @@ CREATE TABLE `ModuleInstance` (
 CREATE INDEX `ModuleInstance_userId` ON `ModuleInstance`(`projectId`);
 
 --
--- Table structure for table `Calenadr`
+-- Table structure for table `Calendar`
 --
 CREATE TABLE `Calendar` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) default NULL,
-  `notes` text,
+  `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,

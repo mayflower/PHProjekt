@@ -142,7 +142,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         }
         $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
         $where .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
-        
+
         if (!empty($startDate)) {
           $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
         }
@@ -152,8 +152,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         if (!empty($userId)) {
             $where .= $this->getAdapter()->quoteInto(' AND userId = ?', $userId);
         }
-        
-        
+
+
         $result = array();
 
         foreach ($this->fetchAll($where, 'datetime DESC') as $row) {

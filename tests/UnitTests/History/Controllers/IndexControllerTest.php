@@ -27,7 +27,6 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
     /**
      * Test the history list
      */
-
     public function testJsonListAction()
     {
         $request = new Zend_Controller_Request_Http();
@@ -106,13 +105,12 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"history":[{"userId":"1","moduleId":"4","itemId":"7","field":"endTime","oldValue"') > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"userId":"1","moduleId":"4","itemId":"7","field":"endTime","oldValue"')) > 0);
     }
-    
+
     /**
      * Test the history list providing module name instead of module id
      */
-
     public function testJsonLisWithModuleNametAction()
     {
         $request = new Zend_Controller_Request_Http();
@@ -191,13 +189,12 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"history":[{"userId":"1","moduleId":"4","itemId":"7","field":"endTime","oldValue":') > 0);
+        $this->assertTrue(strpos($response, '{"userId":"1","moduleId":"4","itemId":"7","field":"endTime","oldValue":') > 0);
     }
-    
+
     /**
      * Test the history error when no id is provided
      */
-
     public function testJsonListNoIdAction()
     {
         $request = new Zend_Controller_Request_Http();
@@ -270,13 +267,17 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         // Getting the output, otherwise the home page will be displayed
         ob_start();
 
-        $front->dispatch($request, $response);
-        $response = ob_get_contents();
+        try {
+          $front->dispatch($request, $response);
+        }
+        catch (Phprojekt_PublishedException $e) {
+            $error_produced = true;
+        }
 
+        $response = ob_get_contents();
         ob_end_clean();
 
-        // checking some parts of the index template
-        $this->assertTrue(strpos($response, 'invalid module or item') > 0);
+        // checking the response for invalid project
+        $this->assertTrue($error_produced);
     }
-
 }

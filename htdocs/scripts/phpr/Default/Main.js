@@ -36,9 +36,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.currentProjectId = project.id;
         if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
         this.setSubmoduleNavigation();
+        if (!this.search) {
+            this.search = new dojo.dnd.Moveable("searchsuggest");
+        }
+        this.setSearchForm();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         phpr.destroyWidgets("centerMainContent");
+        phpr.destroyWidgets("bottomContent");
+        phpr.destroyWidgets("submitButton");
+        phpr.destroyWidgets("deleteButton");
         // destroy serverFeedback
         phpr.destroyWidgets("serverFeedback");
     },
@@ -90,9 +97,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.module = this.module;
         phpr.destroyWidgets("centerMainContent");
         phpr.destroyWidgets("bottomContent");
+        phpr.destroyWidgets("submitButton");
+        phpr.destroyWidgets("deleteButton");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
-
         this.setSubmoduleNavigation();
+        if (!this.search) {
+            this.search = new dojo.dnd.Moveable("searchsuggest");
+        }
+        this.setSearchForm();
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
@@ -122,7 +134,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                                 if(moduleName == phpr.module){
                                     liclass='class = active';
                                 }
-                                if (modules.permission >0) {
+                                if (modules.permission > 0) {
                                     navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
                                         moduleName : moduleName,
                                         moduleLabel: moduleLabel,
@@ -133,7 +145,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                                     var params = {
 			                            label:     '',
 			                            id:        'newEntry',
-                                        iconClass: 'add'
+                                        iconClass: 'add',
+                                        alt:       'Add'
 		                                };
 		                            newEntry = new dijit.form.Button(params);
                                     this.writePermissions = true;
@@ -147,6 +160,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                          })
         });
     },
+
     newEntry: function(){
         // summary:
         //     This function is responsible for displaying the form for a new entry in the
@@ -160,18 +174,69 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.connect(dojo.byId("searchfield"), "onkeyup", dojo.hitch(this, "waitForSubmitSearchForm"));
     },
 
-    waitForSubmitSearchForm: function(){
+    waitForSubmitSearchForm: function(event) {
         // summary:
         //    This function call the search itself After 1000ms of the last letter
         // description:
         //    The function will wait for 1000 ms on each keyup for try to
         //    call the search query when the user finish to write the text
-        if(window.mytimeout) {
-            window.clearTimeout(window.mytimeout);
-            // Show the suggestBox
-            this.search.node.style.display = 'none';
+        //    If the enter is presses, the suggest disapear.
+        //    If some "user" key is presses, the function don´t run.
+        key = event.keyCode
+        if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
+            // hide the suggestBox
+            dojo.byId("searchsuggest").style.display = 'none';
+            dojo.byId("searchsuggest").innerHTML = '';
+        } else if (
+            (key != dojo.keys.TAB) &&
+            (key != dojo.keys.CTRL) &&
+            (key != dojo.keys.SHIFT) &&
+            (key != dojo.keys.CLEAR) &&
+            (key != dojo.keys.ALT) &&
+            (key != dojo.keys.PAUSE) &&
+            (key != dojo.keys.CAPS_LOCK) &&
+            (key != dojo.keys.ESCAPE) &&
+            (key != dojo.keys.SPACE) &&
+            (key != dojo.keys.PAGE_UP) &&
+            (key != dojo.keys.PAGE_DOWN) &&
+            (key != dojo.keys.END) &&
+            (key != dojo.keys.HOME) &&
+            (key != dojo.keys.LEFT_ARROW) &&
+            (key != dojo.keys.UP_ARROW) &&
+            (key != dojo.keys.RIGHT_ARROW) &&
+            (key != dojo.keys.DOWN_ARROW) &&
+            (key != dojo.keys.INSERT) &&
+            (key != dojo.keys.DELETE) &&
+            (key != dojo.keys.HELP) &&
+            (key != dojo.keys.LEFT_WINDOW) &&
+            (key != dojo.keys.RIGHT_WINDOW) &&
+            (key != dojo.keys.SELECT) &&
+            (key != dojo.keys.NUMPAD_MULTIPLY) &&
+            (key != dojo.keys.NUMPAD_PLUS) &&
+            (key != dojo.keys.NUMPAD_DIVIDE) &&
+            (key != dojo.keys.F1) &&
+            (key != dojo.keys.F2) &&
+            (key != dojo.keys.F3) &&
+            (key != dojo.keys.F4) &&
+            (key != dojo.keys.F5) &&
+            (key != dojo.keys.F6) &&
+            (key != dojo.keys.F7) &&
+            (key != dojo.keys.F8) &&
+            (key != dojo.keys.F9) &&
+            (key != dojo.keys.F10) &&
+            (key != dojo.keys.F11) &&
+            (key != dojo.keys.F12) &&
+            (key != dojo.keys.F13) &&
+            (key != dojo.keys.F14) &&
+            (key != dojo.keys.F15) &&
+            (key != dojo.keys.NUM_LOCK) &&
+            (key != dojo.keys.SCROLL_LOCK)) {
+
+            if(window.mytimeout) {
+                window.clearTimeout(window.mytimeout);
+            }
+            window.mytimeout = window.setTimeout(dojo.hitch(this,"showSearchSuggest"), 500);
         }
-        window.mytimeout = window.setTimeout(dojo.hitch(this,"showSearchSuggest"), 500);
     },
 
     showSearchSuggest: function (){
@@ -182,9 +247,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var words = dojo.byId("searchfield").value;
 
         if (words.length >= 3) {
-            // Show the suggestBox
-            this.search.node.style.display = 'none';
-            this.search.node.innerHTML = '';
+            // hide the suggestBox
+            dojo.byId("searchsuggest").style.display = 'none';
+            dojo.byId("searchsuggest").innerHTML = '';
 
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words + '/count/10';
             var self = this;
@@ -204,8 +269,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         });
                     });
                     search += "</ul>";
-                    this.search.node.style.display = 'inline';
-                    this.search.node.innerHTML = search;
+                    dojo.byId("searchsuggest").style.display = 'inline';
+                    dojo.byId("searchsuggest").innerHTML = search;
                 })
             });
         }
@@ -217,6 +282,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    And show the detail view of the item selected
         // description:
         //    The server return the found records and the function display it
+        dojo.byId("searchsuggest").style.display = 'none';
+        dojo.byId("searchsuggest").innerHTML = '';
         this.publish("submitSearchForm", [words]);
         this.publish("openForm", [id, moduleName]);
     },
@@ -250,10 +317,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("headerContext");
         phpr.destroyWidgets("gridContext");
 
-        // Hide the suggestBox
-        this.search.node.style.display = 'none';
-        this.search.node.style.innerHTML = 'none';
-
         phpr.send({
             url:       getDataUrl,
             handleAs: "json",
@@ -272,8 +335,5 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 dojo.byId("gridBox").innerHTML = search;
             })
         });
-
-        // Hide the suggestBox if is still displayed
-        this.search.node.style.display = 'none';
     }
 });

@@ -35,8 +35,6 @@ phpr.destroyWidgets = function(el) {
     }
 };
 
-
-
 phpr.send = function(/*Object*/paramsIn) {
     // Send the given content to the server using the Default values,
     // if you need something special dont use this function.
@@ -103,6 +101,7 @@ phpr.send = function(/*Object*/paramsIn) {
         load	:	_onSuccess
     });
 };
+
 phpr.handleResponse = function(resultArea,result)
 {
     var css = 'error';
@@ -116,6 +115,7 @@ phpr.handleResponse = function(resultArea,result)
     }
     dijit.byId(resultArea).addMessage({cssClass: css, output:message});
 };
+
 phpr.getCurrent = function(data, identifier, value){
     var current = null;
     for (i=0; i < data.length; i++) {
@@ -137,6 +137,7 @@ phpr.receiveUserTags = function(){
         }
 	});
 };
+
 phpr.receiveCurrentTags = function(id){
     phpr.send({
 		url:       phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetTagsByModule/id/'+id,
@@ -146,13 +147,16 @@ phpr.receiveCurrentTags = function(id){
              new phpr.handleResponse('serverFeedback', data);
         }
 	});
-}
+};
+
 phpr.getCurrentTags = function(){
     return phpr.currentTags;
-}
+};
+
 phpr.getUserTags = function(){
     return phpr.userTags;
 };
+
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
@@ -168,6 +172,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         return ret;
     }
 });
+
 dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
     // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
@@ -181,6 +186,7 @@ dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
         return ret;
     }
 });
+
 dojo.require("dijit.form.DateTextBox");
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
     serialize: function(d, options) {
@@ -192,44 +198,48 @@ dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
         return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
     }
 });
-dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated],
-    {
-        // summary:
-        //     A class for displaying the ServerFeedback
-        // description:
-        //     This class receives the Server Feedback and displays it to the User
-        widgetsInTemplate: true,
-        messages:[],
-        displayedMessages:[],
 
-        templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
-		base: {
-			url: dojo.moduleUrl("phpr.Default", "template/serverFeedbackContent.html"),
-			shared: true
-		},
+dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated], {
+    // summary:
+    //     A class for displaying the ServerFeedback
+    // description:
+    //     This class receives the Server Feedback and displays it to the User
+    widgetsInTemplate: true,
+    messages:[],
+    displayedMessages:[],
+
+    templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
+        base: {
+            url: dojo.moduleUrl("phpr.Default", "template/serverFeedbackContent.html"),
+            shared: true
+        },
 
         addMessage: function(message){
             this.messages.push(message);
             this.displayMessage(message);
         },
+
         deleteLastMessage: function(message){
             this.messages.pop();
         },
+
         displayMessage: function(message){
             this.displayedMessages = [message];
             this.setTemplate(dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"));
             this.render();
             fadeIn = dojo.fadeIn({
-                  node:this.serverFeedbackContainer,
-                  duration:500});
+            node:this.serverFeedbackContainer,
+            duration:500});
+
             fadeOut= dojo.fadeOut({
                 node: this.serverFeedbackContainer,
                 duration: 5000
             });
+
             combine = dojo.fx.combine([fadeIn,fadeOut]);
             combine.play();
-
         },
+
         postCreate: function(){
             this.render();
         }
