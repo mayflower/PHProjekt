@@ -119,7 +119,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		formtabs ="";
 
 		//later on we need to provide different tabs depending on the metadata
-		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'First Tab'});
+		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'Basic Data'});
 		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Access'});
         formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.historyData,id:'tab3',title:'History'});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
