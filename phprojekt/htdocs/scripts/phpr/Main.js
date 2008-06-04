@@ -60,6 +60,5 @@ dojo.declare("phpr.Main", null, {
 
         //The load method of the currentModule is called
         dojo.publish(phpr.module + ".load");
-
     }
 });

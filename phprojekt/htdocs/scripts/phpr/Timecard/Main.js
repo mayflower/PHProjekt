@@ -26,7 +26,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
         dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");
 	},
-        load:function(){
+
+    load:function(){
         // summary:
         //    This function initially renders the page
         // description:
@@ -62,12 +63,15 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         // destroy Buttons
         phpr.destroyWidgets("buttonRow");
         phpr.destroyWidgets("centerMainContent");
+        phpr.destroyWidgets("bottomContent");
+        phpr.destroyWidgets("submitButton");
+        phpr.destroyWidgets("deleteButton");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
         this.form     = new this.formWidget(this,ParamsIn);
-
     },
+
     setProject: function(project){
         // summary:
         //    this function changes the Project in the Timecard form
@@ -79,6 +83,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dijit.byId('tcProjectId').setValue(project.id);
 
     },
+
     setDate: function(date){
          dateFormatted = dojo.date.locale.format(date, {formatLength:'full',selector:'date', locale:this.lang});
          dojo.byId("tcFormHeader").innerHTML = "<h3>Zeiterfassung f&uuml;r den "+dateFormatted+"</h3>";
@@ -86,6 +91,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
          dojo.byId('tcProjectDate').value = date;
          dojo.byId('tcDate').value = date;
     },
+
     workingtimesStop: function(){
         // summary:
         //    This function deactivates the Timecard stopwatch
@@ -96,6 +102,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             //onSuccess: this.publish("reload")
         });
     },
+
     workingtimesStart: function(){
         // summary:
         //    This function deactivates the Timecard startwatch
@@ -105,7 +112,5 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 			url:       phpr.webpath + 'index.php/Timecard/index/jsonStart'
             //onSuccess: this.publish("reload")
         });
-
     }
-
 });

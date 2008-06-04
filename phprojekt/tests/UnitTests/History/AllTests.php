@@ -52,10 +52,7 @@ class History_AllTests
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('History Controller');
-
         $suite->addTestSuite('History_IndexController_Test');
-        
-
         return $suite;
     }
 }
