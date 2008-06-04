@@ -48,6 +48,10 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 
         this.grid.widget = dijit.byId("gridNode");
 
+        if (!this.grid.widget) {
+            return;
+        }
+
         //first of all render save Button
         var params = {
             baseClass: "positive",
@@ -78,62 +82,68 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.grid.widget.singleClickEdit = true;
 
         meta = this.grid.widget.model.store.metaData;
-        this.gridLayout.push({
-            type: 'dojox.grid._RowSelector',
-            width: '30px'
-	    });
 
-        for (var i = 0; i < meta.length; i++) {
-            switch(meta[i]["type"]) {
-                case'selectbox':
-                    var range = meta[i]["range"];
-                    var opts  = new Array();
-                    var vals  = new Array();
-                    var j=0;
-                    for (j in range){
-                        vals.push(range[j]["id"]);
-                        opts.push(range[j]["name"]);
-                        j++;
-                    }
-                    this.gridLayout.push({
-                        name:    meta[i]["label"],
-                        field:   meta[i]["key"],
-                        styles:  "text-align:center;",
-                        width:   "auto",
-                        editor:  dojox.grid._data.editors.Select,
-                        options: opts,
-                        values:  vals
-                    });
-                    break;
+        if (meta.length == 0) {
+            dojo.byId("gridNode").innerHTML = 'The are no results';
+        } else {
+            this.gridLayout.push({
+                type: 'dojox.grid._RowSelector',
+                width: '30px'
+            });
 
-                case'date':
-                    this.gridLayout.push({
-                        name:      meta[i]["label"],
-                        field:     meta[i]["key"],
-                        styles:    "text-align:center;",
-                        width:     "auto",
-                        formatter: phpr.grid.formatDate,
-                        editor:    dojox.grid._data.editors.DateTextBox
-                    });
-                    break;
-
-                default:
-                    this.gridLayout.push({
-                        name:   meta[i]["label"],
-                        field:  meta[i]["key"],
-                        styles: "text-align:left;",
-                        width:  "auto",
-                        editor: dojox.grid._data.editors.Input
+            for (var i = 0; i < meta.length; i++) {
+                switch(meta[i]["type"]) {
+                    case'selectbox':
+                        var range = meta[i]["range"];
+                        var opts  = new Array();
+                        var vals  = new Array();
+                        var j=0;
+                        for (j in range){
+                            vals.push(range[j]["id"]);
+                            opts.push(range[j]["name"]);
+                            j++;
+                        }
+                        this.gridLayout.push({
+                            name:    meta[i]["label"],
+                            field:   meta[i]["key"],
+                            styles:  "text-align:center;",
+                            width:   "auto",
+                            editor:  dojox.grid._data.editors.Select,
+                            options: opts,
+                            values:  vals
                         });
-                    break;
-            }
-        }
-        var gridStructure = [{
-                noscroll: true,
-                cells: [this.gridLayout]
-            }];
+                        break;
 
-        this.grid.widget.setStructure(gridStructure);
+                    case'date':
+                        this.gridLayout.push({
+                            name:      meta[i]["label"],
+                            field:     meta[i]["key"],
+                            styles:    "text-align:center;",
+                            width:     "auto",
+                            formatter: phpr.grid.formatDate,
+                            editor:    dojox.grid._data.editors.DateTextBox
+                        });
+                        break;
+
+                    default:
+                        this.gridLayout.push({
+                            name:   meta[i]["label"],
+                            field:  meta[i]["key"],
+                            styles: "text-align:left;",
+                            width:  "auto",
+                            editor: dojox.grid._data.editors.Input
+                            });
+                        break;
+                }
+            }
+
+            var gridStructure = [{
+                    noscroll: true,
+                    cells: [this.gridLayout]
+                }];
+
+            this.grid.widget.setStructure(gridStructure);
+        }
     },
 
     onSubmitFilter: function() {
