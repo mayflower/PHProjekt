@@ -227,17 +227,21 @@ dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated], {
             this.displayedMessages = [message];
             this.setTemplate(dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"));
             this.render();
-            fadeIn = dojo.fadeIn({
-            node:this.serverFeedbackContainer,
-            duration:500});
+            var fadeIn = dojo.fadeIn({
+                node:this.serverFeedbackContainer,
+                duration: 500
+            });
 
-            fadeOut= dojo.fadeOut({
+            var fadeOut = dojo.fadeOut({
                 node: this.serverFeedbackContainer,
                 duration: 5000
             });
 
-            combine = dojo.fx.combine([fadeIn,fadeOut]);
-            combine.play();
+            fadeIn.play();
+            dojo.connect(fadeIn, "onEnd", function(){
+                fadeIn.stop();
+                fadeOut.play();
+            });
         },
 
         postCreate: function(){
