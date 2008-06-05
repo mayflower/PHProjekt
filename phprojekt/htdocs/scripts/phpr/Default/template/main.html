@@ -1,6 +1,6 @@
 <div dojoType="dijit.layout.BorderContainer" id="completeContent">
     <div id="header" region="top" class="block" style="height:55px;" >
-    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='dojo.publish("Project.reload")'>
+    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")'>
     	<form dojoType="dijit.form.Form" id="searchform" name="searchform" style="display:inline" onsubmit='dojo.publish("{{currentModule}}.submitSearchForm"); return false;'>
         <div id="search-bar" class="last right align-right">
             <input id="searchfield" name="searchfield" value="Search" onmousedown="this.value = ''; this.focus();" />
