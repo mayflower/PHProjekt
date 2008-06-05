@@ -53,8 +53,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
 
-        // destroy serverFeedback
-        phpr.destroyWidgets("serverFeedback");
 		this.formdata="";
 		this.historyData="";
 		meta = this.formStore.getValue(items[0], "metadata");
@@ -147,15 +145,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
 			content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data){
+               new phpr.handleResponse('serverFeedback',data);
                if (!this.id) {
                    this.id = data['id'];
                }
-               new phpr.handleResponse('serverFeedback',data);
-               phpr.send({
-                    url: phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonSaveTags/id/' + this.id,
-                    content:   this.sendData,
-                    onSuccess: this.publish("reload")
-                });
+               if (data.type =='success') {
+                   phpr.send({
+                        url: phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonSaveTags/id/' + this.id,
+                        content:   this.sendData,
+                        onSuccess: this.publish("reload")
+                    });
+               }
             })
         });
 	},

@@ -16,7 +16,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     grid:             null,
     module:           null,
     availableModules: null,
-    writePermissions: false,
     search:           null,
 
     constructor:function(){
@@ -27,27 +26,58 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.form = new this.formWidget(this,id,module);
     },
 
-    loadSubElements: function(project){
+    loadSubElements: function(project) {
         // summary:
-        //    this function loads a new submodule
+        //    this function loads a new project with the default submodule
         // description:
+        //    If the current submodule don´t have access, the first found submodule is used
         //    When a new submodule is called, the new grid is displayed,
         //    the navigation changed and the Detail View is resetted
         phpr.currentProjectId = project.id;
         if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
-        this.setSubmoduleNavigation();
-        if (!this.search) {
-            this.search = new dojo.dnd.Moveable("searchsuggest");
-        }
-        this.setSearchForm();
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
-        this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+
+        var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
+        var self = this;
+        var firstModule = '';
+        var usefirstModule = true;
         phpr.destroyWidgets("centerMainContent");
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
-        // destroy serverFeedback
-        phpr.destroyWidgets("serverFeedback");
+
+        phpr.send({
+            url:       subModuleUrl,
+            handleAs: "json",
+            onSuccess: dojo.hitch(this,function(data) {
+
+                    dojo.forEach(data,function(modules) {
+                        var moduleName  = modules.name;
+                        if (modules.permission > 0) {
+                            if (moduleName == phpr.module) {
+                                usefirstModule = false;
+                            }
+                            if (firstModule == '' && moduleName != phpr.module) {
+                                firstModule = moduleName;
+                            }
+                        }
+                    });
+
+                    if (firstModule != '' && usefirstModule) {
+                        phpr.module = firstModule;
+                    }
+
+                    this.drawSubmoduleNavigation(data);
+                    this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+                    if (!this.search) {
+                        this.search = new dojo.dnd.Moveable("searchsuggest");
+                    }
+                    this.setSearchForm();
+                    var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
+                    this.tree     = new this.treeWidget(this);
+                    this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+                }
+      	     )
+      	});
     },
 
     submitForm: function(/*int*/id,/*int*/parent){
@@ -57,7 +87,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    after submitting a form this function takes care of updating
         //    the tree and the grid, so that the changes are displayed
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/id/';
-        this.tree     = new this.treeWidget(this,'Project');
+        //this.tree     = new this.treeWidget(this,'Project');
         this.grid     = new this.gridWidget(updateUrl,this,parent);
     },
 
@@ -86,7 +116,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         );
     },
 
-    reload:function(){
+    reload:function() {
         // summary:
         //    This function reloads the current module
         // description:
@@ -110,55 +140,72 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
-    setSubmoduleNavigation: function(){
+    setSubmoduleNavigation: function() {
         // summary:
         //    This function is responsible for displaying the Navigation of the current Module
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
         var subModuleUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
-        var self =this;
-        var newEntry = null;
-      	phpr.destroyWidgets("subModuleNavigation");
-       	phpr.destroyWidgets("buttonRow");
         phpr.send({
             url:       subModuleUrl,
             handleAs: "json",
             onSuccess: dojo.hitch(this,function(data){
-                            self.availableModules = data;
-                            var navigation ='<ul id="nav_main">';
-                            dojo.forEach(this.availableModules,function(modules) {
-                                var liclass ='';
-                                var moduleName  = modules.name;
-                                var moduleLabel = modules.label;
-                                if(moduleName == phpr.module){
-                                    liclass='class = active';
-                                }
-                                if (modules.permission > 0) {
-                                    navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
-                                        moduleName : moduleName,
-                                        moduleLabel: moduleLabel,
-                                        liclass    : liclass
-                                    });
-                                }
-                                if (modules.permission > 3 && moduleName == phpr.module) {
-                                    var params = {
-			                            label:     '',
-			                            id:        'newEntry',
-                                        iconClass: 'add',
-                                        alt:       'Add'
-		                                };
-		                            newEntry = new dijit.form.Button(params);
-                                    this.writePermissions = true;
-                                }
-                            });
-                            navigation += "</ul>";
-                            dojo.byId("subModuleNavigation").innerHTML = navigation;
-                            dojo.byId("buttonRow").appendChild(newEntry.domNode);
-                            phpr.initWidgets(dojo.byId("subModuleNavigation"));
-                            dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
-                         })
+                this.drawSubmoduleNavigation(data);
+            })
         });
+    },
+
+    drawSubmoduleNavigation: function(data) {
+        // summary:
+        //    This function is responsible for displaying the Navigation of the current Module
+        // description:
+        //    When calling this function, the available Submodules for the current Module
+        //    are received from the server and the Navigation is rendered accordingly
+        phpr.destroyWidgets("subModuleNavigation");
+       	phpr.destroyWidgets("buttonRow");
+        var self = this;
+        var newEntry = null;
+        var firstModule = null
+        var writePermissions = false;
+        var navigation ='<ul id="nav_main">';
+        dojo.forEach(data,function(modules) {
+            var liclass ='';
+            var moduleName  = modules.name;
+            var moduleLabel = modules.label;
+            if (moduleName == phpr.module){
+                liclass = 'class = active';
+            }
+            if (modules.permission > 0) {
+                if (!firstModule && moduleName != phpr.module) {
+                    firstModule = moduleName;
+                }
+                navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
+                    moduleName : moduleName,
+                    moduleLabel: moduleLabel,
+                    liclass    : liclass
+                });
+            }
+            if (modules.permission > 3 && moduleName == phpr.module) {
+                var params = {
+                    label:     '',
+                    id:        'newEntry',
+                    iconClass: 'add',
+                    alt:       'Add'
+                };
+                newEntry = new dijit.form.Button(params);
+                writePermissions = true;
+            }
+        });
+        navigation += "</ul>";
+        dojo.byId("subModuleNavigation").innerHTML = navigation;
+        if (writePermissions) {
+            dojo.byId("buttonRow").appendChild(newEntry.domNode);
+        }
+        phpr.initWidgets(dojo.byId("subModuleNavigation"));
+        if (writePermissions) {
+            dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
+        }
     },
 
     newEntry: function(){
