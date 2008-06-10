@@ -29,10 +29,14 @@ dojo.require("phpr.Note.Main");
 dojo.require("phpr.Administration.Main");
 dojo.require("phpr.Timecard.Main");
 dojo.require("phpr.Calendar.Main");
+
+// Lang Files
+dojo.requireLocalization("phpr.Default", "Default");
+
 dojo.declare("phpr.Main", null, {
     // summary: Main class for PHProjekt Gui
 
-    constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId){
+    constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId) {
         // summary:
         //    Initialize all components for the javascript Userinterfae.
         // description:
@@ -49,6 +53,7 @@ dojo.declare("phpr.Main", null, {
         phpr.webpath          = webpath;
         phpr.rootProjectId    = rootProjectId;
         phpr.currentProjectId = rootProjectId ;
+        phpr.nls              = dojo.i18n.getLocalization("phpr.Default", "Default");
 
         //All modules are initialized in the constructor
         this.Todo           = new phpr.Todo.Main();

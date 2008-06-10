@@ -1,12 +1,15 @@
-<tr><td class="label"><label for="{{labelfor}}">{{label}}</label></td>
-<td><select dojoType="dojox.widget.MultiComboBox"
-			id="{{id}}"
-		    name="{{id}}"
-			value="{{values}}" />
-{% for item in options %}
-<option value ="{{item.id}}">{{item.name}}</option>
-{% endfor %}
-</select>
-</td></tr>
-
-     		
+<tr>
+    <td class="label">
+        <label for="{{labelfor}}">{{label}}</label>
+    </td>
+    <td>
+        <select dojoType="dojox.widget.MultiComboBox"
+        id="{{id}}"
+        name="{{id}}"
+        value="{{values}}" />
+        {% for item in options %}
+        <option value ="{{item.id}}">{{item.name}}</option>
+        {% endfor %}
+        </select>
+    </td>
+</tr>

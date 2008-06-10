@@ -1,5 +1,4 @@
 dojo.provide("phpr.Default.Grid");
-
 // Other classes, class specific
 dojo.require("phpr.grid");
 dojo.require("phpr._EditableGrid");
@@ -84,7 +83,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         meta = this.grid.widget.model.store.metaData;
 
         if (meta.length == 0) {
-            dojo.byId("gridNode").innerHTML = 'The are no results';
+            dojo.byId("gridNode").innerHTML = phpr.nls.noresults;
         } else {
             this.gridLayout.push({
                 type: 'dojox.grid._RowSelector',
@@ -172,7 +171,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 
     },
 
-    onCellEdit: function(inValue, inRowIndex, inFieldIndex){
+    onCellEdit: function(inValue, inRowIndex, inFieldIndex) {
         // summary:
         //    This function publishes a "grid.CellEdi" Topic
         // description:
@@ -182,6 +181,5 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
 
         this.publish("grid.CellEdit", [value, inRowIndex, inFieldIndex]);
         this.cellEdited(value, inRowIndex, inFieldIndex);
-
     },
 });

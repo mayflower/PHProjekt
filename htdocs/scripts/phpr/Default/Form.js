@@ -1,5 +1,4 @@
 dojo.provide("phpr.Default.Form");
-
 dojo.require("phpr.Component");
 dojo.require("phpr.Default.field");
 
@@ -42,7 +41,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData" )});
     },
 
-	getFormData: function(items, request){
+	getFormData: function(items, request) {
         // summary:
         //    This function renders the form data according to the database manager settings
         // description:
@@ -127,14 +126,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         });
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
             writePermissions: itemwrite,
-            itemDelete: this.id
+            itemDelete: this.id,
+            saveText: phpr.nls.save,
+            deleteText: phpr.nls.delete,
         });
 		this.formWidget = dijit.byId('detailForm'+this.id);
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
 	},
 
-	submitForm: function(){
+	submitForm: function() {
         // summary:
         //    This function is responsible for submitting the formdata
         // description:
@@ -160,7 +161,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         });
 	},
 
-	deleteForm: function(){
+	deleteForm: function() {
         // summary:
         //    This function is responsible for deleting a dojo element
         // description:
@@ -172,7 +173,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 });
 	},
 
-    displayTagInput: function(){
+    displayTagInput: function() {
         // summary:
         // This function manually receives the Tags for the current element
         // description:
@@ -199,7 +200,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return this.fieldTemplate.MultipleSelectRender(data ,meta['label'], meta['key'], value, false, false);
     },
 
-    getHistoryData: function(items, request){
+    getHistoryData: function(items, request) {
         // summary:
         //    This function renders the history data
         // description:

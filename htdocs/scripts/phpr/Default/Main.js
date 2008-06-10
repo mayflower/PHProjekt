@@ -100,9 +100,25 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:phpr.webpath, currentModule:phpr.module});
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
-
+        this.render(["phpr.Default.template", "main.html"], dojo.body(),{
+            webpath:phpr.webpath,
+            currentModule:phpr.module,
+            searchText:phpr.nls.search,
+            administrationText:phpr.nls.administration,
+            administratorText:phpr.nls.administrator,
+            settingsText:phpr.nls.settings,
+            timecardText:phpr.nls.timecard,
+            timecardOverviewText:phpr.nls.timecardOverview,
+            timecardWorkingtimeText:phpr.nls.timecardWorkingtime,
+            timecardWorkingtimeStartText:phpr.nls.timecardWorkingtimeStart,
+            timecardWorkingtimeStopText:phpr.nls.timecardWorkingtimeStop,
+            helpText:phpr.nls.help,
+            logoutText:phpr.nls.logout,
+        });
+        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+            webpath:phpr.webpath,
+            currentModule:phpr.module
+        });
         this.search = new dojo.dnd.Moveable("searchsuggest");
 
         dojo.addOnLoad(dojo.hitch(this, function() {

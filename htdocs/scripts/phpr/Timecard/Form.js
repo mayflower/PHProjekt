@@ -5,22 +5,22 @@ dojo.require("phpr.roundedContentPane");
 dojo.require("dijit._Calendar");
 
 dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
-    // summary: 
+    // summary:
     //    This class is responsible for rendering the Form of a Timecard module
-    // description: 
+    // description:
     //    The Detail View of the timecard is rendered
     projecth:0,
     projectm:0,
     date:null,
-    
+
 	constructor: function(/*Object*/main, /*Object*/paramsIn){
-         // summary:    
+         // summary:
         //    render the form on construction
-        // description: 
+        // description:
         //    this function receives the form data from the server and renders the corresponding form
-        
+
         this.date = new Date()
-        
+
         range =[{"id"
                 :"1","name":"Invisible Root"},{"id":"2","name":"....Intern"},{"id":"3","name":"....Extern"},{"id":"5"
                 ,"name":"....Default"}]
@@ -31,10 +31,23 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
 			j++;
 		}
         var params = {
-            values:options, 
+            values:options,
             date: this.date,
             tcProjecthValue: 0,
-            tcProjectmValue:0
+            tcProjectmValue:0,
+            timecardtimeRecordingForText: phpr.nls.timecardtimeRecordingFor,
+            timecardDateText: phpr.nls.timecardDate,
+            timecardWorkingTimesText: phpr.nls.timecardWorkingTimes,
+            timecardStartText: phpr.nls.timecardStart,
+            timecardEndText: phpr.nls.timecardEnd,
+            timecardProjectTimesText: phpr.nls.timecardProjectTimes,
+            timecardProjectText: phpr.nls.timecardProject,
+            timecardNotesText: phpr.nls.timecardNotes,
+            timecardTimesText: phpr.nls.timecardTimes,
+            timecardHText: phpr.nls.timecardH,
+            timecardMText: phpr.nls.timecardM,
+            timecardSavedTimesText: phpr.nls.timecardSavedTimes,
+            saveText: phpr.nls.save,
         };
         if (dojo.isObject(paramsIn)) {
             dojo.mixin(params, paramsIn);
@@ -52,7 +65,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
              dojo.connect(dijit.byId("tcProjectSubmitButton"), "onClick", dojo.hitch(this, "submitTcProjectBookingForm"));
         },
    submitTcBookingForm: function(){
-        // summary: 
+        // summary:
         //    This function is responsible for submitting the formdata
         // description:
         //    This function sends the form data as json data to the server and publishes
@@ -62,11 +75,11 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/',
 			content:   this.sendData,
             onSuccess: this.publish("reload",[{date: this.sendData.date}])
-         });  
-         
+         });
+
     },
     submitTcProjectBookingForm: function(){
-        // summary: 
+        // summary:
         //    This function is responsible for submitting the formdata
         // description:
         //    This function sends the form data as json data to the server and publishes
@@ -76,7 +89,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
 			url:       phpr.webpath + 'index.php/Timeproj/index/jsonSave/',
 			content:   this.sendData,
             onSuccess: this.publish("reload",[{date: this.sendData.date}])
-         });  
-         
+         });
+
     }
 });

@@ -1,5 +1,4 @@
 dojo.provide("phpr.Timecard.Main");
-
 dojo.require("phpr.Default.Main");
 // app specific files
 dojo.require("phpr.Timecard.Tree");
@@ -8,7 +7,7 @@ dojo.require("phpr.Timecard.Form");
 
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
-	constructor:function(){
+	constructor:function() {
 		this.module     = 'Timecard';
 		this.gridWidget = phpr.Timecard.Grid;
 		this.formWidget = phpr.Timecard.Form;
@@ -27,7 +26,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");
 	},
 
-    load:function(){
+    load:function() {
         // summary:
         //    This function initially renders the page
         // description:
@@ -37,8 +36,15 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         // destroy form if exists
-        this.render(["phpr.Default.template", "main.html"], dojo.body(),{webpath:phpr.webpath, currentModule:phpr.module});
-        this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.render(["phpr.Default.template", "main.html"], dojo.body(),{
+            webpath:phpr.webpath,
+            currentModule:phpr.module
+        });
+        this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+            webpath:phpr.webpath,
+            currentModule:phpr.module
+        });
+
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.tree     = new this.treeWidget(this);
@@ -48,7 +54,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         );
     },
 
-    reload:function(ParamsIn){
+    reload:function(ParamsIn) {
         // summary:
         //    This function reloads the current module
         // description:
@@ -72,7 +78,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.form     = new this.formWidget(this,ParamsIn);
     },
 
-    setProject: function(project){
+    setProject: function(project) {
         // summary:
         //    this function changes the Project in the Timecard form
         // description:
@@ -81,10 +87,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.currentProjectId = project.id;
         if(!phpr.currentProjectId) phpr.currentProjectId = phpr.rootProjectId;
         dijit.byId('tcProjectId').setValue(project.id);
-
     },
 
-    setDate: function(date){
+    setDate: function(date) {
          dateFormatted = dojo.date.locale.format(date, {formatLength:'full',selector:'date', locale:this.lang});
          dojo.byId("tcFormHeader").innerHTML = "<h3>Zeiterfassung f&uuml;r den "+dateFormatted+"</h3>";
          dojo.byId("tcBookingsSummary").innerHTML = "<h4>Zeit die am "+dateFormatted+" erfasst wurde:</h4>";
@@ -92,7 +97,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
          dojo.byId('tcDate').value = date;
     },
 
-    workingtimesStop: function(){
+    workingtimesStop: function() {
         // summary:
         //    This function deactivates the Timecard stopwatch
         // description:
@@ -103,7 +108,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         });
     },
 
-    workingtimesStart: function(){
+    workingtimesStart: function() {
         // summary:
         //    This function deactivates the Timecard startwatch
         // description:
