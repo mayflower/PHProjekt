@@ -1,12 +1,17 @@
-<tr><td class="label"><label for="{{labelfor}}">{{label}}</label></td>
-<td><input type="text"
-		       id="{{id}}"
-		       name="{{id}}"
-		       dojoType="phpr.DateTextBox"
-			   required="{{required}}"
-               disabled="{{disabled}}"
-               constraints="{datePattern:'dd.MM.yyyy'}"
-			   promptMessage = "dd.mm.yy"
-			   invalidMessage = "Invalid date. Use dd.mm.yy format."
-           	   value="{{value}}" />
-</td></tr>
+<tr>
+    <td class="label">
+        <label for="{{labelfor}}">{{label}}</label>
+    </td>
+    <td>
+        <input type="text"
+        id="{{id}}"
+        name="{{id}}"
+        dojoType="phpr.DateTextBox"
+        required="{{required}}"
+        disabled="{{disabled}}"
+        constraints="{datePattern:'dd.MM.yyyy'}"
+        promptMessage = "dd.mm.yy"
+        invalidMessage = "Invalid date. Use dd.mm.yy format."
+        value="{{value}}" />
+    </td>
+</tr>

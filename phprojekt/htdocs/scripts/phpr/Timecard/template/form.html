@@ -1,52 +1,108 @@
-<div id="tcFormHeader"><h3>Zeiterfassung f&uuml;r den {{dateForm}}</h3></div>
-<div> 
-	Datum &Auml;ndern <input type="text" id="date"  name="date" dojoType="phpr.DateTextBox" constraints="{datePattern:'dd.MM.yyyy'}" promptMessage = "dd.mm.yy"
-	invalidMessage = "Invalid date. Use dd.mm.yy format." value="{{date}}" />
+<div id="tcFormHeader">
+    <h3>{{timecardtimeRecordingForText}} {{dateForm}}</h3>
+</div>
+<div>
+	{{timecardDateText}}
+	<input dojoType="phpr.DateTextBox"
+	type="text"
+	id="date"
+	name="date"
+	constraints="{datePattern:'dd.MM.yyyy'}"
+	promptMessage = "dd.mm.yy"
+	invalidMessage = "Invalid date. Use dd.mm.yy format."
+	value="{{date}}" />
 </div>
 <div dojoType="phpr.roundedContentPane" radius="20" style="overflow:hidden;width:0.8 em; height:400px;">
-	<form dojoType="dijit.form.Form" id="tcBookingForm" name="tcBookingForm" style="display:inline;" onsubmit="return false;">
-		<input dojoType="dijit.form.TextBox" type="hidden" id="tcDate" name="date" value="{{date}}" />
-		<input dojoType="dijit.form.TextBox" type="hidden" id="tcNote" name="notes" value="dummy" />
-		<input dojoType="dijit.form.TextBox" type="hidden" id="tcProj" name="projectId" value="1" />
-		<div><h4>Arbeitszeiten Buchen</h4></div>
-		<div>Anfang <input type="text" id="" name="startTime" dojoType="dijit.form.TextBox" />  Ende
-			 <input type="text" id="" name="endTime" dojoType="dijit.form.TextBox" />
-			 <button dojoType="dijit.form.Button" baseClass="positive" id="tcSubmitButton" type="submit" iconClass="disk">
-			</button>
-		</div>
-		
-	</form>
-	<br>
-	<form dojoType="dijit.form.Form" id="tcProjectBookingForm" name="projBookingForm" style="display:inline;" onsubmit="return false;">
-		<input dojoType="dijit.form.TextBox"  type="hidden" name="date" id="tcProjectDate" value="{{date}}" />
-		<div><h4>Projektzeiten Buchen</h4></div>
-		<div>Projekt</div>
+    <form dojoType="dijit.form.Form" id="tcBookingForm" name="tcBookingForm" style="display:inline;" onsubmit="return false;">
+        <input dojoType="dijit.form.TextBox"
+        type="hidden"
+        id="tcDate"
+        name="date"
+        value="{{date}}" />
+		<input dojoType="dijit.form.TextBox"
+        type="hidden"
+        id="tcNote"
+        name="notes"
+        value="dummy" />
+		<input dojoType="dijit.form.TextBox"
+        type="hidden"
+        id="tcProj"
+        name="projectId"
+        value="1" />
 		<div>
-			 <select
-		       id="tcProjectId"
-		       name="projectId"
-		       dojoType="dijit.form.FilteringSelect"
-			   autocomplete="true"
-			   value="{{value}}" 
-               searchAttr="name"
-			   invalidMessage="" >
-				{% for item in values %}
-					<option value ="{{item.id}}">{{item.name}}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<div>Notizen</div>
-		<div><textarea dojoType="dijit.form.Textarea" id="" name="notes">
-		</textarea></div>
-		<div>Projektzeiten</div>
-		<div><input type="text" id="" name="tcProjecth" dojoType="dijit.form.TextBox" value="{{tcProjecthValue}}" /> h 
-			<input type="text" id="" name="tcProjectm" dojoType="dijit.form.TextBox" value="{{tcProjectmValue}}" /> m
-		</div>
-		<button dojoType="dijit.form.Button" baseClass="positive" id="tcProjectSubmitButton" type="submit" iconClass="tick">
-					Speichern
-		</button>
-	<div id="tcBookingsSummary">
-		<h4>Zeit die am {{dateForm}} erfasst wurde:</h4>
-	</div>
-	</form>
+            <h4>{{timecardWorkingTimesText}}</h4>
+        </div>
+		<div>
+            {{timecardStartText}}
+            <input dojoType="dijit.form.TextBox"
+            type="text"
+            id=""
+            name="startTime" />
+            {{timecardEndText}}
+            <input dojoType="dijit.form.TextBox"
+            type="text"
+            id=""
+            name="endTime" />
+            <button dojoType="dijit.form.Button" baseClass="positive" id="tcSubmitButton" type="submit" iconClass="disk">
+            </button>
+        </div>
+    </form>
+    <br />
+	<form dojoType="dijit.form.Form" id="tcProjectBookingForm" name="projBookingForm" style="display:inline;" onsubmit="return false;">
+    <input dojoType="dijit.form.TextBox"
+    type="hidden"
+    name="date"
+    id="tcProjectDate"
+    value="{{date}}" />
+    <div>
+        <h4>{{timecardProjectTimesText}}</h4>
+    </div>
+    <div>
+        {{timecardProjectText}}
+    </div>
+    <div>
+        <select
+        id="tcProjectId"
+        name="projectId"
+        dojoType="dijit.form.FilteringSelect"
+        autocomplete="true"
+        value="{{value}}"
+        searchAttr="name"
+        invalidMessage="" >
+        {% for item in values %}
+            <option value ="{{item.id}}">{{item.name}}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div>
+        {{timecardNotesText}}
+    </div>
+    <div>
+        <textarea dojoType="dijit.form.Textarea"
+        id=""
+        name="notes">
+        </textarea>
+    </div>
+    <div>
+        {{timecardTimesText}}
+    </div>
+	<div>
+        <input dojoType="dijit.form.TextBox"
+        type="text"
+        id=""
+        name="tcProjecth"
+        value="{{tcProjecthValue}}" /> {{timecardHText}}
+        <input dojoType="dijit.form.TextBox"
+        type="text"
+		id=""
+        name="tcProjectm"
+        value="{{tcProjectmValue}}" /> {{timecardMText}}
+    </div>
+    <button dojoType="dijit.form.Button" baseClass="positive" id="tcProjectSubmitButton" type="submit" iconClass="tick">
+    {{saveText}}
+    </button>
+    <div id="tcBookingsSummary">
+        <h4>{{timecardSavedTimesText}} {{dateForm}}</h4>
+    </div>
+    </form>
 </div>

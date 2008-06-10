@@ -1,12 +1,12 @@
 <div class="footer prepend-24">
-		{% if writePermissions > 3 %}
-			<button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
-					Speichern
-			</button>
-			{% if itemDelete > 0 %}
-				<button dojoType="dijit.form.Button" baseClass="negative" id="deleteButton" type="submit" iconClass="cross">
-						L&ouml;schen
-			</button>
-			{% endif %}
-		{% endif %}
+    {% if writePermissions > 3 %}
+        <button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
+        {{saveText}}
+        </button>
+        {% if itemDelete > 0 %}
+            <button dojoType="dijit.form.Button" baseClass="negative" id="deleteButton" type="submit" iconClass="cross">
+            {{deleteText}}
+            </button>
+        {% endif %}
+    {% endif %}
 </div>

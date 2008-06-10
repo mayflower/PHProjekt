@@ -1,44 +1,46 @@
 dojo.provide("phpr.Timecard.Grid");
-
 dojo.require("phpr.Default.Grid");
 
 dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
-    // summary: 
+    // summary:
     //    This class is responsible for rendering the Grid of a Timecard module
-    // description: 
+    // description:
     //    The Grid for the Timecard module is rendered -  at the moment it is exactly
     //    the same as in the Default module
     constructor: function(/*String*/updateUrl, /*Object*/main,/*Int*/ id) {
-        // summary:    
+        // summary:
         //    render the grid on construction
-        // description: 
+        // description:
         //    this function receives the list data from the server and renders the corresponding grid
         this._node  = dojo.byId("tcSummary");
         this.main   = main;
         this.id     = id;
         this.url    = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/1";
         phpr.destroyWidgets("tcSummary");
-        this.render(["phpr.Timecard.template", "grid.html"], this._node);
-        
+        this.render(["phpr.Timecard.template", "grid.html"], this._node, {
+            timecardQuickAccessText: phpr.nls.timecardQuickAccess,
+        });
+
         this.grid = {
             widget:null,
             model:null,
             layout:null
         };
-        
+
         this.gridLayout = new Array();
         this.gridStore  = new phpr.grid.ReadStore({url: this.url});
         this.grid.model = new phpr.grid.Model(null, null, {
             store: this.gridStore
         });
-        
+
         this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
-        
+
     },
+
     onLoaded:function() {
-        // summary:     
+        // summary:
         //    This function is called when the grid is loaded
-        // description: 
+        // description:
         //    It takes care of setting the grid headers to the right format
         this.grid.widget = dijit.byId("tcGridNode");
         //connect doubleClick
@@ -67,19 +69,19 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
                 noscroll: true,
                 cells: [this.gridLayout]
             }];
-            
+
         this.grid.widget.setStructure(gridStructure);
-        
+
     },
         onRowClick: function(e) {
-        // summary:     
+        // summary:
         //    This function changes the date
-        // description: 
+        // description:
         //    As soon as a row is clicked the changeDate Topic is published
         var date = this.grid.model.getDatum(e.rowIndex,3);
         date = dojo.date.stamp.fromISOString(date);
         dijit.byId('date').setValue(date);
-        this.publish("changeDate", [date]); 
-        
+        this.publish("changeDate", [date]);
+
     }
 });

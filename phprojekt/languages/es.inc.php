@@ -22,12 +22,12 @@ $lang['Display'] = "Agregar";//mismatch
 $lang['Edit'] = "Editar";
 $lang['Save'] = "Grabar";//mismatch
 $lang['Is a required field'] = "Es un campo requerido";
-$lang['Invalid format for date'] = "Formato de fecha inv�lido";
+$lang['Invalid format for date'] = "Formato de fecha inv&aacute;lido";
 
 $lang['project'] = "Projecto";
 $lang['id'] = "ID";
-$lang['title'] = "T�tulo";
-$lang['notes'] = "Descripci�n";
+$lang['title'] = "T&iacute;tulo";
+$lang['notes'] = "Descripci&oacute;n";
 $lang['parent'] = "Padre";
 $lang['startDate'] = "Fecha de inicio";
 $lang['endDate'] = "Fecha final";
@@ -42,8 +42,9 @@ $lang['Ended'] = "Terminado";
 $lang['Stopped'] = "Parado";
 $lang['Re-Opened'] = "Re-Abierto";//mismatch
 $lang['Waiting'] = "Esperando";
+$lang["priority"]  = "Prioridad";
 
-// es.inc.php, versión en español para PHProjekt
+// es.inc.php, versi�n en espa�ol para PHProjekt
 // Traducido por Guillermo Cavazos <gcavazos@colegios.net>
 // Traducido por Manuel Gualda Caballero <manuel@utopiaverde.org>
 // Traducido por Gustavo Solt <gustavo.solt@gmail.com>
@@ -881,8 +882,6 @@ $lang["Prefix of tables"]  = "Prefijo de tablas";
 $lang["presentation"]  = "presentación";
 $lang["Previous"]  = "Previo";
 $lang["print"]  = "imprimir";
-$lang["Priority"]  = "Prioridad";
-$lang["priority"]  = "prioridad";
 $lang["private"]  = "privado";
 $lang["Problem Description"]  = "Descripción del problema";
 $lang["Problems getting event data from db!"]  = "Han ocurrido problemas al extraer datos de eventos de la base de datos!";

@@ -3,44 +3,44 @@
     	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")'>
     	<form dojoType="dijit.form.Form" id="searchform" name="searchform" style="display:inline" onsubmit='dojo.publish("{{currentModule}}.submitSearchForm"); return false;'>
         <div id="search-bar" class="last right align-right">
-            <input id="searchfield" name="searchfield" value="Search" onmousedown="this.value = ''; this.focus();" />
+            <input id="searchfield" name="searchfield" value="{{searchText}}" onmousedown="this.value = ''; this.focus();" />
         </div>
         </form>
-		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar" >
+		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
 			<div dojoType="dijit.form.DropDownButton">
-				<span>Administration</span>
+				<span>{{administrationText}}</span>
 				<div dojoType="dijit.Menu">
 					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Administration.reload")'>
-						Administrator
+					{{administratorText}}
 					</div>
 					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Settings.load")'>
-						Settings
+					{{settingsText}}
 					</div>
 				</div>
 			</div>
             <span dojoType="dijit.ToolbarSeparator"></span>
     		<div dojoType="dijit.form.DropDownButton">
-				<span>Timecard</span>
+				<span>{{timecardText}}</span>
 				<div dojoType="dijit.Menu">
 					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
-						Overview
+					{{timecardOverviewText}}
 					</div>
                     <div dojoType="dijit.PopupMenuItem">
-                        <span>Working time</span>
+                        <span>{{timecardWorkingtimeText}}</span>
                         <div dojoType="dijit.Menu">
-                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>Stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>{{timecardWorkingtimeStartText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>{{timecardWorkingtimeStopText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
     					</div>
 					</div>
 				</div>
 			</div>
 			<span dojoType="dijit.ToolbarSeparator"></span>
     		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
-				Help
+    		{{helpText}}
     		</button>
 			<span dojoType="dijit.ToolbarSeparator"></span>
 			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
-				Logout
+			{{logoutText}}
 			</button>
     	</div>
  	</div>
@@ -71,12 +71,11 @@
 				    <div id="buttonRow" class="align-right append-2">
 				    </div>
  					<!-- spaces -->
-				    <hr>
+				    <hr />
  				</div>
  				<!-- Exception Form -->
  				<div id="serverFeedback" dojoType="phpr.ServerFeedback" sytle="display:block;height:55px;">
  				</div>
- 				<br />
  				<br />
         	</div>
         	<!-- Center Area Grid and Form -->
