@@ -1,0 +1,24 @@
+The lang files for the dojo strings are in the folder:
+
+phpr/Default/nls/
+
+Default.js contain all the default strings (English)
+
+And each folder contain the translations:
+
+phpr/Default/nls/es/Default.js -> Spanish Translation
+phpr/Default/nls/de/Default.js -> German Translation
+
+For use the translated strings, just use the global var nls:
+
+phpr.nls.TEXT
+
+Where TEXT is defined in the Default.js file.
+
+You can also make the translated string like:
+
+"invalidUsername": "The username \"%s\" is not valid"
+
+and then for use it:
+
+phpr.nls.invalidUsername.replace("%s", value);
