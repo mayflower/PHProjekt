@@ -12,7 +12,9 @@
         autocomplete="true"
         value="{{value}}"
         searchAttr="name"
-        invalidMessage="" >
+        invalidMessage=""
+        size="{{size}}"
+        {{multiple}} >
         {% for item in values %}
         <option value ="{{item.id}}">{{item.name}}</option>
         {% endfor %}

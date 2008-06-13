@@ -169,6 +169,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 case 'selectValues':
                     $converted[] = $this->_convertSelect($field);
                     break;
+                case 'multipleSelectValues':
+                    $entry = $this->_convertSelect($field);
+                    $entry['type'] = 'multipleselectbox';
+                    $converted[] = $entry;
+                    break;
                 case 'textarea':
                 case 'textfield':
                 case 'checkbox':
@@ -181,7 +186,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     break;
                 case 'multipleselect':
                 case 'select_multiple':
-                    $entry         = $this->_convertStandard($field);
+                    $converted[]   = $this->_convertStandard($field);
                     $entry['type'] = 'multipleselect';
                     $converted[]   = $entry;
                 case 'text':
@@ -217,16 +222,20 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
-
-        foreach(explode('|', $field->formRange) as $range) {
-            list($key, $value) = explode('#', $range);
-            $converted['range'][] = array('id'   => $key,
-                                          'name' => $value);
+        if (strpos($field->formRange,"|") > 0) {
+            foreach(explode('|', $field->formRange) as $range) {
+                list($key, $value) = explode('#', $range);
+                $converted['range'][] = array('id'   => $key,
+                                              'name' => $value);
+            }
+        }
+        else {
+            $converted['range'] = $this->getRangeFromModel($field);
         }
 
         return $converted;
     }
-
+    
     /**
      * Fields from the database manager have a complete different
      * type than those that should be propagated into the PHProjekt core
@@ -317,5 +326,31 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $result[] = $field->formLabel;
         }
         return $result;
+    }
+    
+    /**
+     * Gets the data range for a select using a model
+     *
+     * @param Phprojekt_ModelInformation_Interface $field the field description
+     * @return an array with key and value to be used as datarange
+     */
+    public function getRangeFromModel(Phprojekt_ModelInformation_Interface $field) 
+    {
+        $options = array();
+        
+        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
+        
+        switch ($field->formRange) {
+            case 'User':
+                $result = $activeRecord->fetchAll("status = 'A'");
+                foreach ($result as $oneUser) {
+                    $options[] = array('id'   => $oneUser->id,
+                                          'name' => $oneUser->username);
+                }
+                break;
+        }
+        
+        return $options;
+            
     }
 }

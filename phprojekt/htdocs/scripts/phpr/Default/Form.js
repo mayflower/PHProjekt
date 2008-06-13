@@ -85,7 +85,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
 				case'selectbox':
 					this.formdata += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-					  												 itemdisabled);
+					  												 itemdisabled,1, "");
+					break;
+			   case'multipleselectbox':
+					this.formdata += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
+					  												 itemdisabled,5,"multiple");
 					break;
 				case 'multipleselect':
 					this.formdata += this.fieldTemplate.MultipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,

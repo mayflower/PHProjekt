@@ -58,7 +58,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							disabled: itemdisabled
 				});
 	},
-	selectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
+	selectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple){
 		var options=new Array();
 		var j=0;
 		for (j in range){
@@ -72,6 +72,8 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							value: itemvalue,
 							required: itemrequired,
 							disabled: itemdisabled,
+							size: itemsize,
+							multiple: itemmultiple,
 							values: options
 				});
 	},
