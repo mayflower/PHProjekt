@@ -6,10 +6,10 @@
         <input type="text"
         id="{{id}}"
         name="{{id}}"
+        value="T{{value}}"
         dojoType="dijit.form.TimeTextBox"
         required="{{required}}"
         disabled="{{disabled}}"
-        constraints="{formatLength:'short'}"
-        value="{{value}}" />
-    </td>
+        constraints="{formatLength:'short', timePattern:'HH:mm:ss'}" />
+    </td>{{value}}
 </tr>

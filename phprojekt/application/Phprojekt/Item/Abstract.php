@@ -348,7 +348,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $u = strtotime($value);
 
                     $value = mktime(date("H",$u) + $timeZone, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
-                    $value = date("H:i:m",$value);
+                    $value = date("H:i:s",$value);
 
                     break;
                 case 'datetime':

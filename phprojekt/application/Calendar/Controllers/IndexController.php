@@ -41,110 +41,82 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate     = Zend_Registry::get('translate');
-        $userId        = Phprojekt_Auth::getUserId();
-        $participants  = array();
-        $relatedEvents = array();
-        $message       = $translate->translate('The Item was added correctly');
-        
-        $id         = (int) $this->getRequest()->getParam('id');
-        $invite     = $this->getRequest()->getParam('invite');
+        $translate       = Zend_Registry::get('translate');
+        $message         = $translate->translate('The Item was added correctly');
+        $rootEventId = 0;
+        $id         = (int)$this->getRequest()->getParam('id');
         $moduleName = $this->getRequest()->getModuleName();
-        
-        
+
+
         // getting the main row if the group if an id is provided
         if (!empty($id)) {
             $message = $translate->translate('The Item was edited correctly');
-            
-            $rootEvent = Phprojekt_Loader::getModel($moduleName, $moduleName);
-            
-            //$rootEvent = new Calendar_Models_Calendar(); 
-            $rootEvent->find($id);
-            while (!empty($rootEvent->parentId)) {
-                $rootEvent->find($rootEvent->parentId);
-            }
-            
-            $rootEventId = (int)$rootEvent->id;
-            
-            // the main event is related to himself
-            $relatedEvents[$rootEvent->participantId] = $rootEventId;
-            
-            // getting the event list -all related events-
-            $eventList = $rootEvent->fetchAll("parentId = ".$rootEventId);
-            if (is_array($eventList)) {
-                foreach ($eventList as $oneEvent) {
-                    $tmp = (int)$oneEvent->participantId;
-                    $relatedEvents[$tmp] = (int)$oneEvent->id;
-                }
-            }
-        
         }
-        else {
-            $rootEventId = 0;
-        }
-        
-        // getting the participant list from request
-        if (is_array($invite)) {
-            
-            // we will put the owner id first, just to make it clear
-            if (in_array($userId, $invite)) {
-                $participants[] = $userId;
-            }
-            foreach ($invite as $oneParticipant) {
-                if (!in_array((int)$oneParticipant, $participants)) {
-                    $participants[] = (int)$oneParticipant;
-                }
-            }
-        }
-        elseif ((is_numeric($invite) && ($userId <> (int)$invite))) {
-            $participants[] = (int)$userId;
-            $participants[] = (int)$invite;
-        }
-        else {
-            $participants[] = $userId;
-        }
-        
-        // now the insertion or edition for each invited user
-        foreach ($participants as $oneParticipant) {
-            
-            $this->getRequest()->setParam('participantId',$oneParticipant);
-            $model  = Phprojekt_Loader::getModel($moduleName, $moduleName);
-            if (isset($relatedEvents[$oneParticipant])) {
-                
-                if ($relatedEvents[$oneParticipant] <> $rootEventId) {
-                    $this->getRequest()->setParam('parentId',$rootEventId);
-                }
-                else {
-                    $this->getRequest()->setParam('parentId',0);
-                }
-                $model->find($relatedEvents[$oneParticipant]);
-                unset($relatedEvents[$oneParticipant]);
-            }
-            
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-            
-            if ($rootEventId == 0) {
-                $this->getRequest()->setParam('parentId',$model->id);
-            }
-            unset($model);
-        }
-        
-        // now, I'll delete the other participants (uninvited?)
-        if (is_array($relatedEvents) && count($relatedEvents) > 0) {
-            foreach ($relatedEvents as $oneParticipant => $oneId) {
-                $model  = Phprojekt_Loader::getModel($moduleName, $moduleName);
-                $model->find($relatedEvents[$oneParticipant]);
-                $model->delete();
-                unset($model);
-            }
-        }
-        
+
+        $id = (int)Calendar_Models_Calendar::saveEvent($this->getRequest());
+
         $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
+        'message' => $message,
+        'code'    => 0,
+        'id'      => $id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-    
+
+    /**
+     * Returns the detail for a calendar in JSON.
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonDetailAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+        $relatedEvents = array();
+        $moduleName   = $this->getRequest()->getModuleName();
+
+        if (empty($id)) {
+            $record = $this->getModelObject();
+        } else {
+            $record = $this->getModelObject()->find($id);
+            $record->getAllParticipants();
+        }
+
+        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Deletes an event, it includes all related events to this parent event
+     * 
+     * requestparam integer id ...
+     * 
+     * @return void
+     */
+    public function jsonDeleteAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException('ID parameter required');
+        }
+
+        $model = $this->getModelObject()->find($id);
+
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $model->deleteRelatedEvents();
+            $model->delete();
+            $message = $translate->translate('The Item was deleted correctly');
+            $return  = array('type'    => 'success',
+            'message' => $message,
+            'code'    => 0,
+            'id'      => $id);
+
+            echo Phprojekt_Converter_Json::convert($return);
+        } else {
+            throw new Phprojekt_PublishedException('Item not found');
+        }
+    }
+
 }
