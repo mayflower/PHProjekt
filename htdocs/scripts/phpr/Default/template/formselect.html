@@ -4,17 +4,19 @@
     </td>
     <td>
         <select
-        id="{{id}}"
-        name="{{id}}"
-        dojoType="dijit.form.FilteringSelect"
+        id="{{id}}[]"
+        name="{{id}}[]" 
+        dojoType="dijit.form.MultiSelect" 
         required="{{required}}"
         disabled="{{disabled}}"
         autocomplete="true"
         value="{{value}}"
         searchAttr="name"
-        invalidMessage="" >
-        {% for item in values %}
-        <option value ="{{item.id}}">{{item.name}}</option>
+        invalidMessage="" 
+        multiple="{{multiple}}"
+        size="{{size}}" >
+        {% for item in options %}
+        <option value ="{{item.id}}" {{item.selected}}>{{item.name}}</option>
         {% endfor %}
         </select>
     </td>

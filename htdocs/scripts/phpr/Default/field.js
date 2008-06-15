@@ -2,6 +2,7 @@ dojo.provide("phpr.Default.field");
 dojo.require("phpr.Component");
 dojo.require("dijit.form.Textarea");
 dojo.require("dojox.widget.MultiComboBox"); 
+dojo.require("dijit.form.MultiSelect"); 
 dojo.declare("phpr.Default.field", phpr.Component, {
     // summary: 
     //    class for rendering form fields
@@ -58,7 +59,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							disabled: itemdisabled
 				});
 	},
-	selectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple){
+	selectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
 		var options=new Array();
 		var j=0;
 		for (j in range){
@@ -72,11 +73,37 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							value: itemvalue,
 							required: itemrequired,
 							disabled: itemdisabled,
-							size: itemsize,
-							multiple: itemmultiple,
 							values: options
 				});
 	},
+	
+	multipleSelectBoxRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple){
+		var options=new Array();
+		var j=0;
+		for (j in range){
+		    if (itemvalue.indexOf("," + range[j].id + ",") >= 0) {
+		        range[j].selected = 'selected';
+		    }
+		    else {
+		        range[j].selected = '';
+		    }
+			options.push(range[j]);
+			j++;
+		}		
+		
+		return this.render(["phpr.Default.template", "formselect.html"], null, {
+							label: itemlabel,
+							labelfor: itemid,
+							id: itemid,
+							values: itemvalue,
+							required: itemrequired,
+							disabled: itemdisabled,
+							multiple: itemmultiple,
+							size: itemsize,
+							options: options
+				});
+	},
+	
 	MultipleSelectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
 		var options=new Array();
 		var j=0;
@@ -95,3 +122,27 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 				});
 	}
 });
+function dump(arr,level) {
+	var dumped_text = "";
+	if(!level) level = 0;
+	
+	//The padding given at the beginning of the line.
+	var level_padding = "";
+	for(var j=0;j<level+1;j++) level_padding += "    ";
+	
+	if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+		for(var item in arr) {
+			var value = arr[item];
+			
+			if(typeof(value) == 'object') { //If it is an array,
+				dumped_text += level_padding + "'" + item + "' ...\n";
+				dumped_text += dump(value,level+1);
+			} else {
+				dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+			}
+		}
+	} else { //Stings/Chars/Numbers etc.
+		dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+	}
+	return dumped_text;
+}
