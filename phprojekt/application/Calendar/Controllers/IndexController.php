@@ -41,12 +41,9 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate       = Zend_Registry::get('translate');
-        $message         = $translate->translate('The Item was added correctly');
-        $rootEventId = 0;
+        $translate  = Zend_Registry::get('translate');
+        $message    = $translate->translate('The Item was added correctly');
         $id         = (int)$this->getRequest()->getParam('id');
-        $moduleName = $this->getRequest()->getModuleName();
-
 
         // getting the main row if the group if an id is provided
         if (!empty($id)) {
@@ -73,8 +70,6 @@ class Calendar_IndexController extends IndexController
     public function jsonDetailAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
-        $relatedEvents = array();
-        $moduleName   = $this->getRequest()->getModuleName();
 
         if (empty($id)) {
             $record = $this->getModelObject();

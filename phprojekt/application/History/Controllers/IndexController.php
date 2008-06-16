@@ -42,17 +42,16 @@ class History_IndexController extends IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count      = (int) $this->getRequest()->getParam('count',     null);
-        $offset     = (int) $this->getRequest()->getParam('start',     null);
-        $moduleId   = (int) $this->getRequest()->getParam('moduleId',  null);
-        $itemId     = (int) $this->getRequest()->getParam('itemId',    null);
-        $userId     = (int) $this->getRequest()->getParam('userId',    null);
+        $messages   = null;
+        $moduleId   = (int) $this->getRequest()->getParam('moduleId', null);
+        $itemId     = (int) $this->getRequest()->getParam('itemId', null);
+        $userId     = (int) $this->getRequest()->getParam('userId', null);
         $moduleName = (string) $this->getRequest()->getParam('moduleName',  1);
         $startDate  = $this->getRequest()->getParam('startDate', null);
-        $endDate    = $this->getRequest()->getParam('endDate',   null);
+        $endDate    = $this->getRequest()->getParam('endDate', null);
 
         $startDate  = Inspector::sanitize('date', $startDate, $messages, false);
-        $endDate    = Inspector::sanitize('date', $endDate,   $messages, false);
+        $endDate    = Inspector::sanitize('date', $endDate, $messages, false);
 
         if (empty($moduleId) && !empty($moduleName)) {
             $moduleId = Phprojekt_Module::getId($moduleName);

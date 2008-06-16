@@ -156,6 +156,6 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract implements Ph
      */
     public function recordValidate()
     {
-        return $true;
+        return true;
     }
 }

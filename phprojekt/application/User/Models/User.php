@@ -154,6 +154,8 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
 
     /**
      * Get the rigths
+     * 
+     * @param integer $userid use from whom right is needed 
      *
      * @return string
      */
@@ -169,6 +171,6 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      */
     public function recordValidate()
     {
-        return $true;
+        return true;
     }
 }

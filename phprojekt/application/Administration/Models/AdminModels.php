@@ -259,6 +259,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             return $this;
         } catch (Zend_Exception $ze) {
             // .. file not found
+            $ze->getMessage();
             return false;
         }
     }
@@ -360,7 +361,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             $result = $object->recordValidate() && $result;
         }
 
-        return $true;
+        return $result;
     }
 
     /**

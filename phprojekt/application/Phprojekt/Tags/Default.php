@@ -1,4 +1,4 @@
-<?php
+    <?php
 /**
  * Tags class
  *
@@ -125,12 +125,11 @@ class Phprojekt_Tags_Default
             $tagName = $this->_tags->getTagName($tagId);
 
             $modules = $this->_tagsModules->getModulesByRelationId($tagUserId, $projectId);
-            foreach ($modules as $moduleData) {
-                if (!isset($foundResults[$tagName])) {
-                    $foundResults[$tagName] = 0;
-                }
-                $foundResults[$tagName]++;
+            if (!isset($foundResults[$tagName])) {
+                $foundResults[$tagName] = 0;
             }
+            $foundResults[$tagName] = $foundResults[$tagName] + count($modules);
+            
         }
 
         // Sort by the number of occureences

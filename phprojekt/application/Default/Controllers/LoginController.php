@@ -40,7 +40,7 @@ class LoginController extends Zend_Controller_Action
 
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
-		$this->view->webpath = Zend_Registry::get('config')->webpath;
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
         $this->render('login');
     }
 

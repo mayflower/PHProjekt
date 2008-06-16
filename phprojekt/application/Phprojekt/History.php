@@ -144,7 +144,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $where .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
 
         if (!empty($startDate)) {
-          $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
+            $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
         }
         if (!empty($endDate)) {
             $where .= $this->getAdapter()->quoteInto(' AND datetime <= ?', $endDate);
