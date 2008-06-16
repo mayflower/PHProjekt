@@ -48,6 +48,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Save or inserts an event. It inserts one envent by participant
      *
      * @param Request $request
+     * 
      * @return integer the id of the root event
      */
     public static function saveEvent($request) {
@@ -74,28 +75,25 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     $participants[] = (int)$oneParticipant;
                 }
             }
-        }
-        elseif ((is_numeric($participantId) && ($userId <> (int)$participantId))) {
+        } elseif ((is_numeric($participantId) && ($userId <> (int)$participantId))) {
             $participants[] = (int)$participantId;
             // $participants[] = (int)$userId;
 
-        }
-        else {
+        } else {
             $participants[] = $userId;
         }
 
         // now the insertion or edition for each invited user
         foreach ($participants as $oneParticipant) {
 
-            $request->setParam('participantId',$oneParticipant);
+            $request->setParam('participantId', $oneParticipant);
             $model  = Phprojekt_Loader::getModel($moduleName, $moduleName);
             if (isset($relatedEvents[$oneParticipant])) {
 
                 if ($relatedEvents[$oneParticipant] <> $rootEventId) {
-                    $request->setParam('parentId',$rootEventId);
-                }
-                else {
-                    $request->setParam('parentId',0);
+                    $request->setParam('parentId', $rootEventId);
+                } else {
+                    $request->setParam('parentId', 0);
                 }
                 $model->find($relatedEvents[$oneParticipant]);
                 unset($relatedEvents[$oneParticipant]);
@@ -130,6 +128,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Returns the id of the root event of the id provided
      *
      * @param integer $id id of any event
+     * 
      * @return integer id of the root event
      */
     public static function getRootEventId ($id) {
@@ -196,7 +195,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $relatedEvents = $this->getRelatedEvents($rootEventId);
 
             $tmp = ",";
-            foreach ($relatedEvents as $value => $dummy) {
+            $relatedEvents = array_keys($relatedEvents);
+            foreach ($relatedEvents as $value) {
                 $tmp .= $value.",";
             }
 
@@ -208,7 +208,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     /**
      * Deletes all events related to this event excepts itself
      * 
-     *@return void
+     * @return void
      */
     public function deleteRelatedEvents() {
 
@@ -219,7 +219,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         // deleting all related event entries except this item
         if (is_array($relatedEvents) && count($relatedEvents) > 0) {
 
-            foreach ($relatedEvents as $oneParticipant => $oneId) {
+            foreach ($relatedEvents as $oneId) {
                 if ($oneId <> $this->id) {
                     $model  = Phprojekt_Loader::getModel('Calendar', 'Calendar');
 
@@ -231,7 +231,4 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
     }
-
-
-
 }

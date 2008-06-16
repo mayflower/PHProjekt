@@ -86,7 +86,7 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
         $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
         $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
         $result = $this->fetchAll($where);
-        foreach ($result as $tmp => $data) {
+        foreach ($result as $data) {
             $ids[] = $data->wordId;
         }
         $clone = clone($this);

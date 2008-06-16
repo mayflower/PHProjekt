@@ -152,8 +152,6 @@ class Phprojekt_Loader extends Zend_Loader
      */
     protected static function _getClass($module, $item, $ident)
     {
-        $logger = Zend_Registry::get('log');
-
         $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
         $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
 

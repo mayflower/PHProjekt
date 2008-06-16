@@ -141,6 +141,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function __set($varname, $value)
     {
+        $messages = null;
         $info = $this->info();
 
         if (isset($info['metadata'][$varname])) {
@@ -276,6 +277,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $info  = $this->info();
         $valid = true;
+        $messages = null;
         if (isset($info['metadata'][$varname]) && !empty($value)) {
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];

@@ -41,15 +41,16 @@ class Timecard_IndexController extends IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count     = (int) $this->getRequest()->getParam('count',     null);
-        $offset    = (int) $this->getRequest()->getParam('start',     null);
-        $projectId = (int) $this->getRequest()->getParam('nodeId',    null);
-        $itemId    = (int) $this->getRequest()->getParam('id',        null);
+        $messages  = null;
+        $count     = (int) $this->getRequest()->getParam('count', null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
+        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
+        $itemId    = (int) $this->getRequest()->getParam('id', null);
         $startDate = $this->getRequest()->getParam('startDate', null);
-        $endDate   = $this->getRequest()->getParam('endDate',   null);
+        $endDate   = $this->getRequest()->getParam('endDate', null);
 
         $startDate = Inspector::sanitize('date', $startDate, $messages, false);
-        $endDate   = Inspector::sanitize('date', $endDate,   $messages, false);
+        $endDate   = Inspector::sanitize('date', $endDate, $messages, false);
 
         // Date filter for timecard
         $dateFilter = array();
@@ -61,9 +62,8 @@ class Timecard_IndexController extends IndexController
             $dateFilter[] = 'date <= "'.$endDate.'"';
         }
         if (count($dateFilter)) {
-            $dateFilter = implode ($dateFilter, " AND " );
-        }
-        else {
+            $dateFilter = implode($dateFilter, " AND ");
+        } else {
             $dateFilter = null;
         }
 
@@ -86,19 +86,13 @@ class Timecard_IndexController extends IndexController
     public function jsonStartAction()
     {
         $translate = Zend_Registry::get('translate');
-        $id        = (int) $this->getRequest()->getParam('id');
-        $data      = (array) $this->getRequest()->getParam('data');
-
-
         $model   = $this->getModelObject();
         $message = $translate->translate('The Item was added correctly');
 
-        $this->getRequest()->setParam('date',date("Y-m-d"));
-        $this->getRequest()->setParam('startTime',date("h:i:s"));
-        $this->getRequest()->setParam('notes','Timecard started');
-        $this->getRequest()->setParam('projectId','1');
-
-
+        $this->getRequest()->setParam('date', date("Y-m-d"));
+        $this->getRequest()->setParam('startTime', date("h:i:s"));
+        $this->getRequest()->setParam('notes', 'Timecard started');
+        $this->getRequest()->setParam('projectId', '1');
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
@@ -120,16 +114,16 @@ class Timecard_IndexController extends IndexController
     public function jsonStopAction()
     {
         $translate = Zend_Registry::get('translate');
-        $offset    = (int) $this->getRequest()->getParam('start',     null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
 
         // Date filter to find the open register
         $dateFilter = array();
 
         $dateFilter[] = 'date = "'.date("Y-m-d").'"';
         $dateFilter[] = '(endTime = "" OR endTime is null)';
-        $dateFilter = implode ($dateFilter, " AND " );
+        $dateFilter = implode($dateFilter, " AND ");
 
-        $this->getRequest()->setParam('endTime',date("H:i:s"));
+        $this->getRequest()->setParam('endTime', date("H:i:s"));
 
         $records = $this->getModelObject()->fetchAll($dateFilter, null, 1, $offset);
 
@@ -139,14 +133,13 @@ class Timecard_IndexController extends IndexController
             $type    = 'success';
             $message = $translate->translate('The Item was saved correctly');
             $showId  = $model->id;
-        }
-        else {
+        } else {
             $type    = 'error';
             $message = $translate->translate('The Item was not found');
             $showId  = null;
         }
 
-        $return    = array('type'    => 'success',
+        $return    = array('type'    => $type,
                            'message' => $message,
                            'code'    => 0,
                            'id'      => $showId);

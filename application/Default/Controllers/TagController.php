@@ -128,7 +128,7 @@ class TagController extends IndexController
     {
         $id        = (int) $this->getRequest()->getParam('id');
         $projectId = (int) $this->getRequest()->getParam('nodeId');
-        $string    = $this->getRequest()->getParam('string','');
+        $string    = $this->getRequest()->getParam('string', '');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');

@@ -85,7 +85,6 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function searchWords($words, $count = null, $offset = null)
     {
-        $result    = array();
         $words     = $this->_getWordsFromText($words);
         $where     = array();
         foreach ($words as $word) {
