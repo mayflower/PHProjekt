@@ -139,6 +139,6 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
      */
     public function recordValidate()
     {
-        return $true;
+        return true;
     }
 }
