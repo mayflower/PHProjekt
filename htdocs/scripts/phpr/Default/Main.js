@@ -5,6 +5,7 @@ dojo.require("phpr.Component");
 // Load the widgets the template uses.
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.SplitContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.form.Button");
