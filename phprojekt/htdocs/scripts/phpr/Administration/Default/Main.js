@@ -12,8 +12,8 @@ dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {
     writePermissions: false,
     treeWidget: phpr.Administration.Default.Tree,
 
-	 reload:function(){
-	 	phpr.module   = this.module;
+    reload:function() {
+        phpr.module   = this.module;
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.destroyWidgets("centerMainContent");
@@ -27,22 +27,24 @@ dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {
         this.grid     = new this.gridWidget(updateUrl, this, null, this.module);
 	},
 
-    renderButton:function(){
+    renderButton:function() {
         //render new button
-        var newEntry =null;
+        var newEntry = null;
         phpr.destroyWidgets("subModuleNavigation");
         phpr.destroyWidgets("buttonRow");
         var params = {
             label:     '',
             id:        'newEntry',
             iconClass: 'add'
-           };
+        };
+
         newEntry = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(newEntry.domNode);
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
         dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
     },
-     newEntry: function(){
+
+    newEntry: function() {
         // summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module

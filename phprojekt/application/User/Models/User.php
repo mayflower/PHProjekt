@@ -2,14 +2,14 @@
 /**
  * User class for PHProjekt 6.0
  *
- * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   CVS: $Id: User.php 635 2008-04-02 19:32:05Z david $
- * @author    Eduardo Polidor <polidor@mayflower.de>
- * @package   PHProjekt
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @version    CVS: $Id:
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 1.0
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
 
 /**
@@ -17,8 +17,8 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
  * @link       http://www.phprojekt.com
@@ -52,6 +52,13 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
     protected $_informationManager;
 
     /**
+     * Validate object
+     *
+     * @var Phprojekt_Model_Validate
+     */
+    protected $_validate = null;
+
+    /**
      * Initialize new user
      * If is seted the user id in the session,
      * the class will get all the values of these user
@@ -67,12 +74,13 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
         }
         parent::__construct($db);
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        if (isset($authNamespace->userId)) {
-            if ($authNamespace->userId > 0) {
-                $this->find($authNamespace->userId);
-            }
-        }
+        //$authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        //if (isset($authNamespace->userId)) {
+        //    if ($authNamespace->userId > 0) {
+        //        $this->find($authNamespace->userId);
+        //    }
+        //}
+        $this->_validate           = new Phprojekt_Model_Validate();
         $this->_informationManager = new User_Models_Information();
     }
 
@@ -154,8 +162,8 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
 
     /**
      * Get the rigths
-     * 
-     * @param integer $userid use from whom right is needed 
+     *
+     * @param integer $userid use from whom right is needed
      *
      * @return string
      */
@@ -171,6 +179,20 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      */
     public function recordValidate()
     {
-        return true;
+        $data      = $this->_data;
+        $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+
+        $this->_validate = new Phprojekt_Model_Validate();
+        return $this->_validate->recordValidate($this, $data, $fields);
+    }
+
+    /**
+     * Return the error data
+     *
+     * @return array
+     */
+    public function getError()
+    {
+        return (array) $this->_validate->_error->getError();
     }
 }

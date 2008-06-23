@@ -1,6 +1,6 @@
 <?php
 /**
- * User Module Controller for PHProjekt 6.0
+ * Tab Module Controller for PHProjekt 6.0
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
@@ -14,7 +14,7 @@
  */
 
 /**
- * User Module Controller for PHProjekt 6.0
+ * Tab Module Controller for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -24,6 +24,6 @@
  * @since      File available since Release 1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class User_IndexController extends IndexController
+class Tab_IndexController extends IndexController
 {
 }

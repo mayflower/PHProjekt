@@ -1,5 +1,7 @@
-/* {"identifier":"id","label":"name","items":[{"name":"Benutzer","id":"User","parent":null,"children":[]},
-{"name":"Gruppen","id":"Groups","parent":null,"children":[]},
-{"name":"Rollen","id":"Role","parent":null,"children":[]},
-{"name":"Module","id":"Modules","parent":null,"children":[]},
+/* {"identifier":"id","label":"name","items":[
+{"name":"Users","id":"User","parent":null,"children":[]},
+{"name":"Modules","id":"Module","parent":null,"children":[]},
+{"name":"Tabs","id":"Tab","parent":null,"children":[]},
+{"name":"Groups","id":"Groups","parent":null,"children":[]},
+{"name":"Roles","id":"Role","parent":null,"children":[]},
 {"name":"Moduldesigner","id":"Md","parent":null,"children":[]}]}  */

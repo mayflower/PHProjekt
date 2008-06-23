@@ -94,8 +94,10 @@ final class Default_Helpers_Save
         }
 
         /* Set the owner */
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $model->ownerId = $authNamespace->userId;
+        if (isset($model->ownerId)) {
+            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+            $model->ownerId = $authNamespace->userId;
+        }
 
         if ($model->recordValidate()) {
             return $model->save();

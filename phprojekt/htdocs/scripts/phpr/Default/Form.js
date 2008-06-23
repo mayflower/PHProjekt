@@ -114,8 +114,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 					break;
 			}
 		}
-        // add tags at the end of the first tab
 
+        // add tags at the end of the first tab
 		this.formdata += this.displayTagInput();
 		formtabs ="";
 

@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS `TagsModules`;
 DROP TABLE IF EXISTS `TagsUsers`;
 DROP TABLE IF EXISTS `Tags`;
 DROP TABLE IF EXISTS `TabModuleRelation`;
-DROP TABLE IF EXISTS `Tabs`;
+DROP TABLE IF EXISTS `Tab`;
 DROP TABLE IF EXISTS `SearchWords`;
 DROP TABLE IF EXISTS `SearchWordModule`;
 DROP TABLE IF EXISTS `SearchDisplay`;
@@ -86,7 +86,7 @@ CREATE TABLE `User` (
 --
 CREATE TABLE `Module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `module` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -308,9 +308,9 @@ CREATE TABLE `TagsModules` (
 );
 
 --
--- Table structure for table `Tabs`
+-- Table structure for table `Tab`
 --
-CREATE TABLE `Tabs` (
+CREATE TABLE `Tab` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
@@ -430,7 +430,7 @@ CREATE TABLE `Calendar` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `module`) VALUES
+INSERT INTO `Module` (`id`, `name`) VALUES
 (1, 'Project'),
 (2, 'Todo'),
 (3, 'Note'),

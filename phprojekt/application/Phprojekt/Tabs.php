@@ -55,7 +55,7 @@ class Phprojekt_Tabs
 
         $db     = Zend_Registry::get('db');
         $select = $db->select()
-                     ->from(array('t' => 'Tabs'))
+                     ->from(array('t' => 'Tab'))
                      ->joinInner(array('rel' => 'TabModuleRelation'), sprintf("%s = %s", $db->quoteIdentifier("t.id"), $db->quoteIdentifier("rel.tabId")))
                      ->where($db->quoteInto('rel.moduleId = ?', $moduleId));
         $stmt = $db->query($select);
@@ -64,6 +64,7 @@ class Phprojekt_Tabs
         // Set the index 0, is not used but is needed for create other index
         self::$_cache[0] = array();
 
+        self::$_cache[$moduleId] = array();
         foreach ($rows as $row) {
            self::$_cache[$moduleId][] = array('id'    => $row['id'],
                                               'label' => $row['label']);
@@ -93,7 +94,7 @@ class Phprojekt_Tabs
     {
         $db     = Zend_Registry::get('db');
         $select = $db->select()
-                     ->from('Tabs');
+                     ->from('Tab');
         $stmt = $db->query($select);
         return $stmt->fetchAll();
     }
@@ -111,11 +112,11 @@ class Phprojekt_Tabs
         $db = Zend_Registry::get('db');
         if ($id > 0) {
             $data['label'] = $label;
-            $db->update('Tabs', $data, 'id = '.(int)$id);
+            $db->update('Tab', $data, 'id = '.(int)$id);
             return $id;
         } else {
             $data['label'] = $label;
-            $db->insert('Tabs', $data);
+            $db->insert('Tab', $data);
             return $db->lastInsertId();
         }
     }

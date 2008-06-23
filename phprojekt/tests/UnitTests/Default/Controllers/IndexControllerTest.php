@@ -707,7 +707,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"History","label":"History"}')) > 0);
         $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Note","label":"Note"}')) > 0);
         $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Project","label":"Project"}')) > 0);
         $this->assertTrue(strpos(strtolower($response), strtolower('{"name":"Todo","label":"Todo"}')) > 0);
@@ -795,7 +794,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // write permission modules
-        $this->assertTrue(strpos($response, '{"name":"History","label":"History","permission":0}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Note","label":"Note","permission":4}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Project","label":"Project","permission":4}') > 0);
         $this->assertTrue(strpos($response, '{"name":"Timecard","label":"Timecard","permission":0}') > 0);

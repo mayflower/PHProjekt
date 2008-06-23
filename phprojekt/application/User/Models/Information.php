@@ -129,9 +129,9 @@ class User_Models_Information extends EmptyIterator implements Phprojekt_ModelIn
         $data['order']    = 0;
         $data['position'] = 6;
         $data['fieldset'] = '';
-        $data['range']    = array(array('id'   => 0,
+        $data['range']    = array(array('id'   => 'es',
                                         'name' => 'Spanish'),
-                                  array('id'   => 1,
+                                  array('id'   => 'en',
                                         'name' => 'English'));
         $data['required'] = true;
         $data['readOnly'] = false;
