@@ -74,7 +74,7 @@ class Phprojekt_Module
         self::$_cache[0] = array();
 
         foreach ($rows as $row) {
-           self::$_cache[$projectId][$row['module']] = $row['id'];
+           self::$_cache[$projectId][$row['name']] = $row['id'];
         }
 
         if (isset(self::$_cache[$projectId])) {
@@ -87,12 +87,12 @@ class Phprojekt_Module
     /**
      * Returns the id for a given module
      *
-     * @param string  $module    The Module name
+     * @param string  $name      The Module name
      * @param integer $projectId The current Project Id
      *
      * @return integer
      */
-    public static function getId($module, $projectId = null)
+    public static function getId($name, $projectId = null)
     {
         // Default project id for general request
         if (null === $projectId || $projectId < 1) {
@@ -100,8 +100,8 @@ class Phprojekt_Module
         }
         $modules = self::_getCachedIds($projectId);
 
-        if (array_key_exists($module, $modules)) {
-            return $modules[$module];
+        if (array_key_exists($name, $modules)) {
+            return $modules[$name];
         }
 
         return 0;

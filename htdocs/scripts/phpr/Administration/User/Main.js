@@ -1,5 +1,4 @@
 dojo.provide("phpr.Administration.User.Main");
-
 dojo.require("phpr.Administration.Default.Main");
 // app specific files
 dojo.require("phpr.Administration.User.Grid");
@@ -10,6 +9,7 @@ dojo.declare("phpr.Administration.User.Main", phpr.Administration.Default.Main, 
 	 	this.module = "User";
 		this.gridWidget = phpr.Administration.User.Grid;
 		this.formWidget = phpr.Administration.User.Form;
-		dojo.subscribe("Administration.User.load", this, "reload");
+		dojo.subscribe("User.reload", this, "reload");
+		dojo.subscribe("User.openForm", this, "openForm");
 	 }
 });

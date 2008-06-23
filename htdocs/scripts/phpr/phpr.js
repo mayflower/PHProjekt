@@ -178,7 +178,10 @@ dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
     requestMethod:"post",
     doClientPaging:false,
 
-    _filterResponse: function(data){
+    _filterResponse: function(data) {
+        if (!data.history) {
+            data.history = {};
+        }
         ret = {
             items: [{
                "history": data.history}]

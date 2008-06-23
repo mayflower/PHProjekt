@@ -1,5 +1,4 @@
 dojo.provide("phpr.Administration.Default.Tree");
-
 dojo.require("phpr.Component");
 
 dojo.declare("phpr.Administration.Default.Tree", phpr.Component, {
@@ -27,6 +26,6 @@ dojo.declare("phpr.Administration.Default.Tree", phpr.Component, {
     },
 
     onItemClick: function(item) {
-        dojo.publish("Administration."+item.id+".load");
+        dojo.publish(item.id+".reload");
     }
 });

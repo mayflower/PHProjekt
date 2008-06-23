@@ -34,11 +34,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     protected $_dbManager = null;
 
     /**
-     * Error object
+     * Validate object
      *
-     * @var Phprojekt_Error
+     * @var Phprojekt_Model_Validate
      */
-    protected $_error = null;
+    protected $_validate = null;
 
     /**
      * History object
@@ -99,7 +99,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         parent::__construct($db);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
-        $this->_error     = new Phprojekt_Error();
+        $this->_validate  = new Phprojekt_Model_Validate();
         $this->_history   = new Phprojekt_History($db);
         $this->_search    = new Phprojekt_Search_Default();
         $this->_config    = Zend_Registry::get('config');
@@ -172,10 +172,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
                     $value = mktime(date("H",$u) + $timeZomeComplement, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
                     $value = date("H:i:s",$value);
-                    
+
                     // running again the sanitizer to normalize the format
                     $value = Inspector::sanitize('time', $value, $messages, false);
-                    
+
 
                     break;
                 case 'datetime':
@@ -214,114 +214,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function recordValidate()
     {
-        $validated = true;
         $data      = $this->_data;
         $fields    = $this->_dbManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        foreach ($data as $varname => $value) {
-            if (isset($this->$varname)) {
-                /* Validate with the database_manager stuff */
-                foreach ($fields as $field) {
-                    if ($field['key'] == $varname) {
-                        $validations = $field;
-
-                        if (true === $validations['required']) {
-                            $error = $this->validateIsRequired($value);
-                            if (null != $error) {
-                                $validated = false;
-                                $this->_error->addError(array(
-                                'field'   => $varname,
-                                'message' => $error));
-                                break;
-                            }
-                        }
-
-                        $error = $this->validateValue($varname, $value);
-                        if (false === $error) {
-                            $validated = false;
-                            $this->_error->addError(array(
-                            'field'   => $varname,
-                            'message' => "Invalid Format"));
-                        }
-                        break;
-                    }
-                }
-
-                /* Validate an special fieldName */
-                $validater  = 'validate' . ucfirst($varname);
-                if ($validater != 'validateIsRequired') {
-                    if (in_array($validater, get_class_methods($this))) {
-                        $error = call_user_method($validater, $this, $value);
-                        if (null != $error) {
-                            $validated = false;
-                            $this->_error->addError(array(
-                            'field'   => $varname,
-                            'message' => $error));
-                        }
-                    }
-                }
-            }
-        }
-        return $validated;
-    }
-
-    /**
-     * Validate a value use the database type of the field
-     *
-     * @param string $varname Name of the field
-     * @param mix    $value   Value to validate
-     *
-     * @return string Error message or null if is valid
-     */
-    public function validateValue($varname, $value)
-    {
-        $info  = $this->info();
-        $valid = true;
-        $messages = null;
-        if (isset($info['metadata'][$varname]) && !empty($value)) {
-
-            $type = $info['metadata'][$varname]['DATA_TYPE'];
-
-            switch ($type) {
-                case 'int':
-                    $valid = Inspector::validate('integer', $value, $messages, false);
-                    break;
-                case 'float':
-                    $valid = Inspector::validate('float', $value, $messages, false);
-                    break;
-                case 'date':
-                    $valid = Inspector::validate('date', $value, $messages, false);
-                    break;
-                case 'time':
-                    // $valid = Inspector::validate('timestamp', $value, $messages, false);
-                    break;
-                case 'timestamp':
-                    $valid = Inspector::validate('timestamp', $value, $messages, false);
-                    break;
-                default:
-                    $valid = Inspector::validate('string', $value, $messages, false);
-                    break;
-            }
-        }
-
-        return $valid !== false;
-    }
-
-    /**
-     * Validate required fields
-     * return the msg error if exists
-     *
-     * @param mix $value The value to check
-     *
-     * @return string Error string or null
-     */
-    public function validateIsRequired($value)
-    {
-        $error = null;
-        if (empty($value)) {
-            $error = 'Is a required field';
-        }
-        return $error;
+        return $this->_validate->recordValidate($this, $data, $fields);
     }
 
     /**
@@ -378,7 +274,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getError()
     {
-        return (array) $this->_error->getError();
+        return (array) $this->_validate->_error->getError();
     }
 
     /**
