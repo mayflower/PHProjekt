@@ -1,0 +1,88 @@
+<table id="accessTable">
+<tr>
+    <td>{{accessUserText}}</td>
+    <td>{{accessAdminText}}</td>
+    <td>{{accessWriteText}}</td>
+    <td>{{accessReadText}}</td>
+    <td>{{accessActionText}}</td>
+</tr>
+<tr>
+    <td>
+        <select
+        id="userIdAccessAdd"
+        name="userIdAccessAdd"
+        dojoType="dijit.form.FilteringSelect"
+        required="true"
+        disabled="false"
+        autocomplete="true"
+        value=""
+        invalidMessage="" >
+        {% for user in users %}
+        <option value="{{user.id}}" >{{user.name}}</option>
+        {% endfor %}
+        </select>
+    </td>
+    <td>
+        <input type="checkbox"
+        dojotype="dijit.form.CheckBox"
+        id="checkAdminAccessAdd"
+        name="checkAdminAccessAdd"
+        checked="false"
+        value="1" />
+    </td>
+    <td>
+        <input type="checkbox"
+        dojotype="dijit.form.CheckBox"
+        id="checkWriteAccessAdd"
+        name="checkWriteAccessAdd"
+        checked="false"
+        value="1" />
+    </td>
+    <td>
+        <input type="checkbox"
+        dojotype="dijit.form.CheckBox"
+        id="checkReadAccessAdd"
+        name="checkReadAccessAdd"
+        checked="false"
+        value="1" />
+    </td>
+    <td><div id="accessAddButton"></div></td>
+</tr>
+{% for item in accessContent %}
+<tr id="trAccessFor{{item.userId}}">
+    <td>
+        <input id="userIdAccess[{{item.userId}}]"
+        name="userIdAccess[{{item.userId}}]"
+        type="hidden"
+        value="{{item.userName}}"
+        dojoType="dijit.form.TextBox" />
+        {{item.userName}}
+    </td>
+    <td>
+        <input type="checkbox"
+        dojotype="dijit.form.CheckBox"
+        id="checkAdminAccess[{{item.userId}}]"
+        name="checkAdminAccess[{{item.userId}}]"
+        checked="{{item.adminAccess}}"
+        value="1" />
+    </td>
+    <td>
+        <input type="checkbox"
+        dojotype="dijit.form.CheckBox"
+        id="checkWriteAccess[{{item.userId}}]"
+        name="checkWriteAccess[{{item.userId}}]"
+        checked="{{item.writeAccess}}"
+        value="1" />
+    </td>
+    <td>
+        <input type="checkbox"
+        dojotype="dijit.form.CheckBox"
+        id="checkReadAccess[{{item.userId}}]"
+        name="checkReadAccess[{{item.userId}}]"
+        checked="{{item.readAccess}}"
+        value="1" />
+    </td>
+    <td><div id="accessDeleteButton{{item.userId}}"></div></td>
+</tr>
+{% endfor %}
+</table>

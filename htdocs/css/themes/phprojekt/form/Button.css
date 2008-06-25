@@ -9,25 +9,25 @@
 
 .cross {
 	background-image: url(../images/cross.png);
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .tick {
 	background-image: url(../images/tick.png);
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .disk {
 	background-image: url(../images/disk.png);
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .add {
 	background-image: url(../images/add.png);
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
@@ -160,8 +160,8 @@
 	width: 11px;
 	margin: 0 auto 0 auto;
 }
-.phprojekt .dijitUpArrowButton .dijitArrowButtonInner { 
-	background:url("../images/spriteArrows.png") no-repeat -22px top; 
+.phprojekt .dijitUpArrowButton .dijitArrowButtonInner {
+	background:url("../images/spriteArrows.png") no-repeat -22px top;
 	width: 11px;
 	margin: 0 auto 2px auto;
 }

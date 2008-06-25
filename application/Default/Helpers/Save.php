@@ -58,13 +58,30 @@ final class Default_Helpers_Save
         /* Set the owner */
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $node->ownerId = $authNamespace->userId;
-
         if ($node->getActiveRecord()->recordValidate()) {
             if ((int)$node->projectId !== $parentId) {
-               return $node->setParentNode($parentNode);
-           } else {
-               return $node->getActiveRecord()->save();
-           }
+                $newNode = $node->setParentNode($parentNode);
+            } else {
+                $newNode = $node->getActiveRecord()->save();
+            }
+            if (isset($params['userIdAccess'])) {
+                $adminUsers = array($authNamespace->userId);
+                $writeUsers = array($authNamespace->userId);
+                $readUsers  = array($authNamespace->userId);
+                foreach ($params['userIdAccess'] as $accessUserId => $userName) {
+                    if (isset($params['checkAdminAccess'][$accessUserId])) {
+                        array_push($adminUsers, $accessUserId);
+                    }
+                    if (isset($params['checkWriteAccess'][$accessUserId])) {
+                        array_push($writeUsers, $accessUserId);
+                    }
+                    if (isset($params['checkReadAccess'][$accessUserId])) {
+                        array_push($readUsers, $accessUserId);
+                    }
+                }
+                $node->getActiveRecord()->saveRights($adminUsers, $writeUsers, $readUsers);
+            }
+            return $newNode;
         } else {
             $error = array_pop($node->getActiveRecord()->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
@@ -93,14 +110,32 @@ final class Default_Helpers_Save
             }
         }
 
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         /* Set the owner */
         if (isset($model->ownerId)) {
-            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
             $model->ownerId = $authNamespace->userId;
         }
 
         if ($model->recordValidate()) {
-            return $model->save();
+            $model->save();
+            if (isset($params['userIdAccess'])) {
+                $adminUsers = array($authNamespace->userId);
+                $writeUsers = array($authNamespace->userId);
+                $readUsers  = array($authNamespace->userId);
+                foreach ($params['userIdAccess'] as $accessUserId) {
+                    if (isset($params['checkAdminAccess'][$accessUserId])) {
+                        array_push($adminUsers, $accessUserId);
+                    }
+                    if (isset($params['checkWriteAccess'][$accessUserId])) {
+                        array_push($writeUsers, $accessUserId);
+                    }
+                    if (isset($params['checkReadAccess'][$accessUserId])) {
+                        array_push($readUsers, $accessUserId);
+                    }
+                }
+                $model->saveRights($adminUsers, $writeUsers, $readUsers);
+            }
+            return $model;
         } else {
             $error = array_pop($model->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);

@@ -35,6 +35,13 @@ phpr.destroyWidgets = function(el) {
     }
 };
 
+phpr.destroySimpleWidget = function(el) {
+    // Destroy only one widgwt using the id
+    if (dojo.byId(el)) {
+        dijit.byId(el).destroy();
+    }
+};
+
 phpr.send = function(/*Object*/paramsIn) {
     // Send the given content to the server using the Default values,
     // if you need something special dont use this function.
@@ -164,10 +171,9 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 
     _filterResponse: function(data){
         ret = {
-            items: [{
-                "metadata": data.metadata},
-                {"data": data.data},
-                {"history": data.history}]
+            items: [
+                {"metadata": data.metadata},
+                {"data": data.data}]
         };
         return ret;
     }
@@ -185,6 +191,20 @@ dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
         ret = {
             items: [{
                "history": data.history}]
+        };
+        return ret;
+    }
+});
+
+dojo.declare("phpr.ReadUsers", dojox.data.QueryReadStore, {
+    // We need the store explicitly here, since we have to pass it to the grid model.
+    requestMethod:"post",
+    doClientPaging:false,
+
+    _filterResponse: function(data) {
+        ret = {
+            items: [{
+               "users": data.data}]
         };
         return ret;
     }

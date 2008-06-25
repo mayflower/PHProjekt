@@ -286,12 +286,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $result = true;
         if ($this->id > 0) {
-            $this->_saveRights();
             $this->_history->saveFields($this, 'edit');
             $result = parent::save();
         } else {
             $result = parent::save();
-            $this->_saveRights();
             $this->_history->saveFields($this, 'add');
         }
 
@@ -441,18 +439,28 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
+     * Returns the right for each user has on a Phprojekt item
+     *
+     * @return array
+     */
+    public function getAccessRights()
+    {
+        $moduleId = Phprojekt_Module::getId($this->getTableName(), $this->projectId);
+        return $this->_rights->getRights($moduleId,$this->id);
+    }
+
+    /**
      * Save the rigths for the current item
      * The users are a POST array with userIds
-     * There is one save for each user.
+     *
+     * @param array $adminUsers - Array of usersId with admin access to the idem
+     * @param array $writeUsers - Array of usersId with write access to the idem
+     * @param array $readUsers  - Array of usersId with read access to the idem
      *
      * @return void
      */
-    private function _saveRights()
+    public function saveRights($adminUsers, $writeUsers, $readUsers)
     {
-        $writeUsers = array(1);
-        $readUsers  = array(1);
-        $adminUsers = array(1);
-
         $this->_rights->_save(Phprojekt_Module::getId($this->getTableName(), $this->projectId), $this->id, $adminUsers, $writeUsers, $readUsers);
     }
 }

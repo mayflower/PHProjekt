@@ -33,4 +33,11 @@
 	"timecardH": "H",
 	"timecardM": "M",
 	"timecardSavedTimes": "Saved time for",
+
+	// Access
+	"accessUser": "User",
+	"accessAdmin": "Admin",
+	"accessWrite": "Write",
+	"accessRead": "Read",
+	"accessAction": "Action",
 })

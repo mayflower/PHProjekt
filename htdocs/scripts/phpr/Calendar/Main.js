@@ -1,5 +1,4 @@
 dojo.provide("phpr.Calendar.Main");
-
 dojo.require("phpr.Default.Main");
 // app specific files
 dojo.require("phpr.Calendar.Tree");
@@ -20,5 +19,4 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 		dojo.subscribe("Calendar.submitSearchForm", this, "submitSearchForm");
 		dojo.subscribe("Calendar.showSearchResults", this, "showSearchResults");
 	 }
-
 });

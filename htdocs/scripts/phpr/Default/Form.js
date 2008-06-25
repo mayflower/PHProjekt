@@ -9,11 +9,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
-    formWidget:null,
-	range: new Array(),
-    sendData: new Array(),
-	formdata:'',
-	historyData:'',
+    formWidget:  null,
+	range:       new Array(),
+    sendData:    new Array(),
+	formdata:    '',
+	historyData: '',
+	accessData:  '',
+	userList:    new Array(),
 
     constructor:function(main, id, module) {
         // summary:
@@ -34,6 +36,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		});
 		this.formStore.fetch({onComplete: dojo.hitch(this, "getFormData" )});
 
+		// Get all the active users
+		this.userStore = new phpr.ReadUsers({
+			url: phpr.webpath+"index.php/User/index/jsonGetUsers"
+		});
+		this.userStore.fetch({onComplete: dojo.hitch(this, "getUserData" )});
+
 		// Render the history information
 		this.historyStore = new phpr.ReadHistory({
 			url: phpr.webpath+"index.php/History/index/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
@@ -51,6 +59,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
+	    phpr.destroySimpleWidget("userIdAccessAdd");
+	    phpr.destroySimpleWidget("checkAdminAccessAdd");
+	    phpr.destroySimpleWidget("checkWriteAccessAdd");
+	    phpr.destroySimpleWidget("checkReadAccessAdd");
 
 		this.formdata="";
 		this.historyData="";
@@ -63,7 +75,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		newStore = [];
 		this.fieldTemplate = new phpr.Default.field();
 		for (var i = 0; i < meta.length; i++) {
-
 			itemtype     = meta[i]["type"];
 			itemid       = meta[i]["key"];
 			itemlabel    = meta[i]["label"];
@@ -87,12 +98,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 					this.formdata += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
 					  												 itemdisabled);
 					break;
-			   case'multipleselectbox':
+                case'multipleselectbox':
 					this.formdata += this.fieldTemplate.multipleSelectBoxRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
 					  												 itemdisabled, 5, "multiple");
 					break;
 				case 'multipleselect':
-					this.formdata += this.fieldTemplate.MultipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
+					this.formdata += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
 					  												  		itemdisabled);
 					break;
 				case'date':
@@ -119,9 +130,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		this.formdata += this.displayTagInput();
 		formtabs ="";
 
-		//later on we need to provide different tabs depending on the metadata
+		// template for the access tab
+		this.accessData = this.render(["phpr.Default.template", "accesstab.html"], null, {
+        	accessUserText: phpr.nls.accessUser,
+	        accessAdminText: phpr.nls.accessAdmin,
+            accessWriteText: phpr.nls.accessWrite,
+            accessReadText: phpr.nls.accessRead,
+            accessActionText: phpr.nls.accessAction,
+			users: this.userList,
+			accessContent: data[0]["access"],
+        });
+
+		// later on we need to provide different tabs depending on the metadata
 		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'Basic Data'});
-		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:'',id:'tab2',title:'Access'});
+		formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.accessData,id:'tab2',title:'Access'});
         formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.historyData,id:'tab3',title:'History'});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
             formId: 'detailForm' + this.id,
@@ -135,8 +157,95 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             deleteText: phpr.nls.delete,
         });
 		this.formWidget = dijit.byId('detailForm'+this.id);
+
+		// add button for access
+        var params = {
+            label:     '',
+            id:        'newAccess',
+            iconClass: 'add',
+            alt:       'Add'
+        };
+        newAccess = new dijit.form.Button(params);
+        dojo.byId("accessAddButton").appendChild(newAccess.domNode);
+        dojo.connect(dijit.byId("newAccess"), "onClick", dojo.hitch(this, "newAccess"));
+
+		// delete buttons for access
+        for (var i = 0; i < data[0]["access"].length; i++) {
+            var userId     = data[0]["access"][i]["userId"]
+		    var idName     = "deleteAccess" + userId;
+		    var buttonName = "accessDeleteButton" + userId;
+            var params = {
+                label:     '',
+                id:        idName,
+                iconClass: 'cross',
+                alt:       'Delete'
+            };
+            idName = new dijit.form.Button(params);
+            dojo.byId(buttonName).appendChild(idName.domNode);
+            dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
+		}
+
+        // action buttons for the form
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
+	},
+
+	newAccess: function () {
+        // summary:
+        //    Add a new row of one user-accees
+        // description:
+        //    Add a the row of one user-accees
+        //    with the values selected on the first row
+        var userId = dijit.byId("userIdAccessAdd").getValue();
+        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
+            var userName = dijit.byId("userIdAccessAdd").getDisplayedValue();
+            var table    = dojo.byId("accessTable");
+            var row      = table.insertRow(table.rows.length);
+            row.id       = "trAccessFor" + userId;
+
+            var cell = row.insertCell(0);
+            cell.innerHTML = '<input id="userIdAccess[' + userId + ']" name="userIdAccess[' + userId + ']" type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
+            var cell = row.insertCell(1);
+            cell.innerHTML = '<input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAdminAccess[' + userId + ']" name="checkAdminAccess[' + userId + ']" checked="' + dijit.byId("checkAdminAccessAdd").checked + '" value="1" />';
+            var cell = row.insertCell(2);
+            cell.innerHTML = '<input type="checkbox" dojotype="dijit.form.CheckBox" id="checkWriteAccess[' + userId + ']" name="checkWriteAccess[' + userId + ']" checked="' + dijit.byId("checkWriteAccessAdd").checked + '" value="1" />';
+            var cell = row.insertCell(3);
+            cell.innerHTML = '<input type="checkbox" dojotype="dijit.form.CheckBox" id="checkReadAccess[' + userId + ']" name="checkReadAccess[' + userId + ']" checked="' + dijit.byId("checkReadAccessAdd").checked + '" value="1" />';
+            var cell = row.insertCell(4);
+            cell.innerHTML = '<div id="accessDeleteButton' + userId + '"></div>';
+
+            dojo.parser.parse(row);
+
+            var idName     = "deleteAccess" + userId;
+            var buttonName = "accessDeleteButton" + userId;
+            var params = {
+                label:     '',
+                id:        idName,
+                iconClass: 'cross',
+                alt:       'Delete'
+            };
+            idName = new dijit.form.Button(params);
+            dojo.byId(buttonName).appendChild(idName.domNode);
+            dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
+        }
+	},
+
+	deleteAccess: function (userId) {
+        // summary:
+        //    Remove the row of one user-accees
+        // description:
+        //    Remove the row of one user-accees
+        //    and destroy all the used widgets
+	    phpr.destroySimpleWidget("userIdAccess[" + userId + "]");
+	    phpr.destroySimpleWidget("checkAdminAccess[" + userId + "]");
+	    phpr.destroySimpleWidget("checkWriteAccess[" + userId + "]");
+	    phpr.destroySimpleWidget("checkReadAccess[" + userId + "]");
+        phpr.destroyWidgets("deleteAccess" + userId);
+	    phpr.destroyWidgets("accessDeleteButton" + userId);
+
+	    var e = dojo.byId("trAccessFor" + userId);
+	    var parent = e.parentNode;
+        parent.removeChild(e);
 	},
 
 	submitForm: function() {
@@ -174,7 +283,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
             onSuccess: this.publish("reload")
-                });
+        });
 	},
 
     displayTagInput: function() {
@@ -201,7 +310,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         for (var i = 0; i < tags['data'].length; i++) {
             data.push({"id":tags['data'][i]['string'],"name":tags['data'][i]['string']});
         }
-        return this.fieldTemplate.MultipleSelectRender(data ,meta['label'], meta['key'], value, false, false);
+        return this.fieldTemplate.multipleSelectRender(data ,meta['label'], meta['key'], value, false, false);
     },
 
     getHistoryData: function(items, request) {
@@ -230,5 +339,19 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			this.historyData += "<tr><td>" + historyDate + "</td><td>" + historyUser + "</td><td>" + historyField + "</td><td>" + historyOldValue;
 		}
 		this.historyData += "</table>";
+	},
+
+    getUserData: function(items, request) {
+        // summary:
+        //    This function get all the active users
+        // description:
+        //    This function get all the active users, except the current user
+        //    and make the array for the select
+		var users = this.userStore.getValue(items[0], "users");
+        this.userList = new Array();
+
+		for (i in users) {
+		    this.userList.push({"id":users[i]['id'],"name":users[i]['username']})
+		}
 	}
 });

@@ -26,7 +26,6 @@
  */
 class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 {
-
     protected $_rootEventId = 0;
 
     /**
@@ -35,7 +34,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * @return array with the info of the calendar database modified
      */
     public function info() {
-
         $tmp = parent::info();
 
         // participant id is provided as the list of participants of the event,
@@ -48,24 +46,21 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Save or inserts an event. It inserts one envent by participant
      *
      * @param Request $request
-     * 
+     *
      * @return integer the id of the root event
      */
     public static function saveEvent($request) {
-
         $userId        = Phprojekt_Auth::getUserId();
         $rootEventId   = 0;
         $id            = (int) $request->getParam('id');
         $participantId = $request->getParam('participantId');
         $moduleName    = $request->getModuleName();
         $participants  = array();
-        $rootEventId = self::getRootEventId($id);
-
+        $rootEventId   = self::getRootEventId($id);
         $relatedEvents = self::getRelatedEvents($rootEventId);
 
         // getting the participant list from request
         if (is_array($participantId)) {
-
             // we will put the owner id first, just to make it clear
             if (in_array($userId, $participantId)) {
                 $participants[] = $userId;
@@ -85,11 +80,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         // now the insertion or edition for each invited user
         foreach ($participants as $oneParticipant) {
-
             $request->setParam('participantId', $oneParticipant);
             $model  = Phprojekt_Loader::getModel($moduleName, $moduleName);
             if (isset($relatedEvents[$oneParticipant])) {
-
                 if ($relatedEvents[$oneParticipant] <> $rootEventId) {
                     $request->setParam('parentId', $rootEventId);
                 } else {
@@ -107,39 +100,33 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             unset($model);
         }
 
-
         // now, I'll delete the other participants (uninvited?)
         if (is_array($relatedEvents) && count($relatedEvents) > 0) {
             foreach ($relatedEvents as $oneParticipant => $oneId) {
-                $model  = Phprojekt_Loader::getModel($moduleName, $moduleName);
-
+                $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
                 $model->find($oneId);
                 $model->delete();
                 unset($model);
-
             }
         }
 
         return (int)$rootEventId;
-
     }
 
     /**
      * Returns the id of the root event of the id provided
      *
      * @param integer $id id of any event
-     * 
+     *
      * @return integer id of the root event
      */
     public static function getRootEventId ($id) {
         $rootEventId = 0;
-
-        $rootEvent = new Calendar_Models_Calendar();
+        $rootEvent   = new Calendar_Models_Calendar();
         $rootEvent->find($id);
         while (!empty($rootEvent->parentId)) {
             $rootEvent->find($rootEvent->parentId);
         }
-
         $rootEventId = (int)$rootEvent->id;
 
         return $rootEventId;
@@ -152,16 +139,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * @return array with participantId => event id
      */
     public function getRelatedEvents ($rootEventId) {
-
         $relatedEvents = array();
 
         // the main event is related to himself
-
         $rootEvent = new Calendar_Models_Calendar();
         $rootEvent->find($rootEventId);
 
         if (!empty($rootEvent->id)) {
-
             $relatedEvents[$rootEvent->participantId] = $rootEventId;
 
             // getting the event list -all related events-
@@ -179,19 +163,16 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
     /**
      * Sets on participantId the list of all participants of one event
-     * 
+     *
      * @return void
      *
      */
     public function getAllParticipants() {
-
         $relatedEvents = array();
-        $tmp = "";
+        $tmp           = "";
 
         if (!empty($this->id)) {
-
-            $rootEventId = $this->getRootEventId($this->id);
-
+            $rootEventId   = $this->getRootEventId($this->id);
             $relatedEvents = $this->getRelatedEvents($rootEventId);
 
             $tmp = ",";
@@ -199,36 +180,29 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             foreach ($relatedEvents as $value) {
                 $tmp .= $value.",";
             }
-
             $this->participantId = $tmp;
         }
-
     }
 
     /**
      * Deletes all events related to this event excepts itself
-     * 
+     *
      * @return void
      */
     public function deleteRelatedEvents() {
-
-        $rootEventId = $this->getRootEventId($this->id);
-
+        $rootEventId   = $this->getRootEventId($this->id);
         $relatedEvents = $this->getRelatedEvents($rootEventId);
 
         // deleting all related event entries except this item
         if (is_array($relatedEvents) && count($relatedEvents) > 0) {
-
             foreach ($relatedEvents as $oneId) {
                 if ($oneId <> $this->id) {
                     $model  = Phprojekt_Loader::getModel('Calendar', 'Calendar');
-
                     $model->find($oneId);
                     $model->delete();
                     unset($model);
                 }
             }
         }
-
     }
 }
