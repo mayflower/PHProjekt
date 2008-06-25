@@ -138,7 +138,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * @return integer
      */
-    public function hasRight($moduleId, $itemId, $userId, $right) {
+    public function hasRight($moduleId, $itemId, $userId, $right)
+    {
         // Cache the query
         $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId.'-'.$userId);
         if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
@@ -157,5 +158,41 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $rightNamespace->right = $value;
         }
         return $value;
+    }
+
+    /**
+     * Return all the rights for a moduleId-ItemId
+     *
+     * @param string  $moduleId The module Id
+     * @param integer $itemId   The item Id
+     *
+     * @return array
+     */
+    public function getRights($moduleId, $itemId)
+    {
+        // Cache the query
+        //$rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId);
+        //if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
+        //    $values = $rightNamespace->right;
+        //} else {
+            $db     = Zend_Registry::get('db');
+            $user   = new User_Models_User($db);
+            $where  = array();
+            $values = array();
+
+            $where[] = 'moduleId = '. (int)$moduleId;
+            $where[] = 'itemId = '. (int)$itemId;
+            $where   = implode(' AND ', $where);
+            $rows    = $this->fetchAll($where)->toArray();
+            foreach ($rows as $row) {
+                $row['userName'] = $user->findUserById($row['userId'])->username;
+                $row['adminAccess'] = (boolean) $row['adminAccess'];
+                $row['writeAccess'] = (boolean) $row['writeAccess'];
+                $row['readAccess']  = (boolean) $row['readAccess'];
+                $values[] = $row;
+            }
+            //$rightNamespace->right = $values;
+        //}
+        return $values;
     }
 }

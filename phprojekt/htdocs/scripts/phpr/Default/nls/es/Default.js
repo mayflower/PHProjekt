@@ -33,4 +33,11 @@
 	"timecardH": "H",
 	"timecardM": "M",
 	"timecardSavedTimes": "Tiempos grabados para",
+
+	// Access
+	"accessUser": "Usuario",
+	"accessAdmin": "Admin",
+	"accessWrite": "Escritura",
+	"accessRead": "Lectura",
+	"accessAction": "Acci&oacute;n",
 })

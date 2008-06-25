@@ -33,4 +33,11 @@
 	"timecardH": "Std",
 	"timecardM": "M",
 	"timecardSavedTimes": "Bewahrte Zeit f&uuml;r",
+
+	// Access
+	"accessUser": "Verbraucher",
+	"accessAdmin": "Amin",
+	"accessWrite": "Aufschreiben",
+	"accessRead": "Lesen",
+	"accessAction": "Aktion",
 })

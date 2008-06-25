@@ -155,7 +155,7 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      *
      * @return Phprojekt_ModelInformation_Interface
      */
-    public function getInformation ()
+    public function getInformation()
     {
         return $this->_informationManager;
     }
@@ -167,9 +167,19 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      *
      * @return string
      */
-    public function getRights ($userId)
+    public function getRights($userId)
     {
-        return 'write';
+        return 15;
+    }
+
+    /**
+     * Get the rigths for other users
+     *
+     * @return array
+     */
+    public function getAccessRights()
+    {
+        return array();
     }
 
     /**

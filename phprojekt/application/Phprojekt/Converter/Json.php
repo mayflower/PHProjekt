@@ -106,6 +106,7 @@ class Phprojekt_Converter_Json
         /* we can check the returned array, but at the moment we just pass it */
         $datas   = array();
         $data    = array();
+        $access  = array();
         $numRows = 0;
 
         /*
@@ -124,7 +125,7 @@ class Phprojekt_Converter_Json
                    $data[$key] = (string) $value;
                }
                $data['rights'] = $model->getRights(Phprojekt_Auth::getUserId());
-
+               $data['access'] = $model->getAccessRights();
             }
             $datas[] = $data;
         } else {
@@ -138,8 +139,8 @@ class Phprojekt_Converter_Json
                     } else {
                         $data[$key] = (string) $value;
                     }
-
                     $data['rights'] = $model->getRights(Phprojekt_Auth::getUserId());
+                    $data['access'] = $model->getAccessRights();
                 }
                 $datas[] = $data;
             }

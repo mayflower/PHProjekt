@@ -66,7 +66,7 @@ class Tab_Models_Tab extends Phprojekt_ActiveRecord_Abstract implements Phprojek
      *
      * @return Phprojekt_ModelInformation_Interface
      */
-    public function getInformation ()
+    public function getInformation()
     {
         return $this->_informationManager;
     }
@@ -78,9 +78,19 @@ class Tab_Models_Tab extends Phprojekt_ActiveRecord_Abstract implements Phprojek
      *
      * @return string
      */
-    public function getRights ($userId)
+    public function getRights($userId)
     {
-        return 'write';
+        return 15;
+    }
+
+    /**
+     * Get the rigths for other users
+     *
+     * @return array
+     */
+    public function getAccessRights()
+    {
+        return array();
     }
 
     /**

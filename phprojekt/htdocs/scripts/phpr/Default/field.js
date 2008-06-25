@@ -1,10 +1,10 @@
 dojo.provide("phpr.Default.field");
 dojo.require("phpr.Component");
 dojo.require("dijit.form.Textarea");
-dojo.require("dojox.widget.MultiComboBox"); 
-dojo.require("dijit.form.MultiSelect"); 
+dojo.require("dojox.widget.MultiComboBox");
+dojo.require("dijit.form.MultiSelect");
 dojo.declare("phpr.Default.field", phpr.Component, {
-    // summary: 
+    // summary:
     //    class for rendering form fields
     // description:
     //    this class renders the different form types which are available in a PHProjekt Detail View
@@ -43,7 +43,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 		return this.render(["phpr.Default.template", "formdate.html"], null, {
 						 	label: itemlabel,
 							labelfor: itemid,
-							id: itemid,	
+							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
 							disabled: itemdisabled
@@ -53,7 +53,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 		return this.render(["phpr.Default.template", "formtime.html"], null, {
 						 	label: itemlabel,
 							labelfor: itemid,
-							id: itemid,	
+							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
 							disabled: itemdisabled
@@ -76,7 +76,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							values: options
 				});
 	},
-	
+
 	multipleSelectBoxRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple){
 		var options=new Array();
 		var j=0;
@@ -89,8 +89,8 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 		    }
 			options.push(range[j]);
 			j++;
-		}		
-		
+		}
+
 		return this.render(["phpr.Default.template", "formselect.html"], null, {
 							label: itemlabel,
 							labelfor: itemid,
@@ -103,8 +103,8 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							options: options
 				});
 	},
-	
-	MultipleSelectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
+
+	multipleSelectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
 		var options=new Array();
 		var j=0;
 		for (j in range){

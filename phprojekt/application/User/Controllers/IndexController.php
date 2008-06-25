@@ -26,4 +26,19 @@
  */
 class User_IndexController extends IndexController
 {
+    /**
+     * Return a list of all the users except the current user
+     *
+     * @return void
+     */
+    public function jsonGetUsersAction()
+    {
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $where         = array();
+        $where         = "status = 'A' AND id != ". (int)$authNamespace->userId;
+        $object        = Phprojekt_Loader::getModel('User', 'User');
+        $records       = $object->fetchAll($where);
+
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
 }

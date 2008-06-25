@@ -75,7 +75,7 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
      *
      * @return Phprojekt_ModelInformation_Interface
      */
-    public function getInformation ()
+    public function getInformation()
     {
         return $this->_informationManager;
     }
@@ -87,9 +87,19 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
      *
      * @return string
      */
-    public function getRights ($userId)
+    public function getRights($userId)
     {
-        return 'write';
+        return 15;
+    }
+
+    /**
+     * Get the rigths for other users
+     *
+     * @return array
+     */
+    public function getAccessRights()
+    {
+        return array();
     }
 
     /**

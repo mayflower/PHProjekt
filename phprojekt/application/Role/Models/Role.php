@@ -126,7 +126,7 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
      *
      * @return Phprojekt_ModelInformation_Interface
      */
-    public function getInformation ()
+    public function getInformation()
     {
         return $this->_informationManager;
     }
@@ -134,11 +134,23 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
     /**
      * Get the rigths
      *
+     * @param integer $userid use from whom right is needed
+     *
      * @return string
      */
-    public function getRights ($userId)
+    public function getRights($userId)
     {
-        return 'write';
+        return 15;
+    }
+
+    /**
+     * Get the rigths for other users
+     *
+     * @return array
+     */
+    public function getAccessRights()
+    {
+        return array();
     }
 
     /**
