@@ -74,7 +74,8 @@ class Calendar_IndexController extends IndexController
         if (empty($id)) {
             $record = $this->getModelObject();
         } else {
-            $record = $this->getModelObject()->find($id);
+            $record = $this->getModelObject();
+            $record->find($id);
             $record->getAllParticipants();
         }
 
