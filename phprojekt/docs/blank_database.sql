@@ -405,11 +405,13 @@ CREATE TABLE `Calendar` (
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,
-  `endDate` date default NULL,
   `participantId` int(11) default NULL,
   `startTime` time default NULL,
   `endTime` time default NULL,
   `parentId` int(11) default NULL,
+  `serialType` int(11) default NULL,
+  `serialDays` int(11) default NULL,
+  `endDate` date default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -470,11 +472,13 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'title',      1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
 (0, 'Calendar', 'notes',      1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'startDate',  1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'endDate',    1, 'endDate'  , 'endDate'  , 'date'    , 5, 1, NULL, NULL     , '', 5, 'center', 1, 3, '1', 0, 1, 0),
 (0, 'Calendar', 'participantId',1, 'participantId' , 'participantId'   , 'multipleSelectValues'  , 8, 1, NULL, 'User'     , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'startTime',  1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'endTime',    1, 'endTime'  , 'endTime'  , 'time'    , 6, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'projectId',  1, 'project' , 'project'   , 'tree'    , 7, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0);
+(0, 'Calendar', 'endTime',    1, 'endTime'  , 'endTime'  , 'time'    , 5, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'projectId',  1, 'project' , 'project'   , 'tree'    , 6, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Calendar', 'serialType', 1, 'serialType', 'serialType', 'selectValues', 7, 1, NULL, '1#Once|2#Daily|3#Weekly|4#Montlhy|5#Anually', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'serialDays', 1, 'serialDays', 'serialDays', 'selectValues', 7, 1, NULL, '0#All|1#Monday|2#Tuesday|3#Wednesday|4#Thursday|5#Friday|6#Saturday|7#Sunday', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'endDate',    1, 'endDate'  , 'endDate'  , 'date'    , 8, 1, NULL, NULL     , '', 5, 'center', 1, 0, '1', 0, 1, 0);
 
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
 (1,'test','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
