@@ -115,13 +115,17 @@ final class Default_Helpers_Save
         if (isset($model->ownerId)) {
             $model->ownerId = $authNamespace->userId;
         }
-
+        
         if ($model->recordValidate()) {
             $model->save();
+            
+            // creating rights for owner user
+            $adminUsers = array($authNamespace->userId);
+            $writeUsers = array($authNamespace->userId);
+            $readUsers  = array($authNamespace->userId);
+                
+            // checking permission sent as parameter
             if (isset($params['userIdAccess'])) {
-                $adminUsers = array($authNamespace->userId);
-                $writeUsers = array($authNamespace->userId);
-                $readUsers  = array($authNamespace->userId);
                 foreach ($params['userIdAccess'] as $accessUserId) {
                     if (isset($params['checkAdminAccess'][$accessUserId])) {
                         array_push($adminUsers, $accessUserId);
@@ -133,8 +137,11 @@ final class Default_Helpers_Save
                         array_push($readUsers, $accessUserId);
                     }
                 }
-                $model->saveRights($adminUsers, $writeUsers, $readUsers);
             }
+            
+            // saving rights
+            $model->saveRights($adminUsers, $writeUsers, $readUsers);
+            
             return $model;
         } else {
             $error = array_pop($model->getError());
