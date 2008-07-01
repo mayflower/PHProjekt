@@ -30,24 +30,6 @@
 class SearchController extends IndexController
 {
     /**
-     * Search words class
-     *
-     * @var Phprojekt_Search_Words
-     */
-    private $_search = null;
-
-    /**
-     * Init function
-     *
-     * @return void
-     */
-    public function init ()
-    {
-        $this->_search = new Phprojekt_Search_Default();
-        parent::init();
-    }
-
-    /**
      * Search for words
      *
      * @requestparam string  $words    The words for seach
@@ -62,8 +44,9 @@ class SearchController extends IndexController
         $count    = (int) $this->getRequest()->getParam('count',  null);
         $offset   = (int) $this->getRequest()->getParam('start',  null);
 
+        $search  = new Phprojekt_Search_Default();
         $results = array();
-        $results  = $this->_search->search($words, $count, $offset);
+        $results = $search->search($words, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($results);
     }
