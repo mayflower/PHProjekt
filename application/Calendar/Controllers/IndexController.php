@@ -52,10 +52,10 @@ class Calendar_IndexController extends IndexController
 
         $id = (int)Calendar_Models_Calendar::saveEvent($this->getRequest());
 
-        $return    = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => $id);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -84,9 +84,9 @@ class Calendar_IndexController extends IndexController
 
     /**
      * Deletes an event, it includes all related events to this parent event
-     * 
+     *
      * requestparam integer id ...
-     * 
+     *
      * @return void
      */
     public function jsonDeleteAction()
@@ -105,9 +105,9 @@ class Calendar_IndexController extends IndexController
             $model->delete();
             $message = $translate->translate('The Item was deleted correctly');
             $return  = array('type'    => 'success',
-            'message' => $message,
-            'code'    => 0,
-            'id'      => $id);
+                             'message' => $message,
+                             'code'    => 0,
+                             'id'      => $id);
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
