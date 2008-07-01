@@ -35,7 +35,7 @@ class Phprojekt_Acl extends Zend_Acl
     const READ      = 2;
     const WRITE     = 4;
     const ADMIN     = 8;
-
+    const ALL       = 15;
     /**
      * Singleton instance
      * @var PHProjekt_Acl

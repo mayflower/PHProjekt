@@ -89,7 +89,7 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
      */
     public function getRights($userId)
     {
-        return 15;
+        return Phprojekt_Acl::ALL;
     }
 
     /**
