@@ -69,12 +69,14 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
-        $tabs = Phprojekt_Tabs::getTabs();
-        foreach ($tabs as $tab)
-        $data['range'][]    = array('id'   => $tab['id'],
-                                    'name' => $tab['label']);
+
+        foreach (Phprojekt_Tabs::getTabs(); as $tab) {
+            $data['range'][] = array('id'   => $tab['id'],
+                                     'name' => $tab['label']);
+        }
         $data['required'] = true;
         $data['readOnly'] = false;
+
         $converted[] = $data;
         return $converted;
     }
