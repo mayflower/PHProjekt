@@ -138,10 +138,6 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         $this->_validate = new Phprojekt_Model_Validate();
-            $logger = Zend_Registry::get('log');
-            foreach ($this->_data as $k => $v) {
-                $logger->debug($k ."=>".$v);
-            }
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
