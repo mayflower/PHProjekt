@@ -90,7 +90,6 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
      */
     public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
     {
-        $result = array();
-        return $result;
+        return array();
     }
 }
