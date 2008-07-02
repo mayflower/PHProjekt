@@ -46,14 +46,14 @@ class History_IndexController extends IndexController
         $moduleId   = (int) $this->getRequest()->getParam('moduleId', null);
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $userId     = (int) $this->getRequest()->getParam('userId', null);
-        $moduleName = (string) $this->getRequest()->getParam('moduleName', 1);
+        $moduleName = (string) $this->getRequest()->getParam('moduleName', 'Default');
         $startDate  = $this->getRequest()->getParam('startDate', null);
         $endDate    = $this->getRequest()->getParam('endDate', null);
 
         $startDate  = Inspector::sanitize('date', $startDate, $messages, false);
         $endDate    = Inspector::sanitize('date', $endDate, $messages, false);
 
-        if (empty($moduleId) && !empty($moduleName)) {
+        if (empty($moduleId)) {
             $moduleId = Phprojekt_Module::getId($moduleName);
         }
 
