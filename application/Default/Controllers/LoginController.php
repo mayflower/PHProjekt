@@ -59,7 +59,8 @@ class LoginController extends Zend_Controller_Action
         $this->view->webpath = Zend_Registry::get('config')->webpath;
 
         try {
-            if (Phprojekt_Auth::login($username, $password)) {
+            $success = Phprojekt_Auth::login($username, $password);
+            if ($success === true) {
                 $config = Zend_Registry::get('config');
                 $this->_redirect($config->webpath.'index.php');
                 die();

@@ -160,7 +160,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         foreach ($relatedEvents as $oneDate) {
             // now, I'll delete the other participants (uninvited?)
             if (is_array($oneDate) && count($oneDate) > 0) {
-                foreach ($oneDate as $oneParticipant => $oneId) {
+                foreach ($oneDate as $oneId) {
                     $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
                     $model->find($oneId);
                     $model->delete();
