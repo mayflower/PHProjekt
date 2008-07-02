@@ -63,7 +63,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
         $where[] = 'word  = '. $this->getAdapter()->quote($word);
 
         $record = $this->fetchAll($where);
-        if($record->count() == 0) {
+        if ($record->count() == 0) {
             $data['crc32'] = $crc32;
             $data['word']  = $word;
             return $this->insert($data);
@@ -86,7 +86,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
         $where[] = 'crc32 = '. $this->getAdapter()->quote(crc32($word));
 
         $record = $this->fetchAll($where);
-        if($record->count() > 0) {
+        if ($record->count() > 0) {
             $record = array_shift(current((array) $record));
             return $record['id'];
         }

@@ -78,7 +78,7 @@ abstract class AdminController extends IndexController
         }
 
         $result = $model->find($module);
-        if (false === $result) {
+        if ($result === false) {
             throw new Phprojekt_PublishedException('Module not found');
         }
 
