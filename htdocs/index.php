@@ -11,7 +11,7 @@
  */
 define('PHPR_CONFIG_SECTION', 'production');
 
-define('PHPR_ROOT_PATH', realpath( dirname(__FILE__) . '/../') );
+define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
 define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
@@ -31,7 +31,7 @@ Zend_Loader::registerAutoload('Phprojekt_Loader');
 Zend_Session::start();
 
 /* Read the config file, but only the production setting */
-$config = new Zend_Config_Ini(PHPR_CONFIG_FILE,PHPR_CONFIG_SECTION, true);
+$config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
 Zend_Registry::set('config', $config);
 
 if (substr($config->webpath, -1) != '/') {

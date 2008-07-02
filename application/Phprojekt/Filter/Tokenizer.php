@@ -40,7 +40,7 @@ class Phprojekt_Filter_Tokenizer
      * 
      * @var array
      */
-    private $token = array(
+    private $_token = array(
         self::T_OPEN_BRACE  => '/^(\()(.)*?$/',
         self::T_CLOSE_BRACE => '/^(\))(.)*?$/',
         self::T_CONNECTOR   => '/^(or|and)(.)*$/i',
@@ -176,7 +176,7 @@ class Phprojekt_Filter_Tokenizer
         }
 
         $this->_data = trim($this->_data);
-        foreach ($this->token as $key => $regex) {
+        foreach ($this->_token as $key => $regex) {
             if (preg_match($regex, $this->_data, $matches)) {
                 $foundToken = array($key, $matches[1]);
                 if ($remove) {

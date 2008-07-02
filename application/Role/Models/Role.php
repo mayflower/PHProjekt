@@ -95,10 +95,11 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
             if (isset($roleNamespace->$projectId) && !empty($roleNamespace->$projectId)) {
                 $role = $roleNamespace->$projectId;
             } else {
-                $db     = Zend_Registry::get('db');
+                $db = Zend_Registry::get('db');
                 $select = $db->select()
                              ->from(array('rel' => 'ProjectUserRoleRelation'))
-                             ->joinInner(array('role' => 'Role'), sprintf("%s = %s", $db->quoteIdentifier("role.id"), $db->quoteIdentifier("rel.roleId")))
+                             ->joinInner(array('role' => 'Role'), 
+                             sprintf("%s = %s", $db->quoteIdentifier("role.id"), $db->quoteIdentifier("rel.roleId")))
                              ->where($db->quoteInto('userId = ?', $userId));
                 $stmt  = $db->query($select);
                 $allroles = $stmt->fetchAll();

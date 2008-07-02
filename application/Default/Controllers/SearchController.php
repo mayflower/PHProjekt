@@ -41,8 +41,8 @@ class SearchController extends IndexController
     public function jsonSearchAction()
     {
         $words    = $this->getRequest()->getParam('words');
-        $count    = (int) $this->getRequest()->getParam('count',  null);
-        $offset   = (int) $this->getRequest()->getParam('start',  null);
+        $count    = (int) $this->getRequest()->getParam('count', null);
+        $offset   = (int) $this->getRequest()->getParam('start', null);
 
         $search  = new Phprojekt_Search_Default();
         $results = array();

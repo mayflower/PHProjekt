@@ -135,7 +135,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array
      */
-    public function getHistoryData($object, $itemId, $moduleId = null, $startDate = null, $endDate = null, $userId = null)
+    public function getHistoryData($object, $itemId, $moduleId = null, 
+                                   $startDate = null, $endDate = null, $userId = null)
     {
         if (!isset($moduleId)) {
             $moduleId = Phprojekt_Module::getId($object->getTableName());

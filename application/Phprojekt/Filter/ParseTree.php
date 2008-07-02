@@ -50,7 +50,7 @@ class Phprojekt_Filter_ParseTree
     public function stringToTree($string)
     {
         $string = $this->_checkString($string);
-       
+
         // we use this dertemining left open braces
         $braces = 0;
 
@@ -60,7 +60,7 @@ class Phprojekt_Filter_ParseTree
 
         $tokenizer = new Phprojekt_Filter_Tokenizer($string);
         while ($current = $tokenizer->getCurrent()) {
-            
+
             $next = $tokenizer->getNext();
             /**
              * If a tree [(LEAF)-(NODE)-(LEAF)] was created in last iteration, we have to return
@@ -71,53 +71,56 @@ class Phprojekt_Filter_ParseTree
             } else {
                 $tmpTree = null;
             }
-            
+
             if (!is_object($next)) {
-            	break;
+                break;
             }
-            
+
             // Parser error, never the same token twice except braces
             if ($current->type === $next->type &&
-                Phprojekt_Filter_Tokenizer::T_OPEN_BRACE !== $current->type &&
-                Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $current->type) {
+            Phprojekt_Filter_Tokenizer::T_OPEN_BRACE !== $current->type &&
+            Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $current->type) {
                 throw new Phprojekt_ParseException(sprintf("Parser error near %s %s %s",
-                                                    $last->value, $current->value, $next->value), null, $string);
+                $last->value, $current->value, $next->value), null, $string);
             }
 
             switch ($current->type) {
                 case Phprojekt_Filter_Tokenizer::T_OPEN_BRACE :
                     $braces++;
 
-                    if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE != $next->type && Phprojekt_Filter_Tokenizer::T_COLUMN != $next->type) {
+                    if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE != $next->type
+                    && Phprojekt_Filter_Tokenizer::T_COLUMN != $next->type) {
                         throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
-                                                           $current->value, $next->value), null, $string);
+                        $current->value, $next->value), null, $string);
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE:
                     $braces--;
 
-                    if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE != $next->type && Phprojekt_Filter_Tokenizer::T_CONNECTOR != $next->type) {
+                    if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE != $next->type
+                    && Phprojekt_Filter_Tokenizer::T_CONNECTOR != $next->type) {
                         throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
-                                                           $current->value, $next->value), null, $string);
+                        $current->value, $next->value), null, $string);
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_CONNECTOR:
-                    if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE != $next->type && Phprojekt_Filter_Tokenizer::T_COLUMN != $next->type) {
+                    if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE != $next->type
+                    && Phprojekt_Filter_Tokenizer::T_COLUMN != $next->type) {
                         throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
-                                                           $current->value, $next->value), null, $string);
+                        $current->value, $next->value), null, $string);
                     }
 
                     if (0 == $braces) {
                         $tree = new Phprojekt_Tree_Binary($current->value, $current->type);
                         $tree->addChild($this->stringToTree($parsed),
-                                        $this->stringToTree($tokenizer->getRest()));
+                        $this->stringToTree($tokenizer->getRest()));
                         return $tree;
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_OPERATOR:
                     if (Phprojekt_Filter_Tokenizer::T_VALUE != $next->type) {
                         throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
-                                                           $current->value, $next->value), null, $string);
+                        $current->value, $next->value), null, $string);
                     }
 
                     /**
@@ -128,23 +131,24 @@ class Phprojekt_Filter_ParseTree
                     if (0 == $braces) {
                         $tmpTree = new Phprojekt_Tree_Binary($current->value, $current->type);
                         $tmpTree->addChild(new Phprojekt_Tree_Binary($last->value, $last->type),
-                                           new Phprojekt_Tree_Binary($next->value, $next->type));
+                        new Phprojekt_Tree_Binary($next->value, $next->type));
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_COLUMN:
                     if (Phprojekt_Filter_Tokenizer::T_OPERATOR != $next->type) {
                         throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
-                                                                   $current->value, $next->value), null, $string);
+                        $current->value, $next->value), null, $string);
                     }
                     break;
                 case Phprojekt_Filter_Tokenizer::T_VALUE:
-                    if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE != $next->type AND Phprojekt_Filter_Tokenizer::T_CONNECTOR != $next->type) {
+                    if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE != $next->type
+                    && Phprojekt_Filter_Tokenizer::T_CONNECTOR != $next->type) {
                         throw new Phprojekt_ParseException(sprintf("Parser error near %s %s",
-                                                           $current->value, $next->value), null, $string);
+                        $current->value, $next->value), null, $string);
                     }
                     break;
                 default:
-                	echo "default";
+                    echo "default";
             }
 
             // remember the parsed string to call it recursivly
@@ -155,11 +159,11 @@ class Phprojekt_Filter_ParseTree
             $last = clone $current;
             $tokenizer->next();
         }
-        
+
         if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
-        	$braces--;
+            $braces--;
         }
-        
+
         if ($braces != 0) {
             throw new Phprojekt_ParseException(sprintf("Parser error: Braces are set incorrectly!"), null, $string);
         }
@@ -177,18 +181,18 @@ class Phprojekt_Filter_ParseTree
         if ($tree->isLeaf()) {
             return $tree->getNode();
         }
-        
+
         $left  = $this->treeToString($tree->getLeftChild());
         $right = $this->treeToString($tree->getRightChild());
-        
+
         if (Phprojekt_Filter_Tokenizer::T_CONNECTOR === $tree->getNodeType()) {
             $right = " (" . $right . ") ";
             $left  = " (" . $left . ") ";
         }
-        
+
         return $left . $tree->getNode() . $right;
     }
-    
+
     /**
      * Check the given string 
      * 
@@ -205,43 +209,43 @@ class Phprojekt_Filter_ParseTree
      */
     protected function _checkString($string)
     {
-    	$string       = trim($string);
-    	$tokenizer    = new Phprojekt_Filter_Tokenizer($string);
-    	$braces       = 0;
-	$bracesCount  = 0;
-	$lastToken    = $tokenizer->getLast();
-		$isValid      = false;
-       
-		// if last token is not a brace string is valid
-	if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $lastToken->type) {
-       		return $string;
-       	}
-       
-		while ($current = $tokenizer->getCurrent()) {
-       		if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE === $current->type) {
-          		$braces++;
-			$bracesCount++;
-          	}
-          
-           if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
+        $string       = trim($string);
+        $tokenizer    = new Phprojekt_Filter_Tokenizer($string);
+        $braces       = 0;
+        $bracesCount  = 0;
+        $lastToken    = $tokenizer->getLast();
+        $isValid      = false;
+
+        // if last token is not a brace string is valid
+        if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE !== $lastToken->type) {
+            return $string;
+        }
+
+        while ($current = $tokenizer->getCurrent()) {
+            if (Phprojekt_Filter_Tokenizer::T_OPEN_BRACE === $current->type) {
+                $braces++;
+                $bracesCount++;
+            }
+
+            if (Phprojekt_Filter_Tokenizer::T_CLOSE_BRACE === $current->type) {
                 $braces--;
                 $bracesCount++;
             }
-            
+
             // if in between braces sum +(-) is zero and braces exist, end next token not null
             // e.g. (string) string (string), this is valid, but (string) not
             $next = $tokenizer->getNext();
             if (0 < $bracesCount && 0 === $braces && false !== $next) {
-		$isValid = true;
-               	break;
+                $isValid = true;
+                break;
             }
             $tokenizer->next();
-		}
-       
-	if (!$isValid) {
-       		return substr($string, 1, -1);
-       	}
-       	 
-       	return $string;
+        }
+
+        if (!$isValid) {
+            return substr($string, 1, -1);
+        }
+
+        return $string;
     }
 }

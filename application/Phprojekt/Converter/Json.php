@@ -106,7 +106,6 @@ class Phprojekt_Converter_Json
         /* we can check the returned array, but at the moment we just pass it */
         $datas   = array();
         $data    = array();
-        $access  = array();
         $numRows = 0;
 
         /*

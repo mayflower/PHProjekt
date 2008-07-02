@@ -50,8 +50,8 @@ abstract class AdminController extends IndexController
     {
         $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');
         $model->find($this->getRequest()->getModuleName());
-
-        foreach ($model->configuration as $key => $config) {
+        $modelKeys = array_keys($model->configuration);
+        foreach ($modelKeys as $key) {
             if ($this->getRequest()->getParam($key, false) !== false) {
                 $model->$key = $this->getRequest()->getParam($key);
             }
@@ -69,8 +69,6 @@ abstract class AdminController extends IndexController
      */
     public function jsonShowAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
-
         /* @todo: sanitize? */
         $module = $this->getRequest()->getModuleName();
         $model  = Phprojekt_Loader::getModel('Administration', 'AdminModels');

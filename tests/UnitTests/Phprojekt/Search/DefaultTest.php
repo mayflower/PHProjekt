@@ -35,8 +35,9 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $project->endDate = '1981-05-12';
         $project->priority = 1;
         $project->path = '/';
+        $project->ownerId = 1;
         $project->save();
-
+        
         $search = new Phprojekt_Search_Default();
         $search->indexObjectItem($project);
 

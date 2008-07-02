@@ -51,7 +51,10 @@ class Project_IndexController extends IndexController
             $message = $translate->translate('The Item was edited correctly');
         }
         $node    = new Phprojekt_Tree_Node_Database($model, $id);
-        $newNode = Default_Helpers_Save::save($node, $this->getRequest()->getParams(), (int) $this->getRequest()->getParam('projectId', null));
+        $newNode = Default_Helpers_Save::save($node, 
+                                              $this->getRequest()->getParams(), 
+                                              (int) $this->getRequest()->getParam('projectId', 
+                                              null));
 
         // Set the id since the Tree save
         // return differents values from insert and update

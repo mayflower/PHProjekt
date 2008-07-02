@@ -70,7 +70,7 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['position'] = 2;
         $data['fieldset'] = '';
 
-        foreach (Phprojekt_Tabs::getTabs(); as $tab) {
+        foreach (Phprojekt_Tabs::getTabs() as $tab) {
             $data['range'][] = array('id'   => $tab['id'],
                                      'name' => $tab['label']);
         }

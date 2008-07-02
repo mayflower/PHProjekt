@@ -222,14 +222,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
-        if (strpos($field->formRange,"|") > 0) {
-            foreach(explode('|', $field->formRange) as $range) {
+        if (strpos($field->formRange, "|") > 0) {
+            foreach (explode('|', $field->formRange) as $range) {
                 list($key, $value) = explode('#', $range);
                 $converted['range'][] = array('id'   => $key,
                                               'name' => $value);
             }
-        }
-        else {
+        } else {
             $converted['range'] = $this->getRangeFromModel($field);
         }
 

@@ -65,14 +65,14 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      *
      * @return integer
      */
-     public function saveTags($tagId)
-     {
+    public function saveTags($tagId)
+    {
         $where = array();
         $where[] = 'userId = '. $this->getAdapter()->quote($this->_user);
         $where[] = 'tagId  = '. $this->getAdapter()->quote($tagId);
 
         $record = $this->fetchAll($where);
-        if($record->count() == 0) {
+        if ($record->count() == 0) {
             $data['userId'] = $this->_user;
             $data['tagId']  = $tagId;
             return $this->insert($data);

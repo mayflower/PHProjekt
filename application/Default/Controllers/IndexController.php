@@ -139,10 +139,10 @@ class IndexController extends Zend_Controller_Action
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count     = (int) $this->getRequest()->getParam('count',  null);
-        $offset    = (int) $this->getRequest()->getParam('start',  null);
+        $count     = (int) $this->getRequest()->getParam('count', null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
-        $itemId    = (int) $this->getRequest()->getParam('id',     null);
+        $itemId    = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
