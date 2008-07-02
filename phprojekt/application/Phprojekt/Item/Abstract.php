@@ -170,8 +170,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZomeComplement = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H",$u) + $timeZomeComplement, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
-                    $value = date("H:i:s",$value);
+                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u), 
+                             date("s", $u), date("m"), date("d"), date("Y"));
+                    
+                    $value = date("H:i:s", $value);
 
                     // running again the sanitizer to normalize the format
                     $value = Inspector::sanitize('time', $value, $messages, false);
@@ -186,7 +188,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZomeComplement = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H",$u) + $timeZomeComplement, date("i",$u), date("s",$u), date("m",$u), date("d",$u), date("Y",$u));
+                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u), 
+                             date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
 
                     // running again the sanitizer to normalize the format
                     $value = Inspector::sanitize('timestamp', $value, $messages, false);
@@ -201,7 +204,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         }
 
         if ($value === false) {
-            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname . ' expected to be ' . $type .'.');
+            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname . 
+                                               ' expected to be ' . $type .'.');
         }
 
         parent::__set($varname, $value);
@@ -245,8 +249,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZone = (int)$this->_config->timeZone;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H",$u) + $timeZone, date("i",$u), date("s",$u), date("m"), date("d"), date("Y"));
-                    $value = date("H:i:s",$value);
+                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), 
+                             date("m"), date("d"), date("Y"));
+
+                    $value = date("H:i:s", $value);
 
                     break;
                 case 'datetime':
@@ -255,7 +261,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZone = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H",$u) + $timeZone, date("i",$u), date("s",$u), date("m",$u), date("d",$u), date("Y",$u));
+                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), 
+                             date("m", $u), date("d", $u), date("Y", $u));
                     break;
             }
         }
@@ -274,7 +281,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getError()
     {
-        return (array) $this->_validate->_error->getError();
+        return (array) $this->_validate->error->getError();
     }
 
     /**
@@ -353,21 +360,23 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
         // Get the projectId if is set
         if (strstr($where, 'projectId = ')) {
-            $projectId = (int) ereg_replace('projectId = ','',$where);
+            $projectId = (int) ereg_replace('projectId = ', '', $where);
         } else {
             $projectId = 1;
         }
         $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
                          AND ItemRights.moduleId = %d AND ItemRights.userId = %d) ',
-        		         $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-        	             Phprojekt_Module::getId($this->getTableName(), $projectId),
+                         $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
+                         Phprojekt_Module::getId($this->getTableName(), $projectId),
                          $authNamespace->userId);
 
         // Set where
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(), $authNamespace->userId, $this->getTableName());
+        $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(), 
+                  $authNamespace->userId, $this->getTableName());
+                  
         $where .= ' OR (ItemRights.adminAccess = 1 OR ItemRights.writeAccess = 1 OR ItemRights.readAccess = 1))';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
@@ -446,7 +455,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function getAccessRights()
     {
         $moduleId = Phprojekt_Module::getId($this->getTableName(), $this->projectId);
-        return $this->_rights->getRights($moduleId,$this->id);
+        return $this->_rights->getRights($moduleId, $this->id);
     }
 
     /**
@@ -461,6 +470,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function saveRights($adminUsers, $writeUsers, $readUsers)
     {
-        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName(), $this->projectId), $this->id, $adminUsers, $writeUsers, $readUsers);
+        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName(), $this->projectId), 
+                              $this->id, $adminUsers, $writeUsers, $readUsers);
     }
 }

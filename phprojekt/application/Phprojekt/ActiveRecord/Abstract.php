@@ -1064,7 +1064,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return Zend_Db_Table_Rowset
      */
-    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null, $select = null, $join)
+    protected function _fetchWithJoin($where = null, $order = null, $count = null, 
+                                      $offset = null, $select = null, $join = null)
     {
         // selection tool
         $selectObj = $this->_db->select();
@@ -1104,11 +1105,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $sqlStr = "SELECT * FROM " . $statement[1];
             
         } else {
-        	$selectStmt = $statement[0] . ", ";
+            $selectStmt = $statement[0] . ", ";
             $columns    = explode(",", trim($select));
-        	
+            
             foreach ($columns as $column) {
-            	$selectStmt .= " " . $column . " ";
+                $selectStmt .= " " . $column . " ";
             }
             
             $selectStmt .= " FROM ";

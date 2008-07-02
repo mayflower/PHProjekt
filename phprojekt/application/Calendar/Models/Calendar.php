@@ -149,7 +149,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     
                 if ($rootEventId == 0) {
                     $rootEventId = $model->id;
-                    $request->setParam('parentId',$rootEventId);
+                    $request->setParam('parentId', $rootEventId);
                 }
                 
                 unset($model);
@@ -181,7 +181,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public static function getRootEventId ($id) {
         $rootEventId = 0;
-        $rootEvent = Phprojekt_Loader::getModel('Calendar','Calendar');
+        $rootEvent = Phprojekt_Loader::getModel('Calendar', 'Calendar');
         $rootEvent->find($id);
         while (!empty($rootEvent->parentId)) {
             $rootEvent->find($rootEvent->parentId);
@@ -202,7 +202,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $relatedEvents = array();
 
         // the main event is related to himself
-        $rootEvent = Phprojekt_Loader::getModel('Calendar','Calendar');
+        $rootEvent = Phprojekt_Loader::getModel('Calendar', 'Calendar');
         $rootEvent->find($rootEventId);
 
         if (!empty($rootEvent->id)) {
@@ -215,8 +215,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     $tmpUserId = (int)$oneEvent->participantId;
                     if ($getOnlyParticipants) {
                         $relatedEvents[$tmpUserId] = (int)$oneEvent->id;
-                    }
-                    else {
+                    } else {
                         $tmpStartDate = $oneEvent->startDate;
                         $relatedEvents[$tmpStartDate][$tmpUserId] = (int)$oneEvent->id;
                     }
@@ -262,12 +261,14 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         // deleting all related event entries except this item
         if (is_array($relatedEvents) && count($relatedEvents) > 0) {
             foreach ($relatedEvents as $oneDate) {
-                foreach ($oneDat as $oneId) {
-                    if ($oneId <> $this->id) {
-                        $model  = Phprojekt_Loader::getModel('Calendar', 'Calendar');
-                        $model->find($oneId);
-                        $model->delete();
-                        unset($model);
+                if (is_array($oneDate)) {
+                    foreach ($oneDate as $oneId) {
+                        if ($oneId <> $this->id) {
+                            $model  = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+                            $model->find($oneId);
+                            $model->delete();
+                            unset($model);
+                        }
                     }
                 }
             }
@@ -283,7 +284,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * @param array $weekDays with the days of the week included on serial selection (ISO-8601 numeric representation)
      * @return array of dates
      */
-    public static function getSerialDates($startDate, $endDate, $serialType = Calendar_Models_Calendar::EVENT_TYPE_ONCE, $weekDays = array()) {
+    public static function getSerialDates($startDate, 
+                                          $endDate, 
+                                          $serialType = Calendar_Models_Calendar::EVENT_TYPE_ONCE, 
+                                          $weekDays = array()) {
 
         $dates = array();
         $startDate = strtotime($startDate);
@@ -298,7 +302,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
                 while ($startDate <= $endDate) {
                     $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0, date("m",$startDate), date("d", $startDate) + 1, date("Y", $startDate));
+                    $startDate = mktime(0, 0, 0, date("m", $startDate), 
+                                 date("d", $startDate) + 1, date("Y", $startDate));
 
                 }
                 break;
@@ -309,7 +314,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     if (in_array(date("N", $startDate), $weekDays)) {
                         $dates[] = date("Y-m-d", $startDate);
                     }
-                    $startDate = mktime(0, 0, 0, date("m", $startDate), date("d", $startDate) + 1, date("Y", $startDate));
+                    $startDate = mktime(0, 0, 0, date("m", $startDate), 
+                                 date("d", $startDate) + 1, date("Y", $startDate));
 
                 }
                 break;
@@ -317,7 +323,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
                 while ($startDate <= $endDate) {
                     $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0, date("m",$startDate) + 1, date("d", $startDate), date("Y", $startDate));
+                    $startDate = mktime(0, 0, 0, date("m", $startDate) + 1, 
+                                 date("d", $startDate), date("Y", $startDate));
 
                 }
                 break;
@@ -325,7 +332,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
                 while ($startDate <= $endDate) {
                     $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0,date("m", $startDate), date("d", $startDate), date("Y", $startDate) + 1);
+                    $startDate = mktime(0, 0, 0,date("m", $startDate), 
+                                 date("d", $startDate), date("Y", $startDate) + 1);
 
                 }
                 break;

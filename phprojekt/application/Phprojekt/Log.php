@@ -106,7 +106,8 @@ class Phprojekt_Log extends Zend_Log
             $btrace = debug_backtrace();
             if (isset($btrace[3])) {
                 if (!isset($btrace[3]['line'])) $btrace[3]['line'] = '';
-                $message = sprintf("%d %s::%s:\n %s\n", $btrace[3]['line'], $btrace[3]['class'], $btrace[3]['function'], $message);
+                $message = sprintf("%d %s::%s:\n %s\n", $btrace[3]['line'], 
+                           $btrace[3]['class'], $btrace[3]['function'], $message);
             }
         }
         foreach ($this->_loggers as $logger) {

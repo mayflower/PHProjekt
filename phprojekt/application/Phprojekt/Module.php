@@ -64,7 +64,9 @@ class Phprojekt_Module
         $db     = Zend_Registry::get('db');
         $select = $db->select()
                      ->from(array('m' => 'Module'))
-                     ->joinInner(array('rel' => 'ModuleProjectRelation'), sprintf("%s = %s", $db->quoteIdentifier("m.id"), $db->quoteIdentifier("rel.moduleId")))
+                     ->joinInner(array('rel' => 'ModuleProjectRelation'), 
+                                 sprintf("%s = %s", $db->quoteIdentifier("m.id"), 
+                                 $db->quoteIdentifier("rel.moduleId")))
                      ->where($db->quoteInto('rel.projectId = ?', $projectId))
                      ->where($db->quoteInto('rel.isActive  = ?', 1));
         $stmt = $db->query($select);

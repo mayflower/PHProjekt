@@ -68,7 +68,8 @@ final class Default_Helpers_Save
                 $adminUsers = array($authNamespace->userId);
                 $writeUsers = array($authNamespace->userId);
                 $readUsers  = array($authNamespace->userId);
-                foreach ($params['userIdAccess'] as $accessUserId => $userName) {
+                $userIds = array_keys($params['userIdAccess']);
+                foreach ($userIds as $accessUserId) {
                     if (isset($params['checkAdminAccess'][$accessUserId])) {
                         array_push($adminUsers, $accessUserId);
                     }
@@ -161,8 +162,8 @@ final class Default_Helpers_Save
     public static function save()
     {
         $arguments = func_get_args();
-      	$model     = $arguments[0];
-      	$params    = $arguments[1];
+        $model     = $arguments[0];
+        $params    = $arguments[1];
 
         if (func_num_args() < 2) {
             throw new Phprojekt_PublishedException('Expect two arguments');
@@ -187,5 +188,7 @@ final class Default_Helpers_Save
         if ($model instanceof Phprojekt_Model_Interface) {
             return self::_saveModel($model, $params);
         }
+        
+        return true;
     }
 }

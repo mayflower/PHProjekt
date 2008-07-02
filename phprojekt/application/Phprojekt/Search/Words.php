@@ -194,10 +194,12 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     private function _cleanupString($string)
     {
         // Clean up HTML
-        $string = preg_replace('#\W+#msiU', ' ', strtoupper(strtr(strip_tags($string), array_flip(get_html_translation_table(HTML_ENTITIES)))));
+        $string = preg_replace('#\W+#msiU', ' ', strtoupper(strtr(strip_tags($string), 
+                               array_flip(get_html_translation_table(HTML_ENTITIES)))));
         // Translate bad
         $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i", "'&(gt|#62);'i", "'&(nbsp|#160);'i",
-                         "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i", "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
+                         "'&(iexcl|#161);'i", "'&(cent|#162);'i", 
+                         "'&(pound|#163);'i", "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
                          "'&auml;'", "'&ouml;'", "'&uuml;'", "'&Auml;'", "'&Ouml;'",
                          "'&Uuml;'", "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
         $replace = array (" ", " ", " ", " ", " ",

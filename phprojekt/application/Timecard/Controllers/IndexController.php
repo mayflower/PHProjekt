@@ -70,7 +70,8 @@ class Timecard_IndexController extends IndexController
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId . $dateFilter, null, $count, $offset);
         } else if (!empty($projectId)) {
-            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId . $dateFilter, null, $count, $offset);
+            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId . 
+                                                         $dateFilter, null, $count, $offset);
         } else {
             $records = $this->getModelObject()->fetchAll($dateFilter, null, $count, $offset);
         }

@@ -38,17 +38,17 @@
  */
 class Phprojekt_PublishedException extends Exception
 {
-	public $message;
-	public $code = 0;
-	
-	/**
+    public $message;
+    public $code = 0;
+
+    /**
 	 * Initialize
 	 *
 	 * @param string  $message  A short description what's wrong 
 	 * @param integer $code     An optional error code
 	 */
-	public function __construct($message, $code = 0) {
-		$this->message = $message;
-		$this->code    = $code;
-	}
+    public function __construct($message, $code = 0) {
+        $this->message = $message;
+        $this->code    = $code;
+    }
 }

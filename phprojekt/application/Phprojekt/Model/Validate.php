@@ -32,11 +32,11 @@ class Phprojekt_Model_Validate
      *
      * @var Phprojekt_Error
      */
-    public $_error = null;
+    public $error = null;
 
     public function __construct()
     {
-        $this->_error = new Phprojekt_Error();
+        $this->error = new Phprojekt_Error();
     }
 
     /**
@@ -59,7 +59,7 @@ class Phprojekt_Model_Validate
                             $error = $this->validateIsRequired($value);
                             if (null != $error) {
                                 $validated = false;
-                                $this->_error->addError(array(
+                                $this->error->addError(array(
                                 'field'   => $varname,
                                 'message' => $error));
                                 break;
@@ -69,7 +69,7 @@ class Phprojekt_Model_Validate
                         $error = $this->validateValue($class, $varname, $value);
                         if (false === $error) {
                             $validated = false;
-                            $this->_error->addError(array(
+                            $this->error->addError(array(
                             'field'   => $varname,
                             'message' => "Invalid Format"));
                         }
@@ -84,7 +84,7 @@ class Phprojekt_Model_Validate
                         $error = call_user_method($validater, $class, $value);
                         if (null != $error) {
                             $validated = false;
-                            $this->_error->addError(array(
+                            $this->error->addError(array(
                             'field'   => $varname,
                             'message' => $error));
                         }

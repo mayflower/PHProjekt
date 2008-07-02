@@ -56,7 +56,9 @@ class Phprojekt_Tabs
         $db     = Zend_Registry::get('db');
         $select = $db->select()
                      ->from(array('t' => 'Tab'))
-                     ->joinInner(array('rel' => 'TabModuleRelation'), sprintf("%s = %s", $db->quoteIdentifier("t.id"), $db->quoteIdentifier("rel.tabId")))
+                     ->joinInner(array('rel' => 'TabModuleRelation'), 
+                                 sprintf("%s = %s", $db->quoteIdentifier("t.id"), 
+                                 $db->quoteIdentifier("rel.tabId")))
                      ->where($db->quoteInto('rel.moduleId = ?', $moduleId));
         $stmt = $db->query($select);
         $rows = $stmt->fetchAll();
