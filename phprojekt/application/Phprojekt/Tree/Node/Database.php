@@ -397,6 +397,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         if (in_array($name, $methods)) {
             return call_user_method_array($name, $this->getActiveRecord(), $arguments);
         }
+        
+        return false;
     }
 
     /**

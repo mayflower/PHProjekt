@@ -157,7 +157,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
         // removing not included dates 
-        foreach ($relatedEvents as $startDate => $oneDate) {
+        foreach ($relatedEvents as $oneDate) {
             // now, I'll delete the other participants (uninvited?)
             if (is_array($oneDate) && count($oneDate) > 0) {
                 foreach ($oneDate as $oneParticipant => $oneId) {
@@ -195,10 +195,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Gets the list of related events of one root event
      *
      * @param integer $rootEventId id of one root event
-     * @param boolean $getOnlyParticipants indicates if only the user list is necessary
+     * @param boolean $onlyUsers indicates if only the user list is necessary
      * @return array with startDate => participantId => event id or only participantId => event id if it is indicated
      */
-    public function getRelatedEvents ($rootEventId, $getOnlyParticipants = false) {
+    public function getRelatedEvents ($rootEventId, $onlyUsers = false) {
         $relatedEvents = array();
 
         // the main event is related to himself
@@ -213,7 +213,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             if (is_array($eventList)) {
                 foreach ($eventList as $oneEvent) {
                     $tmpUserId = (int)$oneEvent->participantId;
-                    if ($getOnlyParticipants) {
+                    if ($onlyUsers) {
                         $relatedEvents[$tmpUserId] = (int)$oneEvent->id;
                     } else {
                         $tmpStartDate = $oneEvent->startDate;
@@ -332,7 +332,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
                 while ($startDate <= $endDate) {
                     $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0,date("m", $startDate), 
+                    $startDate = mktime(0, 0, 0, date("m", $startDate), 
                                  date("d", $startDate), date("Y", $startDate) + 1);
 
                 }

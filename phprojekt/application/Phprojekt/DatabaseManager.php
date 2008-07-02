@@ -276,7 +276,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['type']  = 'selectbox';
 
         $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord,1);
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
         foreach ($tree as $node) {
             $key   = $node->id;
