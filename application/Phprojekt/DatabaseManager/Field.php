@@ -45,7 +45,6 @@ class Phprojekt_DatabaseManager_Field
     {
         $this->value     = (string) $value;
         $this->_metadata = $dbm->find($name);
-        // $this->right     = $dbm->getModel()->getRights();
     }
 
     /**

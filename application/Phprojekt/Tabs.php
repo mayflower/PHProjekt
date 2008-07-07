@@ -56,8 +56,8 @@ class Phprojekt_Tabs
         $db     = Zend_Registry::get('db');
         $select = $db->select()
                      ->from(array('t' => 'Tab'))
-                     ->joinInner(array('rel' => 'TabModuleRelation'), 
-                                 sprintf("%s = %s", $db->quoteIdentifier("t.id"), 
+                     ->joinInner(array('rel' => 'ModuleTabRelation'),
+                                 sprintf("%s = %s", $db->quoteIdentifier("t.id"),
                                  $db->quoteIdentifier("rel.tabId")))
                      ->where($db->quoteInto('rel.moduleId = ?', $moduleId));
         $stmt = $db->query($select);
@@ -131,17 +131,17 @@ class Phprojekt_Tabs
      *
      * @return void
      */
-    public function saveTabModuleRelation($tabIds, $moduleId)
+    public function saveModuleTabRelation($tabIds, $moduleId)
     {
         $db = Zend_Registry::get('db');
-        $db->delete('TabModuleRelation', $db->quoteInto('moduleId = ?', $moduleId));
+        $db->delete('ModuleTabRelation', $db->quoteInto('moduleId = ?', $moduleId));
         if (!is_array($tabIds)) {
             $tabIds = array($tabIds);
         }
         foreach ($tabIds as $tabId) {
             $data['tabId']    = (int)$tabId;
             $data['moduleId'] = (int)$moduleId;
-            $db->insert('TabModuleRelation', $data);
+            $db->insert('ModuleTabRelation', $data);
         }
     }
 }

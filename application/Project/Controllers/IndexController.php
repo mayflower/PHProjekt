@@ -51,9 +51,9 @@ class Project_IndexController extends IndexController
             $message = $translate->translate('The Item was edited correctly');
         }
         $node    = new Phprojekt_Tree_Node_Database($model, $id);
-        $newNode = Default_Helpers_Save::save($node, 
-                                              $this->getRequest()->getParams(), 
-                                              (int) $this->getRequest()->getParam('projectId', 
+        $newNode = Default_Helpers_Save::save($node,
+                                              $this->getRequest()->getParams(),
+                                              (int) $this->getRequest()->getParam('projectId',
                                               null));
 
         // Set the id since the Tree save
@@ -99,5 +99,37 @@ class Project_IndexController extends IndexController
                         'id'      => implode(',', $showId));
 
         echo Phprojekt_Converter_Json::convert($return);
+    }
+
+    /**
+     * Get all the modules active and their relation with the projectId
+     *
+     * @requestparam int $id The project Id
+     *
+     * @return void
+     */
+    public function jsonGetModulesProjectRelationAction()
+    {
+        $projectId = (int) $this->getRequest()->getParam('id');
+        $project   = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+        $modules   = $project->getProjectModulePermissionsById($projectId);
+
+        echo Phprojekt_Converter_Json::convert($modules);
+    }
+
+    /**
+     * Get all the role-user relation with the projectId
+     *
+     * @requestparam int $id The project Id
+     *
+     * @return void
+     */
+    public function jsonGetProjectRoleUserRelationAction()
+    {
+        $projectId = (int) $this->getRequest()->getParam('id');
+        $project   = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+        $roles     = $project->getProjectRoleUserPermissions($projectId);
+
+        echo Phprojekt_Converter_Json::convert($roles);
     }
 }

@@ -30,12 +30,17 @@ class Phprojekt_Acl extends Zend_Acl
      * Fixed permission values for items and modules
      *
      */
-    const NO_ACCESS = 0;
-    const ACCESS    = 1;
-    const READ      = 2;
-    const WRITE     = 4;
-    const ADMIN     = 8;
-    const ALL       = 15;
+    const NONE      = 0;
+    const READ      = 1;
+    const WRITE     = 2;
+    const ACCESS    = 4;
+    const CREATE    = 8;
+    const COPY      = 16;
+    const DELETE    = 32;
+    const DOWNLOAD  = 64;
+    const ADMIN     = 128;
+    const ALL       = 255;
+
     /**
      * Singleton instance
      * @var PHProjekt_Acl
@@ -89,12 +94,86 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function _registerRights()
     {
-        $role  = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
+        $role   = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
+        $rights = array();
         foreach ($role->fetchAll(null, 'roleId ASC') as $right) {
-            if (!$this->has($right->moduleId)) {
-                $this->add(new Zend_Acl_Resource($right->moduleId));
-                $this->allow($right->roleId, $right->moduleId, $right->permission);
+            $access = Phprojekt_Acl::convertBitmaskToArray($right->access);
+            foreach ($access as $name => $value) {
+                if ($value) {
+                    $rights[$right->roleId][$name][] = $right->moduleId;
+                }
             }
         }
+        foreach ($rights as $roleId => $accessData) {
+            foreach ($accessData as $access => $modules) {
+                foreach ($modules as $moduleId) {
+                    $resources = array();
+                    if (!$this->has($moduleId)) {
+                        $this->add(new Zend_Acl_Resource($moduleId));
+                    }
+                    $resources[] = $moduleId;
+                }
+                $this->allow($roleId, $modules, $access);
+            }
+        }
+    }
+
+    /**
+     * Convert a bitmask into an array with each access
+     *
+     * @param int $right The number of the bitmask
+     *
+     * @return array
+     */
+    static function convertBitmaskToArray($right)
+    {
+        $return = array();
+        $return['none']     = (boolean) ($right == 0) ? true : false;
+        $return['read']     = (boolean) ($right & self::READ) ? true : false;
+        $return['write']    = (boolean) ($right & self::WRITE) ? true : false;
+        $return['access']   = (boolean) ($right & self::ACCESS) ? true : false;
+        $return['create']   = (boolean) ($right & self::CREATE) ? true : false;
+        $return['copy']     = (boolean) ($right & self::COPY) ? true : false;
+        $return['delete']   = (boolean) ($right & self::DELETE) ? true : false;
+        $return['download'] = (boolean) ($right & self::DOWNLOAD) ? true : false;
+        $return['admin']    = (boolean) ($right & self::ADMIN) ? true : false;
+        return $return;
+    }
+
+    /**
+     * Convert an array with boolean values into a bitmask
+     *
+     * @param array $rights Array with boolean values for each accees
+     *
+     * @return int
+     */
+    static function convertArrayToBitmask($rights)
+    {
+        $right = self::NONE;
+        if ($rights['read']) {
+            $right = $right | self::READ;
+        }
+        if ($rights['write']) {
+            $right = $right | self::WRITE;
+        }
+        if ($rights['access']) {
+            $right = $right | self::ACCESS;
+        }
+        if ($rights['create']) {
+            $right = $right | self::CREATE;
+        }
+        if ($rights['copy']) {
+            $right = $right | self::COPY;
+        }
+        if ($rights['delete']) {
+            $right = $right | self::DELETE;
+        }
+        if ($rights['download']) {
+            $right = $right | self::DOWNLOAD;
+        }
+        if ($rights['admin']) {
+            $right = $right | self::ADMIN;
+        }
+        return $right;
     }
 }

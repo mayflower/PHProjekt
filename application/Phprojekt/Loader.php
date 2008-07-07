@@ -105,10 +105,10 @@ class Phprojekt_Loader extends Zend_Loader
             self::loadClass($class, self::$_directories);
             return $class;
         } catch (Exception $e) {
-            if (Zend_Registry::isRegistered('log')) {
-                $log = Zend_Registry::get('log');
-                $log->debug((string) $e->getMessage());
-            }
+            //if (Zend_Registry::isRegistered('log')) {
+            //    $log = Zend_Registry::get('log');
+            //    $log->debug((string) $e->getMessage());
+            //}
             return false;
         }
 

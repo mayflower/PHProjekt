@@ -169,9 +169,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __construct($config = null)
     {
-        if (Zend_Registry::isRegistered('log')) {
-            $this->_log = Zend_Registry::get('log');
-        }
+        //if (Zend_Registry::isRegistered('log')) {
+        //    $this->_log = Zend_Registry::get('log');
+        //}
 
         if (null === $config) {
             $config = array('db' => Zend_Registry::get('db'));
@@ -837,9 +837,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @return boolean
      */
     public function save()
-    {	
+    {
         $data = array();
-        
+
         foreach ($this->_data as $k => $v) {
             if (in_array($k, $this->_colInfo) && is_scalar($v)) {
                 $data[$k] = $v;
@@ -965,7 +965,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         /*
-         * In case of join strings please note that the resultset is read only. 
+         * In case of join strings please note that the resultset is read only.
          */
         if (null != $join) {
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
@@ -1064,7 +1064,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return Zend_Db_Table_Rowset
      */
-    protected function _fetchWithJoin($where = null, $order = null, $count = null, 
+    protected function _fetchWithJoin($where = null, $order = null, $count = null,
                                       $offset = null, $select = null, $join = null)
     {
         // selection tool
@@ -1100,18 +1100,18 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $sqlStr    = $selectObj->__toString();
         $statement = explode("FROM", $sqlStr);
-        
+
         if (null == $select) {
             $sqlStr = "SELECT * FROM " . $statement[1];
-            
+
         } else {
             $selectStmt = $statement[0] . ", ";
             $columns    = explode(",", trim($select));
-            
+
             foreach ($columns as $column) {
                 $selectStmt .= " " . $column . " ";
             }
-            
+
             $selectStmt .= " FROM ";
             $sqlStr      = $selectStmt . $statement[1];
         }
@@ -1125,11 +1125,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         } else {
             $sqlStr .= ' ' . $join;
         }
-        
+
         // return the results
         $stmt      = $this->_db->query($sqlStr);
         $dataArray = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
-        
+
         $data  = array(
             'table'    => $this,
             'data'     => $dataArray,

@@ -253,7 +253,7 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
             /* workaround as php 5.2 doesnot support late static bindings */
             $vars            = get_class_vars($moduleClass);
             $this->_name     = (empty($vars['name'])) ? $module : $vars['name'];
-            $this->_moduleId = Phprojekt_Module::getId($module, 1);
+            $this->_moduleId = Phprojekt_Module::getId($module);
             $this->setConfiguration($vars['configuration']);
             $this->_loadFromDatabase();
             return $this;
@@ -335,18 +335,13 @@ class Administration_Models_AdminModels extends EmptyIterator implements Phproje
     }
 
     /**
-     * Get the rigths
+     * Get the rigths for other users
      *
-     * @return string
+     * @return array
      */
-    public function getRights ($userId)
+    public function getRights()
     {
-        $permission = 'none';
-        
-        if (!empty($userId)) {
-            $permission = 'write';
-        }
-        return $permission;
+        return array();
     }
 
     /**

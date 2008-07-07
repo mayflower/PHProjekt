@@ -51,36 +51,27 @@ class Phprojekt_Module
      * @todo: Provide a ActiveRecord like interface, but actually don't do
      *        ActiveRecord
      *
-     * @param integer $projectId The current Project Id
-     *
      * @return array
      */
-    protected static function _getCachedIds($projectId)
+    protected static function _getCachedIds()
     {
-        if (isset(self::$_cache[$projectId]) && null !== self::$_cache[$projectId]) {
-            return self::$_cache[$projectId];
+        if (isset(self::$_cache) && null !== self::$_cache) {
+            return self::$_cache;
         }
 
         $db     = Zend_Registry::get('db');
         $select = $db->select()
-                     ->from(array('m' => 'Module'))
-                     ->joinInner(array('rel' => 'ModuleProjectRelation'), 
-                                 sprintf("%s = %s", $db->quoteIdentifier("m.id"), 
-                                 $db->quoteIdentifier("rel.moduleId")))
-                     ->where($db->quoteInto('rel.projectId = ?', $projectId))
-                     ->where($db->quoteInto('rel.isActive  = ?', 1));
+                     ->from('Module')
+                     ->where('active = 1');
         $stmt = $db->query($select);
         $rows = $stmt->fetchAll();
 
-        // Set the index 0, is not used but is needed for create other index
-        self::$_cache[0] = array();
-
         foreach ($rows as $row) {
-           self::$_cache[$projectId][$row['name']] = $row['id'];
+           self::$_cache[$row['name']] = $row['id'];
         }
 
-        if (isset(self::$_cache[$projectId])) {
-            return self::$_cache[$projectId];
+        if (isset(self::$_cache)) {
+            return self::$_cache;
         } else {
             return array();
         }
@@ -89,18 +80,13 @@ class Phprojekt_Module
     /**
      * Returns the id for a given module
      *
-     * @param string  $name      The Module name
-     * @param integer $projectId The current Project Id
+     * @param string $name The Module name
      *
      * @return integer
      */
-    public static function getId($name, $projectId = null)
+    public static function getId($name)
     {
-        // Default project id for general request
-        if (null === $projectId || $projectId < 1) {
-            $projectId = 1;
-        }
-        $modules = self::_getCachedIds($projectId);
+        $modules = self::_getCachedIds();
 
         if (array_key_exists($name, $modules)) {
             return $modules[$name];
@@ -112,19 +98,13 @@ class Phprojekt_Module
     /**
      * Returns the name for a given module id
      *
-     * @param integer $id        The module id
-     * @param integer $projectId The current Project Id
+     * @param integer $id The module id
      *
      * @return string
      */
-    public static function getModuleName($id, $projectId = null)
+    public static function getModuleName($id)
     {
-        // Default project id for general request
-        if (null === $projectId || $projectId < 1) {
-            $projectId = 1;
-        }
-
-        $modules = self::_getCachedIds($projectId);
+        $modules = self::_getCachedIds();
 
         if ((in_array($id, $modules))) {
             return array_search($id, $modules);

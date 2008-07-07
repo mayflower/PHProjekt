@@ -123,8 +123,7 @@ class Phprojekt_Converter_Json
                } else {
                    $data[$key] = (string) $value;
                }
-               $data['rights'] = $model->getRights(Phprojekt_Auth::getUserId());
-               $data['access'] = $model->getAccessRights();
+               $data['rights'] = $model->getRights();
             }
             $datas[] = $data;
         } else {
@@ -138,8 +137,7 @@ class Phprojekt_Converter_Json
                     } else {
                         $data[$key] = (string) $value;
                     }
-                    $data['rights'] = $model->getRights(Phprojekt_Auth::getUserId());
-                    $data['access'] = $model->getAccessRights();
+                    $data['rights'] = $model->getRights();
                 }
                 $datas[] = $data;
             }

@@ -60,6 +60,24 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['readOnly'] = false;
         $converted[] = $data;
 
+        // active
+        $data = array();
+        $data['key']      = 'active';
+        $data['label']    = $translate->translate('active');
+        $data['type']     = 'selectbox';
+        $data['hint']     = $translate->translate('active');
+        $data['order']    = 0;
+        $data['position'] = 2;
+        $data['fieldset'] = '';
+        $data['range'][]    = array('id'   => '0',
+                                    'name' => $translate->translate('no'));
+        $data['range'][]    = array('id'   => '1',
+                                    'name' => $translate->translate('yes'));
+        $data['required'] = false;
+        $data['readOnly'] = false;
+
+        $converted[] = $data;
+
         // tabs
         $data = array();
         $data['key']      = 'tabs';
@@ -67,7 +85,7 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['type']     = 'multipleselectbox';
         $data['hint']     = $translate->translate('tabs');
         $data['order']    = 0;
-        $data['position'] = 2;
+        $data['position'] = 3;
         $data['fieldset'] = '';
 
         foreach (Phprojekt_Tabs::getTabs() as $tab) {

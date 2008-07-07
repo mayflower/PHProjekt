@@ -81,23 +81,11 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
     }
 
     /**
-     * Get the rigths
-     *
-     * @param integer $userid use from whom right is needed
-     *
-     * @return string
-     */
-    public function getRights($userId)
-    {
-        return Phprojekt_Acl::ALL;
-    }
-
-    /**
      * Get the rigths for other users
      *
      * @return array
      */
-    public function getAccessRights()
+    public function getRights()
     {
         return array();
     }
@@ -115,11 +103,29 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
      */
     public function saveModule(array $params)
     {
-        $this->name = $params['name'];
+        $this->name   = $params['name'];
+        $this->active = (int) $params['active'];
 
         if ($this->recordValidate()) {
+            $saveNewModule = false;
+            if ($this->id == 0) {
+                $saveNewModule = true;
+            }
             $this->save();
-            Phprojekt_Tabs::saveTabModuleRelation($params['tabs'], $this->id);
+            if (isset($params['tabs'])) {
+                Phprojekt_Tabs::saveModuleTabRelation($params['tabs'], $this->id);
+            }
+            // Reset cache for root project
+            $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-1');
+            if (isset($projectModulePermissionsNamespace->modules) && !empty($projectModulePermissionsNamespace->modules)) {
+                $projectModulePermissionsNamespace->modules = array();
+            }
+
+            // Add the new module to the root project
+            if ($saveNewModule) {
+                $project = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+                $project->addModule($this->id, 1);
+            }
             return $this->id;
         } else {
             $error = array_pop($this->getError());
@@ -149,6 +155,6 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
      */
     public function getError()
     {
-        return (array) $this->_validate->_error->getError();
+        return (array) $this->_validate->error->getError();
     }
 }

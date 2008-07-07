@@ -29,11 +29,8 @@ class Phprojekt_ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testGetId()
     {
-        $this->assertEquals(1, Phprojekt_Module::getId('Project',1));
         $this->assertEquals(1, Phprojekt_Module::getId('Project'));
-
-        $this->assertEquals(2, Phprojekt_Module::getId('Todo',1));
-        $this->assertEquals(0, Phprojekt_Module::getId('Todo',6));
+        $this->assertEquals(2, Phprojekt_Module::getId('Todo'));
     }
 
 
@@ -42,10 +39,7 @@ class Phprojekt_ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testGetModuleName()
     {
-        $this->assertEquals('Project', Phprojekt_Module::getModuleName(1,1));
         $this->assertEquals('Project', Phprojekt_Module::getModuleName(1));
-
-        $this->assertEquals('Todo', Phprojekt_Module::getModuleName(2,1));
-        $this->assertNull(Phprojekt_Module::getModuleName(2,6));
+        $this->assertEquals('Todo', Phprojekt_Module::getModuleName(2));
     }
 }

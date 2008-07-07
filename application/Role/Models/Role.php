@@ -78,49 +78,6 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
     }
 
     /**
-     * getter for UserRole
-     * Returns UserRole for item
-     *
-     * @param int $userId user ID
-     * @param int $projectId project ID
-     *
-     * @return string $_role current role
-     */
-    public function fetchUserRole($userId, $projectId)
-    {
-        $role = 0;
-        // Keep the roles in the session for optimize the query
-        if (isset($userId) && isset($projectId)) {
-            $roleNamespace = new Zend_Session_Namespace('UserRole_'.$userId);
-            if (isset($roleNamespace->$projectId) && !empty($roleNamespace->$projectId)) {
-                $role = $roleNamespace->$projectId;
-            } else {
-                $db = Zend_Registry::get('db');
-                $select = $db->select()
-                             ->from(array('rel' => 'ProjectUserRoleRelation'))
-                             ->joinInner(array('role' => 'Role'), 
-                             sprintf("%s = %s", $db->quoteIdentifier("role.id"), $db->quoteIdentifier("rel.roleId")))
-                             ->where($db->quoteInto('userId = ?', $userId));
-                $stmt  = $db->query($select);
-                $allroles = $stmt->fetchAll();
-                foreach ($allroles as $roles) {
-                    $role = $roles['id'];
-                    $roleNamespace->$roles['projectId'] = $role;
-                }
-                if (!$roleNamespace->$projectId) {
-                    $projectObject = Phprojekt_Loader::getModel('Project', 'Project');
-                    $parent        = $projectObject->find($projectId);
-                    if (null != $parent && $parent->projectId > 0) {
-                        $role = $this->fetchUserRole($userId, $parent->projectId);
-                        $roleNamespace->$projectId = $role;
-                    }
-                }
-            }
-        }
-        return $role;
-    }
-
-    /**
      * Get the information manager
      *
      * @see Phprojekt_Model_Interface::getInformation()
@@ -133,25 +90,27 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
     }
 
     /**
-     * Get the rigths
-     *
-     * @param integer $userid use from whom right is needed
-     *
-     * @return string
-     */
-    public function getRights($userId)
-    {
-        return 15;
-    }
-
-    /**
      * Get the rigths for other users
      *
      * @return array
      */
-    public function getAccessRights()
+    public function getRights()
     {
         return array();
+    }
+
+    /**
+     * Save the rights for each modules
+     *
+     * @param array $rights Array with the modules and the bitmask access
+     *
+     * @return void
+     */
+    public function saveRights($rights)
+    {
+        $role    = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
+        $roleId  = $this->id;
+        $role->saveRights($rights, $roleId);
     }
 
     /**

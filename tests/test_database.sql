@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `TagsModules`;
 DROP TABLE IF EXISTS `TagsUsers`;
 DROP TABLE IF EXISTS `Tags`;
 DROP TABLE IF EXISTS `TabModuleRelation`;
+DROP TABLE IF EXISTS `ModuleTabRelation`;
 DROP TABLE IF EXISTS `Tab`;
 DROP TABLE IF EXISTS `SearchWords`;
 DROP TABLE IF EXISTS `SearchWordModule`;
@@ -23,12 +24,14 @@ DROP TABLE IF EXISTS `SearchDisplay`;
 DROP TABLE IF EXISTS `UserModuleSetting`;
 DROP TABLE IF EXISTS `Todo`;
 DROP TABLE IF EXISTS `RoleModulePermissions`;
-DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `ProjectUserRoleRelation`;
+DROP TABLE IF EXISTS `ProjectRoleUserPermissions`;
 DROP TABLE IF EXISTS `ModuleProjectRelation`;
+DROP TABLE IF EXISTS `ProjectModulePermissions`;
 DROP TABLE IF EXISTS `Project`;
 DROP TABLE IF EXISTS `History`;
 DROP TABLE IF EXISTS `GroupsUserRelation`;
+DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
@@ -87,6 +90,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`)
 );
 
@@ -157,30 +161,18 @@ CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
 
 
 --
--- Table structure for table `ModuleProjectRelation`
+-- Table structure for table `ProjectModulePermissions `
 --
-CREATE TABLE `ModuleProjectRelation` (
+CREATE TABLE `ProjectModulePermissions` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `moduleId` int(11) NOT NULL,
     `projectId` int(11) NOT NULL,
-    `isActive` int(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`id`),
     FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
     FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
-
---
--- Table structure for table `ProjectUserRoleRelation`
---
-CREATE TABLE `ProjectUserRoleRelation` (
-  `projectId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `roleId` int(11) NOT NULL
-);
-CREATE INDEX `ProjectUserRoleRelation_projectId` ON `ProjectUserRoleRelation`(`projectId`);
-CREATE INDEX `ProjectUserRoleRelation_userId` ON `ProjectUserRoleRelation`(`userId`);
-CREATE INDEX `ProjectUserRoleRelation_roleId` ON `ProjectUserRoleRelation`(`roleId`);
 
 
 --
@@ -195,16 +187,35 @@ CREATE TABLE `Role` (
 
 
 --
+-- Table structure for table `ProjectRoleUserPermissions `
+--
+CREATE TABLE `ProjectRoleUserPermissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `roleId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`projectId`) REFERENCES Project(`id`),
+  FOREIGN KEY (`userId`) REFERENCES User(`id`),
+  FOREIGN KEY (`roleId`) REFERENCES Role(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+
+--
 -- Table structure for table `RoleModulePermissions`
 --
 CREATE TABLE `RoleModulePermissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `roleId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
-  `permission` varchar(50) NOT NULL,
+  `access` int(3) NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`roleId`) REFERENCES Role(`id`),
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 
@@ -238,6 +249,8 @@ CREATE TABLE `UserModuleSetting` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`userId`) REFERENCES User(`id`),
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
@@ -318,9 +331,9 @@ CREATE TABLE `Tab` (
 
 
 --
--- Table structure for table `TabModuleRelation`
+-- Table structure for table `ModuleTabRelation`
 --
-CREATE TABLE `TabModuleRelation` (
+CREATE TABLE `ModuleTabRelation` (
   `tabId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
   PRIMARY KEY (`tabId`, `moduleId`)
@@ -361,10 +374,12 @@ CREATE TABLE `ItemRights` (
   `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `adminAccess` int(1) NOT NULL,
-  `writeAccess` int(1) NOT NULL,
-  `readAccess` int(1) NOT NULL,
-  PRIMARY KEY  (`moduleId`,`itemId`,`userId`)
+  `access` int(3) NOT NULL,
+  PRIMARY KEY  (`moduleId`,`itemId`,`userId`),
+  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
+  FOREIGN KEY (`userId`) REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 
@@ -417,14 +432,14 @@ CREATE TABLE `Calendar` (
   `notes` text default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
-  `endDate` date default NULL,
+  `startDate` date default NULL,
   `participantId` int(11) default NULL,
   `startTime` time default NULL,
   `endTime` time default NULL,
   `parentId` int(11) default NULL,
   `serialType` int(11) default NULL,
   `serialDays` int(11) default NULL,
-  `startDate` date default NULL,
+  `endDate` date default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -432,13 +447,13 @@ CREATE TABLE `Calendar` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `name`) VALUES
-(1, 'Project'),
-(2, 'Todo'),
-(3, 'Note'),
-(4, 'Timecard'),
-(5, 'Timeproj'),
-(6, 'Calendar');
+INSERT INTO `Module` (`id`, `name`, `active`) VALUES
+(1, 'Project', 1),
+(2, 'Todo', 1),
+(3, 'Note', 1),
+(4, 'Timecard', 1),
+(5, 'Timeproj', 1),
+(6, 'Calendar', 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
@@ -472,24 +487,23 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Note', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Note', 'comments', 1, 'comments', 'comments', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 1, 0),
 (0, 'Note', 'category', 1, 'category', 'category', 'selectSqlAddOne', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
-(0, 'Timecard', 'notes'    , 1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
-(0, 'Timecard', 'date'     , 1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
-(0, 'Timecard', 'startTime', 1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Timecard', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Timecard', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 0, 0, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 0, 0),
-(0, 'Timeproj', 'notes'    , 1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
-(0, 'Timeproj', 'date'     , 1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
-(0, 'Timeproj', 'startTime', 1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Timeproj', 'endTime'  , 1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Timeproj', 'projectId', 1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0),
-(0, 'Calendar', 'title',     1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
-(0, 'Calendar', 'notes',     1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'startDate', 1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'endDate',   1, 'endDate'  , 'endDate'  , 'date'    , 5, 1, NULL, NULL     , '', 5, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'participantId', 1, 'participantId', 'participantId'   , 'multipleSelectValues'  , 8, 1, NULL, 'User' , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
-(0, 'Calendar', 'startTime', 1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'endTime',   1, 'endTime'  , 'endTime'  , 'time'    , 6, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'projectId', 1, 'project' , 'project'   , 'tree'    , 7, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Timecard', 'notes'    ,  1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
+(0, 'Timecard', 'date'     ,  1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
+(0, 'Timecard', 'startTime',  1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Timecard', 'endTime'  ,  1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Timecard', 'projectId',  1, 'project'  , 'project'  , 'tree'    , 0, 0, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 0, 0),
+(0, 'Timeproj', 'notes'    ,  1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
+(0, 'Timeproj', 'date'     ,  1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
+(0, 'Timeproj', 'startTime',  1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Timeproj', 'endTime'  ,  1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Timeproj', 'projectId',  1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Calendar', 'title',      1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
+(0, 'Calendar', 'notes',      1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'startDate',  1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
+(0, 'Calendar', 'participantId',1, 'participantId' , 'participantId'   , 'multipleSelectValues'  , 8, 1, NULL, 'User'     , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'startTime',  1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'endTime',    1, 'endTime'  , 'endTime'  , 'time'    , 5, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'projectId',  1, 'project' , 'project'   , 'tree'    , 6, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0),
 (0, 'Calendar', 'serialType', 1, 'serialType', 'serialType', 'selectValues', 7, 1, NULL, '1#Once|2#Daily|3#Weekly|4#Montlhy|5#Anually', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'serialDays', 1, 'serialDays', 'serialDays', 'selectValues', 7, 1, NULL, '0#All|1#Monday|2#Tuesday|3#Wednesday|4#Thursday|5#Friday|6#Saturday|7#Sunday', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'endDate',    1, 'endDate'  , 'endDate'  , 'date'    , 8, 1, NULL, NULL     , '', 5, 'center', 1, 0, '1', 0, 1, 0);
@@ -514,52 +528,51 @@ INSERT INTO `Groups` (`id`, `name`) VALUES
 (3, 'ninasgruppe'),
 (4, 'testgruppe');
 
+INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
+(1, 'admin', 0);
 INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 1);
 
-INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
-(1, 'admin', 0);
-
-INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES
+INSERT INTO `ProjectRoleUserPermissions` (`projectId`, `userId`, `roleId`) VALUES
 (1, 1, 1);
 
-INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `moduleId`, `permission`) VALUES
-(1, 1, 1, 'write'),
-(2, 1, 2, 'write'),
-(3, 1, 3, 'write'),
-(4, 1, 6, 'write');
+INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
+(1, 1, 131),
+(1, 2, 131),
+(1, 3, 131),
+(1, 6, 131);
 
-INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
-(1, 1, 1, 1, 1, 1),
-(1, 1, 3, 1, 1, 1),
-(1, 2, 1, 1, 1, 1),
-(1, 2, 3, 0, 0, 1),
-(1, 4, 1, 0, 0, 1),
-(1, 4, 3, 0, 0, 1),
-(1, 5, 1, 0, 0, 1),
-(1, 5, 3, 0, 0, 1),
-(1, 6, 1, 1, 1, 1),
-(1, 7, 1, 1, 1, 1),
-(1, 8, 1, 1, 1, 1),
-(1, 9, 1, 1, 1, 1),
-(1, 10, 1, 1, 1, 1),
-(1, 11, 1, 1, 1, 1),
-(4, 1, 1, 1, 1, 1),
-(4, 2, 1, 1, 1, 1),
-(4, 3, 1, 1, 1, 1),
-(4, 4, 1, 1, 1, 1),
-(4, 5, 1, 1, 1, 1),
-(4, 6, 1, 1, 1, 1),
-(2, 1, 1, 1, 1, 1),
-(2, 1, 3, 0, 1, 1),
-(5, 1, 1, 1, 1, 1),
-(5, 2, 1, 1, 1, 1),
-(5, 3, 1, 1, 1, 1),
-(5, 4, 1, 1, 1, 1),
-(5, 5, 1, 1, 1, 1),
-(5, 6, 1, 1, 1, 1);
+INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
+(1, 1, 1, 255),
+(1, 1, 3, 255),
+(1, 2, 1, 255),
+(1, 2, 3, 255),
+(1, 4, 1, 255),
+(1, 4, 3, 255),
+(1, 5, 1, 255),
+(1, 5, 3, 255),
+(1, 6, 1, 255),
+(1, 7, 1, 255),
+(1, 8, 1, 255),
+(1, 9, 1, 255),
+(1, 10, 1, 255),
+(1, 11, 1, 255),
+(4, 1, 1, 255),
+(4, 2, 1, 255),
+(4, 3, 1, 255),
+(4, 4, 1, 255),
+(4, 5, 1, 255),
+(4, 6, 1, 255),
+(2, 1, 1, 255),
+(2, 1, 3, 255),
+(5, 1, 1, 255),
+(5, 2, 1, 255),
+(5, 3, 1, 255),
+(5, 4, 1, 255),
+(5, 5, 1, 255),
+(5, 6, 1, 255);
 
 INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,'working');
@@ -595,46 +608,46 @@ INSERT INTO `ModuleInstance` VALUES
 (1,5,'Task','Developer Tasks'),
 (2,5,'Tasks','Project Tasks');
 
-INSERT INTO `ModuleProjectRelation` (`moduleId`, `projectId`, `isActive`) VALUES
-(1,1,1),
-(2,1,1),
-(3,1,1),
-(4,1,1),
-(5,1,1),
-(6,1,1),
-(1,2,1),
-(2,2,1),
-(3,2,1),
-(4,2,1),
-(5,2,1),
-(6,2,1),
-(1,3,1),
-(2,3,1),
-(3,3,1),
-(4,3,1),
-(5,3,1),
-(6,3,1),
-(1,4,1),
-(2,4,1),
-(3,4,1),
-(4,4,1),
-(5,4,1),
-(6,4,1),
-(1,5,1),
-(2,5,1),
-(3,5,1),
-(4,5,1),
-(5,5,1),
-(6,5,1),
-(1,6,1),
-(2,6,0),
-(3,6,1),
-(4,6,1),
-(5,6,1),
-(6,6,1),
-(1,7,1),
-(2,7,1),
-(3,7,1),
-(4,7,1),
-(5,7,1),
-(6,7,1);
+INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
+(1,1),
+(2,1),
+(3,1),
+(4,1),
+(5,1),
+(6,1),
+(1,2),
+(2,2),
+(3,2),
+(4,2),
+(5,2),
+(6,2),
+(1,3),
+(2,3),
+(3,3),
+(4,3),
+(5,3),
+(6,3),
+(1,4),
+(2,4),
+(3,4),
+(4,4),
+(5,4),
+(6,4),
+(1,5),
+(2,5),
+(3,5),
+(4,5),
+(5,5),
+(6,5),
+(1,6),
+(2,6),
+(3,6),
+(4,6),
+(5,6),
+(6,6),
+(1,7),
+(2,7),
+(3,7),
+(4,7),
+(5,7),
+(6,7);

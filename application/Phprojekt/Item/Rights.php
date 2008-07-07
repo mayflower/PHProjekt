@@ -47,41 +47,22 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * @param string  $moduleId   The module Id to store
      * @param integer $itemId     The item Id
-     * @param array   $adminUsers Array of userIds with admin access
-     * @param array   $writeUsers Array of userIds with write access
-     * @param array   $readUsers  Array of userIds with read access
+     * @param array   $rights     Array of userIds with the bitmask access
      *
      * @return void
      */
-    public function _save($moduleId, $itemId, $adminUsers, $writeUsers, $readUsers)
+    public function _save($moduleId, $itemId, $rights)
     {
         // Delete the entries for this moduleId-itemId and re-inserted the changes
         $this->_delete($moduleId, $itemId);
 
-        $userData = array();
-        foreach ($adminUsers as $user) {
-            $userData[$user]['admin'] = 1;
+        foreach ($rights as $userId => $access) {
+            $this->_saveRight($moduleId, $itemId, $userId, $access);
         }
-        foreach ($writeUsers as $user) {
-            $userData[$user]['write'] = 1;
-        }
-        foreach ($readUsers as $user) {
-            $userData[$user]['read'] = 1;
-        }
-        foreach ($userData as $userId => $accessData) {
-            $adminAccess = 0;
-            $writeAccess = 0;
-            $readAccess  = 0;
-            if (isset($accessData['admin'])) {
-                $adminAccess = 1;
-            }
-            if (isset($accessData['write'])) {
-                $writeAccess = 1;
-            }
-            if (isset($accessData['read'])) {
-                $readAccess = 1;
-            }
-            $this->_saveRight($moduleId, $itemId, $userId, $adminAccess, $writeAccess, $readAccess);
+        // Reset cache
+        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId);
+        if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
+            $rightNamespace->right = array();
         }
     }
 
@@ -93,20 +74,16 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      * @param string  $moduleId The module Id to store
      * @param integer $itemId   The item ID
      * @param integer $userId   The user to save
-     * @param integer $admin    Value of the admin access
-     * @param integer $write    Value of the write access
-     * @param integer $read     Value of the read access
+     * @param integer $access   Bitmask of the access
      *
      * @return void
      */
-    private function _saveRight($moduleId, $itemId, $userId, $admin, $write, $read)
+    private function _saveRight($moduleId, $itemId, $userId, $access)
     {
         $data['moduleId']     = (int)$moduleId;
         $data['itemId']       = (int)$itemId;
         $data['userId']       = (int)$userId;
-        $data['adminAccess']  = $admin;
-        $data['writeAccess']  = $write;
-        $data['readAccess']   = $read;
+        $data['access']       = (int)$access;
         $this->insert($data);
     }
 
@@ -129,32 +106,28 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return the right
+     * Return the right for a individual module-item-user pair
      *
      * @param string  $moduleId The module Id
      * @param integer $itemId   The item Id
      * @param integer $userId   The user Id
-     * @param string  $right    Field to check
      *
      * @return integer
      */
-    public function hasRight($moduleId, $itemId, $userId, $right)
+    public function getItemRight($moduleId, $itemId, $userId)
     {
         // Cache the query
         $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId.'-'.$userId);
         if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
             $value = $rightNamespace->right;
         } else {
-            $rows = $this->find($moduleId, $itemId, $userId);
-            $value = 0;
-            foreach ($rows as $row) {
-                foreach ($row->toArray() as $k => $v) {
-                    if ($k == $right) {
-                        $value = $v;
-                        break;
-                    }
-                }
+            $row   = $this->find($moduleId, $itemId, $userId)->toArray();
+            if (isset($row[0])) {
+                $value = $row[0]['access'];
+            } else {
+                $value = 0;
             }
+
             $rightNamespace->right = $value;
         }
         return $value;
@@ -171,11 +144,13 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getRights($moduleId, $itemId)
     {
         // Cache the query
-        //$rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId);
-        //if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
-        //    $values = $rightNamespace->right;
-        //} else {
-            $db     = Zend_Registry::get('db');
+        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId);
+        if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
+            $values = $rightNamespace->right;
+        } else {
+            $db            = Zend_Registry::get('db');
+            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+
             $user   = new User_Models_User($db);
             $where  = array();
             $values = array();
@@ -186,13 +161,15 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $rows    = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
                 $row['userName'] = $user->findUserById($row['userId'])->username;
-                $row['adminAccess'] = (boolean) $row['adminAccess'];
-                $row['writeAccess'] = (boolean) $row['writeAccess'];
-                $row['readAccess']  = (boolean) $row['readAccess'];
-                $values[] = $row;
+                $row = array_merge($row, Phprojekt_Acl::convertBitmaskToArray($row['access']));
+                if ($authNamespace->userId == $row['userId']) {
+                    $values['currentUser'] = $row;
+                } else {
+                    $values[$row['userId']] = $row;
+                }
             }
-            //$rightNamespace->right = $values;
-        //}
+            $rightNamespace->right = $values;
+        }
         return $values;
     }
 }
