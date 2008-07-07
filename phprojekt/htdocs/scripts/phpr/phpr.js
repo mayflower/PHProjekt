@@ -196,7 +196,7 @@ dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
     }
 });
 
-dojo.declare("phpr.ReadUsers", dojox.data.QueryReadStore, {
+dojo.declare("phpr.ReadData", dojox.data.QueryReadStore, {
     // We need the store explicitly here, since we have to pass it to the grid model.
     requestMethod:"post",
     doClientPaging:false,
@@ -204,7 +204,7 @@ dojo.declare("phpr.ReadUsers", dojox.data.QueryReadStore, {
     _filterResponse: function(data) {
         ret = {
             items: [{
-               "users": data.data}]
+               "data": data.data}]
         };
         return ret;
     }

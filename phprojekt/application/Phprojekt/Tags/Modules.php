@@ -88,7 +88,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $modules = $this->fetchAll($where);
         foreach ($modules as $moduleData) {
             $foundResults[] = array('id'     => $moduleData->itemId,
-                                    'module' => Phprojekt_Module::getModuleName($moduleData->moduleId, $projectId));
+                                    'module' => Phprojekt_Module::getModuleName($moduleData->moduleId));
         }
 
         return $foundResults;

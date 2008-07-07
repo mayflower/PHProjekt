@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `TagsModules`;
 DROP TABLE IF EXISTS `TagsUsers`;
 DROP TABLE IF EXISTS `Tags`;
 DROP TABLE IF EXISTS `TabModuleRelation`;
+DROP TABLE IF EXISTS `ModuleTabRelation`;
 DROP TABLE IF EXISTS `Tab`;
 DROP TABLE IF EXISTS `SearchWords`;
 DROP TABLE IF EXISTS `SearchWordModule`;
@@ -23,12 +24,14 @@ DROP TABLE IF EXISTS `SearchDisplay`;
 DROP TABLE IF EXISTS `UserModuleSetting`;
 DROP TABLE IF EXISTS `Todo`;
 DROP TABLE IF EXISTS `RoleModulePermissions`;
-DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `ProjectUserRoleRelation`;
+DROP TABLE IF EXISTS `ProjectRoleUserPermissions`;
 DROP TABLE IF EXISTS `ModuleProjectRelation`;
+DROP TABLE IF EXISTS `ProjectModulePermissions`;
 DROP TABLE IF EXISTS `Project`;
 DROP TABLE IF EXISTS `History`;
 DROP TABLE IF EXISTS `GroupsUserRelation`;
+DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
@@ -86,6 +89,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`)
 );
 
@@ -156,30 +160,18 @@ CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
 
 
 --
--- Table structure for table `ModuleProjectRelation`
+-- Table structure for table `ProjectModulePermissions `
 --
-CREATE TABLE `ModuleProjectRelation` (
+CREATE TABLE `ProjectModulePermissions` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `moduleId` int(11) NOT NULL,
     `projectId` int(11) NOT NULL,
-    `isActive` int(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`id`),
     FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
     FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
-
---
--- Table structure for table `ProjectUserRoleRelation`
---
-CREATE TABLE `ProjectUserRoleRelation` (
-  `projectId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `roleId` int(11) NOT NULL
-);
-CREATE INDEX `ProjectUserRoleRelation_projectId` ON `ProjectUserRoleRelation`(`projectId`);
-CREATE INDEX `ProjectUserRoleRelation_userId` ON `ProjectUserRoleRelation`(`userId`);
-CREATE INDEX `ProjectUserRoleRelation_roleId` ON `ProjectUserRoleRelation`(`roleId`);
 
 
 --
@@ -194,16 +186,35 @@ CREATE TABLE `Role` (
 
 
 --
+-- Table structure for table `ProjectRoleUserPermissions `
+--
+CREATE TABLE `ProjectRoleUserPermissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `roleId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`projectId`) REFERENCES Project(`id`),
+  FOREIGN KEY (`userId`) REFERENCES User(`id`),
+  FOREIGN KEY (`roleId`) REFERENCES Role(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+
+--
 -- Table structure for table `RoleModulePermissions`
 --
 CREATE TABLE `RoleModulePermissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `roleId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
-  `permission` varchar(50) NOT NULL,
+  `access` int(3) NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`roleId`) REFERENCES Role(`id`),
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 
@@ -237,6 +248,8 @@ CREATE TABLE `UserModuleSetting` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`userId`) REFERENCES User(`id`),
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
 
@@ -317,9 +330,9 @@ CREATE TABLE `Tab` (
 
 
 --
--- Table structure for table `TabModuleRelation`
+-- Table structure for table `ModuleTabRelation`
 --
-CREATE TABLE `TabModuleRelation` (
+CREATE TABLE `ModuleTabRelation` (
   `tabId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
   PRIMARY KEY (`tabId`, `moduleId`)
@@ -360,10 +373,12 @@ CREATE TABLE `ItemRights` (
   `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `adminAccess` int(1) NOT NULL,
-  `writeAccess` int(1) NOT NULL,
-  `readAccess` int(1) NOT NULL,
-  PRIMARY KEY  (`moduleId`,`itemId`,`userId`)
+  `access` int(3) NOT NULL,
+  PRIMARY KEY  (`moduleId`,`itemId`,`userId`),
+  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
+  FOREIGN KEY (`userId`) REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 
@@ -419,13 +434,13 @@ CREATE TABLE `Calendar` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `name`) VALUES
-(1, 'Project'),
-(2, 'Todo'),
-(3, 'Note'),
-(4, 'Timecard'),
-(5, 'Timeproj'),
-(6, 'Calendar');
+INSERT INTO `Module` (`id`, `name`, `active`) VALUES
+(1, 'Project', 1),
+(2, 'Todo', 1),
+(3, 'Note', 1),
+(4, 'Timecard', 1),
+(5, 'Timeproj', 1),
+(6, 'Calendar', 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
@@ -482,13 +497,14 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 
 INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
 (1,'test','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
-(2,'gus','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A');
+(2,'test1','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
+(3,'test2','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A');
 
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
-(1, NULL, '/', 'PHProjekt', '', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),
-(2, 1, '/1/', 'Project 1', '', 1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL),
-(3, 1, '/1/', 'Project 2', '', 1, '2008-05-02', '2008-07-02', 2, 'working' ,0, NULL, NULL),
-(4, 2, '/1/2/', 'Sub Project', '',1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL);
+(1, NULL, '/', 'PHProjekt', 'Test', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),
+(2, 1, '/1/', 'Project 1', 'Test', 1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL),
+(3, 1, '/1/', 'Project 2', 'Test', 1, '2008-05-02', '2008-07-02', 2, 'working' ,0, NULL, NULL),
+(4, 2, '/1/2/', 'Sub Project', 'Test',1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL);
 
 INSERT INTO `Groups` (`id`, `name`) VALUES
 (1, 'default'),
@@ -496,50 +512,95 @@ INSERT INTO `Groups` (`id`, `name`) VALUES
 (3, 'ninasgruppe'),
 (4, 'testgruppe');
 
+INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
+(1, 'admin in all', null), #Necessary
+(2, 'can Read TODOs only', null),
+(3, 'admin in CALENDAR and PROJECTS', null),
+(4, 'read only in All', null);
+
 INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 1);
 
-INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
-(1, 'admin', 0);
-
-INSERT INTO `ProjectUserRoleRelation` (`projectId`, `userId`, `roleId`) VALUES
-(1, 1, 1);
-
-INSERT INTO `RoleModulePermissions` (`id`, `roleId`, `moduleId`, `permission`) VALUES
-(1, 1, 1, 'write'),
-(2, 1, 2, 'write'),
-(3, 1, 6, 'write');
-
-INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `adminAccess`, `writeAccess`, `readAccess`) VALUES
-(1, 1, 1, 1, 1, 1),
-(1, 2, 1, 1, 1, 1),
-(1, 3, 1, 1, 1, 1);
-
-INSERT INTO `ModuleProjectRelation` (`moduleId`, `projectId`, `isActive`) VALUES
+INSERT INTO `ProjectRoleUserPermissions` (`projectId`, `userId`, `roleId`) VALUES
 (1, 1, 1),
 (1, 2, 1),
 (1, 3, 1),
-(1, 4, 1),
+
 (2, 1, 1),
-(2, 2, 1),
-(2, 3, 1),
-(2, 4, 1),
+(2, 2, 2),
+(2, 3, 4),
+
 (3, 1, 1),
-(3, 2, 1),
-(3, 3, 1),
-(3, 4, 1),
+(3, 2, 3),
+(3, 3, 4),
+
+(4, 1, 4),
+(4, 2, 4),
+(4, 3, 4);
+
+INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
+(1, 1, 131),
+(1, 2, 131),
+(1, 3, 131),
+(1, 4, 131),
+(1, 5, 131),
+(1, 6, 131),
+
+(2, 1, 0),
+(2, 2, 1),
+(2, 3, 0),
+(2, 4, 0),
+(2, 5, 0),
+(2, 6, 1),
+
+(3, 1, 131),
+(3, 2, 0),
+(3, 3, 0),
+(3, 4, 0),
+(3, 5, 0),
+(3, 6, 131),
+
 (4, 1, 1),
 (4, 2, 1),
 (4, 3, 1),
 (4, 4, 1),
-(5, 1, 1),
-(5, 2, 1),
-(5, 3, 1),
-(5, 4, 1),
-(6, 1, 1),
-(6, 2, 1),
-(6, 3, 1),
-(6, 4, 1);
+(4, 5, 1),
+(4, 6, 1);
+
+INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
+(1, 1, 1, 255),
+(1, 1, 2, 255),
+(1, 1, 3, 255),
+
+(1, 2, 1, 255),
+(1, 2, 2, 1),
+(1, 2, 3, 0),
+
+(1, 3, 1, 255),
+(1, 3, 2, 3),
+(1, 3, 3, 3),
+
+(1, 4, 1, 255),
+(1, 4, 2, 255),
+(1, 4, 3, 255);
+
+INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+
+(1, 2),
+(2, 2),
+(3, 2),
+(6, 2),
+
+(1, 3),
+(2, 3),
+
+(1, 4);
 COMMIT;

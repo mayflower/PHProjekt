@@ -140,13 +140,13 @@ class Groups_Models_Groups extends Phprojekt_ActiveRecord_Abstract implements Ph
     }
 
     /**
-     * Get the rigths
+     * Get the rigths for other users
      *
-     * @return string
+     * @return array
      */
-    public function getRights ($userId)
+    public function getRights()
     {
-        return 'write';
+        return array();
     }
 
     /**

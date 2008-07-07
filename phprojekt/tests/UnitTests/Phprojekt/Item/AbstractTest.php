@@ -560,15 +560,13 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
         $module->find(2);
-        $this->assertEquals(15, $module->getRights($userId));
-        $this->assertEquals(3, $module->getRights(3));
 
-        $module = Phprojekt_Loader::getModel('Todo', 'Todo', array('db' => $this->sharedFixture));
-        $module->find(1);
-        $this->assertEquals(15, $module->getRights($userId));
-        $this->assertEquals(7, $module->getRights(3));
+        $getRights = $module->getRights();
+        $this->assertTrue($getRights['currentUser']['admin']);
+        $this->assertEquals($getRights['currentUser']['userName'], 'david');
+        $this->assertEquals($getRights[3]['userName'], 'inactive');
 
         $module = Phprojekt_Loader::getModel('Timecard', 'Timecard', array('db' => $this->sharedFixture));
-        $this->assertEquals(null, $module->getRights($userId));
+        $this->assertEquals(array(), $module->getRights());
     }
 }

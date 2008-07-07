@@ -48,10 +48,10 @@ class Phprojekt_TabsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($result, $tab->getTabs());
     }
 
-    public function testSaveTabModuleRelation()
+    public function testSaveModuleTabRelation()
     {
         $tab = new Phprojekt_Tabs();
-        $tab->saveTabModuleRelation(1,1);
+        $tab->saveModuleTabRelation(1,1);
         $result = array(array('id' => 1,
                               'label' => 'CHANGE TEST TAB 1'));
         $this->assertEquals($result, $tab->getTabsByModule(1));

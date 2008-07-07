@@ -36,8 +36,19 @@
 
 	// Access
 	"accessUser": "Usuario",
-	"accessAdmin": "Admin",
-	"accessWrite": "Escritura",
-	"accessRead": "Lectura",
+	"accessRead": "Leer",
+	"accessWrite": "Escribir",
+    "accessAccess": "Acceso",
+    "accessCreate": "Crear",
+    "accessCopy": "Copiar",
+    "accessDelete": "Borrar",
+    "accessDownload": "Bajar",
+    "accessAdmin": "Admin",
+    "accessNone": "Ninguno",
 	"accessAction": "Acci&oacute;n",
+	"accessModule": "Mo&oacute;dulo",
+
+	// Modules
+    "moduleName": "M&oacute;dulo",
+    "moduleActive": "Activo",
 })

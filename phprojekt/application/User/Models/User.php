@@ -161,25 +161,22 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
     }
 
     /**
-     * Get the rigths
-     *
-     * @param integer $userid use from whom right is needed
-     *
-     * @return string
-     */
-    public function getRights($userId)
-    {
-        return 15;
-    }
-
-    /**
      * Get the rigths for other users
      *
      * @return array
      */
-    public function getAccessRights()
+    public function getRights()
     {
         return array();
+    }
+
+    /**
+     * Save the rigths
+     *
+     * @return void
+     */
+    public function saveRights()
+    {
     }
 
     /**
@@ -203,6 +200,6 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      */
     public function getError()
     {
-        return (array) $this->_validate->_error->getError();
+        return (array) $this->_validate->error->getError();
     }
 }

@@ -170,9 +170,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZomeComplement = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u), 
+                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
                              date("s", $u), date("m"), date("d"), date("Y"));
-                    
+
                     $value = date("H:i:s", $value);
 
                     // running again the sanitizer to normalize the format
@@ -188,7 +188,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZomeComplement = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u), 
+                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
                              date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
 
                     // running again the sanitizer to normalize the format
@@ -204,7 +204,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         }
 
         if ($value === false) {
-            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname . 
+            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname .
                                                ' expected to be ' . $type .'.');
         }
 
@@ -249,7 +249,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZone = (int)$this->_config->timeZone;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), 
+                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
                              date("m"), date("d"), date("Y"));
 
                     $value = date("H:i:s", $value);
@@ -261,7 +261,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $timeZone = (int)$this->_config->timeZone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), 
+                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
                              date("m", $u), date("d", $u), date("Y", $u));
                     break;
             }
@@ -358,93 +358,22 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         // only fetch records with read access
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
-        // Get the projectId if is set
-        if (strstr($where, 'projectId = ')) {
-            $projectId = (int) ereg_replace('projectId = ', '', $where);
-        } else {
-            $projectId = 1;
-        }
         $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
                          AND ItemRights.moduleId = %d AND ItemRights.userId = %d) ',
                          $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-                         Phprojekt_Module::getId($this->getTableName(), $projectId),
+                         Phprojekt_Module::getId($this->getTableName()),
                          $authNamespace->userId);
 
         // Set where
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(), 
+        $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(),
                   $authNamespace->userId, $this->getTableName());
-                  
-        $where .= ' OR (ItemRights.adminAccess = 1 OR ItemRights.writeAccess = 1 OR ItemRights.readAccess = 1))';
+
+        $where .= ' OR (ItemRights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
-    }
-
-    /**
-     * Returns the right the user has on a Phprojekt item
-     *
-     * @todo Make sure that this doesnot need any database query
-     *
-     * @return integer $right bitmap
-     *                        0 => no permission
-     *                        1 => access
-     *                        2 => read
-     *                        4 => write
-     *                        8 => administration
-     */
-    public function getRights($userId)
-    {
-        $itemRight = null;
-        $right     = null;
-
-        $moduleId = Phprojekt_Module::getId($this->getTableName(), $this->projectId);
-
-        if ($this->id > 0) {
-            if ($this->ownerId == $userId) {
-                $itemRight = 'admin';
-            } else if ($this->_rights->hasRight($moduleId, $this->id, $userId, 'adminAccess')) {
-                $itemRight = 'admin';
-            } else if ($this->_rights->hasRight($moduleId, $this->id, $userId, 'writeAccess')) {
-                $itemRight = 'write';
-            } else if ($this->_rights->hasRight($moduleId, $this->id, $userId, 'readAccess')) {
-                $itemRight = 'read';
-            }
-        } else {
-            $itemRight     = 'write';
-        }
-
-        $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
-        $roleRightRead   = $roleRights->hasRight('read');
-        $roleRightWrite  = $roleRights->hasRight('write');
-
-        switch ($itemRight) {
-            case 'read':
-                if ($roleRightRead || $roleRightWrite) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
-                }
-                break;
-            case 'write':
-                if ($roleRightWrite) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ | Phprojekt_Acl::WRITE;
-                } else if ($roleRightRead) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
-                }
-                break;
-            case 'admin':
-                if ($roleRightWrite) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ | Phprojekt_Acl::WRITE | Phprojekt_Acl::ADMIN;
-                } else if ($roleRightRead) {
-                    $right = Phprojekt_Acl::ACCESS | Phprojekt_Acl::READ;
-                }
-                break;
-            default:
-                $right = Phprojekt_Acl::NO_ACCESS;
-                break;
-        }
-
-        return $right;
     }
 
     /**
@@ -452,25 +381,64 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @return array
      */
-    public function getAccessRights()
+    public function getRights()
     {
-        $moduleId = Phprojekt_Module::getId($this->getTableName(), $this->projectId);
-        return $this->_rights->getRights($moduleId, $this->id);
+        $rights   = $this->_rights->getRights(Phprojekt_Module::getId($this->getTableName()), $this->id);
+        $moduleId = Phprojekt_Module::getId($this->getTableName());
+
+        $roleRights     = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
+        $roleRightRead  = $roleRights->hasRight('read');
+        $roleRightWrite = $roleRights->hasRight('write');
+        $roleRightAdmin = $roleRights->hasRight('admin');
+
+        // Map roles with item rigths and make one array
+        foreach ($rights as $userId => $access) {
+            foreach ($access as $name => $value) {
+                switch ($name) {
+                    case 'admin':
+                        $rights[$userId]['admin'] = $roleRightAdmin && $value;
+                        break;
+                    case 'donwload':
+                        $rights[$userId]['donwload'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'delete':
+                        $rights[$userId]['delete'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'copy':
+                        $rights[$userId]['copy'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'create':
+                        $rights[$userId]['create'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'access':
+                        $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'write':
+                        $rights[$userId]['write'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'read':
+                        $rights[$userId]['read'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;
+                        break;
+                    case 'none':
+                        $rights[$userId]['none'] = $value;
+                        break;
+                }
+            }
+        }
+
+        return $rights;
     }
 
     /**
      * Save the rigths for the current item
      * The users are a POST array with userIds
      *
-     * @param array $adminUsers - Array of usersId with admin access to the idem
-     * @param array $writeUsers - Array of usersId with write access to the idem
-     * @param array $readUsers  - Array of usersId with read access to the idem
+     * @param array $rights - Array of usersId with the bitmask access
      *
      * @return void
      */
-    public function saveRights($adminUsers, $writeUsers, $readUsers)
+    public function saveRights($rights)
     {
-        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName(), $this->projectId), 
-                              $this->id, $adminUsers, $writeUsers, $readUsers);
+        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $rights);
     }
 }

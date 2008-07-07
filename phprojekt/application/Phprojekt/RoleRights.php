@@ -235,8 +235,8 @@ class Phprojekt_RoleRights
      */
     private function _setUserRole()
     {
-        $role        = Phprojekt_Loader::getModel('Role', 'Role');
-        $this->_role = $role->fetchUserRole($this->getUser(), $this->getProject());
+        $project = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+        $this->_role = $project->fetchUserRole($this->getUser(), $this->getProject());
     }
 
     /**

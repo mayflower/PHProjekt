@@ -141,9 +141,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      *
      * @return string
      */
-    public function getRights($userId)
+    public function getRights()
     {
-        return 'read';
+        return array();
     }
 
     /**
@@ -151,11 +151,11 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      *
      * @return boolean
      */
-    public function recordValidate() 
+    public function recordValidate()
     {
         return true;
     }
-    
+
     /**
      * Get an array with all the fields for make the filter select
      *

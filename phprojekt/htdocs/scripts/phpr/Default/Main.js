@@ -50,34 +50,32 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             url:       subModuleUrl,
             handleAs: "json",
             onSuccess: dojo.hitch(this,function(data) {
-
-                    dojo.forEach(data,function(modules) {
-                        var moduleName  = modules.name;
-                        if (modules.permission > 0) {
-                            if (moduleName == phpr.module) {
-                                usefirstModule = false;
-                            }
-                            if (firstModule == '' && moduleName != phpr.module) {
-                                firstModule = moduleName;
-                            }
+                dojo.forEach(data,function(modules) {
+                var moduleName  = modules.name;
+                    if (modules.rights.read) {
+                        if (moduleName == phpr.module) {
+                            usefirstModule = false;
                         }
-                    });
-
-                    if (firstModule != '' && usefirstModule) {
-                        phpr.module = firstModule;
+                        if (firstModule == '' && moduleName != phpr.module) {
+                            firstModule = moduleName;
+                        }
                     }
+                });
 
-                    this.drawSubmoduleNavigation(data);
-                    this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
-                    if (!this.search) {
-                        this.search = new dojo.dnd.Moveable("searchsuggest");
-                    }
-                    this.setSearchForm();
-                    var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
-                    this.tree     = new this.treeWidget(this);
-                    this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+                if (firstModule != '' && usefirstModule) {
+                    phpr.module = firstModule;
                 }
-      	     )
+
+                this.drawSubmoduleNavigation(data);
+                this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+                if (!this.search) {
+                    this.search = new dojo.dnd.Moveable("searchsuggest");
+                }
+                this.setSearchForm();
+                var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
+                this.tree     = new this.treeWidget(this);
+                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+            })
       	});
     },
 
@@ -193,7 +191,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (moduleName == phpr.module){
                 liclass = 'class = active';
             }
-            if (modules.permission > 0) {
+            if (modules.rights.read) {
                 if (!firstModule && moduleName != phpr.module) {
                     firstModule = moduleName;
                 }
@@ -203,7 +201,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     liclass    : liclass
                 });
             }
-            if (modules.permission > 3 && moduleName == phpr.module) {
+            if (modules.rights.write && moduleName == phpr.module) {
                 var params = {
                     label:     '',
                     id:        'newEntry',

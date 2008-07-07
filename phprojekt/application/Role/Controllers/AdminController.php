@@ -28,4 +28,20 @@ class Role_AdminController extends AdminController
 {
     public static $name = 'Role Administration';
     public static $configuration = array();
+
+    /**
+     * Return all the modules in an array and the access if exists
+     *
+     * @requestparam integer $roleId The role id
+     *
+     * @return void
+     */
+    public function jsonGetModulesAccessAction()
+    {
+        $role    = Phprojekt_Loader::getModel('Role', 'RoleModulePermissions');
+        $roleId  = (int) $this->getRequest()->getParam('id', null);
+        $modules = $role->getRoleModulePermissionsById($roleId);
+
+        echo Phprojekt_Converter_Json::convert($modules);
+    }
 }

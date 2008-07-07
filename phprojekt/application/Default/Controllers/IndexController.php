@@ -76,38 +76,6 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Get a list of submodules
-     * and check for the users right on them
-     * if the nodeId param isset
-     *
-     * @requestparam integer projectId
-     *
-     * @return array
-     */
-    public function jsonGetSubmodulesAction()
-    {
-        $subModules = Phprojekt_SubModules::getInstance()->getSubModules();
-        $projectId  = (int) $this->getRequest()->getParam('nodeId');
-
-        if ($projectId == 0) {
-            $data = $subModules;
-        } else {
-            $allowedSubModules = array();
-            $rights = new Phprojekt_RoleRights($projectId);
-            foreach ($subModules as $subModuleData) {
-                $subModuleId = Phprojekt_Module::getId($subModuleData['name'], $projectId);
-                $right = ($rights->hasRight('read', $subModuleId)) ? true : $rights->hasRight('write', $subModuleId);
-                if ($right) {
-                    $allowedSubModules[] = $subModuleData;
-                }
-            }
-            $data = $allowedSubModules;
-        }
-
-        echo Phprojekt_Converter_Json::convert($data);
-    }
-
-    /**
      * Returns a tree for a model in JSON.
      *
      * For further information see the chapter json exchange
@@ -316,37 +284,33 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonGetModulesPermissionAction()
     {
-        $subModules = Phprojekt_SubModules::getInstance()->getSubModules();
         $projectId  = (int) $this->getRequest()->getParam('nodeId');
+        $relation   = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+        $modules    = $relation->getProjectModulePermissionsById($projectId);
 
         if ($projectId == 0) {
             $data = array(); // there is no rights on invalid projects
         } else {
-            $allowedSubModules = array();
+            $allowedModules = array();
             $rights = new Phprojekt_RoleRights($projectId);
-            foreach ($subModules as $subModuleData) {
+            foreach ($modules['data'] as $module) {
 
-                $tmpPermission = Phprojekt_Acl::NO_ACCESS;
-
-                if ($rights->hasRight('access', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
-                    $tmpPermission = Phprojekt_Acl::ACCESS;
+                if ($module['inProject']) {
+                    $tmpPermission = Phprojekt_Acl::NONE;
+                    if ($rights->hasRight('admin', $module['id'])) {
+                        $tmpPermission = $tmpPermission | Phprojekt_Acl::ADMIN;
+                    }
+                    if ($rights->hasRight('write', $module['id'])) {
+                        $tmpPermission = $tmpPermission | Phprojekt_Acl::WRITE;
+                    }
+                    if ($rights->hasRight('read', $module['id'])) {
+                        $tmpPermission = $tmpPermission | Phprojekt_Acl::READ;
+                    }
+                    $module['rights'] = Phprojekt_Acl::convertBitmaskToArray($tmpPermission);
+                    $allowedModules[] = $module;
                 }
-                if ($rights->hasRight('read', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
-                    $tmpPermission = Phprojekt_Acl::READ;
-                }
-                if ($rights->hasRight('write', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
-                    $tmpPermission = Phprojekt_Acl::WRITE;
-                }
-                if ($rights->hasRight('create', Phprojekt_Module::getId($subModuleData['name'], $projectId))) {
-                    $tmpPermission = Phprojekt_Acl::ADMIN;
-                }
-
-                $subModuleData['permission'] = $tmpPermission;
-
-                $allowedSubModules[] = $subModuleData;
-
             }
-            $data = $allowedSubModules;
+            $data = $allowedModules;
         }
 
         echo Phprojekt_Converter_Json::convert($data);

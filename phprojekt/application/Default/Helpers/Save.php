@@ -60,29 +60,56 @@ final class Default_Helpers_Save
         $node->ownerId = $authNamespace->userId;
         if ($node->getActiveRecord()->recordValidate()) {
             if ((int)$node->projectId !== $parentId) {
-                $newNode = $node->setParentNode($parentNode);
+                $node->setParentNode($parentNode);
             } else {
-                $newNode = $node->getActiveRecord()->save();
+                $node->getActiveRecord()->save();
             }
-            if (isset($params['userIdAccess'])) {
-                $adminUsers = array($authNamespace->userId);
-                $writeUsers = array($authNamespace->userId);
-                $readUsers  = array($authNamespace->userId);
-                $userIds = array_keys($params['userIdAccess']);
-                foreach ($userIds as $accessUserId) {
-                    if (isset($params['checkAdminAccess'][$accessUserId])) {
-                        array_push($adminUsers, $accessUserId);
-                    }
-                    if (isset($params['checkWriteAccess'][$accessUserId])) {
-                        array_push($writeUsers, $accessUserId);
-                    }
-                    if (isset($params['checkReadAccess'][$accessUserId])) {
-                        array_push($readUsers, $accessUserId);
-                    }
+
+            $right  = array();
+            $rights = array();
+
+            $right['none']     = true;
+            $right['read']     = true;
+            $right['write']    = true;
+            $right['access']   = true;
+            $right['create']   = true;
+            $right['copy']     = true;
+            $right['delete']   = true;
+            $right['download'] = true;
+            $right['admin']    = true;
+
+            $rights[$authNamespace->userId] = Phprojekt_Acl::convertArrayToBitmask($right);
+            if (isset($params['dataAccess'])) {
+                $ids = array_keys($params['dataAccess']);
+                foreach ($ids as $accessId) {
+                    $right = array();
+                    $right['none']     = (isset($params['checkNoneAccess'][$accessId])) ? true : false;
+                    $right['read']     = (isset($params['checkReadAccess'][$accessId])) ? true : false;
+                    $right['write']    = (isset($params['checkWriteAccess'][$accessId])) ? true : false;
+                    $right['access']   = (isset($params['checkAccessAccess'][$accessId])) ? true : false;
+                    $right['create']   = (isset($params['checkCreateAccess'][$accessId])) ? true : false;
+                    $right['copy']     = (isset($params['checkCopyAccess'][$accessId])) ? true : false;
+                    $right['delete']   = (isset($params['checkDeleteAccess'][$accessId])) ? true : false;
+                    $right['download'] = (isset($params['checkDownloadAccess'][$accessId])) ? true : false;
+                    $right['admin']    = (isset($params['checkAdminAccess'][$accessId])) ? true : false;
+                    $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
                 }
-                $node->getActiveRecord()->saveRights($adminUsers, $writeUsers, $readUsers);
             }
-            return $newNode;
+            $node->getActiveRecord()->saveRights($rights);
+
+            // Save the module-project relation
+            if (isset($params['checkModuleRelation'])) {
+                $model = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+                $model->saveModules(array_keys($params['checkModuleRelation']), $node->getActiveRecord()->id);
+            }
+
+            // Save the role-user-project relation
+            if (isset($params['userRelation'])) {
+                $model = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+                $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']), $node->getActiveRecord()->id);
+            }
+
+            return $node->getActiveRecord();
         } else {
             $error = array_pop($node->getActiveRecord()->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
@@ -116,33 +143,41 @@ final class Default_Helpers_Save
         if (isset($model->ownerId)) {
             $model->ownerId = $authNamespace->userId;
         }
-        
+
         if ($model->recordValidate()) {
             $model->save();
-            
-            // creating rights for owner user
-            $adminUsers = array($authNamespace->userId);
-            $writeUsers = array($authNamespace->userId);
-            $readUsers  = array($authNamespace->userId);
-                
-            // checking permission sent as parameter
-            if (isset($params['userIdAccess'])) {
-                foreach ($params['userIdAccess'] as $accessUserId) {
-                    if (isset($params['checkAdminAccess'][$accessUserId])) {
-                        array_push($adminUsers, $accessUserId);
-                    }
-                    if (isset($params['checkWriteAccess'][$accessUserId])) {
-                        array_push($writeUsers, $accessUserId);
-                    }
-                    if (isset($params['checkReadAccess'][$accessUserId])) {
-                        array_push($readUsers, $accessUserId);
-                    }
+
+            $right  = array();
+            $rights = array();
+
+            $right['none']     = true;
+            $right['read']     = true;
+            $right['write']    = true;
+            $right['access']   = true;
+            $right['create']   = true;
+            $right['copy']     = true;
+            $right['delete']   = true;
+            $right['download'] = true;
+            $right['admin']    = true;
+
+            $rights[$authNamespace->userId] = Phprojekt_Acl::convertArrayToBitmask($right);
+            if (isset($params['dataAccess'])) {
+                $ids = array_keys($params['dataAccess']);
+                foreach ($ids as $accessId) {
+                    $right = array();
+                    $right['none']     = (isset($params['checkNoneAccess'][$accessId])) ? true : false;
+                    $right['read']     = (isset($params['checkReadAccess'][$accessId])) ? true : false;
+                    $right['write']    = (isset($params['checkWriteAccess'][$accessId])) ? true : false;
+                    $right['access']   = (isset($params['checkAccessAccess'][$accessId])) ? true : false;
+                    $right['create']   = (isset($params['checkCreateAccess'][$accessId])) ? true : false;
+                    $right['copy']     = (isset($params['checkCopyAccess'][$accessId])) ? true : false;
+                    $right['delete']   = (isset($params['checkDeleteAccess'][$accessId])) ? true : false;
+                    $right['download'] = (isset($params['checkDownloadAccess'][$accessId])) ? true : false;
+                    $right['admin']    = (isset($params['checkAdminAccess'][$accessId])) ? true : false;
+                    $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
                 }
             }
-            
-            // saving rights
-            $model->saveRights($adminUsers, $writeUsers, $readUsers);
-            
+            $model->saveRights($rights);
             return $model;
         } else {
             $error = array_pop($model->getError());
@@ -188,7 +223,7 @@ final class Default_Helpers_Save
         if ($model instanceof Phprojekt_Model_Interface) {
             return self::_saveModel($model, $params);
         }
-        
+
         return true;
     }
 }

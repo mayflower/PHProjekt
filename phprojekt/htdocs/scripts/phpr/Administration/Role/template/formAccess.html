@@ -1,0 +1,51 @@
+<tr>
+    <td class="label">
+        <label for="{{labelfor}}">{{label}}</label>
+    </td>
+    <td>
+    <table id="accessTable">
+    <tr>
+        <td>{{accessModuleText}}</td>
+        <td>{{accessReadText}}</td>
+        <td>{{accessWriteText}}</td>
+        <td>{{accessAdminText}}</td>
+    </tr>
+    {% for module in modules %}
+    <tr id="trAccessFor{{module.id}}">
+        <td>
+            <input id="dataAccess[{{module.id}}]"
+            name="dataAccess[{{module.id}}]"
+            type="hidden"
+            value="{{module.name}}"
+            dojoType="dijit.form.TextBox" />
+            {{module.name}}
+        </td>
+        <td>
+            <input type="checkbox"
+            dojotype="dijit.form.CheckBox"
+            id="checkReadAccess[{{module.id}}]"
+            name="checkReadAccess[{{module.id}}]"
+            checked="{{module.read}}"
+            value="1" />
+        </td>
+        <td>
+            <input type="checkbox"
+            dojotype="dijit.form.CheckBox"
+            id="checkWriteAccess[{{module.id}}]"
+            name="checkWriteAccess[{{module.id}}]"
+            checked="{{module.write}}"
+            value="1" />
+        </td>
+        <td>
+            <input type="checkbox"
+            dojotype="dijit.form.CheckBox"
+            id="checkAdminAccess[{{module.id}}]"
+            name="checkAdminAccess[{{module.id}}]"
+            checked="{{module.admin}}"
+            value="1" />
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+    </td>
+</tr>

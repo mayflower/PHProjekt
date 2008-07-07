@@ -86,7 +86,7 @@ class Phprojekt_Search_Default
      */
     public function indexObjectItem($object)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName(), $object->projectId);
+        $moduleId = Phprojekt_Module::getId($object->getTableName());
         $itemId   = $object->id;
 
         $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
@@ -115,7 +115,7 @@ class Phprojekt_Search_Default
      */
     public function deleteObjectItem($object)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName(), $object->projectId);
+        $moduleId = Phprojekt_Module::getId($object->getTableName());
         $itemId   = $object->id;
 
         $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
@@ -174,7 +174,7 @@ class Phprojekt_Search_Default
         }
 
         foreach ($tmpFoundResults as $moduleData) {
-            if ($rights->hasRight($moduleData['moduleId'], $moduleData['itemId'], $userId, 'readAccess')) {
+            if ($rights->getItemRight($moduleData['moduleId'], $moduleData['itemId'], $userId) > 0) {
                 $foundResults[] = $this->_display->getDisplay($moduleData['moduleId'], $moduleData['itemId']);
             }
         }

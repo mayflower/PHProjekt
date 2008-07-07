@@ -36,8 +36,19 @@
 
 	// Access
 	"accessUser": "User",
-	"accessAdmin": "Admin",
+    "accessRead": "Read",
 	"accessWrite": "Write",
-	"accessRead": "Read",
+    "accessAccess": "Acces",
+    "accessCreate": "Create",
+    "accessCopy": "Copy",
+    "accessDelete": "Delete",
+    "accessDownload": "Download",
+    "accessAdmin": "Admin",
+    "accessNone": "None",
 	"accessAction": "Action",
+	"accessModule": "Module",
+
+	// Modules
+    "moduleName": "Module",
+    "moduleActive": "Active",
 })
