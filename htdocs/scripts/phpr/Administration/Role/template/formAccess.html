@@ -8,6 +8,7 @@
         <td>{{accessModuleText}}</td>
         <td>{{accessReadText}}</td>
         <td>{{accessWriteText}}</td>
+        <td>{{accessCreateText}}</td>
         <td>{{accessAdminText}}</td>
     </tr>
     {% for module in modules %}
@@ -34,6 +35,14 @@
             id="checkWriteAccess[{{module.id}}]"
             name="checkWriteAccess[{{module.id}}]"
             checked="{{module.write}}"
+            value="1" />
+        </td>
+        <td>
+            <input type="checkbox"
+            dojotype="dijit.form.CheckBox"
+            id="checkCreateAccess[{{module.id}}]"
+            name="checkCreateAccess[{{module.id}}]"
+            checked="{{module.create}}"
             value="1" />
         </td>
         <td>

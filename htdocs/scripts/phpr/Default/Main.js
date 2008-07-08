@@ -182,7 +182,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var self = this;
         var newEntry = null;
         var firstModule = null
-        var writePermissions = false;
+        var createPermissions = false;
         var navigation ='<ul id="nav_main">';
         dojo.forEach(data,function(modules) {
             var liclass ='';
@@ -201,7 +201,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     liclass    : liclass
                 });
             }
-            if (modules.rights.write && moduleName == phpr.module) {
+            if (modules.rights.create && moduleName == phpr.module) {
                 var params = {
                     label:     '',
                     id:        'newEntry',
@@ -209,16 +209,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     alt:       'Add'
                 };
                 newEntry = new dijit.form.Button(params);
-                writePermissions = true;
+                createPermissions = true;
             }
         });
         navigation += "</ul>";
         dojo.byId("subModuleNavigation").innerHTML = navigation;
-        if (writePermissions) {
+        if (createPermissions) {
             dojo.byId("buttonRow").appendChild(newEntry.domNode);
         }
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
-        if (writePermissions) {
+        if (createPermissions) {
             dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
         }
     },

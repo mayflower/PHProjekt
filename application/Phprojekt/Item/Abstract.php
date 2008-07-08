@@ -386,10 +386,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $rights   = $this->_rights->getRights(Phprojekt_Module::getId($this->getTableName()), $this->id);
         $moduleId = Phprojekt_Module::getId($this->getTableName());
 
-        $roleRights     = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
-        $roleRightRead  = $roleRights->hasRight('read');
-        $roleRightWrite = $roleRights->hasRight('write');
-        $roleRightAdmin = $roleRights->hasRight('admin');
+        $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
+        $roleRightRead   = $roleRights->hasRight('read');
+        $roleRightWrite  = $roleRights->hasRight('write');
+        $roleRightCreate = $roleRights->hasRight('create');
+        $roleRightAdmin  = $roleRights->hasRight('admin');
 
         // Map roles with item rigths and make one array
         foreach ($rights as $userId => $access) {
@@ -405,16 +406,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                         $rights[$userId]['delete'] = ($roleRightWrite || $roleRightAdmin) && $value;
                         break;
                     case 'copy':
-                        $rights[$userId]['copy'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        $rights[$userId]['copy'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
                         break;
                     case 'create':
-                        $rights[$userId]['create'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        $rights[$userId]['create'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
                         break;
                     case 'access':
-                        $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;
+                        $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
                         break;
                     case 'write':
-                        $rights[$userId]['write'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                        $rights[$userId]['write'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
                         break;
                     case 'read':
                         $rights[$userId]['read'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;

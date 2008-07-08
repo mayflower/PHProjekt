@@ -300,6 +300,9 @@ class IndexController extends Zend_Controller_Action
                     if ($rights->hasRight('admin', $module['id'])) {
                         $tmpPermission = $tmpPermission | Phprojekt_Acl::ADMIN;
                     }
+                    if ($rights->hasRight('create', $module['id'])) {
+                        $tmpPermission = $tmpPermission | Phprojekt_Acl::CREATE;
+                    }
                     if ($rights->hasRight('write', $module['id'])) {
                         $tmpPermission = $tmpPermission | Phprojekt_Acl::WRITE;
                     }

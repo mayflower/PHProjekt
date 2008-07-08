@@ -12,7 +12,6 @@
  * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
-
  */
 
 /**
@@ -85,7 +84,6 @@ class Role_Models_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstract
             $clone->roleId   = $roleId;
             $clone->access   = $access;
 
-            $clone->permission = '';
             $clone->save();
         }
     }

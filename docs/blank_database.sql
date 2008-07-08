@@ -541,12 +541,12 @@ INSERT INTO `ProjectRoleUserPermissions` (`projectId`, `userId`, `roleId`) VALUE
 (4, 3, 4);
 
 INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
-(1, 1, 131),
-(1, 2, 131),
-(1, 3, 131),
-(1, 4, 131),
-(1, 5, 131),
-(1, 6, 131),
+(1, 1, 139),
+(1, 2, 139),
+(1, 3, 139),
+(1, 4, 139),
+(1, 5, 139),
+(1, 6, 139),
 
 (2, 1, 0),
 (2, 2, 1),
@@ -555,12 +555,12 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (2, 5, 0),
 (2, 6, 1),
 
-(3, 1, 131),
+(3, 1, 139),
 (3, 2, 0),
 (3, 3, 0),
 (3, 4, 0),
 (3, 5, 0),
-(3, 6, 131),
+(3, 6, 139),
 
 (4, 1, 1),
 (4, 2, 1),
