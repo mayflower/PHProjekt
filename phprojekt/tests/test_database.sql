@@ -539,10 +539,10 @@ INSERT INTO `ProjectRoleUserPermissions` (`projectId`, `userId`, `roleId`) VALUE
 (1, 1, 1);
 
 INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
-(1, 1, 131),
-(1, 2, 131),
-(1, 3, 131),
-(1, 6, 131);
+(1, 1, 139),
+(1, 2, 139),
+(1, 3, 139),
+(1, 6, 139);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),

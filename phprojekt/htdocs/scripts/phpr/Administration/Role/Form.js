@@ -88,6 +88,7 @@ dojo.declare("phpr.Administration.Role.Form", phpr.Administration.Default.Form, 
         	accessModuleText: phpr.nls.accessModule,
             accessReadText: phpr.nls.accessRead,
             accessWriteText: phpr.nls.accessWrite,
+            accessCreateText: phpr.nls.accessCreate,
             accessAdminText: phpr.nls.accessAdmin,
             labelfor: phpr.nls.accessAccess,
             label: phpr.nls.accessAccess,
@@ -125,7 +126,8 @@ dojo.declare("phpr.Administration.Role.Form", phpr.Administration.Default.Form, 
 
 		for (i in modules) {
 		    this.moduleList.push({"id":modules[i]['id'],"name":modules[i]['name'],
-		                          "read":modules[i]['read'],"write":modules[i]['write'],"admin":modules[i]['admin']})
+		                          "read":modules[i]['read'],"write":modules[i]['write'],
+		                          "create":modules[i]['create'],"admin":modules[i]['admin']})
 		}
 	}
 });
