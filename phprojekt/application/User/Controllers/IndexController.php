@@ -41,4 +41,103 @@ class User_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
+
+    /**
+     * Gets the content of a setting
+     * 
+     * @uses name parameter as setting key
+     * 
+     * @return void
+     *
+     */
+    public function jsonGetSettingAction() {
+
+        $value = '';
+
+        $settingName = (string) $this->getRequest()->getParam('name', null);
+
+        if (!empty($settingName)) {
+            $setting = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+
+            $value = $setting->getSetting($settingName);
+        }
+        echo Phprojekt_Converter_Json::convert($value);
+
+    }
+
+    /**
+     * Sets the value for a setting
+     * 
+     * @uses name and value parameters
+     * 
+     * @return void
+     *
+     */
+    public function jsonSetSettingAction() {
+
+        $message = '';
+
+        $settingName = (string) $this->getRequest()->getParam('name', null);
+        $settingValue = (string) $this->getRequest()->getParam('value', null);
+
+        if (!empty($settingName)) {
+            $setting = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+
+            if ($setting->setSetting($settingName, $settingValue)) {
+                $return = 'Value saved successful';
+            } else {
+                $return = 'Value not saved. Error at saving.';
+            }
+        } else {
+            $return = 'A key value needs to be provided';
+        }
+
+        echo Phprojekt_Converter_Json::convert($return);
+
+    }
+
+    /**
+     * Gets the list of all settings and it is returned as an array
+     * 
+     * @return void
+     *
+     */
+    public function jsonGetSettingListAction() {
+
+        $tmp = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+
+
+        echo Phprojekt_Converter_Json::convert($tmp->getList());
+
+    }
+
+    /**
+     * Deletes the indicated setting
+     * 
+     * @uses name parameter 
+     *
+     * @return boolean
+     */
+    public function jsonDeleteSettingAction() {
+
+        $message = '';
+
+        $settingName = (string) $this->getRequest()->getParam('name', null);
+
+        if (!empty($settingName)) {
+            $setting = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+
+            if ($setting->deleteSetting($settingName)) {
+                $return = 'Value deleted successful';
+            } else {
+                $return = 'Value not found.';
+            }
+        } else {
+            $return = 'A key value needs to be provided';
+        }
+
+        echo Phprojekt_Converter_Json::convert($return);
+
+    }
+
 }

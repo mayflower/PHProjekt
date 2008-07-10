@@ -49,6 +49,7 @@ require_once 'Phprojekt/AllTests.php';
 require_once 'Timecard/AllTests.php';
 require_once 'Timeproj/AllTests.php';
 require_once 'History/AllTests.php';
+require_once 'User/AllTests.php';
 require_once 'Calendar/AllTests.php';
 // require_once 'Selenium/AllTests.php';
 
@@ -169,6 +170,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Timecard_AllTests::suite());
         $suite->addTest(Timeproj_AllTests::suite());
         $suite->addTest(History_AllTests::suite());
+        $suite->addTest(User_AllTests::suite());
         $suite->addTest(Calendar_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());
