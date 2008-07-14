@@ -17,8 +17,14 @@ dojo.declare("phpr.Component", null, {
         }
         var tpl = new dojox.dtl.Template(tplContent);
         if(node) {
-            node.innerHTML = tpl.render(context);
-            phpr.initWidgets(node);
+            var dojoType = node.getAttribute('dojoType');
+            if ((dojoType == 'dijit.layout.ContentPane') ||
+                (dojoType == 'dijit.layout.BorderContainer') ) {
+                dijit.byId(node.getAttribute('id')).setContent(tpl.render(context));
+            } else {
+                node.innerHTML = tpl.render(context);
+                phpr.initWidgets(node);
+            }
         } else {
             return tpl.render(context);
         }

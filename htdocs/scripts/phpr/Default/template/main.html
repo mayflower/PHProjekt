@@ -1,5 +1,6 @@
-<div dojoType="dijit.layout.BorderContainer" id="completeContent">
-    <div id="header" region="top" class="block" style="height:55px;" >
+<div id="completeContent" dojoType="dijit.layout.BorderContainer" style="width: 100%; height: 100%;">
+    <!-- Top Bar menu -->
+    <div dojoType="dijit.layout.ContentPane" id="header" region="top" style="height:55px;" splitter="false">
     	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")'>
     	<form dojoType="dijit.form.Form" id="searchform" name="searchform" style="display:inline" onsubmit='dojo.publish("{{currentModule}}.submitSearchForm"); return false;'>
         <div id="search-bar" class="last right align-right">
@@ -43,48 +44,49 @@
 			{{logoutText}}
 			</button>
     	</div>
- 	</div>
- 	<!-- Border Container which splits page in navigation and form/list view: -->
-	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
-		<!-- navigation panel -->
-    	<div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" region="leading" splitter="true" class="column span-5 left" id="navigation-container">
-    		<div id="subheader" class="block">
- 				<div id="navigation-container-titel">
-        		</div>
-        	</div>
-            <div id="tree-navigation">
-                <div id="treeBox">
-                </div>
-			</div>
-    	</div>
-    	<!-- Border Container which splits main content in navigation, listview and formview -->
-    	<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent" >
-    		<!-- Top Area navigation and messages -->
-    		<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="top" id="centerNavContent">
-    			<!-- Submodule navigation: -->
-    			<div class="block">
-        			<div class="column">
-        				<img src="{{webpath}}img/subheaderborder.png" alt="" />
+    </div>
+    <!-- Left Content -->
+    <div id="navigation-container" dojoType="dijit.layout.ContentPane" region="left" style="width:15%;" splitter="true" minSize="20" maxSize="300">
+        <div id="subheader" class="block">
+            <div id="navigation-container-titel">
+            </div>
+        </div>
+        <!-- Tree menu -->
+        <div id="tree-navigation">
+            <div id="treeBox">
+            </div>
+        </div>
+    </div>
+    <!-- Center Content -->
+    <div dojoType="dijit.layout.ContentPane" region="center">
+        <div dojoType="dijit.layout.BorderContainer" design="sidebar" style="width: 100%; height: 100%;">
+            <!-- Second Top Bar -->
+            <div dojoType="dijit.layout.ContentPane" region="top" class="block" style="height: 15%;" splitter="false">
+                <div dojoType="dijit.layout.ContentPane" id="centerNavContent" class="block">
+                    <div class="column">
+                        <img src="{{webpath}}img/subheaderborder.png" alt="" />
+                    </div>
+                    <!-- Submodule navigation -->
+                    <div class="column left span-17 append-1 align-left" id="subModuleNavigation">
         			</div>
-        			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
-        			</div>
-				    <div id="buttonRow" class="align-right append-2">
+        			<!-- Add / Save Buttons -->
+				    <div id="buttonRow" class="align-right append-0">
 				    </div>
  					<!-- spaces -->
-				    <hr />
+                    <hr />
+                    <!-- Exception Form -->
+                    <div id="serverFeedback" dojoType="phpr.ServerFeedback">
+                    </div>
  				</div>
- 				<!-- Exception Form -->
- 				<div id="serverFeedback" dojoType="phpr.ServerFeedback" sytle="display:block;height:55px;">
- 				</div>
- 				<br />
-        	</div>
-        	<!-- Center Area Grid and Form -->
-        	<div dojoType="dijit.layout.ContentPane"  id="centerMainContent" region="center">
-           	</div>
-            <div dojoType="dijit.layout.ContentPane" class="block" id="bottomContent" region="bottom">
             </div>
-         </div>
-	</div>
+            <!-- Main Content -->
+            <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
+            </div>
+            <!-- Form buttons -->
+            <div dojoType="dijit.layout.ContentPane" region="bottom" id="bottomContent" class="block" style="height: 6%;" splitter="false">
+            </div>
+    	</div>
+    </div>
 </div>
 <!-- Suggest seacrh -->
 <div id="searchsuggest" class="last right align-right" style="display:none">
