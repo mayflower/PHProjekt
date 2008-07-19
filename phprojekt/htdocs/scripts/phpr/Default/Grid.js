@@ -81,6 +81,20 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.grid.widget.singleClickEdit = true;
 
         meta = this.grid.widget.model.store.metaData;
+        
+        // if there is any row, render export Button
+        if (meya.length > 0) {
+            var params = {
+                baseClass: "positive",
+                id: "exportGrid",
+                iconClass: "export",
+                alt: "Export",
+                disabled: false
+            };
+            var exportButton = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(exportButton.domNode);
+            dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "onExport"));
+        }
 
         if (meta.length == 0) {
             dojo.byId("gridNode").innerHTML = phpr.nls.noresults;
@@ -182,4 +196,9 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.publish("grid.CellEdit", [value, inRowIndex, inFieldIndex]);
         this.cellEdited(value, inRowIndex, inFieldIndex);
     },
+    
+    onExport: function () {
+        window.open(phpr.webpath+"index.php/"+phpr.module+"/index/csvList/nodeId/"+this.id);
+        return false;
+    }
 });
