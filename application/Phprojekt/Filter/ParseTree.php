@@ -149,6 +149,7 @@ class Phprojekt_Filter_ParseTree
                     break;
                 default:
                     echo "default";
+                    
             }
 
             // remember the parsed string to call it recursivly

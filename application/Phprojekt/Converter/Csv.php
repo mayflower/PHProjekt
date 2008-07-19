@@ -54,7 +54,9 @@ class Phprojekt_Converter_Csv
      *
      * @return string
      */
-    private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT, $exportHeader = true)
+    private static function _convertModel($models, 
+                                          $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT, 
+                                          $exportHeader = true)
     {
         $datas = array();
         $data = array();
@@ -126,11 +128,10 @@ class Phprojekt_Converter_Csv
                 foreach ($oneRow as $colNbr => $oneData) {
                     if ($colNbr > 0) {
                         $outputString .= '","';
-                    }
-                    else {
+                    } else {
                         $outputString .= '"';
                     }
-                    $outputString .= str_replace('"','""',$oneData);
+                    $outputString .= str_replace('"', '""', $oneData);
                 }
             }
             $outputString .= "\"\n";
