@@ -117,7 +117,8 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
             }
             // Reset cache for root project
             $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-1');
-            if (isset($projectModulePermissionsNamespace->modules) && !empty($projectModulePermissionsNamespace->modules)) {
+            if (isset($projectModulePermissionsNamespace->modules) 
+                && !empty($projectModulePermissionsNamespace->modules)) {
                 $projectModulePermissionsNamespace->modules = array();
             }
 

@@ -412,7 +412,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                         $rights[$userId]['create'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
                         break;
                     case 'access':
-                        $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
+                        $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || 
+                                                      $roleRightCreate || $roleRightAdmin) && $value;
                         break;
                     case 'write':
                         $rights[$userId]['write'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;

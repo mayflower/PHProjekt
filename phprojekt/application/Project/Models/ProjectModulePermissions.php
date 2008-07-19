@@ -43,8 +43,8 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
             $modules = $projectModulePermissionsNamespace->modules;
         } else {
             $modules = array();
-            $model = Phprojekt_Loader::getModel('Module','Module');
-            foreach ($model->fetchAll(' active = 1 ' ,' name ASC ') as $module) {
+            $model = Phprojekt_Loader::getModel('Module', 'Module');
+            foreach ($model->fetchAll(' active = 1 ', ' name ASC ') as $module) {
                 $modules['data'][$module->id] = array();
                 $modules['data'][$module->id]['id']        = $module->id;
                 $modules['data'][$module->id]['name']      = $module->name;
