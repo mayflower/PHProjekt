@@ -48,17 +48,19 @@ class Role_Models_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstract
             $modules['data'][$right->moduleId]['id']   = $right->moduleId;
             $modules['data'][$right->moduleId]['name'] = Phprojekt_Module::getModuleName($right->moduleId);
 
-            $modules['data'][$right->moduleId] = array_merge($modules['data'][$right->moduleId], Phprojekt_Acl::convertBitmaskToArray($right->access));
+            $modules['data'][$right->moduleId] = array_merge($modules['data'][$right->moduleId], 
+                                                             Phprojekt_Acl::convertBitmaskToArray($right->access));
         }
         if (empty($modules)) {
-            $model = Phprojekt_Loader::getModel('Module','Module');
-            foreach ($model->fetchAll(null,' name ASC ') as $module) {
+            $model = Phprojekt_Loader::getModel('Module', 'Module');
+            foreach ($model->fetchAll(null, ' name ASC ') as $module) {
                 $modules['data'][$module->id] = array();
 
                 $modules['data'][$module->id]['id']   = $module->id;
                 $modules['data'][$module->id]['name'] = $module->name;
 
-                $modules['data'][$module->id] = array_merge($modules['data'][$module->id], Phprojekt_Acl::convertBitmaskToArray(0));
+                $modules['data'][$module->id] = array_merge($modules['data'][$module->id], 
+                                                Phprojekt_Acl::convertBitmaskToArray(0));
             }
         }
         return $modules;

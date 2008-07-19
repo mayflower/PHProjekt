@@ -101,8 +101,7 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
                                   " AND moduleId = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $record = $record[0];
-        }
-        else {
+        } else {
             $record = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
             $record->userId = $this->_userId;
             $record->keyValue = $settingName;

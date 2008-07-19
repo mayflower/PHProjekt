@@ -38,10 +38,10 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     function getProjectRoleUserPermissions($projectId)
     {
         $roles         = array();
-        $model         = Phprojekt_Loader::getModel('Role','Role');
+        $model         = Phprojekt_Loader::getModel('Role', 'Role');
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
-        foreach ($model->fetchAll(null,' name ASC ') as $role) {
+        foreach ($model->fetchAll(null, ' name ASC ') as $role) {
             $roles['data'][$role->id] = array();
             $roles['data'][$role->id]['id']    = $role->id;
             $roles['data'][$role->id]['name']  = $role->name;
@@ -118,7 +118,8 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                         $project = Phprojekt_Loader::getModel('Project', 'Project');
                         $parent  = $project->find($projectId);
                         if (!is_null($parent) && $parent->projectId > 0) {
-                            $roleParentNamespace = new Zend_Session_Namespace('ProjectRoleUserPermissions_'.$parent->projectId.'_'.$userId);
+                            $roleParentNamespace = new Zend_Session_Namespace(
+                                                     'ProjectRoleUserPermissions_'.$parent->projectId.'_'.$userId);
                             if (isset($roleParentNamespace->role) && $roleParentNamespace->role > 0) {
                                 $role = $roleParentNamespace->role;
                             } else {

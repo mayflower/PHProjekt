@@ -111,7 +111,7 @@ class Project_IndexController extends IndexController
     public function jsonGetModulesProjectRelationAction()
     {
         $projectId = (int) $this->getRequest()->getParam('id');
-        $project   = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+        $project   = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
         $modules   = $project->getProjectModulePermissionsById($projectId);
 
         echo Phprojekt_Converter_Json::convert($modules);
@@ -127,7 +127,7 @@ class Project_IndexController extends IndexController
     public function jsonGetProjectRoleUserRelationAction()
     {
         $projectId = (int) $this->getRequest()->getParam('id');
-        $project   = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+        $project   = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
         $roles     = $project->getProjectRoleUserPermissions($projectId);
 
         echo Phprojekt_Converter_Json::convert($roles);

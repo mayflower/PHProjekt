@@ -99,14 +99,16 @@ final class Default_Helpers_Save
 
             // Save the module-project relation
             if (isset($params['checkModuleRelation'])) {
-                $model = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+                $model = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
                 $model->saveModules(array_keys($params['checkModuleRelation']), $node->getActiveRecord()->id);
             }
 
             // Save the role-user-project relation
             if (isset($params['userRelation'])) {
-                $model = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
-                $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']), $node->getActiveRecord()->id);
+                $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+                $model->saveRelation($params['roleRelation'], 
+                                     array_keys($params['userRelation']), 
+                                     $node->getActiveRecord()->id);
             }
 
             return $node->getActiveRecord();
