@@ -25,6 +25,12 @@
 	width: 16px;
 	height: 16px;
 }
+.export {
+	background-image: url(../images/export.png);
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
 .add {
 	background-image: url(../images/add.png);
 	background-repeat: no-repeat;

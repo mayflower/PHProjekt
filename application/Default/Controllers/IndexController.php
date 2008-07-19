@@ -285,7 +285,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonGetModulesPermissionAction()
     {
         $projectId  = (int) $this->getRequest()->getParam('nodeId');
-        $relation   = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+        $relation   = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
         $modules    = $relation->getProjectModulePermissionsById($projectId);
 
         if ($projectId == 0) {
@@ -329,5 +329,27 @@ class IndexController extends Zend_Controller_Action
         $object = Phprojekt_Loader::getModel('Project', 'Project');
         $records = $object->fetchAll();
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+    
+    /**
+     * Returns the list for a model in CSV format.
+     *
+     *
+     * @return void
+     */
+    public function csvListAction()
+    {
+        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
+        $itemId    = (int) $this->getRequest()->getParam('id', null);
+
+        if (!empty($itemId)) {
+            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
+        } else if (!empty($projectId)) {
+            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, $count, $offset);
+        } else {
+            $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
+        }
+
+        Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 }
