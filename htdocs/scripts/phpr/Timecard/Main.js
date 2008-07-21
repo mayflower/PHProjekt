@@ -22,6 +22,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		dojo.subscribe("Timecard.form.Submitted", this, "submitForm");
         dojo.subscribe("Timecard.submitSearchForm", this, "submitSearchForm");
 		dojo.subscribe("Timecard.showSearchResults", this, "showSearchResults");
+        dojo.subscribe("Timecard.drawTagsBox", this, "drawTagsBox");
+		dojo.subscribe("Timecard.showTagsResults", this, "showTagsResults");
         dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
         dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");
 	},

@@ -76,7 +76,7 @@
     margin-right: 10px;
 }
 
-.phprojekt #searchsuggest {
+.phprojekt #searchsuggest, #tagsbox {
     width: auto;
     border: none;
     height: auto;
@@ -107,7 +107,11 @@
     margin: 10px 20px;
 }
 
-.phprojekt #searchsuggest a {
+.phprojekt #tagsbox {
+    margin-top: 20%;
+}
+
+.phprojekt #searchsuggest a, #tagsbox a {
     font-size: 9px;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     font-size: 11px;

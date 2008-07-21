@@ -22,5 +22,7 @@ dojo.declare("phpr.Note.Main", phpr.Default.Main, {
 		dojo.subscribe("Note.form.Submitted", this, "submitForm");
 		dojo.subscribe("Note.submitSearchForm", this, "submitSearchForm");
 		dojo.subscribe("Note.showSearchResults", this, "showSearchResults");
+		dojo.subscribe("Note.drawTagsBox", this, "drawTagsBox");
+		dojo.subscribe("Note.showTagsResults", this, "showTagsResults");
 	}
 });

@@ -18,5 +18,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 		dojo.subscribe("Calendar.form.Submitted",this, "submitForm");
 		dojo.subscribe("Calendar.submitSearchForm", this, "submitSearchForm");
 		dojo.subscribe("Calendar.showSearchResults", this, "showSearchResults");
+		dojo.subscribe("Calendar.drawTagsBox", this, "drawTagsBox");
+		dojo.subscribe("Calendar.showTagsResults", this, "showTagsResults");
 	 }
 });

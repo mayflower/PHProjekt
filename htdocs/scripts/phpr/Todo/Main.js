@@ -19,5 +19,7 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
 		dojo.subscribe("Todo.form.Submitted",this, "submitForm");
         dojo.subscribe("Todo.submitSearchForm", this, "submitSearchForm");
 		dojo.subscribe("Todo.showSearchResults", this, "showSearchResults");
+        dojo.subscribe("Todo.drawTagsBox", this, "drawTagsBox");
+		dojo.subscribe("Todo.showTagsResults", this, "showTagsResults");
 	 }
 });

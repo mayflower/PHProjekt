@@ -18,6 +18,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     module:           null,
     availableModules: null,
     search:           null,
+    tags:             null,
 
     constructor:function(){
     },
@@ -41,7 +42,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var self = this;
         var firstModule = '';
         var usefirstModule = true;
-        phpr.destroyWidgets("centerMainContent");
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
@@ -70,6 +70,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
                 if (!this.search) {
                     this.search = new dojo.dnd.Moveable("searchsuggest");
+                }
+                if (!this.search) {
+                    this.tags = new dojo.dnd.Moveable("tagsbox");
                 }
                 this.setSearchForm();
                 var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/navId/'+phpr.currentProjectId;
@@ -119,6 +122,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             currentModule:phpr.module
         });
         this.search = new dojo.dnd.Moveable("searchsuggest");
+        this.tags = new dojo.dnd.Moveable("tagsbox");
 
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
@@ -140,7 +144,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        phpr.destroyWidgets("centerMainContent");
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
@@ -148,6 +151,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.setSubmoduleNavigation();
         if (!this.search) {
             this.search = new dojo.dnd.Moveable("searchsuggest");
+        }
+        if (!this.tags) {
+            this.tags = new dojo.dnd.Moveable("tagsbox");
         }
         this.setSearchForm();
         this.tree     = new this.treeWidget(this);
@@ -248,7 +254,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
             // hide the suggestBox
             dojo.byId("searchsuggest").style.display = 'none';
-            dojo.byId("searchsuggest").innerHTML = '';
+            dojo.byId("searchsuggest").innetHTML = '';
         } else if (
             (key != dojo.keys.TAB) &&
             (key != dojo.keys.CTRL) &&
@@ -345,7 +351,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    The server return the found records and the function display it
         dojo.byId("searchsuggest").style.display = 'none';
-        dojo.byId("searchsuggest").innerHTML = '';
+        dojo.byId("searchsuggest").innetHTML = '';
         this.publish("submitSearchForm", [words]);
         this.publish("openForm", [id, moduleName]);
     },
@@ -394,8 +400,110 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     });
                 });
                 search += "</ul>";
-                dojo.byId("gridBox").innerHTML = search;
+                dijit.byId("gridBox").setContent(search);
             })
         });
-    }
+    },
+
+    drawTagsBox: function(/*Array*/data) {
+        var value   = '';
+        var newline = false;
+        var size    = '';
+        for (var i = 0; i < data['data'].length; i++) {
+            if (((i % 5) == 0) && i != 0) {
+                newline = true;
+            } else {
+                newline = false;
+            }
+            if (data['data'][i]['count'] < 5) {
+                size = 10;
+            } else if (data['data'][i]['count'] < 10) {
+                size = 12;
+            } else if (data['data'][i]['count'] < 15) {
+                size = 14;
+            } else if (data['data'][i]['count'] < 20) {
+                size = 16;
+            } else if (data['data'][i]['count'] < 25) {
+                size = 18;
+            } else if (data['data'][i]['count'] < 30) {
+                size = 20;
+            } else if (data['data'][i]['count'] < 35) {
+                size = 22;
+            } else if (data['data'][i]['count'] < 40) {
+                size = 24;
+            } else if (data['data'][i]['count'] < 45) {
+                size = 26;
+            } else if (data['data'][i]['count'] < 50) {
+                size = 28;
+            } else if (data['data'][i]['count'] < 55) {
+                size = 30;
+            } else if (data['data'][i]['count'] < 60) {
+                size = 32;
+            } else if (data['data'][i]['count'] < 65) {
+                size = 33;
+            } else if (data['data'][i]['count'] < 70) {
+                size = 34;
+            } else if (data['data'][i]['count'] < 75) {
+                size = 36;
+            } else if (data['data'][i]['count'] < 80) {
+                size = 38;
+            } else if (data['data'][i]['count'] < 85) {
+                size = 40;
+            } else if (data['data'][i]['count'] < 90) {
+                size = 42;
+            } else {
+                size = 48;
+            }
+            value += this.render(["phpr.Default.template", "tag.html"], null, {
+                moduleName: phpr.module,
+                size: size,
+                newline: newline,
+                tag: data['data'][i]['string']
+            });
+        }
+        //value += '</ul>';
+        dojo.byId("tagsbox").innerHTML = value;
+    },
+
+    showTagsResults: function(/*String*/tag) {
+        // summary:
+        //    This function reload the grid place with the result of the tag search
+        // description:
+        //    The server return the found records and the function display it
+        var getDataUrl = phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
+        var self = this;
+
+        // Destroy form view
+        phpr.destroyWidgets("submitButton");
+        phpr.destroyWidgets("deleteButton");
+        phpr.destroyWidgets("bottomContent");
+        phpr.destroyWidgets("detailsBox");
+        phpr.destroyWidgets("detailForm");
+
+        // Destroy list view
+        phpr.destroyWidgets("buttonRow");
+        phpr.destroyWidgets("gridBox");
+        phpr.destroyWidgets("gridNode");
+        phpr.destroyWidgets("headerContext");
+        phpr.destroyWidgets("gridContext");
+
+        phpr.send({
+            url:       getDataUrl,
+            handleAs: "json",
+            onSuccess: dojo.hitch(this,function(data){
+                var search = '<ul>';
+                dojo.forEach(data,function(modulesData) {
+                    search += self.render(["phpr.Default.template", "search.html"], null, {
+                        id : modulesData.id,
+                        moduleId : modulesData.modulesId,
+                        moduleName: modulesData.moduleName,
+                        firstDisplay: modulesData.firstDisplay,
+                        secondDisplay: modulesData.secondDisplay
+                    });
+                });
+                search += "</ul>";
+                dijit.byId("gridBox").setContent(search);
+            })
+        });
+    },
 });
