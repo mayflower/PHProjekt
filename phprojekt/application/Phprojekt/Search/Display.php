@@ -67,12 +67,19 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
 
         $tmpResult = $this->fetchAll($where)->toArray();
 
-        $result = array('id'            => $itemId,
-                        'moduleId'      => $moduleId,
-                        'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                        'firstDisplay'  => $tmpResult[0]['firstDisplay'],
-                        'secondDisplay' => $tmpResult[0]['secondDisplay']);
-
+        if (isset($tmpResult[0])) {
+            $result = array('id'            => $itemId,
+                            'moduleId'      => $moduleId,
+                            'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
+                            'firstDisplay'  => $tmpResult[0]['firstDisplay'],
+                            'secondDisplay' => $tmpResult[0]['secondDisplay']);
+        } else {
+            $result = array('id'            => $itemId,
+                            'moduleId'      => $moduleId,
+                            'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
+                            'firstDisplay'  => '',
+                            'secondDisplay' => '');
+        }
         return $result;
     }
 

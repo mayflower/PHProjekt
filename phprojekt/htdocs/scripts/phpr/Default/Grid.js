@@ -36,6 +36,10 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
             store: this.gridStore
         });
         this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
+
+        // Draw the tags
+        phpr.receiveUserTags();
+        this.publish("drawTagsBox",[phpr.getUserTags()]);
     },
 
     onLoaded:function() {
@@ -81,9 +85,9 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.grid.widget.singleClickEdit = true;
 
         meta = this.grid.widget.model.store.metaData;
-        
+
         // if there is any row, render export Button
-        if (meya.length > 0) {
+        if (meta.length > 0) {
             var params = {
                 baseClass: "positive",
                 id: "exportGrid",
@@ -196,7 +200,7 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         this.publish("grid.CellEdit", [value, inRowIndex, inFieldIndex]);
         this.cellEdited(value, inRowIndex, inFieldIndex);
     },
-    
+
     onExport: function () {
         window.open(phpr.webpath+"index.php/"+phpr.module+"/index/csvList/nodeId/"+this.id);
         return false;

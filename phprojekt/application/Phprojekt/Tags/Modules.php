@@ -87,8 +87,8 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
 
         $modules = $this->fetchAll($where);
         foreach ($modules as $moduleData) {
-            $foundResults[] = array('id'     => $moduleData->itemId,
-                                    'module' => Phprojekt_Module::getModuleName($moduleData->moduleId));
+            $foundResults[] = array('itemId'     => $moduleData->itemId,
+                                    'moduleId'   => $moduleData->moduleId);
         }
 
         return $foundResults;
@@ -137,19 +137,5 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
             $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
             $clone->delete($where);
         }
-    }
-
-    /**
-     * Return the field definiton for tagsModule
-     *
-     * @return array
-     */
-    public function getFieldDefinition()
-    {
-        $translate = Zend_Registry::get('translate');
-        $fields = array();
-        $fields[] = array('key'   => 'module',
-                          'label' => $translate->translate('Module'));
-        return $fields;
     }
 }

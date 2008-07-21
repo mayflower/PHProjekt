@@ -68,11 +68,11 @@ class TagController extends IndexController
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
         $moduleId  = (int) Phprojekt_Module::getId($this->getRequest()->getModuleName());
 
-        if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
+        if (!empty($id)) {
+            $tags = $tagObj->getTagsByModule($moduleId, $id, $limit);
+        } else {
+            $tags = array();
         }
-
-        $tags   = $tagObj->getTagsByModule($moduleId, $id, $limit);
         $fields = $tagObj->getFieldDefinition();
 
         echo Phprojekt_Converter_Json::convert($tags, $fields);
@@ -96,9 +96,8 @@ class TagController extends IndexController
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
 
         $tags   = $tagObj->getModulesByTag($tag, $projectId, $limit);
-        $fields = $tagObj->getModuleFieldDefinition();
 
-        echo Phprojekt_Converter_Json::convert($tags, $fields);
+        echo Phprojekt_Converter_Json::convert($tags);
     }
 
     /**

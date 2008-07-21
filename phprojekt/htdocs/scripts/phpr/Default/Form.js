@@ -364,7 +364,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                    phpr.send({
                         url: phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonSaveTags/id/' + this.id,
                         content:   this.sendData,
-                        onSuccess: this.publish("reload")
+                        onSuccess: dojo.hitch(this, function(data){
+                            new phpr.handleResponse('serverFeedback',data);
+                            if (data.type =='success') {
+                                this.publish("reload");
+                            }
+                        }),
                     });
                }
             })
@@ -388,26 +393,28 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // This function manually receives the Tags for the current element
         // description:
         // By calling the TagController this function receives all data it needs
-        // for rendering a Tag from the server and renders those tags in a MultiSelectBox
+        // for rendering a Tag from the server and renders those tags in a Input separated by coma
+        // The function also render the tags in the moveable pannel for click it and search by tags
+        phpr.receiveCurrentTags(this.id);
 
-        //first of all update the User Tags
-        phpr.receiveUserTags();
+        var currentTags = phpr.getCurrentTags();
+        var meta        = currentTags["metadata"][0];
+        var data        = new Array();
+        var value       = '';
 
-        var tags          = phpr.getUserTags();
-        var meta          = tags["metadata"][0];
-        var data          = new Array();
-        var value         = '';
         if (this.id > 0) {
-            phpr.receiveCurrentTags(this.id);
-            var currentTags = phpr.getCurrentTags();
-            for (var i = 0; i < currentTags['data'].length; i++){
-                 value +=currentTags['data'][i]['string']+',';
+            for (var i = 0; i < currentTags['data'].length; i++) {
+                value += currentTags['data'][i]['string'];
+                if (i != currentTags['data'].length - 1) {
+                    value += ', ';
+                }
             }
         }
-        for (var i = 0; i < tags['data'].length; i++) {
-            data.push({"id":tags['data'][i]['string'],"name":tags['data'][i]['string']});
-        }
-        return this.fieldTemplate.multipleSelectRender(data ,meta['label'], meta['key'], value, false, false);
+
+        // Draw the tags
+        this.publish("drawTagsBox",[currentTags]);
+
+        return this.fieldTemplate.textFieldRender(meta['label'], meta['key'], value, false, false);
     },
 
     getHistoryData: function(items, request) {
@@ -418,7 +425,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    renders the actual form according to the received data
         var history = "";
 
-        this.historyData = "<table>";
+        this.historyData = '<tr><td class="label" colspan="2"><table>';
 
         history = this.historyStore.getValue(items[0], "history");
 
@@ -434,7 +441,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
             this.historyData += "<tr><td>" + historyDate + "</td><td>" + historyUser + "</td><td>" + historyField + "</td><td>" + historyOldValue;
         }
-        this.historyData += "</table>";
+        this.historyData += "</table></td></tr>";
     },
 
     getUserData: function(items, request) {

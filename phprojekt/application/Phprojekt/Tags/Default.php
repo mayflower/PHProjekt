@@ -58,6 +58,13 @@ class Phprojekt_Tags_Default
     protected $_tagsUsers = null;
 
     /**
+     * Class for return the display data of the items
+     *
+     * @var Phprojekt_Search_Display
+     */
+    protected $_display = null;
+
+    /**
      * Return this class only one time
      *
      * @return Phprojekt_Tags_Users
@@ -129,11 +136,8 @@ class Phprojekt_Tags_Default
                 $foundResults[$tagName] = 0;
             }
             $foundResults[$tagName] = $foundResults[$tagName] + count($modules);
-            
-        }
 
-        // Sort by the number of occureences
-        arsort($foundResults);
+        }
 
         // Return the $limit tags
         if ($limit > 0) {
@@ -166,6 +170,7 @@ class Phprojekt_Tags_Default
     public function getModulesByTag($tag, $projectId, $limit = 0)
     {
         $foundResults = array();
+        $results      = array();
 
         if (!empty($tag)) {
             // Find the tag
@@ -182,10 +187,15 @@ class Phprojekt_Tags_Default
                 if ($limit > 0) {
                     $foundResults = array_slice($foundResults, 0, $limit);
                 }
+
+                $display = new Phprojekt_Search_Display();
+                foreach ($foundResults as $result) {
+                    $results[] = $display->getDisplay($result['moduleId'], $result['itemId']);
+                }
             }
         }
 
-        return $foundResults;
+        return $results;
     }
 
     /**
@@ -329,12 +339,12 @@ class Phprojekt_Tags_Default
     private function _cleanupString($string)
     {
         // Clean up HTML
-        $string = preg_replace('#\W+#msiU', ' ', strtolower(strtr(strip_tags($string), 
+        $string = preg_replace('#\W+#msiU', ' ', strtolower(strtr(strip_tags($string),
                                array_flip(get_html_translation_table(HTML_ENTITIES)))));
         // Translate bad
-        $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i", 
+        $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i",
                          "'&(gt|#62);'i", "'&(nbsp|#160);'i",
-                         "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i", 
+                         "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i",
                          "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
                          "'&auml;'", "'&ouml;'", "'&uuml;'", "'&Auml;'", "'&Ouml;'",
                          "'&Uuml;'", "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
@@ -372,15 +382,5 @@ class Phprojekt_Tags_Default
         $fields[] = array('key'   => 'count',
                           'label' => $translate->translate('Count'));
         return $fields;
-    }
-
-    /**
-     * Return the field definiton for tagsModule
-     *
-     * @return array
-     */
-    public function getModuleFieldDefinition()
-    {
-        return $this->_tagsModules->getFieldDefinition();
     }
 }
