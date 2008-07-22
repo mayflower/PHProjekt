@@ -51,24 +51,28 @@
         		<!-- Exception Form -->
         		<div id="serverFeedback" class="prepend-24">
         		<?php
-        			if($this->message){
-        				echo '<div class="error">'.$this->message.'</div>';
-        			}
-        			if($this->errors){
-        				echo '<div class="error">'.$this->errors.'</div>';
-        			}
-        		?>
+                    if ($this->message) {
+                        echo '<div class="error">'.$this->message.'</div>';
+                    }
+                    if ($this->errors) {
+                        echo '<div class="error">'.$this->errors.'</div>';
+                    }
+                ?>
         		</div>
 			    <form method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
      				<table width="100%" align="center" class="form">
      				<col class="col1" />
     					<tr>
         					<td class="label"><label for="username">Username:</label></td>
-        					<td><input dojoType="dijit.form.TextBox" type="text" name="username" value="<?php echo $this->username; ?>" /></td>
+        					<td>
+        					    <input dojoType="dijit.form.TextBox" type="text" name="username" value="<?php echo $this->username; ?>" />
+        					</td>
     					</tr>
     					<tr>
         					<td class="label"><label for="password">Password:</label></td>
-        					<td><input dojoType="dijit.form.TextBox" type="password" name="password" value="" /></td>
+        					<td>
+        					    <input dojoType="dijit.form.TextBox" type="password" name="password" value="" />
+        					</td>
     					<tr>
     					<tr>
     						<td  class="label"><button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">

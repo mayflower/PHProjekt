@@ -343,11 +343,11 @@ class IndexController extends Zend_Controller_Action
         $itemId    = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
-            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
+            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, 0, 0);
         } else if (!empty($projectId)) {
-            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, $count, $offset);
+            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId, null, 0, 0);
         } else {
-            $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
+            $records = $this->getModelObject()->fetchAll(null, null, 0, 0);
         }
 
         Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
