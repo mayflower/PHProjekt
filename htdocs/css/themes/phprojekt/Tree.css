@@ -32,6 +32,7 @@
     width: 18px;
     height: 18px;
     margin-left: 19px;
+	cursor: pointer;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeContent {
@@ -59,6 +60,7 @@
 	background-color: #f1ce47;
 	border-bottom: 4px #f3f3f3 solid;
 	text-transform: uppercase;
+	cursor: pointer;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
@@ -94,6 +96,11 @@
     font-weight: normal;
     text-transform:none;
     text-decoration: none;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
+	
+	color: #4b4b4b;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
