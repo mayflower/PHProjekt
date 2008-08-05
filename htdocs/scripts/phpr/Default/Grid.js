@@ -1,90 +1,87 @@
 dojo.provide("phpr.Default.Grid");
 // Other classes, class specific
 dojo.require("phpr.grid");
-dojo.require("phpr._EditableGrid");
+//dojo.require("phpr._EditableGrid");
 
-dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
+dojo.require("dojox.grid.DataGrid");
+dojo.require("dojo.data.ItemFileWriteStore");
+
+dojo.declare("phpr.Default.Grid", phpr.Component, {
     // summary:
     //    Class for displaying a PHProjekt grid
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a dojo grid
-    gridLayout:[],
-    _node:null,
 
     constructor: function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
         //    render the grid on construction
         // description:
         //    this function receives the list data from the server and renders the corresponding grid
-        this._node  = dojo.byId("gridBox");
+        //this._node  = dojo.byId("gridBox");
         this.main   = main;
         this.id     = id;
 
         phpr.destroyWidgets("gridBox");
-        phpr.destroyWidgets("headerContext");
-        phpr.destroyWidgets("gridContext");
-        this.render(["phpr.Default.template", "grid.html"], this._node);
-        this.grid = {
-            widget:null,
-            model:null,
-            layout:null
-        };
 
         this.gridLayout = new Array();
-        this.gridStore  = new phpr.grid.ReadStore({url: phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/"+id});
-        this.grid.model = new phpr.grid.Model(null, null, {
-            store: this.gridStore
+        this.gridStore = new phpr.ReadStore({
+            url: phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/"+id
         });
-        this.grid.model.requestRows(null,null, dojo.hitch(this, "onLoaded"));
+        this.gridStore.fetch({onComplete: dojo.hitch(this, "onLoaded")});
 
         // Draw the tags
         phpr.receiveUserTags();
         this.publish("drawTagsBox",[phpr.getUserTags()]);
     },
 
-    onLoaded:function() {
+    onLoaded: function(dataContent, request) {
         // summary:
         //    This function is called when the grid is loaded
         // description:
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
 
-        this.grid.widget = dijit.byId("gridNode");
-
-        if (!this.grid.widget) {
-            return;
+        // Data of the grid
+        data = {
+            items: []
+        };
+        var content = this.gridStore.getValue(dataContent[1], "data") || Array();
+        for (var i = 0; i < content.length; i++) {
+            data.items.push(content[i]);
         }
+        var store = new dojo.data.ItemFileWriteStore({data: data});
 
         //first of all render save Button
-        var params = {
-            baseClass: "positive",
-            id: "saveChanges",
-            iconClass: "disk",
-            alt: "Save",
-            disabled: true
-        };
-        var saveButton = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(saveButton.domNode);
-        dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
+        //var params = {
+        //    baseClass: "positive",
+        //    id: "saveChanges",
+        //    iconClass: "disk",
+        //    alt: "Save",
+        //    disabled: true
+        //};
+        //var saveButton = new dijit.form.Button(params);
+        //dojo.byId("buttonRow").appendChild(saveButton.domNode);
+        //dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
 
-        dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
-        dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
+        //dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
+        //dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
 
         //gridHeaderContextMenu = dijit.byId("headerContext");
         //gridHeaderContextMenu.bindDomNode(this.grid.widget.domNode);
 
-        this.grid.widget.onCellContextMenu = function(e) {
-            cellNode = e.cellNode;
-        };
+        //this.grid.widget.onCellContextMenu = function(e) {
+        //    cellNode = e.cellNode;
+        //};
 
-        this.grid.widget.onHeaderContextMenu = function(e) {
-            cellNode = e.cellNode;
-        };
+        //this.grid.widget.onHeaderContextMenu = function(e) {
+        //    cellNode = e.cellNode;
+        //};
 
-        this.grid.widget.setModel(this.grid.model);
-        this.grid.widget.singleClickEdit = true;
+        //this.grid.widget.setModel(this.grid.model);
+        //this.grid.widget.singleClickEdit = true;
 
-        meta = this.grid.widget.model.store.metaData;
+        // Layout of the grus
+        var meta = this.gridStore.getValue(dataContent[0], "metadata") || Array();
 
         // if there is any row, render export Button
         if (meta.length > 0) {
@@ -101,65 +98,79 @@ dojo.declare("phpr.Default.Grid", [phpr.Component, phpr._EditableGrid], {
         }
 
         if (meta.length == 0) {
-            dojo.byId("gridNode").innerHTML = phpr.nls.noresults;
+            dijit.byId("gridBox").setContent(phpr.nls.noresults);
         } else {
+            var porcent = (100 / meta.length) + '%';
             this.gridLayout.push({
-                type: 'dojox.grid._RowSelector',
-                width: '30px'
+                name:   "ID",
+                field:  "id",
+                width:  porcent,
+                editable: false,
             });
-
             for (var i = 0; i < meta.length; i++) {
                 switch(meta[i]["type"]) {
                     case'selectbox':
                         var range = meta[i]["range"];
                         var opts  = new Array();
                         var vals  = new Array();
-                        var j=0;
+                        var j     = 0;
                         for (j in range){
                             vals.push(range[j]["id"]);
                             opts.push(range[j]["name"]);
                             j++;
                         }
                         this.gridLayout.push({
-                            name:    meta[i]["label"],
-                            field:   meta[i]["key"],
-                            styles:  "text-align:center;",
-                            width:   "auto",
-                            editor:  dojox.grid._data.editors.Select,
-                            options: opts,
-                            values:  vals
+                            name:     meta[i]["label"],
+                            field:    meta[i]["key"],
+                            styles:   "text-align:center;",
+                            type:     phpr.grid.cells.Select,
+                            width:  porcent,
+                            options:  opts,
+                            values:   vals
                         });
                         break;
 
                     case'date':
                         this.gridLayout.push({
-                            name:      meta[i]["label"],
-                            field:     meta[i]["key"],
-                            styles:    "text-align:center;",
-                            width:     "auto",
-                            formatter: phpr.grid.formatDate,
-                            editor:    dojox.grid._data.editors.DateTextBox
+                            width:      porcent,
+                            name:       meta[i]["label"],
+                            field:      meta[i]["key"],
+                            styles:     "text-align:center;",
+        					type:       phpr.grid.cells.DateTextBox,
+		          			formatter:  phpr.grid.formatDate,
+                            constraint: {formatLength: 'short', selector: "date"}
                         });
                         break;
 
                     default:
                         this.gridLayout.push({
+                            width:  porcent,
                             name:   meta[i]["label"],
                             field:  meta[i]["key"],
-                            styles: "text-align:left;",
-                            width:  "auto",
-                            editor: dojox.grid._data.editors.Input
+                            type: dojox.grid.cells.TextBox
                             });
                         break;
                 }
             }
 
-            var gridStructure = [{
-                    noscroll: true,
-                    cells: [this.gridLayout]
-                }];
+            this.grid = new dojox.grid.DataGrid({
+                id: "gridNode",
+                store: store,
+                structure: [{
+                            defaultCell: {
+                                editable: true,
+                                type: dojox.grid.cells._Widget,
+                                styles: 'text-align: left;'
+                            },
+                            rows: [this.gridLayout]
+                }]
+            }, document.createElement('div'));
 
-            this.grid.widget.setStructure(gridStructure);
+            // Edit on one click
+            this.grid.singleClickEdit = true;
+
+            dijit.byId("gridBox").setContent(this.grid.domNode);
+            this.grid.startup();
         }
     },
 

@@ -1,7 +1,6 @@
 dojo.provide("phpr.Default.field");
 dojo.require("phpr.Component");
 dojo.require("dijit.form.Textarea");
-dojo.require("dojox.widget.MultiComboBox");
 dojo.require("dijit.form.MultiSelect");
 dojo.declare("phpr.Default.field", phpr.Component, {
     // summary:
