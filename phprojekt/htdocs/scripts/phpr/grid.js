@@ -1,12 +1,14 @@
 dojo.provide("phpr.grid");
-dojo.provide("phpr.grid.Model");
-dojo.provide("phpr.grid.QueryReadStore");
+dojo.provide("phpr.grid.cells.Select");
 
-dojo.require("dojox.grid.Grid");
-dojo.require("dojox.grid._data.dijitEditors");
-dojo.require("dojox.grid._data.model"); // dojox.grid.data.DojoData is in there
-dojo.require("dojox.data.QueryReadStore");
-dojo.require("dojox.widget.MultiComboBox");
+dojo.require("dojox.grid.cells.dijit");
+//dojo.require("dojo.data.ItemFileWriteStore");
+
+//dojo.require("dojox.grid.Grid");
+//dojo.require("dojox.grid._data.dijitEditors");
+//dojo.require("dojox.grid._data.model"); // dojox.grid.data.DojoData is in there
+//dojo.require("dojox.data.QueryReadStore");
+//dojo.require("dojox.widget.MultiComboBox");
 
 phpr.grid.formatDateTime = function(date) {
     if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
@@ -17,145 +19,48 @@ phpr.grid.formatDateTime = function(date) {
     return dojo.date.locale.format(dateObj, {formatLength:'short', selector:'dateTime'});
 };
 
-phpr.grid.formatDate = function(date) {
-    if (!date || ! String(date).match(/\d{4}-\d{2}-\d{2}/)) {
-        return date;
+phpr.grid.formatDate = function(value) {
+    var date = '';
+    if (value) {
+        if (String(value).match(/\d{4}-\d{2}-\d{2}/)) {
+            var iso = String(value).replace(" ", "T"); // Make it a real date ISO string
+            var dateObj = dojo.date.stamp.fromISOString(iso);
+            date = dojo.date.locale.format(dateObj, this.constraint);
+        } else {
+            date = dojo.date.locale.format(new Date(value), this.constraint);
+        }
+        date = String(date).replace(" 00:00", "");
     }
-    var iso = String(date).replace(" ", "T"); // Make it a real date ISO string
-    var dateObj = dojo.date.stamp.fromISOString(iso);
-    return dojo.date.locale.format(dateObj, {formatLength:'medium', selector:'date'});
+    return date;
 };
 
-phpr.grid.updateRows = function(gridWidget, rowNumbers) {
+dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     // summary:
-    //    Updates the given rowNumbers in the given grid.
+    //    Redefine the function for return the correct value
     // description:
-    //    To do so, it requests the data for these rows from the server and
-    //    triggers the update of the visual grid row.
-    //    It would be great if there was an integrated way for this in the grid
-    //    model, but I didnt find it.
-    //
-    var model = gridWidget.model;
-    var ids = [];
-    for (var i=0, l=rowNumbers.length; i<l; i++) {
-        ids.push(model.data[rowNumbers[i]].id);
-    }
-    var params = {
-        query:{ids:ids},
-        onComplete:dojo.hitch(this, function(items, req) {
-            for (var i=0, l=items.length; i<l; i++) {
-                var item = items[i];
-                var id = req.store.getIdentity(item);
-                var rowNum = model.getRowByIdentity(id); // Make sure we get the right row number by using the ID!
-                model.setRow(item, rowNum);
-                gridWidget.updateRow(rowNum);
-            }
-        }),
-        onError: function(response, ioArgs) {
-            new phpr.handleResponse('serverFeedback',response);
+    //    Redefine the function for return the correct value
+	format: function(inRowIndex, inItem) {
+        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+            return this.formatEditing(d, inRowIndex);
+        } else {
+            return this.options[d-1];
         }
-    };
-    model.store.fetch(params);
-};
-
-dojo.declare("phpr.grid.Model", dojox.grid._data.DojoData, {
-    // Thanks to Maine for the kick start: http://dojotoolkit.org/book/dojo-book-0-9-1-0/part-2-dijit-dojo-widget-library/advanced-editing-and-display/grid-1-0/sortin#comment-9112
-
-    // The number of items to load per request.
-    // This is also the number of items (rows) initially shown.
-    rowsPerPage:20,
-    query:{name:"*"},
-    clientSort:false,
-    metaData:null,
-    _numRows:0,
-    getRowCount:function() {
-        return this._numRows;
-    },
-
-    requestRows:function(inRowIndex, inCount, onComplete) {
-        // creates serverQuery-parameter
-        var row  = inRowIndex || 0;
-        var params = {
-            start: row,
-            count: inCount || this.rowsPerPage,
-            serverQuery: dojo.mixin(
-              { start: row,
-                count: inCount || this.rowsPerPage,
-                sort:(this._sortColumn || '')
-              },
-              this.query
-            ),
-            query: this.query,
-            // onBegin:     dojo.hitch(this, "beginReturn"),
-            // onComplete:  dojo.hitch(this, "processRows"),
-            onComplete: dojo.hitch(this, function(items, request) {
-                if (dojo.isFunction(onComplete)) {
-                    onComplete();
-                }
-                this.processRows(items, request);
-            }),
-            onBegin:dojo.hitch(this, function(numRows) {
-                this._numRows = numRows;
-            }),
-            onError: function(response, ioArgs) {
-                new phpr.handleResponse('serverFeedback',response);
-            }
-        }
-        this.store.fetch(params);
-    },
-
-    canSort:function() {
-        return true;
-    },
-
-    sort:function(colIndex) {
-        // clears old data to force loading of new, then requests new rows
-        var name = this.fields.get(Math.abs(colIndex)-1).name;
-        if (name) {
-            this._sortColumn = (colIndex<0?'-':'')+name;
-            // This clears the data and triggers the reload too.
-            this.clearData();
-        }
-    },
-
-    setData: function(inData){
-        // edited not to reset the store
-        this.data = [];
-        this.allChange();
-    }
+	},
 });
 
-dojo.declare("phpr.grid.ReadStore", dojox.data.QueryReadStore, {
-    // We need the store explicitly here, since we have to pass it to the grid model.
-    requestMethod:"post",
-    doClientPaging:false,
 
-    _filterResponse: function(data){
-        this.metaData=data.metadata;
-        // We need to pre-process the data before passing them to the QueryReadStore,
-        // since the data structure sent form the server does not comply to what
-        // the QueryReadStore expects, we just need to extract the data-key.
-        ret = {
-            numRows:data.numRows,
-            items:data.data
-        };
-        return ret;
-    }
-});
-
-dojo.declare("phpr.grid._data.editors.MultiComboBox", dojox.grid._data.editors.Dijit, {
-    editorClass: "dojox.widget.MultiComboBox",
-    getEditorProps: function(inDatum){
-        var store = new dojo.data.ItemFileReadStore({data: {identifier:"id", items: this.cell.options}});
-        return dojo.mixin({}, this.cell.editorProps||{}, {
-            value: inDatum,
-            store: store
-        });
-    },
-    getValue: function(){
-        var e = this.editor;
-        // make sure to apply the displayed value
-        e.setDisplayedValue(e.getDisplayedValue());
-        return e.getValue();
-    }
+dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
+    // summary:
+    //    Redefine the function for return the correct value
+    // description:
+    //    Redefine the function for return the correct value
+	format: function(inRowIndex, inItem) {
+        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+            return this.formatEditing(d, inRowIndex);
+        } else {
+            return phpr.grid.formatDate(d);
+        }
+	},
 });
