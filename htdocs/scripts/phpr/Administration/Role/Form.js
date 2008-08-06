@@ -96,9 +96,13 @@ dojo.declare("phpr.Administration.Role.Form", phpr.Administration.Default.Form, 
         });
 
 		// later on we need to provide different tabs depending on the metadata
-		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'Basic Data'});
+		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{
+		    innerTabs: this.formdata,
+		    id:        'tab1',
+		    title:     'Basic Data',
+            formId:    'dataFormTab'
+		});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
-            formId: 'detailForm' + this.id,
             id: 'formtab',
             tabsContent: formtabs
         });
@@ -108,7 +112,7 @@ dojo.declare("phpr.Administration.Role.Form", phpr.Administration.Default.Form, 
             saveText: phpr.nls.save,
             deleteText: phpr.nls.delete,
         });
-		this.formWidget = dijit.byId('detailForm'+this.id);
+		this.formsWidget = dijit.byId('dataFormTab');
 
         // action buttons for the form
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));

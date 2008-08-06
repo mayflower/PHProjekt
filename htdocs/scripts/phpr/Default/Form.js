@@ -9,7 +9,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
-    formWidget:  null,
     range:       new Array(),
     sendData:    new Array(),
     formdata:    '',
@@ -175,13 +174,28 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
 
         // later on we need to provide different tabs depending on the metadata
-        formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'Basic Data'});
+        formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{
+            innerTabs: this.formdata,
+            id:        'tab1',
+            title:     'Basic Data',
+            formId:    'dataFormTab'
+        });
         if (accessPermissions) {
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.accessData,id:'tab2',title:'Access'});
+            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
+                innerTabs: this.accessData,
+                id:        'tab2',
+                title:     'Access',
+                formId:    'accessFormTab'
+            });
         }
-        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.historyData,id:'tab3',title:'History'});
+        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
+            innerTabs: this.historyData,
+            id:        'tab3',
+            title:     'History',
+            formId:    'historyFormTab'
+        });
+
         this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
-            formId: 'detailForm' + this.id,
             id: 'formtab',
             tabsContent: formtabs
         });
@@ -191,7 +205,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             saveText: phpr.nls.save,
             deleteText: phpr.nls.delete,
         });
-        this.formWidget = dijit.byId('detailForm'+this.id);
+
+        this.formsWidget = Array();
+        this.formsWidget.push(dijit.byId('dataFormTab'));
+        this.formsWidget.push(dijit.byId('accessFormTab'));
 
         if (accessPermissions) {
             // add button for access
@@ -351,7 +368,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    This function sends the form data as json data to the server and publishes
         //    a form.Submitted topic after the data was send.
-        this.sendData = this.formWidget.getValues();
+        for(var i = 0; i < this.formsWidget.length; i++) {
+            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].getValues());
+        }
+
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
             content:   this.sendData,
@@ -381,7 +401,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function is responsible for deleting a dojo element
         // description:
         //    This function calls jsonDeleteAction
-        this.sendData = this.formWidget.getValues();
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
             onSuccess: this.publish("reload")

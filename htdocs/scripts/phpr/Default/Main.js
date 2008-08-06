@@ -376,7 +376,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("deleteButton");
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("detailsBox");
-        phpr.destroyWidgets("detailForm");
 
         // Destroy list view
         phpr.destroyWidgets("buttonRow");
@@ -478,7 +477,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("deleteButton");
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("detailsBox");
-        phpr.destroyWidgets("detailForm");
 
         // Destroy list view
         phpr.destroyWidgets("buttonRow");
