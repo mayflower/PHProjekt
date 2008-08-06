@@ -177,15 +177,39 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
         }
         // later on we need to provide different tabs depending on the metadata
-        formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'Basic Data'});
+        formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{
+            innerTabs: this.formdata,
+            id:        'tab1',
+            title:     'Basic Data',
+            formId:    'dataFormTab'
+        });
         if (accessPermissions) {
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.accessData,id:'tab2',title:'Access'});
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.rolesData,id:'tab3',title:'Roles'});
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.modulesData,id:'tab4',title:'Modules'});
+            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
+                innerTabs: this.accessData,
+                id:        'tab2',
+                title:     'Access',
+                formId:    'accessFormTab'
+            });
+            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
+                innerTabs: this.rolesData,
+                id:        'tab3',
+                title:     'Roles',
+                formId:    'roleFormTab'
+            });
+            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
+                innerTabs: this.modulesData,
+                id:        'tab4',
+                title:     'Modules',
+                formId:    'moduleFormTab'
+            });
         }
-        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.historyData,id:'tab5',title:'History'});
+        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
+            innerTabs: this.historyData,
+            id:       'tab5',
+            title:    'History',
+            formId:   'historyFormTab'
+        });
         this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
-            formId: 'detailForm' + this.id,
             id: 'formtab',
             tabsContent: formtabs
         });
@@ -195,7 +219,12 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             saveText: phpr.nls.save,
             deleteText: phpr.nls.delete,
         });
-        this.formWidget = dijit.byId('detailForm'+this.id);
+
+        this.formsWidget = Array();
+        this.formsWidget.push(dijit.byId('dataFormTab'));
+        this.formsWidget.push(dijit.byId('accessFormTab'));
+        this.formsWidget.push(dijit.byId('roleFormTab'));
+        this.formsWidget.push(dijit.byId('moduleFormTab'));
 
         if (accessPermissions) {
             // add button for access

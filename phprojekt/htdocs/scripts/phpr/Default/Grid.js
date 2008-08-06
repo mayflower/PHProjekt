@@ -78,7 +78,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //};
 
         //this.grid.widget.setModel(this.grid.model);
-        //this.grid.widget.singleClickEdit = true;
 
         // Layout of the grus
         var meta = this.gridStore.getValue(dataContent[0], "metadata") || Array();

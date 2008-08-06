@@ -78,9 +78,13 @@ dojo.declare("phpr.Administration.Default.Form", phpr.Default.Form, {
 
 		formtabs = "";
 		// later on we need to provide different tabs depending on the metadata
-		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{innerTabs:this.formdata,id:'tab1',title:'Basic Data'});
+		formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{
+		    innerTabs: this.formdata,
+		    id:        'tab1',
+		    title:     'Basic Data',
+            formId:    'dataFormTab'
+		});
 		this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
-            formId: 'detailForm' + this.id,
             id: 'formtab',
             tabsContent: formtabs
         });
@@ -90,7 +94,7 @@ dojo.declare("phpr.Administration.Default.Form", phpr.Default.Form, {
             saveText: phpr.nls.save,
             deleteText: phpr.nls.delete,
         });
-		this.formWidget = dijit.byId('detailForm'+this.id);
+		this.formsWidget = dijit.byId('dataFormTab');
 
         // action buttons for the form
 		dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
@@ -103,7 +107,9 @@ dojo.declare("phpr.Administration.Default.Form", phpr.Default.Form, {
         // description:
         //    This function sends the form data as json data to the server and publishes
         //    a form.Submitted topic after the data was send.
-		this.sendData = this.formWidget.getValues();
+        for(var i = 0; i < this.formsWidget.length; i++) {
+            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].getValues());
+        }
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
 			content:   this.sendData,
