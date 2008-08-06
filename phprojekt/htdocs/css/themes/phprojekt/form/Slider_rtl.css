@@ -1,0 +1,36 @@
+
+/* Slider */
+
+.dijitRtl .phprojekt .dijitSliderProgressBarH,
+.dijitRtl .phprojekt .dijitSliderRemainingBarH,
+.dijitRtl .phprojekt .dijitSliderLeftBumper,
+.dijitRtl .phprojekt .dijitSliderRightBumper,
+.dijitRtl .phprojekt .dijitSliderTopBumper {
+	background-position: top right;
+}
+
+.dijitRtl .phprojekt .dijitSliderProgressBarV,
+.dijitRtl .phprojekt .dijitSliderRemainingBarV,
+.dijitRtl .phprojekt .dijitSliderBottomBumper {
+	background-position: bottom right;
+}
+
+.dijitRtl .phprojekt .dijitSliderLeftBumper {
+	border-left-width: 0px;
+	border-right-width: 1px;
+}
+
+.dijitRtl .phprojekt .dijitSliderRightBumper {
+	border-left-width: 1px;
+	border-right-width: 0px;
+}
+
+.dijitRtl .phprojekt .dijitSliderIncrementIconH {
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat left top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat left top;
+}
+
+.dijitRtl .phprojekt .dijitSliderDecrementIconH {
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -30px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -30px top;
+}
