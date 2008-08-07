@@ -18,6 +18,7 @@
 
 	// Grid
 	"noresults": "Das ist keine Ergebnisse",
+    "gridCantEdit": "Sie haben keine Berechtigung auf dieses Item zuzugreifen",
 
 	// Timecard
 	"timecardQuickAccess": "Schneller Zugang",

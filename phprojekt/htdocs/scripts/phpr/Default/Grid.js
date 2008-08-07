@@ -12,7 +12,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a dojo grid
 
-    constructor: function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
+    constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
         //    render the grid on construction
         // description:
@@ -22,6 +22,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.id            = id;
         this.updateUrl     = updateUrl;
         this._newRowValues = {};
+        this._oldRowValues = {};
+        this.gridData      = {};
 
         phpr.destroyWidgets("gridBox");
 
@@ -36,7 +38,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.publish("drawTagsBox",[phpr.getUserTags()]);
     },
 
-    onLoaded: function(dataContent, request) {
+    onLoaded:function(dataContent, request) {
         // summary:
         //    This function is called when the grid is loaded
         // description:
@@ -44,14 +46,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    and renders the filter for the grid
 
         // Data of the grid
-        data = {
+        this.gridData = {
             items: []
         };
         var content = this.gridStore.getValue(dataContent[1], "data") || Array();
         for (var i = 0; i < content.length; i++) {
-            data.items.push(content[i]);
+            this.gridData.items.push(content[i]);
         }
-        var store = new dojo.data.ItemFileWriteStore({data: data});
+        store = new dojo.data.ItemFileWriteStore({data: this.gridData});
 
         //first of all render save Button
         var params = {
@@ -160,10 +162,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
             dojo.connect(this.grid,"onCellClick",dojo.hitch(this,"showForm"));
             dojo.connect(this.grid,"onApplyCellEdit",dojo.hitch(this,"cellEdited"));
+            dojo.connect(this.grid,"onStartEdit",dojo.hitch(this,"checkCanEdit"));
         }
     },
 
-    onSubmitFilter: function() {
+    onSubmitFilter:function() {
         // summary: This function reloads the grid after submitting filters
         var vals   = {};
         var values = this._filterForm.getValues();
@@ -179,7 +182,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }));
     },
 
-    showForm: function(e) {
+    showForm:function(e) {
         // summary:
         //    This function publishes a "openForm" Topic
         // description:
@@ -191,16 +194,48 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
     },
 
-    cellEdited: function(inValue, inRowIndex, inFieldIndex) {
+    checkCanEdit:function(inCell, inRowIndex) {
+        // summary:
+        //    Check the access of the item for the user
+        // description:
+        //    If the user can´t edit the item keep the current value for restor it later
+        //    We can´t stop the edition, but we can restore the value
+        var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
+        var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
+        if (!this._oldRowValues[inRowIndex]) {
+            this._oldRowValues[inRowIndex] = {};
+        }
+        // Keep the old value if the user can´t edit
+        if (writePermissions == 'false' && adminPermissions == 'false') {
+            var item = this.grid.getItem(inRowIndex);
+            var value = this.grid.store.getValue(item, inCell.field);
+            this._oldRowValues[inRowIndex][inCell.field] = value;
+        }
+    },
+
+    cellEdited:function(inValue, inRowIndex, inFieldIndex) {
         // summary:
         //    Save the changed values for store
         // description:
         //    Save only the items that was changed, for save it later
+        //    If the user can´t edit the item, restore the last value
+        var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
+        var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
         if (!this._newRowValues[inRowIndex]) {
             this._newRowValues[inRowIndex] = {};
         }
-        this._newRowValues[inRowIndex][inFieldIndex] = inValue;
-        this.toggleSaveButton();
+        if (writePermissions == 'false' && adminPermissions == 'false') {
+            var item  = this.grid.getItem(inRowIndex);
+            var value = this._oldRowValues[inRowIndex][inFieldIndex];
+            this.grid.store.setValue(item,inFieldIndex,value);
+            var result = Array();
+            result.type = 'error';
+            result.message = phpr.nls.gridCantEdit;
+            new phpr.handleResponse('serverFeedback',result);
+        } else {
+            this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+            this.toggleSaveButton();
+        }
     },
 
     toggleSaveButton:function() {
@@ -241,11 +276,12 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             handleAs: "json",
             load: dojo.hitch(this, function(response, ioArgs) {
                 this._newRowValues = {};
+                this._oldRowValues = {};
                 new phpr.handleResponse('serverFeedback',response);
                 return response;
                 this.publish("reload");
             }),
-            error: function(response, ioArgs) {
+            error:function(response, ioArgs) {
                 new phpr.handleResponse('serverFeedback',response);
             }
         });
