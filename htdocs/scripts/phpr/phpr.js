@@ -136,7 +136,7 @@ phpr.getCurrent = function(data, identifier, value){
 
 phpr.receiveUserTags = function(){
     phpr.send({
-		url:       phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetTags',
+		url:       phpr.webpath + 'index.php/Default/Tag/jsonGetTags',
         sync:      true,
 		onSuccess: function(data){
              phpr.userTags = data;
@@ -147,7 +147,7 @@ phpr.receiveUserTags = function(){
 
 phpr.receiveCurrentTags = function(id){
     phpr.send({
-		url:       phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetTagsByModule/id/'+id,
+		url:       phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/module/' + phpr.module + '/id/'+id,
         sync:      true,
 		onSuccess: function(data){
              phpr.currentTags = data;

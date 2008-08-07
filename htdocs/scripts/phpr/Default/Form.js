@@ -382,7 +382,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                }
                if (data.type =='success') {
                    phpr.send({
-                        url: phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonSaveTags/id/' + this.id,
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/module/' + phpr.module + '/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data){
                             new phpr.handleResponse('serverFeedback',data);

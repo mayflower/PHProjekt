@@ -55,8 +55,9 @@ class TagController extends IndexController
      * Get an array with tags for the $module and $id
      * order by number of ocurrences
      *
-     * @requestparam integer $id    Item id
-     * @requestparam integer $limit Limit the number of tags for return
+     * @requestparam integer $id     Item id
+     * @requestparam integer $limit  Limit the number of tags for return
+     * @requestparam string  $module Module name
      *
      * @return void
      */
@@ -66,7 +67,8 @@ class TagController extends IndexController
 
         $id        = (int) $this->getRequest()->getParam('id', 0);
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
-        $moduleId  = (int) Phprojekt_Module::getId($this->getRequest()->getModuleName());
+        $module    = (int) $this->getRequest()->getParam('module', 'Project');
+        $moduleId  = (int) Phprojekt_Module::getId($module);
 
         if (!empty($id)) {
             $tags = $tagObj->getTagsByModule($moduleId, $id, $limit);
@@ -103,8 +105,9 @@ class TagController extends IndexController
     /**
      * Saves the tags for the current item
      *
-     * @requestparam integer $id        Item id
-     * @requestparam string  $string    All the tags separated by space
+     * @requestparam integer $id      Item id
+     * @requestparam string  $string  All the tags separated by space
+     * @requestparam string  $module  Module name
      *
      * @return void
      */
@@ -118,8 +121,9 @@ class TagController extends IndexController
         if (empty($id)) {
             throw new Phprojekt_PublishedException('ID parameter required');
         }
+        $module    = (int) $this->getRequest()->getParam('module', 'Project');
+        $moduleId  = (int) Phprojekt_Module::getId($module);
 
-        $moduleId = Phprojekt_Module::getId($this->getRequest()->getModuleName());
         $tagObj->saveTags($moduleId, $id, $string);
 
         $translate = Zend_Registry::get('translate');
