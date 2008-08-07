@@ -137,7 +137,7 @@ class Phprojekt_Converter_Json
                     } else {
                         $data[$key] = (string) $value;
                     }
-                    $data['rights'] = $model->getRights();
+                    $data['rights'] = $cmodel->getRights();
                 }
                 $datas[] = $data;
             }

@@ -18,6 +18,7 @@
 
 	// Grid
 	"noresults": "The are no results",
+	"gridCantEdit": "You do not have access for edit this item",
 
 	// Timecard
 	"timecardQuickAccess": "Quick Access",

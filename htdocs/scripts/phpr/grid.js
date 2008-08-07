@@ -2,13 +2,6 @@ dojo.provide("phpr.grid");
 dojo.provide("phpr.grid.cells.Select");
 
 dojo.require("dojox.grid.cells.dijit");
-//dojo.require("dojo.data.ItemFileWriteStore");
-
-//dojo.require("dojox.grid.Grid");
-//dojo.require("dojox.grid._data.dijitEditors");
-//dojo.require("dojox.grid._data.model"); // dojox.grid.data.DojoData is in there
-//dojo.require("dojox.data.QueryReadStore");
-//dojo.require("dojox.widget.MultiComboBox");
 
 phpr.grid.formatDateTime = function(date) {
     if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {

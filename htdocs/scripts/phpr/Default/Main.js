@@ -20,15 +20,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     search:           null,
     tags:             null,
 
-    constructor:function(){
+    constructor:function() {
     },
 
-    openForm: function(/*int*/id, /*String*/module){
+    openForm:function(/*int*/id, /*String*/module) {
         //summary: this function opens a new Detail View
         this.form = new this.formWidget(this,id,module);
     },
 
-    loadSubElements: function(project) {
+    loadSubElements:function(project) {
         // summary:
         //    this function loads a new project with the default submodule
         // description:
@@ -82,7 +82,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
       	});
     },
 
-    submitForm: function(/*int*/id,/*int*/parent){
+    submitForm:function(/*int*/id,/*int*/parent) {
         // summary:
         //    after a Form has been submitted the view is updated
         // description:
@@ -93,7 +93,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.grid     = new this.gridWidget(updateUrl,this,parent);
     },
 
-    load:function(){
+    load:function() {
         // summary:
         //    This function initially renders the page
         // description:
@@ -161,7 +161,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
-    setSubmoduleNavigation: function() {
+    setSubmoduleNavigation:function() {
         // summary:
         //    This function is responsible for displaying the Navigation of the current Module
         // description:
@@ -177,7 +177,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         });
     },
 
-    drawSubmoduleNavigation: function(data) {
+    drawSubmoduleNavigation:function(data) {
         // summary:
         //    This function is responsible for displaying the Navigation of the current Module
         // description:
@@ -229,20 +229,20 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
     },
 
-    newEntry: function(){
+    newEntry:function() {
         // summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
         this.publish("openForm", [null]);
     },
 
-    setSearchForm : function(){
+    setSearchForm:function() {
         // summary:
         //    Add the onkeyup to the search field
         dojo.connect(dojo.byId("searchfield"), "onkeyup", dojo.hitch(this, "waitForSubmitSearchForm"));
     },
 
-    waitForSubmitSearchForm: function(event) {
+    waitForSubmitSearchForm:function(event) {
         // summary:
         //    This function call the search itself After 1000ms of the last letter
         // description:
@@ -307,7 +307,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
     },
 
-    showSearchSuggest: function (){
+    showSearchSuggest:function () {
         // summary:
         //    This function show a box with suggest or quick result of the search
         // description:
@@ -344,7 +344,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
     },
 
-    showSearchResults: function(/*int*/id, /*String*/moduleName, /*String*/words){
+    showSearchResults:function(/*int*/id, /*String*/moduleName, /*String*/words) {
         // summary:
         //    This function reload the grid place with a search template
         //    And show the detail view of the item selected
@@ -356,7 +356,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.publish("openForm", [id, moduleName]);
     },
 
-    submitSearchForm: function(/*String*/words){
+    submitSearchForm:function(/*String*/words) {
         // summary:
         //    This function reload the grid place with a search template
         // description:
@@ -404,7 +404,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         });
     },
 
-    drawTagsBox: function(/*Array*/data) {
+    drawTagsBox:function(/*Array*/data) {
         var value   = '';
         var newline = false;
         var size    = '';
@@ -464,7 +464,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.byId("tagsbox").innerHTML = value;
     },
 
-    showTagsResults: function(/*String*/tag) {
+    showTagsResults:function(/*String*/tag) {
         // summary:
         //    This function reload the grid place with the result of the tag search
         // description:
