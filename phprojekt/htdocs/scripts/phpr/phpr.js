@@ -147,7 +147,7 @@ phpr.receiveUserTags = function(){
 
 phpr.receiveCurrentTags = function(id){
     phpr.send({
-		url:       phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/module/' + phpr.module + '/id/'+id,
+		url:       phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/'+id,
         sync:      true,
 		onSuccess: function(data){
              phpr.currentTags = data;
