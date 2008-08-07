@@ -17,7 +17,7 @@
 	background-color:  #e9e9e9;
 }
 
-.phprojekt .dojoxGridHeader .dojoxGridCell { 
+.phprojekt .dojoxGridHeader .dojoxGridCell {
 	border-width: 1px;
 	padding-bottom: 0px;
 	border-color: transparent #ACA899 #919191 transparent;
@@ -60,7 +60,7 @@
 
 /* rowbar */
 
-.phprojekt .dojoxGridRowbar { 
+.phprojekt .dojoxGridRowbar {
 	border: none;
 	background: url(../../../dijit/themes/phprojekt/images/titleBar.png) #e9e9e9 repeat-y right;
 	border-right: 1px solid #cccccc;
@@ -94,8 +94,7 @@
 }
 
 .phprojekt .dojoxGridRowOver .dojoxGridCell {
-	background-color: #60a1ea; 
-	color:#fff;
+	background-color: #60a1ea;
 }
 
 .phprojekt .dojoxGridRowOdd {
@@ -141,7 +140,7 @@
 /* FIXME: these colors are off! */
 .phprojekt .dojoxGridRowEditing td {
 	/* background-color: #F4FFF4; */
-	background-color: #60a1ea; 
+	background-color: #60a1ea;
 	/* padding: 0px 3px 0px 3px; */
 }
 

@@ -2,14 +2,14 @@
 /**
  * User class for PHProjekt 6.0
  *
- * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   CVS: $Id$
- * @author    Eduardo Polidor <polidor@mayflower.de>
- * @package   PHProjekt
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
+ * @version    CVS: $Id$
+ * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 1.0
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
  */
 
 /**
@@ -17,7 +17,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
- * @license   http://www.phprojekt.com/license PHProjekt6 License
+ * @license    http://www.phprojekt.com/license PHProjekt6 License
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -77,7 +77,7 @@ class Phprojekt_Auth extends Zend_Auth
             }
         }
         catch (Exception $e) {
-            throw new Phprojekt_Auth_Exception('Invalid user or password ' . $e->getCode(), 3);
+            throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
 
         /* if the user was found we will save the user information on the session */
@@ -87,22 +87,22 @@ class Phprojekt_Auth extends Zend_Auth
         /* please, put any extra info of user to be saved on session here */
         return true;
     }
-    
+
     /**
      * Gets from auth namespace the user id logged in
      *
      * @return integet user ID or false if there isn't user logged
      */
     public function getUserId() {
-        
+
         $returnValue = false;
-        
+
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        
+
         if (isset($authNamespace->userId)) {
             $returnValue = $authNamespace->userId;
         }
-        
+
         return $returnValue;
     }
 

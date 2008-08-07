@@ -20,23 +20,22 @@
 		dojo.require("dijit.layout.ContentPane");
 	</script>
 </head>
-	<body class="phprojekt">
-    	<div dojoType="dijit.layout.BorderContainer" id="completeContent">
-    		<div id="header" region="top" class="block" style="height:55px;" >
-    		    <img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
-			</div>
-
-			<!-- Border Container which splits page in navigation and form/list view: -->
-			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
-			<!-- navigation panel -->
-    		<div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
-    			<div id="subheader" class="block">
- 	    			<div id="navigation-container-titel">
+<body class="phprojekt">
+    <div dojoType="dijit.layout.BorderContainer" id="completeContent">
+        <div id="header" region="top" class="block" style="height:55px;" >
+            <img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
+        </div>
+        <!-- Border Container which splits page in navigation and form/list view: -->
+        <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
+        <!-- navigation panel -->
+            <div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
+                <div id="subheader" class="block">
+                    <div id="navigation-container-titel">
         			</div>
 				</div>
      		</div>
-   			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent" >
-    		<!-- Submodule navigation: -->
+   			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%; background-color:#FFFFFF" id="centerContent" >
+                <!-- Submodule navigation: -->
     			<div class="block">
         			<div class="column">
         				<img src="<?php echo $this->webpath; ?>img/subheaderborder.png" alt="" />
@@ -82,11 +81,9 @@
     						<td></td>
     					</tr>
     				</table>
-
     			</form>
          	</div>
 		</div>
-		</div>
-
-	</body>
+    </div>
+</body>
 </html>

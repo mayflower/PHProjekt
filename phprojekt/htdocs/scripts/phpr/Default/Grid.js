@@ -18,8 +18,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    this function receives the list data from the server and renders the corresponding grid
         //this._node  = dojo.byId("gridBox");
-        this.main   = main;
-        this.id     = id;
+        this.main          = main;
+        this.id            = id;
+        this.updateUrl     = updateUrl;
+        this._newRowValues = {};
 
         phpr.destroyWidgets("gridBox");
 
@@ -52,32 +54,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var store = new dojo.data.ItemFileWriteStore({data: data});
 
         //first of all render save Button
-        //var params = {
-        //    baseClass: "positive",
-        //    id: "saveChanges",
-        //    iconClass: "disk",
-        //    alt: "Save",
-        //    disabled: true
-        //};
-        //var saveButton = new dijit.form.Button(params);
-        //dojo.byId("buttonRow").appendChild(saveButton.domNode);
-        //dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
-
-        //dojo.connect(this.grid.widget,          "onRowDblClick",   dojo.hitch(this, "onRowClick"));
-        //dojo.connect(this.grid.widget,          "onApplyCellEdit", dojo.hitch(this, "onCellEdit"));
-
-        //gridHeaderContextMenu = dijit.byId("headerContext");
-        //gridHeaderContextMenu.bindDomNode(this.grid.widget.domNode);
-
-        //this.grid.widget.onCellContextMenu = function(e) {
-        //    cellNode = e.cellNode;
-        //};
-
-        //this.grid.widget.onHeaderContextMenu = function(e) {
-        //    cellNode = e.cellNode;
-        //};
-
-        //this.grid.widget.setModel(this.grid.model);
+        var params = {
+            baseClass: "positive",
+            id: "saveChanges",
+            iconClass: "disk",
+            alt: "Save",
+            disabled: true
+        };
+        var saveButton = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(saveButton.domNode);
+        dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
 
         // Layout of the grus
         var meta = this.gridStore.getValue(dataContent[0], "metadata") || Array();
@@ -93,7 +79,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             };
             var exportButton = new dijit.form.Button(params);
             dojo.byId("buttonRow").appendChild(exportButton.domNode);
-            dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "onExport"));
+            dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "export"));
         }
 
         if (meta.length == 0) {
@@ -101,10 +87,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         } else {
             var porcent = (100 / meta.length) + '%';
             this.gridLayout.push({
-                name:   "ID",
-                field:  "id",
-                width:  porcent,
+                name:     "ID",
+                field:    "id",
+                width:    porcent,
                 editable: false,
+                styles:   "text-decoration:underline;"
             });
             for (var i = 0; i < meta.length; i++) {
                 switch(meta[i]["type"]) {
@@ -123,7 +110,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                             field:    meta[i]["key"],
                             styles:   "text-align:center;",
                             type:     phpr.grid.cells.Select,
-                            width:  porcent,
+                            width:    porcent,
                             options:  opts,
                             values:   vals
                         });
@@ -170,6 +157,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
             dijit.byId("gridBox").setContent(this.grid.domNode);
             this.grid.startup();
+
+            dojo.connect(this.grid,"onCellClick",dojo.hitch(this,"showForm"));
+            dojo.connect(this.grid,"onApplyCellEdit",dojo.hitch(this,"cellEdited"));
         }
     },
 
@@ -189,29 +179,79 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }));
     },
 
-    onRowClick: function(e) {
+    showForm: function(e) {
         // summary:
         //    This function publishes a "openForm" Topic
         // description:
-        //    As soon as a row is clicked the openForm Topic is published
-        var rowID=this.grid.model.getDatum(e.rowIndex,0);
-        this.publish("openForm", [rowID]);
-
+        //    As soon as a ID cell is clicked the openForm Topic is published
+        if (e.cellIndex == 0) {
+            var item = this.grid.getItem(e.rowIndex);
+            var rowID = this.grid.store.getValue(item, 'id');
+            this.publish("openForm", [rowID]);
+        }
     },
 
-    onCellEdit: function(inValue, inRowIndex, inFieldIndex) {
+    cellEdited: function(inValue, inRowIndex, inFieldIndex) {
         // summary:
-        //    This function publishes a "grid.CellEdi" Topic
+        //    Save the changed values for store
         // description:
-        //    As soon as a Cell in the grid is edited the grid.CellEdit Topic is published
-        //    and the cellEdited function is called
-        var value = this.grid.model.getDatum(inRowIndex,inFieldIndex);
-
-        this.publish("grid.CellEdit", [value, inRowIndex, inFieldIndex]);
-        this.cellEdited(value, inRowIndex, inFieldIndex);
+        //    Save only the items that was changed, for save it later
+        if (!this._newRowValues[inRowIndex]) {
+            this._newRowValues[inRowIndex] = {};
+        }
+        this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+        this.toggleSaveButton();
     },
 
-    onExport: function () {
+    toggleSaveButton:function() {
+        // highlight when button gets avtivated
+        saveButton = dijit.byId('saveChanges');
+        if (saveButton.disabled == true) {
+            dojox.fx.highlight({
+                node:'saveChanges',
+                color:'#ffff99',
+                duration:1600
+            }).play();
+        }
+        // Activate/Deactivate "save changes" buttons.
+        saveButton.disabled = false;
+        saveButton = dojo.byId('saveChanges');
+        saveButton.disabled = false;
+    },
+
+    saveChanges:function() {
+        // Make sure, that an element that is still in edit mode calls "onApplyCellEdit",
+        // so we also get the new data into _newRowValues.
+        this.grid.edit.apply();
+
+        // Get all the IDs for the data sets.
+        var content = "";
+        for (var i in this._newRowValues) {
+            var item = this.grid.getItem(i);
+            var curId = this.grid.store.getValue(item, 'id');
+            for (var j in this._newRowValues[i]) {
+                content += '&data['+ encodeURIComponent(curId) +']['+encodeURIComponent(j)+']='+encodeURIComponent(this._newRowValues[i][j]);
+            }
+        }
+
+        //post the content of all changed forms
+        dojo.rawXhrPost( {
+            url: this.updateUrl,
+            postData: content,
+            handleAs: "json",
+            load: dojo.hitch(this, function(response, ioArgs) {
+                this._newRowValues = {};
+                new phpr.handleResponse('serverFeedback',response);
+                return response;
+                this.publish("reload");
+            }),
+            error: function(response, ioArgs) {
+                new phpr.handleResponse('serverFeedback',response);
+            }
+        });
+    },
+
+    export:function() {
         window.open(phpr.webpath+"index.php/"+phpr.module+"/index/csvList/nodeId/"+this.id);
         return false;
     }
