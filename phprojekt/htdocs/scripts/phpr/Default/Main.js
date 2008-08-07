@@ -469,7 +469,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function reload the grid place with the result of the tag search
         // description:
         //    The server return the found records and the function display it
-        var getDataUrl = phpr.webpath + 'index.php/' + phpr.module + '/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
+        var getDataUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
         var self = this;
 
         // Destroy form view
