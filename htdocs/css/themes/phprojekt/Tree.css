@@ -1,44 +1,44 @@
 
 /* Tree */
 
-.phprojekt .dijitTreeNode {}
+.phprojekt .dijitTreeNode {
+	background-color: #F8F8F8;
+}
 
 
 /* left vertical line (grid) for all nodes */
 .phprojekt .dijitTreeIsLast {}
 
 .phprojekt .dijitTreeLabel {
-	font-weight: bold;
-	margin-left: 3px;
+	margin-left: 0px;
 }
 
 .phprojekt .dijitTreeIsRoot {
-	font-weight: bold;
 	color: #fff;
-	background-color: #f1ce47;
-	border-bottom: 4px #f3f3f3 solid;
+	background-color: #F8F8F8;
+	border-bottom: 4px #F8F8F8 solid;
 	text-transform: uppercase;
     margin-left: 0px;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeIsRoot .dijitTreeContent {
-    font-weight: bold;
     color: #fff;
     background-color: #F1CE47;
+	margin-left: 0px;
 }
 
 /**** Level 1 ****/
 .phprojekt .dijitTreeExpando {
     width: 18px;
     height: 18px;
-    margin-left: 5px;
+    margin-left: 0px;
 	cursor: pointer;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeContent {
+	margin-left: 0px;
     min-height: 18px;
     min-width: 18px;
-    font-weight: bold;
 	color: #fff;
 	background-color: #f1ce47;
 	text-transform: uppercase;
@@ -47,60 +47,108 @@
 
 /**** Level 2 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
-    margin-left: 8px;
+    margin-left: 0px;
+    background-color: #F1CE47;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeContent {
-    min-height: 18px;
-    min-width: 18px;
-    padding-left: 10px;
-    font-weight: bold;
-	color: #fff;
-	background-color: #f1ce47;
-	text-transform: uppercase;
-    text-decoration: none;
-	cursor: pointer;
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeRow {
+    background-color: #F1CE47;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
 	color: #4b4b4b;
 }
 
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeContent {
+    margin-left: 0px;
+    min-height: 18px;
+    min-width: 18px;
+    font-weight: bold;
+	color: #fff;
+    background-color: #F1CE47;
+	border-bottom: 3px #F1CE47 solid;
+	text-transform: uppercase;
+    text-decoration: none;
+	cursor: pointer;
+}
+
 /**** Level 3 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
     margin-left: 12px;
+	background-color: #F8F8F8;    
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeRow {
+    background-color: #F8F8F8;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+	color: #4b4b4b;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
     min-height: 18px;
     min-width: 18px;
-    padding-left: 14px;
-	color: #fff;
-	background-color: #f1ce47;
+	color: #000;
     font-weight: normal;
-    text-transform:none;
+	background-color: #F8F8F8;
+	border-bottom: 3px #f3f3f3 solid;
+    text-transform: none;
     text-decoration: none;
+	margin-left: 0px;
 }
 
 
 /**** Level 4 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
-    margin-left: 16px;
+    margin-left: 24px;
+	background-color: #F8F8F8;    
 }
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent li ul li ul li ul li a {
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeRow {
+    background-color: #F8F8F8;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+	color: #4b4b4b;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
     min-height: 18px;
     min-width: 18px;
-
-    padding-left: 18px;
-    background-color: #ffffff;
-    color: #aaa;
+	color: #000;
     font-weight: normal;
-    text-transform:none;
+	background-color: #F8F8F8;
+	border-bottom: 3px #f3f3f3 solid;
+    text-transform: none;
     text-decoration: none;
+	margin-left: 0px;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+/**** Level 5 ****/
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
+    margin-left: 36px;
+	background-color: #F8F8F8;    
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode.dijitTreeNode .dijitTreeNode  .dijitTreeRow {
+    background-color: #F8F8F8;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
 	color: #4b4b4b;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
+    min-height: 18px;
+    min-width: 18px;
+	color: #000;
+    font-weight: normal;
+	background-color: #F8F8F8;
+	border-bottom: 3px #f3f3f3 solid;
+    text-transform: none;
+    text-decoration: none;
+	margin-left: 0px;
 }
 
 /* same style as IE selection */
