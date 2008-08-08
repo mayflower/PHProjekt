@@ -37,9 +37,9 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Timecard'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Timecard/index/jsonList/nodeId/');
-        $request->setPathInfo('/Timecard/index/jsonList/startDate/2008-04-01/endDate/2008-04-30');
-        $request->setRequestUri('/Timecard/index/jsonList/startDate/2008-04-01/endDate/2008-04-30');
+        $request->setBaseUrl($config->webpath.'index.php/Timecard/index/jsonList/year/2008/month/04');
+        $request->setPathInfo('/Timecard/index/jsonList/year/2008/month/04');
+        $request->setRequestUri('/Timecard/index/jsonList/year/2008/month/04');
 
         // getting the view information
         $request->setModuleKey('module');

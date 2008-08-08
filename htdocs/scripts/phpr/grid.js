@@ -12,6 +12,18 @@ phpr.grid.formatDateTime = function(date) {
     return dojo.date.locale.format(dateObj, {formatLength:'short', selector:'dateTime'});
 };
 
+phpr.grid.formatTime = function(value) {
+
+    var isoRegExp = /^(?:(\d{2})(\d{2})?)$/;
+	var match = isoRegExp.exec(value);
+	if(match) {
+		match.shift();
+		return match[0] + ':' + match[1];
+    } else {
+        return value;
+    }
+},
+
 phpr.grid.formatDate = function(value) {
     var date = '';
     if (value) {

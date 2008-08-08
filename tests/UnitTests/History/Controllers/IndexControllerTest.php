@@ -36,9 +36,9 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'History'));
 
-        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleId/4/itemId/7');
-        $request->setPathInfo('/History/index/jsonList/moduleId/4/itemId/7');
-        $request->setRequestUri('/History/index/jsonList/moduleId/4/itemId/7');
+        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleId/6/itemId/1');
+        $request->setPathInfo('/History/index/jsonList/moduleId/6/itemId/1');
+        $request->setRequestUri('/History/index/jsonList/moduleId/6/itemId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -105,7 +105,7 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"userId":"1","moduleId":"4","itemId":"7","field":"endTime","oldValue"')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"userId":"1","moduleId":"6","itemId":"1","field":"endTime","oldValue"')) > 0);
     }
 
     /**
@@ -120,9 +120,9 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'History'));
 
-        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleName/Timecard/itemId/7');
-        $request->setPathInfo('/History/index/jsonList/moduleName/Timecard/itemId/7');
-        $request->setRequestUri('/History/index/jsonList/moduleName/Timecard/itemId/7');
+        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleName/Calendar/itemId/1');
+        $request->setPathInfo('/History/index/jsonList/moduleName/Calendar/itemId/1');
+        $request->setRequestUri('/History/index/jsonList/moduleName/Calendar/itemId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -189,7 +189,7 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"userId":"1","moduleId":"4","itemId":"7","field":"endTime","oldValue":') > 0);
+        $this->assertTrue(strpos($response, '{"userId":"1","moduleId":"6","itemId":"1","field":"endTime","oldValue":') > 0);
     }
 
     /**

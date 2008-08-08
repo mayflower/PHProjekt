@@ -26,13 +26,19 @@
  */
 class Timecard_IndexController extends IndexController
 {
-    /**
-     * Returns the list for a Timecard in JSON.
+   /**
+     * Returns the list for a model in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * Only return data for the current user.
+     * User the params for set the month and year
      *
      * @requestparam integer count ...
      * @requestparam integer start ...
-     * @requestparam date startDate to limit the list start date
-     * @requestparam date endDate to limit the list end date
+     * @requestparam integer year  Year for the list view
+     * @requestparam integer month Month for the list view
      *
      * @return void
      */
@@ -41,40 +47,19 @@ class Timecard_IndexController extends IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $messages  = null;
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
-        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
-        $itemId    = (int) $this->getRequest()->getParam('id', null);
-        $startDate = $this->getRequest()->getParam('startDate', null);
-        $endDate   = $this->getRequest()->getParam('endDate', null);
+        $year      = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month     = (int) $this->getRequest()->getParam('month', date("m"));
 
-        $startDate = Inspector::sanitize('date', $startDate, $messages, false);
-        $endDate   = Inspector::sanitize('date', $endDate, $messages, false);
-
-        // Date filter for timecard
-        $dateFilter = array();
-
-        if (!empty($startDate)) {
-            $dateFilter[] = 'date >= "'.$startDate.'"';
-        }
-        if (!empty($endDate)) {
-            $dateFilter[] = 'date <= "'.$endDate.'"';
-        }
-        if (count($dateFilter)) {
-            $dateFilter = implode($dateFilter, " AND ");
-        } else {
-            $dateFilter = null;
+        if (strlen($month) == 1) {
+            $month = '0'.$month;
         }
 
-        if (!empty($itemId)) {
-            $records = $this->getModelObject()->fetchAll('id = ' . $itemId . $dateFilter, null, $count, $offset);
-        } else if (!empty($projectId)) {
-            $records = $this->getModelObject()->fetchAll('projectId = ' . $projectId . 
-                                                         $dateFilter, null, $count, $offset);
-        } else {
-            $records = $this->getModelObject()->fetchAll($dateFilter, null, $count, $offset);
-        }
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $where = 'ownerId = '. $authNamespace->userId;
+        $where .= ' AND date LIKE \''. $year .'-'. $month .'%\'';
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
@@ -87,22 +72,18 @@ class Timecard_IndexController extends IndexController
     public function jsonStartAction()
     {
         $translate = Zend_Registry::get('translate');
-        $model   = $this->getModelObject();
-        $message = $translate->translate('The Item was added correctly');
+        $model     = $this->getModelObject();
+        $message   = $translate->translate('The Item was added correctly');
 
         $this->getRequest()->setParam('date', date("Y-m-d"));
-        $this->getRequest()->setParam('startTime', date("h:i:s"));
-        $this->getRequest()->setParam('notes', 'Timecard started');
-        $this->getRequest()->setParam('projectId', '1');
+        $this->getRequest()->setParam('startTime', date("Hi"));
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
-        $showId = $model->id;
 
         $return    = array('type'    => 'success',
                            'message' => $message,
                            'code'    => 0,
-                           'id'      => $showId);
+                           'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -124,7 +105,7 @@ class Timecard_IndexController extends IndexController
         $dateFilter[] = '(endTime = "" OR endTime is null)';
         $dateFilter = implode($dateFilter, " AND ");
 
-        $this->getRequest()->setParam('endTime', date("H:i:s"));
+        $this->getRequest()->setParam('endTime', date("Hi"));
 
         $records = $this->getModelObject()->fetchAll($dateFilter, null, 1, $offset);
 

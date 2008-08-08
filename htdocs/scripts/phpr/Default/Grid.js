@@ -62,15 +62,30 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.publish("drawTagsBox",[phpr.getUserTags()]);
     },
 
+    useIdInGrid: function() {
+        // summary:
+        //    Draw the ID on the grid
+        // description:
+        //    Draw the ID on the grid
+        return true;
+    },
+
     setGridLayout:function(meta) {
+        // summary:
+        //    Create the layout using the different field types
+        // description:
+        //    Create the layout using the different field types
         var porcent = (100 / meta.length) + '%';
-        this.gridLayout.push({
-            name:     "ID",
-            field:    "id",
-            width:    porcent,
-            editable: false,
-            styles:   "text-decoration:underline;"
-        });
+
+        if (this.useIdInGrid()) {
+            this.gridLayout.push({
+                name:     "ID",
+                field:    "id",
+                width:    porcent,
+                editable: false,
+                styles:   "text-decoration:underline;"
+            });
+        }
         for (var i = 0; i < meta.length; i++) {
             switch(meta[i]["type"]) {
                 case'selectbox':
@@ -106,13 +121,24 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
+                case'time':
+                    this.gridLayout.push({
+                        width:      porcent,
+                        name:       meta[i]["label"],
+                        field:      meta[i]["key"],
+                        styles:     "text-align:center;",
+                        type:       dojox.grid.cells.TextBox,
+                        formatter:  phpr.grid.formatTime
+                    });
+                    break;
+
                 default:
                     this.gridLayout.push({
                         width:  porcent,
                         name:   meta[i]["label"],
                         field:  meta[i]["key"],
                         type: dojox.grid.cells.TextBox
-                        });
+                    });
                     break;
             }
         }

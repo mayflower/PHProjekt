@@ -1,6 +1,7 @@
 dojo.provide("phpr.Timecard.Main");
-dojo.require("phpr.Default.Main");
+
 // app specific files
+dojo.require("phpr.Default.Main");
 dojo.require("phpr.Timecard.Tree");
 dojo.require("phpr.Timecard.Grid");
 dojo.require("phpr.Timecard.Form");
@@ -16,7 +17,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
 		//subscribe to all topics which concern this module
 		dojo.subscribe("Timecard.load", this, "load");
-		dojo.subscribe("Timecard.changeProjekt",this, "setProject");
+		dojo.subscribe("Timecard.changeProjekt", this, "setProject");
 		dojo.subscribe("Timecard.reload", this, "reload");
 		dojo.subscribe("Timecard.changeDate", this, "setDate");
 		dojo.subscribe("Timecard.form.Submitted", this, "submitForm");
@@ -37,26 +38,41 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        // destroy form if exists
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{
             webpath:phpr.webpath,
-            currentModule:phpr.module
+            currentModule:phpr.module,
+            searchText:phpr.nls.search,
+            administrationText:phpr.nls.administration,
+            administratorText:phpr.nls.administrator,
+            settingsText:phpr.nls.settings,
+            timecardText:phpr.nls.timecard,
+            timecardOverviewText:phpr.nls.timecardOverview,
+            timecardWorkingtimeText:phpr.nls.timecardWorkingtime,
+            timecardWorkingtimeStartText:phpr.nls.timecardWorkingtimeStart,
+            timecardWorkingtimeStopText:phpr.nls.timecardWorkingtimeStop,
+            helpText:phpr.nls.help,
+            logoutText:phpr.nls.logout,
         });
-        this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             webpath:phpr.webpath,
             currentModule:phpr.module
         });
 
+        this.search = new dojo.dnd.Moveable("searchsuggest");
+        this.tags = new dojo.dnd.Moveable("tagsbox");
+
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
-                this.tree     = new this.treeWidget(this);
-                this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-                this.form     = new this.formWidget(this);
+                this.setSubmoduleNavigation();
+                this.setSearchForm();
+                this.tree = new this.treeWidget(this);
+                this.grid = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
+                //this.form = new this.formWidget(this);
             })
         );
     },
 
-    reload:function(ParamsIn) {
+    reload:function() {
         // summary:
         //    This function reloads the current module
         // description:
@@ -65,19 +81,22 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        // destroy serverFeedback
-        phpr.destroyWidgets("serverFeedback");
-        // destroy form if exists
-        // destroy Buttons
-        phpr.destroyWidgets("buttonRow");
-        phpr.destroyWidgets("centerMainContent");
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
+
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.setSubmoduleNavigation();
+        if (!this.search) {
+            this.search = new dojo.dnd.Moveable("searchsuggest");
+        }
+        if (!this.tags) {
+            this.tags = new dojo.dnd.Moveable("tagsbox");
+        }
+        this.setSearchForm();
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
-        this.form     = new this.formWidget(this,ParamsIn);
+        //this.form     = new this.formWidget(this,ParamsIn);
     },
 
     setProject: function(project) {
