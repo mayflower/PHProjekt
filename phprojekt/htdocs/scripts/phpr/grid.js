@@ -32,14 +32,20 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     //    Redefine the function for return the correct value
     // description:
     //    Redefine the function for return the correct value
-	format: function(inRowIndex, inItem) {
+    format: function(inRowIndex, inItem){
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+        if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
         } else {
-            return this.options[d-1];
+            var v = '';
+            for (var i=0, o; ((o=this.options[i]) !== undefined); i++){
+                if (d == this.values[i]) {
+                    v = o;
+                }
+            }
+            return (typeof v == "undefined" ? this.defaultValue : v);
         }
-	},
+    },
 });
 
 

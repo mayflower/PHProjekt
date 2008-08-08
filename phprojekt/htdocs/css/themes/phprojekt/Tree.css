@@ -27,7 +27,6 @@
 	margin-left: 0px;
 }
 
-/**** Level 1 ****/
 .phprojekt .dijitTreeExpando {
     width: 18px;
     height: 18px;
@@ -35,14 +34,31 @@
 	cursor: pointer;
 }
 
+/**** Level 1 ****/
+.phprojekt .dijitTreeNode .dijitTreeExpando  {
+    margin-left: 0px;
+    background-color: #F1CE47;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeRow {
+    background-color: #F1CE47;
+}
+
+.phprojek .dijitTreeNode .dijitTreeNodeHover {
+	color: #4b4b4b;
+}
+
 .phprojekt .dijitTreeNode .dijitTreeContent {
-	margin-left: 0px;
+    margin-left: 0px;
     min-height: 18px;
     min-width: 18px;
+    font-weight: bold;
 	color: #fff;
-	background-color: #f1ce47;
+    background-color: #F1CE47;
+	border-bottom: 3px #F1CE47 solid;
 	text-transform: uppercase;
     text-decoration: none;
+	cursor: pointer;
 }
 
 /**** Level 2 ****/
@@ -55,7 +71,7 @@
     background-color: #F1CE47;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
 	color: #4b4b4b;
 }
 
@@ -75,14 +91,14 @@
 /**** Level 3 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
     margin-left: 12px;
-	background-color: #F8F8F8;    
+	background-color: #F8F8F8;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeRow {
     background-color: #F8F8F8;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
 	color: #4b4b4b;
 }
 
@@ -102,14 +118,14 @@
 /**** Level 4 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
     margin-left: 24px;
-	background-color: #F8F8F8;    
+	background-color: #F8F8F8;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeRow {
     background-color: #F8F8F8;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
 	color: #4b4b4b;
 }
 
@@ -128,14 +144,14 @@
 /**** Level 5 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
     margin-left: 36px;
-	background-color: #F8F8F8;    
+	background-color: #F8F8F8;
 }
 
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode.dijitTreeNode .dijitTreeNode  .dijitTreeRow {
     background-color: #F8F8F8;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {	
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
 	color: #4b4b4b;
 }
 

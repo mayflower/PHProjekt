@@ -22,7 +22,7 @@ dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {
         phpr.destroyWidgets("deleteButton");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.renderButton();
-        var updateUrl = phpr.webpath + 'index.php/'+this.module+'/index/jsonSave/nodeId/';
+        var updateUrl = phpr.webpath + 'index.php/'+this.module+'/index/jsonSaveMultiple';
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(updateUrl, this, null, this.module);
 	},

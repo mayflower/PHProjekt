@@ -7,6 +7,7 @@ dojo.require("dojox.data.QueryReadStore");
 dojo.require("dojox.dtl._HtmlTemplated");
 dojo.require("dojox.fx");
 dojo.require("dojo.fx");
+dojo.require("dijit.Dialog");
 
 // global vars
 var module = null;
@@ -170,6 +171,9 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     doClientPaging:false,
 
     _filterResponse: function(data){
+        if (!data.data) {
+            data.data = {};
+        }
         ret = {
             items: [
                 {"metadata": data.metadata},
@@ -202,6 +206,9 @@ dojo.declare("phpr.ReadData", dojox.data.QueryReadStore, {
     doClientPaging:false,
 
     _filterResponse: function(data) {
+        if (!data.data) {
+            data.data = {};
+        }
         ret = {
             items: [{
                "data": data.data}]
