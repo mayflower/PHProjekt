@@ -84,7 +84,7 @@ class Project_IndexController extends IndexController
         $translate = Zend_Registry::get('translate');
         $data      = (array) $this->getRequest()->getParam('data');
 
-        $message = $translate->translate('The Items was added correctly');
+        $message = $translate->translate('The Items was edited correctly');
         $showId = array();
         foreach ($data as $id => $fields) {
             $model   = $this->getModelObject()->find($id);
