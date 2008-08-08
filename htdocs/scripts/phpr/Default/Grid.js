@@ -17,7 +17,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    render the grid on construction
         // description:
         //    this function receives the list data from the server and renders the corresponding grid
-        //this._node  = dojo.byId("gridBox");
         this.main          = main;
         this.id            = id;
         this.updateUrl     = updateUrl;
@@ -25,17 +24,125 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this._oldRowValues = {};
         this.gridData      = {};
 
-        phpr.destroyWidgets("gridBox");
+        this.setUrl();
+        this.setNode();
 
         this.gridLayout = new Array();
         this.gridStore = new phpr.ReadStore({
-            url: phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/"+id
+            url: this.url
         });
         this.gridStore.fetch({onComplete: dojo.hitch(this, "onLoaded")});
 
         // Draw the tags
+        this.showTags();
+    },
+
+    setUrl:function() {
+        // summary:
+        //    Set the url for get the data
+        // description:
+        //    Set the url for get the data
+        this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/" + this.id;
+    },
+
+    setNode:function() {
+        // summary:
+        //    Set the url for get the data
+        // description:
+        //    Set the url for get the data
+        this._node = dijit.byId("gridBox");
+    },
+
+    showTags:function() {
+        // summary:
+        //    Draw the tags
+        // description:
+        //    Draw the tags
         phpr.receiveUserTags();
         this.publish("drawTagsBox",[phpr.getUserTags()]);
+    },
+
+    setGridLayout:function(meta) {
+        var porcent = (100 / meta.length) + '%';
+        this.gridLayout.push({
+            name:     "ID",
+            field:    "id",
+            width:    porcent,
+            editable: false,
+            styles:   "text-decoration:underline;"
+        });
+        for (var i = 0; i < meta.length; i++) {
+            switch(meta[i]["type"]) {
+                case'selectbox':
+                    var range = meta[i]["range"];
+                    var opts  = new Array();
+                    var vals  = new Array();
+                    var j     = 0;
+                    for (j in range){
+                        vals.push(range[j]["id"]);
+                        opts.push(range[j]["name"]);
+                        j++;
+                    }
+                    this.gridLayout.push({
+                        name:     meta[i]["label"],
+                        field:    meta[i]["key"],
+                        styles:   "text-align:center;",
+                        type:     phpr.grid.cells.Select,
+                        width:    porcent,
+                        options:  opts,
+                        values:   vals
+                    });
+                    break;
+
+                case'date':
+                    this.gridLayout.push({
+                        width:      porcent,
+                        name:       meta[i]["label"],
+                        field:      meta[i]["key"],
+                        styles:     "text-align:center;",
+                        type:       phpr.grid.cells.DateTextBox,
+                        formatter:  phpr.grid.formatDate,
+                        constraint: {formatLength: 'short', selector: "date"}
+                    });
+                    break;
+
+                default:
+                    this.gridLayout.push({
+                        width:  porcent,
+                        name:   meta[i]["label"],
+                        field:  meta[i]["key"],
+                        type: dojox.grid.cells.TextBox
+                        });
+                    break;
+            }
+        }
+    },
+
+    setClickEdit:function() {
+        // summary:
+        //    Set the edit type
+        // description:
+        //    Set if each field is ediatable with one or two clicks
+        this.grid.singleClickEdit = true;
+    },
+
+    setExport:function(meta) {
+        // summary:
+        //    Set the export button
+        // description:
+        //    If there is any row, render export Button
+        if (meta.length > 0) {
+            var params = {
+                baseClass: "positive",
+                id: "exportGrid",
+                iconClass: "export",
+                alt: "Export",
+                disabled: false
+            };
+            var exportButton = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(exportButton.domNode);
+            dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "export"));
+        }
     },
 
     onLoaded:function(dataContent, request) {
@@ -55,7 +162,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
         store = new dojo.data.ItemFileWriteStore({data: this.gridData});
 
-        //first of all render save Button
+        // Render save Button
         var params = {
             baseClass: "positive",
             id: "saveChanges",
@@ -67,80 +174,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         dojo.byId("buttonRow").appendChild(saveButton.domNode);
         dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
 
-        // Layout of the grus
+        // Layout of the grid
         var meta = this.gridStore.getValue(dataContent[0], "metadata") || Array();
 
-        // if there is any row, render export Button
-        if (meta.length > 0) {
-            var params = {
-                baseClass: "positive",
-                id: "exportGrid",
-                iconClass: "export",
-                alt: "Export",
-                disabled: false
-            };
-            var exportButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(exportButton.domNode);
-            dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "export"));
-        }
+        this.setExport(meta);
 
         if (meta.length == 0) {
-            dijit.byId("gridBox").setContent(phpr.nls.noresults);
+            this._node.setContent(phpr.nls.noresults);
         } else {
-            var porcent = (100 / meta.length) + '%';
-            this.gridLayout.push({
-                name:     "ID",
-                field:    "id",
-                width:    porcent,
-                editable: false,
-                styles:   "text-decoration:underline;"
-            });
-            for (var i = 0; i < meta.length; i++) {
-                switch(meta[i]["type"]) {
-                    case'selectbox':
-                        var range = meta[i]["range"];
-                        var opts  = new Array();
-                        var vals  = new Array();
-                        var j     = 0;
-                        for (j in range){
-                            vals.push(range[j]["id"]);
-                            opts.push(range[j]["name"]);
-                            j++;
-                        }
-                        this.gridLayout.push({
-                            name:     meta[i]["label"],
-                            field:    meta[i]["key"],
-                            styles:   "text-align:center;",
-                            type:     phpr.grid.cells.Select,
-                            width:    porcent,
-                            options:  opts,
-                            values:   vals
-                        });
-                        break;
-
-                    case'date':
-                        this.gridLayout.push({
-                            width:      porcent,
-                            name:       meta[i]["label"],
-                            field:      meta[i]["key"],
-                            styles:     "text-align:center;",
-        					type:       phpr.grid.cells.DateTextBox,
-		          			formatter:  phpr.grid.formatDate,
-                            constraint: {formatLength: 'short', selector: "date"}
-                        });
-                        break;
-
-                    default:
-                        this.gridLayout.push({
-                            width:  porcent,
-                            name:   meta[i]["label"],
-                            field:  meta[i]["key"],
-                            type: dojox.grid.cells.TextBox
-                            });
-                        break;
-                }
-            }
-
+            this.setGridLayout(meta);
+            phpr.destroyWidgets("gridNode");
             this.grid = new dojox.grid.DataGrid({
                 id: "gridNode",
                 store: store,
@@ -154,10 +197,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 }]
             }, document.createElement('div'));
 
-            // Edit on one click
-            this.grid.singleClickEdit = true;
+            this.setClickEdit();
 
-            dijit.byId("gridBox").setContent(this.grid.domNode);
+            this._node.setContent(this.grid.domNode);
             this.grid.startup();
 
             dojo.connect(this.grid,"onCellClick",dojo.hitch(this,"showForm"));
@@ -200,16 +242,28 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    If the user can´t edit the item keep the current value for restor it later
         //    We can´t stop the edition, but we can restore the value
-        var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
-        var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
-        if (!this._oldRowValues[inRowIndex]) {
-            this._oldRowValues[inRowIndex] = {};
-        }
-        // Keep the old value if the user can´t edit
-        if (writePermissions == 'false' && adminPermissions == 'false') {
+        if (!this.canEdit(inRowIndex)) {
+            // Keep the old value if the user can´t edit
+            if (!this._oldRowValues[inRowIndex]) {
+                this._oldRowValues[inRowIndex] = {};
+            }
             var item = this.grid.getItem(inRowIndex);
             var value = this.grid.store.getValue(item, inCell.field);
             this._oldRowValues[inRowIndex][inCell.field] = value;
+        }
+    },
+
+    canEdit:function(inRowIndex) {
+        // summary:
+        //    Check the access of the item for the user
+        // description:
+        //    Return true if have write or admin accees
+        var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
+        var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
+        if (writePermissions == 'false' && adminPermissions == 'false') {
+            return false;
+        } else {
+            return true;
         }
     },
 
@@ -219,12 +273,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    Save only the items that was changed, for save it later
         //    If the user can´t edit the item, restore the last value
-        var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
-        var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
-        if (!this._newRowValues[inRowIndex]) {
-            this._newRowValues[inRowIndex] = {};
-        }
-        if (writePermissions == 'false' && adminPermissions == 'false') {
+        if (!this.canEdit(inRowIndex)) {
             var item  = this.grid.getItem(inRowIndex);
             var value = this._oldRowValues[inRowIndex][inFieldIndex];
             this.grid.store.setValue(item,inFieldIndex,value);
@@ -233,6 +282,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             result.message = phpr.nls.gridCantEdit;
             new phpr.handleResponse('serverFeedback',result);
         } else {
+            if (!this._newRowValues[inRowIndex]) {
+                this._newRowValues[inRowIndex] = {};
+            }
             this._newRowValues[inRowIndex][inFieldIndex] = inValue;
             this.toggleSaveButton();
         }
@@ -275,11 +327,12 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             postData: content,
             handleAs: "json",
             load: dojo.hitch(this, function(response, ioArgs) {
-                this._newRowValues = {};
-                this._oldRowValues = {};
                 new phpr.handleResponse('serverFeedback',response);
-                return response;
-                this.publish("reload");
+                if (response.type =='success') {
+                    this._newRowValues = {};
+                    this._oldRowValues = {};
+                    this.publish("reload");
+                }
             }),
             error:function(response, ioArgs) {
                 new phpr.handleResponse('serverFeedback',response);
