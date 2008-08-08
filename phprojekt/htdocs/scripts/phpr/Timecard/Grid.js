@@ -8,31 +8,26 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     //    The Grid for the Timecard module is rendered -  at the moment it is exactly
     //    the same as in the Default module
 
-    setUrl:function() {
-        this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/1";
+    setUrl: function(year, month) {
+        if (typeof year == "undefined") {
+            date = new Date();
+            year = date.getFullYear();
+        }
+        if (typeof month == "undefined") {
+            date = new Date();
+            month = date.getMonth() + 1;
+        }
+        this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/year/" + year + "/month/" + month;
     },
 
-    showTags:function() {
+    showTags: function() {
     },
 
-    setGridLayout:function(meta) {
-        this.gridLayout.push({
-             name:    "Datum",
-             field:   "date",
-             styles:  "text-align:center;",
-             width:   "auto"
-        });
-        this.gridLayout.push({
-            name:    "Anfang",
-            field:   "startTime",
-            styles:  "text-align:center;",
-            width:   "auto"
-        });
-        this.gridLayout.push({
-            name:    "Ende",
-            field:   "endTime",
-            styles:  "text-align:center;",
-            width:   "auto"
-        });
+    canEdit: function(inRowIndex) {
+        return true;
+    },
+
+    useIdInGrid: function () {
+        return false;
     }
 });

@@ -388,12 +388,10 @@ CREATE TABLE `ItemRights` (
 --
 CREATE TABLE `Timecard` (
   `id` int(11) NOT NULL auto_increment,
-  `notes` text default NULL,
   `ownerId` int(11) default NULL,
-  `projectId` int(11) default NULL,
   `date` date default NULL,
-  `startTime` time default NULL,
-  `endTime` time default NULL,
+  `startTime` varchar(4) default NULL,
+  `endTime` varchar(4) default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -487,16 +485,13 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Note', 'title', 1, 'title', 'title', 'text', 2, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Note', 'comments', 1, 'comments', 'comments', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 1, 0),
 (0, 'Note', 'category', 1, 'category', 'category', 'selectSqlAddOne', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
-(0, 'Timecard', 'notes'    ,  1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
-(0, 'Timecard', 'date'     ,  1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
-(0, 'Timecard', 'startTime',  1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Timecard', 'endTime'  ,  1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Timecard', 'projectId',  1, 'project'  , 'project'  , 'tree'    , 0, 0, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 0, 0),
+
 (0, 'Timeproj', 'notes'    ,  1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
 (0, 'Timeproj', 'date'     ,  1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
 (0, 'Timeproj', 'startTime',  1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Timeproj', 'endTime'  ,  1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Timeproj', 'projectId',  1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0),
+
 (0, 'Calendar', 'title',      1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
 (0, 'Calendar', 'notes',      1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'startDate',  1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
@@ -577,13 +572,13 @@ INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,'working');
 
-INSERT INTO `Timecard` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTime`, `endTime`) VALUES
-(1, 'Timecard row', 1, 1, '2008-04-29', '08:00:00', '13:00:00'),
-(2, 'Timecard row 2', 1, 1, '2008-04-29', '14:00:00', '18:00:00'),
-(3, 'Timecard row 3', 1, 1, '2008-04-30', '08:00:00', '13:00:00'),
-(4, 'Timecard row 4', 1, 1, '2008-04-30', '14:00:00', '18:00:00'),
-(5, 'Timecard row 6', 1, 1, '2008-05-02', '08:00:00', '13:00:00'),
-(6, 'Timecard row 7', 1, 1, '2008-05-02', '14:00:00', '18:00:00');
+INSERT INTO `Timecard` (`id`, `ownerId`, `date`, `startTime`, `endTime`) VALUES
+(1, 1, '2008-04-29', '0800', '1300'),
+(2, 1, '2008-04-29', '1400', '1800'),
+(3, 1, '2008-04-30', '0800', '1300'),
+(4, 1, '2008-04-30', '1400', '1800'),
+(5, 1, '2008-05-02', '0800', '1300'),
+(6, 1, '2008-05-02', '1400', '1800');
 
 INSERT INTO `Timeproj` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTime`, `endTime`) VALUES
 (1, 'Timeproj row', 1, 1, '2008-04-29', '08:00:00', '13:00:00'),
