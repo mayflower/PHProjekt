@@ -34,9 +34,17 @@ class Phprojekt_Model_Validate
      */
     public $error = null;
 
+    /**
+     * Translate class
+     *
+     * @var Phprojekt_Language
+     */
+    private $_translate = null;
+
     public function __construct()
     {
-        $this->error = new Phprojekt_Error();
+        $this->error      = new Phprojekt_Error();
+        $this->_translate = Zend_Registry::get('translate');
     }
 
     /**
@@ -60,7 +68,7 @@ class Phprojekt_Model_Validate
                             if (null != $error) {
                                 $validated = false;
                                 $this->error->addError(array(
-                                'field'   => $varname,
+                                'field'   => $this->_translate->translate($varname),
                                 'message' => $error));
                                 break;
                             }
@@ -70,8 +78,8 @@ class Phprojekt_Model_Validate
                         if (false === $error) {
                             $validated = false;
                             $this->error->addError(array(
-                            'field'   => $varname,
-                            'message' => "Invalid Format"));
+                            'field'   => $this->_translate->translate($varname),
+                            'message' => $this->_translate->translate("Invalid Format")));
                         }
                         break;
                     }
@@ -85,8 +93,8 @@ class Phprojekt_Model_Validate
                         if (null != $error) {
                             $validated = false;
                             $this->error->addError(array(
-                            'field'   => $varname,
-                            'message' => $error));
+                            'field'   => $this->_translate->translate($varname),
+                            'message' => $this->_translate->translate($error)));
                         }
                     }
                 }
