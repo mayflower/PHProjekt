@@ -35,13 +35,27 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
      * @var int
      */
     private $_userId = null;
-    
+
     /**
      * module Id related with settings - by default the id of Project module
      *
      * @var int
      */
     private $_moduleId = null;
+
+    /**
+     * Default settings to be created for each user
+     *
+     * @var array
+     */
+    private $_defaultSettings = array('timeZone', 'language');
+
+    /**
+     * Config for inicializes children objects
+     *
+     * @var array
+     */
+    protected $_config = null;
 
 
     /**
@@ -53,19 +67,43 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
 
         parent::__construct();
 
+        $this->_config = Zend_Registry::get('config');
+
         if (empty($userId)) {
             $userId = Phprojekt_Auth::getUserId();
         }
-        
+
         if (empty($moduleId)) {
             $moduleId = Phprojekt_Module::getId('Project');
         }
 
         $this->_userId = (int)$userId;
-        
+
         $this->_moduleId = (int)$moduleId;
 
 
+
+    }
+
+    /**
+     * Creates the default settings to be set for each user
+     *
+     * @return void
+     */
+    public function checkDefaultSettings() {
+
+        foreach ($this->_defaultSettings as $oneSettingKey) {
+            $value = '';
+            $tmp = $this->getSetting($oneSettingKey);
+
+            if (empty($tmp)) {
+
+                if (!empty($this->_config->$oneSettingKey)) {
+                    $value = $this->_config->$oneSettingKey;
+                }
+                $this->setSetting($oneSettingKey, $value);
+            }
+        }
     }
 
     /**
@@ -78,11 +116,29 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
 
         $toReturn = '';
 
-        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) . 
-                                  " AND keyValue = ".$this->_db->quote($settingName) . 
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+        " AND keyValue = ".$this->_db->quote($settingName) .
+        " AND moduleId = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $toReturn = $record[0]->value;
+        }
+        return $toReturn;
+    }
+
+    /**
+     * Gets the name of a setting based on a setting label
+     *
+     * @param integer $id name of the setting to be found
+     * @return string name of the setting
+     */
+    public function getSettingNameById($id) {
+
+        $toReturn = '';
+
+        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+        " AND id = ".$this->_db->quote($id));
+        if (!empty($record)) {
+            $toReturn = $record[0]->keyValue;
         }
         return $toReturn;
     }
@@ -96,9 +152,9 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
      */
     public function setSetting($settingName, $settingValue) {
 
-        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) . 
-                                  " AND keyValue = ".$this->_db->quote($settingName) .
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+        " AND keyValue = ".$this->_db->quote($settingName) .
+        " AND moduleId = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $record = $record[0];
         } else {
@@ -112,7 +168,7 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
         $record->value = $settingValue;
         return $record->save();
     }
-    
+
     /**
      * Gets a list of all settings with its values
      *
@@ -120,19 +176,28 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
      */
     public function getList() {
 
-        $settingsArray = array();          
-        
-        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) . 
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+        $settingsArray = array();
+
+        // check default settings
+        $this->checkDefaultSettings();
+
+        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+        " AND moduleId = ".$this->_db->quote($this->_moduleId));
         foreach ($record as $oneSetting) {
-            
-            $settingsArray[$oneSetting->keyValue] = $oneSetting->value;
-            
+
+            $data = array();
+            $data['id'] = $oneSetting->id;
+            $data['keyValue'] = $oneSetting->keyValue;
+            $data['value'] = $oneSetting->value;
+
+
+            $settingsArray[] = $data;
+
         }
-        
+
         return $settingsArray;
     }
-    
+
     /**
      * Deletes a setting value
      *
@@ -141,9 +206,9 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
      */
     public function deleteSetting($settingName) {
 
-        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) . 
-                                  " AND keyValue = ".$this->_db->quote($settingName) .
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+        " AND keyValue = ".$this->_db->quote($settingName) .
+        " AND moduleId = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $record = $record[0];
             $record->delete();
@@ -151,8 +216,53 @@ class User_Models_UserModuleSetting extends Phprojekt_ActiveRecord_Abstract
         } else {
             $return = false;
         }
-       
+
         return $return;
+    }
+
+    /**
+     * Return an array of field information.
+     *
+     * @param integer $ordering An ordering constant
+     *
+     * @return array
+     */
+    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    {
+        $converted = array();
+        $translate = Zend_Registry::get('translate');
+
+        // username
+        $data = array();
+        $data['key']      = 'keyValue';
+        $data['label']    = $translate->translate('keyValue');
+        $data['type']     = 'text';
+        $data['hint']     = $translate->translate('keyValue');
+        $data['order']    = 0;
+        $data['position'] = 1;
+        $data['fieldset'] = '';
+        $data['range']    = array('id'   => '',
+        'name' => '');
+        $data['required'] = true;
+        $data['readOnly'] = true;
+        $converted[] = $data;
+
+        // value
+        $data = array();
+        $data['key']      = 'value';
+        $data['label']    = $translate->translate('value');
+        $data['type']     = 'text';
+        $data['hint']     = $translate->translate('value');
+        $data['order']    = 0;
+        $data['position'] = 2;
+        $data['fieldset'] = '';
+        $data['range']    = array('id'   => '',
+        'name' => '');
+        $data['required'] = true;
+        $data['readOnly'] = false;
+        $converted[] = $data;
+
+        return $converted;
     }
 
 }

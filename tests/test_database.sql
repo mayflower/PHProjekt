@@ -646,3 +646,12 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (4,7),
 (5,7),
 (6,7);
+
+INSERT INTO SearchWords (`id`, `word`, `count`) VALUES
+(1, 'NOTE', 1);
+
+INSERT INTO searchwordmodule (`ModuleId`, `ItemId`, `WordId`) VALUES
+(1, 1, 1);
+
+INSERT INTO searchdisplay (`ModuleId`, `ItemId`, `firstDisplay`) VALUES
+(1, 1, 'test');

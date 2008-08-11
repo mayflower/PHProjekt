@@ -95,6 +95,36 @@ class User_IndexController extends IndexController
         echo Phprojekt_Converter_Json::convert($return);
 
     }
+    /**
+     * Save settings fields from grid, using the multple save action request
+     *
+     * @requestparam string data Array with fields and values
+     *
+     * @return void
+     */
+    public function jsonSaveMultipleSettingAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $data      = (array) $this->getRequest()->getParam('data');
+
+        $message = $translate->translate('The Items was edited correctly');
+        $showId = array();
+        foreach ($data as $id => $fields) {
+            if (array_key_exists('value', $fields)) {
+                $setting = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+                $settingName   = $setting->getSettingNameById($id);
+                $setting->setSetting($settingName, $fields['value']);
+                $showId[] = $id;
+            }
+        }
+
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => implode(',', $showId));
+
+        echo Phprojekt_Converter_Json::convert($return);
+    }
 
     /**
      * Gets the list of all settings and it is returned as an array
@@ -104,10 +134,20 @@ class User_IndexController extends IndexController
      */
     public function jsonGetSettingListAction() {
 
-        $tmp = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+        
+        
+        $settings = Phprojekt_Loader::getModel('User', 'UserModuleSetting');
+        
+        $metadata = $settings->getFieldDefinition();
+        $records = $settings->getList();
+        
+        $numRows = array('numRows' => count($records));
 
-
-        echo Phprojekt_Converter_Json::convert($tmp->getList());
+        $data  = array("metadata"=> $metadata,
+                       "data" => $records,
+                       "numRows" => count($records));
+        
+        echo Phprojekt_Converter_Json::convert($data);
 
     }
 

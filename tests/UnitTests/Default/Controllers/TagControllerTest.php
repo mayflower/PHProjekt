@@ -273,6 +273,6 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"id":"1","moduleId":"1","moduleName":"Project","firstDisplay":"","secondDisplay":""}]') > 0);
+        $this->assertTrue(strpos($response, '{"id":"1","moduleId":"1","moduleName":"Project","firstDisplay":"test","secondDisplay":null}') > 0);
     }
 }
