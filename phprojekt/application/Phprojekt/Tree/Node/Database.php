@@ -364,7 +364,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null !== $this->_activeRecord) {
             /* dont allow to set the tree dependent stuff */
-            if (!in_array($key, array('id', 'path', 'projectId'))) {
+            if (!in_array($key, array('id', 'path'))) {
                 $this->_activeRecord->$key = $value;
             }
         }

@@ -29,4 +29,53 @@
  */
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
+    /**
+     * Validate function for the projectId field
+     *
+     * @param integer $value Value of the projectId to check
+     *
+     * @return string Error msg
+     */
+    public function validateProjectId($value)
+    {
+        $node      = Phprojekt_Loader::getModel('Project', 'Project')->find($this->id);
+        $tree      = new Phprojekt_Tree_Node_Database($node, $this->id);
+
+        $tree->setup();
+        if ($tree->getActiveRecord()->id == $value) {
+            return 'The project can not saved under itself';
+        } else if ($this->_isInTheProject($value, $tree)) {
+            return 'The project can not saved under his children';
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if the projectId is under the same project or a subproject of him
+     *
+     * @param integer                      $projectId The projectId to check
+     * @param Phprojekt_Tree_Node_Database $node      The node of the current project
+     *
+     * @return boolean
+     */
+    private function _isInTheProject($projectId, $node)
+    {
+        $allow = false;
+        if ($node->hasChildren()) {
+            $childrens = $node->getChildren();
+            foreach ($childrens as $childrenNode) {
+                if ($projectId == $childrenNode->id) {
+                    $allow = true;
+                    break;
+                } else {
+                    if ($this->_isInTheProject($projectId, $childrenNode)) {
+                        $allow = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return $allow;
+    }
 }
