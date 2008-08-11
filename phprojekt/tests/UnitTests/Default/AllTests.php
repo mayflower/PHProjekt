@@ -24,7 +24,7 @@ require_once 'Controllers/IndexControllerTest.php';
 require_once 'Controllers/LoginControllerTest.php';
 require_once 'Controllers/ErrorControllerTest.php';
 require_once 'Controllers/TagControllerTest.php';
-
+require_once 'Controllers/SearchControllerTest.php';
 
 /**
  * Test suite for the default module
@@ -62,6 +62,7 @@ class Default_AllTests
         $suite->addTestSuite('Phprojekt_IndexController_Test');
         //// $suite->addTestSuite('Phprojekt_ErrorController_Test');
         $suite->addTestSuite('Phprojekt_TagController_Test');
+        $suite->addTestSuite('Phprojekt_SearchController_Test');
 
         return $suite;
     }

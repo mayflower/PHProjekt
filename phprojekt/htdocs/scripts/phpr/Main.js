@@ -27,6 +27,7 @@ dojo.require("phpr.Default.Main");
 dojo.require("phpr.Project.Main");
 dojo.require("phpr.Note.Main");
 dojo.require("phpr.Administration.Main");
+dojo.require("phpr.Settings.Main");
 dojo.require("phpr.Timecard.Main");
 dojo.require("phpr.Calendar.Main");
 
@@ -60,6 +61,7 @@ dojo.declare("phpr.Main", null, {
         this.Note           = new phpr.Note.Main();
         this.Project        = new phpr.Project.Main();
         this.Administration = new phpr.Administration.Main();
+        this.Settings       = new phpr.Settings.Main();
         this.Timecard       = new phpr.Timecard.Main();
         this.Calendar       = new phpr.Calendar.Main();
 
