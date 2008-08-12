@@ -38,14 +38,16 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function validateProjectId($value)
     {
-        $node      = Phprojekt_Loader::getModel('Project', 'Project')->find($this->id);
-        $tree      = new Phprojekt_Tree_Node_Database($node, $this->id);
+        $node = Phprojekt_Loader::getModel('Project', 'Project')->find($this->id);
 
-        $tree->setup();
-        if ($tree->getActiveRecord()->id == $value) {
-            return 'The project can not saved under itself';
-        } else if ($this->_isInTheProject($value, $tree)) {
-            return 'The project can not saved under his children';
+        if (null != $this->id) {
+            $tree = new Phprojekt_Tree_Node_Database($node, $this->id);
+            $tree->setup();
+            if ($tree->getActiveRecord()->id == $value) {
+                return 'The project can not saved under itself';
+            } else if ($this->_isInTheProject($value, $tree)) {
+                return 'The project can not saved under his children';
+            }
         }
 
         return null;

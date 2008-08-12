@@ -48,17 +48,40 @@ final class Default_Helpers_Save
         $parentNode = new Phprojekt_Tree_Node_Database($node->getActiveRecord(), $parentId);
         $parentNode->setup();
 
-        /* Assign the values */
+        // Assign the values
         foreach ($params as $k => $v) {
             if (isset($node->$k)) {
                 $node->$k = $v;
             }
         }
 
-        /* Set the owner */
+        // Set the owner
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $node->ownerId = $authNamespace->userId;
-        if ($node->getActiveRecord()->recordValidate()) {
+
+        // Parent Project
+        $parentNode    = Phprojekt_Loader::getModel('Project', 'Project')->find($node->projectId);
+        $itemRights    = $parentNode->getRights();
+        $relation      = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $modules       = $relation->getProjectModulePermissionsById($parentNode->id);
+
+        // Check all the fields
+        if (!$node->getActiveRecord()->recordValidate()) {
+            $error = array_pop($node->getActiveRecord()->getError());
+            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
+        // Check if the user have write access to the parent project
+        } else if (!$itemRights['currentUser']['write']  &&
+                   !$itemRights['currentUser']['create'] &&
+                   !$itemRights['currentUser']['copy']   &&
+                   !$itemRights['currentUser']['admin']) {
+            $error = 'You do not have write access into the parent project';
+            throw new Phprojekt_PublishedException($error);
+        // Check if the parent project have this module enabled
+        } else if (!$modules['data'][1]['inProject']) {
+            $error = 'You do not have access for add projects on the parent project';
+            throw new Phprojekt_PublishedException($error);
+        // Save
+        } else {
             if ((int)$node->projectId !== $parentId) {
                 $node->setParentNode($parentNode);
             } else {
@@ -106,15 +129,12 @@ final class Default_Helpers_Save
             // Save the role-user-project relation
             if (isset($params['userRelation'])) {
                 $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-                $model->saveRelation($params['roleRelation'], 
-                                     array_keys($params['userRelation']), 
+                $model->saveRelation($params['roleRelation'],
+                                     array_keys($params['userRelation']),
                                      $node->getActiveRecord()->id);
             }
 
             return $node->getActiveRecord();
-        } else {
-            $error = array_pop($node->getActiveRecord()->getError());
-            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         }
     }
 
@@ -133,7 +153,7 @@ final class Default_Helpers_Save
     {
         foreach ($params as $k => $v) {
             if (isset($model->$k)) {
-                /* dont allow to set the id on save, since is doit by the activerecord */
+                // dont allow to set the id on save, since is doit by the activerecord
                 if (!in_array($k, array('id'))) {
                     $model->$k = $v;
                 }
@@ -141,12 +161,34 @@ final class Default_Helpers_Save
         }
 
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        /* Set the owner */
+        // Set the owner
         if (isset($model->ownerId)) {
             $model->ownerId = $authNamespace->userId;
         }
 
-        if ($model->recordValidate()) {
+        // Parent Project
+        $parentNode    = Phprojekt_Loader::getModel('Project', 'Project')->find($model->projectId);
+        $itemRights    = $parentNode->getRights();
+        $relation      = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $modules       = $relation->getProjectModulePermissionsById($parentNode->id);
+
+        // Check all the fields
+        if (!$model->recordValidate()) {
+            $error = array_pop($model->getError());
+            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
+        // Check if the user have write access to the parent project
+        } else if (!$itemRights['currentUser']['write']  &&
+                   !$itemRights['currentUser']['create'] &&
+                   !$itemRights['currentUser']['copy']   &&
+                   !$itemRights['currentUser']['admin']) {
+            $error = 'You do not have write access into the parent project';
+            throw new Phprojekt_PublishedException($error);
+        // Check if the parent project have this module enabled
+        } else if (!$modules['data'][Phprojekt_Module::getId($model->getTableName())]['inProject']) {
+            $error = 'The parent project do not have enabled this module';
+            throw new Phprojekt_PublishedException($error);
+        // Save
+        } else {
             $model->save();
 
             $right  = array();
@@ -181,9 +223,6 @@ final class Default_Helpers_Save
             }
             $model->saveRights($rights);
             return $model;
-        } else {
-            $error = array_pop($model->getError());
-            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         }
     }
 
