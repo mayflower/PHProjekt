@@ -105,7 +105,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         type:     phpr.grid.cells.Select,
                         width:    porcent,
                         options:  opts,
-                        values:   vals
+                        values:   vals,
+                        editable: meta[i]['readOnly'] ? false : true,
                     });
                     break;
 
@@ -117,7 +118,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         styles:     "text-align:center;",
                         type:       phpr.grid.cells.DateTextBox,
                         formatter:  phpr.grid.formatDate,
-                        constraint: {formatLength: 'short', selector: "date"}
+                        constraint: {formatLength: 'short', selector: "date"},
+                        editable: meta[i]['readOnly'] ? false : true,
                     });
                     break;
 
@@ -128,7 +130,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         field:      meta[i]["key"],
                         styles:     "text-align:center;",
                         type:       dojox.grid.cells.TextBox,
-                        formatter:  phpr.grid.formatTime
+                        formatter:  phpr.grid.formatTime,
+                        editable: meta[i]['readOnly'] ? false : true,
                     });
                     break;
 
@@ -137,7 +140,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:  porcent,
                         name:   meta[i]["label"],
                         field:  meta[i]["key"],
-                        type: dojox.grid.cells.TextBox
+                        type: dojox.grid.cells.TextBox,
+                        editable: meta[i]['readOnly'] ? false : true,
                     });
                     break;
             }
