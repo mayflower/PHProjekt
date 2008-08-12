@@ -413,13 +413,8 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->notes = 'TEST';
         $item->startDate = '1981-05-12';
         $item->priority = 1;
-        $result = array();
-        $result[] = array('field'    => 'title',
-        'message'  => 'Is a required field');
-        $result[] = array('field'    => 'endDate',
-        'message'  => 'Is a required field');
         $item->recordValidate();
-        $this->assertEquals($result, $item->getError());
+        $this->assertEquals(2, count($item->getError()));
     }
 
     /**
