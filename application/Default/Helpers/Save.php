@@ -60,27 +60,22 @@ final class Default_Helpers_Save
         $node->ownerId = $authNamespace->userId;
 
         // Parent Project
-        $parentNode    = Phprojekt_Loader::getModel('Project', 'Project')->find($node->projectId);
-        $itemRights    = $parentNode->getRights();
-        $relation      = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-        $modules       = $relation->getProjectModulePermissionsById($parentNode->id);
+        if (isset($node->projectId)) {
+            $projectId = $node->projectId;
+        } else {
+            $projectId = 1;
+        }
 
-        // Check all the fields
+        // Checks
         if (!$node->getActiveRecord()->recordValidate()) {
             $error = array_pop($node->getActiveRecord()->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
-        // Check if the user have write access to the parent project
-        } else if (!$itemRights['currentUser']['write']  &&
-                   !$itemRights['currentUser']['create'] &&
-                   !$itemRights['currentUser']['copy']   &&
-                   !$itemRights['currentUser']['admin']) {
+        } else if (!self::_checkAccess($projectId)) {
             $error = 'You do not have write access into the parent project';
             throw new Phprojekt_PublishedException($error);
-        // Check if the parent project have this module enabled
-        } else if (!$modules['data'][1]['inProject']) {
+        } else if (!self::_checkModule(1, $projectId)) {
             $error = 'You do not have access for add projects on the parent project';
             throw new Phprojekt_PublishedException($error);
-        // Save
         } else {
             if ((int)$node->projectId !== $parentId) {
                 $node->setParentNode($parentNode);
@@ -167,27 +162,22 @@ final class Default_Helpers_Save
         }
 
         // Parent Project
-        $parentNode    = Phprojekt_Loader::getModel('Project', 'Project')->find($model->projectId);
-        $itemRights    = $parentNode->getRights();
-        $relation      = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-        $modules       = $relation->getProjectModulePermissionsById($parentNode->id);
+        if (isset($model->projectId)) {
+            $projectId = $model->projectId;
+        } else {
+            $projectId = 0;
+        }
 
-        // Check all the fields
+        // Checks
         if (!$model->recordValidate()) {
             $error = array_pop($model->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
-        // Check if the user have write access to the parent project
-        } else if (!$itemRights['currentUser']['write']  &&
-                   !$itemRights['currentUser']['create'] &&
-                   !$itemRights['currentUser']['copy']   &&
-                   !$itemRights['currentUser']['admin']) {
+        } else if (!self::_checkAccess($projectId)) {
             $error = 'You do not have write access into the parent project';
             throw new Phprojekt_PublishedException($error);
-        // Check if the parent project have this module enabled
-        } else if (!$modules['data'][Phprojekt_Module::getId($model->getTableName())]['inProject']) {
+        } else if (!self::_checkModule(Phprojekt_Module::getId($model->getTableName()), $projectId)) {
             $error = 'The parent project do not have enabled this module';
             throw new Phprojekt_PublishedException($error);
-        // Save
         } else {
             $model->save();
 
@@ -266,5 +256,53 @@ final class Default_Helpers_Save
         }
 
         return true;
+    }
+
+    /**
+     * Check if the user have write access to the parent project
+     *
+     * @param integer $projectId The project Id to check
+     *
+     * @return boolean
+     */
+    private function _checkAccess($projectId)
+    {
+        if ($projectId > 0) {
+            $parentNode = Phprojekt_Loader::getModel('Project', 'Project')->find($projectId);
+            $itemRights = $parentNode->getRights();
+
+            if (!$itemRights['currentUser']['write']  &&
+                !$itemRights['currentUser']['create'] &&
+                !$itemRights['currentUser']['copy']   &&
+                !$itemRights['currentUser']['admin']) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Check if the parent project have this module enabled
+     *
+     * @param integer $projectId The project Id to check
+     *
+     * @return boolean
+     */
+    private function _checkModule($moduleId, $projectId)
+    {
+        if ($projectId > 0) {
+            $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+            $modules  = $relation->getProjectModulePermissionsById($projectId);
+            if ($modules['data'][$moduleId]['inProject']) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 }
