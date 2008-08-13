@@ -165,20 +165,120 @@ phpr.getUserTags = function(){
     return phpr.userTags;
 };
 
+dojo.declare("phpr.DataStore", null, {
+    // summary:
+    //    Get and return data from the server
+    // description:
+    //    The data is request to the server
+    //    and then is cached for the future used.
+    _internalCache:  new Array(),
+    _onComplete:     null,
+
+    addStore:function(params) {
+        // summary:
+        //    Set a new store for save the data
+        // description:
+        //    Set a new store for save the data
+        if (!this._internalCache[params.url]) {
+            store = new phpr.ReadStore({url: params.url});
+            this._internalCache[params.url] = {
+                data: new Array(),
+                store: store,
+            };
+        }
+    },
+
+    requestData:function(params) {
+        // summary:
+        //    Request the data
+        // description:
+        //    If the data is not cached, request to the server.
+        //    Then return to the processData function
+        if (typeof params.processData == "undefined") {
+            params.processData = null;
+        }
+        if (this._internalCache[params.url]['data'].length == 0) {
+            this._internalCache[params.url]['store'].fetch({onComplete: dojo.hitch(this, "saveData", {url: params.url, processData: params.processData})});
+        } else if (params.processData) {
+            params.processData.call();
+        }
+    },
+
+    saveData:function(params, data) {
+        // summary:
+        //    Store the data in the cache
+        // description:
+        //    Store the data in the cache
+        //    Then return to the processData function
+        this._internalCache[params.url]['data'] = data;
+        if (params.processData) {
+            params.processData.call();
+        }
+    },
+
+    getData:function(params) {
+        // summary:
+        //    Return the "data" tag from the server
+        // description:
+        //    Return the "data" tag from the server
+        return this.getStore(params).getValue(this._internalCache[params.url]['data'][0], "data") || Array();
+    },
+
+    getMetaData:function(params) {
+        // summary:
+        //    Return the "metadata" tag from the server
+        // description:
+        //    Return the "metadata" tag from the server
+        return this.getStore(params).getValue(this._internalCache[params.url]['data'][1], "metadata") || Array();
+    },
+
+    deleteData:function(params) {
+        // summary:
+        //    Delete the cache
+        // description:
+        //    Delete the cache
+        this._internalCache[params.url]['data'] = new Array();
+    },
+
+    getStore:function(params) {
+        // summary:
+        //    Return the current data.store
+        // description:
+        //    Return the current data.store
+        return this._internalCache[params.url]['store'];
+    }
+});
+
+phpr.DataStore = new phpr.DataStore();
+
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
-    // We need the store explicitly here, since we have to pass it to the grid model.
+    // summary:
+    //    Request to the server
+    // description:
+    //    Request to the server and return an array with
+    //    data and metadata values
     requestMethod:"post",
     doClientPaging:false,
 
-    _filterResponse: function(data){
+    _filterResponse:function(data) {
         if (!data.data) {
             data.data = {};
         }
-        ret = {
-            items: [
-                {"metadata": data.metadata},
-                {"data": data.data}]
-        };
+        if (!data.metadata) {
+            data.metadata = {};
+        }
+        if (data.metadata.length == 0 && data.data.length == 0) {
+            alert(data);
+            ret = {
+                items: [{"data": data}]
+            };
+        } else {
+            ret = {
+                items: [
+                    {"data": data.data},
+                    {"metadata": data.metadata}]
+            };
+        }
         return ret;
     }
 });

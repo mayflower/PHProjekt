@@ -1,6 +1,6 @@
 dojo.provide("phpr.Settings.Default.Main");
 
-dojo.require("phpr.Component");
+dojo.require("phpr.Default.Main");
 dojo.require("phpr.Settings.Default.Tree");
 
 dojo.declare("phpr.Settings.Default.Main", phpr.Default.Main, {
@@ -10,7 +10,7 @@ dojo.declare("phpr.Settings.Default.Main", phpr.Default.Main, {
     module:           null,
     availableModules: null,
     writePermissions: false,
-    treeWidget: phpr.Settings.Default.Tree,
+    treeWidget:       phpr.Settings.Default.Tree,
 
     reload:function() {
         phpr.module   = this.module;
@@ -44,13 +44,6 @@ dojo.declare("phpr.Settings.Default.Main", phpr.Default.Main, {
         */
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
         // dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
-        
-    },
 
-    newEntry: function() {
-        // summary:
-        //     This function is responsible for displaying the form for a new entry in the
-        //     current Module
-        this.openForm([null]);
-    }
+    },
 });

@@ -7,7 +7,6 @@ dojo.require("phpr.Timecard.Grid");
 dojo.require("phpr.Timecard.Form");
 
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
-
 	constructor:function() {
 		this.module     = 'Timecard';
 		this.gridWidget = phpr.Timecard.Grid;
@@ -15,9 +14,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		this.treeWidget = phpr.Timecard.Tree;
         this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
 
-		//subscribe to all topics which concern this module
+		// Subscribe to all topics which concern this module
 		dojo.subscribe("Timecard.load", this, "load");
-		dojo.subscribe("Timecard.changeProjekt", this, "setProject");
+		dojo.subscribe("Timecard.changeProject", this, "setProject");
 		dojo.subscribe("Timecard.reload", this, "reload");
 		dojo.subscribe("Timecard.changeDate", this, "setDate");
 		dojo.subscribe("Timecard.form.Submitted", this, "submitForm");
@@ -25,6 +24,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		dojo.subscribe("Timecard.showSearchResults", this, "showSearchResults");
         dojo.subscribe("Timecard.drawTagsBox", this, "drawTagsBox");
 		dojo.subscribe("Timecard.showTagsResults", this, "showTagsResults");
+		dojo.subscribe("Timecard.updateCacheData", this, "updateCacheData");
         dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
         dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");
 	},

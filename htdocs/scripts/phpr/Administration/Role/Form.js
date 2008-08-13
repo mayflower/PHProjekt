@@ -1,5 +1,6 @@
 dojo.provide("phpr.Administration.Role.Form");
 dojo.provide("phpr.Administration.Role.ReadModule");
+
 dojo.require("phpr.Administration.Default.Form");
 
 dojo.declare("phpr.Administration.Role.Form", phpr.Administration.Default.Form, {

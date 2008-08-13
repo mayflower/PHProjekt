@@ -1,2 +1,7 @@
-/* {"identifier":"id","label":"name","items":[
-{"name":"Settings","id":"Setting","parent":null,"children":[]}]}  */
+{
+    "identifier":"id",
+    "label":"name",
+    "items":[{"name":"Admin","id":"1","parent":null,"children":[]},
+             {"name":"Setting","id":"Setting","parent":"1","children":[]},
+            ]
+}
