@@ -1,244 +1,60 @@
 dojo.provide("phpr.Project.Form");
+
 dojo.require("phpr.Default.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
-
-    moduleList: new Array(),
-    roleList: new Array(),
-    relationList: new Array(),
-
-    // summary:
-    //    This class is responsible for rendering the Form of a Project module
-    // description:
-    //    The Form for the Project module is rendered -  at the moment it is exactly
-    //    the same as in the Default module
-    constructor: function() {
-    },
-
     initData: function() {
-        // summary:
-        //    Init all the data before draw the form
-        // description:
-        //    This function call all the needed data before the form is drawed
-        //    The form will wait for all the data are loaded.
-        //    Each module can overwrite this function for load the own data
+        dojo.inher
         this.historyStore = new phpr.ReadHistory({
             url: phpr.webpath+"index.php/History/index/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
         });
         this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
 
         // Get all the active users
-        this.userStore = new phpr.ReadData({
-            url: phpr.webpath+"index.php/User/index/jsonGetUsers"
-        });
-        this.userStore.fetch({onComplete: dojo.hitch(this, "getUserData")});
+        this.userStore = new phpr.User();
+        this.userStore.fetch();
 
         // Get modules
-        this.roleStore = new phpr.ReadData({
-            url: phpr.webpath+"index.php/Project/index/jsonGetProjectRoleUserRelation/id/" + this.id
-        });
-        this.roleStore.fetch({onComplete: dojo.hitch(this, "getRoleData")});
+        this.roleStore = new phpr.Role(this.id);
+        this.roleStore.fetch();
 
         // Get modules
-        this.moduleStore = new phpr.ReadData({
-            url: phpr.webpath+"index.php/Project/index/jsonGetModulesProjectRelation/id/" + this.id
-        });
-        this.moduleStore.fetch({onComplete: dojo.hitch(this, "getModuleData")});
+        this.moduleStore = new phpr.Module(this.id);
+        this.moduleStore.fetch();
     },
 
-    getFormData: function(items, request) {
+    addModuleTab:function(data) {
         // summary:
-        //    This function renders the form data according to the database manager settings
+        //    Add Tab for allow/disallow modules on the project
         // description:
-        //    This function processes the form data which is stored in a phpr.ReadStore and
-        //    renders the actual form according to the received data
-        phpr.destroyWidgets("detailsBox");
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-        phpr.destroySimpleWidget("dataAccessAdd");
-        phpr.destroySimpleWidget("checkAdminAccessAdd");
-        phpr.destroySimpleWidget("checkWriteAccessAdd");
-        phpr.destroySimpleWidget("checkReadAccessAdd");
-
-        this.formdata = "";
-        meta = this.formStore.getValue(items[0], "metadata");
-        data = this.formStore.getValue(items[1], "data");
-        var writePermissions  = true;
-        var deletePermissions = false;
-        var accessPermissions = true;
-        if (this.id > 0) {
-            writePermissions  = data[0]["rights"]["currentUser"]["write"];
-            deletePermissions = data[0]["rights"]["currentUser"]["delete"];
-            accessPermissions = data[0]["rights"]["currentUser"]["admin"];
-        }
-
-        // Except the current user
-        var accessContent = new Array();
-        var currentUser   = 0;
-        if (this.id > 0) {
-            currentUser = data[0]["rights"]["currentUser"]["userId"];
-            for (i in data[0]["rights"]) {
-                if (i != "currentUser") {
-                    accessContent.push(data[0]["rights"][i]);
-                }
-            }
-        }
-
-        this.fieldTemplate = new phpr.Default.field();
-        for (var i = 0; i < meta.length; i++) {
-            itemtype     = meta[i]["type"];
-            itemid       = meta[i]["key"];
-            itemlabel    = meta[i]["label"];
-            itemdisabled = meta[i]["readOnly"];
-            itemrequired = meta[i]["required"];
-            itemlabel    = meta[i]["label"];
-            itemvalue    = data[0][itemid];
-            itemrange    = meta[i]["range"];
-            //special workaround for new projects - set parent to current ProjectId
-            if(itemid == 'projectId' && !itemvalue){
-                itemvalue = phpr.currentProjectId;
-            }
-
-            //render the fields according to their type
-            switch (itemtype) {
-                case 'checkbox':
-                    this.formdata += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue);
-                    break;
-
-                case'selectbox':
-                    this.formdata += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled);
-                    break;
-                case'multipleselectbox':
-                    this.formdata += this.fieldTemplate.multipleSelectBoxRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled, 5, "multiple");
-                    break;
-                case 'multipleselect':
-                    this.formdata += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                                itemdisabled);
-                    break;
-                case'date':
-                    this.formdata += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                   itemdisabled);
-                    break;
-                case 'time':
-                    this.formdata += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                   itemdisabled);
-                    break;
-                case 'textarea':
-                    this.formdata += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled);
-                    break;
-                case 'textfield':
-                default:
-                    this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                        itemdisabled);
-                    break;
-            }
-        }
-
-        // add tags at the end of the first tab
-        this.formdata += this.displayTagInput();
-        formtabs = "";
-
-        if (accessPermissions) {
-            // template for the access tab
-            this.accessData = this.render(["phpr.Default.template", "accesstab.html"], null, {
-            accessUserText: phpr.nls.accessUser,
-            accessReadText: phpr.nls.accessRead,
-            accessWriteText: phpr.nls.accessWrite,
-            accessAccessText: phpr.nls.accessAccess,
-            accessCreateText: phpr.nls.accessCreate,
-            accessCopyText: phpr.nls.accessCopy,
-            accessDeleteText: phpr.nls.accessDelete,
-            accessDownloadText: phpr.nls.accessDownload,
-            accessAdminText: phpr.nls.accessAdmin,
-            accessNoneText: phpr.nls.accessNone,
-            accessActionText: phpr.nls.accessAction,
-            users: this.userList,
-            currentUser: currentUser,
-            accessContent: accessContent,
-            });
-
-            this.rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
-                accessUserText: phpr.nls.accessUser,
-                accessRoleText: phpr.nls.accessRole,
-                accessActionText: phpr.nls.accessAction,
-                users: this.userList,
-                roles: this.roleList,
-                relations: this.relationList,
-            });
-
-            this.modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
-                moduleNameText: phpr.nls.moduleName,
+        //    Add Tab for allow/disallow modules on the project
+        if (this._accessPermissions) {
+            var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
+                moduleNameText:   phpr.nls.moduleName,
                 moduleActiveText: phpr.nls.moduleActive,
-                modules: this.moduleList,
+                modules:          this.moduleStore.getModuleList(),
             });
-        }
-        // later on we need to provide different tabs depending on the metadata
-        formtabs = this.render(["phpr.Default.template", "tabs.html"], null,{
-            innerTabs: this.formdata,
-            id:        'tab1',
-            title:     'Basic Data',
-            formId:    'dataFormTab'
-        });
-        if (accessPermissions) {
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
-                innerTabs: this.accessData,
-                id:        'tab2',
-                title:     'Access',
-                formId:    'accessFormTab'
-            });
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
-                innerTabs: this.rolesData,
-                id:        'tab3',
-                title:     'Roles',
-                formId:    'roleFormTab'
-            });
-            formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
-                innerTabs: this.modulesData,
-                id:        'tab4',
-                title:     'Modules',
-                formId:    'moduleFormTab'
-            });
-        }
-        formtabs += this.render(["phpr.Default.template", "tabs.html"], null,{
-            innerTabs: this.historyData,
-            id:       'tab5',
-            title:    'History',
-            formId:   'historyFormTab'
-        });
-        this.render(["phpr.Default.template", "content.html"], dojo.byId("detailsBox"),{
-            id: 'formtab',
-            tabsContent: formtabs
-        });
-        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
-            writePermissions: writePermissions,
-            deletePermissions: deletePermissions,
-            saveText: phpr.nls.save,
-            deleteText: phpr.nls.delete,
-        });
 
-        this.formsWidget = Array();
-        this.formsWidget.push(dijit.byId('dataFormTab'));
-        this.formsWidget.push(dijit.byId('accessFormTab'));
-        this.formsWidget.push(dijit.byId('roleFormTab'));
-        this.formsWidget.push(dijit.byId('moduleFormTab'));
+            this.addTab(modulesData, 'tabModules', 'Modules', 'moduleFormTab');
+        }
+    },
 
-        if (accessPermissions) {
-            // add button for access
-            var params = {
-                label:     '',
-                id:        'newAccess',
-                iconClass: 'add',
-                alt:       'Add'
-            };
-            newAccess = new dijit.form.Button(params);
-            dojo.byId("accessAddButton").appendChild(newAccess.domNode);
-            dojo.connect(dijit.byId("newAccess"), "onClick", dojo.hitch(this, "newAccess"));
-            dojo.connect(dijit.byId("checkAdminAccessAdd"), "onClick", dojo.hitch(this, "checkAllAccess", "Add"));
-            dojo.connect(dijit.byId("checkNoneAccessAdd"), "onClick", dojo.hitch(this, "checkNoneAccess", "Add"));
+    addRoleTab:function(data) {
+        // summary:
+        //    Add Tab for user-role relation into the project
+        // description:
+        //    Add Tab for user-role relation into the project
+        if (this._accessPermissions) {
+            var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
+                accessUserText:   phpr.nls.accessUser,
+                accessRoleText:   phpr.nls.accessRole,
+                accessActionText: phpr.nls.accessAction,
+                users:            this.userStore.getUserList(),
+                roles:            this.roleStore.getRoleList(),
+                relations:        this.roleStore.getRelationList(),
+            });
+
+            this.addTab(rolesData, 'tabRoles', 'Roles', 'roleFormTab');
 
             // add button for role-user
             var params = {
@@ -250,25 +66,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             newRoleUser = new dijit.form.Button(params);
             dojo.byId("relationAddButton").appendChild(newRoleUser.domNode);
             dojo.connect(dijit.byId("newRoleUser"), "onClick", dojo.hitch(this, "newRoleUser"));
-
-            // delete buttons for access
-            // add check all and none functions
-            for (i in accessContent) {
-                var userId     = accessContent[i]["userId"]
-                var idName     = "deleteAccess" + userId;
-                var buttonName = "accessDeleteButton" + userId;
-                var params = {
-                    label:     '',
-                    id:        idName,
-                    iconClass: 'cross',
-                    alt:       'Delete'
-                };
-                idName = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(idName.domNode);
-                dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
-                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
-                dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
-            }
 
             // delete buttons for role-user relation
             for (i in this.relationList) {
@@ -286,10 +83,13 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
             }
         }
+    },
 
-        // action buttons for the form
-        dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
-        dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
+    addModuleTabs:function(data) {
+        this.addAccessTab(data);
+        this.addModuleTab(data);
+        this.addRoleTab(data);
+        this.addTab(this.historyData, 'tabHistory', 'History');
     },
 
     newRoleUser: function () {
@@ -345,39 +145,4 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var parent = e.parentNode;
         parent.removeChild(e);
     },
-
-    getModuleData: function(items, request) {
-        // summary:
-        //    This function get all the active modules
-        // description:
-        //    This function get all the active modules,
-        //    and make the array for draw it with the relation module-project
-        var modules = this.moduleStore.getValue(items[0], "data");
-        this.moduleList = new Array();
-
-        for (i in modules) {
-            this.moduleList.push({"id":modules[i]['id'],"name":modules[i]['name'],
-                                  "inProject":modules[i]['inProject']})
-        }
-    },
-
-    getRoleData: function(items, request) {
-        // summary:
-        //    This function get all the roles and their assignes user for onw project
-        // description:
-        //    This function get all the roles and their assignes user for onw project
-        var roles         = this.roleStore.getValue(items[0], "data");
-        this.roleList     = new Array();
-        this.relationList = new Array();
-
-        for (i in roles) {
-            this.roleList.push({"id":roles[i]['id'], "name":roles[i]['name']});
-            for (j in roles[i]['users']) {
-                this.relationList.push({"roleId": roles[i]['id'],
-                                        "roleName": roles[i]['name'],
-                                        "userId": roles[i]['users'][j]['id'],
-                                        "userName": roles[i]['users'][j]['name']});
-            }
-        }
-    }
 });

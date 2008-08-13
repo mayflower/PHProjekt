@@ -11,6 +11,13 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     //    Class for displaying a PHProjekt grid
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a dojo grid
+    main:          null,
+    id:            0,
+    updateUrl:     null,
+    _newRowValues: new Array(),
+    _oldRowValues: new Array(),
+    gridData:      new Array(),
+    url:           null,
 
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
@@ -23,15 +30,19 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this._newRowValues = {};
         this._oldRowValues = {};
         this.gridData      = {};
+        this.url           = null;
 
         this.setUrl();
         this.setNode();
 
+        phpr.destroySimpleWidget("exportGrid");
+        phpr.destroySimpleWidget("saveChanges");
+        phpr.destroySimpleWidget("gridNode");
+
         this.gridLayout = new Array();
-        this.gridStore = new phpr.ReadStore({
-            url: this.url
-        });
-        this.gridStore.fetch({onComplete: dojo.hitch(this, "onLoaded")});
+
+        phpr.DataStore.addStore({url: this.url});
+        phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
 
         // Draw the tags
         this.showTags();
@@ -47,9 +58,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
     setNode:function() {
         // summary:
-        //    Set the url for get the data
+        //    Set the node to put the grid
         // description:
-        //    Set the url for get the data
+        //    Set the node to put the grid
         this._node = dijit.byId("gridBox");
     },
 
@@ -58,8 +69,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Draw the tags
         // description:
         //    Draw the tags
-        phpr.receiveUserTags();
-        this.publish("drawTagsBox",[phpr.getUserTags()]);
+        //phpr.receiveUserTags();
+        //this.publish("drawTagsBox",[phpr.getUserTags()]);
     },
 
     useIdInGrid: function() {
@@ -162,20 +173,22 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    If there is any row, render export Button
         if (meta.length > 0) {
-            var params = {
-                baseClass: "positive",
-                id: "exportGrid",
-                iconClass: "export",
-                alt: "Export",
-                disabled: false
-            };
-            var exportButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(exportButton.domNode);
-            dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "export"));
+            if (!dijit.byId("exportGrid")) {
+                var params = {
+                    baseClass: "positive",
+                    id: "exportGrid",
+                    iconClass: "export",
+                    alt: "Export",
+                    disabled: false
+                };
+                var exportButton = new dijit.form.Button(params);
+                dojo.byId("buttonRow").appendChild(exportButton.domNode);
+                dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "export"));
+            }
         }
     },
 
-    onLoaded:function(dataContent, request) {
+    onLoaded:function(dataContent) {
         // summary:
         //    This function is called when the grid is loaded
         // description:
@@ -186,26 +199,28 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.gridData = {
             items: []
         };
-        var content = this.gridStore.getValue(dataContent[1], "data") || Array();
+        var content = phpr.DataStore.getData({url: this.url});
         for (var i = 0; i < content.length; i++) {
             this.gridData.items.push(content[i]);
         }
         store = new dojo.data.ItemFileWriteStore({data: this.gridData});
 
         // Render save Button
-        var params = {
-            baseClass: "positive",
-            id: "saveChanges",
-            iconClass: "disk",
-            alt: "Save",
-            disabled: true
-        };
-        var saveButton = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(saveButton.domNode);
-        dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
+        if (!dijit.byId("saveChanges")) {
+            var params = {
+                baseClass: "positive",
+                id: "saveChanges",
+                iconClass: "disk",
+                alt: "Save",
+                disabled: true
+            };
+            var saveButton = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(saveButton.domNode);
+            dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
+        }
 
         // Layout of the grid
-        var meta = this.gridStore.getValue(dataContent[0], "metadata") || Array();
+        var meta = phpr.DataStore.getMetaData({url: this.url});
 
         this.setExport(meta);
 
@@ -213,7 +228,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this._node.setContent(phpr.nls.noresults);
         } else {
             this.setGridLayout(meta);
-            phpr.destroyWidgets("gridNode");
             this.grid = new dojox.grid.DataGrid({
                 id: "gridNode",
                 store: store,
@@ -236,22 +250,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             dojo.connect(this.grid,"onApplyCellEdit",dojo.hitch(this,"cellEdited"));
             dojo.connect(this.grid,"onStartEdit",dojo.hitch(this,"checkCanEdit"));
         }
-    },
-
-    onSubmitFilter:function() {
-        // summary: This function reloads the grid after submitting filters
-        var vals   = {};
-        var values = this._filterForm.getValues();
-
-        for (var i in values) {
-            vals["filter["+i+"]"] = values[i];
-        }
-
-        this.grid.model.query = vals;
-        this.grid.model.clearData();
-        this.grid.model.requestRows(null, null, dojo.hitch(this, function() {
-            this.grid.widget.updateRowCount(this.grid.model.getRowCount());
-        }));
     },
 
     showForm:function(e) {
@@ -321,7 +319,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     toggleSaveButton:function() {
-        // highlight when button gets avtivated
+        // summary:
+        //    highlight when button gets avtivated
+        // description:
+        //    highlight when button gets avtivated
         saveButton = dijit.byId('saveChanges');
         if (saveButton.disabled == true) {
             dojox.fx.highlight({
@@ -337,8 +338,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     saveChanges:function() {
-        // Make sure, that an element that is still in edit mode calls "onApplyCellEdit",
-        // so we also get the new data into _newRowValues.
+        // summary:
+        //    Apply the changes into the server
+        // description:
+        //    Get all the new values into the _newRowValues
+        //    and sent it to the server
         this.grid.edit.apply();
 
         // Get all the IDs for the data sets.
@@ -361,6 +365,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 if (response.type =='success') {
                     this._newRowValues = {};
                     this._oldRowValues = {};
+                    this.updateData();
                     this.publish("reload");
                 }
             }),
@@ -371,7 +376,19 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     export:function() {
+        // summary:
+        //    Open a new widnows in CVS mode
+        // description:
+        //    Open a new widnows in CVS mode
         window.open(phpr.webpath+"index.php/"+phpr.module+"/index/csvList/nodeId/"+this.id);
         return false;
-    }
+    },
+
+    updateData: function() {
+        // summary:
+        //    Delete the cache for this grid
+        // description:
+        //    Delete the cache for this grid
+        phpr.DataStore.deleteData({url: this.url});
+    },
 });

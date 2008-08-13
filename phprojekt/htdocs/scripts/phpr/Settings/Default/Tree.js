@@ -1,31 +1,35 @@
 dojo.provide("phpr.Settings.Default.Tree");
-dojo.require("phpr.Component");
 
-dojo.declare("phpr.Settings.Default.Tree", phpr.Component, {
-   	_treeNode:  null,
-	treeWidget: null,
-	module:     "Settings",
+dojo.require("phpr.Default.Tree");
 
-    constructor: function(main) {
-        var treepath = phpr.webpath + "scripts/phpr/Settings/Default/settingstree.json";
-        this.main    = main;
+dojo.declare("phpr.Settings.Default.Tree", phpr.Default.Tree, {
 
-		this._treeNode = dojo.byId("treeBox");
+    setUrl:function() {
+        this._url = phpr.webpath + "scripts/phpr/Settings/Default/settingstree.json";
+	},
 
-		if (dijit.byId(this._treeNode)) {
-			phpr.destroyWidgets("treeBox");
-		}
+    setId:function() {
+        phpr.destroySimpleWidget("treeNode");
+        this._idName = 'treeSettingsNode';
+    },
 
-        this.render(["phpr.Settings.Default.template", "tree.html"], this._treeNode, {
-            url: treepath,
-            settingsText: phpr.nls.settings,
+    getModel:function(store) {
+        return new dijit.tree.ForestStoreModel({
+            store: store,
+            query: {parent:'1'},
+            rootId:    phpr.nls.settings,
+            rootLabel: phpr.nls.settings,
         });
+    },
 
-		this.treeWidget = dijit.byId("treeNode");
-        dojo.connect(this.treeWidget, "onClick", dojo.hitch(this, "onItemClick"));
+    getTree:function(model) {
+        return new dijit.Tree({
+            id:        this._idName,
+            model:     model,
+        }, document.createElement('div'));
     },
 
     onItemClick: function(item) {
         dojo.publish(item.id+".reload");
-    }
+    },
 });

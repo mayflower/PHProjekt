@@ -1,11 +1,11 @@
 ({
 	// Navigation
 	"search": "Buscar",
-    "administration": "Administraci&oacute;n",
+    "administration": "Administracion",
     "administrator": "Administrador",
-    "settings": "Configuraci&oacute;n",
+    "settings": "Configuracion",
     "timecard": "Asistencias",
-    "timecardOverview": "Visi&oacute;n general",
+    "timecardOverview": "Vision general",
     "timecardWorkingtime": "Tiempo de trabajo",
     "timecardWorkingtimeStart": "Iniciar",
     "timecardWorkingtimeStop": "Detener",
@@ -21,7 +21,7 @@
     "gridCantEdit": "No tiene acceso para editar este item",
 
 	// Timecard
-	"timecardQuickAccess": "Acceso r&aacute;pido",
+	"timecardQuickAccess": "Acceso rapido",
     "timecardtimeRecordingFor": "Tiempo grabado para",
 	"timecardDate": "Fecha",
 	"timecardWorkingTimes": "Tiempos de Trabajo",
@@ -46,10 +46,10 @@
     "accessDownload": "Bajar",
     "accessAdmin": "Admin",
     "accessNone": "Ninguno",
-	"accessAction": "Acci&oacute;n",
-	"accessModule": "Mo&oacute;dulo",
+	"accessAction": "Accion",
+	"accessModule": "Modulo",
 
 	// Modules
-    "moduleName": "M&oacute;dulo",
+    "moduleName": "Modulo",
     "moduleActive": "Activo",
 })

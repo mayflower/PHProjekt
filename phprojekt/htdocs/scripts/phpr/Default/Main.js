@@ -1,6 +1,9 @@
 dojo.provide("phpr.Default.Main");
 
 dojo.require("phpr.Component");
+dojo.require("phpr.User");
+dojo.require("phpr.Role");
+dojo.require("phpr.Module");
 
 // Load the widgets the template uses.
 dojo.require("dijit.layout.BorderContainer");
@@ -135,7 +138,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         );
     },
 
-    reload:function() {
+    reload:function(update) {
         // summary:
         //    This function reloads the current module
         // description:
@@ -183,12 +186,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        phpr.destroyWidgets("subModuleNavigation");
-       	phpr.destroyWidgets("buttonRow");
+
         var self = this;
         var newEntry = null;
         var firstModule = null
         var createPermissions = false;
+        phpr.destroySimpleWidget("newEntry");
         var navigation ='<ul id="nav_main">';
         dojo.forEach(data,function(modules) {
             var liclass ='';
@@ -378,7 +381,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("detailsBox");
 
         // Destroy list view
-        phpr.destroyWidgets("buttonRow");
+        //phpr.destroyWidgets("buttonRow");
         phpr.destroyWidgets("gridBox");
         phpr.destroyWidgets("gridNode");
         phpr.destroyWidgets("headerContext");
@@ -479,7 +482,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("detailsBox");
 
         // Destroy list view
-        phpr.destroyWidgets("buttonRow");
+        //phpr.destroyWidgets("buttonRow");
         phpr.destroyWidgets("gridBox");
         phpr.destroyWidgets("gridNode");
         phpr.destroyWidgets("headerContext");
@@ -503,5 +506,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 dijit.byId("gridBox").setContent(search);
             })
         });
+    },
+
+    updateCacheData:function() {
+        this.grid.updateData();
+        this.form.updateData();
     },
 });
