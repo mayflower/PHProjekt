@@ -136,4 +136,15 @@ class Role_Models_Role extends Phprojekt_ActiveRecord_Abstract implements Phproj
     {
         return (array) $this->_validate->_error->getError();
     }
+    
+    /**
+     * Delete a role and all his relations. It prevents deletion of role 1 -admin role-
+     *
+     * @return void
+     */
+    public function delete() {
+        if ((!empty($this->id)) && ($this->id != 1)) {
+            parent::delete();
+        }
+    }
 }

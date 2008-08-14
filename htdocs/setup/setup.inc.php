@@ -18,6 +18,12 @@ function checkServer() {
     if (substr(phpversion(),0,1) < 5) {
         die("Sorry, you need PHP 5 or newer to run PHProjekt 6");
     }
+    
+    // check pdo_mysql library
+    $tmp = phpversion('pdo_mysql');
+    if (empty($tmp)) {
+        die("Sorry, you need pdo_mysql extension to install PHProjekt 6");
+    }
 
     // checking if configuration.ini exists
     $baseDir = substr($_SERVER['SCRIPT_FILENAME'], 0, -22);
