@@ -6,22 +6,12 @@ dojo.require("phpr.Note.Grid");
 dojo.require("phpr.Note.Form");
 
 dojo.declare("phpr.Note.Main", phpr.Default.Main, {
-	constructor:function() {
-		this.module     = 'Note';
-		this.gridWidget = phpr.Note.Grid;
+    constructor:function() {
+        this.module = 'Note';
+        this.loadFunctions(this.module);
+
+        this.gridWidget = phpr.Note.Grid;
 		this.formWidget = phpr.Note.Form;
 		this.treeWidget = phpr.Note.Tree;
-
-		// Subscribe to all topics which concern this module
-		dojo.subscribe("Note.load", this, "load");
-		dojo.subscribe("Note.changeProject",this, "loadSubElements");
-		dojo.subscribe("Note.reload", this, "reload");
-		dojo.subscribe("Note.openForm", this, "openForm");
-		dojo.subscribe("Note.form.Submitted", this, "submitForm");
-		dojo.subscribe("Note.submitSearchForm", this, "submitSearchForm");
-		dojo.subscribe("Note.showSearchResults", this, "showSearchResults");
-		dojo.subscribe("Note.drawTagsBox", this, "drawTagsBox");
-		dojo.subscribe("Note.showTagsResults", this, "showTagsResults");
-		dojo.subscribe("Note.updateCacheData", this, "updateCacheData");
 	}
 });

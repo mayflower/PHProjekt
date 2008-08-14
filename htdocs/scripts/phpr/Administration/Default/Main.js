@@ -1,6 +1,7 @@
 dojo.provide("phpr.Administration.Default.Main");
 
 dojo.require("phpr.Component");
+dojo.require("phpr.Store");
 dojo.require("phpr.Administration.Default.Tree");
 
 dojo.declare("phpr.Administration.Default.Main", phpr.Default.Main, {

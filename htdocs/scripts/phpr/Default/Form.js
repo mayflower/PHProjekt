@@ -73,7 +73,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
 
         // Get all the active users
-        this.userStore = new phpr.User();
+        this.userStore = new phpr.Store.User();
         this.userStore.fetch();
     },
 
@@ -113,7 +113,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 accessAdminText:    phpr.nls.accessAdmin,
                 accessNoneText:     phpr.nls.accessNone,
                 accessActionText:   phpr.nls.accessAction,
-                users:              this.userStore.getUserList(),
+                users:              this.userStore.getList(),
                 currentUser:        currentUser,
                 accessContent:      accessContent,
             });
@@ -260,9 +260,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
         }
 
-        // add tags at the end of the first tab
-        this.formdata += this.displayTagInput();
-        formtabs = "";
+        // add special inputs to the Basic Data
+        this.addBasicFields();
 
         this.form = this.setFormContent();
         this.formsWidget = new Array();
@@ -304,6 +303,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Add all the tabs that are not the basic data
         this.addAccessTab(data);
         this.addTab(this.historyData, 'tabHistory', 'History');
+    },
+
+    addBasicFields:function() {
+        // summary:
+        //    Add some special fields
+        // description:
+        //    Add some special fields
+        this.formdata += this.displayTagInput()
     },
 
     newAccess: function () {

@@ -11,15 +11,15 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
 
         // Get all the active users
-        this.userStore = new phpr.User();
+        this.userStore = new phpr.Store.User();
         this.userStore.fetch();
 
         // Get modules
-        this.roleStore = new phpr.Role(this.id);
+        this.roleStore = new phpr.Store.Role(this.id);
         this.roleStore.fetch();
 
         // Get modules
-        this.moduleStore = new phpr.Module(this.id);
+        this.moduleStore = new phpr.Store.Module(this.id);
         this.moduleStore.fetch();
     },
 
@@ -32,7 +32,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
                 moduleNameText:   phpr.nls.moduleName,
                 moduleActiveText: phpr.nls.moduleActive,
-                modules:          this.moduleStore.getModuleList(),
+                modules:          this.moduleStore.getList(),
             });
 
             this.addTab(modulesData, 'tabModules', 'Modules', 'moduleFormTab');
@@ -49,8 +49,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 accessUserText:   phpr.nls.accessUser,
                 accessRoleText:   phpr.nls.accessRole,
                 accessActionText: phpr.nls.accessAction,
-                users:            this.userStore.getUserList(),
-                roles:            this.roleStore.getRoleList(),
+                users:            this.userStore.getList(),
+                roles:            this.roleStore.getList(),
                 relations:        this.roleStore.getRelationList(),
             });
 
@@ -144,5 +144,12 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var e = dojo.byId("trRelationFor" + userId);
         var parent = e.parentNode;
         parent.removeChild(e);
+    },
+
+    updateData:function() {
+        phpr.DataStore.deleteData({url: this._url});
+        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
+        phpr.DataStore.deleteData({url: subModuleUrl});
+        this.moduleStore.update();
     },
 });
