@@ -240,8 +240,12 @@ class IndexController extends Zend_Controller_Action
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $model->delete();
-            $message = $translate->translate('The Item was deleted correctly');
+            $tmp = $model->delete();
+            if (!empty($tmp)) {
+                $message = $translate->translate('The Item was deleted correctly');
+            } else {
+                $message = $translate->translate("The Item can't be deleted");
+            }
             $return  = array('type'    => 'success',
                              'message' => $message,
                              'code'    => 0,

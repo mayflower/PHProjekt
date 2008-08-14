@@ -20,7 +20,7 @@ dojo.declare("phpr.Settings.Default.Main", phpr.Default.Main, {
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.render(["phpr.Settings.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.renderButton();
         var updateUrl = phpr.webpath + 'index.php/User/index/jsonSaveMultipleSetting';
         this.tree     = new this.treeWidget(this);
