@@ -22,8 +22,8 @@ dojo.require("phpr.roundedContentPane");
 
 //Load all module mains
 //When a new Module is created please add here
-dojo.require("phpr.Todo.Main");
 dojo.require("phpr.Default.Main");
+dojo.require("phpr.Todo.Main");
 dojo.require("phpr.Project.Main");
 dojo.require("phpr.Note.Main");
 dojo.require("phpr.Administration.Main");

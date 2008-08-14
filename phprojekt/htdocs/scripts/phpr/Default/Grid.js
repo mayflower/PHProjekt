@@ -205,8 +205,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
         store = new dojo.data.ItemFileWriteStore({data: this.gridData});
 
+        // Layout of the grid
+        var meta = phpr.DataStore.getMetaData({url: this.url});
+
         // Render save Button
-        if (!dijit.byId("saveChanges")) {
+        if (!dijit.byId("saveChanges") && (meta.length >0)) {
             var params = {
                 baseClass: "positive",
                 id: "saveChanges",
@@ -218,9 +221,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             dojo.byId("buttonRow").appendChild(saveButton.domNode);
             dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
         }
-
-        // Layout of the grid
-        var meta = phpr.DataStore.getMetaData({url: this.url});
 
         this.setExport(meta);
 

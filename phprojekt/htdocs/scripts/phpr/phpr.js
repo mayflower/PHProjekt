@@ -261,23 +261,20 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     doClientPaging:false,
 
     _filterResponse:function(data) {
-        if (!data.data) {
-            data.data = {};
+        if (typeof data.data == 'undefined') {
+            data.data = new Array();
         }
-        if (!data.metadata) {
-            data.metadata = {};
-        }
-        if (data.metadata.length == 0 && data.data.length == 0) {
-            alert(data);
-            ret = {
-                items: [{"data": data}]
-            };
+        if (data.data.length == 0 && typeof data.metadata == 'undefined') {
+            var retData     = data;
+            var retMetaData = new Array();
         } else {
-            ret = {
-                items: [
-                    {"data": data.data},
-                    {"metadata": data.metadata}]
-            };
+            var retData     = data.data;
+            var retMetaData = data.metadata;
+        }
+        ret = {
+            items: [
+                {"data":     retData},
+                {"metadata": retMetaData}]
         }
         return ret;
     }
