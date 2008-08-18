@@ -35,7 +35,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 		dojo.subscribe(module+".changeProject",this, "loadSubElements");
 		dojo.subscribe(module+".reload", this, "reload");
 		dojo.subscribe(module+".openForm", this, "openForm");
-		dojo.subscribe(module+".form.Submitted", this, "submitForm");
 		dojo.subscribe(module+".submitSearchForm", this, "submitSearchForm");
 		dojo.subscribe(module+".showSearchResults", this, "showSearchResults");
 		dojo.subscribe(module+".drawTagsBox", this, "drawTagsBox");
@@ -60,17 +59,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.currentProjectId = phpr.rootProjectId;
         }
         this.reload();
-    },
-
-    submitForm:function(/*int*/id,/*int*/parent) {
-        // summary:
-        //    after a Form has been submitted the view is updated
-        // description:
-        //    after submitting a form this function takes care of updating
-        //    the tree and the grid, so that the changes are displayed
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/id/';
-        //this.tree     = new this.treeWidget(this,'Project');
-        this.grid     = new this.gridWidget(updateUrl,this,parent);
     },
 
     load:function() {

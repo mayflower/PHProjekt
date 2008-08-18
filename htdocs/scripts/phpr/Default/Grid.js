@@ -92,7 +92,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this.gridLayout.push({
                 name:     "ID",
                 field:    "id",
-                width:    porcent,
+                width:    "40px",
                 editable: false,
                 styles:   "text-decoration:underline;"
             });
