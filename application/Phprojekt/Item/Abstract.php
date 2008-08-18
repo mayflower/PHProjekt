@@ -67,6 +67,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @var array
      */
     protected $_rights = null;
+    
+    /**
+     * Tags object
+     *
+     * @var Phprojet_Tags_Module
+     */
+    protected $_tags = null;
 
     /**
      * History data of the fields
@@ -104,6 +111,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_search    = new Phprojekt_Search_Default();
         $this->_config    = Zend_Registry::get('config');
         $this->_rights    = new Phprojekt_Item_Rights();
+        $this->_tags      = new Phprojekt_Tags_Modules();
     }
 
     /**
@@ -312,8 +320,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function delete()
     {
+        $moduleId = (!empty($this->moduleId))? $this->moduleId: 1;
+        
         $this->_history->saveFields($this, 'delete');
         $this->_search->deleteObjectItem($this);
+        $this->_rights->_save($moduleId, $this->id, array());
+        // remove tags
+        $this->_tags->deleteRelations($moduleId, $this->id);
+        
         parent::delete();
     }
 

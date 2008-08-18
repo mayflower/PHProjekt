@@ -148,6 +148,18 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
+    
+    /**
+     * Extencion of the Active Record deletion to prevent deletion of module 1 (project)
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        if ($this->id != 1) {
+            parent::delete();
+        }
+    }
 
     /**
      * Return the error data

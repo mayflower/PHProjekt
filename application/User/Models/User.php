@@ -147,6 +147,19 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
             return $this;
         }
     }
+    
+    /**
+     * Extencion of the ACtive Record deletion adding deleteion of user tags
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $tags = new Phprojekt_Tags_Users();
+        $tags->deleteUserTags($this->id);
+        unset($tags);
+        parent::delete();
+    }
 
     /**
      * Get the information manager

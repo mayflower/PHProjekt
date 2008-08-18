@@ -88,7 +88,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $modules = $this->fetchAll($where);
         foreach ($modules as $moduleData) {
             $foundResults[] = array('itemId'     => $moduleData->itemId,
-                                    'moduleId'   => $moduleData->moduleId);
+            'moduleId'   => $moduleData->moduleId);
         }
 
         return $foundResults;
@@ -111,8 +111,10 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $where[] = 'itemId  = '. $this->getAdapter()->quote($itemId);
 
         $modules = $this->fetchAll($where);
-        foreach ($modules as $moduleData) {
-            $foundResults[] = $moduleData->tagUserId;
+        if (!empty($modules)) {
+            foreach ($modules as $moduleData) {
+                $foundResults[] = $moduleData->tagUserId;
+            }
         }
 
         return $foundResults;
@@ -127,14 +129,21 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      *
      * @return void
      */
-    public function deleteRelations($moduleId, $itemId, $tagUserIds)
+    public function deleteRelations($moduleId, $itemId, $tagUserIds = null)
     {
         $clone = clone($this);
-        foreach ($tagUserIds as $tagUserId) {
+        if (!empty($tagUserIds)) {
+            foreach ($tagUserIds as $tagUserId) {
+                $where = array();
+                $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
+                $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+                $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
+                $clone->delete($where);
+            }
+        } else {
             $where = array();
             $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
             $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
-            $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
             $clone->delete($where);
         }
     }
