@@ -136,4 +136,21 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
         $record = array_shift(current($this->find($id)));
         return $record['tagId'];
     }
+
+    /**
+     * Delete all the entries for one userId
+     *
+     * @param int   $userId Id of user to delete all tags
+     *
+     * @return void
+     */
+    public function deleteUserTags($userId)
+    {
+        $clone = clone($this);
+
+        $where = array();
+        $where[] = 'userId = '. $clone->getAdapter()->quote($userId);
+        $clone->delete($where);
+
+    }
 }

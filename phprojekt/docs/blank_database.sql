@@ -113,6 +113,8 @@ CREATE TABLE `GroupsUserRelation` (
   `userId` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`userId`) REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 
@@ -130,8 +132,12 @@ CREATE TABLE `History` (
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`),
+  FOREIGN KEY (`userId`) REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 CREATE INDEX `History_userId` ON `History`(`userId`);
 
@@ -155,6 +161,8 @@ CREATE TABLE `Project` (
   `budget` float default NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`ownerId`) REFERENCES User(`id`)
+  ON DELETE SET NULL
+  ON UPDATE SET NULL
 );
 CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
 
@@ -167,7 +175,9 @@ CREATE TABLE `ProjectModulePermissions` (
     `moduleId` int(11) NOT NULL,
     `projectId` int(11) NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
+    FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
     FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
@@ -194,8 +204,12 @@ CREATE TABLE `ProjectRoleUserPermissions` (
   `userId` int(11) NOT NULL,
   `roleId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`projectId`) REFERENCES Project(`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`),
+  FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  FOREIGN KEY (`userId`) REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   FOREIGN KEY (`roleId`) REFERENCES Role(`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE
@@ -211,7 +225,9 @@ CREATE TABLE `RoleModulePermissions` (
   `moduleId` int(11) NOT NULL,
   `access` int(3) NOT NULL,
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`roleId`) REFERENCES Role(`id`),
+  FOREIGN KEY (`roleId`) REFERENCES Role(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE
@@ -225,7 +241,9 @@ CREATE TABLE `Todo` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL,
   `notes` text default NULL,
-  `ownerId` int(11) default NULL,
+  `ownerId` int(11) default NULL REFERENCES Role(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,
   `endDate` date default NULL,
@@ -246,7 +264,9 @@ CREATE TABLE `UserModuleSetting` (
   `value` varchar(255) NOT NULL,
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`),
+  FOREIGN KEY (`userId`) REFERENCES User(`id`) 
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE
@@ -268,7 +288,9 @@ CREATE TABLE `SearchWords` (
 -- Table structure for table `SearchWordModule`
 --
 CREATE TABLE `SearchWordModule` (
-  `moduleId` int(11) NOT NULL,
+  `moduleId` int(11) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `itemId` int(11) NOT NULL,
   `wordId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`,`wordId`)
@@ -279,7 +301,9 @@ CREATE TABLE `SearchWordModule` (
 -- Table structure for table `SearchDisplay`
 --
 CREATE TABLE `SearchDisplay` (
-  `moduleId` int(11) NOT NULL,
+  `moduleId` int(11) REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `itemId` int(11) NOT NULL,
   `firstDisplay` varchar(255),
   `secondDisplay` varchar(255),
@@ -303,7 +327,9 @@ CREATE TABLE `Tags` (
 --
 CREATE TABLE `TagsUsers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL  REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `tagId` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
 );
@@ -313,7 +339,9 @@ CREATE TABLE `TagsUsers` (
 -- Table structure for table `TagsModules`
 --
 CREATE TABLE `TagsModules` (
-  `moduleId` int(11) NOT NULL,
+  `moduleId` int(11) NOT NULL  REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `itemId` int(11) NOT NULL,
   `tagUserId` int(11) NOT NULL,
   PRIMARY KEY  (`moduleId`, `itemId`, `tagUserId`)
@@ -358,7 +386,10 @@ CREATE TABLE `Note` (
 --
 CREATE TABLE `Configuration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `moduleId` int(11) NOT NULL,
+  `moduleId` int(11) NOT NULL
+  REFERENCES Module(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `key` varchar(255) NOT NULL,
   `value` text default NULL,
   PRIMARY KEY  (`id`),
@@ -401,7 +432,9 @@ CREATE TABLE `Timeproj` (
   `id` int(11) NOT NULL auto_increment,
   `notes` text default NULL,
   `ownerId` int(11) default NULL,
-  `projectId` int(11) default NULL,
+  `projectId` int(11) REFERENCES Project(`id`) 
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `date` date default NULL,
   `startTime` time default NULL,
   `endTime` time default NULL,
@@ -416,9 +449,13 @@ CREATE TABLE `Calendar` (
   `title` varchar(255) default NULL,
   `notes` text default NULL,
   `ownerId` int(11) default NULL,
-  `projectId` int(11) default NULL,
+  `projectId` int(11) REFERENCES Project(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `startDate` date default NULL,
-  `participantId` int(11) default NULL,
+  `participantId` int(11)  REFERENCES User(`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
   `startTime` time default NULL,
   `endTime` time default NULL,
   `parentId` int(11) default NULL,
