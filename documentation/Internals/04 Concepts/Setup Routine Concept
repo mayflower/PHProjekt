@@ -1,0 +1,62 @@
+Documentation of the setup routine
+
+[emph]Setup routine topics[/emph]
+
+- The setup routine needs to be divided into three main parts: 1. pre-installation server configuration check, 2. setup information form and 3. installation process.
+
+- On server configuration check it is important to do not allow administrator to install the application if the server does not have the minimal requisites to run the application.
+
+- The information about why is not possible to install the application needs to be clear, and if it is possible we need give the administration directions about how to fix the errors before continue installing (e.g. a how to disable the register globals On).
+
+- All the server checks needs to be run each time the administrator goes to admin section, to alert changes on configurations after installation.
+
+- It is necessary to divide the failed checks into warnings (the application will run perfect but there will be any performance or security problem) and errors (when the application will fail after installation). It will not be possible to install Phprojekt if any error is detected before start installation.
+
+- The quantity of information to be requested to administrator needs to be the minimum possible to perform the installation. It is important to divide setup routine from configuration to make it clear and simply.
+
+- We can suggest the information to be filled on form (e.g. we can check if there is a database installed on loalhost and suggest it).
+
+- After installation all the information filled by administrator needs to be checked and the installation cancelled before starting the setup process. Again, the message about why the installation can't be done needs to be clear.
+
+- On installation process it could be necessary a rollback process in case of error on installation.
+
+- The message about the problem installing (if there is a problem) needs to show us exactly where the install process stops, to help us on debugging.
+
+- If installation ran successful, a clear message about how to start working with PHProjet needs to be showed. It needs to have the URL and username to login.
+
+- It could be good to detect the first login of administrator to guide him inside the configuration of PHProjekt.
+
+[emph]Checks to be performed before start installation[/emph]
+
+- PHP version (5.2 or better)
+- Php.ini configuration (TODO: determine if it is necessary any special PHP configuration).
+- PDO, PDO_Mysql and GD extensions installed.
+- Ability to write the configuration file.
+- Existence of a previous configuration file (if it exists, the installation needs to be canceled).
+
+[emph]Information to be requested for installation[/emph]
+- Database type (first version only Mysql)
+- Database host (check localhost to set it as default)
+- Database user (check connection with root user without password)
+- Database password
+- Database name
+- Admin user passwords and confirmation
+- Default language (it could be get from browser to suggest it)
+- Default timezone (it could be taken from server time information).
+
+All information needs to be validated with javascript and into the server after post
+
+[emph]Form information validation[/emph]
+
+After submit the following information needs to be checked:
+
+- If the pdo extension exists and is installed for the database type selected
+- If it is possible to make a valid connection using the information provided
+- Check if admin password and confirmation are equal.
+
+[emph]Installation process[/emph]
+The installation process will include:
+- Database creation
+- Basic information load
+- Configuration file creation
+- Display of next steps information
