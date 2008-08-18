@@ -3,7 +3,7 @@ Using a dojo Module for our Client source code allows us to keep our code separa
 A Dojo Module provides us with our own Namespace for the PHProjekt specific scripts and we don't need
 to worry about overwriting existing dojo classes.
 
-All PHProjekt Modules like Project, Todo etc. are what dojo would call submodules. 
+All PHProjekt Modules like Project, Todo etc. are what dojo would call submodules.
 
 The Main purpose of the phpr.js is to initialize the new Module phpr and to register the path to this Module relative
 to the dojo.js Script.
@@ -30,10 +30,9 @@ and customized functions which are called after the content was successfully sen
 [emph]phpr.getData[/emph]
 This methods receives data from the server and allows you to process the data in a custom callback function
 
-[emph]phpr.MetaReadStore and phpr.CompleteReadStore[/emph]
-Those two Submodules of the phpr Module both extend the dojox.data.QueryReadStore.
-The Store is needed to provide the data for many dojo widgets, like the Grid widget for example.
-
-The difference between the phpr.MetaReadStore and the phpr.CompleteReadStore is that the MetaReadStore
-only stores the metadata which it receives from the Server in Json format, whereas the CompleteReadStore
-stores both the metadata and data.
+[emph]phpr.DataStore[/emph]
+This function work with the dojox.data.QueryReadStore.
+There is an internal array for save each data request to the server.
+The "key" used is the url of the request, so each time that the same data is needed,
+the function return the internal cache.
+There are also a function deleteData for reset the cache for the url given.

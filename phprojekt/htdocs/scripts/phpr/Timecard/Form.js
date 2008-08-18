@@ -69,7 +69,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
         //    This function is responsible for submitting the formdata
         // description:
         //    This function sends the form data as json data to the server and publishes
-        //    a form.Submitted topic after the data was send.
+        //    and call the reload routine
 		this.sendData = dijit.byId('tcBookingForm').getValues();
 		phpr.send({
 			url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/',
@@ -83,7 +83,7 @@ dojo.declare("phpr.Timecard.Form",phpr.Default.Form, {
         //    This function is responsible for submitting the formdata
         // description:
         //    This function sends the form data as json data to the server and publishes
-        //    a form.Submitted topic after the data was send.
+        //    and call the reload routine
 		this.sendData = dijit.byId('tcBookingForm').getValues();
 		phpr.send({
 			url:       phpr.webpath + 'index.php/Timeproj/index/jsonSave/',
