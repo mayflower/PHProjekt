@@ -1,6 +1,6 @@
 <?php
 /**
- * Test suite for the user module
+ * Test suite for the role module
  *
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
@@ -20,11 +20,10 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
-require_once 'Models/UserTest.php';
-require_once 'Models/UserModuleSettingTest.php';
+require_once 'Models/RoleModulePermissionsTest.php';
 
 /**
- * Test suite for the user module
+ * Test suite for the role module
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
@@ -34,7 +33,7 @@ require_once 'Models/UserModuleSettingTest.php';
  * @since      File available since Release 1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class User_AllTests
+class Role_AllTests
 {
     /**
      * Runs the test suite
@@ -53,14 +52,13 @@ class User_AllTests
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite('User Controller');
-        $suite->addTestSuite('User_IndexController_Test');
-        $suite->addTestSuite('User_User_Test');
-        $suite->addTestSuite('User_ModuleSetting_Test');
+        $suite = new PHPUnit_Framework_TestSuite('Role Controller');
+        $suite->addTestSuite('Role_IndexController_Test');
+        $suite->addTestSuite('Phprojekt_RoleModelsRoleModulePermissions_Test');
         return $suite;
     }
 }
 
-if (PHPUnit_MAIN_METHOD == 'User_AllTests::main') {
+if (PHPUnit_MAIN_METHOD == 'Role_AllTests::main') {
     Framework_AllTests::main();
 }

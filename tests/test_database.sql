@@ -33,11 +33,12 @@ DROP TABLE IF EXISTS `GroupsUserRelation`;
 DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `UserModuleSetting`;
+DROP TABLE IF EXISTS `ModuleInstance`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
 DROP TABLE IF EXISTS `Calendar`;
-DROP TABLE IF EXISTS `ModuleInstance`;
+
 
 --
 -- Table structure for table `DatabaseManager`
