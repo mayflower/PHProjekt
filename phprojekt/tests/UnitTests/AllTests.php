@@ -51,6 +51,13 @@ require_once 'Timeproj/AllTests.php';
 require_once 'History/AllTests.php';
 require_once 'User/AllTests.php';
 require_once 'Calendar/AllTests.php';
+require_once 'Note/AllTests.php';
+require_once 'Role/AllTests.php';
+require_once 'Todo/AllTests.php';
+require_once 'Tab/AllTests.php';
+require_once 'Module/AllTests.php';
+require_once 'Project/AllTests.php';
+
 // require_once 'Selenium/AllTests.php';
 
 /**
@@ -171,8 +178,15 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Timeproj_AllTests::suite());
         $suite->addTest(User_AllTests::suite());
         $suite->addTest(Calendar_AllTests::suite());
+        $suite->addTest(Note_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
         $suite->addTest(History_AllTests::suite());
+        $suite->addTest(Role_AllTests::suite());
+        $suite->addTest(Todo_AllTests::suite());
+        $suite->addTest(Tab_AllTests::suite());
+        $suite->addTest(Module_AllTests::suite());
+        $suite->addTest(Project_AllTests::suite());
+        
         //$suite->addTestSuite(Selenium_AllTests::suite());
 
         // add here additional test suites

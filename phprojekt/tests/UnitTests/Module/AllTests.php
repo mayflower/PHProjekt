@@ -1,13 +1,13 @@
 <?php
 /**
- * Test suite for the user module
+ * Test suite for the Module module
  *
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *             GNU Public License 2.0
- * @version    CVS: $Id: AllTests.php 667 2008-04-14 02:19:16Z polidor $
+ * @version    CVS: $Id: AllTests.php 853 2008-08-11 06:34:28Z polidor $
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
 */
@@ -19,12 +19,13 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
+// require_once 'Controllers/BaseTest.php';
 require_once 'Controllers/IndexControllerTest.php';
-require_once 'Models/UserTest.php';
-require_once 'Models/UserModuleSettingTest.php';
+require_once 'Models/ModuleTest.php';
+require_once 'Models/InformationTest.php';
 
 /**
- * Test suite for the user module
+ * Test suite for the Module module
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
@@ -32,9 +33,9 @@ require_once 'Models/UserModuleSettingTest.php';
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     David Soria Parra <soria_parra@mayflower.de>
  */
-class User_AllTests
+class Module_AllTests
 {
     /**
      * Runs the test suite
@@ -53,14 +54,15 @@ class User_AllTests
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite('User Controller');
-        $suite->addTestSuite('User_IndexController_Test');
-        $suite->addTestSuite('User_User_Test');
-        $suite->addTestSuite('User_ModuleSetting_Test');
+        $suite = new PHPUnit_Framework_TestSuite('Module Controller');
+
+        $suite->addTestSuite('Module_IndexController_Test');
+        $suite->addTestSuite('Phprojekt_ModuleModelModule_Test');
+        $suite->addTestSuite('Phprojekt_ModuleModelInformation_Test');
         return $suite;
     }
 }
 
-if (PHPUnit_MAIN_METHOD == 'User_AllTests::main') {
+if (PHPUnit_MAIN_METHOD == 'Default_AllTests::main') {
     Framework_AllTests::main();
 }
