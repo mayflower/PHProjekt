@@ -15,6 +15,7 @@
 .phprojekt .dijitComboBox,
 .phprojekt .dijitSpinner {
 	margin: 0em 0.1em;
+	width: 300px;
 }
 
 .phprojekt .dijitTextBox,
@@ -30,6 +31,7 @@
 	#background:#fff url('../images/validationInputBg.gif') repeat-x top left;
 	border:1px solid #8ba0bd;
 	line-height: normal;
+	width: 300px;
 }
 
 .phprojekt .dijitTextBoxDisabled,

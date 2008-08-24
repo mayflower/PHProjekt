@@ -59,6 +59,25 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['required'] = true;
         $data['readOnly'] = false;
         $converted[] = $data;
+        
+        // Internal name
+        $data = array();
+        $data['key']      = 'internalName';
+        $data['label']    = $translate->translate('internalName');
+        $data['type']     = 'text';
+        $data['hint']     = $translate->translate('internalName');
+        $data['order']    = 0;
+        $data['position'] = 2;
+        $data['fieldset'] = '';
+        $data['range']    = array('id'   => '',
+                                  'name' => '');
+        $data['required'] = true;
+        if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
+            $data['readOnly'] = false;
+        } else {
+            $data['readOnly'] = true;
+        }
+        $converted[] = $data;
 
         // active
         $data = array();
@@ -67,7 +86,7 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['type']     = 'selectbox';
         $data['hint']     = $translate->translate('active');
         $data['order']    = 0;
-        $data['position'] = 2;
+        $data['position'] = 3;
         $data['fieldset'] = '';
         $data['range'][]    = array('id'   => '0',
                                     'name' => $translate->translate('no'));
@@ -85,7 +104,7 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['type']     = 'multipleselectbox';
         $data['hint']     = $translate->translate('tabs');
         $data['order']    = 0;
-        $data['position'] = 3;
+        $data['position'] = 4;
         $data['fieldset'] = '';
 
         foreach (Phprojekt_Tabs::getTabs() as $tab) {

@@ -172,4 +172,21 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         }
         return $values;
     }
+    
+    /**
+     * Save default permission for the provided user in root project
+     *
+     * @param integer $userId   The user to save default permission
+     *
+     * @return void
+     */
+    public function saveDefaultRights($userId)
+    {
+        $data = array();
+        $data['moduleId']     = Phprojekt_Module::getId('Project');
+        $data['itemId']       = 1;
+        $data['userId']       = (int)$userId;
+        $data['access']       = (int)Phprojekt_Acl::WRITE;
+        $this->insert($data);
+    }
 }

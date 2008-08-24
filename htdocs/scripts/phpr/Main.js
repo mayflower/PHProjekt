@@ -10,6 +10,8 @@ dojo.require("dojox.dtl");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Textarea");
+dojo.require("dijit.Editor");
+dojo.require("dojo.parser");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dojo.date.locale");
 dojo.require("dojo.dnd.Mover");

@@ -41,7 +41,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         
         $this->assertEquals($moduleModel->getRights(), array());
         
-        $this->assertEquals($moduleModel->saveModule(array('name' => 'test', 'active' => 1)), 8);
+        $this->assertEquals($moduleModel->saveModule(array('name' => 'test', 'internalName' => 'test', 'active' => 1)), 8);
         
         $moduleModel->find(8);
         

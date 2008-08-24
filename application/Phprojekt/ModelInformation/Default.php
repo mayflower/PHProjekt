@@ -46,6 +46,12 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      * are used by a filter and therefore ordered in that way
      */
     const ORDERING_FILTER = 3;
+    
+    /**
+     * The fields given by the ModelInformation interface
+     * are used by a form on updates and therefore ordered in that way
+     */
+    const ORDERING_FORM_UPDATE = 4;
 
     /**
      * The fields given by the ModelInformation interface

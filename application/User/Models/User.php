@@ -32,7 +32,7 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      * @var array
      */
     public $hasMany = array('settings' => array('module' => 'User',
-                                                'model'  => 'UserModuleSetting'));
+    'model'  => 'UserModuleSetting'));
 
     /**
      * Has many and belongs to many declrations
@@ -40,8 +40,8 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      * @var array
      */
     public $hasManyAndBelongsToMany = array('groups' => array('classname' => 'Groups_Models_Groups',
-                                                              'module'    => 'Groups',
-                                                              'model'     => 'Groups'));
+    'module'    => 'Groups',
+    'model'     => 'Groups'));
 
     /**
      * The standard information manager with hardcoded
@@ -147,7 +147,26 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
             return $this;
         }
     }
-    
+
+    /**
+     * Extencion of the ActiveRecord save adding default permissions
+     *
+     * @return boolean true if saved correctly
+     */
+    public function save()
+    {
+        if (parent::save()) {
+            // adding default values
+            $rights = new Phprojekt_Item_Rights();
+            
+            $rights->saveDefaultRights($this->id);
+            
+            return true;
+        }
+        
+        return false;
+    }
+
     /**
      * Extencion of the ACtive Record deletion adding deleteion of user tags
      *
