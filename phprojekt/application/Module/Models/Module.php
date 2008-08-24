@@ -105,6 +105,10 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
     {
         $this->name   = $params['name'];
         $this->active = (int) $params['active'];
+        
+        if (empty($this->id)) {
+           $this->internalName = $params['internalName'];
+        }
 
         if ($this->recordValidate()) {
             $saveNewModule = false;
@@ -169,5 +173,14 @@ class Module_Models_Module extends Phprojekt_ActiveRecord_Abstract implements Ph
     public function getError()
     {
         return (array) $this->_validate->error->getError();
+    }
+    
+    /**
+     * Save rights
+     *
+     * @return void
+     */
+    public function saveRights()
+    {
     }
 }
