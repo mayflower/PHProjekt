@@ -334,7 +334,7 @@ class IndexController extends Zend_Controller_Action
         $records = $object->fetchAll();
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
-    
+
     /**
      * Returns the list for a model in CSV format.
      *

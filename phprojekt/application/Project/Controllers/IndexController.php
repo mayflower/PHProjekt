@@ -44,8 +44,9 @@ class Project_IndexController extends IndexController
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            $model   = $this->getModelObject();
-            $message = $translate->translate('The Item was added correctly');
+            $model     = $this->getModelObject();
+            $model->id = 0;
+            $message   = $translate->translate('The Item was added correctly');
         } else {
             $model   = $this->getModelObject()->find($id);
             $message = $translate->translate('The Item was edited correctly');
