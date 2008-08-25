@@ -92,11 +92,14 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      *
      * @return array
      */
-    public function getUserTagIds($tagId = 0)
+    public function getUserTagIds($userId = 0, $tagId = 0)
     {
         $where = array();
 
-        $where[]   = 'userId = '. $this->getAdapter()->quote($this->_user);
+        if ($userId == 0) {
+            $userId = $this->_user;
+        }
+        $where[]   = 'userId = '. $this->getAdapter()->quote($userId);
         if ($tagId > 0) {
             $where[]   = 'tagId = '. $this->getAdapter()->quote($tagId);
         }
@@ -140,17 +143,15 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     /**
      * Delete all the entries for one userId
      *
-     * @param int   $userId Id of user to delete all tags
+     * @param integer $userId Id of user to delete all tags
      *
      * @return void
      */
     public function deleteUserTags($userId)
     {
-        $clone = clone($this);
-
-        $where = array();
+        $clone   = clone($this);
+        $where   = array();
         $where[] = 'userId = '. $clone->getAdapter()->quote($userId);
         $clone->delete($where);
-
     }
 }

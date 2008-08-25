@@ -158,12 +158,12 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
         if (parent::save()) {
             // adding default values
             $rights = new Phprojekt_Item_Rights();
-            
+
             $rights->saveDefaultRights($this->id);
-            
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -174,8 +174,8 @@ class User_Models_User extends Phprojekt_ActiveRecord_Abstract implements Phproj
      */
     public function delete()
     {
-        $tags = new Phprojekt_Tags_Users();
-        $tags->deleteUserTags($this->id);
+        $tags = Phprojekt_Tags_Default::getInstance();
+        $tags->deleteTagsByUser($this->id);
         unset($tags);
         parent::delete();
     }
