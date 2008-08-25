@@ -72,13 +72,15 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
                             'firstDisplay'  => $tmpResult[0]['firstDisplay'],
-                            'secondDisplay' => $tmpResult[0]['secondDisplay']);
+                            'secondDisplay' => $tmpResult[0]['secondDisplay'],
+                            'projectId'     => $tmpResult[0]['projectId']);
         } else {
             $result = array('id'            => $itemId,
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
                             'firstDisplay'  => '',
-                            'secondDisplay' => '');
+                            'secondDisplay' => '',
+                            'projectId'     => 1);
         }
         return $result;
     }
@@ -96,10 +98,11 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     {
         $firstDisplay  = $object->{$object->searchFirstDisplayField};
         $secondDisplay = $object->{$object->searchSecondDisplayField};
+        $projectId     = $object->projectId;
         if (!$this->_exists($moduleId, $itemId)) {
-            $this->_save($moduleId, $itemId, $firstDisplay, $secondDisplay);
+            $this->_save($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay);
         } else {
-            $this->_update($moduleId, $itemId, $firstDisplay, $secondDisplay);
+            $this->_update($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay);
         }
     }
 
@@ -141,17 +144,19 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      *
      * @param integer $moduleId      The moduleId to store
      * @param integer $itemId        The item Id
+     * @param integer $projectId     The parent project Id
      * @param string  $firstDisplay  Text for the first display
      * @param string  $secondDisplay Text for the second display
      *
      * @return void
      */
-    private function _save($moduleId, $itemId, $firstDisplay, $secondDisplay)
+    private function _save($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay)
     {
         $data['moduleId']       = $moduleId;
         $data['itemId']         = $itemId;
         $data['firstDisplay']   = $firstDisplay;
         $data['secondDisplay']  = $secondDisplay;
+        $data['projectId']      = $projectId;
         $this->insert($data);
     }
 
@@ -162,15 +167,17 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      *
      * @param integer $moduleId      The moduleId to store
      * @param integer $itemId        The item Id
+     * @param integer $projectId     The parent project Id
      * @param string  $firstDisplay  Text for the first display
      * @param string  $secondDisplay Text for the second display
      *
      * @return void
      */
-    private function _update($moduleId, $itemId, $firstDisplay, $secondDisplay)
+    private function _update($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay)
     {
         $data['firstDisplay']   = $firstDisplay;
         $data['secondDisplay']  = $secondDisplay;
+        $data['projectId']      = $projectId;
 
         $where   = array();
         $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
