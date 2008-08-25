@@ -45,13 +45,14 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // description:
         //    Add Tab for user-role relation into the project
         if (this._accessPermissions) {
+            var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
                 accessUserText:   phpr.nls.accessUser,
                 accessRoleText:   phpr.nls.accessRole,
                 accessActionText: phpr.nls.accessAction,
                 users:            this.userStore.getList(),
                 roles:            this.roleStore.getList(),
-                relations:        this.roleStore.getRelationList(),
+                relations:        relationList,
             });
 
             this.addTab(rolesData, 'tabRoles', 'Roles', 'roleFormTab');
@@ -68,8 +69,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             dojo.connect(dijit.byId("newRoleUser"), "onClick", dojo.hitch(this, "newRoleUser"));
 
             // delete buttons for role-user relation
-            for (i in this.relationList) {
-                var userId     = this.relationList[i].userId;
+            for (i in relationList) {
+                var userId     = relationList[i].userId;
                 var idName     = "deleteRelation" + userId;
                 var buttonName = "relationDeleteButton" + userId;
                 var params = {

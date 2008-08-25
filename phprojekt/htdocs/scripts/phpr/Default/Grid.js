@@ -69,8 +69,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Draw the tags
         // description:
         //    Draw the tags
-        //phpr.receiveUserTags();
-        //this.publish("drawTagsBox",[phpr.getUserTags()]);
+        phpr.receiveUserTags();
+        this.publish("drawTagsBox",[phpr.getUserTags()]);
     },
 
     useIdInGrid: function() {
@@ -140,7 +140,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         name:       meta[i]["label"],
                         field:      meta[i]["key"],
                         styles:     "text-align:center;",
-                        type:       dojox.grid.cells.TextBox,
+                        type:       dojox.grid.cells.Input,
                         formatter:  phpr.grid.formatTime,
                         editable: meta[i]['readOnly'] ? false : true,
                     });
@@ -151,7 +151,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:  porcent,
                         name:   meta[i]["label"],
                         field:  meta[i]["key"],
-                        type: dojox.grid.cells.TextBox,
+                        type:   dojox.grid.cells.Input,
                         editable: meta[i]['readOnly'] ? false : true,
                     });
                     break;
@@ -195,6 +195,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
 
+        phpr.destroySimpleWidget("gridNode");
         // Data of the grid
         this.gridData = {
             items: []
@@ -225,7 +226,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.setExport(meta);
 
         if (meta.length == 0) {
-            this._node.setContent(phpr.nls.noresults);
+            this._node.attr('content', phpr.nls.noresults);
         } else {
             this.setGridLayout(meta);
             this.grid = new dojox.grid.DataGrid({
@@ -234,8 +235,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 structure: [{
                             defaultCell: {
                                 editable: true,
-                                type: dojox.grid.cells._Widget,
-                                styles: 'text-align: left;'
+                                type:     dojox.grid.cells.Input,
+                                styles:   'text-align: left;'
                             },
                             rows: [this.gridLayout]
                 }]
@@ -243,7 +244,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
             this.setClickEdit();
 
-            this._node.setContent(this.grid.domNode);
+            this._node.attr('content', this.grid.domNode);
             this.grid.startup();
 
             dojo.connect(this.grid,"onCellClick",dojo.hitch(this,"showForm"));

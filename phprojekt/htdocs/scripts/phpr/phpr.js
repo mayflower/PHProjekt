@@ -237,7 +237,9 @@ dojo.declare("phpr.DataStore", null, {
         //    Delete the cache
         // description:
         //    Delete the cache
-        this._internalCache[params.url]['data'] = new Array();
+        if(this._internalCache[params.url]) {
+           this._internalCache[params.url]['data'] = new Array();
+        }
     },
 
     getStore:function(params) {

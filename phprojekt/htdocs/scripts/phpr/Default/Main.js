@@ -19,7 +19,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     module:           null,
     availableModules: null,
     search:           null,
-    tags:             null,
 
     gridWidget:       null,
     formWidget:       null,
@@ -35,16 +34,29 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 		dojo.subscribe(module+".changeProject",this, "loadSubElements");
 		dojo.subscribe(module+".reload", this, "reload");
 		dojo.subscribe(module+".openForm", this, "openForm");
-		dojo.subscribe(module+".submitSearchForm", this, "submitSearchForm");
+		dojo.subscribe(module+".showSuggest", this, "showSuggest");
+		dojo.subscribe(module+".hideSuggest", this, "hideSuggest");
+		dojo.subscribe(module+".setSuggest", this, "setSuggest");
 		dojo.subscribe(module+".showSearchResults", this, "showSearchResults");
 		dojo.subscribe(module+".drawTagsBox", this, "drawTagsBox");
 		dojo.subscribe(module+".showTagsResults", this, "showTagsResults");
+        dojo.subscribe(module+".clickResult", this, "clickResult");
 		dojo.subscribe(module+".updateCacheData", this, "updateCacheData");
+		dojo.subscribe(module+".loadResult", this, "loadResult");
     },
 
     openForm:function(/*int*/id, /*String*/module) {
         //summary: this function opens a new Detail View
+        if (!dojo.byId('detailsBox')) {
+            this.reload();
+        }
         this.form = new this.formWidget(this,id,module);
+    },
+
+    loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
+        phpr.currentProjectId = projectId;
+        this.reload();
+        this.openForm(id, module);
     },
 
     loadSubElements:function(project) {
@@ -89,8 +101,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             webpath:phpr.webpath,
             currentModule:phpr.module
         });
-        this.search = new dojo.dnd.Moveable("searchsuggest");
-        this.tags = new dojo.dnd.Moveable("tagsbox");
+        this.hideSuggest();
 
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
@@ -117,25 +128,19 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("deleteButton");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.setSubmoduleNavigation();
-        if (!this.search) {
-            this.search = new dojo.dnd.Moveable("searchsuggest");
-        }
-        if (!this.tags) {
-            this.tags = new dojo.dnd.Moveable("tagsbox");
-        }
+        this.hideSuggest();
         this.setSearchForm();
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
-    setSubmoduleNavigation:function() {
+    setSubmoduleNavigation:function(currentModule) {
         // summary:
         //    This function is responsible for displaying the Navigation of the current Module
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self = this;
         var usefirstModule = true;
@@ -147,8 +152,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             url: subModuleUrl,
             processData: dojo.hitch(this,function() {
                 modules = phpr.DataStore.getData({url: subModuleUrl});
+                foundBasicData = false;
                 for (var i = 0; i < modules.length; i++) {
                     var moduleName  = modules[i].name;
+                    if (modules[i].label == 'Basic Data') {
+                        foundBasicData = true;
+                    }
                     if (modules[i].rights.read) {
                         if (moduleName == phpr.module) {
                             usefirstModule = false;
@@ -159,27 +168,53 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     }
                 }
 
-                if (firstModule && usefirstModule) {
-                    phpr.module = firstModule;
+                if (!foundBasicData && phpr.currentProjectId != 1) {
+                    modules.unshift({
+                        name:           "Project",
+                        label:          "Basic Data",
+                        rights:         {read: true},
+                        moduleFunction: "basicData"
+                    });
+                }
+
+                if (currentModule == 'undefined') {
+                    if (firstModule && usefirstModule) {
+                        phpr.module   = firstModule;
+                    }
+                } else if (currentModule == "BasicData") {
+                    phpr.module   = 'Project';
                 }
 
                 phpr.destroySimpleWidget("newEntry");
                 var navigation ='<ul id="nav_main">';
+                var activeTab = false;
                 for (var i = 0; i < modules.length; i++) {
                     var liclass ='';
-                    var moduleName  = modules[i].name;
-                    var moduleLabel = modules[i].label;
-                    if (moduleName == phpr.module){
+                    var moduleName     = modules[i].name;
+                    var moduleLabel    = modules[i].label;
+                    var moduleFunction = modules[i].moduleFunction || "reload";
+                    if (moduleLabel == "Basic Data" &&
+                        currentModule == 'BasicData' &&
+                        !activeTab) {
                         liclass = 'class = active';
+                        activeTab = true;
+                    } else if (moduleName == phpr.module &&
+                               moduleLabel != "Basic Data" &&
+                               !activeTab) {
+                        liclass = 'class = active';
+                        activeTab = true;
                     }
                     if (modules[i].rights.read) {
                         navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
-                            moduleName : moduleName,
-                            moduleLabel: moduleLabel,
-                            liclass    : liclass
+                            moduleName :    moduleName,
+                            moduleLabel:    moduleLabel,
+                            liclass:        liclass,
+                            moduleFunction: moduleFunction,
                         });
                     }
-                    if (modules[i].rights.create && moduleName == phpr.module) {
+                    if (modules[i].rights.create &&
+                        moduleName == phpr.module &&
+                        currentModule != 'BasicData') {
                         var params = {
                             label:     '',
                             id:        'newEntry',
@@ -226,9 +261,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    If some "user" key is presses, the function don´t run.
         key = event.keyCode
         if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
-            // hide the suggestBox
-            dojo.byId("searchsuggest").style.display = 'none';
-            dojo.byId("searchsuggest").innetHTML = '';
+            // hide the suggestBox and delete the time
+            // for not show the suggest
+            if(window.mytimeout) {
+                window.clearTimeout(window.mytimeout);
+            }
+            this.hideSuggest();
         } else if (
             (key != dojo.keys.TAB) &&
             (key != dojo.keys.CTRL) &&
@@ -290,92 +328,82 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         if (words.length >= 3) {
             // hide the suggestBox
-            dojo.byId("searchsuggest").style.display = 'none';
-            dojo.byId("searchsuggest").innerHTML = '';
-
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words + '/count/10';
             var self = this;
             phpr.send({
                 url:       getDataUrl,
                 handleAs: "json",
                 onSuccess: dojo.hitch(this,function(data){
-                    var search = '<ul>';
-                    dojo.forEach(data,function(modulesData) {
-                        search += self.render(["phpr.Default.template", "searchsuggest.html"], null, {
-                            id : modulesData.id,
-                            moduleId : modulesData.modulesId,
-                            moduleName: modulesData.moduleName,
-                            firstDisplay: modulesData.firstDisplay,
+                    var search        = '';
+                    var results       = {};
+                    var index         = 0;
+                    for(var i = 0; i < data.length; i++) {
+                        modulesData = data[i];
+                        if (!results[modulesData.moduleName]) {
+                            results[modulesData.moduleName] = '';
+                        }
+                        results[modulesData.moduleName] += self.render(["phpr.Default.template.results", "results.html"], null, {
+                            id :           modulesData.id,
+                            moduleId :     modulesData.modulesId,
+                            moduleName:    modulesData.moduleName,
+                            projectId:     modulesData.projectId,
+                            firstDisplay:  modulesData.firstDisplay,
                             secondDisplay: modulesData.secondDisplay,
-                            words: words
+                            resultType:    "search",
                         });
-                    });
-                    search += "</ul>";
-                    dojo.byId("searchsuggest").style.display = 'inline';
-                    dojo.byId("searchsuggest").innerHTML = search;
+                    }
+                    var moduleName = '';
+                    var html       = '';
+                    for (var i in results) {
+                        moduleName = i;
+                        html       = results[i];
+                        search += self.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
+                            moduleName:    moduleName,
+                            results:       html,
+                        });
+                    }
+
+                    search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
+                    search += "<a class=\"searchsuggesttitle\" href='javascript:dojo.publish(\""+this.module+".clickResult\",[\"search\"]); dojo.publish(\""+this.module+".showSearchResults\",[\"" + words + "\"])'>View all</a>";
+                    search += "</div>";
+
+                    this.setSuggest(search);
+                    this.showSuggest();
                 })
             });
         }
     },
 
-    showSearchResults:function(/*int*/id, /*String*/moduleName, /*String*/words) {
+    showSearchResults:function(/*String*/words) {
         // summary:
         //    This function reload the grid place with a search template
         //    And show the detail view of the item selected
         // description:
         //    The server return the found records and the function display it
-        dojo.byId("searchsuggest").style.display = 'none';
-        dojo.byId("searchsuggest").innetHTML = '';
-        this.publish("submitSearchForm", [words]);
-        this.publish("openForm", [id, moduleName]);
-    },
-
-    submitSearchForm:function(/*String*/words) {
-        // summary:
-        //    This function reload the grid place with a search template
-        // description:
-        //    The server return the found records and the function display it
-        //    This function is used when the form is summited by enter or when
-        //    One item in the suggest box is clicked
-
         if (undefined == words) {
             words = dojo.byId("searchfield").value;
         }
-
         var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words;
-        var self = this;
+        var resultsTitle = phpr.nls.searchResults;
+        this.showResults(getDataUrl, resultsTitle);
+    },
 
-        // Destroy form view
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("detailsBox");
+    clickResult:function(/*String*/type) {
+        if (type == 'search') {
+            this.hideSuggest();
+        }
+    },
 
-        // Destroy list view
-        //phpr.destroyWidgets("buttonRow");
-        phpr.destroyWidgets("gridBox");
-        phpr.destroyWidgets("gridNode");
-        phpr.destroyWidgets("headerContext");
-        phpr.destroyWidgets("gridContext");
+    showSuggest:function() {
+        dojo.byId("searchsuggest").style.display = 'inline';
+    },
 
-        phpr.send({
-            url:       getDataUrl,
-            handleAs: "json",
-            onSuccess: dojo.hitch(this,function(data){
-                var search = '<ul>';
-                dojo.forEach(data,function(modulesData) {
-                    search += self.render(["phpr.Default.template", "search.html"], null, {
-                        id : modulesData.id,
-                        moduleId : modulesData.modulesId,
-                        moduleName: modulesData.moduleName,
-                        firstDisplay: modulesData.firstDisplay,
-                        secondDisplay: modulesData.secondDisplay
-                    });
-                });
-                search += "</ul>";
-                dijit.byId("gridBox").setContent(search);
-            })
-        });
+    hideSuggest:function() {
+        dojo.byId("searchsuggest").style.display = 'none';
+    },
+
+    setSuggest:function(html) {
+        dojo.byId("searchsuggest").innerHTML = html;
     },
 
     drawTagsBox:function(/*Array*/data) {
@@ -434,8 +462,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 tag: data['data'][i]['string']
             });
         }
-        //value += '</ul>';
-        dojo.byId("tagsbox").innerHTML = value;
+        dijit.byId("tagsbox").attr('content', value);
     },
 
     showTagsResults:function(/*String*/tag) {
@@ -443,7 +470,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function reload the grid place with the result of the tag search
         // description:
         //    The server return the found records and the function display it
-        var getDataUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
+        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
+        var resultsTitle = phpr.nls.tagResults;
+        this.showResults(getDataUrl, resultsTitle);
+    },
+
+    showResults:function(/*String*/getDataUrl, /*String*/resultsTitle) {
+        // summary:
+        //    This function reload the grid place with the result of a search or a tagt
+        // description:
+        //    The server return the found records and the function display it
         var self = this;
 
         // Destroy form view
@@ -453,28 +489,47 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroyWidgets("detailsBox");
 
         // Destroy list view
-        //phpr.destroyWidgets("buttonRow");
-        phpr.destroyWidgets("gridBox");
-        phpr.destroyWidgets("gridNode");
-        phpr.destroyWidgets("headerContext");
-        phpr.destroyWidgets("gridContext");
+        phpr.destroySimpleWidget("gridNode");
+        this.hideSuggest();
 
         phpr.send({
             url:       getDataUrl,
             handleAs: "json",
             onSuccess: dojo.hitch(this,function(data){
-                var search = '<ul>';
-                dojo.forEach(data,function(modulesData) {
-                    search += self.render(["phpr.Default.template", "search.html"], null, {
-                        id : modulesData.id,
-                        moduleId : modulesData.modulesId,
-                        moduleName: modulesData.moduleName,
-                        firstDisplay: modulesData.firstDisplay,
-                        secondDisplay: modulesData.secondDisplay
-                    });
+                this.render(["phpr.Default.template.results", "mainContentResults.html"],dojo.byId('centerMainContent') ,{
+                    resultsTitle:   resultsTitle,
+                    webpath:        phpr.webpath,
+                    currentModule:  phpr.module
                 });
-                search += "</ul>";
-                dijit.byId("gridBox").setContent(search);
+                var search        = '';
+                var results       = {};
+                var index         = 0;
+                for(var i = 0; i < data.length; i++) {
+                    modulesData = data[i];
+                    if (!results[modulesData.moduleName]) {
+                        results[modulesData.moduleName] = '';
+                    }
+                    results[modulesData.moduleName] += self.render(["phpr.Default.template.results", "results.html"], null, {
+                        id :           modulesData.id,
+                        moduleId :     modulesData.modulesId,
+                        moduleName:    modulesData.moduleName,
+                        projectId:     modulesData.projectId,
+                        firstDisplay:  modulesData.firstDisplay,
+                        secondDisplay: modulesData.secondDisplay,
+                        resultType:    "tag",
+                    });
+                }
+                var moduleName = '';
+                var html       = '';
+                for (var i in results) {
+                    moduleName = i;
+                    html       = results[i];
+                    search += self.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
+                        moduleName:    moduleName,
+                        results:       html,
+                    });
+                }
+                dijit.byId("gridBox").attr('content', search);
             })
         });
     },

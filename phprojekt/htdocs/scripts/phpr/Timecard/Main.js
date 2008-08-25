@@ -49,12 +49,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             currentModule:phpr.module
         });
 
-        this.search = new dojo.dnd.Moveable("searchsuggest");
-        this.tags = new dojo.dnd.Moveable("tagsbox");
-
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
                 this.setSubmoduleNavigation();
+                this.hideSuggest();
                 this.setSearchForm();
                 this.tree = new this.treeWidget(this);
                 this.grid = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);
@@ -78,12 +76,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.setSubmoduleNavigation();
-        if (!this.search) {
-            this.search = new dojo.dnd.Moveable("searchsuggest");
-        }
-        if (!this.tags) {
-            this.tags = new dojo.dnd.Moveable("tagsbox");
-        }
+        this.hideSuggest();
         this.setSearchForm();
         this.tree     = new this.treeWidget(this);
         this.grid     = new this.gridWidget(this.updateUrl, this, phpr.currentProjectId);

@@ -60,7 +60,6 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     },
 });
 
-
 dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     // summary:
     //    Redefine the function for return the correct value
