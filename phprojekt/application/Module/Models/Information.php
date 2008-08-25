@@ -59,7 +59,7 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
         $data['required'] = true;
         $data['readOnly'] = false;
         $converted[] = $data;
-        
+
         // Internal name
         $data = array();
         $data['key']      = 'internalName';
@@ -121,11 +121,11 @@ class Module_Models_Information extends EmptyIterator implements Phprojekt_Model
     /**
      * Return an array with titles to simplify things
      *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $ordering An ordering constant (ORDERING_DEFAULT, etc)
      *
      * @return array
      */
-    public function getTitles($ordering = MODELINFO_ORD_DEFAULT)
+    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         return array();
     }
