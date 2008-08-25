@@ -1,5 +1,3 @@
-
-
 /* Tree */
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeNode {
     background-image : url('images/treeI_rtl.gif');
@@ -20,7 +18,7 @@
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeContent {
     padding-left: auto;
-    padding-right: 1px;   
+    padding-right: 1px;
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeExpandoOpened {

@@ -1,5 +1,3 @@
-@import url("../../../scripts/dojo/dijit/themes/dijit.css");
-
 @import url("lib/reset.css");
 @import url("lib/typography.css");
 @import url("lib/css-classes.css");
@@ -12,6 +10,7 @@
 @import url("layout/AccordionContainer.css");
 @import url("layout/SplitContainer.css");
 @import url("layout/BorderContainer.css");
+@import url("layout/ExpandoPane.css");
 @import url("form/Common.css");
 @import url("form/Button.css");
 @import url("form/ComboBox.css");
