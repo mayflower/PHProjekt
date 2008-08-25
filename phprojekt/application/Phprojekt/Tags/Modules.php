@@ -54,7 +54,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      *
      * This function use the Zend_DB insert
      *
-     * @param string  $moduleId  The module Id to store
+     * @param integer $moduleId  The module Id to store
      * @param integer $itemId    The item Id
      * @param integer $tagUserId The User-Tag relation Id
      *
@@ -85,10 +85,10 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
 
         $where[] = 'tagUserId  = '. $this->getAdapter()->quote($tagUserId);
 
-        $modules = $this->fetchAll($where);
+        $modules = $this->fetchAll($where, 'itemId DESC');
         foreach ($modules as $moduleData) {
             $foundResults[] = array('itemId'     => $moduleData->itemId,
-            'moduleId'   => $moduleData->moduleId);
+                                    'moduleId'   => $moduleData->moduleId);
         }
 
         return $foundResults;
@@ -97,7 +97,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     /**
      * Return all the relations with the pair moduleId-itemId
      *
-     * @param string  $moduleId The module Id to store
+     * @param integer $moduleId The module Id to store
      * @param integer $itemId   The item Id
      *
      * @return integer
@@ -123,27 +123,54 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     /**
      * Delete all the entries for one userId-moduleId-itemId pair
      *
-     * @param string  $moduleId   The module Id to store
+     * @param integer $moduleId   The module Id to store
      * @param integer $itemId     The item Id
      * @param array   $tagUserIds All the relationsId for delete
      *
      * @return void
      */
-    public function deleteRelations($moduleId, $itemId, $tagUserIds = null)
+    public function deleteRelations($moduleId, $itemId, $tagUserIds)
     {
         $clone = clone($this);
-        if (!empty($tagUserIds)) {
-            foreach ($tagUserIds as $tagUserId) {
-                $where = array();
-                $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
-                $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
-                $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
-                $clone->delete($where);
-            }
-        } else {
+        foreach ($tagUserIds as $tagUserId) {
             $where = array();
             $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
             $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+            $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
+            $clone->delete($where);
+        }
+    }
+
+    /**
+     * Delete all the entries for the moduleId-itemId pair
+     *
+     * @param integer $moduleId The module Id to store
+     * @param integer $itemId   The item Id
+     *
+     * @return void
+     */
+    public function deleteRelationsByItem($moduleId, $itemId)
+    {
+        $clone = clone($this);
+        $where = array();
+        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
+        $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+        $clone->delete($where);
+    }
+
+    /**
+     * Delete all the entries for one userId
+     *
+     * @param array $tagUserIds All the relationsId for delete
+     *
+     * @return void
+     */
+    public function deleteRelationsByUser($tagUserIds)
+    {
+        $clone = clone($this);
+        foreach ($tagUserIds as $tagUserId) {
+            $where = array();
+            $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
             $clone->delete($where);
         }
     }

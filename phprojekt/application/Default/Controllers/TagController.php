@@ -137,4 +137,37 @@ class TagController extends IndexController
                            'id'      => 0);
         echo Phprojekt_Converter_Json::convert($return);
     }
+
+    /**
+     * Delete the tags for one item
+     *
+     * @requestparam integer $id         Item id
+     * @requestparam string  $string     All the tags separated by space
+     * @requestparam string  $moduleName Module name
+     *
+     * @return void
+     */
+    public function jsonDeleteTagsAction()
+    {
+        $tagObj = Phprojekt_Tags_Default::getInstance();
+        $id     = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException('ID parameter required');
+        }
+
+        $module    = $this->getRequest()->getParam('moduleName', 'Project');
+        $moduleId  = (int) Phprojekt_Module::getId($module);
+
+        $tagObj->deleteTagsByItem($moduleId, $id);
+
+        $translate = Zend_Registry::get('translate');
+        $message   = $translate->translate('The Tags was deleted correctly');
+
+        $return    = array('type'    => 'success',
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => 0);
+        echo Phprojekt_Converter_Json::convert($return);
+    }
 }

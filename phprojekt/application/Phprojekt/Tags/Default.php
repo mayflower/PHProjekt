@@ -96,7 +96,7 @@ class Phprojekt_Tags_Default
      *
      * Index all the strings.
      *
-     * @param string  $moduleId The module Id to store
+     * @param integer $moduleId The module Id to store
      * @param integer $itemId   The item Id
      * @param string  $data     Strings to save separated by spaces/coma
      *
@@ -178,7 +178,7 @@ class Phprojekt_Tags_Default
 
             if ($tagId > 0) {
                 // Get The user-tags relations
-                $tagUserId = $this->_tagsUsers->getUserTagIds($tagId);
+                $tagUserId = $this->_tagsUsers->getUserTagIds(0, $tagId);
 
                 // Get The modules data
                 $foundResults = $this->_tagsModules->getModulesByRelationId($tagUserId, $projectId);
@@ -204,7 +204,7 @@ class Phprojekt_Tags_Default
      * If the $limit is set,
      * the returned array is limited to the $limit tags
      *
-     * @param string  $moduleId The module Id to store
+     * @param integer $moduleId The module Id to store
      * @param integer $itemId   The item Id
      * @param integer $limit    The number of modules for return, 0 for all
      *
@@ -243,11 +243,34 @@ class Phprojekt_Tags_Default
     }
 
     /**
+     * Delete the entries for the moduleId-itemId
+     *
+     * @param integer $moduleId The module Id to delete
+     * @param integer $itemId   The item Id
+     */
+    public function deleteTagsByItem($moduleId, $itemId) {
+        $this->_tagsModules->deleteRelationsByItem($moduleId, $itemId);
+    }
+
+    /**
+     * Delete the tags for the user
+     *
+     * @param integer $itemId     The item Id
+     */
+    public function deleteTagsByUser($userId) {
+        // Get all the user-tags relations
+        $tagUserRelations = $this->_tagsUsers->getUserTagIds($userId);
+
+        $this->_tagsModules->deleteRelationsByUser($tagUserRelations);
+        $this->_tagsUsers->deleteUserTags($userId);
+    }
+
+    /**
      * Index a string with the moduleId and the itemId
      * The function get a string and separate into many words
      * And store each of them.
      *
-     * @param string  $moduleId The module Id to store
+     * @param integer $moduleId The module Id to store
      * @param integer $itemId   The item Id
      * @param string  $data     String to save
      *
@@ -279,7 +302,7 @@ class Phprojekt_Tags_Default
     /**
      * Get all the relations moduleId-itemId that are for the current user
      *
-     * @param string  $moduleId The module Id to get
+     * @param integer $moduleId The module Id to get
      * @param integer $itemId   The item Id
      *
      * @return array
