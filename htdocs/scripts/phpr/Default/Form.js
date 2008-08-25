@@ -174,13 +174,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    to the array of values for save it later
         var html = this.render(["phpr.Default.template", "tabs.html"], null,{
             innerTabs: innerTabs,
-            formId:    formId
+            formId:    formId || '',
         });
         var tab = new dijit.layout.ContentPane({
             id:        id,
             title:     title,
         });
-        tab.setContent(html);
+        tab.attr('content', html);
         this.form.addChild(tab);
         if (typeof formId != "undefined") {
             this.formsWidget.push(dijit.byId(formId));
@@ -268,7 +268,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         this.addTab(this.formdata, 'tabBasicData', 'Basic Data', 'dataFormTab');
 
-        this._formNode.setContent(this.form.domNode);
+        this._formNode.attr('content',this.form.domNode);
         this.form.startup();
 
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
@@ -439,17 +439,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
             content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data){
-               new phpr.handleResponse('serverFeedback',data);
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
                if (!this.id) {
                    this.id = data['id'];
                }
-               if (data.type =='success') {
+               if (data.type == 'success') {
                    phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' + this.id,
                         content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data){
-                            new phpr.handleResponse('serverFeedback',data);
+                        onSuccess: dojo.hitch(this, function(data) {
+                            new phpr.handleResponse('serverFeedback', data);
                             if (data.type =='success') {
                                 this.publish("updateCacheData");
                                 this.publish("reload");
@@ -468,9 +468,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function calls jsonDeleteAction
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function() {
-                this.publish("updateCacheData");
-                this.publish("reload");
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
+               if (data.type == 'success') {
+                   phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' + phpr.module + '/id/' + this.id,
+                        onSuccess: dojo.hitch(this, function(data) {
+                            new phpr.handleResponse('serverFeedback', data);
+                            if (data.type =='success') {
+                                this.publish("updateCacheData");
+                                this.publish("reload");
+                            }
+                        }),
+                    });
+               }
             })
         });
     },

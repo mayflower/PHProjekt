@@ -48,8 +48,12 @@
     "accessNone": "None",
 	"accessAction": "Aktion",
 	"accessModule": "Module",
+    "accessRole":  "Rol",
 
 	// Modules
     "moduleName": "Module",
     "moduleActive": "Active",
+
+    "tagResults": "Tags Ergebnisse",
+    "searchResults": "Such Ergebnisse",
 })

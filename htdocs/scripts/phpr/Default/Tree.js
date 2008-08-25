@@ -8,6 +8,8 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     _treeNode:  null,
     _url:       null,
     _idName:    null,
+    _store:     null,
+    _model:     null,
 
     constructor:function(main) {
         // summary: The tree is rendere on construction
@@ -21,32 +23,34 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     loadTree:function() {
         if (!dijit.byId(this._idName)) {
             // Data of the tree
-            store     = this.getStore();
-            model     = this.getModel(store);
-            this.tree = this.getTree(model);
+            this.getStore();
+            this.getModel(store);
+            this.tree = this.getTree();
 
-            this._treeNode.setContent(this.tree.domNode);
+            this._treeNode.attr('content', this.tree.domNode);
             this.tree.startup();
 
             dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
+        } else {
+            this.tree = dijit.byId(this._idName);
         }
     },
 
     getStore:function() {
-        return new dojo.data.ItemFileWriteStore({url: this._url});
+        this._store = new dojo.data.ItemFileWriteStore({url: this._url});
     },
 
-    getModel:function(store) {
-        return new dijit.tree.ForestStoreModel({
-            store: store,
+    getModel:function() {
+        this._model = new dijit.tree.ForestStoreModel({
+            store: this._store,
             query: {parent:'1'},
         });
     },
 
-    getTree:function(model) {
+    getTree:function() {
         return new dijit.Tree({
             id:       this._idName,
-            model:    model,
+            model:    this._model,
             showRoot: false
         }, document.createElement('div'));
     },

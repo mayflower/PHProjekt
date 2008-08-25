@@ -13,19 +13,19 @@ dojo.declare("phpr.Administration.Default.Tree", phpr.Default.Tree, {
         this._idName = 'treeAdminNode';
     },
 
-    getModel:function(store) {
-        return new dijit.tree.ForestStoreModel({
-            store: store,
+    getModel:function() {
+        this._model = new dijit.tree.ForestStoreModel({
+            store: this._store,
             query: {parent:'1'},
             rootId:    phpr.nls.administration,
             rootLabel: phpr.nls.administration,
         });
     },
 
-    getTree:function(model) {
+    getTree:function() {
         return new dijit.Tree({
             id:        this._idName,
-            model:     model,
+            model:     this._model,
         }, document.createElement('div'));
     },
 

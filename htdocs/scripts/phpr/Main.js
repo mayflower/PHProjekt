@@ -4,6 +4,8 @@ dojo.provide("phpr.Main");
 //Load General widgets
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.layout.ExpandoPane");
+dojo.require("dijit.TitlePane");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.Menu");
 dojo.require("dojox.dtl");

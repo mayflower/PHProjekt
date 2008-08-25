@@ -20,7 +20,7 @@ dojo.declare("phpr.Component", null, {
             var dojoType = node.getAttribute('dojoType');
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
-                dijit.byId(node.getAttribute('id')).setContent(tpl.render(context));
+                dijit.byId(node.getAttribute('id')).attr('content', tpl.render(context));
             } else {
                 node.innerHTML = tpl.render(context);
                 phpr.initWidgets(node);
