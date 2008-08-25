@@ -30,13 +30,8 @@ class User_ModuleSetting_Test extends PHPUnit_Framework_TestCase
      */
     public function testUserModuleSettingModelsUser()
     {
-
         $userModel = Phprojekt_Loader::getModel('User','UserModuleSetting');
-
         $userModel->getSettingNameById(1);
-
-        $this->assertEquals($UserModel->value, null);
-
+        $this->assertEquals($userModel->value, null);
     }
-
 }

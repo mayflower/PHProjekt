@@ -106,34 +106,41 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
     public function testGetModulesByTag()
     {
         $tag = Phprojekt_Tags_Default::getInstance();
-        $result = array('0' => array('id' => 1,
-                                     'moduleId' => 1,
-                                     'moduleName' => 'Project',
-                                     'firstDisplay' => 'test',
-                                     'secondDisplay' => null),
-                        '1' => array('id' => 2,
-                                     'moduleId' => 1,
-                                     'moduleName' => 'Project',
-                                     'firstDisplay' => '',
-                                     'secondDisplay' => ''),
-                        '2' => array('id' => 1,
-                                     'moduleId' => 2,
-                                     'moduleName' => 'Todo',
-                                     'firstDisplay' => '',
-                                     'secondDisplay' => ''));
+        $result = array(
+                        '0' => array('id'            => 2,
+                                     'moduleId'      => 1,
+                                     'moduleName'    => 'Project',
+                                     'firstDisplay'  => '',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1),
+                        '1' => array('id'            => 1,
+                                     'moduleId'      => 1,
+                                     'moduleName'    => 'Project',
+                                     'firstDisplay'  => 'test',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1),
+                        '2' => array('id'            => 1,
+                                     'moduleId'      => 2,
+                                     'moduleName'    => 'Todo',
+                                     'firstDisplay'  => '',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1));
         $this->assertEquals($tag->getModulesByTag('this',1), $result);
 
         // limit
-        $result = array('0' => array('id' => 1,
-                                     'moduleId' => 1,
-                                     'moduleName' => 'Project',
-                                     'firstDisplay' => 'test',
-                                     'secondDisplay' => null),
-                        '1' => array('id' => 2,
-                                     'moduleId' => 1,
-                                     'moduleName' => 'Project',
-                                     'firstDisplay' => '',
-                                     'secondDisplay' => ''));
+        $result = array(
+                        '0' => array('id'            => 2,
+                                     'moduleId'      => 1,
+                                     'moduleName'    => 'Project',
+                                     'firstDisplay'  => '',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1),
+                        '1' => array('id'            => 1,
+                                     'moduleId'      => 1,
+                                     'moduleName'    => 'Project',
+                                     'firstDisplay'  => 'test',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1));
         $this->assertEquals($tag->getModulesByTag('this', 1, 2), $result);
 
         // None

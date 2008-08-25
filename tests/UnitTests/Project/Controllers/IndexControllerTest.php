@@ -24,7 +24,7 @@ require_once 'PHPUnit/Framework.php';
  */
 class Project_IndexController_Test extends PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * Test of json save Project -in fact, default json save
      */
@@ -116,8 +116,8 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
     }
-    
-    
+
+
     /**
      * Test of json save  multiple Project
      */
@@ -209,8 +209,8 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Items was edited correctly') > 0);
     }
-    
-    
+
+
      /**
      * Test the get all the modules active and their relation with the projectId
      */
@@ -295,7 +295,7 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '"5":{"id":"5","name":"Timeproj","label":"Timeproj","inProject":true}') > 0);
     }
-    
+
     /**
      * Test the get all the role-user relation with the projectId
      */
@@ -379,6 +379,6 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(strpos($response, '{"1":{"id":"1","name":"admin","users":[]},') > 0);
     }
-    
+
 
 }
