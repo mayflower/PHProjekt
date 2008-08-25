@@ -1,17 +1,16 @@
-/** 
- * dijit.layout.TitlePane 
+/**
+ * dijit.layout.TitlePane
  *
- */ 
- 
+ */
+
 .phprojekt .dijitTitlePane .dijitTitlePaneTitle {
-	background: #cccccc;
-	background:#fff url("images/titleBar.png") repeat-x top left;
+	background: #294064;
 	border:1px solid #bfbfbf;
 	padding:4px 4px 2px 4px;
 	cursor: pointer;
 	font-size: 0.9em;
 	font-weight: bold;
-	color: #6d6d6d;
+	color: #fff;
 }
 
 .phprojekt .dijitTitlePane .dijitArrowNode {
@@ -21,12 +20,12 @@
 }
 
 .phprojekt .dijitTitlePaneFocused .dijitTitlePaneTextNode {
-	color: #243C5F;
+	color: #fff;
 }
 
 
 .phprojekt .dijitOpen .dijitTitlePaneTextNode {
-	color: #243C5F;
+	color: #fff;
 }
 
 .phprojekt .dijitTitlePane .dijitClosed .dijitArrowNode {

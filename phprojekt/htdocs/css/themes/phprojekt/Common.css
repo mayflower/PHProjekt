@@ -77,55 +77,6 @@
     margin-right: 10px;
 }
 
-.phprojekt #searchsuggest, #tagsbox {
-    width: auto;
-    border: none;
-    height: auto;
-    font-size: 9px;
-    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-    font-size: 11px;
-    font-weight: 400;
-    font-style: normal;
-    color: #FFFFFF;
-    text-transform: none;
-    text-decoration: none;
-    letter-spacing: normal;
-    word-spacing: normal;
-    line-height: normal;
-    text-align: start;
-    vertical-align: baseline;
-    margin-top: 45px;
-    margin-right: 5px;
-    background: #294064;
-    position: absolute;
-	border: 1px solid black;
-    cursor: pointer;
-    radius:8pt;
-    -moz-border-radius:8pt 8pt;
-    left: 80%;
-    top:  42px;
-    padding: 10px 20px;
-    margin: 10px 20px;
-}
-
-.phprojekt #tagsbox {
-    margin-top: 20%;
-}
-
-.phprojekt #searchsuggest a, #tagsbox a {
-    font-size: 9px;
-    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-    font-size: 11px;
-    font-weight: 400;
-    font-style: normal;
-    color: #FFFFFF;
-    letter-spacing: normal;
-    word-spacing: normal;
-    line-height: normal;
-    text-align: start;
-    vertical-align: baseline;
-}
-
 .phprojekt #header #toolbar {
     margin: 15px;
     color: #ffffff;
@@ -178,8 +129,9 @@
 }
 
 .phprojekt #navigation-container {
-    border-bottom: 10px solid #294064;
+    border-bottom: 14px solid #294064;
     border-left: 10px solid #294064;
+    background: #294064;
 }
 
 .phprojekt #tree-navigation {
@@ -306,3 +258,111 @@ h1,h2,h3,h4,h5,h6 {
 .phprojekt.dojoDndCopy .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(images/dndNoCopy.png); background-repeat: no-repeat; background-position: 2px center;}
 .phprojekt.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(images/dndMove.png); background-repeat: no-repeat; background-position: 2px center;}
 .phprojekt.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(images/dndCopy.png); background-repeat: no-repeat; background-position: 2px center;}
+
+/* Results */
+.phprojekt .results {
+    font-family: "Verdana";
+    font-size: 11px;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-align: start;
+    vertical-align: baseline;
+    border-bottom: 1px solid #CBCBCB;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #fff;
+}
+
+.phprojekt .results a {
+    font-weight: bold;
+    color: #294064;
+    text-decoration: none;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.phprojekt .results span {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.phprojekt #resultstitle {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    vertical-align: center;
+    color: #CBCBCB;
+    font-family: "Verdana";
+    font-size: 20px;
+    font-weight: 400;
+    font-style: normal;
+    overflow:hidden !important;
+}
+
+.phprojekt #searchsuggest {
+    width: auto;
+    border: none;
+    height: auto;
+    font-size: 9px;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    font-style: normal;
+    color: #FFFFFF;
+    text-transform: none;
+    text-decoration: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-align: start;
+    vertical-align: baseline;
+    margin-top: 50px;
+    margin-right: 0px;
+    background-color: #ccc;
+    position: absolute;
+	border: 1px solid black;
+    right: 0px;
+    top:  50px;
+    margin: 10px 0px;
+}
+
+.phprojekt .searchsuggesttitle {
+    padding-left: 10px;
+    vertical-align: center;
+    color: #fff;
+    font-family: "Verdana";
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    overflow:hidden !important;
+    background-color: #294064;
+}
+
+.phprojekt .searchsuggesttitle a {
+    text-transform: none;
+    text-decoration: none;
+    color: #fff;
+    line-height: normal;
+    text-align: start;
+    vertical-align: baseline;
+}
+
+.phprojekt #searchsuggest .results {
+    background-color: #ccc;
+}
+
+.phprojekt #searchsuggest .results a {
+    color: #000;
+    font-weight: bold;
+}
+
+.phprojekt #searchsuggest .results span {
+    color: #000;
+}

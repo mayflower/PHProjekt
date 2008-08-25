@@ -1,0 +1,133 @@
+/* dojox.layout.ExpandoPane */
+
+.dojoxExpandoPane {
+    overflow:auto;
+    margin-top:1px;
+    z-index:440;
+    background:#294064;
+}
+
+.dojoxExpandoPane .dojoxExpandoWrapper,
+.dojoxExpandoPane .dojoxExpandoContent {
+    overflow:auto;
+}
+
+.dojoxExpandoClosed .dojoxExpandoTitleNode {
+}
+
+/* hide all layout children scrollbars when closed */
+.dojoxExpandoClosed .dojoxExpandoWrapper * {
+    overflow:hidden !important;
+}
+
+.dojoxExpandoTitleNode {
+    padding-right:6px;
+    padding-left:6px;
+}
+
+.dojoxExpandoIcon .a11yNode {
+    display:none;
+    visibility:hidden;
+}
+
+.dojoxExpandoBottom .dojoxExpandoIcon,
+.dojoxExpandoTop .dojoxExpandoIcon,
+.dojoxExpandoLeft .dojoxExpandoIcon {
+    float:left;
+    margin-left:5px;
+}
+
+.dojoxExpandoRight .dojoxExpandoIcon {
+    float:left;
+    margin-left:5px;
+}
+
+/* this handles the tested embedded layout widget borders ...
+    ... perhaps some of these "relationship classes" can be refined and merged
+    into the existing themes */
+.dojoxExpandoPane .dijitTabContainer .dijitTabPaneWrapper {
+    border:none;
+}
+
+.dojoxExpandoPane .dijitAccordionContainer {
+    border:none;
+}
+
+.dojoxExpandoRight .dijitAccordionContainer {
+    /* FIXME: need specifics for themes */
+    border-right:1px solid #ccc;
+}
+
+.dojoxExpandoIcon {
+    width:14px;
+    cursor:pointer;
+    background-position:-60px 0px;
+    height:14px;
+}
+
+.dojoxExpandoClosed .dojoxExpandoIcon {
+    background-position: 0px 0px;
+}
+
+/* phprojekt definitions */
+.phprojekt .dojoxExpandoTitle {
+    height:12px;
+    font-size:0.9em;
+    font-weight:bold;
+    color: #fff;
+    background: #294064;
+    padding-bottom: 5px;
+}
+
+.dj_safari .phprojekt .dojoxExpandoTitle {
+    height:13px;
+}
+
+.phprojekt .dojoxExpandoIcon {
+    background: url('../images/spriteRoundedIconsSmall.png') no-repeat center center;
+    background-position:-60px 0px;
+}
+
+.phprojekt .dojoxExpandoClosed .dojoxExpandoIcon {
+    background-position:0px 0px;
+}
+
+.phprojekt .dojoxExpandoRight {
+    border-left:1px solid #b1badf;
+}
+
+.phprojekt .dojoxExpandoLeft {
+    border-right:1px solid #b1badf;
+}
+
+.phprojekt .dojoxExpandoPane {
+}
+
+.phprojekt .dojoxExpandoPane .dojoxExpandoWrapper {
+    background: #294064;
+}
+
+.phprojekt .dojoxExpandoPane .dojoxExpandoContent {
+    vertical-align: baseline;
+    margin-left:1px;
+    margin-rigth:1px;
+    background: #fff;
+	border: 1px solid #294064;
+    radius:8pt;
+    -moz-border-radius:8pt 8pt;
+    padding-right:6px;
+    padding-left:6px;
+}
+
+.phprojekt .dojoxExpandoPane .dojoxExpandoContent a {
+    text-transform: none;
+    text-decoration: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-align: start;
+    font-family: Verdana;
+    font-size: 12px;
+    font-weight: 600;
+    color: #7E7E7E;
+}
