@@ -96,6 +96,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 			$project->startDate = '1981-05-12';
 			$project->endDate = '1981-05-12';
 			$project->priority = 1;
+			$project->projectId = 1;
 			$project->path = '/';
 			$project->save();
 

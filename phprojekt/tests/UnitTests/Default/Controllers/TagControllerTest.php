@@ -122,9 +122,9 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Default/Tags/jsonSaveTags/moduleName/Project/string/test/id/1');
-        $request->setPathInfo('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1');
-        $request->setRequestUri('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1');
+        $request->setBaseUrl($config->webpath.'index.php/Default/Tags/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
+        $request->setPathInfo('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
+        $request->setRequestUri('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -273,6 +273,6 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"id":"1","moduleId":"1","moduleName":"Project","firstDisplay":"test","secondDisplay":null}') > 0);
+        $this->assertTrue(strpos($response, '{"id":"1","moduleId":"1","moduleName":"Project","firstDisplay":"test","secondDisplay":null,"projectId":"1"}') > 0);
     }
 }

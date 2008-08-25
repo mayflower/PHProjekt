@@ -268,7 +268,7 @@ CREATE TABLE `UserModuleSetting` (
   `value` varchar(255) NOT NULL,
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`) 
+  FOREIGN KEY (`userId`) REFERENCES User(`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE,
   FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
@@ -311,6 +311,7 @@ CREATE TABLE `SearchDisplay` (
   `itemId` int(11) NOT NULL,
   `firstDisplay` varchar(255),
   `secondDisplay` varchar(255),
+  `projectId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`)
 );
 
@@ -436,7 +437,7 @@ CREATE TABLE `Timeproj` (
   `id` int(11) NOT NULL auto_increment,
   `notes` text default NULL,
   `ownerId` int(11) default NULL,
-  `projectId` int(11) REFERENCES Project(`id`) 
+  `projectId` int(11) REFERENCES Project(`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE,
   `date` date default NULL,
@@ -693,5 +694,5 @@ INSERT INTO SearchWords (`id`, `word`, `count`) VALUES
 INSERT INTO searchwordmodule (`ModuleId`, `ItemId`, `WordId`) VALUES
 (1, 1, 1);
 
-INSERT INTO searchdisplay (`ModuleId`, `ItemId`, `firstDisplay`) VALUES
-(1, 1, 'test');
+INSERT INTO searchdisplay (`ModuleId`, `ItemId`, `firstDisplay`, `projectId`) VALUES
+(1, 1, 'test', 1);
