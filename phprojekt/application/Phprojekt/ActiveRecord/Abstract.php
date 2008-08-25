@@ -967,7 +967,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         /*
          * In case of join strings please note that the resultset is read only.
          */
-        if (null != $join) {
+        if (null !== $join) {
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
         } else {
             $rows = parent::fetchAll($where, $order, $count, $offset);

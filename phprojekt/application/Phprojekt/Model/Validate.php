@@ -65,7 +65,7 @@ class Phprojekt_Model_Validate
 
                         if (true === $validations['required']) {
                             $error = $this->validateIsRequired($value);
-                            if (null != $error) {
+                            if (null !== $error) {
                                 $validated = false;
                                 $this->error->addError(array(
                                 'field'   => $this->_translate->translate($varname),
@@ -90,7 +90,7 @@ class Phprojekt_Model_Validate
                 if ($validater != 'validateIsRequired') {
                     if (in_array($validater, get_class_methods($class))) {
                         $error = call_user_method($validater, $class, $value);
-                        if (null != $error) {
+                        if (null !== $error) {
                             $validated = false;
                             $this->error->addError(array(
                             'field'   => $this->_translate->translate($varname),
