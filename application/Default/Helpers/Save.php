@@ -60,11 +60,10 @@ final class Default_Helpers_Save
         $node->ownerId = $authNamespace->userId;
 
         // Parent Project
-        if (isset($node->projectId)) {
-            $projectId = $node->projectId;
-        } else {
-            $projectId = 1;
+        if (!isset($node->projectId) || null === $node->projectId) {
+            $node->projectId = 1;
         }
+        $projectId = $node->projectId;
 
         // Checks
         if (!$node->getActiveRecord()->recordValidate()) {

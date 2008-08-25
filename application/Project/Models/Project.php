@@ -38,9 +38,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function validateProjectId($value)
     {
-        $node = Phprojekt_Loader::getModel('Project', 'Project')->find($this->id);
-
-        if (null != $this->id) {
+        if (null !== $this->id && $this->id > 0) {
+            $node = Phprojekt_Loader::getModel('Project', 'Project')->find($this->id);
             $tree = new Phprojekt_Tree_Node_Database($node, $this->id);
             $tree->setup();
             if ($tree->getActiveRecord()->id == $value) {
