@@ -5,10 +5,12 @@
     <title>PHProjekt</title>
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
     <style>
-        @import "<?php echo $this->webpath; ?>scripts/dojo/dojo/resources/dojo.css";
+        @import "<?php echo $this->webpath; ?>scripts/src/dojo/resources/dojo.css";
+        @import "<?php echo $this->webpath; ?>scripts/src/dijit/themes/dijit.css";
+        @import "<?php echo $this->webpath; ?>scripts/src/dijit/themes/dijit_rtl.css";
         @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojekt.css";
     </style>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>scripts/dojo/dojo/dojo.js"
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>scripts/src/dojo/dojo.js"
      djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
 	<script type="text/javascript">
 		dojo.require("dojo.parser");
