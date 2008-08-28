@@ -26,7 +26,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("exportGrid");
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
-        this.render(["Project.template", "BasicData.html"], dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.setSubmoduleNavigation('BasicData');
         this.hideSuggest();
         this.setSearchForm();

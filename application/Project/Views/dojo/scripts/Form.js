@@ -2,11 +2,12 @@ dojo.provide("phpr.Project.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     initData: function() {
-        dojo.inher
-        this.historyStore = new phpr.ReadHistory({
-            url: phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
-        });
-        this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
+        if (this.id > 0) {
+            this.historyStore = new phpr.ReadHistory({
+                url: phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            });
+            this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
+        }
 
         // Get all the active users
         this.userStore = new phpr.Store.User();
@@ -26,6 +27,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for allow/disallow modules on the project
         // description:
         //    Add Tab for allow/disallow modules on the project
+        phpr.destroyWidgets("tabModules");
         if (this._accessPermissions) {
             var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
                 moduleNameText:   phpr.nls.moduleName,
@@ -42,6 +44,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for user-role relation into the project
         // description:
         //    Add Tab for user-role relation into the project
+        phpr.destroyWidgets("tabRoles");
+        phpr.destroyWidgets("newRoleUser");
+
         if (this._accessPermissions) {
             var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
@@ -71,6 +76,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 var userId     = relationList[i].userId;
                 var idName     = "deleteRelation" + userId;
                 var buttonName = "relationDeleteButton" + userId;
+                phpr.destroyWidgets(idName);
                 var params = {
                     label:     '',
                     id:        idName,
@@ -88,7 +94,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.addAccessTab(data);
         this.addModuleTab(data);
         this.addRoleTab(data);
-        this.addTab(this.historyData, 'tabHistory', 'History');
+        if (this.id > 0) {
+            this.addTab(this.historyData, 'tabHistory', 'History');
+        }
     },
 
     newRoleUser: function () {
