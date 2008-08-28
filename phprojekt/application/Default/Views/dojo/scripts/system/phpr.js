@@ -70,6 +70,8 @@ phpr.destroyWidgets = function(el) {
                 dijit.byNode(oldWidgetNodes[i]).destroy();
             }
         }
+    } else if (dijit.byId(el)) {
+        dijit.byId(el).destroy();
     }
 };
 
