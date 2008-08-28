@@ -81,10 +81,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Display all the users and the acces
         //    The user can assign to each user different access on the item
-        phpr.destroySimpleWidget("dataAccessAdd");
-        phpr.destroySimpleWidget("checkAdminAccessAdd");
-        phpr.destroySimpleWidget("checkWriteAccessAdd");
-        phpr.destroySimpleWidget("checkReadAccessAdd");
+        phpr.destroyWidgets("tabAccess");
+        phpr.destroyWidgets("newAccess");
+        phpr.destroyWidgets("dataAccessAdd");
+        phpr.destroyWidgets("checkAdminAccessAdd");
+        phpr.destroyWidgets("checkWriteAccessAdd");
+        phpr.destroyWidgets("checkReadAccessAdd");
+
         // Except the current user
         var accessContent = new Array();
         var currentUser   = 0;
@@ -116,7 +119,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 accessContent:      accessContent,
             });
 
-            this.addTab(accessData, 'tab2', 'Access', 'accessFormTab');
+            this.addTab(accessData, 'tabAccess', 'Access', 'accessFormTab');
 
             // add button for access
             var params = {
@@ -191,7 +194,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
-        phpr.destroyWidgets("detailsBox");
+        phpr.destroyWidgets(this._formNode.attr("id"));
+
+        phpr.destroyWidgets("formtab");
+        phpr.destroyWidgets("tabBasicData");
+        phpr.destroyWidgets("tabHistory");
+
+
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");

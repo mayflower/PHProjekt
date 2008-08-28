@@ -7,9 +7,9 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
         dojo.subscribe("Project.basicData", this, "basicData");
 
-		this.gridWidget = phpr.Project.Grid;
+		this.gridWidget = phpr.Default.Grid;
 		this.formWidget = phpr.Project.Form;
-		this.treeWidget = phpr.Project.Tree;
+		this.treeWidget = phpr.Default.Tree;
 	},
 
     loadResult:function(id, module, projectId) {

@@ -6,7 +6,7 @@ dojo.declare("phpr.Settings.Main", phpr.Default.Main, {
         this.loadFunctions(this.module);
 
         this.gridWidget = phpr.Settings.Grid;
-		this.formWidget = phpr.Settings.Form;
+		this.formWidget = phpr.Default.Form;
 		this.treeWidget = phpr.Settings.Tree;
     },
 
