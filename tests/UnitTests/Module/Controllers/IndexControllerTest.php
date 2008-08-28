@@ -24,7 +24,7 @@ require_once 'PHPUnit/Framework.php';
  */
 class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * Test of json save Module -in fact, default json save
      */
@@ -38,9 +38,9 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Module'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Module/index/jsonSave/id/null/name/test/internalName/test/active/1');
-        $request->setPathInfo('/Module/index/jsonSave/id/null/name/test/internalName/test/active/1');
-        $request->setRequestUri('/Module/index/jsonSave/id/null/name/test/internalName/test/active/1');
+        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonSave/id/null/name/test/internalName/test/active/1');
+        $request->setPathInfo('/Core/module/jsonSave/id/null/name/test/internalName/test/active/1');
+        $request->setRequestUri('/Core/module/jsonSave/id/null/name/test/internalName/test/active/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -49,7 +49,7 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -116,7 +116,7 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
     }
-    
+
     /**
      * Test of json delete Module -in fact, default json save
      */
@@ -130,9 +130,9 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Module'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Module/index/jsonDelete/id/7');
-        $request->setPathInfo('/Module/index/jsonDelete/id/7');
-        $request->setRequestUri('/Module/index/jsonDelete/id/7');
+        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonDelete/id/7');
+        $request->setPathInfo('/Core/module/jsonDelete/id/7');
+        $request->setRequestUri('/Core/module/jsonDelete/id/7');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -141,7 +141,7 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -208,7 +208,7 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
     }
-    
+
     /**
      * Test of json detail Module -in fact, default json save
      */
@@ -222,9 +222,9 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Module'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Module/index/jsonDetail/id/1');
-        $request->setPathInfo('/Module/index/jsonDetail/id/1');
-        $request->setRequestUri('/Module/index/jsonDetail/id/1');
+        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonDetail/id/1');
+        $request->setPathInfo('/Core/module/jsonDetail/id/1');
+        $request->setRequestUri('/Core/module/jsonDetail/id/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -233,7 +233,7 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -300,6 +300,6 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '"name":"Project"') > 0);
     }
-    
+
 
 }

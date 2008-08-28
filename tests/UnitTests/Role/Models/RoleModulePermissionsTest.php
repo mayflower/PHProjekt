@@ -30,12 +30,9 @@ class Phprojekt_RoleModelsRoleModulePermissions_Test extends PHPUnit_Framework_T
      */
     public function testRoleModelsRole()
     {
-
-        $roleModel = Phprojekt_Loader::getModel('Role','RoleModulePermissions');
-
-        $return = $roleModel->getRoleModulePermissionsById(2);
-        
-        $expected = array(
+        $roleModel = new Phprojekt_Role_RoleModulePermissions();
+        $return    = $roleModel->getRoleModulePermissionsById(2);
+        $expected  = array(
               "data" => array(
                 "1" => array(
                  "id" => 1,
@@ -76,7 +73,5 @@ class Phprojekt_RoleModelsRoleModulePermissions_Test extends PHPUnit_Framework_T
              )
            );
         $this->assertEquals($expected, $return);
-        
     }
-
 }

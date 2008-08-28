@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS `History`;
 DROP TABLE IF EXISTS `GroupsUserRelation`;
 DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
-DROP TABLE IF EXISTS `UserModuleSetting`;
+DROP TABLE IF EXISTS `UserSetting`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
@@ -256,9 +256,9 @@ CREATE TABLE `Todo` (
 
 
 --
--- Table structure for table `UserModuleSetting`
+-- Table structure for table `UserSetting`
 --
-CREATE TABLE `UserModuleSetting` (
+CREATE TABLE `UserSetting` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
@@ -273,7 +273,7 @@ CREATE TABLE `UserModuleSetting` (
   ON DELETE CASCADE
   ON UPDATE CASCADE
 );
-CREATE INDEX `UserModuleSetting_userId` ON `UserModuleSetting`(`userId`);
+CREATE INDEX `UserSetting_userId` ON `UserSetting`(`userId`);
 
 --
 -- Table structure for table `SearchWords`

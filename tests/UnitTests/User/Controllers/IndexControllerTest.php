@@ -36,9 +36,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'user'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonGetUsers');
-        $request->setPathInfo('/User/index/jsonGetUsers');
-        $request->setRequestUri('/User/index/jsonGetUsers');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonGetUsers');
+        $request->setPathInfo('/Core/user/jsonGetUsers');
+        $request->setRequestUri('/Core/user/jsonGetUsers');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -47,7 +47,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -120,9 +120,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'user'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonSetSetting/name/timezone/value/3');
-        $request->setPathInfo('/User/index/jsonSetSetting/name/timezone/value/3');
-        $request->setRequestUri('/User/index/jsonSetSetting/name/timezone/value/3');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonSetSetting/name/timezone/value/3');
+        $request->setPathInfo('/Core/user/jsonSetSetting/name/timezone/value/3');
+        $request->setRequestUri('/Core/user/jsonSetSetting/name/timezone/value/3');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -131,7 +131,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -204,9 +204,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'user'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonGetSetting/name/timezone');
-        $request->setPathInfo('/User/index/jsonGetSetting/name/timezone');
-        $request->setRequestUri('/User/index/jsonGetSetting/name/timezone');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonGetSetting/name/timezone');
+        $request->setPathInfo('/Core/user/jsonGetSetting/name/timezone');
+        $request->setRequestUri('/Core/user/jsonGetSetting/name/timezone');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -215,7 +215,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -288,9 +288,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'user'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonGetSettingList');
-        $request->setPathInfo('/User/index/jsonGetSettingList');
-        $request->setRequestUri('/User/index/jsonGetSettingList');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonGetSettingList');
+        $request->setPathInfo('/Core/user/jsonGetSettingList');
+        $request->setRequestUri('/Core/user/jsonGetSettingList');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -299,7 +299,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -372,9 +372,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'user'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonDeleteSetting/name/timezone');
-        $request->setPathInfo('/User/index/jsonDeleteSetting/name/timezone');
-        $request->setRequestUri('/User/index/jsonDeleteSetting/name/timezone');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonDeleteSetting/name/timezone');
+        $request->setPathInfo('/Core/user/jsonDeleteSetting/name/timezone');
+        $request->setRequestUri('/Core/user/jsonDeleteSetting/name/timezone');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -383,7 +383,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -443,7 +443,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('Value deleted successful')) > 0);
     }
-    
+
     /**
      * Test of json save multiple User
      */
@@ -457,9 +457,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'User'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonSaveMultiple/data[1][firstname]/John/data[2][lastname]/Doe');
-        $request->setPathInfo('/User/index/jsonSaveMultiple/data[1][firstname]/John/data[2][lastname]/Doe');
-        $request->setRequestUri('/User/index/jsonSaveMultiple/data[1][firstname]/John/data[2][lastname]/Doe');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonSaveMultiple/data[1][firstname]/John/data[2][lastname]/Doe');
+        $request->setPathInfo('/Core/user/jsonSaveMultiple/data[1][firstname]/John/data[2][lastname]/Doe');
+        $request->setRequestUri('/Core/user/jsonSaveMultiple/data[1][firstname]/John/data[2][lastname]/Doe');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -468,7 +468,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -535,7 +535,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Items was edited correctly') > 0);
     }
-    
+
     /**
      * Test of json save multiple User
      */
@@ -549,9 +549,9 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'User'));
 
-        $request->setBaseUrl($config->webpath.'index.php/User/index/jsonSaveMultipleSetting/data[1][value]/-3/data[2][value]/es');
-        $request->setPathInfo('/User/index/jsonSaveMultipleSetting/data[1][value]/-3/data[2][value]/es');
-        $request->setRequestUri('/User/index/jsonSaveMultipleSetting/data[1][value]/-3/data[2][value]/es');
+        $request->setBaseUrl($config->webpath.'index.php/Core/user/jsonSaveMultipleSetting/data[1][value]/-3/data[2][value]/es');
+        $request->setPathInfo('/Core/user/jsonSaveMultipleSetting/data[1][value]/-3/data[2][value]/es');
+        $request->setRequestUri('/Core/user/jsonSaveMultipleSetting/data[1][value]/-3/data[2][value]/es');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -560,7 +560,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');

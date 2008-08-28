@@ -36,9 +36,9 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'History'));
 
-        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleId/6/itemId/1');
-        $request->setPathInfo('/History/index/jsonList/moduleId/6/itemId/1');
-        $request->setRequestUri('/History/index/jsonList/moduleId/6/itemId/1');
+        $request->setBaseUrl($config->webpath.'index.php/Core/history/jsonList/moduleId/6/itemId/1');
+        $request->setPathInfo('/Core/history/jsonList/moduleId/6/itemId/1');
+        $request->setRequestUri('/Core/history/jsonList/moduleId/6/itemId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -47,7 +47,7 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -120,9 +120,9 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'History'));
 
-        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleName/Calendar/itemId/1');
-        $request->setPathInfo('/History/index/jsonList/moduleName/Calendar/itemId/1');
-        $request->setRequestUri('/History/index/jsonList/moduleName/Calendar/itemId/1');
+        $request->setBaseUrl($config->webpath.'index.php/Core/history/jsonList/moduleName/Calendar/itemId/1');
+        $request->setPathInfo('/Core/history/jsonList/moduleName/Calendar/itemId/1');
+        $request->setRequestUri('/Core/history/jsonList/moduleName/Calendar/itemId/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -131,7 +131,7 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -204,9 +204,9 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'History'));
 
-        $request->setBaseUrl($config->webpath.'index.php/History/index/jsonList/moduleId/2/itemId/');
-        $request->setPathInfo('/History/index/jsonList/moduleId/2/itemId/');
-        $request->setRequestUri('/History/index/jsonList/moduleId/2/itemId/');
+        $request->setBaseUrl($config->webpath.'index.php/Core/history/jsonList/moduleId/2/itemId/');
+        $request->setPathInfo('/Core/history/jsonList/moduleId/2/itemId/');
+        $request->setRequestUri('/Core/history/jsonList/moduleId/2/itemId/');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -215,7 +215,7 @@ class History_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');

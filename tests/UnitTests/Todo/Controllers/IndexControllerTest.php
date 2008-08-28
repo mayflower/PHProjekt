@@ -24,7 +24,7 @@ require_once 'PHPUnit/Framework.php';
  */
 class Todo_IndexController_Test extends PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * Test of json list todoe -in fact, default json list
      */
@@ -49,7 +49,7 @@ class Todo_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -116,7 +116,7 @@ class Todo_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '"numRows":1') > 0);
     }
-    
-    
+
+
 
 }

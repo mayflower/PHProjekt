@@ -24,7 +24,7 @@ require_once 'PHPUnit/Framework.php';
  */
 class Tab_IndexController_Test extends PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * Test of json list Tabe -in fact, default json list
      */
@@ -38,9 +38,9 @@ class Tab_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Tab'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Tab/index/jsonList');
-        $request->setPathInfo('/Tab/index/jsonList');
-        $request->setRequestUri('/Tab/index/jsonList');
+        $request->setBaseUrl($config->webpath.'index.php/Core/tab/jsonList');
+        $request->setPathInfo('/Core/tab/jsonList');
+        $request->setRequestUri('/Core/tab/jsonList');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -49,7 +49,7 @@ class Tab_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -116,7 +116,7 @@ class Tab_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '"numRows":2}') > 0);
     }
-    
-    
+
+
 
 }

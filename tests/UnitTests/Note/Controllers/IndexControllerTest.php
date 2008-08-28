@@ -24,7 +24,7 @@ require_once 'PHPUnit/Framework.php';
  */
 class Note_IndexController_Test extends PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * Test of json save Note -in fact, default json save
      */
@@ -49,7 +49,7 @@ class Note_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -116,8 +116,8 @@ class Note_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
     }
-    
-    
+
+
     /**
      * Test of json save  multiple Note
      */
@@ -142,7 +142,7 @@ class Note_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -209,9 +209,9 @@ class Note_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Items was edited correctly') > 0);
     }
-    
-    
-    
+
+
+
     /**
      * Test the note deletion
      */
@@ -236,7 +236,7 @@ class Note_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -296,7 +296,7 @@ class Note_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
     }
-    
-    
+
+
 
 }

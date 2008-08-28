@@ -38,7 +38,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     function getProjectRoleUserPermissions($projectId)
     {
         $roles         = array();
-        $model         = Phprojekt_Loader::getModel('Role', 'Role');
+        $model         = new Phprojekt_Role_Role();
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         foreach ($model->fetchAll(null, ' name ASC ') as $role) {

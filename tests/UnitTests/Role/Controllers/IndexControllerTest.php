@@ -36,9 +36,9 @@ class Role_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Role'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Role/index/jsonList');
-        $request->setPathInfo('/Role/index/jsonList');
-        $request->setRequestUri('/Role/index/jsonList');
+        $request->setBaseUrl($config->webpath.'index.php/Core/role/jsonList');
+        $request->setPathInfo('/Core/role/jsonList');
+        $request->setRequestUri('/Core/role/jsonList');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -47,7 +47,7 @@ class Role_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -107,7 +107,7 @@ class Role_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('{"id":"1","name":"admin","rights":[]}],"numRows":1}')) > 0);
     }
-    
+
     /**
      * Test the role save
      */
@@ -120,9 +120,9 @@ class Role_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Role'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Role/index/jsonSave/name/test');
-        $request->setPathInfo('/Role/index/jsonSave/name/test');
-        $request->setRequestUri('/Role/index/jsonSave/name/test');
+        $request->setBaseUrl($config->webpath.'index.php/Core/role/jsonSave/name/test');
+        $request->setPathInfo('/Core/role/jsonSave/name/test');
+        $request->setRequestUri('/Core/role/jsonSave/name/test');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -131,7 +131,7 @@ class Role_IndexController_Test extends PHPUnit_Framework_TestCase
         $request->setDispatched(false);
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
