@@ -65,10 +65,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function call all the needed data before the form is drawed
         //    The form will wait for all the data are loaded.
         //    Each module can overwrite this function for load the own data
-        this.historyStore = new phpr.ReadHistory({
-            url: phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
-        });
-        this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
+        if (this.id > 0) {
+            this.historyStore = new phpr.ReadHistory({
+                url: phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            });
+            this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
+        }
 
         // Get all the active users
         this.userStore = new phpr.Store.User();
@@ -309,7 +311,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Add all the tabs that are not the basic data
         this.addAccessTab(data);
-        this.addTab(this.historyData, 'tabHistory', 'History');
+        if (this.id > 0) {
+            this.addTab(this.historyData, 'tabHistory', 'History');
+        }
     },
 
     addBasicFields:function() {
