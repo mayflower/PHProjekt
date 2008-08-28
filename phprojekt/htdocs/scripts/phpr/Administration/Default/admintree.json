@@ -1,9 +1,0 @@
-{
-    "identifier":"id",
-    "label":"name",
-    "items":[{"name":"Admin","id":"1","parent":null,"children":[]},
-             {"name":"Users","id":"User","parent":"1","children":[]},
-             {"name":"Modules","id":"Module","parent":"1","children":[]},
-             {"name":"Roles","id":"Role","parent":"1","children":[]},
-            ]
-}

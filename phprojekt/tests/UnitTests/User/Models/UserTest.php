@@ -30,19 +30,11 @@ class User_User_Test extends PHPUnit_Framework_TestCase
      */
     public function testUserModelsUser()
     {
-
-        $userModel = Phprojekt_Loader::getModel('User','User');
-
+        $userModel = new Phprojekt_User_User();
         $userModel->find(1);
-
         $this->assertEquals($userModel->saveRights(), null);
-
         $this->assertEquals($userModel->recordValidate(), false);
-
         $this->assertEquals($userModel->getError(), array(0 => array('field' => 'firstname', 'message' => 'Is a required field'),
                                                           1 => array('field' => 'lastname', 'message' => 'Is a required field')));
-
-
     }
-
 }

@@ -30,9 +30,8 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-
     }
-    
+
     /**
      * Test the loadClass functionality
      *
@@ -40,11 +39,8 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
     public function testLoadClass()
     {
         Phprojekt_Loader::loadClass('IndexController');
-
         $this->assertTrue(class_exists('IndexController'));
-
     }
-    
 
     /**
      * Test the getModel functionality
@@ -53,13 +49,11 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
     public function testGetModel()
     {
         $name = Phprojekt_Loader::getModel('Project', 'Project');
-
         $this->assertEquals('Project_Models_Project', get_class($name));
-
         $instance = new $name(array('db'=>$this->sharedFixture));
         $this->assertNotNull($instance);
     }
-    
+
     /**
      * Test GetViewClassname
      *
@@ -67,34 +61,15 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
     public function testGetViewClassname()
     {
         $this->assertEquals('Project_Views_Project', Phprojekt_Loader::getViewClassname('Project', 'Project'));
-
     }
-    
+
     /**
      * Test getModelFromObject
      *
      */
     public function testGetModelFromObject()
     {
-        
-        
-        $object = Phprojekt_Loader::getModel('Role', 'Role');
-        
-        $this->assertEquals('Role', Phprojekt_Loader::getModelFromObject($object));
-
+        $object = Phprojekt_Loader::getModel('Todo', 'Todo');
+        $this->assertEquals('Todo', Phprojekt_Loader::getModelFromObject($object));
     }
-    
-    /**
-     * Test getModuleFromObject
-     *
-     */
-    public function testGetModuleFromObject()
-    {
-        
-        $object = Phprojekt_Loader::getModel('Role', 'Role');
-        
-        $this->assertEquals('Role', Phprojekt_Loader::getModuleFromObject($object));
-
-    }
-    
 }

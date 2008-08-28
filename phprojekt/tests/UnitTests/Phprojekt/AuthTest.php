@@ -172,7 +172,7 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
      * Test found user by id
      */
     public function testUserId() {
-        $user = Phprojekt_Loader::getModel('User', 'User', (array ('db' => $this->sharedFixture)));
+        $user = new Phprojekt_User_User(array ('db' => $this->sharedFixture));
         $clone = $user->findUserById(1);
         $this->assertEquals('david', $clone->username);
 

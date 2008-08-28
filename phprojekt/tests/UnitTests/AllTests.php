@@ -103,7 +103,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $log = new Phprojekt_Log($config);
         Zend_Registry::set('log', $log);
 
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
         $translate = new Phprojekt_Language($config->language);
         Zend_Registry::set('translate', $translate);
 
@@ -125,7 +125,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         // Loading view stuff for controller tests
 
         $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -186,7 +186,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Tab_AllTests::suite());
         $suite->addTest(Module_AllTests::suite());
         $suite->addTest(Project_AllTests::suite());
-        
+
         //$suite->addTestSuite(Selenium_AllTests::suite());
 
         // add here additional test suites

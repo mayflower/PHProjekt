@@ -56,21 +56,21 @@ Zend_Registry::set('db', $db);
  * use $log->priority($txt);
  * Where priority can be emerg,alert,crit,err,warn,notice,info,debug
  */
-Zend_Loader::loadClass('Phprojekt_Log', PHPR_CORE_PATH);
+Zend_Loader::loadClass('Phprojekt_Log', PHPR_LIBRARY_PATH);
 $log = new Phprojekt_Log($config);
 Zend_Registry::set('log', $log);
 
 $view = new Zend_View();
-$view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/scripts/');
+$view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
 
 $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
 $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
-$viewRenderer->setViewScriptPathSpec(':action.:suffix'); 
+$viewRenderer->setViewScriptPathSpec(':action.:suffix');
 
 Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
 /* Languages Set */
-Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
+Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
 $translate = new Phprojekt_Language($config->language);
 
 /* Front controller stuff */

@@ -30,10 +30,8 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
      */
     public function testTabModelsTab()
     {
-
-        $tabModel = Phprojekt_Loader::getModel('Tab','Information');
-        
-        $expected = array();
+        $tabModel  = new Phprojekt_Tab_Information();
+        $expected  = array();
         $translate = Zend_Registry::get('translate');
 
         // name
@@ -52,9 +50,6 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
         $expected[] = $data;
 
         $this->assertEquals($tabModel->getFieldDefinition(), $expected);
-        
         $this->assertEquals($tabModel->getTitles(), array());
-        
     }
-
 }

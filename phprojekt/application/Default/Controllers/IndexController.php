@@ -44,7 +44,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function init ()
+    public function init()
     {
         try {
             Phprojekt_Auth::isLoggedIn();
@@ -68,7 +68,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function indexAction ()
+    public function indexAction()
     {
         $this->view->webpath  = Zend_Registry::get('config')->webpath;
         $this->view->language = Zend_Registry::get('config')->language;

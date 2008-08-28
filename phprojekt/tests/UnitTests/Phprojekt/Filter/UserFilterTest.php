@@ -42,7 +42,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
 
     public function testSaveToFilter()
     {
-        $user = Phprojekt_Loader::getModel('User','User',array('db' => $this->sharedFixture));
+        $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
         $user->find(1);
 
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
