@@ -371,7 +371,4 @@ class Calendar_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
     }
-
-
-
 }

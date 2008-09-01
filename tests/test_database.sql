@@ -88,10 +88,13 @@ CREATE TABLE `User` (
 --
 -- Table structure for table `Module`
 --
+-- saveType can be 0 for projects, 1 for global, 2 for both
+--
 CREATE TABLE `Module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `internalName` varchar(255) NOT NULL,
+  `saveType` int(1) NOT NULL default 0,
   `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`),
   UNIQUE (`internalName`)
@@ -486,13 +489,12 @@ CREATE TABLE `Calendar` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `name`, `internalName`, `active`) VALUES
-(1, 'Project', 'project', 1),
-(2, 'Todo', 'todo', 1),
-(3, 'Note', 'note', 1),
-(4, 'Timecard', 'timecard', 1),
-(5, 'Timeproj', 'timeproj', 1),
-(6, 'Calendar', 'calendar', 1);
+INSERT INTO `Module` (`id`, `name`, `internalName`, `saveType`, `active`) VALUES
+(1, 'Project', 'project', 0, 1),
+(2, 'Todo', 'todo', 0, 1),
+(3, 'Note', 'note', 0, 1),
+(4, 'Timecard', 'timecard', 1, 1),
+(5, 'Calendar', 'calendar', 1, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
@@ -578,7 +580,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 1, 139),
 (1, 2, 139),
 (1, 3, 139),
-(1, 6, 139);
+(1, 5, 139);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
@@ -602,13 +604,7 @@ INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (4, 5, 1, 255),
 (4, 6, 1, 255),
 (2, 1, 1, 255),
-(2, 1, 3, 255),
-(5, 1, 1, 255),
-(5, 2, 1, 255),
-(5, 3, 1, 255),
-(5, 4, 1, 255),
-(5, 5, 1, 255),
-(5, 6, 1, 255);
+(2, 1, 3, 255);
 
 INSERT INTO `Todo` (`id`, `title`, `notes`, `ownerId`, `projectId`, `startDate`, `endDate`, `priority`, `currentStatus`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,'working');
@@ -650,43 +646,36 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (3,1),
 (4,1),
 (5,1),
-(6,1),
 (1,2),
 (2,2),
 (3,2),
 (4,2),
 (5,2),
-(6,2),
 (1,3),
 (2,3),
 (3,3),
 (4,3),
 (5,3),
-(6,3),
 (1,4),
 (2,4),
 (3,4),
 (4,4),
 (5,4),
-(6,4),
 (1,5),
 (2,5),
 (3,5),
 (4,5),
 (5,5),
-(6,5),
 (1,6),
 (2,6),
 (3,6),
 (4,6),
 (5,6),
-(6,6),
 (1,7),
 (2,7),
 (3,7),
 (4,7),
-(5,7),
-(6,7);
+(5,7);
 
 INSERT INTO SearchWords (`id`, `word`, `count`) VALUES
 (1, 'NOTE', 1);
