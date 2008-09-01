@@ -67,7 +67,8 @@ class Phprojekt_Module
         $rows = $stmt->fetchAll();
 
         foreach ($rows as $row) {
-           self::$_cache[$row['name']] = $row['id'];
+           self::$_cache[$row['name']] = array('id'       => $row['id'],
+                                               'saveType' => $row['saveType']);
         }
 
         if (isset(self::$_cache)) {
@@ -89,7 +90,7 @@ class Phprojekt_Module
         $modules = self::_getCachedIds();
 
         if (array_key_exists($name, $modules)) {
-            return $modules[$name];
+            return $modules[$name]['id'];
         }
 
         return 0;
@@ -111,5 +112,23 @@ class Phprojekt_Module
         }
 
         return null;
+    }
+
+    /**
+     * Returns the saveType for a given module
+     *
+     * @param string $name The Module name
+     *
+     * @return integer
+     */
+    public static function getSaveType($name)
+    {
+        $modules = self::_getCachedIds();
+
+        if (array_key_exists($name, $modules)) {
+            return $modules[$name]['saveType'];
+        }
+
+        return 0;
     }
 }

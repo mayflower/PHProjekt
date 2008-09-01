@@ -54,8 +54,6 @@ class Core_ModuleController extends Core_IndexController
             $ordering = Phprojekt_ModelInformation_Default::ORDERING_FORM_UPDATE;
         }
 
-
-
         echo Phprojekt_Converter_Json::convert($record, $ordering);
     }
 
@@ -97,5 +95,30 @@ class Core_ModuleController extends Core_IndexController
                            'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
+    }
+
+    /**
+     * Return all global modules
+     *
+     * @return array
+     */
+    function jsonGetGlobalModulesAction()
+    {
+        // Cache the query
+        $globalModulesNamespace = new Zend_Session_Namespace('globalModulesNamespace');
+        if (isset($globalModulesNamespace->modules) && !empty($globalModulesNamespace->modules)) {
+            $modules = $globalModulesNamespace->modules;
+        } else {
+            $modules = array();
+            $model   = new Phprojekt_Module_Module();
+            foreach ($model->fetchAll(' active = 1 AND (saveType = 1 OR saveType = 2) ', ' name ASC ') as $module) {
+                $modules['data'][$module->id] = array();
+                $modules['data'][$module->id]['id']        = $module->id;
+                $modules['data'][$module->id]['name']      = $module->name;
+                $modules['data'][$module->id]['label']     = $module->name;
+            }
+            $globalModulesNamespace->modules = $modules;
+        }
+        echo Phprojekt_Converter_Json::convert($modules);
     }
 }

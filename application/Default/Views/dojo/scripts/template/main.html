@@ -8,42 +8,7 @@
         </div>
         </form>
 		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
-			<div dojoType="dijit.form.DropDownButton">
-				<span>{{administrationText}}</span>
-				<div dojoType="dijit.Menu">
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Administration.reload")'>
-					{{administratorText}}
-					</div>
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Settings.reload")'>
-					{{settingsText}}
-					</div>
-				</div>
-			</div>
-            <span dojoType="dijit.ToolbarSeparator"></span>
-    		<div dojoType="dijit.form.DropDownButton">
-				<span>{{timecardText}}</span>
-				<div dojoType="dijit.Menu">
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
-					{{timecardOverviewText}}
-					</div>
-                    <div dojoType="dijit.PopupMenuItem">
-                        <span>{{timecardWorkingtimeText}}</span>
-                        <div dojoType="dijit.Menu">
-                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>{{timecardWorkingtimeStartText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>{{timecardWorkingtimeStopText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-    					</div>
-					</div>
-				</div>
-			</div>
-			<span dojoType="dijit.ToolbarSeparator"></span>
-    		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
-    		{{helpText}}
-    		</button>
-			<span dojoType="dijit.ToolbarSeparator"></span>
-			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
-			{{logoutText}}
-			</button>
-    	</div>
+		</div>
     </div>
     <!-- Left Content -->
     <div id="navigation-container" dojoType="dijit.layout.BorderContainer" region="left" style="width:15%;" splitter="true" minSize="20" maxSize="300">
