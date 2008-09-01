@@ -29,6 +29,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module+".clickResult", this, "clickResult");
 		dojo.subscribe(module+".updateCacheData", this, "updateCacheData");
 		dojo.subscribe(module+".loadResult", this, "loadResult");
+		dojo.subscribe(module+"._isGlobalModule", this, "_isGlobalModule");
     },
 
     openForm:function(/*int*/id, /*String*/module) {
@@ -109,7 +110,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
-        this.setSubmoduleNavigation();
+        if (this._isGlobalModule(this.module)) {
+            this.setSubGlobalModulesNavigation();
+        } else {
+            this.setSubmoduleNavigation();
+        }
         this.hideSuggest();
         this.setSearchForm();
         this.tree     = new this.treeWidget(this);
@@ -119,7 +124,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
     setGlobalModulesNavigation:function() {
         var toolbar  = dijit.byId('mainNavigation');
-        var globaUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
 
         // Administration
         var button = new dijit.form.Button({
@@ -186,17 +190,18 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 */
 
 
-        phpr.DataStore.addStore({url: globaUrl});
-        phpr.DataStore.requestData({url: globaUrl, processData: dojo.hitch(this, function() {
-                this.globalModules = phpr.DataStore.getData({url: globaUrl});
-                for (i in this.globalModules) {
+        var globalUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
+        phpr.DataStore.addStore({url: globalUrl});
+        phpr.DataStore.requestData({url: globalUrl, processData: dojo.hitch(this, function() {
+                var globalModules = phpr.DataStore.getData({url: globalUrl});
+                for (i in globalModules) {
                     var button = new dijit.form.Button({
-                        id:        "globalModule"+this.globalModules[i].id,
-                        label:     this.globalModules[i].label,
-                        name:      this.globalModules[i].name,
+                        id:        "globalModule"+globalModules[i].id,
+                        label:     globalModules[i].label,
+                        name:      globalModules[i].name,
                         showLabel: true,
                         onClick:   dojo.hitch(this, function(e) {
-                            phpr.currentProjectId = 1;
+                            phpr.currentProjectId = phpr.rootProjectId;
                             dojo.publish(e.target.name+".reload");
                         }),
                     });
@@ -227,6 +232,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 toolbar.addChild(button);
             })
         });
+    },
+
+    _isGlobalModule:function(module) {
+        // summary:
+        //    Return if the module is global or per project
+        // description:
+        //    Return if the module is global or per project
+        var globalUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
+        var globalModules = phpr.DataStore.getData({url: globalUrl});
+        for (index in globalModules) {
+            if (globalModules[index]['name'] == module) {
+                return true;
+            }
+        }
+        return false;
     },
 
     setSubmoduleNavigation:function(currentModule) {
@@ -332,6 +352,26 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.customSetSubmoduleNavigation();
             })
         })
+    },
+
+    setSubGlobalModulesNavigation:function(currentModule) {
+        // summary:
+        //    This function is responsible for displaying the Navigation of the current Global Module
+        // description:
+        //    Delete all the submodules and put the add button
+        dojo.byId("subModuleNavigation").innerHTML = '';
+        phpr.destroySimpleWidget("newEntry");
+        var newEntry = null;
+        var params = {
+            label:     '',
+            id:        'newEntry',
+            iconClass: 'add',
+            alt:       'Add'
+        };
+        newEntry = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(newEntry.domNode);
+        //phpr.initWidgets(dojo.byId("subModuleNavigation"));
+        dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
     },
 
     customSetSubmoduleNavigation:function() {
