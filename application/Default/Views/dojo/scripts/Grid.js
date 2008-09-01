@@ -188,8 +188,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
-
-        phpr.destroySimpleWidget("gridNode");
+        phpr.destroyWidgets("gridNode");
         // Data of the grid
         this.gridData = {
             items: []
