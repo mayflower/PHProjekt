@@ -175,7 +175,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->sharedFixture  = &$db;
         $suite->addTest(Default_AllTests::suite());
         $suite->addTest(Timecard_AllTests::suite());
-        $suite->addTest(Timeproj_AllTests::suite());
+        //$suite->addTest(Timeproj_AllTests::suite());
         $suite->addTest(User_AllTests::suite());
         $suite->addTest(Calendar_AllTests::suite());
         $suite->addTest(Note_AllTests::suite());

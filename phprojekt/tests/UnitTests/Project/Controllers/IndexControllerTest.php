@@ -293,7 +293,7 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"5":{"id":"5","name":"Timeproj","label":"Timeproj","inProject":true}') > 0);
+        $this->assertTrue(strpos($response, '"5":{"id":"5","name":"Calendar","label":"Calendar","inProject":true}') > 0);
     }
 
     /**

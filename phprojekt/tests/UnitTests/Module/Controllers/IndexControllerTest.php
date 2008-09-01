@@ -38,9 +38,9 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Module'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonSave/id/null/name/test/internalName/test/active/1');
-        $request->setPathInfo('/Core/module/jsonSave/id/null/name/test/internalName/test/active/1');
-        $request->setRequestUri('/Core/module/jsonSave/id/null/name/test/internalName/test/active/1');
+        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonSave/id/null/name/test/internalName/test/saveType/0/active/1');
+        $request->setPathInfo('/Core/module/jsonSave/id/null/name/test/internalName/test/saveType/0/active/1');
+        $request->setRequestUri('/Core/module/jsonSave/id/null/name/test/internalName/test/saveType/0/active/1');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -130,9 +130,9 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Module'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonDelete/id/7');
-        $request->setPathInfo('/Core/module/jsonDelete/id/7');
-        $request->setRequestUri('/Core/module/jsonDelete/id/7');
+        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonDelete/id/6');
+        $request->setPathInfo('/Core/module/jsonDelete/id/6');
+        $request->setRequestUri('/Core/module/jsonDelete/id/6');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -300,6 +300,4 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
         // checking some parts of the index template
         $this->assertTrue(strpos($response, '"name":"Project"') > 0);
     }
-
-
 }

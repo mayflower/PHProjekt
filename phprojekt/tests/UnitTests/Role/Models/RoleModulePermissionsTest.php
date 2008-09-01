@@ -58,18 +58,6 @@ class Phprojekt_RoleModelsRoleModulePermissions_Test extends PHPUnit_Framework_T
                  "delete" => false,
                  "download" => false,
                  "admin" => false),
-               "5" => array (
-                 "id" => "5",
-                 "name" => "Timeproj",
-                 "none" => true,
-                 "read" => false,
-                 "write" => false,
-                 "access" => false,
-                 "create" => false,
-                 "copy" => false,
-                 "delete" => false,
-                 "download" => false,
-                 "admin" => false)
              )
            );
         $this->assertEquals($expected, $return);
