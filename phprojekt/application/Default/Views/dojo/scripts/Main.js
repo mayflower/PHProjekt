@@ -70,21 +70,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
+
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{
             webpath:phpr.webpath,
             currentModule:phpr.module,
             searchText:phpr.nls.search,
-            administrationText:phpr.nls.administration,
-            administratorText:phpr.nls.administrator,
-            settingsText:phpr.nls.settings,
-            timecardText:phpr.nls.timecard,
-            timecardOverviewText:phpr.nls.timecardOverview,
-            timecardWorkingtimeText:phpr.nls.timecardWorkingtime,
-            timecardWorkingtimeStartText:phpr.nls.timecardWorkingtimeStart,
-            timecardWorkingtimeStopText:phpr.nls.timecardWorkingtimeStop,
-            helpText:phpr.nls.help,
-            logoutText:phpr.nls.logout,
         });
+
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
             webpath:phpr.webpath,
             currentModule:phpr.module
@@ -93,6 +85,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         dojo.addOnLoad(dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
+                this.setGlobalModulesNavigation();
                 this.setSubmoduleNavigation();
                 this.setSearchForm();
                 var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
@@ -124,6 +117,118 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+    },
+
+    setGlobalModulesNavigation:function() {
+        var toolbar  = dijit.byId('mainNavigation');
+        var globaUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
+
+        // Administration
+        var button = new dijit.form.Button({
+            id:        "globalModuleAdmin",
+            label:     phpr.nls.administration,
+            showLabel: true,
+            onClick:   dojo.hitch(this, function() {
+                dojo.publish("Administration.reload");
+            }),
+        });
+        toolbar.addChild(button);
+        var separator = new dijit.ToolbarSeparator();
+        toolbar.addChild(separator);
+
+        // Settings
+        var button = new dijit.form.Button({
+            id:        "globalModuleSettings",
+            label:     phpr.nls.settings,
+            showLabel: true,
+            onClick:   dojo.hitch(this, function() {
+                dojo.publish("Settings.reload");
+            }),
+        });
+        toolbar.addChild(button);
+        var separator = new dijit.ToolbarSeparator();
+        toolbar.addChild(separator);
+
+        /*
+			<div dojoType="dijit.form.DropDownButton">
+				<span>{{administrationText}}</span>
+				<div dojoType="dijit.Menu">
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Administration.reload")'>
+					{{administratorText}}
+					</div>
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Settings.reload")'>
+					{{settingsText}}
+					</div>
+				</div>
+			</div>
+            <span dojoType="dijit.ToolbarSeparator"></span>
+    		<div dojoType="dijit.form.DropDownButton">
+				<span>{{timecardText}}</span>
+				<div dojoType="dijit.Menu">
+					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
+					{{timecardOverviewText}}
+					</div>
+                    <div dojoType="dijit.PopupMenuItem">
+                        <span>{{timecardWorkingtimeText}}</span>
+                        <div dojoType="dijit.Menu">
+                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>{{timecardWorkingtimeStartText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>{{timecardWorkingtimeStopText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    					</div>
+					</div>
+				</div>
+			</div>
+			<span dojoType="dijit.ToolbarSeparator"></span>
+    		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
+    		{{helpText}}
+    		</button>
+			<span dojoType="dijit.ToolbarSeparator"></span>
+			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
+			{{logoutText}}
+			</button>
+*/
+
+
+        phpr.DataStore.addStore({url: globaUrl});
+        phpr.DataStore.requestData({url: globaUrl, processData: dojo.hitch(this, function() {
+                var globalModules = phpr.DataStore.getData({url: globaUrl});
+                for (i in globalModules) {
+                    var button = new dijit.form.Button({
+                        id:        "globalModule"+globalModules[i].id,
+                        label:     globalModules[i].label,
+                        name:      globalModules[i].name,
+                        showLabel: true,
+                        onClick:   dojo.hitch(this, function(e) {
+                            phpr.currentProjectId = 1;
+                            dojo.publish(e.target.name+".reload");
+                        }),
+                    });
+                    toolbar.addChild(button);
+                    var separator = new dijit.ToolbarSeparator();
+                    toolbar.addChild(separator);
+                }
+
+                // Help
+                var button = new dijit.form.Button({
+                    id:        "globalModuleHelp",
+                    label:     phpr.nls.help,
+                    showLabel: true,
+                });
+                toolbar.addChild(button);
+                var separator = new dijit.ToolbarSeparator();
+                toolbar.addChild(separator);
+
+                // Logout
+                var button = new dijit.form.Button({
+                    id:        "globalModuleLogout",
+                    label:     phpr.nls.logout,
+                    showLabel: true,
+                    onClick:   dojo.hitch(this, function() {
+                        location = phpr.webpath+"index.php/Login/logout";
+                    }),
+                });
+                toolbar.addChild(button);
+            })
+        });
     },
 
     setSubmoduleNavigation:function(currentModule) {
