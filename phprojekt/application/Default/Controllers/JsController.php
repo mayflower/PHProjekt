@@ -143,70 +143,18 @@ class JsController extends IndexController
 
     /**
      * Get all the Modules scripts
-     * If some file don´t exist, the Default file is called for it
      *
      * @return string
      */
     private function _getModuleScripts($scripts, $module)
     {
-        $useDefault         = array();
-        $useDefault['Form'] = true;
-        $useDefault['Grid'] = true;
-        $useDefault['Tree'] = true;
-        $useDefault['Main'] = true;
-        $output             = '';
-
+        $output = '';
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
-                if ($script == 'Form.js') {
-                    $useDefault['Form'] = false;
-                }
-                if ($script == 'Grid.js') {
-                    $useDefault['Grid'] = false;
-                }
-                if ($script == 'Tree.js') {
-                    $useDefault['Tree'] = false;
-                }
-                if ($script == 'Main.js') {
-                    $useDefault['Main'] = false;
-                }
                 $output .= file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/'.$script);
             }
         }
-        if ($useDefault['Main']) {
-            $output .= $this->_getDefaultScript($module, $useDefault);
-        }
         return $output;
-    }
-
-    /**
-     * Provide a Default class for the modules
-     *
-     * @param string $module     The name of the module
-     * @param array  $useDefault An array contain if exist or not the module file
-     *
-     * @return string
-     */
-    private function _getDefaultScript($module, $useDefault)
-    {
-        $_grid = ($useDefault['Grid']) ? 'Default' : $module;
-        $_form = ($useDefault['Form']) ? 'Default' : $module;
-        $_tree = ($useDefault['Tree']) ? 'Default' : $module;
-
-        return '
-        dojo.provide("phpr.'.$module.'.Main");
-
-        dojo.declare("phpr.'.$module.'.Main", phpr.Default.Main, {
-            constructor:function() {
-                this.module = "'.$module.'";
-                this.loadFunctions(this.module);
-
-                this.gridWidget = phpr.'.$_grid.'.Grid;
-                this.formWidget = phpr.'.$_form.'.Form;
-                this.treeWidget = phpr.'.$_tree.'.Tree;
-            }
-        });
-        ';
     }
 
     /**
