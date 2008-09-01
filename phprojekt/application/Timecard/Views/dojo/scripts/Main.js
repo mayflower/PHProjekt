@@ -8,7 +8,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
 		this.gridWidget = phpr.Timecard.Grid;
 		this.formWidget = phpr.Timecard.Form;
-		this.treeWidget = phpr.Default.Tree;
+		this.treeWidget = phpr.Timecard.Tree;
         this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
 
         dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
