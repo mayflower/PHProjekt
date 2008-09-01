@@ -622,7 +622,6 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         // write permission modules
         $this->assertTrue(strpos($response, '"name":"Note","label":"Note","inProject":true,"rights":{"none":false,') > 0);
         $this->assertTrue(strpos($response, '"name":"Project","label":"Project","inProject":true,"rights":{"none":false,') > 0);
-        $this->assertTrue(strpos($response, '"name":"Timecard","label":"Timecard","inProject":true,"rights":{"none":true,') > 0);
         $this->assertTrue(strpos($response, '"name":"Todo","label":"Todo","inProject":true,"rights":{"none":false,') > 0);
     }
 
