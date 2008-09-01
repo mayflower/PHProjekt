@@ -370,6 +370,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     this.showSuggest();
                 })
             });
+        } else {
+            this.hideSuggest();
         }
     },
 
