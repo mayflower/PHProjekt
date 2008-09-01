@@ -5,12 +5,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     tree: 	          null,
     grid:             null,
     module:           null,
-    availableModules: null,
-    search:           null,
-
     gridWidget:       null,
     formWidget:       null,
     treeWidget:       null,
+    globalModules:    null,
 
     loadFunctions:function(module) {
         // summary:
@@ -190,12 +188,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         phpr.DataStore.addStore({url: globaUrl});
         phpr.DataStore.requestData({url: globaUrl, processData: dojo.hitch(this, function() {
-                var globalModules = phpr.DataStore.getData({url: globaUrl});
-                for (i in globalModules) {
+                this.globalModules = phpr.DataStore.getData({url: globaUrl});
+                for (i in this.globalModules) {
                     var button = new dijit.form.Button({
-                        id:        "globalModule"+globalModules[i].id,
-                        label:     globalModules[i].label,
-                        name:      globalModules[i].name,
+                        id:        "globalModule"+this.globalModules[i].id,
+                        label:     this.globalModules[i].label,
+                        name:      this.globalModules[i].name,
                         showLabel: true,
                         onClick:   dojo.hitch(this, function(e) {
                             phpr.currentProjectId = 1;

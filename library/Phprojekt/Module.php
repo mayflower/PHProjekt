@@ -107,8 +107,10 @@ class Phprojekt_Module
     {
         $modules = self::_getCachedIds();
 
-        if ((in_array($id, $modules))) {
-            return array_search($id, $modules);
+        foreach ($modules as $name => $data) {
+            if ($data['id'] == $id) {
+                return $name;
+            }
         }
 
         return null;
@@ -121,12 +123,14 @@ class Phprojekt_Module
      *
      * @return integer
      */
-    public static function getSaveType($name)
+    public static function getSaveType($id)
     {
         $modules = self::_getCachedIds();
 
-        if (array_key_exists($name, $modules)) {
-            return $modules[$name]['saveType'];
+        foreach ($modules as $name => $data) {
+            if ($data['id'] == $id) {
+                return $data['saveType'];
+            }
         }
 
         return 0;

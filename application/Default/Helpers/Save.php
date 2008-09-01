@@ -292,16 +292,22 @@ final class Default_Helpers_Save
      */
     private function _checkModule($moduleId, $projectId)
     {
+        $boolean = false;
         if ($projectId > 0) {
-            $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-            $modules  = $relation->getProjectModulePermissionsById($projectId);
-            if ($modules['data'][$moduleId]['inProject']) {
-                return true;
+            if ($projectId == 1 && Phprojekt_Module::getSaveType($moduleId) > 0) {
+                $boolean = true;
             } else {
-                return false;
+                $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+                $modules  = $relation->getProjectModulePermissionsById($projectId);
+                if ($modules['data'][$moduleId]['inProject']) {
+                    $boolean = true;
+                } else {
+                    $boolean = false;
+                }
             }
         } else {
-            return true;
+            $boolean = true;
         }
+        return $boolean;
     }
 }
