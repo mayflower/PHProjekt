@@ -57,7 +57,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if(!phpr.currentProjectId) {
             phpr.currentProjectId = phpr.rootProjectId;
         }
-        this.reload();
+        if (this._isGlobalModule(this.module)) {
+            dojo.publish("Project.reload");
+        } else {
+            this.reload();
+        }
     },
 
     load:function() {
@@ -239,11 +243,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Return if the module is global or per project
         // description:
         //    Return if the module is global or per project
-        var globalUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
+        var globalUrl     = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
         var globalModules = phpr.DataStore.getData({url: globalUrl});
-        for (index in globalModules) {
-            if (globalModules[index]['name'] == module) {
-                return true;
+
+        // System Global Modules
+        if (module == 'Administration' ||
+		    module == 'Settings' ||
+			module == 'User' ||
+			module == 'Role' ||
+            module == 'Module') {
+            return true;
+        } else {
+            for (index in globalModules) {
+                if (globalModules[index]['name'] == module) {
+                    return true;
+                }
             }
         }
         return false;

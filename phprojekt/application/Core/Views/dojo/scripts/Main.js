@@ -27,7 +27,40 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
-	customSetSubmoduleNavigation:function() {
+    setSubmoduleNavigation:function(currentModule) {
+        // summary:
+        //    This function is responsible for displaying the Navigation of the current Module
+        // description:
+        //    When calling this function, the available Submodules for the current Module
+        //    are received from the server and the Navigation is rendered accordingly
+        var newEntry   = null;
+        var navigation = '<ul id="nav_main">';
+        var activeTab  = false;
+        var modules    = new Array();
+
+        modules.push({"name":"User", "label":"Users"});
+        modules.push({"name":"Role", "label":"Roles"});
+        modules.push({"name":"Module", "label":"Modules"});
+
+        for (var i = 0; i < modules.length; i++) {
+            var liclass        = '';
+            var moduleName     = modules[i].name;
+            var moduleLabel    = modules[i].label;
+            var moduleFunction = modules[i].moduleFunction || "reload";
+            if (moduleName == phpr.module && !activeTab) {
+                liclass = 'class = active';
+                activeTab = true;
+            }
+            navigation += this.render(["phpr.Default.template", "navigation.html"], null, {
+                moduleName: moduleName,
+                moduleLabel: moduleLabel,
+                liclass: liclass,
+                moduleFunction: moduleFunction,
+            });
+        }
+        navigation += "</ul>";
+        dojo.byId("subModuleNavigation").innerHTML = navigation;
+	
         phpr.destroySimpleWidget("newEntry");
         var params = {
             label:     '',
