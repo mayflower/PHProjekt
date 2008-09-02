@@ -2,9 +2,10 @@
     <td class="label">
         <label for="{{labelfor}}">{{label}}</label>
     </td>
-    <td>
-        <textarea dojoType="dijit.form.Textarea"
-        id="{{id}}"
-        name="{{id}}">{{value}}</textarea>
+    <td><div class="dijitTextArea"
+    ><div dojoType="dijit.Editor" id="{{id}}_edt"
+			onChange="document.getElementById('{{id}}').value = dijit.byId('{{id}}_edt').getValue()"
+		>{{value}}</div></div>
+        <input type="hidden" id="{{id}}" name="{{id}}" value="{{value}}" dojoType="dijit.form.TextBox" />
     </td>
 </tr>
