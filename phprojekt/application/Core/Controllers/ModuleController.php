@@ -42,7 +42,6 @@ class Core_ModuleController extends Core_IndexController
 
         if (empty($id)) {
             $record = $this->getModelObject();
-            $ordering = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         } else {
             $record = $this->getModelObject()->find($id);
             $record->tabs->create();
@@ -51,10 +50,9 @@ class Core_ModuleController extends Core_IndexController
             foreach ($tabs as $tabData) {
                 $record->tabs .= $tabData['id'].",";
             }
-            $ordering = Phprojekt_ModelInformation_Default::ORDERING_FORM_UPDATE;
         }
 
-        echo Phprojekt_Converter_Json::convert($record, $ordering);
+        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -80,9 +78,6 @@ class Core_ModuleController extends Core_IndexController
             $message = $translate->translate('The Item was added correctly');
         } else {
             $model   = $this->getModelObject()->find($id);
-
-            // prevent internal name change
-            // $this->getRequest()->setParam('internalName', $model->internalName);
 
             $message = $translate->translate('The Item was edited correctly');
         }
