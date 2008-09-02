@@ -258,8 +258,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                                    itemdisabled);
                     break;
                 case 'textarea':
-                    // destroying old editor widget before rendering it again.
-                    phpr.destroyWidgets(itemid + "_edt");
                     this.formdata += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                        itemdisabled);
                     break;
