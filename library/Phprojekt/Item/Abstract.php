@@ -88,6 +88,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @var string
      */
     public $searchSecondDisplayField = 'notes';
+    
+    /**
+     * Field for user timezone to be used on time conversion
+     *
+     * @var string
+     */
+    private $_timezone = null;
 
     /**
      * Initialize new object
@@ -445,5 +452,17 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function saveRights($rights)
     {
         $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $rights);
+    }
+    
+    /**
+     * Gets the timezone to be used on time conversion
+     *
+     * @return void
+     */
+    public function getUserTImezone()
+    {
+        if ($this->_timezone === null) {
+            $tmp = Phrojekt_Loader("User","UserSettings");
+        }
     }
 }

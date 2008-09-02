@@ -106,10 +106,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         $this->name   = $params['name'];
         $this->active = (int) $params['active'];
 
-        if (empty($this->id)) {
-           $this->internalName = $params['internalName'];
-        }
-
         if ($this->recordValidate()) {
             $saveNewModule = false;
             if ($this->id == 0) {
