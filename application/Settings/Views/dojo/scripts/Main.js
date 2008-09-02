@@ -26,4 +26,14 @@ dojo.declare("phpr.Settings.Main", phpr.Default.Main, {
         var updateUrl = phpr.webpath + 'index.php/Core/user/jsonSaveMultipleSetting';
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
+	
+    setSubmoduleNavigation:function(currentModule) {
+        // summary:
+        //    This function is responsible for displaying the Navigation of the current Module
+        // description:
+        //    When calling this function, the available Submodules for the current Module
+        //    are received from the server and the Navigation is rendered accordingly
+        phpr.destroySimpleWidget("newEntry");
+        dojo.byId("subModuleNavigation").innerHTML = '';
+    },	
 });
