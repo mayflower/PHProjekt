@@ -473,13 +473,12 @@ CREATE TABLE `Calendar` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `name`, `active`) VALUES
-(1, 'Project', 1),
-(2, 'Todo', 1),
-(3, 'Note', 1),
-(4, 'Timecard', 1),
-(5, 'Timeproj', 1),
-(6, 'Calendar', 1);
+INSERT INTO `Module` (`id`, `name`, `saveType`, `active`) VALUES
+(1, 'Project', 0, 1),
+(2, 'Todo', 0, 1),
+(3, 'Note', 0, 1),
+(4, 'Timecard', 1, 1),
+(5, 'Calendar', 1, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 1, 1, NULL, 'Project', '1', 0, NULL, 1, 1, '1', 1, 0, 0),
