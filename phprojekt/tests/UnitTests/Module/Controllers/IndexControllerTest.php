@@ -38,9 +38,9 @@ class Module_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Module'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonSave/id/null/name/test/internalName/test/saveType/0/active/1');
-        $request->setPathInfo('/Core/module/jsonSave/id/null/name/test/internalName/test/saveType/0/active/1');
-        $request->setRequestUri('/Core/module/jsonSave/id/null/name/test/internalName/test/saveType/0/active/1');
+        $request->setBaseUrl($config->webpath.'index.php/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
+        $request->setPathInfo('/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
+        $request->setRequestUri('/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
 
         // getting the view information
         $request->setModuleKey('module');

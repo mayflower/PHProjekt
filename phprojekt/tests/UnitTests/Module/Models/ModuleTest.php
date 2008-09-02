@@ -34,7 +34,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $expected    = new Phprojekt_Module_Information();
         $this->assertEquals($moduleModel->getInformation(), $expected);
         $this->assertEquals($moduleModel->getRights(), array());
-        $this->assertEquals($moduleModel->saveModule(array('name' => 'test', 'internalName' => 'test', 'saveType' => 0, 'active' => 1)), 7);
+        $this->assertEquals($moduleModel->saveModule(array('name' => 'test', 'saveType' => 0, 'active' => 1)), 7);
         $moduleModel->find(7);
         $this->assertEquals($moduleModel->recordValidate(), true);
         $this->assertEquals($moduleModel->delete(), null);

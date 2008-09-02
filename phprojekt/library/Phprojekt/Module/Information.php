@@ -59,26 +59,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['required'] = true;
         $data['readOnly'] = false;
         $converted[] = $data;
-
-        // Internal name
-        $data = array();
-        $data['key']      = 'internalName';
-        $data['label']    = $translate->translate('internalName');
-        $data['type']     = 'text';
-        $data['hint']     = $translate->translate('internalName');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
-            $data['readOnly'] = false;
-        } else {
-            $data['readOnly'] = true;
-        }
-        $converted[] = $data;
-
+        
         // active
         $data = array();
         $data['key']      = 'active';
