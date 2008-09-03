@@ -9,8 +9,8 @@ dojo.require("dojo.dnd.move");
 dojo.require("dojo.dnd.TimedMoveable");
 dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("dojo.data.ItemFileWriteStore");
-dojo.require("dojo.parser");
 
+dojo.require("dijit.dijit");
 dojo.require("dijit.form.MultiSelect");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.Editor");
