@@ -426,8 +426,8 @@ CREATE TABLE `Timecard` (
   `id` int(11) NOT NULL auto_increment,
   `ownerId` int(11) default NULL,
   `date` date default NULL,
-  `startTime` varchar(4) default NULL,
-  `endTime` varchar(4) default NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -442,8 +442,7 @@ CREATE TABLE `Timeproj` (
   ON DELETE CASCADE
   ON UPDATE CASCADE,
   `date` date default NULL,
-  `startTime` time default NULL,
-  `endTime` time default NULL,
+  `amount` time default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -527,12 +526,6 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Note', 'comments', 1, 'comments', 'comments', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 1, 0),
 (0, 'Note', 'category', 1, 'category', 'category', 'selectSqlAddOne', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 
-(0, 'Timeproj', 'notes'    ,  1, 'notes'    , 'notes'    , 'text'    , 1, 2, NULL, NULL     , '', 1, NULL    , 1, 0, '1', 0, 1, 0),
-(0, 'Timeproj', 'date'     ,  1, 'date'     , 'date'     , 'date'    , 2, 1, NULL, NULL     , '', 2, 'center', 1, 1, '1', 0, 1, 0),
-(0, 'Timeproj', 'startTime',  1, 'startTime', 'startTime', 'time'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Timeproj', 'endTime'  ,  1, 'endTime'  , 'endTime'  , 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Timeproj', 'projectId',  1, 'project'  , 'project'  , 'tree'    , 5, 1, NULL, 'Project', '', 0, 'center', 1, 0, '1', 1, 1, 0),
-
 (0, 'Calendar', 'title',      1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
 (0, 'Calendar', 'notes',      1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'startDate',  1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
@@ -614,14 +607,6 @@ INSERT INTO `Timecard` (`id`, `ownerId`, `date`, `startTime`, `endTime`) VALUES
 (4, 1, '2008-04-30', '1400', '1800'),
 (5, 1, '2008-05-02', '0800', '1300'),
 (6, 1, '2008-05-02', '1400', '1800');
-
-INSERT INTO `Timeproj` (`id`, `notes`, `ownerId`, `projectId`, `date`, `startTime`, `endTime`) VALUES
-(1, 'Timeproj row', 1, 1, '2008-04-29', '08:00:00', '13:00:00'),
-(2, 'Timeproj row 2', 1, 1, '2008-04-29', '14:00:00', '18:00:00'),
-(3, 'Timeproj row 3', 1, 1, '2008-04-30', '08:00:00', '13:00:00'),
-(4, 'Timeproj row 4', 1, 1, '2008-04-30', '14:00:00', '18:00:00'),
-(5, 'Timeproj row 6', 1, 1, '2008-05-02', '08:00:00', '13:00:00'),
-(6, 'Timeproj row 7', 1, 1, '2008-05-02', '14:00:00', '18:00:00');
 
 INSERT INTO Tags (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),
