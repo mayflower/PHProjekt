@@ -36,59 +36,95 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
     /**
      * Return an array of field information.
      *
-     * @param integer $ordering An ordering constant
+     * @param string $ordering Type of view
      *
      * @return array
      */
-    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function getFieldDefinition($ordering = 'month')
     {
         $converted = array();
         $translate = Zend_Registry::get('translate');
 
-        // date
-        $data = array();
-        $data['key']      = 'date';
-        $data['label']    = $translate->translate('Date');
-        $data['type']     = 'date';
-        $data['hint']     = $translate->translate('Date');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $converted[] = $data;
+        switch ($ordering) {
+        	case 'today':
+        	default:
+                // Sum of hours
+                $data = array();
+                $data['key']      = 'startTime';
+                $data['label']    = $translate->translate('startTime');
+                $data['type']     = 'time';
+                $data['hint']     = $translate->translate('startTime');
+                $data['order']    = 0;
+                $data['position'] = 2;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = false;
+                $converted[] = $data;
 
-        // startTime
-        $data = array();
-        $data['key']      = 'startTime';
-        $data['label']    = $translate->translate('Start');
-        $data['type']     = 'time';
-        $data['hint']     = $translate->translate('Start');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
+                // Sum of hours
+                $data = array();
+                $data['key']      = 'endTime';
+                $data['label']    = $translate->translate('endTime');
+                $data['type']     = 'time';
+                $data['hint']     = $translate->translate('endTime');
+                $data['order']    = 0;
+                $data['position'] = 3;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = false;
+                $data['readOnly'] = false;
+                $converted[] = $data;
+                break;
+        	case 'month':
+                // date
+                $data = array();
+                $data['key']      = 'date';
+                $data['label']    = $translate->translate('Date');
+                $data['type']     = 'date';
+                $data['hint']     = $translate->translate('Date');
+                $data['order']    = 0;
+                $data['position'] = 1;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
                                   'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $converted[] = $data;
+                $data['required'] = true;
+                $data['readOnly'] = true;
+                $converted[] = $data;
+        
+        		// Sum of hours
+                $data = array();
+                $data['key']      = 'sum';
+                $data['label']    = $translate->translate('Sum');
+                $data['type']     = 'time';
+                $data['hint']     = $translate->translate('Sum');
+                $data['order']    = 0;
+                $data['position'] = 2;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = true;
+                $converted[] = $data;
 
-        // endTime
-        $data = array();
-        $data['key']      = 'endTime';
-        $data['label']    = $translate->translate('End');
-        $data['type']     = 'time';
-        $data['hint']     = $translate->translate('End');
-        $data['order']    = 0;
-        $data['position'] = 3;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $converted[] = $data;
+                // Sum of Bookinks
+                $data = array();
+                $data['key']      = 'bookings';
+                $data['label']    = $translate->translate('Bookings');
+                $data['type']     = 'time';
+                $data['hint']     = $translate->translate('Bookings');
+                $data['order']    = 0;
+                $data['position'] = 3;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = true;
+                $converted[] = $data;                
+                break;
+        }
 
         return $converted;
     }

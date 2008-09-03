@@ -37,9 +37,9 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Timecard'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Timecard/index/jsonList/year/2008/month/04');
-        $request->setPathInfo('/Timecard/index/jsonList/year/2008/month/04');
-        $request->setRequestUri('/Timecard/index/jsonList/year/2008/month/04');
+        $request->setBaseUrl($config->webpath.'index.php/Timecard/index/jsonList/year/2008/month/04/view/month');
+        $request->setPathInfo('/Timecard/index/jsonList/year/2008/month/04/view/month');
+        $request->setRequestUri('/Timecard/index/jsonList/year/2008/month/04/view/month');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -106,7 +106,7 @@ class Timecard_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
+        $this->assertTrue(strpos($response, '"numRows":'.date("t").'}') > 0);
     }
 
     public function testJsonStartAction()

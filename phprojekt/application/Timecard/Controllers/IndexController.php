@@ -47,19 +47,13 @@ class Timecard_IndexController extends IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count     = (int) $this->getRequest()->getParam('count', null);
-        $offset    = (int) $this->getRequest()->getParam('start', null);
-        $year      = (int) $this->getRequest()->getParam('year', date("Y"));
-        $month     = (int) $this->getRequest()->getParam('month', date("m"));
-
-        if (strlen($month) == 1) {
-            $month = '0'.$month;
-        }
-
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $where = 'ownerId = '. $authNamespace->userId;
-        $where .= ' AND date LIKE \''. $year .'-'. $month .'%\'';
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+        $count  = (int) $this->getRequest()->getParam('count', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
+        $year   = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month  = (int) $this->getRequest()->getParam('month', date("m"));
+        $view   = $this->getRequest()->getParam('view', 'month');
+                
+        $records = $this->getModelObject()->getRecords($view, $year, $month, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
@@ -76,7 +70,7 @@ class Timecard_IndexController extends IndexController
         $message   = $translate->translate('The Item was added correctly');
 
         $this->getRequest()->setParam('date', date("Y-m-d"));
-        $this->getRequest()->setParam('startTime', date("Hi"));
+        $this->getRequest()->setParam('startTime', date("H:i:s"));
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
@@ -105,7 +99,7 @@ class Timecard_IndexController extends IndexController
         $dateFilter[] = '(endTime = "" OR endTime is null)';
         $dateFilter = implode($dateFilter, " AND ");
 
-        $this->getRequest()->setParam('endTime', date("Hi"));
+        $this->getRequest()->setParam('endTime', date("H:i:s"));
 
         $records = $this->getModelObject()->fetchAll($dateFilter, null, 1, $offset);
 
