@@ -127,7 +127,7 @@ class Phprojekt_Module
     {
         $modules = self::_getCachedIds();
 
-        foreach ($modules as $name => $data) {
+        foreach ($modules as $data) {
             if ($data['id'] == $id) {
                 return $data['saveType'];
             }
