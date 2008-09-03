@@ -111,6 +111,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_search    = new Phprojekt_Search_Default();
         $this->_config    = Zend_Registry::get('config');
         $this->_rights    = new Phprojekt_Item_Rights();
+        $this->_timezone  = (int)Phprojekt_User_User::getSetting("timeZone", $this->_config->timeZone);
     }
 
     /**
@@ -174,7 +175,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Inspector::sanitize('time', $value, $messages, false);
 
                     // moving the value to UTC
-                    $timeZomeComplement = (int)$this->_config->timeZone * -1;
+                    $timeZomeComplement = (int)$this->_timezone * -1;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
@@ -192,7 +193,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Inspector::sanitize('timestamp', $value, $messages, false);
 
                     // moving the value to UTC
-                    $timeZomeComplement = (int)$this->_config->timeZone * -1;
+                    $timeZomeComplement = (int)$this->_timezone * -1;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
@@ -253,7 +254,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'time':
 
-                    $timeZone = (int)$this->_config->timeZone;
+                    $timeZone = (int)$this->_timezone;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
@@ -265,7 +266,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 case 'datetime':
                 case 'timestamp':
 
-                    $timeZone = (int)$this->_config->timeZone * -1;
+                    $timeZone = (int)$this->_timezone * -1;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
@@ -454,15 +455,4 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $rights);
     }
     
-    /**
-     * Gets the timezone to be used on time conversion
-     *
-     * @return void
-     */
-    public function getUserTImezone()
-    {
-        if ($this->_timezone === null) {
-            $tmp = Phrojekt_Loader("User","UserSettings");
-        }
-    }
 }

@@ -231,4 +231,24 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         return (array) $this->_validate->error->getError();
     }
+    
+    /**
+     * Return the user setting
+     * 
+     * @param string $settingName The key of the setting to get
+     * @param object $defaultValue Default value if setting is empty
+     *
+     * @return int 
+     */
+    static public function getSetting($settingName, $defaultValue = null)
+    {
+        $settings = new Phprojekt_User_UserSetting();
+        
+        $value = $settings->getSetting($settingName);
+        if (empty($value)) {
+            $value = $defaultValue;
+        }
+        
+        return $value;
+    }
 }
