@@ -99,11 +99,21 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['order']    = 0;
         $data['position'] = 5;
         $data['fieldset'] = '';
-        $data['range']    = 'Project';
+        $data['range']    = array();
+        $data['type']     = 'selectbox';        
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree->setup();
+        foreach ($tree as $node) {
+            $key   = $node->id;
+            $value = str_repeat('....', $node->getDepth()) . $node->title;
+            $data['range'][] = array('id'   => $key,
+                                     'name' => $value);
+        }
         $data['required'] = true;
         $data['readOnly'] = true;
         $converted[] = $data;
-                
+    
         return $converted;
     }
 

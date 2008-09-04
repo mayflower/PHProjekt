@@ -128,7 +128,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }        
     	switch ($view) {
     		case 'today':
-    			$where   = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $year.'-'.$month.'-'.date("d"));
+    			$where   = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, date("Y-m-d"));
                 $order   = ' date ASC';
                 $records = $this->fetchAll($where, $order, $count, $offset);      
     			$data= $records;
@@ -176,13 +176,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     	$data['date']     = $date;
                     	$data['sum']      = $this->convertTime($sortRecords[$date]['sum']);
                     	$data['bookings'] = $this->convertTime($sortRecords[$date]['bookings']);
-                        $data['rights']   = $record->getRights();
+                        $data['rights']   = array();
                         $datas[] = $data;
                 	} else {
                         $data['date']     = $date;
                         $data['sum']      = 0;
                         $data['bookings'] = 0;
-                        $data['rights']   = $record->getRights();
+                        $data['rights']   = array();
                         $datas[] = $data;                		
                 	}
                 }

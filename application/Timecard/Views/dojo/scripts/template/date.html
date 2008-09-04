@@ -1,0 +1,7 @@
+<div id="tcFormHeader">
+    <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" value="{{date}}"
+            onMouseEnter=""
+            onMouseLeave=""
+            onKeyDown=""            
+            onChange="if (this.value != null) { dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]); } "> {{timecardtimeRecordingForText}} {{dateForm}}
+</div>

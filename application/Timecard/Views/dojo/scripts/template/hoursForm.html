@@ -1,0 +1,16 @@
+<form dojoType="dijit.form.Form" id="hoursForm" name="hoursForm" style="display:inline;" onsubmit="return false;">
+<h4>{{timecardWorkingTimesText}}</h4>
+<div>
+    <input dojoType="dijit.form.TextBox"
+        type="hidden"
+        id="date"
+        name="date"
+        value="{{date}}" />        
+    {{timecardStartText}} <input type="text" id="startTime"  name="startTime" dojoType="dijit.form.TimeTextBox" constraints="{formatLength:'short', timePattern:'HH:mm'}" style="width:55px" />
+    {{timecardEndText}} <input type="text" id="endTime"  name="endTime" dojoType="dijit.form.TimeTextBox" constraints="{formatLength:'short', timePattern:'HH:mm'}" style="width:55px" />
+    <button dojoType="dijit.form.Button" baseClass="positive" id="hoursSaveButton" type="submit" iconClass="disk">
+    </button>
+</div>
+    <br />
+    {{hoursdata|safe}}
+</form>

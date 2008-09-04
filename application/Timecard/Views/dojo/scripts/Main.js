@@ -3,7 +3,8 @@ dojo.provide("phpr.Timecard.Main");
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
     _view: 'month',
-	
+    _date: new Date(),
+		
     constructor:function() {
 		this.module = 'Timecard';
 		this.loadFunctions(this.module);
@@ -16,6 +17,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
         dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");
 		dojo.subscribe("Timecard.changeListView", this, "changeListView");
+		dojo.subscribe("Timecard.changeDate", this, "changeDate");
 	},
 
     reload:function() {
@@ -30,9 +32,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
-        this.tree     = new this.treeWidget(this);
-        var updateUrl = null;
+        this.tree     = new this.treeWidget(this);			
+		var updateUrl = null;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        this.form     = new this.formWidget(this,0,this.module, this._date);
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
@@ -53,8 +56,26 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
     changeListView:function(view) {
 		this._view = view;
-        this.grid.reloadView(this._view);	
+		if (view == 'today') {
+			this.grid.reloadView(this._view); 
+		} else {
+			this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
+		}
 	},
+		
+    changeDate:function(date) {
+		this._date = date
+		this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
+        this.form = new this.formWidget(this,0,this.module, this._date);
+    },
+	
+    getIsoDate:function(date) {
+       return date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+    },
+    
+    getIsoTime:function(time){
+       return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+    },
 		
     workingtimesStop:function() {
         // summary:
@@ -67,7 +88,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
 					this.grid.updateData();
-                    this.grid.reloadView(this._view);
+                    this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
                 }
             })
         });
@@ -84,7 +105,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
 					this.grid.updateData();
-					this.grid.reloadView(this._view);
+					this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
 				}
             })
         });
