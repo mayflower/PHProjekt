@@ -183,15 +183,17 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      */
     public function getFieldDefinition ($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
+    	$definition = null;
         switch ($ordering) {
             case Phprojekt_ModelInformation_Default::ORDERING_FILTER:
             case Phprojekt_ModelInformation_Default::ORDERING_LIST:
-                return $this->_listFields;
+                $definition = $this->_listFields;
                 break;
             case Phprojekt_ModelInformation_Default::ORDERING_FORM:
-                return $this->_formFields;
+                $definition = $this->_formFields;
                 break;
         }
+        return $definition;
     }
 
     /**
