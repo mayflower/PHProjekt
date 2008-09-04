@@ -59,6 +59,28 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
+     * Returns the detail for a model in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonDetailAction()
+    {
+        $date          = $this->getRequest()->getParam('date');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        
+        $where = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $date);
+
+        $records = $this->getModelObject()->fetchAll($where);
+
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+        
+    /**
      * Creates a new timecard record with the current date and time.
      *
      * @return void
@@ -122,4 +144,25 @@ class Timecard_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($return);
     }
+    
+    /**
+     * Creates a new timecard record with the current date and time.
+     *
+     * @return void
+     */
+    public function jsonSaveHoursAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $model     = $this->getModelObject();
+        $message   = $translate->translate('The Item was added correctly');
+
+        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
+        $return    = array('type'    => 'success',
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $model->id);
+
+        echo Phprojekt_Converter_Json::convert($return);
+    }    
 }
