@@ -174,7 +174,7 @@ final class Default_Helpers_Save
         } else if (!self::_checkAccess($projectId)) {
             $error = 'You do not have write access into the parent project';
             throw new Phprojekt_PublishedException($error);
-        } else if (!self::_checkModule(Phprojekt_Module::getId($model->getTableName()), $projectId)) {
+        } else if (!self::_checkModule(Phprojekt_Module::getId($params['module']), $projectId)) {
             $error = 'The parent project do not have enabled this module';
             throw new Phprojekt_PublishedException($error);
         } else {
@@ -297,13 +297,17 @@ final class Default_Helpers_Save
             if ($projectId == 1 && Phprojekt_Module::getSaveType($moduleId) > 0) {
                 $boolean = true;
             } else {
-                $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-                $modules  = $relation->getProjectModulePermissionsById($projectId);
-                if ($modules['data'][$moduleId]['inProject']) {
-                    $boolean = true;
-                } else {
-                    $boolean = false;
-                }
+            	if (Phprojekt_Module::getSaveType($moduleId) > 0) {
+            		$boolean = true;
+            	} else {
+                    $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+                    $modules  = $relation->getProjectModulePermissionsById($projectId);
+                    if ($modules['data'][$moduleId]['inProject']) {
+                        $boolean = true;
+                    } else {
+                        $boolean = false;
+                    }
+            	}
             }
         } else {
             $boolean = true;
