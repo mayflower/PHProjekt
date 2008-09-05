@@ -112,8 +112,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-					this.grid.updateData();
-                    this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
+                    this.grid.updateData();
+					phpr.DataStore.deleteData({url: this.form._hourUrl}); 
+                    this.changeDate(new Date());
                 }
             })
         });
@@ -129,8 +130,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-					this.grid.updateData();
-					this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
+					this.changeDate(new Date());
 				}
             })
         });
