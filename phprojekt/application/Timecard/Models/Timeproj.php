@@ -118,6 +118,13 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         return (array) $this->_validate->error->getError();
     }
     
+    /**
+     * Return an array with information about the records and the fields
+     *
+     * @param string  $date Date for the request
+     * 
+     * @return array
+     */    
     public function getRecords($date)
     {
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');        

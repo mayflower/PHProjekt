@@ -39,6 +39,7 @@ class Timecard_IndexController extends IndexController
      * @requestparam integer start ...
      * @requestparam integer year  Year for the list view
      * @requestparam integer month Month for the list view
+     * @requestparam string  view  Type of the view for the list
      *
      * @return void
      */
@@ -80,10 +81,30 @@ class Timecard_IndexController extends IndexController
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
+    /**
+     * Returns the detail for the bookings in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam string date
+     *
+     * @return void
+     */
+    public function jsonBookingDetailAction()
+    {
+        $date  = $this->getRequest()->getParam('date');
+        $model = Phprojekt_Loader::getModel('Timecard','Timeproj');
+        
+        $records = $model->getRecords($date);
+
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+        
    /**
      * Deletes a certain item
      *
-     * If the item are already deleted or don�t exist
+     * If the item are already deleted or do not exist
      * return a Phprojekt_PublishedException
      * If the item is deleted, the return is a string with the same format than the Phprojekt_PublishedException
      * but with success type
@@ -119,26 +140,6 @@ class Timecard_IndexController extends IndexController
         } else {
             throw new Phprojekt_PublishedException('Item not found');
         }
-    }
-    
-    /**
-     * Returns the detail for the bookings in JSON.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * @requestparam string date
-     *
-     * @return void
-     */
-    public function jsonBookingDetailAction()
-    {
-        $date  = $this->getRequest()->getParam('date');
-        $model = Phprojekt_Loader::getModel('Timecard','Timeproj');
-        
-        $records = $model->getRecords($date);
-
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
         
     /**
@@ -206,6 +207,11 @@ class Timecard_IndexController extends IndexController
         echo Phprojekt_Converter_Json::convert($return);
     }
     
+    /**
+     * Save a booking project
+     *
+     * @return void
+     */
     public function jsonBookingSaveAction()
     {
         $translate = Zend_Registry::get('translate');
