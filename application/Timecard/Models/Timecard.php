@@ -124,6 +124,18 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return (array) $this->_validate->error->getError();
     }
     
+    /**
+     * Return an array with information about the records, the fields and some convinations
+     * with other tables (timecard and timeproj)
+     *
+     * @param string  $view   Type of view
+     * @param integer $year   Year for the request
+     * @param integer $month  Month for the request
+     * @param integer $count  Count  for the request
+     * @param integer $offset Offset for the request
+     * 
+     * @return array
+     */
     public function getRecords($view, $year, $month, $count, $offset)
     {
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
@@ -210,6 +222,14 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     	return $data;
     }
     
+    /**
+     * Get the diff of minutes between 2 times
+     *
+     * @param string $end   endTime
+     * @param string $start startTime
+     * 
+     * @return integer
+     */
     public function getDiffTime($end, $start)
     {
     	$hoursEnd   = substr($end, 0, 2);
@@ -221,6 +241,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return (($hoursEnd - $hoursStart)*60) + ($minutesEnd - $minutesStart);
     }
     
+    /**
+     * Convert a number of minuts into hours:inutes
+     *
+     * @param integer $time
+     * 
+     * @return string
+     */
     public function convertTime($time)
     {
         $hoursDiff = floor($time / 60);

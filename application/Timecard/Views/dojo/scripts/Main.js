@@ -55,6 +55,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 
     changeListView:function(view) {
+        // summary:
+        //    Change the list view deppend on the view param
+        // description:
+        //    Change the list view deppend on the view param		
 		this._view = view;
 		if (view == 'today') {
 			this.grid.reloadView(this._view); 
@@ -64,6 +68,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 	},
 		
     changeDate:function(date) {
+        // summary:
+        //    Update the date and reload the views
+        // description:
+        //    Update the date and reload the views		
 		this._date = date
 		this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
 		this.form.setDate(this._date);
@@ -71,6 +79,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 	
     getIsoDate:function(date) {
+        // summary:
+        //    Convert a js date into ISO date
+        // description:
+        //    Convert a js date into ISO date		
 		var day = date.getDate();		
         if (day < 10) {
 			day = '0'+day; 
@@ -83,6 +95,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
     
     getIsoTime:function(time){
+        // summary:
+        //    Convert a js time into ISO time
+        // description:
+        //    Convert a js time into ISO time		
        return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
     },
 		
