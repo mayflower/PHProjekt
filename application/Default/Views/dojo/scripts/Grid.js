@@ -378,7 +378,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         return false;
     },
 
-    updateData: function() {
+    updateData:function() {
         // summary:
         //    Delete the cache for this grid
         // description:
