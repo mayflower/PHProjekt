@@ -66,11 +66,20 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     changeDate:function(date) {
 		this._date = date
 		this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
-        this.form = new this.formWidget(this,0,this.module, this._date);
+		this.form.setDate(this._date);
+		this.form.loadView(this._date);
     },
 	
     getIsoDate:function(date) {
-       return date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+		var day = date.getDate();		
+        if (day < 10) {
+			day = '0'+day; 
+		}
+        var month = (date.getMonth()+1);       
+        if (month < 10) {
+            month = '0'+month 
+        }
+        return date.getFullYear() + '-' + month + '-' + day;
     },
     
     getIsoTime:function(time){

@@ -1,5 +1,5 @@
 <form dojoType="dijit.form.Form" id="hoursForm" name="hoursForm" style="display:inline;" onsubmit="return false;">
-<h4>{{timecardWorkingTimesText}}</h4>
+<h4>{{timecardWorkingTimesText}}<br />{{dateForm}}</h4>
 <div>
     <input dojoType="dijit.form.TextBox"
         type="hidden"
@@ -13,4 +13,5 @@
 </div>
     <br />
     {{hoursdata|safe}}
+    <h6>Total: {{totalHours}}</h6>
 </form>

@@ -39,12 +39,16 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     showForm:function(e) {
         if (e.cellIndex == 0) {
             var item  = this.grid.getItem(e.rowIndex);
-            var date = this.grid.store.getValue(item, 'date');
-			var year = date.substr(0,4);
-			var month = date.substr(5,2);
-			var day = date.substr(8,2);
-			var date = new Date(year,(month-1),day);
-            this.publish("changeDate", [date]);
+			var date = this.grid.store.getValue(item, 'date');
+			if (date) {
+				var year = date.substr(0, 4);
+				var month = date.substr(5, 2);
+				var day = date.substr(8, 2);
+				var date = new Date(year, (month - 1), day);
+				this.main.form.setDate(date);
+				this.main.form.reloadDateView();
+				this.publish("changeDate", [date]);
+			}
         }
     },	
 });

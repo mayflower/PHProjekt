@@ -116,5 +116,42 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
     public function getError()
     {
         return (array) $this->_validate->error->getError();
-    }    
+    }
+    
+    public function getRecords($date)
+    {
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');        
+        $where  = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $date);
+        $order  = ' projectId ASC ';    
+        $models = $this->fetchAll($where, $order);
+        
+        $information     = $this->getInformation($order);
+        $fieldDefinition = $information->getFieldDefinition($order);
+
+        $datas   = array();
+        $data    = array();
+        $numRows = 0;
+
+        foreach ($models as $cmodel) {
+            $data['id'] = $cmodel->id;
+            foreach ($fieldDefinition as $field) {
+                $key   = $field['key'];
+                $value = $cmodel->$key;
+                if (is_scalar($value)) {
+                    $data[$key] = $value;
+                } else {
+                    $data[$key] = (string) $value;
+                }
+                $data['rights'] = $cmodel->getRights();
+            }
+            $datas[] = $data;
+        }
+
+        $numRows = count($datas);
+        $data = array('metadata' => $fieldDefinition,
+                      'data'     => $datas,
+                      'numRows'  => (int)$numRows);
+
+        return $data;
+    }
 }

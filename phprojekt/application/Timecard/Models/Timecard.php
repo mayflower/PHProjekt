@@ -104,6 +104,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $data      = $this->_data;
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
+        if ($data['endTime'] <= $data['startTime']) {
+            $this->_validate->error->addError(array(
+                                'field'   => Zend_Registry::get('translate')->translate('Hours'),
+                                'message' => Zend_Registry::get('translate')->translate('The end time must be after the start time')));
+            return false;
+        }
         $this->_validate = new Phprojekt_Model_Validate();
         return $this->_validate->recordValidate($this, $data, $fields);
     }
@@ -147,24 +153,31 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $datas   = array();
                 $data    = array();
                 $numRows = 0;
+                
+                // Get all the hours for this month
                 foreach ($records as $record) {
                     $sum = $this->getDiffTime($record->endTime, $record->startTime);
                     if (!isset($sortRecords[$record->date])) {
                         $sortRecords[$record->date] = array('sum'      => 0,
                                                             'bookings' => 0);
-                        $where = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $record->date);
-                        $bookingsResults = $timeproj->fetchAll($where);
-                        $bookings = 0;
-                        foreach ($bookingsResults as $booking) {
-                            $bookings += $this->getDiffTime($booking->amount, '00:00:00');	
-                        }
-                        $sortRecords[$record->date]['bookings'] += (int)$bookings;
                     }
                     if ($sum > 0) {
                         $sortRecords[$record->date]['sum'] += (int)$sum;
                     }
                 }
                 
+                // Get the bookings for this month
+                $bookingsResults = $timeproj->fetchAll($where);                
+                foreach ($bookingsResults as $booking) {
+                	$bookings = 0;
+                    if (!isset($sortRecords[$booking->date])) {
+                        $sortRecords[$booking->date] = array('sum'      => 0,
+                                                             'bookings' => 0);
+                    }                	
+                    $bookings += $this->getDiffTime($booking->amount, '00:00:00');
+                    $sortRecords[$booking->date]['bookings'] += (int)$bookings;  
+                }
+
                 $endDayofTheMonth = date("t");
                 for($i = 1; $i <= $endDayofTheMonth; $i++) {
                 	$day = $i;

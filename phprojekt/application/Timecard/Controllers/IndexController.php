@@ -64,7 +64,7 @@ class Timecard_IndexController extends IndexController
      * For further information see the chapter json exchange
      * in the internals documentantion
      *
-     * @requestparam integer id ...
+     * @requestparam string date
      *
      * @return void
      */
@@ -76,6 +76,67 @@ class Timecard_IndexController extends IndexController
         $where = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $date);
 
         $records = $this->getModelObject()->fetchAll($where);
+
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+   /**
+     * Deletes a certain item
+     *
+     * If the item are already deleted or don�t exist
+     * return a Phprojekt_PublishedException
+     * If the item is deleted, the return is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonBookingDeleteAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException('ID parameter required');
+        }
+
+        $model = Phprojekt_Loader::getModel('Timecard','Timeproj')->find($id);
+
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $tmp = $model->delete();
+            if ($tmp === false) {
+                $message = $translate->translate("The Item can't be deleted");
+            } else {
+                $message = $translate->translate('The Item was deleted correctly');
+            }
+            $return  = array('type'    => 'success',
+                             'message' => $message,
+                             'code'    => 0,
+                             'id'      => $id);
+
+            echo Phprojekt_Converter_Json::convert($return);
+        } else {
+            throw new Phprojekt_PublishedException('Item not found');
+        }
+    }
+    
+    /**
+     * Returns the detail for the bookings in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam string date
+     *
+     * @return void
+     */
+    public function jsonBookingDetailAction()
+    {
+        $date  = $this->getRequest()->getParam('date');
+        $model = Phprojekt_Loader::getModel('Timecard','Timeproj');
+        
+        $records = $model->getRecords($date);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -145,15 +206,10 @@ class Timecard_IndexController extends IndexController
         echo Phprojekt_Converter_Json::convert($return);
     }
     
-    /**
-     * Creates a new timecard record with the current date and time.
-     *
-     * @return void
-     */
-    public function jsonSaveHoursAction()
+    public function jsonBookingSaveAction()
     {
         $translate = Zend_Registry::get('translate');
-        $model     = $this->getModelObject();
+        $model     = Phprojekt_Loader::getModel('Timecard','Timeproj');
         $message   = $translate->translate('The Item was added correctly');
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
