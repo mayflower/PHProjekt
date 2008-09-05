@@ -138,6 +138,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // description:
         //    Reload the Booking view with the form and all the Bookings saved for the current day		
         phpr.destroyWidgets("TimecardBooking");
+		phpr.destroyWidgets("projectId");
+		phpr.destroyWidgets("notes");
+		phpr.destroyWidgets("amount");
 		
 		var bookingdata = '';
 		
