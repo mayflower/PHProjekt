@@ -60,6 +60,31 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['readOnly'] = true;
         $converted[] = $data;
         
+        // projectId
+        $data = array();
+        $data['key']      = 'projectId';
+        $data['label']    = $translate->translate('project');
+        $data['type']     = 'time';
+        $data['hint']     = $translate->translate('project');
+        $data['order']    = 0;
+        $data['position'] = 2;
+        $data['fieldset'] = '';
+        $data['range']    = array();
+        $data['type']     = 'selectbox';        
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree->setup();
+        foreach ($tree as $node) {
+            $key   = $node->id;
+            $value = str_repeat('....', $node->getDepth()) . $node->title;
+            $data['range'][] = array('id'    => $key,
+                                     'label' => $value,
+                                     'name'  => $node->title);
+        }
+        $data['required'] = true;
+        $data['readOnly'] = true;
+        $converted[] = $data;
+                
         // notes
         $data = array();
         $data['key']      = 'notes';
@@ -67,7 +92,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['type']     = 'textarea';
         $data['hint']     = $translate->translate('notes');
         $data['order']    = 0;
-        $data['position'] = 2;
+        $data['position'] = 3;
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
@@ -82,34 +107,10 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['type']     = 'time';
         $data['hint']     = $translate->translate('amount');
         $data['order']    = 0;
-        $data['position'] = 3;
+        $data['position'] = 4;
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = true;
-        $converted[] = $data;
-                
-        // projectId
-        $data = array();
-        $data['key']      = 'projectId';
-        $data['label']    = $translate->translate('project');
-        $data['type']     = 'time';
-        $data['hint']     = $translate->translate('project');
-        $data['order']    = 0;
-        $data['position'] = 5;
-        $data['fieldset'] = '';
-        $data['range']    = array();
-        $data['type']     = 'selectbox';        
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree->setup();
-        foreach ($tree as $node) {
-            $key   = $node->id;
-            $value = str_repeat('....', $node->getDepth()) . $node->title;
-            $data['range'][] = array('id'   => $key,
-                                     'name' => $value);
-        }
         $data['required'] = true;
         $data['readOnly'] = true;
         $converted[] = $data;

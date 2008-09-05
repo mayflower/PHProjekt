@@ -1,0 +1,54 @@
+<form dojoType="dijit.form.Form" id="bookingForm" name="bookingForm" style="display:inline;" onsubmit="return false;">
+    <input dojoType="dijit.form.TextBox" type="hidden" name="date" id="bookingDate" value="{{date}}" />
+    <div>
+        <h4>{{timecardProjectTimesText}}<br />{{dateForm}}</h4>
+    </div>
+    <table>
+    <tr>
+        <td class="label">
+        <label for="{{projectId}}">{{projectIdLabel}}</label></td>
+        <td>
+        <select
+        id="{{projectId}}"
+        name="{{projectId}}"
+        dojoType="dijit.form.FilteringSelect"
+        required="true"
+        disabled="false"
+        autocomplete="true"
+        value=""
+        searchAttr="name"
+        invalidMessage="" >
+        {% for item in values %}
+        <option value ="{{item.id}}">{{item.label}}{{item.name}}</option>
+        {% endfor %}
+        </select></td>
+    </tr>
+    <tr>
+        <td class="label">    
+        <label for="{{notes}}">{{notesLabel}}</label>
+        </td>
+        <td>
+            <input type="text"
+            id="{{notes}}"
+            name="{{notes}}"
+            dojoType="dijit.form.TextBox"
+            required="false"
+            disabled="false"
+            ucfirst="false"
+            value=""
+            invalidMessage="" />        
+        </td>
+    </tr>        
+    <tr>
+        <td>
+        <label for="{{amount}}">{{amountLabel}}</label>
+        </td>
+        <td>
+        <input type="text" id="amount"  name="amount" dojoType="dijit.form.TimeTextBox" constraints=" {formatLength:'short', timePattern:'HH:mm'}" value="T00:00" style="width:55px" />
+        <button dojoType="dijit.form.Button" baseClass="positive" id="bookingSaveButton" type="submit" iconClass="disk"></button>
+        </td>
+    </tr>
+    </table>        
+</form>
+<br />
+{{bookingdata|safe}}

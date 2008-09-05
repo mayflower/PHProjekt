@@ -3,5 +3,9 @@
             onMouseEnter=""
             onMouseLeave=""
             onKeyDown=""            
-            onChange="if (this.value != null) { dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]); } "> {{timecardtimeRecordingForText}} {{dateForm}}
+            onChange="
+            if (this.value != null) {
+                dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]);
+                dojo.byId('hoursSaveButton').focus();
+            } ">
 </div>
