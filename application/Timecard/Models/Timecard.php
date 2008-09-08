@@ -105,7 +105,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         if (isset($data['endTime'])) {
-            if ($data['startTime'] <= $data['endTime']) {
+        	if ($this->getDiffTime($data['endTime'],$data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
                                     'field'   => Zend_Registry::get('translate')->translate('Hours'),
                                     'message' => Zend_Registry::get('translate')->translate('The end time must be after the start time')));
