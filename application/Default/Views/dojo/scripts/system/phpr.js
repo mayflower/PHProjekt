@@ -92,7 +92,7 @@ phpr.send = function(/*Object*/paramsIn) {
     // onEnd: Is always called after the onSuccess and onError have finished.
     //     This might be used for resetting things that are common for both cases.
 
-    //
+    phpr.loadding.show();
     var params = {
         url:"",
         content:"",
@@ -126,6 +126,7 @@ phpr.send = function(/*Object*/paramsIn) {
             try {
                 params.onSuccess(data, ioArgs);
                 _onEnd();
+                phpr.loadding.hide();
             } catch(e) {
                 var response = {};
                 response.type ='error';
@@ -151,6 +152,7 @@ phpr.send = function(/*Object*/paramsIn) {
 
 phpr.handleResponse = function(resultArea,result)
 {
+	phpr.loadding.hide();
     var css = 'error';
     if(result.type =='success'){
         css = 'success';
@@ -237,6 +239,7 @@ dojo.declare("phpr.DataStore", null, {
             params.processData = null;
         }
         if (this._internalCache[params.url]['data'].length == 0) {
+			 phpr.loadding.show();
             this._internalCache[params.url]['store'].fetch({onComplete: dojo.hitch(this, "saveData", {url: params.url, processData: params.processData})});
         } else if (params.processData) {
             params.processData.call();
@@ -250,6 +253,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Store the data in the cache
         //    Then return to the processData function
         this._internalCache[params.url]['data'] = data;
+        phpr.loadding.hide();
         if (params.processData) {
             params.processData.call();
         }
@@ -417,3 +421,18 @@ dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated], {
         }
     }
 );
+
+dojo.declare("phpr.loadding", null, {
+    // summary:
+    //     Simple class for show or hide the loadding icon
+    // description:
+    //     Simple class for show or hide the loadding icon	
+    hide:function() {
+        dojo.byId('loaddingIcon').style.display = 'none';
+    },
+	
+    show:function() { 		
+        dojo.byId('loaddingIcon').style.display = 'inline';
+    },
+});
+phpr.loadding =  new phpr.loadding();
