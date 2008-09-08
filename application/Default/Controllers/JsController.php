@@ -40,7 +40,9 @@ class JsController extends IndexController
     {
         echo 'dojo.registerModulePath("phpr", "../../../application/Default/Views/dojo/scripts/system");';
         echo 'dojo.registerModulePath("phpr.Default", "../../../application/Default/Views/dojo/scripts");';
+        echo 'dojo.registerModulePath("phpr.Default.nls", "../../../application/Default");';
         echo 'dojo.registerModulePath("phpr.Core", "../../../application/Core/Views/dojo/scripts");';
+        echo 'dojo.registerModulePath("phpr.Core.nls", "../../../application/Core");';
 
         // System files, must be parsed in this order
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/phpr.js');
@@ -56,7 +58,6 @@ class JsController extends IndexController
         echo $this->_getCoreScripts();
 
         // Load all modules and make and array of it
-        $modules = array();
         $files   = scandir(PHPR_CORE_PATH);
         foreach ($files as $file) {
             if ($file != '.'  &&
@@ -64,7 +65,6 @@ class JsController extends IndexController
                 $file != '.svn' &&
                 $file != 'Default' &&
                 $file != 'Phprojekt') {
-                echo 'dojo.registerModulePath("phpr.'.$file.'", "../../../application/'.$file.'/Views/dojo/scripts");';
                 if (is_dir(PHPR_CORE_PATH.'/'.$file.'/Views/dojo/scripts/')) {
                     $scripts = scandir(PHPR_CORE_PATH.'/'.$file.'/Views/dojo/scripts/');
                 } else {
@@ -72,6 +72,8 @@ class JsController extends IndexController
                 }
                 $this->_modules[] = $file;
                 if ($file != 'Core') {
+                	echo 'dojo.registerModulePath("phpr.'.$file.'", "../../../application/'.$file.'/Views/dojo/scripts");';
+                	echo 'dojo.registerModulePath("phpr.'.$file.'.nls", "../../../application/'.$file.'");';
                     echo $this->_getModuleScripts($scripts, $file);
                 } else {
                     echo $this->_getCoreModuleScripts($scripts);
@@ -82,8 +84,11 @@ class JsController extends IndexController
         echo 'dojo.provide("phpr.Main");';
 
         // Lang Files
-        echo 'dojo.requireLocalization("phpr.Default", "Default");';
-
+        echo 'dojo.requireLocalization("phpr.Default.nls", "default");';
+        foreach ($this->_modules as $module) {
+        	echo 'dojo.requireLocalization("phpr.'.$module.'.nls", "default");';
+        }
+        
         echo '
         dojo.declare("phpr.Main", null, {
             constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId) {
@@ -91,11 +96,12 @@ class JsController extends IndexController
                 phpr.webpath          = webpath;
                 phpr.rootProjectId    = rootProjectId;
                 phpr.currentProjectId = rootProjectId ;
-                phpr.nls              = dojo.i18n.getLocalization("phpr.Default", "Default");
+                phpr.nls              = dojo.i18n.getLocalization("phpr.Default.nls", "default");
         ';
         foreach ($this->_modules as $module) {
             echo '
-            this.'.$module.' = new phpr.'.$module.'.Main();
+                this.'.$module.' = new phpr.'.$module.'.Main();
+                phpr.'.$module.'.nls = dojo.i18n.getLocalization("phpr.'.$module.'.nls", "default");
             ';
         }
 
@@ -167,9 +173,11 @@ class JsController extends IndexController
     private function _getCoreModuleScripts($scripts)
     {
         foreach ($scripts as $script) {
-            if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.') {
+            if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.' && ($script != 'nls')) {
                 $coreScripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
                 if (in_array('Main.js', $coreScripts)) {
+                    echo 'dojo.registerModulePath("phpr.'.$script.'", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
+                    echo 'dojo.registerModulePath("phpr.'.$script.'.nls", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
                     $this->_modules[] = $script;
                 }
                 foreach ($coreScripts as $coreScript) {
