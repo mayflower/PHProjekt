@@ -20,21 +20,6 @@
 	"noresults": "No se encontraron resultados",
     "gridCantEdit": "No tiene acceso para editar este item",
 
-	// Timecard
-	"timecardQuickAccess": "Acceso rapido",
-    "timecardtimeRecordingFor": "Tiempo grabado para",
-	"timecardDate": "Fecha",
-	"timecardWorkingTimes": "Tiempos de Trabajo",
-	"timecardStart": "Inicio",
-	"timecardEnd": "Fin",
-	"timecardProjectTimes": "Tiempos por Projectos",
-	"timecardProject": "Projecto",
-	"timecardNotes": "Notas",
-	"timecardTimes": "Tiempo",
-	"timecardH": "H",
-	"timecardM": "M",
-	"timecardSavedTimes": "Tiempos grabados para",
-
 	// Access
 	"accessUser": "Usuario",
 	"accessRead": "Leer",
