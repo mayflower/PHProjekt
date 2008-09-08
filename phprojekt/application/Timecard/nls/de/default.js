@@ -1,0 +1,15 @@
+({
+    "timecardQuickAccess": "Schneller Zugang",
+    "timecardtimeRecordingFor": "Zeitaufnahme f&uuml;r",
+    "timecardDate": "Datum",
+    "timecardWorkingTimes": "Das Hervorbringen von Zeiten",
+    "timecardStart": "Anfang",
+    "timecardEnd": "Ende",
+    "timecardProjectTimes": "Projizieren Sie Zeiten",
+    "timecardProject": "Projekt",
+    "timecardNotes": "Notizen",
+    "timecardTimes": "Zeit",
+    "timecardH": "Std",
+    "timecardM": "M",
+    "timecardSavedTimes": "Bewahrte Zeit f&uuml;r",	
+})

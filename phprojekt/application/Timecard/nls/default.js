@@ -1,0 +1,15 @@
+({
+    "timecardQuickAccess": "Quick Access",
+    "timecardtimeRecordingFor": "Time recording for",
+    "timecardDate": "Date",
+    "timecardWorkingTimes": "Working Times",
+    "timecardStart": "Start",
+    "timecardEnd": "End",
+    "timecardProjectTimes": "Project Times",
+    "timecardProject": "Project",
+    "timecardNotes": "Notes",
+    "timecardTimes": "Time",
+    "timecardH": "H",
+    "timecardM": "M",
+    "timecardSavedTimes": "Saved time for",	
+})
