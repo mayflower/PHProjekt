@@ -1,13 +1,16 @@
 <div id="completeContent" dojoType="dijit.layout.BorderContainer" style="width: 100%; height: 100%;">
     <!-- Top Bar menu -->
     <div dojoType="dijit.layout.ContentPane" id="header" region="top" style="height:55px;" splitter="false">
-    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" / onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")'>
+    	<img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")' />
     	<form dojoType="dijit.form.Form" id="searchform" name="searchform" style="display:inline" onsubmit='dojo.publish("{{currentModule}}.showSearchResults",[dojo.byId("searchfield").value]); return false;'>
         <div id="search-bar" class="last right align-right">
             <input id="searchfield" name="searchfield" onmousedown='this.focus(); dojo.publish("{{currentModule}}.showSuggest");' />
         </div>
         </form>
 		<div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
+		</div>
+		<div id="loadingIcon" class="right align-right">
+            <img class="left" src="{{webpath}}img/ajax-loader.gif" alt="Loadding" />
 		</div>
     </div>
     <!-- Left Content -->
