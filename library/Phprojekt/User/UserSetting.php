@@ -113,14 +113,20 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @return string value of the setting
      */
     public function getSetting($settingName) {
-
-        $toReturn = '';
-
-        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-        " AND keyValue = ".$this->_db->quote($settingName) .
-        " AND moduleId = ".$this->_db->quote($this->_moduleId));
-        if (!empty($record)) {
-            $toReturn = $record[0]->value;
+     
+    	// Cache the settings for this user
+        $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
+        if (isset($userSettingsNamespace->$settingName)) {
+        	$toReturn = $userSettingsNamespace->$settingName;
+        } else {
+            $toReturn = '';
+            $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+                                      " AND keyValue = ".$this->_db->quote($settingName) .
+                                      " AND moduleId = ".$this->_db->quote($this->_moduleId));
+            if (!empty($record)) {
+                $toReturn = $record[0]->value;
+                $userSettingsNamespace->$settingName = $toReturn;
+            }
         }
         return $toReturn;
     }
@@ -132,11 +138,9 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @return string name of the setting
      */
     public function getSettingNameById($id) {
-
         $toReturn = '';
-
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-        " AND id = ".$this->_db->quote($id));
+                                  " AND id = ".$this->_db->quote($id));
         if (!empty($record)) {
             $toReturn = $record[0]->keyValue;
         }
@@ -151,10 +155,9 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @return boolean if it was saved or not.
      */
     public function setSetting($settingName, $settingValue) {
-
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-        " AND keyValue = ".$this->_db->quote($settingName) .
-        " AND moduleId = ".$this->_db->quote($this->_moduleId));
+                                  " AND keyValue = ".$this->_db->quote($settingName) .
+                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $record = $record[0];
         } else {
@@ -166,6 +169,10 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         }
 
         $record->value = $settingValue;
+           
+        $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
+        $userSettingsNamespace->$settingName = $settingValue;
+            
         return $record->save();
     }
 
