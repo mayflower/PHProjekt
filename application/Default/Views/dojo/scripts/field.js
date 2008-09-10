@@ -23,7 +23,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled
+							disabled: (itemdisabled) ? "disabled" : ''
 				});
 	},
 	textAreaRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
@@ -33,7 +33,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled
+							disabled: (itemdisabled) ? "disabled" : ''
 				});
 	},
 	dateRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
@@ -43,7 +43,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled
+							disabled: (itemdisabled) ? "disabled" : ''
 				});
 	},
 	timeRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
@@ -53,7 +53,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled
+							disabled: (itemdisabled) ? "disabled" : ''
 				});
 	},
 	selectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
@@ -69,7 +69,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							value: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled,
+							disabled: (itemdisabled) ? "disabled" : '',
 							values: options
 				});
 	},
@@ -94,7 +94,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							values: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled,
+							disabled: (itemdisabled) ? "disabled" : '',
 							multiple: itemmultiple,
 							size: itemsize,
 							options: options
@@ -114,7 +114,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							id: itemid,
 							values: itemvalue,
 							required: itemrequired,
-							disabled: itemdisabled,
+							disabled: (itemdisabled) ? "disabled" : '',
 							options: options
 				});
 	}

@@ -60,11 +60,11 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
 				moduleName: moduleName,
 				moduleLabel: moduleLabel,
 				liclass: liclass,
-				moduleFunction: moduleFunction,
+				moduleFunction: moduleFunction
 			});
 		}
         navigation += "</ul>";
         dojo.byId("subModuleNavigation").innerHTML = navigation;
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
-    },
+    }
 });

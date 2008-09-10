@@ -55,7 +55,7 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
             }
             return (typeof v == "undefined" ? this.defaultValue : v);
         }
-    },
+    }
 });
 
 dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
@@ -70,5 +70,5 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         } else {
             return phpr.grid.formatDate(d);
         }
-	},
+	}
 });

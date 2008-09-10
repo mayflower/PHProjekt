@@ -50,5 +50,5 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
 				this.publish("changeDate", [date]);
 			}
         }
-    },	
+    }
 });

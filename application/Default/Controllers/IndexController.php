@@ -219,7 +219,7 @@ class IndexController extends Zend_Controller_Action
     /**
      * Deletes a certain item
      *
-     * If the item are already deleted or don´t exist
+     * If the item are already deleted or do not exist
      * return a Phprojekt_PublishedException
      * If the item is deleted, the return is a string with the same format than the Phprojekt_PublishedException
      * but with success type
@@ -355,5 +355,18 @@ class IndexController extends Zend_Controller_Action
         }
 
         Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+    
+    /**
+     * Return all the words translated in each modules for the $language
+     *
+     * @requestparam string $language The current language
+     * 
+     * @return void
+     */
+    public function getTranslatedStringsAction()
+    {
+    	$language = $this->getRequest()->getParam('language', 'en');
+        echo Phprojekt_Converter_Json::convert(Zend_Registry::get('translate')->getTranslatedStrings($language));
     }
 }

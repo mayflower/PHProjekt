@@ -17,5 +17,5 @@ dojo.declare("phpr.Settings.Grid", phpr.Default.Grid, {
 
     useIdInGrid: function() {
         return false;
-    },
+    }
 });

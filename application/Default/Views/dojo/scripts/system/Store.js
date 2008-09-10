@@ -36,7 +36,7 @@ dojo.declare("phpr.Store", phpr.Component, {
         // description:
         //    Delete de cache
         phpr.DataStore.deleteData({url: this._url});
-    },
+    }
 });
 
 dojo.declare("phpr.Store.User", phpr.Store, {
@@ -55,7 +55,7 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         for (i in users) {
             this._list.push({"id":users[i]['id'],"name":users[i]['username']});
         }
-    },
+    }
 });
 
 dojo.declare("phpr.Store.Module", phpr.Store, {
@@ -75,7 +75,7 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
             this._list.push({"id":modules[i]['id'],"name":modules[i]['name'],
                              "inProject":modules[i]['inProject']})
         }
-    },
+    }
 });
 
 dojo.declare("phpr.Store.Role", phpr.Store, {
@@ -106,7 +106,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
 
     getRelationList:function() {
         return this._relationList;
-    },
+    }
 });
 
 dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
@@ -126,5 +126,5 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
 		                     "read":modules[i]['read'],"write":modules[i]['write'],
 		                     "create":modules[i]['create'],"admin":modules[i]['admin']})
 		}
-    },
+    }
 });

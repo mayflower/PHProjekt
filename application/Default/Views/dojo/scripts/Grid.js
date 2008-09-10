@@ -111,7 +111,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:    porcent,
                         options:  opts,
                         values:   vals,
-                        editable: meta[i]['readOnly'] ? false : true,
+                        editable: meta[i]['readOnly'] ? false : true
                     });
                     break;
 
@@ -124,7 +124,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         type:       phpr.grid.cells.DateTextBox,
                         formatter:  phpr.grid.formatDate,
                         constraint: {formatLength: 'short', selector: "date"},
-                        editable: meta[i]['readOnly'] ? false : true,
+                        editable: meta[i]['readOnly'] ? false : true
                     });
                     break;
 
@@ -136,7 +136,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         styles:     "text-align:center;",
                         type:       dojox.grid.cells.Input,
                         formatter:  phpr.grid.formatTime,
-                        editable: meta[i]['readOnly'] ? false : true,
+                        editable: meta[i]['readOnly'] ? false : true
                     });
                     break;
 
@@ -146,7 +146,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         name:   meta[i]["label"],
                         field:  meta[i]["key"],
                         type:   dojox.grid.cells.Input,
-                        editable: meta[i]['readOnly'] ? false : true,
+                        editable: meta[i]['readOnly'] ? false : true
                     });
                     break;
             }
@@ -177,7 +177,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 };
                 var exportButton = new dijit.form.Button(params);
                 dojo.byId("buttonRow").appendChild(exportButton.domNode);
-                dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "export"));
+                dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "exportData"));
             }
         }
     },
@@ -219,7 +219,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.setExport(meta);
 
         if (meta.length == 0) {
-            this._node.attr('content', phpr.nls.noresults);
+            this._node.attr('content', phpr.nls.get('noresults'));
         } else {
             this.setGridLayout(meta);
             this.grid = new dojox.grid.DataGrid({
@@ -301,7 +301,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this.grid.store.setValue(item,inFieldIndex,value);
             var result = Array();
             result.type = 'error';
-            result.message = phpr.nls.gridCantEdit;
+            result.message = phpr.nls.get('gridCantEdit');
             new phpr.handleResponse('serverFeedback',result);
         } else {
             if (!this._newRowValues[inRowIndex]) {
@@ -369,7 +369,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         });
     },
 
-    export:function() {
+    exportData:function() {
         // summary:
         //    Open a new widnows in CVS mode
         // description:
@@ -384,5 +384,5 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    Delete the cache for this grid
         phpr.DataStore.deleteData({url: this.url});
-    },
+    }
 });

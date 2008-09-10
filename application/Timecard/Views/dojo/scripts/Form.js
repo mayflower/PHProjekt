@@ -102,18 +102,18 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
                 start: data[i].startTime,
                 end: data[i].endTime,
-                id:  data[i].id,
+                id:  data[i].id
             });
         }   	
 		
 		this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
             dateForm: dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang}),
 			date: this._date,
-            timecardWorkingTimesText: phpr.Timecard.nls.timecardWorkingTimes,
-            timecardStartText: phpr.Timecard.nls.timecardStart,
-            timecardEndText: phpr.Timecard.nls.timecardEnd,			
+            timecardWorkingTimesText: phpr.nls.get("timecardWorkingTimes"),
+            timecardStartText: phpr.nls.get("timecardStart"),
+            timecardEndText: phpr.nls.get("timecardEnd"),
             hoursdata: hoursdata,
-			totalHours: this.convertTime(totalHours),
+			totalHours: this.convertTime(totalHours)
 		});
         
         for (var i = 0; i < data.length; i++) {
@@ -128,7 +128,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // description:
         //    Reload the HDate picker div with the current date		
         this.render(["phpr.Timecard.template", "date.html"], dojo.byId('TimecardDate') , {
-            date: this._date,
+            date: this._date
 		});		
 	},
 	
@@ -160,14 +160,14 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 project: projectName,
 				notes:   data[i].notes,
                 amount:  this.convertTime(this.getDiffTime(data[i].amount, '00:00:00')),
-                id:      data[i].id,
+                id:      data[i].id
             });
         }       
 			
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
             dateForm: dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang}),
             date: this._date,
-			timecardProjectTimesText: phpr.Timecard.nls.timecardProject,
+			timecardProjectTimesText: phpr.nls.get("timecardProject"),
 			projectId: meta[1]['key'],
 			projectIdLabel: meta[1]['label'],
 			values: meta[1]['range'],
@@ -176,7 +176,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             amount: meta[3]['key'],
             amountLabel: meta[3]['label'],
 			bookingdata: bookingdata,
-			totalHours: this.convertTime(totalHours),		
+			totalHours: this.convertTime(totalHours)
         });
 
         for (var i = 0; i < data.length; i++) {

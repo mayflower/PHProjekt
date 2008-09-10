@@ -105,20 +105,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (this._accessPermissions) {
             // template for the access tab
             var accessData = this.render(["phpr.Default.template", "accesstab.html"], null, {
-                accessUserText:     phpr.nls.accessUser,
-                accessReadText:     phpr.nls.accessRead,
-                accessWriteText:    phpr.nls.accessWrite,
-                accessAccessText:   phpr.nls.accessAccess,
-                accessCreateText:   phpr.nls.accessCreate,
-                accessCopyText:     phpr.nls.accessCopy,
-                accessDeleteText:   phpr.nls.accessDelete,
-                accessDownloadText: phpr.nls.accessDownload,
-                accessAdminText:    phpr.nls.accessAdmin,
-                accessNoneText:     phpr.nls.accessNone,
-                accessActionText:   phpr.nls.accessAction,
+                accessUserText:     phpr.nls.get('accessUser'),
+                accessReadText:     phpr.nls.get('accessRead'),
+                accessWriteText:    phpr.nls.get('accessWrite'),
+                accessAccessText:   phpr.nls.get('accessAccess'),
+                accessCreateText:   phpr.nls.get('accessCreate'),
+                accessCopyText:     phpr.nls.get('accessCopy'),
+                accessDeleteText:   phpr.nls.get('accessDelete'),
+                accessDownloadText: phpr.nls.get('accessDownload'),
+                accessAdminText:    phpr.nls.get('accessAdmin'),
+                accessNoneText:     phpr.nls.get('accessNone'),
+                accessActionText:   phpr.nls.get('accessAction'),
                 users:              this.userStore.getList(),
                 currentUser:        currentUser,
-                accessContent:      accessContent,
+                accessContent:      accessContent
             });
 
             this.addTab(accessData, 'tabAccess', 'Access', 'accessFormTab');
@@ -177,11 +177,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    to the array of values for save it later
         var html = this.render(["phpr.Default.template", "tabs.html"], null,{
             innerTabs: innerTabs,
-            formId:    formId || '',
+            formId:    formId || ''
         });
         var tab = new dijit.layout.ContentPane({
             id:        id,
-            title:     title,
+            title:     title
         });
         tab.attr('content', html);
         this.form.addChild(tab);
@@ -283,8 +283,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
             writePermissions:  this._writePermissions,
             deletePermissions: this._deletePermissions,
-            saveText:          phpr.nls.save,
-            deleteText:        phpr.nls.delete,
+            saveText:          phpr.nls.get('save'),
+            deleteText:        phpr.nls.get('deleteButton')
         });
 
         // Action buttons for the form
@@ -465,7 +465,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                 this.publish("updateCacheData");
                                 this.publish("reload");
                             }
-                        }),
+                        })
                     });
                }
             })
@@ -490,7 +490,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                 this.publish("updateCacheData");
                                 this.publish("reload");
                             }
-                        }),
+                        })
                     });
                }
             })
@@ -559,5 +559,5 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Delete the cache for this form
         phpr.DataStore.deleteData({url: this._url});
-    },
+    }
 });

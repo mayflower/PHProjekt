@@ -30,9 +30,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         phpr.destroyWidgets("tabModules");
         if (this._accessPermissions) {
             var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
-                moduleNameText:   phpr.nls.moduleName,
-                moduleActiveText: phpr.nls.moduleActive,
-                modules:          this.moduleStore.getList(),
+                moduleNameText:   phpr.nls.get('moduleName'),
+                moduleActiveText: phpr.nls.get('moduleActive'),
+                modules:          this.moduleStore.getList()
             });
 
             this.addTab(modulesData, 'tabModules', 'Modules', 'moduleFormTab');
@@ -50,12 +50,12 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         if (this._accessPermissions) {
             var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
-                accessUserText:   phpr.nls.accessUser,
-                accessRoleText:   phpr.nls.accessRole,
-                accessActionText: phpr.nls.accessAction,
+                accessUserText:   phpr.nls.get('accessUser'),
+                accessRoleText:   phpr.nls.get('accessRole'),
+                accessActionText: phpr.nls.get('accessAction'),
                 users:            this.userStore.getList(),
                 roles:            this.roleStore.getList(),
-                relations:        relationList,
+                relations:        relationList
             });
 
             this.addTab(rolesData, 'tabRoles', 'Roles', 'roleFormTab');
@@ -158,5 +158,5 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
         phpr.DataStore.deleteData({url: subModuleUrl});
         this.moduleStore.update();
-    },
+    }
 });
