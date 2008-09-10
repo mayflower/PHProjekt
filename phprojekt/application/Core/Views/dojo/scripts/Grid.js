@@ -11,5 +11,5 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     },
 
     showTags:function() {
-    },
+    }
 });

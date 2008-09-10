@@ -35,5 +35,5 @@ dojo.declare("phpr.Settings.Main", phpr.Default.Main, {
         //    are received from the server and the Navigation is rendered accordingly
         phpr.destroySimpleWidget("newEntry");
         dojo.byId("subModuleNavigation").innerHTML = '';
-    },	
+    }
 });

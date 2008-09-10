@@ -55,7 +55,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 moduleName: moduleName,
                 moduleLabel: moduleLabel,
                 liclass: liclass,
-                moduleFunction: moduleFunction,
+                moduleFunction: moduleFunction
             });
         }
         navigation += "</ul>";
@@ -72,5 +72,5 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         dojo.byId("buttonRow").appendChild(newEntry.domNode);
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
         dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
-	 },
+	 }
 });

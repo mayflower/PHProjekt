@@ -224,7 +224,7 @@ dojo.declare("phpr.DataStore", null, {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
                 data: new Array(),
-                store: store,
+                store: store
             };
         }
     },
@@ -428,11 +428,36 @@ dojo.declare("phpr.loading", null, {
     // description:
     //     Simple class for show or hide the loading icon	
     hide:function() {
-        dojo.byId('loadingIcon').style.display = 'none';
+		if (dojo.byId('loadingIcon')) {
+			dojo.byId('loadingIcon').style.display = 'none';
+		}
     },
 	
-    show:function() { 		
-        dojo.byId('loadingIcon').style.display = 'inline';
-    },
+    show:function() {
+		if (dojo.byId('loadingIcon')) {
+			dojo.byId('loadingIcon').style.display = 'inline';
+		}
+    }
 });
 phpr.loading =  new phpr.loading();
+
+dojo.declare("phpr.translator", null, {
+    // summary:
+    //     Trasnlation class
+    // description:
+    //     Collect all the trasnlated strings into an array
+	//     and return the request string translateds    	
+    _strings: {},
+	
+    constructor:function(translatedStrings) {
+	   this._strings = 	translatedStrings;
+	},
+	
+    get:function(string) {
+		if (this._strings[string]) {
+			return this._strings[string];
+		} else {
+			return string;
+		}
+    }
+});

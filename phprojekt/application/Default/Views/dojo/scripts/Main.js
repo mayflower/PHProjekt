@@ -9,6 +9,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     formWidget:       null,
     treeWidget:       null,
     globalModules:    null,
+	_langUrl:         null,   
 
     loadFunctions:function(module) {
         // summary:
@@ -29,9 +30,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module+".clickResult", this, "clickResult");
 		dojo.subscribe(module+".updateCacheData", this, "updateCacheData");
 		dojo.subscribe(module+".loadResult", this, "loadResult");
+		dojo.subscribe(module+".setLanguage", this, "setLanguage");
 		dojo.subscribe(module+"._isGlobalModule", this, "_isGlobalModule");
     },
-
+	
     openForm:function(/*int*/id, /*String*/module) {
         //summary: this function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
@@ -76,8 +78,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{
             webpath:phpr.webpath,
-            currentModule:phpr.module,
-            searchText:phpr.nls.search,
+            currentModule:phpr.module
         });
 
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
@@ -85,17 +86,20 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             currentModule:phpr.module
         });
         this.hideSuggest();
-
-        dojo.addOnLoad(dojo.hitch(this, function() {
+    
+        this._langUrl = phpr.webpath+"index.php/Default/index/getTranslatedStrings/language/"+ phpr.language;
+        phpr.DataStore.addStore({url: this._langUrl});
+        phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
+                phpr.nls    = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
                 this.setGlobalModulesNavigation();
                 this.setSubmoduleNavigation();
                 this.setSearchForm();
                 var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
                 this.tree     = new this.treeWidget(this);
-                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-            })
-        );
+                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);		
+		  })
+        });			
     },
 
     reload:function() {
@@ -132,11 +136,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Administration
         var button = new dijit.form.Button({
             id:        "globalModuleAdmin",
-            label:     phpr.nls.administration,
+            label:     phpr.nls.get('administration'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 dojo.publish("Administration.reload");
-            }),
+            })
         });
         toolbar.addChild(button);
         var separator = new dijit.ToolbarSeparator();
@@ -145,54 +149,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Settings
         var button = new dijit.form.Button({
             id:        "globalModuleSettings",
-            label:     phpr.nls.settings,
+            label:     phpr.nls.get('settings'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 dojo.publish("Settings.reload");
-            }),
+            })
         });
         toolbar.addChild(button);
         var separator = new dijit.ToolbarSeparator();
         toolbar.addChild(separator);
-
-        /*
-			<div dojoType="dijit.form.DropDownButton">
-				<span>{{administrationText}}</span>
-				<div dojoType="dijit.Menu">
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Administration.reload")'>
-					{{administratorText}}
-					</div>
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Settings.reload")'>
-					{{settingsText}}
-					</div>
-				</div>
-			</div>
-            <span dojoType="dijit.ToolbarSeparator"></span>
-    		<div dojoType="dijit.form.DropDownButton">
-				<span>{{timecardText}}</span>
-				<div dojoType="dijit.Menu">
-					<div dojoType="dijit.MenuItem" onClick='dojo.publish("Timecard.reload")'>
-					{{timecardOverviewText}}
-					</div>
-                    <div dojoType="dijit.PopupMenuItem">
-                        <span>{{timecardWorkingtimeText}}</span>
-                        <div dojoType="dijit.Menu">
-                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.start")'>{{timecardWorkingtimeStartText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                            <div dojoType="dijit.MenuItem" onClick='dojo.publish("Workingtimes.stop")'>{{timecardWorkingtimeStopText}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-    					</div>
-					</div>
-				</div>
-			</div>
-			<span dojoType="dijit.ToolbarSeparator"></span>
-    		<button dojoType="dijit.form.Button" type='link' onClick='dojo.publish("Help.load")'>
-    		{{helpText}}
-    		</button>
-			<span dojoType="dijit.ToolbarSeparator"></span>
-			<button dojoType="dijit.form.Button" type='link' onClick='location="{{webpath}}index.php/Login/logout"'>
-			{{logoutText}}
-			</button>
-*/
-
 
         var globalUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
         phpr.DataStore.addStore({url: globalUrl});
@@ -201,13 +166,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 for (i in globalModules) {
                     var button = new dijit.form.Button({
                         id:        "globalModule"+globalModules[i].id,
-                        label:     globalModules[i].label,
+                        label:     phpr.nls.get(globalModules[i].label),
                         name:      globalModules[i].name,
                         showLabel: true,
                         onClick:   dojo.hitch(this, function(e) {
                             phpr.currentProjectId = phpr.rootProjectId;
                             dojo.publish(e.target.name+".reload");
-                        }),
+                        })
                     });
                     toolbar.addChild(button);
                     var separator = new dijit.ToolbarSeparator();
@@ -217,8 +182,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Help
                 var button = new dijit.form.Button({
                     id:        "globalModuleHelp",
-                    label:     phpr.nls.help,
-                    showLabel: true,
+                    label:     phpr.nls.get('help'),
+                    showLabel: true
                 });
                 toolbar.addChild(button);
                 var separator = new dijit.ToolbarSeparator();
@@ -227,11 +192,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Logout
                 var button = new dijit.form.Button({
                     id:        "globalModuleLogout",
-                    label:     phpr.nls.logout,
+                    label:     phpr.nls.get('logout'),
                     showLabel: true,
                     onClick:   dojo.hitch(this, function() {
                         location = phpr.webpath+"index.php/Login/logout";
-                    }),
+                    })
                 });
                 toolbar.addChild(button);
             })
@@ -337,7 +302,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                             moduleName :    moduleName,
                             moduleLabel:    moduleLabel,
                             liclass:        liclass,
-                            moduleFunction: moduleFunction,
+                            moduleFunction: moduleFunction
                         });
                     }
                     if (modules[i].rights.create &&
@@ -505,7 +470,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                             projectId:     modulesData.projectId,
                             firstDisplay:  modulesData.firstDisplay,
                             secondDisplay: modulesData.secondDisplay,
-                            resultType:    "search",
+                            resultType:    "search"
                         });
                     }
                     var moduleName = '';
@@ -515,7 +480,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         html       = results[i];
                         search += self.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
                             moduleName:    moduleName,
-                            results:       html,
+                            results:       html
                         });
                     }
 
@@ -542,7 +507,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             words = dojo.byId("searchfield").value;
         }
         var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words;
-        var resultsTitle = phpr.nls.searchResults;
+        var resultsTitle = phpr.nls.get('searchResults');
         this.showResults(getDataUrl, resultsTitle);
     },
 
@@ -629,7 +594,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    The server return the found records and the function display it
         var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
-        var resultsTitle = phpr.nls.tagResults;
+        var resultsTitle = phpr.nls.get('tagResults');
         this.showResults(getDataUrl, resultsTitle);
     },
 
@@ -674,7 +639,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         projectId:     modulesData.projectId,
                         firstDisplay:  modulesData.firstDisplay,
                         secondDisplay: modulesData.secondDisplay,
-                        resultType:    "tag",
+                        resultType:    "tag"
                     });
                 }
                 var moduleName = '';
@@ -684,7 +649,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     html       = results[i];
                     search += self.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
                         moduleName:    moduleName,
-                        results:       html,
+                        results:       html
                     });
                 }
                 dijit.byId("gridBox").attr('content', search);
@@ -693,7 +658,27 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     updateCacheData:function() {
+        // summary:
+        //    This function reload the grid place with the result of a search or a tagt
+        // description:
+        //    The server return the found records and the function display it		
         this.grid.updateData();
         this.form.updateData();
     },
+	
+	setLanguage:function(language) {
+        // summary:
+        //    Request to the server the languagues strings and change the current lang
+        // description:
+        //    Request to the server the languagues strings and change the current lang
+		//    Call the reload function then		
+		phpr.language = language;
+		this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
+		phpr.DataStore.addStore({url: this._langUrl});
+		phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
+			phpr.nls    = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+			this.reload();
+            })
+        });
+	}
 });

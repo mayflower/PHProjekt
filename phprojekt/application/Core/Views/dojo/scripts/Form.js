@@ -55,10 +55,10 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                                 this.publish("updateCacheData");
                                 this.publish("reload");
                             }
-                        }),
+                        })
                     });
                }
             })
         });
-    },
+    }
 });

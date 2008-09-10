@@ -40,7 +40,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     getModel:function() {
         this._model = new dijit.tree.ForestStoreModel({
             store: this._store,
-            query: {parent:'1'},
+            query: {parent:'1'}
         });
     },
 
@@ -86,5 +86,5 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
           item = [];
         }
         this.publish("changeProject", [item]);
-    },
+    }
 });
