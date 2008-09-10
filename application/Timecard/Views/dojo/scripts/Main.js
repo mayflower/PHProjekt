@@ -40,9 +40,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
     setSubGlobalModulesNavigation:function(currentModule) {
         phpr.destroySimpleWidget("newEntry");
-		var buttons = "<a href='javascript:dojo.publish(\"Workingtimes.start\")'>"+phpr.nls.get("timecardWorkingtimeStart")+"</a>";
+		var buttons = "<a href='javascript:dojo.publish(\"Workingtimes.start\")'>"+phpr.nls.get("Start working time")+"</a>";
 		buttons += "&nbsp;";
-		buttons += "<a href='javascript:dojo.publish(\"Workingtimes.stop\")>"+phpr.nls.get("timecardWorkingtimeStop")+"</a>";
+		buttons += "<a href='javascript:dojo.publish(\"Workingtimes.stop\")>"+phpr.nls.get("Stop working time")+"</a>";
         dojo.byId("subModuleNavigation").innerHTML = buttons;
     },
 	

@@ -109,9 +109,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 		this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
             dateForm: dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang}),
 			date: this._date,
-            timecardWorkingTimesText: phpr.nls.get("timecardWorkingTimes"),
-            timecardStartText: phpr.nls.get("timecardStart"),
-            timecardEndText: phpr.nls.get("timecardEnd"),
+            timecardWorkingTimesText: phpr.nls.get("Working Times"),
+            timecardStartText: phpr.nls.get("Start"),
+            timecardEndText: phpr.nls.get("End"),
             hoursdata: hoursdata,
 			totalHours: this.convertTime(totalHours)
 		});
@@ -167,7 +167,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
             dateForm: dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang}),
             date: this._date,
-			timecardProjectTimesText: phpr.nls.get("timecardProject"),
+			timecardProjectTimesText: phpr.nls.get("Project"),
 			projectId: meta[1]['key'],
 			projectIdLabel: meta[1]['label'],
 			values: meta[1]['range'],

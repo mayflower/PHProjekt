@@ -46,10 +46,10 @@ class Project_IndexController extends IndexController
         if (empty($id)) {
             $model     = $this->getModelObject();
             $model->id = 0;
-            $message   = $translate->translate('The Item was added correctly');
+            $message   = $translate->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate('The Item was edited correctly');
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
         $node    = new Phprojekt_Tree_Node_Database($model, $id);
         $newNode = Default_Helpers_Save::save($node,
@@ -85,7 +85,7 @@ class Project_IndexController extends IndexController
         $translate = Zend_Registry::get('translate');
         $data      = (array) $this->getRequest()->getParam('data');
 
-        $message = $translate->translate('The Items was edited correctly');
+        $message = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId = array();
         foreach ($data as $id => $fields) {
             $model   = $this->getModelObject()->find($id);

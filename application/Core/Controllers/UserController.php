@@ -101,7 +101,7 @@ class Core_UserController extends Core_IndexController
         $translate = Zend_Registry::get('translate');
         $data      = (array) $this->getRequest()->getParam('data');
 
-        $message = $translate->translate('The Items was edited correctly');
+        $message = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId = array();
         foreach ($data as $id => $fields) {
             if (array_key_exists('value', $fields)) {

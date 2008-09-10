@@ -70,11 +70,9 @@ final class Default_Helpers_Save
             $error = array_pop($node->getActiveRecord()->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         } else if (!self::_checkAccess($projectId)) {
-            $error = 'You do not have write access into the parent project';
-            throw new Phprojekt_PublishedException($error);
+            throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(1, $projectId)) {
-            $error = 'You do not have access for add projects on the parent project';
-            throw new Phprojekt_PublishedException($error);
+            throw new Phprojekt_PublishedException('You do not have access for add projects on the parent project');
         } else {
             if ((int)$node->projectId !== $parentId) {
                 $node->setParentNode($parentNode);
@@ -172,11 +170,9 @@ final class Default_Helpers_Save
             $error = array_pop($model->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         } else if (!self::_checkAccess($projectId)) {
-            $error = 'You do not have write access into the parent project';
-            throw new Phprojekt_PublishedException($error);
+            throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(Phprojekt_Module::getId($params['module']), $projectId)) {
-            $error = 'The parent project do not have enabled this module';
-            throw new Phprojekt_PublishedException($error);
+            throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
         } else {
             $model->save();
 

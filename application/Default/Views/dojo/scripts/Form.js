@@ -105,17 +105,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (this._accessPermissions) {
             // template for the access tab
             var accessData = this.render(["phpr.Default.template", "accesstab.html"], null, {
-                accessUserText:     phpr.nls.get('accessUser'),
-                accessReadText:     phpr.nls.get('accessRead'),
-                accessWriteText:    phpr.nls.get('accessWrite'),
-                accessAccessText:   phpr.nls.get('accessAccess'),
-                accessCreateText:   phpr.nls.get('accessCreate'),
-                accessCopyText:     phpr.nls.get('accessCopy'),
-                accessDeleteText:   phpr.nls.get('accessDelete'),
-                accessDownloadText: phpr.nls.get('accessDownload'),
-                accessAdminText:    phpr.nls.get('accessAdmin'),
-                accessNoneText:     phpr.nls.get('accessNone'),
-                accessActionText:   phpr.nls.get('accessAction'),
+                accessUserText:     phpr.nls.get('User'),
+                accessReadText:     phpr.nls.get('Read'),
+                accessWriteText:    phpr.nls.get('Write'),
+                accessAccessText:   phpr.nls.get('Access'),
+                accessCreateText:   phpr.nls.get('Create'),
+                accessCopyText:     phpr.nls.get('Copy'),
+                accessDeleteText:   phpr.nls.get('Delete'),
+                accessDownloadText: phpr.nls.get('Download'),
+                accessAdminText:    phpr.nls.get('Admin'),
+                accessNoneText:     phpr.nls.get('None'),
+                accessActionText:   phpr.nls.get('Action'),
                 users:              this.userStore.getList(),
                 currentUser:        currentUser,
                 accessContent:      accessContent
@@ -181,7 +181,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         });
         var tab = new dijit.layout.ContentPane({
             id:        id,
-            title:     title
+            title:     phpr.nls.get(title)
         });
         tab.attr('content', html);
         this.form.addChild(tab);
@@ -283,8 +283,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
             writePermissions:  this._writePermissions,
             deletePermissions: this._deletePermissions,
-            saveText:          phpr.nls.get('save'),
-            deleteText:        phpr.nls.get('deleteButton')
+            saveText:          phpr.nls.get('Save'),
+            deleteText:        phpr.nls.get('Delete')
         });
 
         // Action buttons for the form
