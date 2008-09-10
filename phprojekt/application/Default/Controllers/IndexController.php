@@ -71,7 +71,7 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->view->webpath  = Zend_Registry::get('config')->webpath;
-        $this->view->language = Zend_Registry::get('config')->language;
+        $this->view->language = Phprojekt_User_User::getSetting("language", Zend_Registry::get('config')->language);
         $this->render('index');
     }
 
