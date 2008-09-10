@@ -75,11 +75,11 @@ class Core_ModuleController extends Core_IndexController
 
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate('The Item was added correctly');
+            $message = $translate->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
 
-            $message = $translate->translate('The Item was edited correctly');
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 
         $model->saveModule($this->getRequest()->getParams());

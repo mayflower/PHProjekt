@@ -119,7 +119,7 @@ class TagController extends IndexController
         $string    = $this->getRequest()->getParam('string', '');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
         $module    = $this->getRequest()->getParam('moduleName', 'Project');
@@ -153,7 +153,7 @@ class TagController extends IndexController
         $id     = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
         $module    = $this->getRequest()->getParam('moduleName', 'Project');

@@ -42,12 +42,12 @@ class Calendar_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $translate  = Zend_Registry::get('translate');
-        $message    = $translate->translate('The Item was added correctly');
+        $message    = $translate->translate(self::ADD_TRUE_TEXT);
         $id         = (int)$this->getRequest()->getParam('id');
 
         // getting the main row if the group if an id is provided
         if (!empty($id)) {
-            $message = $translate->translate('The Item was edited correctly');
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 
         $id = (int)Calendar_Models_Calendar::saveEvent($this->getRequest());
@@ -95,7 +95,7 @@ class Calendar_IndexController extends IndexController
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
         $model = $this->getModelObject()->find($id);
@@ -103,7 +103,7 @@ class Calendar_IndexController extends IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $model->deleteRelatedEvents();
             $model->delete();
-            $message = $translate->translate('The Item was deleted correctly');
+            $message = $translate->translate(self::DELETE_TRUE_TEXT);
             $return  = array('type'    => 'success',
                              'message' => $message,
                              'code'    => 0,
@@ -111,7 +111,7 @@ class Calendar_IndexController extends IndexController
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
-            throw new Phprojekt_PublishedException('Item not found');
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
 

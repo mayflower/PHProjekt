@@ -48,7 +48,7 @@ class Phprojekt_PublishedException extends Exception
 	 * @param integer $code     An optional error code
 	 */
     public function __construct($message, $code = 0) {
-        $this->message = $message;
+        $this->message = Zend_Registry::get("translate")->translate($message);
         $this->code    = $code;
     }
 }

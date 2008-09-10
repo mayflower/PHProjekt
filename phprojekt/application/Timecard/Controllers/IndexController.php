@@ -119,7 +119,7 @@ class Timecard_IndexController extends IndexController
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
         $model = Phprojekt_Loader::getModel('Timecard','Timeproj')->find($id);
@@ -127,9 +127,9 @@ class Timecard_IndexController extends IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
             if ($tmp === false) {
-                $message = $translate->translate("The Item can't be deleted");
+                $message = $translate->translate(self::DELETE_FALASE_TEXT);
             } else {
-                $message = $translate->translate('The Item was deleted correctly');
+                $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
             $return  = array('type'    => 'success',
                              'message' => $message,
@@ -138,7 +138,7 @@ class Timecard_IndexController extends IndexController
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
-            throw new Phprojekt_PublishedException('Item not found');
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
         
@@ -151,7 +151,7 @@ class Timecard_IndexController extends IndexController
     {
         $translate = Zend_Registry::get('translate');
         $model     = $this->getModelObject();
-        $message   = $translate->translate('The Item was added correctly');
+        $message   = $translate->translate(self::ADD_TRUE_TEXT);
 
         $this->getRequest()->setParam('date', date("Y-m-d"));
         $this->getRequest()->setParam('startTime', date("H:i:s"));
@@ -191,11 +191,11 @@ class Timecard_IndexController extends IndexController
             $model = $records[0];
             Default_Helpers_Save::save($model, $this->getRequest()->getParams());
             $type    = 'success';
-            $message = $translate->translate('The Item was saved correctly');
+            $message = $translate->translate(self::ADD_TRUE_TEXT);
             $showId  = $model->id;
         } else {
             $type    = 'error';
-            $message = $translate->translate('The Item was not found');
+            $message = $translate->translate(self::NOT_FOUND);
             $showId  = null;
         }
 
@@ -216,7 +216,7 @@ class Timecard_IndexController extends IndexController
     {
         $translate = Zend_Registry::get('translate');
         $model     = Phprojekt_Loader::getModel('Timecard','Timeproj');
-        $message   = $translate->translate('The Item was added correctly');
+        $message   = $translate->translate(self::ADD_TRUE_TEXT);
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 

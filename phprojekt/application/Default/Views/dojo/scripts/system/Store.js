@@ -72,7 +72,9 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
         var modules = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in modules) {
-            this._list.push({"id":modules[i]['id'],"name":modules[i]['name'],
+            this._list.push({"id":modules[i]['id'],
+			                 "name":modules[i]['name'],
+							 "label":modules[i]['label'],
                              "inProject":modules[i]['inProject']})
         }
     }

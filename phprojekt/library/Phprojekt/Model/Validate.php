@@ -69,7 +69,7 @@ class Phprojekt_Model_Validate
                                 $validated = false;
                                 $this->error->addError(array(
                                 'field'   => $this->_translate->translate($varname),
-                                'message' => $error));
+                                'message' => $this->_translate->translate($error)));
                                 break;
                             }
                         }

@@ -12,13 +12,13 @@ dojo.declare("phpr.Role.Form", phpr.Core.Form, {
 
     addBasicFields:function() {
         this.formdata += this.render(["phpr.Core.Role.template", "formAccess.html"], null, {
-        	accessModuleText: phpr.nls.get('accessModule'),
-            accessReadText: phpr.nls.get('accessRead'),
-            accessWriteText: phpr.nls.get('accessWrite'),
-            accessCreateText: phpr.nls.get('accessCreate'),
-            accessAdminText: phpr.nls.get('accessAdmin'),
-            labelfor: phpr.nls.get('accessAccess'),
-            label: phpr.nls.get('accessAccess'),
+        	accessModuleText: phpr.nls.get('Module'),
+            accessReadText: phpr.nls.get('Read'),
+            accessWriteText: phpr.nls.get('Write'),
+            accessCreateText: phpr.nls.get('Create'),
+            accessAdminText: phpr.nls.get('Admin'),
+            labelfor: phpr.nls.get('Access'),
+            label: phpr.nls.get('Access'),
 			modules: this.roleModuleAccessStore.getList()
         });
     },

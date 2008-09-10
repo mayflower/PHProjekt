@@ -70,9 +70,9 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['position'] = 3;
         $data['fieldset'] = '';
         $data['range'][]    = array('id'   => '0',
-                                    'name' => $translate->translate('no'));
+                                    'name' => $translate->translate('No'));
         $data['range'][]    = array('id'   => '1',
-                                    'name' => $translate->translate('yes'));
+                                    'name' => $translate->translate('Yes'));
         $data['required'] = false;
         $data['readOnly'] = false;
 

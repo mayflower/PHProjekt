@@ -1,45 +1,124 @@
 <?php
+// General
+$lang["Module"] = "Module";
+$lang["Active"] = "Active";
+$lang["Role"] = "Role";
+$lang["Start"] = "Start";
+$lang["End"] = "End";
+$lang["Project"] = "Project";
+$lang["Tag"] = "Tag";
+$lang["No"] = "No";
+$lang["Yes"] = "Yes";
+$lang["Count"] = "Count";
 
-// Navigation
-$lang["search"] = "Suche";
-$lang["administration"] = "Verwaltung";
-$lang["administrator"] = "Verwalter";
-$lang["settings"] = "Rahmen";
-$lang["timecard"] = "Stechkarte";
-$lang["timecardOverview"] = "&Uuml;berblick";
-$lang["timecardWorkingtime"] = "Das Hervorbringen von Zeit";
-$lang["timecardWorkingtimeStart"] = "Anfang";
-$lang["timecardWorkingtimeStop"] = "Halt";
-$lang["help"] = "Hilfe";
-$lang["logout"] = "Logout";
-
-// Form Buttons
-$lang["save"] = "Ballabwehr";
-$lang["deleteButton"] = "L&ouml;schen Sie";
-
-// Grid
-$lang["noresults"] = "Das ist keine Ergebnisse";
-$lang["gridCantEdit"] = "Sie haben keine Berechtigung auf dieses Item zuzugreifen";
+// General Fiels
+$lang["project"] = "Project";
+$lang["notes"] = "Notes";
+$lang["date"] = "Date";
+$lang["name"] = "Name";
+$lang["label"] = "Label";
+$lang["active"] = "Active";
+$lang["username"] = "Username";
+$lang["password"] = "Password";
+$lang["firstname"] = "Firstname";
+$lang["lastname"] = "Lastname";
+$lang["email"] = "Email";
+$lang["language"] = "Language";
+$lang["status"] = "Status";
+$lang["title"] = "Title";
+$lang["parent"] = "Project";
+$lang["projectId"] = "Project";
+$lang["startDate"] = "Start Date";
+$lang["endDate"] = "End Date";
+$lang["priority"] = "Priority";
+$lang["currentStatus"] = "Current Status";
+$lang["completePercent"] = "Complete Percent";
+$lang["budget"] = "Budget";
+$lang["UserId"] = "User";
+$lang["ItemId"] = "Item";
+$lang["Field"] = "Field";
+$lang["OldValue"] = "Old Value";
+$lang["NewValue"] = "New Value";
+$lang["Datetime"] = "Datetime";
+$lang["comments"] = "Comments";
+$lang["category"] = "Category";
+$lang["participantId"] = "Participant";
+$lang["startTime"] = "Start Time";
+$lang["endTime"] = "End Time";
+$lang["sum"] = "Sum";
+$lang["bookings"] = "Bookings";
+$lang["amount"] = "Amount";
+$lang["serialType"] = "Serial Type";
+$lang["serialDays"] = "Serial Days";
 
 // Access
-$lang["accessUser"] = "Verbraucher";
-$lang["accessRead"] = "Read";
-$lang["accessWrite"] = "Write";
-$lang["accessAccess"] = "Acces";
-$lang["accessCreate"] = "Create";
-$lang["accessCopy"] = "Copy";
-$lang["accessDelete"] = "Delete";
-$lang["accessDownload"] = "Download";
-$lang["accessAdmin"] = "Admin";
-$lang["accessNone"] = "None";
-$lang["accessAction"] = "Aktion";
-$lang["accessModule"] = "Module";
-$lang["accessRole":  "Rol";
+$lang["User"] = "User";
+$lang["Read"] = "Read";
+$lang["Write"] = "Write";
+$lang["Create"] = "Create";
+$lang["Access"] = "Access";
+$lang["Copy"] = "Copy";
+$lang["Download"] = "Download";
+$lang["Admin"] = "Admin";
+$lang["None"] = "None";
+$lang["Action"] = "Action";
 
-// Modules
-$lang["moduleName"] = "Module";
-$lang["moduleActive"] = "Active";
+// Buttons
+$lang["Save"] = "Save";
+$lang["Delete"] = "Delete";
 
-$lang["tagResults"] = "Tags Ergebnisse";
-$lang["searchResults"] = "Such Ergebnisse";
+// Messages
+$lang["The are no results"] = "The are no results";
+$lang["You do not have access for edit this item"] = "You do not have access for edit this item";
+$lang["The Item was added correctly"] = "The Item was added correctly";
+$lang["The Item was edited correctly"] = "The Item was edited correctly";
+$lang["The Items was edited correctly"] = "The Items was edited correctly";
+$lang["The Item can't be deleted"] = "The Item can't be deleted";
+$lang["The Item was deleted correctly"] = "The Item was deleted correctly";
+$lang["Is a required field"] = "Is a required field";
+$lang["Invalid format for date"] = "Invalid format for date";
+$lang["Invalid Format"] = "Invalid Format";
+$lang["The Tags was added correctly"] = "The Tags was added correctly";
+$lang["The Tags was deleted correctly"] = "The Tags was deleted correctly";
+$lang["The Item was not found"] = "The Item was not found";
+$lang["You do not have write access into the parent project"] = "You do not have write access into the parent project";
+$lang["You do not have access for add projects on the parent project"] = "You do not have access for add projects on the parent project";
+$lang["The parent project do not have enabled this module"] = "The parent project do not have enabled this module";
+$lang["The project can not saved under itself"] = "The project can not saved under itself";
+$lang["The project can not saved under his children"] = "The project can not saved under his children";
+$lang["ID parameter required"] = "ID parameter required";
+$lang["Invalid module or item"] = "Invalid module or item";
+$lang["Module not given"] = "Module not given";
+$lang["Module not found"] = "Module not found";
+$lang["Expect two arguments"] = "Expect two arguments";
+$lang["Second parameter needs to be an array"] = "Second parameter needs to be an array";
+$lang["No parent id found in parameters or passed"] = "No parent id found in parameters or passed";
+
+// System Modules
+$lang["Administration"] = "Administration";
+$lang["Calendar"] = "Calendar";
+$lang["Note"] = "Note";
+$lang["Settings"] = "Setting";
+$lang["Timecard"] = "Timecard";
+$lang["Todo"] = "Todo";
+$lang["Help"] = "Help";
+$lang["Logout"] = "Logout";
+$lang["Groups"] = "Group";
+$lang["Role"] = "Role";
+$lang["Tab"] = "Tab";
+$lang["User"] = "User";
+$lang["History"] = "History";
+$lang["Basic Data"] = "Basic Data";
+
+// Titles
+$lang["Search results"] = "Search results";
+$lang["Tag results"] = "Tag results";
+
+// Special System words of the module
+// Timecard
+$lang["Working Times"] = "Working Times";
+$lang["Start working time"] = "Start working time";
+$lang["Stop working time"] = "Stop working time";
+$lang["Hours"] = "Hours";
+$lang["The end time must be after the start time"] = "The end time must be after the start time";
 ?>

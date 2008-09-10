@@ -48,9 +48,9 @@ class Phprojekt_Groups_Information extends EmptyIterator implements Phprojekt_Mo
         // name
         $data = array();
         $data['key']      = 'name';
-        $data['label']    = $translate->translate('name');
+        $data['label']    = $translate->translate('Name');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('name');
+        $data['hint']     = $translate->translate('Name');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';

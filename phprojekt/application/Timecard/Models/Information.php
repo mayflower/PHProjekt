@@ -82,9 +82,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 // date
                 $data = array();
                 $data['key']      = 'date';
-                $data['label']    = $translate->translate('Date');
+                $data['label']    = $translate->translate('date');
                 $data['type']     = 'date';
-                $data['hint']     = $translate->translate('Date');
+                $data['hint']     = $translate->translate('date');
                 $data['order']    = 0;
                 $data['position'] = 1;
                 $data['fieldset'] = '';
@@ -97,9 +97,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         		// Sum of hours
                 $data = array();
                 $data['key']      = 'sum';
-                $data['label']    = $translate->translate('Sum');
+                $data['label']    = $translate->translate('sum');
                 $data['type']     = 'time';
-                $data['hint']     = $translate->translate('Sum');
+                $data['hint']     = $translate->translate('sum');
                 $data['order']    = 0;
                 $data['position'] = 2;
                 $data['fieldset'] = '';
@@ -112,9 +112,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 // Sum of Bookinks
                 $data = array();
                 $data['key']      = 'bookings';
-                $data['label']    = $translate->translate('Bookings');
+                $data['label']    = $translate->translate('bookings');
                 $data['type']     = 'time';
-                $data['hint']     = $translate->translate('Bookings');
+                $data['hint']     = $translate->translate('bookings');
                 $data['order']    = 0;
                 $data['position'] = 3;
                 $data['fieldset'] = '';

@@ -136,7 +136,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Administration
         var button = new dijit.form.Button({
             id:        "globalModuleAdmin",
-            label:     phpr.nls.get('administration'),
+            label:     phpr.nls.get('Administration'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 dojo.publish("Administration.reload");
@@ -149,7 +149,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Settings
         var button = new dijit.form.Button({
             id:        "globalModuleSettings",
-            label:     phpr.nls.get('settings'),
+            label:     phpr.nls.get('Settings'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 dojo.publish("Settings.reload");
@@ -182,7 +182,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Help
                 var button = new dijit.form.Button({
                     id:        "globalModuleHelp",
-                    label:     phpr.nls.get('help'),
+                    label:     phpr.nls.get('Help'),
                     showLabel: true
                 });
                 toolbar.addChild(button);
@@ -192,7 +192,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Logout
                 var button = new dijit.form.Button({
                     id:        "globalModuleLogout",
-                    label:     phpr.nls.get('logout'),
+                    label:     phpr.nls.get('Logout'),
                     showLabel: true,
                     onClick:   dojo.hitch(this, function() {
                         location = phpr.webpath+"index.php/Login/logout";
@@ -507,7 +507,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             words = dojo.byId("searchfield").value;
         }
         var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words;
-        var resultsTitle = phpr.nls.get('searchResults');
+        var resultsTitle = phpr.nls.get('Search results');
         this.showResults(getDataUrl, resultsTitle);
     },
 
@@ -594,7 +594,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    The server return the found records and the function display it
         var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
-        var resultsTitle = phpr.nls.get('tagResults');
+        var resultsTitle = phpr.nls.get('Tag results');
         this.showResults(getDataUrl, resultsTitle);
     },
 

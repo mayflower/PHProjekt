@@ -33,6 +33,14 @@
  */
 class IndexController extends Zend_Controller_Action
 {
+	const ADD_TRUE_TEXT           = "The Item was added correctly";
+	const EDIT_TRUE_TEXT          = "The Item was edited correctly";
+	const EDIT_MULTIPLE_TRUE_TEXT = "The Items was edited correctly";
+    const DELETE_FALASE_TEXT      = "The Item can't be deleted";
+    const DELETE_TRUE_TEXT        = "The Item was deleted correctly";
+    const NOT_FOUND               = "The Item was not found";
+    const ID_REQUIRED_TEXT        = "ID parameter required";
+                
     /**
      * Init function
      *
@@ -166,10 +174,10 @@ class IndexController extends Zend_Controller_Action
 
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate('The Item was added correctly');
+            $message = $translate->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate('The Item was edited correctly');
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
@@ -200,7 +208,7 @@ class IndexController extends Zend_Controller_Action
         $translate = Zend_Registry::get('translate');
         $data      = (array) $this->getRequest()->getParam('data');
 
-        $message = $translate->translate('The Items was edited correctly');
+        $message = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId = array();
         foreach ($data as $id => $fields) {
             $model   = $this->getModelObject()->find($id);
@@ -234,7 +242,7 @@ class IndexController extends Zend_Controller_Action
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException('ID parameter required');
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
         $model = $this->getModelObject()->find($id);
@@ -242,9 +250,9 @@ class IndexController extends Zend_Controller_Action
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
             if ($tmp === false) {
-                $message = $translate->translate("The Item can't be deleted");
+                $message = $translate->translate(self::DELETE_FALASE_TEXT);
             } else {
-                $message = $translate->translate('The Item was deleted correctly');
+                $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
             $return  = array('type'    => 'success',
                              'message' => $message,
@@ -253,7 +261,7 @@ class IndexController extends Zend_Controller_Action
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
-            throw new Phprojekt_PublishedException('Item not found');
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
 

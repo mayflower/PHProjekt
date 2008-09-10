@@ -30,12 +30,12 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         phpr.destroyWidgets("tabModules");
         if (this._accessPermissions) {
             var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
-                moduleNameText:   phpr.nls.get('moduleName'),
-                moduleActiveText: phpr.nls.get('moduleActive'),
+                moduleNameText:   phpr.nls.get('Module'),
+                moduleActiveText: phpr.nls.get('Active'),
                 modules:          this.moduleStore.getList()
             });
 
-            this.addTab(modulesData, 'tabModules', 'Modules', 'moduleFormTab');
+            this.addTab(modulesData, 'tabModules', 'Module', 'moduleFormTab');
         }
     },
 
@@ -50,15 +50,15 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         if (this._accessPermissions) {
             var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
-                accessUserText:   phpr.nls.get('accessUser'),
-                accessRoleText:   phpr.nls.get('accessRole'),
-                accessActionText: phpr.nls.get('accessAction'),
+                accessUserText:   phpr.nls.get('User'),
+                accessRoleText:   phpr.nls.get('Role'),
+                accessActionText: phpr.nls.get('Action'),
                 users:            this.userStore.getList(),
                 roles:            this.roleStore.getList(),
                 relations:        relationList
             });
 
-            this.addTab(rolesData, 'tabRoles', 'Roles', 'roleFormTab');
+            this.addTab(rolesData, 'tabRoles', 'Role', 'roleFormTab');
 
             // add button for role-user
             var params = {
