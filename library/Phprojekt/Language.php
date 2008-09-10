@@ -31,6 +31,8 @@
  */
 class Phprojekt_Language extends Zend_Translate
 {
+	private $_locale = null;
+	
     /**
      * Constructor function
      *
@@ -48,8 +50,8 @@ class Phprojekt_Language extends Zend_Translate
      */
     public function __construct($locale)
     {
-        $data = PHPR_ROOT_PATH . '/languages/' . $locale . '.inc.php';
-
+        $data = PHPR_CORE_PATH . '/Default/Languages/';
+        $this->_loacale = $locale;
         $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
     }
 
@@ -76,8 +78,9 @@ class Phprojekt_Language extends Zend_Translate
     {
         if (null !== $locale) {
             $this->_loadLangFile($locale);
+            $this->_loacale = $locale;
         }
-        return utf8_encode($this->_adapter->translate($message, $locale));
+        return $this->_adapter->translate($message, $this->_loacale);
     }
 
     /**
@@ -95,9 +98,26 @@ class Phprojekt_Language extends Zend_Translate
     private function _loadLangFile($locale)
     {
         if (false === $this->_adapter->isLoaded($locale)) {
-            $data = PHPR_ROOT_PATH . '/languages/' . $locale . '.inc.php';
+            $data = PHPR_CORE_PATH . '/Default/Languages/';
 
             $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
         }
+    }
+    
+    /**
+     * Return all the trasnlated strings for the $locale
+     *
+     * @param string|Zend_Locale $locale Locale/Language to set,
+     *                                   identical with Locale identifiers
+     *                                   see Zend_Locale for more information
+     * 
+     * @return array
+     */
+    public function getTranslatedStrings($locale)
+    {
+        if (null !== $locale) {
+            $this->_loadLangFile($locale);
+        }
+        return $this->_adapter->getTranslatedStrings($locale);
     }
 }
