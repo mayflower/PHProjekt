@@ -126,9 +126,8 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
      * @return array
      */    
     public function getRecords($date)
-    {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');        
-        $where  = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $date);
+    {       
+        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
         $order  = ' projectId ASC ';    
         $models = $this->fetchAll($where, $order);
         

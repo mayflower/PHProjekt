@@ -51,12 +51,11 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     public function saveFields($object, $action)
     {
         if (is_object($object) === true) {
-            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-            $differences   = $this->_getDifferences($object, $action);
+            $differences = $this->_getDifferences($object, $action);
 
             foreach ($differences as $fieldName => $difference) {
                 $history               = clone($this);
-                $history->userId       = $authNamespace->userId;
+                $history->userId       = Phprojekt_Auth::getUserId();
                 $history->moduleId     = Phprojekt_Module::getId($object->getTableName());
                 $history->itemId       = $object->id;
                 $history->field        = $fieldName;

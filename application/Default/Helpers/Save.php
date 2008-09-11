@@ -56,8 +56,7 @@ final class Default_Helpers_Save
         }
 
         // Set the owner
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $node->ownerId = $authNamespace->userId;
+        $node->ownerId = Phprojekt_Auth::getUserId();
 
         // Parent Project
         if (!isset($node->projectId) || null === $node->projectId) {
@@ -93,7 +92,7 @@ final class Default_Helpers_Save
             $right['download'] = true;
             $right['admin']    = true;
 
-            $rights[$authNamespace->userId] = Phprojekt_Acl::convertArrayToBitmask($right);
+            $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
             if (isset($params['dataAccess'])) {
                 $ids = array_keys($params['dataAccess']);
                 foreach ($ids as $accessId) {
@@ -152,10 +151,9 @@ final class Default_Helpers_Save
             }
         }
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         // Set the owner
         if (isset($model->ownerId)) {
-            $model->ownerId = $authNamespace->userId;
+            $model->ownerId = Phprojekt_Auth::getUserId();
         }
 
         // Parent Project
@@ -189,7 +187,7 @@ final class Default_Helpers_Save
             $right['download'] = true;
             $right['admin']    = true;
 
-            $rights[$authNamespace->userId] = Phprojekt_Acl::convertArrayToBitmask($right);
+            $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
             if (isset($params['dataAccess'])) {
                 $ids = array_keys($params['dataAccess']);
                 foreach ($ids as $accessId) {

@@ -146,10 +146,8 @@ class Phprojekt_Search_Default
         $result = $this->_words->searchWords($words, $count, $offset);
         // Convert result to array and add the display data
         // only fetch records with read access
-        $foundResults = array();
-
-        $authNamespace   = new Zend_Session_Namespace('PHProjekt_Auth');
-        $userId          = $authNamespace->userId;
+        $foundResults    = array();
+        $userId          = Phprojekt_Auth::getUserId();
         $tmpFoundResults = array();
         foreach ($result as $wordData) {
             $tmpResult = $this->_wordModule->searchModuleByWordId($wordData['id'], $count, $offset);

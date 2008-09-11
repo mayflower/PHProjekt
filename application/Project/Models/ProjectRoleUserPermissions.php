@@ -37,9 +37,8 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
      */
     function getProjectRoleUserPermissions($projectId)
     {
-        $roles         = array();
-        $model         = new Phprojekt_Role_Role();
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $roles = array();
+        $model = new Phprojekt_Role_Role();
 
         foreach ($model->fetchAll(null, ' name ASC ') as $role) {
             $roles['data'][$role->id] = array();
@@ -48,7 +47,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             $roles['data'][$role->id]['users'] = array();
         }
         $where  = ' ProjectRoleUserPermissions.projectId = ' . $projectId;
-        $where .= ' AND User.id != '. (int) $authNamespace->userId;
+        $where .= ' AND User.id != '. (int) Phprojekt_Auth::getUserId();
         $order  = ' ProjectRoleUserPermissions.userId ASC';
         $select = ' User.username ';
         $join   = ' LEFT JOIN User ON User.id = ProjectRoleUserPermissions.userId ';

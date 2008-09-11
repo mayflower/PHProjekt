@@ -148,9 +148,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
             $values = $rightNamespace->right;
         } else {
-            $db            = Zend_Registry::get('db');
-            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-
+            $db     = Zend_Registry::get('db');
             $user   = new Phprojekt_User_User($db);
             $where  = array();
             $values = array();
@@ -162,7 +160,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             foreach ($rows as $row) {
                 $row['userName'] = $user->findUserById($row['userId'])->username;
                 $row = array_merge($row, Phprojekt_Acl::convertBitmaskToArray($row['access']));
-                if ($authNamespace->userId == $row['userId']) {
+                if (Phprojekt_Auth::getUserId() == $row['userId']) {
                     $values['currentUser'] = $row;
                 } else {
                     $values[$row['userId']] = $row;
