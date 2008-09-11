@@ -32,13 +32,13 @@ class Phprojekt_LanguageTest extends PHPUnit_Framework_TestCase
     public function testTranslate()
     {
         $lang = new Phprojekt_Language('es');
-        $string = $lang->translate('Saved');
-        $this->assertEquals('Grabado', $string);
+        $string = $lang->translate('Delete');
+        $this->assertEquals('Borrar', $string);
 
         $string = $lang->translate('stringNotTranslated');
         $this->assertEquals('stringNotTranslated', $string);
 
-        $string = $lang->translate('Saved','de');
-        $this->assertEquals('Gespeichert', $string);
+        $string = $lang->translate('Delete','en');
+        $this->assertEquals('Delete', $string);
     }
 }

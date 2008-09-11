@@ -33,7 +33,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
@@ -106,7 +106,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Anzahl"}],"data":[{"string":"this","count":1}') > 0);
+        $this->assertTrue(strpos($response, '"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],"data":[{"string":"this","count":1}') > 0);
     }
 
     /**
@@ -118,7 +118,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
@@ -200,7 +200,7 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Tag','module'=>'Default'));
 
@@ -273,6 +273,6 @@ class Phprojekt_TagController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '{"id":"1","moduleId":"1","moduleName":"Project","firstDisplay":"test","secondDisplay":null,"projectId":"1"}') > 0);
+        $this->assertTrue(strpos($response, '{"id":"1","moduleId":"1","moduleName":"Project","moduleLabel":"Project","firstDisplay":"test","secondDisplay":null,"projectId":"1"}') > 0);
     }
 }

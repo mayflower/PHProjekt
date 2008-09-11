@@ -453,7 +453,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'User'));
 
@@ -545,7 +545,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'User'));
 
