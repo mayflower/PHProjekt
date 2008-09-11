@@ -69,13 +69,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     protected $_rights = null;
 
     /**
-     * History data of the fields
-     *
-     * @var array
-     */
-    public $history = array();
-
-    /**
      * Field for display in the search results
      *
      * @var string
@@ -134,7 +127,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         return new Phprojekt_DatabaseManager_Field($this->getInformation(),
         $this->key(),
         parent::current());
-        // return parent::current();
     }
 
     /**

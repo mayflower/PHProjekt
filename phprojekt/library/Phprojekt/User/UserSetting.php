@@ -63,26 +63,11 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      *
      * @param int $userId - if a different user of the current user is needed
      */
-    public function __construct($userId = null, $moduleId = null) {
-
+    public function __construct() {
         parent::__construct();
-
-        $this->_config = Zend_Registry::get('config');
-
-        if (empty($userId)) {
-            $userId = Phprojekt_Auth::getUserId();
-        }
-
-        if (empty($moduleId)) {
-            $moduleId = Phprojekt_Module::getId('Project');
-        }
-
-        $this->_userId = (int)$userId;
-
-        $this->_moduleId = (int)$moduleId;
-
-
-
+        $this->_config   = Zend_Registry::get('config');
+        $this->_userId   = Phprojekt_Auth::getUserId();
+        $this->_moduleId = Phprojekt_Module::getId('Project');
     }
 
     /**
