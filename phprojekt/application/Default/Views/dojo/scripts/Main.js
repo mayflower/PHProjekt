@@ -460,10 +460,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     var index         = 0;
                     for(var i = 0; i < data.length; i++) {
                         modulesData = data[i];
-                        if (!results[modulesData.moduleName]) {
-                            results[modulesData.moduleName] = '';
+                        if (!results[modulesData.moduleLabel]) {
+                            results[modulesData.moduleLabel] = '';
                         }
-                        results[modulesData.moduleName] += self.render(["phpr.Default.template.results", "results.html"], null, {
+                        results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"], null, {
                             id :           modulesData.id,
                             moduleId :     modulesData.modulesId,
                             moduleName:    modulesData.moduleName,
@@ -473,13 +473,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                             resultType:    "search"
                         });
                     }
-                    var moduleName = '';
-                    var html       = '';
+                    var moduleLabel = '';
+                    var html        = '';
                     for (var i in results) {
-                        moduleName = i;
+                        moduleLabel = i;
                         html       = results[i];
                         search += self.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
-                            moduleName:    moduleName,
+                            moduleLabel:   moduleLabel,
                             results:       html
                         });
                     }
@@ -629,10 +629,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 var index         = 0;
                 for(var i = 0; i < data.length; i++) {
                     modulesData = data[i];
-                    if (!results[modulesData.moduleName]) {
-                        results[modulesData.moduleName] = '';
+                    if (!results[modulesData.moduleLabel]) {
+                        results[modulesData.moduleLabel] = '';
                     }
-                    results[modulesData.moduleName] += self.render(["phpr.Default.template.results", "results.html"], null, {
+                    results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"], null, {
                         id :           modulesData.id,
                         moduleId :     modulesData.modulesId,
                         moduleName:    modulesData.moduleName,
@@ -642,13 +642,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         resultType:    "tag"
                     });
                 }
-                var moduleName = '';
+                var moduleLabel = '';
                 var html       = '';
                 for (var i in results) {
-                    moduleName = i;
+                    moduleLabel = i;
                     html       = results[i];
                     search += self.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
-                        moduleName:    moduleName,
+                        moduleLabel:   moduleLabel,
                         results:       html
                     });
                 }
