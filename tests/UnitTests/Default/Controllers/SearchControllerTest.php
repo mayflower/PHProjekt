@@ -33,7 +33,7 @@ class Phprojekt_SearchController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonGetTags','controller'=>'Search','module'=>'Default'));
 
@@ -106,8 +106,6 @@ class Phprojekt_SearchController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"id":"1","moduleId":"1","moduleName":"Project","firstDisplay":"test"') > 0);
+        $this->assertTrue(strpos($response, '"id":"1","moduleId":"1","moduleName":"Project","moduleLabel":"Project","firstDisplay":"test"') > 0);
     }
-
-
 }

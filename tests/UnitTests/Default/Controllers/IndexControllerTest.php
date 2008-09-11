@@ -33,7 +33,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setModuleName('Default');
 
@@ -118,7 +118,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Project'));
 
@@ -191,7 +191,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2')) > 0);
         $this->assertTrue(strpos($response, '"numRows":6}') > 0);
     }
 
@@ -204,7 +204,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Project'));
 
@@ -277,7 +277,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Titel","type":"textfield","hint":"title","order":0,"position":2,"fieldset":')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":')) > 0);
     }
 
     /**
@@ -289,7 +289,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonDetail','controller'=>'index','module'=>'Project'));
 
@@ -375,7 +375,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonDetail','controller'=>'index','module'=>'Project'));
 
@@ -461,7 +461,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonTree','controller'=>'index','module'=>'Project'));
 
@@ -547,7 +547,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonGetModulesPermission','controller'=>'index','module'=>'Project'));
 
@@ -634,7 +634,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonGetModulesPermission','controller'=>'index','module'=>'Project'));
 
@@ -719,7 +719,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonDelete','controller'=>'index','module'=>'Project'));
 
@@ -811,7 +811,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Project'));
 
@@ -904,7 +904,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $response = new Zend_Controller_Response_Http();
 
         $config = Zend_Registry::get('config');
-        $config->language = "de";
+        $config->language = "en";
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Project'));
 
