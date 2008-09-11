@@ -27,16 +27,6 @@
 class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * Has many and belongs to many declrations
-     *
-     * @var array
-     */
-    public $hasManyAndBelongsToMany = array('users' => array('module' => 'User',
-                                                             'model'  => 'User'),
-                                            'projects'=> array('module' => 'Project',
-                                                               'model'  => 'Project'));
-
-    /**
      * Id of user
      * @var int $user
      */
@@ -138,12 +128,28 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Delete a role and all his relations. It prevents deletion of role 1 -admin role-
+     * Delete a role and all his relations.
+     * It prevents deletion of role 1 -admin role-
      *
      * @return void
      */
-    public function delete() {
-        if ((!empty($this->id)) && ($this->id != 1)) {
+    public function delete()
+    {
+        if ($this->id > 1) {
+            // Delete role-module relation
+            $relations = new Phprojekt_Role_RoleModulePermissions();
+            $records = $relations->fetchAll('roleId = ' . $this->id);
+            foreach ($records as $record) {
+                $record->delete();
+            }
+            
+            // Delete project-role-user relation    
+            $relations = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+            $records = $relations->fetchAll('roleId = ' . $this->id);
+            foreach ($records as $record) {
+                $record->delete();
+            }
+                        
             parent::delete();
         }
     }
