@@ -150,17 +150,25 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Extencion of the Active Record deletion to prevent deletion of module 1 (project)
+     * Prevent delete modules from the Frontend
+     * For delete modules use safeDelete
      *
      * @return void
      */
     public function delete()
     {
-        if ($this->id != 1) {
-            parent::delete();
-        }
     }
 
+    /**
+     * Delete all the entries for the current module
+     * This function is used by the system when a folder module is deleted
+     *
+     * @return void
+     */
+    public function safeDelete() {
+        parent::delete();
+    }
+        
     /**
      * Return the error data
      *

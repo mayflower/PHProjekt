@@ -39,7 +39,6 @@ DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
 DROP TABLE IF EXISTS `Calendar`;
 
-
 --
 -- Table structure for table `DatabaseManager`
 --
@@ -116,10 +115,7 @@ CREATE TABLE `GroupsUserRelation` (
   `id` int NOT NULL AUTO_INCREMENT,
   `groupsId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 
@@ -136,15 +132,8 @@ CREATE TABLE `History` (
   `newValue` varchar(255) default NULL,
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
 );
-CREATE INDEX `History_userId` ON `History`(`userId`);
 
 
 --
@@ -164,12 +153,8 @@ CREATE TABLE `Project` (
   `completePercent` float default '0',
   `hourlyWageRate` float default NULL,
   `budget` float default NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`ownerId`) REFERENCES User(`id`)
-  ON DELETE SET NULL
-  ON UPDATE SET NULL
+  PRIMARY KEY (`id`)
 );
-CREATE INDEX `Project_ownerId` ON `Project`(`ownerId`);
 
 
 --
@@ -179,13 +164,7 @@ CREATE TABLE `ProjectModulePermissions` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `moduleId` int(11) NOT NULL,
     `projectId` int(11) NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (`id`)
 );
 
 
@@ -208,16 +187,7 @@ CREATE TABLE `ProjectRoleUserPermissions` (
   `projectId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `roleId` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`projectId`) REFERENCES Project(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  FOREIGN KEY (`userId`) REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  FOREIGN KEY (`roleId`) REFERENCES Role(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
 );
 
 
@@ -229,13 +199,7 @@ CREATE TABLE `RoleModulePermissions` (
   `roleId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
   `access` int(3) NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`roleId`) REFERENCES Role(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 
@@ -246,9 +210,7 @@ CREATE TABLE `Todo` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL,
   `notes` text default NULL,
-  `ownerId` int(11) default NULL REFERENCES Role(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `startDate` date default NULL,
   `endDate` date default NULL,
@@ -268,15 +230,9 @@ CREATE TABLE `UserSetting` (
   `keyValue` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   `identifier`  varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
 );
-CREATE INDEX `UserSetting_userId` ON `UserSetting`(`userId`);
+
 
 --
 -- Table structure for table `SearchWords`
@@ -293,9 +249,7 @@ CREATE TABLE `SearchWords` (
 -- Table structure for table `SearchWordModule`
 --
 CREATE TABLE `SearchWordModule` (
-  `moduleId` int(11) REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `wordId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`,`wordId`)
@@ -306,9 +260,7 @@ CREATE TABLE `SearchWordModule` (
 -- Table structure for table `SearchDisplay`
 --
 CREATE TABLE `SearchDisplay` (
-  `moduleId` int(11) REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `firstDisplay` varchar(255),
   `secondDisplay` varchar(255),
@@ -333,9 +285,7 @@ CREATE TABLE `Tags` (
 --
 CREATE TABLE `TagsUsers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL  REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `userId` int(11) NOT NULL,
   `tagId` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
 );
@@ -345,13 +295,12 @@ CREATE TABLE `TagsUsers` (
 -- Table structure for table `TagsModules`
 --
 CREATE TABLE `TagsModules` (
-  `moduleId` int(11) NOT NULL  REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `tagUserId` int(11) NOT NULL,
   PRIMARY KEY  (`moduleId`, `itemId`, `tagUserId`)
 );
+
 
 --
 -- Table structure for table `Tab`
@@ -392,14 +341,10 @@ CREATE TABLE `Note` (
 --
 CREATE TABLE `Configuration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `moduleId` int(11) NOT NULL
-  REFERENCES Module(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `moduleId` int(11) NOT NULL,
   `key` varchar(255) NOT NULL,
   `value` text default NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`)
+  PRIMARY KEY  (`id`)
 );
 
 
@@ -411,11 +356,7 @@ CREATE TABLE `ItemRights` (
   `itemId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `access` int(3) NOT NULL,
-  PRIMARY KEY  (`moduleId`,`itemId`,`userId`),
-  FOREIGN KEY (`moduleId`) REFERENCES Module(`id`),
-  FOREIGN KEY (`userId`) REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE
+  PRIMARY KEY  (`moduleId`,`itemId`,`userId`)
 );
 
 
@@ -431,6 +372,7 @@ CREATE TABLE `Timecard` (
   PRIMARY KEY  (`id`)
 );
 
+
 --
 -- Table structure for table `Timeproj`
 --
@@ -438,13 +380,32 @@ CREATE TABLE `Timeproj` (
   `id` int(11) NOT NULL auto_increment,
   `notes` text default NULL,
   `ownerId` int(11) default NULL,
-  `projectId` int(11) REFERENCES Project(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  `projectId` int(11),
   `date` date default NULL,
   `amount` time default NULL,
   PRIMARY KEY  (`id`)
 );
+
+--
+-- Table structure for table `Calendar`
+--
+CREATE TABLE `Calendar` (
+  `id` int(11) NOT NULL auto_increment,
+  `title` varchar(255) default NULL,
+  `notes` text default NULL,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) NOT NULL,
+  `startDate` date default NULL,
+  `participantId` int(11) NOT NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
+  `parentId` int(11) default NULL,
+  `serialType` int(11) default NULL,
+  `serialDays` int(11) default NULL,
+  `endDate` date default NULL,
+  PRIMARY KEY  (`id`)
+);
+
 
 --
 -- Table structure for table `ModuleInstance`
@@ -456,31 +417,7 @@ CREATE TABLE `ModuleInstance` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 );
-CREATE INDEX `ModuleInstance_userId` ON `ModuleInstance`(`projectId`);
 
---
--- Table structure for table `Calendar`
---
-CREATE TABLE `Calendar` (
-  `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) default NULL,
-  `notes` text default NULL,
-  `ownerId` int(11) default NULL,
-  `projectId` int(11) REFERENCES Project(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  `startDate` date default NULL,
-  `participantId` int(11)  REFERENCES User(`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  `startTime` time default NULL,
-  `endTime` time default NULL,
-  `parentId` int(11) default NULL,
-  `serialType` int(11) default NULL,
-  `serialDays` int(11) default NULL,
-  `endDate` date default NULL,
-  PRIMARY KEY  (`id`)
-);
 
 --
 -- INSERT DATA
@@ -532,7 +469,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'participantId',1, 'participantId' , 'participantId'   , 'multipleSelectValues'  , 8, 1, NULL, 'User'     , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'startTime',  1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endTime',    1, 'endTime'  , 'endTime'  , 'time'    , 5, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'projectId',  1, 'project' , 'project'   , 'tree'    , 6, 1, NULL, 'Project', '', 7, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Calendar', 'projectId',  1, 'project' , 'project'   , 'tree'    , 6, 1, NULL, 'Project', '', 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Calendar', 'serialType', 1, 'serialType', 'serialType', 'selectValues', 7, 1, NULL, '1#Once|2#Daily|3#Weekly|4#Montlhy|5#Anually', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'serialDays', 1, 'serialDays', 'serialDays', 'selectValues', 7, 1, NULL, '0#All|1#Monday|2#Tuesday|3#Wednesday|4#Thursday|5#Friday|6#Saturday|7#Sunday', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'endDate',    1, 'endDate'  , 'endDate'  , 'date'    , 8, 1, NULL, NULL     , '', 5, 'center', 1, 0, '1', 0, 1, 0);
