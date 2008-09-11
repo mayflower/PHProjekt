@@ -140,7 +140,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getRecords($view, $year, $month, $count, $offset)
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $sortRecords   = array();
         
         if (strlen($month) == 1) {
@@ -148,13 +147,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }        
     	switch ($view) {
     		case 'today':
-    			$where   = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, date("Y-m-d"));
+    			$where   = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), date("Y-m-d"));
                 $order   = ' date ASC';
                 $records = $this->fetchAll($where, $order, $count, $offset);      
     			$data= $records;
     			break;
     		case 'month':    			
-                $where = sprintf('(ownerId = %d AND date LIKE "%s")', $authNamespace->userId, $year.'-'.$month.'-%');
+                $where = sprintf('(ownerId = %d AND date LIKE "%s")', Phprojekt_Auth::getUserId(), $year.'-'.$month.'-%');
                 $order = ' date ASC';
 
                 $records       = $this->fetchAll($where, $order, $count, $offset);      

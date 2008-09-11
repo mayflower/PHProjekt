@@ -48,18 +48,15 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function __construct()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $this->_user   = $authNamespace->userId;
-
-        $config = array('db' => Zend_Registry::get('db'));
-        parent::__construct($config);
+        $this->_user = Phprojekt_Auth::getUserId();
+        parent::__construct(array('db' => Zend_Registry::get('db')));
     }
 
     /**
      * Save a relation current user <-> tagId
      *
      * This function use the Zend_DB insert
-     * First check if the pair don´t exist
+     * First check if the pair donï¿½t exist
      *
      * @param integer $tagId  The Tagid
      *

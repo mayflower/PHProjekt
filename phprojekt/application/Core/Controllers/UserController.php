@@ -33,12 +33,11 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonGetUsersAction()
     {
-        $db            = Zend_Registry::get('db');
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $where         = array();
-        $where         = "status = 'A' AND id != ". (int)$authNamespace->userId;
-        $user          = new Phprojekt_User_User($db);
-        $records       = $user->fetchAll($where);
+        $db      = Zend_Registry::get('db');
+        $where   = array();
+        $where   = "status = 'A' AND id != ". (int)Phprojekt_Auth::getUserId();
+        $user    = new Phprojekt_User_User($db);
+        $records = $user->fetchAll($where);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }

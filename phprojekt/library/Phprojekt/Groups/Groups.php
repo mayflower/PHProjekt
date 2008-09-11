@@ -56,9 +56,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     {
         parent::__construct();
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $this->_userId = $authNamespace->userId;
-
+        $this->_userId             = Phprojekt_Auth::getUserId();
         $this->_informationManager = new Phprojekt_Groups_Information();
     }
 

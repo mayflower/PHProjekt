@@ -192,8 +192,7 @@ class Phprojekt_RoleRights
         if ($user != 0) {
             $this->_user = $user;
         } else {
-            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-            $this->_user   = $authNamespace->userId;
+            $this->_user = Phprojekt_Auth::getUserId();
         }
     }
 

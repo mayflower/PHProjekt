@@ -71,10 +71,9 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $date          = $this->getRequest()->getParam('date');
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $date = $this->getRequest()->getParam('date');
         
-        $where = sprintf('(ownerId = %d AND date = "%s")', $authNamespace->userId, $date);
+        $where = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
 
         $records = $this->getModelObject()->fetchAll($where);
 
