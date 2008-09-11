@@ -26,6 +26,8 @@
  */
 class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
+	public $hasMany = array('modulePermissions' => array('classname' => 'Phprojekt_Role_RoleModulePermissions'));
+	
     /**
      * Id of user
      * @var int $user
@@ -98,9 +100,16 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function saveRights($rights)
     {
-        $role    = new Phprojekt_Role_RoleModulePermissions();
-        $roleId  = $this->id;
-        $role->saveRights($rights, $roleId);
+    	foreach($this->modulePermissions->fetchAll() as $relation) {
+    		$relation->delete();
+    	}
+        foreach ($rights as $moduleId => $access) {
+            $modulePermissions = $this->modulePermissions->create();
+            $modulePermissions->moduleId = $moduleId;
+            $modulePermissions->roleId   = $this->id;
+            $modulePermissions->access   = $access;
+            $modulePermissions->save();
+        }    
     }
 
     /**
@@ -135,20 +144,13 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function delete()
     {
-        if ($this->id > 1) {
-            // Delete role-module relation
-            $relations = new Phprojekt_Role_RoleModulePermissions();
-            $records = $relations->fetchAll('roleId = ' . $this->id);
-            foreach ($records as $record) {
-                $record->delete();
-            }
-            
+        if ($this->id > 1) {            
             // Delete project-role-user relation    
-            $relations = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
-            $records = $relations->fetchAll('roleId = ' . $this->id);
-            foreach ($records as $record) {
-                $record->delete();
-            }
+            //$relations = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+            //$records = $relations->fetchAll('roleId = ' . $this->id);
+            //foreach ($records as $record) {
+            //    $record->delete();
+            //}
                         
             parent::delete();
         }

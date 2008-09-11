@@ -65,28 +65,4 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
         }
         return $modules;
     }
-
-    /**
-     * Save the acces per each module for one roleId
-     *
-     * @param array $rights Array with the modules and the bitmask access
-     * @param int   $roleId The role Id
-     *
-     * @return void
-     */
-    public function saveRights($rights, $roleId)
-    {
-        $where   = ' roleId = ' . $roleId;
-        foreach ($this->fetchAll($where) as $relation) {
-            $relation->delete();
-        }
-        foreach ($rights as $moduleId => $access) {
-            $clone = clone $this;
-            $clone->moduleId = $moduleId;
-            $clone->roleId   = $roleId;
-            $clone->access   = $access;
-
-            $clone->save();
-        }
-    }
 }

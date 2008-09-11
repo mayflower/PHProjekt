@@ -896,14 +896,18 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function delete()
     {
         if (array_key_exists('id', $this->_data)) {
-            if (array_key_exists('hasMany', $this->_relations)) {
-                $className = $this->_relations['hasMany']['classname'];
-                $im        = new $className($this->getAdapter());
-                $tableName = $im->getTableName();
-                $this->getAdapter()->delete($tableName,
-                $this->getAdapter()->quoteInto(sprintf('%s = ?',
-                $this->_translateKeyFormat($this->_relations['hasMany']['classname'])),
-                $this->id));
+            if (array_key_exists('hasMany', $this->_relations)
+            || count($this->hasMany) > 0) {           	
+                foreach (array_keys($this->hasMany) as $key) {
+                    $className = $this->_getClassNameForRelationship($key,
+                    $this->hasMany);
+                    $im        = new $className($this->getAdapter());
+                    $tableName  = $im->getTableName();
+                    $columnName = $this->_translateKeyFormat(get_class($this));
+                    $this->getAdapter()->delete($tableName,
+                    $this->getAdapter()->quoteInto(sprintf('%s = ?', $columnName),
+                    $this->id));
+                }
             }
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
