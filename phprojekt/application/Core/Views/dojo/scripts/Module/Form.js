@@ -5,5 +5,5 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         this._writePermissions = true;
         this._deletePermissions = false;
         this._accessPermissions = true;
-    },	
+    }
 });
