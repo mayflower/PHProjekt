@@ -37,76 +37,24 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
      */
     function getProjectModulePermissionsById($projectId)
     {
-        // Cache the query
-        $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-'.$projectId);
-        if (isset($projectModulePermissionsNamespace->modules) && !empty($projectModulePermissionsNamespace->modules)) {
-            $modules = $projectModulePermissionsNamespace->modules;
-        } else {
-            $modules = array();
-            $model   = new Phprojekt_Module_Module();
-            foreach ($model->fetchAll(' active = 1 AND (saveType = 0 OR saveType = 2) ', ' name ASC ') as $module) {
-                $modules['data'][$module->id] = array();
-                $modules['data'][$module->id]['id']        = $module->id;
-                $modules['data'][$module->id]['name']      = $module->name;
-                $modules['data'][$module->id]['label']     = Zend_Registry::get("translate")->translate($module->name);
-                $modules['data'][$module->id]['inProject'] = false;
-            }
-            $where  = ' ProjectModulePermissions.projectId = ' . $projectId;
-            $where .= ' AND Module.active = 1 ';
-            $order  = ' Module.name ASC';
-            $select = ' Module.id as moduleId ';
-            $join   = ' RIGHT JOIN Module ON ( Module.id = ProjectModulePermissions.moduleId ';
-            $join  .= ' AND (Module.saveType = 0 OR Module.saveType = 2) )';
-            foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
-                $modules['data'][$right->moduleId]['inProject'] = true;
-            }
-            $projectModulePermissionsNamespace->modules = $modules;
+        $modules = array();
+        $model   = new Phprojekt_Module_Module();
+        foreach ($model->fetchAll(' active = 1 AND (saveType = 0 OR saveType = 2) ', ' name ASC ') as $module) {
+            $modules['data'][$module->id] = array();
+            $modules['data'][$module->id]['id']        = $module->id;
+            $modules['data'][$module->id]['name']      = $module->name;
+            $modules['data'][$module->id]['label']     = Zend_Registry::get("translate")->translate($module->name);
+            $modules['data'][$module->id]['inProject'] = false;
+        }
+        $where  = ' ProjectModulePermissions.projectId = ' . $projectId;
+        $where .= ' AND Module.active = 1 ';
+        $order  = ' Module.name ASC';
+        $select = ' Module.id as moduleId ';
+        $join   = ' RIGHT JOIN Module ON ( Module.id = ProjectModulePermissions.moduleId ';
+        $join  .= ' AND (Module.saveType = 0 OR Module.saveType = 2) )';
+        foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
+            $modules['data'][$right->moduleId]['inProject'] = true;
         }
         return $modules;
-    }
-
-    /**
-     * Save the allow modules for one projectId
-     * First delete all the older relations
-     *
-     * @param array $rights    Array with the modules to save
-     * @param int   $projectId The project Id
-     *
-     * @return void
-     */
-    public function saveModules($rights, $projectId)
-    {
-        $where   = ' projectId = ' . $projectId;
-        foreach ($this->fetchAll($where) as $relation) {
-            $relation->delete();
-        }
-        foreach ($rights as $moduleId) {
-            $clone = clone $this;
-            $clone->moduleId  = $moduleId;
-            $clone->projectId = $projectId;
-            $clone->save();
-        }
-        // Destroy cache
-        $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-'.$projectId);
-        if (isset($projectModulePermissionsNamespace->modules) && !empty($projectModulePermissionsNamespace->modules)) {
-            $projectModulePermissionsNamespace->modules = array();
-        }
-    }
-
-    /**
-     * Add a new relation module-project without delete any entry
-     * Used for add modules to the root project
-     *
-     * @param int $moduleId  The Module Id to add
-     * @param int $projectId The project Id
-     *
-     * @return void
-     */
-    public function addModule($moduleId, $projectId)
-    {
-        $clone = clone $this;
-        $clone->moduleId  = $moduleId;
-        $clone->projectId = $projectId;
-        $clone->save();
     }
 }
