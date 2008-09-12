@@ -38,9 +38,9 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         var activeTab  = false;
         var modules    = new Array();
 
-        modules.push({"name":"User", "label":"Users"});
-        modules.push({"name":"Role", "label":"Roles"});
-        modules.push({"name":"Module", "label":"Modules"});
+        modules.push({"name":"User", "label": phpr.nls.get("User")});
+        modules.push({"name":"Role", "label": phpr.nls.get("Role")});
+        modules.push({"name":"Module", "label": phpr.nls.get("Module")});
 
         for (var i = 0; i < modules.length; i++) {
             var liclass        = '';
