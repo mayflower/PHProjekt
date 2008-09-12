@@ -29,6 +29,8 @@
  */
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
+    public $hasMany = array('modulePermissions' => array('classname' => 'Project_Models_ProjectModulePermissions'));
+    	
     /**
      * Validate function for the projectId field
      *
@@ -80,6 +82,43 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         return $allow;
     }
     
+    /**
+     * Save the allow modules for one projectId
+     * First delete all the older relations
+     *
+     * @param array $rights    Array with the modules to save
+     *
+     * @return void
+     */
+    public function saveModules($rights)
+    {
+        foreach($this->modulePermissions->fetchAll() as $relation) {
+            $relation->delete();
+        }
+        foreach ($rights as $moduleId) {
+            $modulePermissions = $this->modulePermissions->create();
+            $modulePermissions->moduleId = $moduleId;
+            $modulePermissions->projectId = $this->id;
+            $modulePermissions->save();
+        }
+    }    
+      
+    /**
+     * Add a new relation module-project without delete any entry
+     * Used for add modules to the root project
+     *
+     * @param int $moduleId  The Module Id to add
+     *
+     * @return void
+     */
+    public function addModule($moduleId)
+    {
+        $modulePermissions = $this->modulePermissions->create();
+        $modulePermissions->moduleId = $moduleId;
+        $modulePermissions->projectId = $this->id;
+        $modulePermissions->save();    	
+    }
+        
     /**
      * Extencion of the Phprojekt_Item_Abstract
      * for delete all the project relations

@@ -224,9 +224,9 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Project'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonGetModulesProjectRelation/id/1');
-        $request->setPathInfo('/Project/index/jsonGetModulesProjectRelation/id/1');
-        $request->setRequestUri('/Project/index/jsonGetModulesProjectRelation/id/1');
+        $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonGetModulesProjectRelation/id/2');
+        $request->setPathInfo('/Project/index/jsonGetModulesProjectRelation/id/2');
+        $request->setRequestUri('/Project/index/jsonGetModulesProjectRelation/id/2');
 
         // getting the view information
         $request->setModuleKey('module');
