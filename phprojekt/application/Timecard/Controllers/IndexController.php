@@ -60,6 +60,63 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
+     * Save the timecard hours
+     * IF the start is empty, looking for an open time and close it.
+     * 
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonSaveAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            $model   = $this->getModelObject();
+            $message = $translate->translate(self::ADD_TRUE_TEXT);
+        } else {
+            $model   = $this->getModelObject()->find($id);
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+        }
+
+        if (null == $this->getRequest()->getParam('startTime', null)) {
+        	
+            // Date filter to find the open register
+            $dateFilter = array();
+
+            $dateFilter[] = 'date = "'.date("Y-m-d").'"';
+            $dateFilter[] = '(endTime = "" OR endTime is null)';
+            $dateFilter = implode($dateFilter, " AND ");
+
+            $records = $this->getModelObject()->fetchAll($dateFilter, null, 1);
+
+            if (isset($records[0])) {
+                $model = $records[0];
+                Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+                $type    = 'success';
+                $message = $translate->translate(self::ADD_TRUE_TEXT);
+                $showId  = $model->id;
+            } else {
+                $type    = 'error';
+                $message = $translate->translate(self::NOT_FOUND);
+                $showId  = null;
+            }            
+        } else {
+            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            $type    = 'success';
+            $showId = $model->id;
+        }        
+
+        $return    = array('type'    => $type,
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $showId);
+
+        echo Phprojekt_Converter_Json::convert($return);
+    }
+        
+    /**
      * Returns the detail for a model in JSON.
      *
      * For further information see the chapter json exchange
