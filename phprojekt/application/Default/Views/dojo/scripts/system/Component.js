@@ -11,8 +11,14 @@ dojo.declare("phpr.Component", null, {
         // Cache the templates if loaded once.
         var tplContent = __phpr_templateCache[template[0]+"."+template[1]];
         if (!tplContent) {
-            tplContent = dojo._getText(dojo.moduleUrl(template[0], template[1])+'?'+Math.random());
-            __phpr_templateCache[template[0]+"."+template[1]] = tplContent;
+            phpr.send({
+                url:       phpr.webpath + 'index.php/Default/Js/jsonGetTemplate/module/'+template[0]+'/name/'+template[1],
+                sync:      true,
+                onSuccess:function(data) {
+                    tplContent = data;
+                    __phpr_templateCache[template[0]+"."+template[1]] = tplContent;
+                }
+            });
         }
         var tpl = new dojox.dtl.Template(tplContent);
         if(node) {
