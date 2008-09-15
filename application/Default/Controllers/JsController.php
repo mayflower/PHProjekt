@@ -104,13 +104,26 @@ class JsController extends IndexController
 
     public function jsonGetTemplateAction()
     {
-        $module = $this->getRequest()->getParam('module', null);
-        $name   = $this->getRequest()->getParam('name', null);
-
-        $module = ereg_replace('phpr.','',$module);
-        $module = ereg_replace('.template','',$module);
+    	$path = $this->getRequest()->getParam('path', null);
+    	$name = $this->getRequest()->getParam('name', null);
+    	
+    	$path = split("\.", $path);
+        $module = $path[1];
         
-        echo '"'.addslashes(ereg_replace("\n",'',file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/template/'.$name))).'"';
+        $extendPath = '';
+        foreach ($path as $tmp => $folder) {
+        	if ($tmp > 1) {
+        		$extendPath .= $path[$tmp].'/';
+        	}
+        }
+        $extendPath .= $name;
+        
+        $template = file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/'.$extendPath);
+        
+        $template = ereg_replace("\n","",$template);
+        $template = ereg_replace("\r","",$template);
+        $template = addslashes($template);
+        echo '"'.$template.'"';
     }
     
     /**
