@@ -99,20 +99,13 @@ class Core_ModuleController extends Core_IndexController
      */
     function jsonGetGlobalModulesAction()
     {
-        // Cache the query
-        $globalModulesNamespace = new Zend_Session_Namespace('globalModulesNamespace');
-        if (isset($globalModulesNamespace->modules) && !empty($globalModulesNamespace->modules)) {
-            $modules = $globalModulesNamespace->modules;
-        } else {
-            $modules = array();
-            $model   = new Phprojekt_Module_Module();
-            foreach ($model->fetchAll(' active = 1 AND (saveType = 1 OR saveType = 2) ', ' name ASC ') as $module) {
-                $modules['data'][$module->id] = array();
-                $modules['data'][$module->id]['id']        = $module->id;
-                $modules['data'][$module->id]['name']      = $module->name;
-                $modules['data'][$module->id]['label']     = $module->name;
-            }
-            $globalModulesNamespace->modules = $modules;
+        $modules = array();
+        $model   = new Phprojekt_Module_Module();
+        foreach ($model->fetchAll(' active = 1 AND (saveType = 1 OR saveType = 2) ', ' name ASC ') as $module) {
+            $modules['data'][$module->id] = array();
+            $modules['data'][$module->id]['id']        = $module->id;
+            $modules['data'][$module->id]['name']      = $module->name;
+            $modules['data'][$module->id]['label']     = $module->name;
         }
         echo Phprojekt_Converter_Json::convert($modules);
     }
