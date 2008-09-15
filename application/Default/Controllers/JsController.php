@@ -102,6 +102,17 @@ class JsController extends IndexController
         ';
     }
 
+    public function jsonGetTemplateAction()
+    {
+        $module = $this->getRequest()->getParam('module', null);
+        $name   = $this->getRequest()->getParam('name', null);
+
+        $module = ereg_replace('phpr.','',$module);
+        $module = ereg_replace('.template','',$module);
+        
+        echo '"'.addslashes(ereg_replace("\n",'',file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/template/'.$name))).'"';
+    }
+    
     /**
      * Get all the Default scripts
      *
