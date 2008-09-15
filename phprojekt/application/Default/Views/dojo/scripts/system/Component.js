@@ -12,7 +12,7 @@ dojo.declare("phpr.Component", null, {
         var tplContent = __phpr_templateCache[template[0]+"."+template[1]];
         if (!tplContent) {
             phpr.send({
-                url:       phpr.webpath + 'index.php/Default/Js/jsonGetTemplate/module/'+template[0]+'/name/'+template[1],
+                url:       phpr.webpath + 'index.php/Default/Js/jsonGetTemplate/path/'+template[0]+'/name/'+template[1],
                 sync:      true,
                 onSuccess:function(data) {
                     tplContent = data;
