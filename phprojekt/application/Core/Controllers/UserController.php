@@ -26,6 +26,9 @@
  */
 class Core_UserController extends Core_IndexController
 {
+    
+    const DEACTIVATED_USER_TEXT = "The user was set as inactive correctly";
+    
     /**
      * Return a list of all the users except the current user
      *
@@ -166,5 +169,41 @@ class Core_UserController extends Core_IndexController
             $return = 'A key value needs to be provided';
         }
         echo Phprojekt_Converter_Json::convert($return);
+    }
+    
+    /**
+     * Deactivate a certain user
+     * 
+     * If the user do not exist
+     * return a Phprojekt_PublishedException
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonDeleteAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+
+        $user = $this->getModelObject()->find($id);
+
+        if ($user instanceof Phprojekt_Model_Interface) {
+            $user->delete();
+            
+            $message = $translate->translate(self::DEACTIVATED_USER_TEXT);
+            $return  = array('type'    => 'success',
+                             'message' => $message,
+                             'code'    => 0,
+                             'id'      => $id);
+
+            echo Phprojekt_Converter_Json::convert($return);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
     }
 }

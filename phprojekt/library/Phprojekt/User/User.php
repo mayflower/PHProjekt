@@ -165,16 +165,20 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Extencion of the ACtive Record deletion adding deleteion of user tags
+     * Users can't be deleted, so if delete is requested it will be deactivated.
      *
      * @return void
      */
     public function delete()
     {
-        $tags = Phprojekt_Tags_Default::getInstance();
+        /*$tags = Phprojekt_Tags_Default::getInstance();
         $tags->deleteTagsByUser($this->id);
         unset($tags);
         parent::delete();
+        */
+        $this->status = 'I';
+        $this->save();
+        
     }
 
     /**
