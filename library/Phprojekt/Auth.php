@@ -137,6 +137,32 @@ class Phprojekt_Auth extends Zend_Auth
         // None of the methods works
         return false;
     }
+    
+    /**
+     * Compare a string with a user password
+     *
+     * @param string $string   key uncryted to check if it is the password
+     * @param string $password crypted password
+     *
+     * @return boolean true if the string crypted is equal to provide password
+     */
+    public static function setPassword($password)
+    {
+        $userId = Phprojekt_Auth::getUserId();
+        
+        $cryptedPassword = 'phprojektmd5'.$password;
+        $cryptedPassword = Phprojekt_Auth::_cryptPassword($cryptedPassword);
+        
+        $user = new Phprojekt_User_User();
+        if ($user->find($userId)) {
+            $user->password = $cryptedPassword;
+            $user->save();
+        } else {
+            return false;
+        }
+        
+        return true;
+    }
 
     /**
      * String to be crytped
