@@ -206,8 +206,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rootEvent->find($rootEventId);
 
         if (!empty($rootEvent->id)) {
-            $relatedEvents[$rootEvent->startDate][$rootEvent->participantId] = $rootEventId;
-
+            if ($onlyUsers) {
+                $relatedEvents[$rootEvent->participantId] = $rootEventId;
+            } else {
+                $relatedEvents[$rootEvent->startDate][$rootEvent->participantId] = $rootEventId;
+            }
             // getting the event list -all related events-
             $eventList = $rootEvent->fetchAll("parentId = ".$rootEventId);
             if (is_array($eventList)) {
@@ -239,7 +242,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if (!empty($this->id)) {
             $rootEventId   = $this->getRootEventId($this->id);
             $relatedEvents = $this->getRelatedEvents($rootEventId, true);
-
+            
             $tmp = ",";
             $relatedEvents = array_keys($relatedEvents);
             foreach ($relatedEvents as $value) {

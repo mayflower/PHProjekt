@@ -114,5 +114,37 @@ class Calendar_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
+    
+    /**
+     * Returns the list for a model in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam integer count ...
+     * @requestparam integer start ...
+     *
+     * @return void
+     */
+    public function jsonListAction()
+    {
+        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
+        // so lets apply this to the query set. This is also used for loading a
+        // grid on demand (initially only a part is shown, scrolling down loads what is needed).
+        $count     = (int) $this->getRequest()->getParam('count', null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
+        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
+        $itemId    = (int) $this->getRequest()->getParam('id', null);
+
+        if (!empty($itemId)) {
+            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
+        } else if (!empty($projectId)) {
+            $records = $this->getModelObject()->fetchAll('projectId = ' . (int) $projectId . ' AND participantId = '. PHprojekt_Auth::getUserId(), null, $count, $offset);
+        } else {
+            $records = $this->getModelObject()->fetchAll('participantId = '. PHprojekt_Auth::getUserId(), null, $count, $offset);
+        }
+
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
 
 }
