@@ -170,6 +170,7 @@ class Phprojekt_Converter_Json
             $treeNodes[] = array('name'     => $node->title,
                                  'id'       => $node->id,
                                  'parent'   => $node->projectId,
+                                 'path'     => $node->path,
                                  'children' => $references);
         }
 
