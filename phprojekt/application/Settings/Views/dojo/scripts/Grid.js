@@ -12,10 +12,7 @@ dojo.declare("phpr.Settings.Grid", phpr.Default.Grid, {
         this.url = phpr.webpath+"index.php/Core/user/jsonGetSettingList/nodeId/" + this.id;
     },
 
-    showForm:function(e) {
-    },
-
     useIdInGrid: function() {
-        return false;
+        return true;
     }
 });

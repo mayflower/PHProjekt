@@ -25,6 +25,15 @@ dojo.declare("phpr.Settings.Main", phpr.Default.Main, {
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/Core/user/jsonSaveMultipleSetting';
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+
+    },
+    
+    openForm:function(/*int*/id, /*String*/module) {
+        //summary: this function opens a new Detail View
+        if (!dojo.byId('detailsBox')) {
+            this.reload();
+        }
+        this.form = new this.formWidget(this,id,module);
     },
 	
     setSubmoduleNavigation:function(currentModule) {

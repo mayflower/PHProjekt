@@ -130,6 +130,13 @@ class Core_UserController extends Core_IndexController
         $settings = new Phprojekt_User_UserSetting();
         $metadata = $settings->getFieldDefinition();
         $records  = $settings->getList();
+        
+        $data = array();
+        $data['id'] = -1;
+        $data['keyValue'] = "Password";
+        $data['value'] = "";
+        $records[] = $data;
+        
         $numRows  = array('numRows' => count($records));
         $data     = array("metadata"=> $metadata,
                           "data"    => $records,

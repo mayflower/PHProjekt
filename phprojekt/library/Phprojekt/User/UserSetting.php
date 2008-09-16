@@ -51,6 +51,21 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
     private $_defaultSettings = array('timeZone', 'language');
 
     /**
+     * Range of dates language setting
+     *
+     * @var array
+     */
+    private $_languageRange = array('de', 'en');
+
+    /**
+     * Range of available timezones
+     *
+     * @var array
+     */
+    private $_timeZoneRange = array(-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0,
+    1, 2, 3, 4, 5, 6, 7, 8, 99, 10, 11, 12);
+
+    /**
      * Config for inicializes children objects
      *
      * @var array
@@ -98,16 +113,16 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @return string value of the setting
      */
     public function getSetting($settingName) {
-     
-    	// Cache the settings for this user
+
+        // Cache the settings for this user
         $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
         if (isset($userSettingsNamespace->$settingName)) {
-        	$toReturn = $userSettingsNamespace->$settingName;
+            $toReturn = $userSettingsNamespace->$settingName;
         } else {
             $toReturn = '';
             $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-                                      " AND keyValue = ".$this->_db->quote($settingName) .
-                                      " AND moduleId = ".$this->_db->quote($this->_moduleId));
+            " AND keyValue = ".$this->_db->quote($settingName) .
+            " AND moduleId = ".$this->_db->quote($this->_moduleId));
             if (!empty($record)) {
                 $toReturn = $record[0]->value;
                 $userSettingsNamespace->$settingName = $toReturn;
@@ -125,7 +140,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
     public function getSettingNameById($id) {
         $toReturn = '';
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-                                  " AND id = ".$this->_db->quote($id));
+        " AND id = ".$this->_db->quote($id));
         if (!empty($record)) {
             $toReturn = $record[0]->keyValue;
         }
@@ -140,25 +155,31 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @return boolean if it was saved or not.
      */
     public function setSetting($settingName, $settingValue) {
-        $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-                                  " AND keyValue = ".$this->_db->quote($settingName) .
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
-        if (!empty($record)) {
-            $record = $record[0];
-        } else {
-            $record = new Phprojekt_User_UserSetting();
-            $record->userId = $this->_userId;
-            $record->keyValue = $settingName;
-            $record->moduleId = $this->_moduleId;
-            $record->identifier = '';
-        }
 
-        $record->value = $settingValue;
-           
-        $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
-        $userSettingsNamespace->$settingName = $settingValue;
-            
-        return $record->save();
+        if ($this->validateSetting($settingName, $settingValue)) {
+
+            $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
+            " AND keyValue = ".$this->_db->quote($settingName) .
+            " AND moduleId = ".$this->_db->quote($this->_moduleId));
+            if (!empty($record)) {
+                $record = $record[0];
+            } else {
+                $record = new Phprojekt_User_UserSetting();
+                $record->userId = $this->_userId;
+                $record->keyValue = $settingName;
+                $record->moduleId = $this->_moduleId;
+                $record->identifier = '';
+            }
+
+            $record->value = $settingValue;
+
+            $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
+            $userSettingsNamespace->$settingName = $settingValue;
+
+            return $record->save();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -223,6 +244,9 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
     {
         $converted = array();
         $translate = Zend_Registry::get('translate');
+        if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
+
+        }
 
         // username
         $data = array();
@@ -252,9 +276,53 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+
+        if (isset($this->keyValue) && in_array($this->keyValue, $this->_defaultSettings)) {
+            $data['type'] = 'selectbox';
+            $data['range'] = array();
+
+            switch ($this->keyValue) {
+                case 'timeZone':
+                    $values = $this->_timeZoneRange;
+                    break;
+                case 'language':
+                    $values = $this->_languageRange;
+                    break;
+            }
+            foreach ($values as $value) {
+                $data['range'][] = array('id'=> $value, 'name' => $value);
+            }
+        }
+
+
         $converted[] = $data;
 
+        
+
         return $converted;
+    }
+
+    /**
+     * Validates the settings if there is any range. Any setting not defined into a range will be valid.
+     *
+     * @param string $key The name of the setting to be validated
+     * @param string $value the value to be validated
+     *
+     * @return boolean true if the value is valid for the provied key.
+     */
+    public function validateSetting($key, $value) {
+
+        $return = true;
+
+        switch ($key) {
+            case 'timeZone':
+                $return = in_array($value, $this->_timeZoneRange);
+                break;
+            case 'language':
+                $return = in_array($value, $this->_languageRange);
+                break;
+        }
+        return $return;
     }
 
 }
