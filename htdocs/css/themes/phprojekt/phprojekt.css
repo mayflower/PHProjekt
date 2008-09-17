@@ -29,5 +29,6 @@
 @import url("Editor.css");
 @import url("ColorPalette.css");
 @import url("phprojektGrid.css");
+@import url("Toaster.css");
 
 :focus { -moz-outline-style: none; }
