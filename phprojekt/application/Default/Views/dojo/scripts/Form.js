@@ -548,7 +548,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.historyData += "<tr><td><label>" + phpr.nls.get('Date');
             this.historyData += "</label></td><td><label>" + phpr.nls.get('User');
             this.historyData += "</label></td><td><label>" + phpr.nls.get('Field');
-            this.historyData += "</label></td><td><label>" + phpr.nls.get('Old value') + "</label>";
+            this.historyData += "</label></td><td><label>" + phpr.nls.get('Old value') + "</label></td></tr>";
         }
 
         for (var i = 0; i < history.length; i++) {
