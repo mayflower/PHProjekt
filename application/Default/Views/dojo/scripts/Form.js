@@ -539,9 +539,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    renders the actual form according to the received data
         var history = "";
 
-        this.historyData = '<tr><td class="label" colspan="2"><table>';
+        this.historyData = '<tr><td class="label" colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
 
         history = this.historyStore.getValue(items[0], "history");
+        
+        
+        if (history.length > 0) {
+            this.historyData += "<tr><td><label>" + phpr.nls.get('Date');
+            this.historyData += "</label></td><td><label>" + phpr.nls.get('User');
+            this.historyData += "</label></td><td><label>" + phpr.nls.get('Field');
+            this.historyData += "</label></td><td><label>" + phpr.nls.get('Old value') + "</label>";
+        }
 
         for (var i = 0; i < history.length; i++) {
             historyUser     = history[i]["userId"];
@@ -553,7 +561,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             historyAction   = history[i]["action"];
             historyDate     = history[i]["datetime"];
 
-            this.historyData += "<tr><td>" + historyDate + "</td><td>" + historyUser + "</td><td>" + historyField + "</td><td>" + historyOldValue;
+            this.historyData += "<tr><td>" + historyDate;
+            this.historyData += "</td><td>" + historyUser;
+            this.historyData += "</td><td>" + historyField;
+            this.historyData += "</td><td>" + historyOldValue;
         }
         this.historyData += "</table></td></tr>";
     },

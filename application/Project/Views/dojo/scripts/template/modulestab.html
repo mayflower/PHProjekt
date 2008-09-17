@@ -1,9 +1,9 @@
 <tr>
     <td class="label" colspan="2">
-    <table id="modulesTable">
+    <table id="modulesTable" style="position: relative; left: 75px">
     <tr>
-        <td>{{moduleNameText}}</td>
-        <td>{{moduleActiveText}}</td>
+        <td><label>{{moduleNameText}}</label></td>
+        <td><label>{{moduleActiveText}}</label></td>
     </tr>
     {% for module in modules %}
     <tr id="trModulesFor{{module.id}}">
@@ -15,13 +15,13 @@
             dojoType="dijit.form.TextBox" />
             {{module.label}}
         </td>
-        <td>
+        <td><div align="center">
             <input type="checkbox"
             dojotype="dijit.form.CheckBox"
             id="checkModuleRelation[{{module.id}}]"
             name="checkModuleRelation[{{module.id}}]"
             checked="{{module.inProject}}"
-            value="1" />
+            value="1" /></div>
         </td>
     </tr>
     {% endfor %}
