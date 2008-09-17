@@ -223,7 +223,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function appendNode(Phprojekt_Tree_Node_Database $node)
     {
         if (null !== $node->_activeRecord) {
-            if (null === $node->id) {
+        	if (null === $node->id || $node->id == 0) {
                 $node->_activeRecord->projectId = (int) $this->id;
                 $node->_activeRecord->path      = sprintf('%s%s%s', $this->path, $this->id, self::NODE_SEPARATOR);
                 $node->_activeRecord->save();

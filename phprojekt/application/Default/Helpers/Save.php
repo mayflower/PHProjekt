@@ -73,10 +73,11 @@ final class Default_Helpers_Save
         } else if (!self::_checkModule(1, $projectId)) {
             throw new Phprojekt_PublishedException('You do not have access for add projects on the parent project');
         } else {
-            if ((int)$node->projectId !== $parentId) {
+        	if (null === $node->id || $node->id == 0) {
+        		$parentNode->appendNode($node);
+        	} else {
+        		$node->projectId = 0;
                 $node->setParentNode($parentNode);
-            } else {
-                $node->getActiveRecord()->save();
             }
 
             $right  = array();
