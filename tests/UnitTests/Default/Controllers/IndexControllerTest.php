@@ -535,7 +535,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         // checking some parts of the index template
         $this->assertTrue(strpos(strtolower($response), strtolower('"identifier":"id","label":"name","items":[{"name":"Invisible Root"')) > 0);
-        $this->assertTrue(strpos($response, '"parent":"2","children":[]}]}') > 0);
+        $this->assertTrue(strpos($response, '"name":"Sub Project","id":"4","parent":"2","path":"/1/2/","children":[{"_reference":"6"},{"_reference":"7"') > 0);
     }
 
     /**
