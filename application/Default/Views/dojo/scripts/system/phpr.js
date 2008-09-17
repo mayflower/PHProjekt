@@ -177,36 +177,6 @@ phpr.getCurrent = function(data, identifier, value){
     return current;
 };
 
-phpr.receiveUserTags = function(){
-    phpr.send({
-		url:       phpr.webpath + 'index.php/Default/Tag/jsonGetTags',
-        sync:      true,
-		onSuccess: function(data){
-             phpr.userTags = data;
-             new phpr.handleResponse('serverFeedback', data);
-        }
-	});
-};
-
-phpr.receiveCurrentTags = function(id){
-    phpr.send({
-		url:       phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/'+id,
-        sync:      true,
-		onSuccess: function(data){
-             phpr.currentTags = data;
-             new phpr.handleResponse('serverFeedback', data);
-        }
-	});
-};
-
-phpr.getCurrentTags = function(){
-    return phpr.currentTags;
-};
-
-phpr.getUserTags = function(){
-    return phpr.userTags;
-};
-
 dojo.declare("phpr.DataStore", null, {
     // summary:
     //    Get and return data from the server

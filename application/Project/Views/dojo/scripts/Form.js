@@ -9,6 +9,11 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
         }
 
+        // Get the tags
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
+        phpr.DataStore.addStore({url: this._tagUrl});
+        phpr.DataStore.requestData({url: this._tagUrl});
+		
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this.userStore.fetch();
@@ -158,5 +163,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
         phpr.DataStore.deleteData({url: subModuleUrl});
         this.moduleStore.update();
+        phpr.DataStore.deleteData({url: this._tagUrl});
     }
 });

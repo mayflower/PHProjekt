@@ -18,6 +18,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _writePermissions:  true,
     _deletePermissions: false,
     _accessPermissions: true,
+	_tagUrl:            null,
 
     constructor:function(main, id, module) {
         // summary:
@@ -71,6 +72,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             });
             this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
         }
+
+        // Get the tags
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
+        phpr.DataStore.addStore({url: this._tagUrl});
+        phpr.DataStore.requestData({url: this._tagUrl});
 
         // Get all the active users
         this.userStore = new phpr.Store.User();
@@ -139,7 +145,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // delete buttons for access
             // add check all and none functions
             for (i in accessContent) {
-                var userId     = accessContent[i]["userId"]
+                var userId     = accessContent[i]["userId"];
                 var idName     = "deleteAccess" + userId;
                 var buttonName = "accessDeleteButton" + userId;
                 var params = {
@@ -148,8 +154,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     iconClass: 'cross',
                     alt:       'Delete'
                 };
-                idName = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(idName.domNode);
+				if (!dijit.byId(idName)) {
+					idName = new dijit.form.Button(params);
+					dojo.byId(buttonName).appendChild(idName.domNode);
+				}
                 dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
                 dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
                 dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
@@ -321,7 +329,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Add some special fields
         // description:
         //    Add some special fields
-        this.formdata += this.displayTagInput()
+        this.formdata += this.displayTagInput();
     },
 
     newAccess: function () {
@@ -504,17 +512,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // By calling the TagController this function receives all data it needs
         // for rendering a Tag from the server and renders those tags in a Input separated by coma
         // The function also render the tags in the moveable pannel for click it and search by tags
-        phpr.receiveCurrentTags(this.id);
-
-        var currentTags = phpr.getCurrentTags();
-        var meta        = currentTags["metadata"][0];
-        var data        = new Array();
+        var currentTags = phpr.DataStore.getData({url: this._tagUrl});
+        var meta        = phpr.DataStore.getMetaData({url: this._tagUrl});
         var value       = '';
 
         if (this.id > 0) {
-            for (var i = 0; i < currentTags['data'].length; i++) {
-                value += currentTags['data'][i]['string'];
-                if (i != currentTags['data'].length - 1) {
+            for (var i = 0; i < currentTags.length; i++) {
+                value += currentTags[i]['string'];
+                if (i != currentTags.length - 1) {
                     value += ', ';
                 }
             }
@@ -523,7 +528,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Draw the tags
         this.publish("drawTagsBox",[currentTags]);
 
-        return this.fieldTemplate.textFieldRender(meta['label'], meta['key'], value, false, false);
+        return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, false, false);
     },
 
     getHistoryData: function(items, request) {
@@ -559,5 +564,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Delete the cache for this form
         phpr.DataStore.deleteData({url: this._url});
+		phpr.DataStore.deleteData({url: this._tagUrl});
     }
 });

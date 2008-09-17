@@ -32,7 +32,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
 			url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonSave/id/' + this.id,
 			content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
-                new phpr.handleResponse('serverFeedback',data);
+                new phpr.handleResponse('serverFeedback', data);
                 if (data.type =='success') {
                     this.publish("updateCacheData");
                     this.publish("reload");
@@ -47,16 +47,8 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' + phpr.module + '/id/' + this.id,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
-                            if (data.type =='success') {
-                                this.publish("updateCacheData");
-                                this.publish("reload");
-                            }
-                        })
-                    });
+                    this.publish("updateCacheData");
+                    this.publish("reload");
                }
             })
         });

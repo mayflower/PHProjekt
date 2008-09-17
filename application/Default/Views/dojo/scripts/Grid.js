@@ -12,6 +12,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     _oldRowValues: new Array(),
     gridData:      new Array(),
     url:           null,
+	_tagUrl:       null,
 
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
@@ -63,8 +64,13 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Draw the tags
         // description:
         //    Draw the tags
-        phpr.receiveUserTags();
-        this.publish("drawTagsBox",[phpr.getUserTags()]);
+        // Get the module tags
+		this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
+        phpr.DataStore.addStore({url: this._tagUrl});
+        phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
+            this.publish("drawTagsBox",[phpr.DataStore.getData({url: this._tagUrl})]);
+          })
+        }); 
     },
 
     useIdInGrid: function() {
@@ -384,5 +390,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    Delete the cache for this grid
         phpr.DataStore.deleteData({url: this.url});
+		phpr.DataStore.deleteData({url: this._tagUrl});
     }
 });
