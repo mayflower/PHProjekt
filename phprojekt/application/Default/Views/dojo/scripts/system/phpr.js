@@ -45,6 +45,7 @@ dojo.require("dojox.layout.ExpandoPane");
 dojo.require("dojox.dtl");
 dojo.require("dojox.dtl.Context");
 dojo.require("dojox.grid.cells.dijit");
+dojo.require("dojox.widget.Toaster");
 
 // global vars
 var module = null;
@@ -53,6 +54,7 @@ var currentProjectId = null;
 var rootProjectId = null;
 var userTags = null;
 var currentTags = null;
+var serverFeedback = null;
 phpr.initWidgets = function(el) {
     // This parses the given node and inits the widgets found in there.
     if (dojo.isString(el)) {
@@ -159,10 +161,9 @@ phpr.handleResponse = function(resultArea,result)
     }
     var message= result.message
     if (!message) {
-        css = '';
-        message = "";
+    	return;
     }
-    dijit.byId(resultArea).addMessage({cssClass: css, output:message});
+    phpr.serverFeedback.addMessage({cssClass: css, output:message});
 };
 
 phpr.getCurrent = function(data, identifier, value){
@@ -371,53 +372,33 @@ dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
     }
 });
 
-dojo.declare("phpr.ServerFeedback",[dijit._Widget, dojox.dtl._HtmlTemplated], {
+dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
     // summary:
     //     A class for displaying the ServerFeedback
     // description:
     //     This class receives the Server Feedback and displays it to the User
-    widgetsInTemplate: true,
     messages:[],
     displayedMessages:[],
-
-    templatePath: dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"),
-        base: {
-            url: dojo.moduleUrl("phpr.Default", "template/serverFeedbackContent.html"),
-            shared: true
-        },
-
+    
         addMessage: function(message){
             this.messages.push(message);
             this.displayMessage(message);
         },
-
         deleteLastMessage: function(message){
             this.messages.pop();
         },
 
         displayMessage: function(message){
             this.displayedMessages = [message];
-            this.setTemplate(dojo.moduleUrl("phpr.Default", "template/ServerFeedback.html"));
-            this.render();
-            var fadeIn = dojo.fadeIn({
-                node:this.serverFeedbackContainer,
-                duration: 500
-            });
-
-            var fadeOut = dojo.fadeOut({
-                node: this.serverFeedbackContainer,
-                duration: 5000
-            });
-
-            fadeIn.play();
-            dojo.connect(fadeIn, "onEnd", function(){
-                fadeIn.stop();
-                fadeOut.play();
-            });
-        },
-
-        postCreate: function(){
-            this.render();
+            for (i in this.displayedMessages) {
+            	out = this.displayedMessages[i];
+				dojo.publish("ServerFeedback", 
+				[{
+					message:out.output, 
+					type: out.cssClass
+        		}]
+     			);
+			}
         }
     }
 );

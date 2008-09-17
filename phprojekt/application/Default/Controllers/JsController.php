@@ -87,7 +87,9 @@ class JsController extends IndexController
                 phpr.rootProjectId    = rootProjectId;
                 phpr.currentProjectId = rootProjectId ;
                 phpr.language         = language;
+                phpr.serverFeedback   = new phpr.ServerFeedback();
         ';
+
         foreach ($this->_modules as $module) {
             echo '
                 this.'.$module.' = new phpr.'.$module.'.Main();

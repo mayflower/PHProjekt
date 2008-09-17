@@ -5,17 +5,17 @@
     <title>PHProjekt</title>
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
     <style>
-        @import "<?php echo $this->webpath; ?>../library/dojo/dojo/resources/dojo.css";
+        @import "<?php echo $this->webpath; ?>dojo/dojo/resources/dojo.css";
         @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojekt.css";
-        @import "<?php echo $this->webpath; ?>../library/dojo/dijit/themes/dijit.css";
-        @import "<?php echo $this->webpath; ?>../library/dojo/dijit/themes/dijit_rtl.css";
+        @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit.css";
+        @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit_rtl.css";
     </style>
     <script type="text/javascript">
         var djConfig = {isDebug: true, parseOnLoad: false, preventBackButtonFix: false,
                         bindEncoding: "utf-8", dojoIframeHistoryUrl: '../resources/iframe_history.html',
                         locale: '<?php echo $this->language; ?>', useCommentedJson: true};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>../library/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
     <script type="text/javascript" src="<?php echo $this->url(array('controller' => 'js', 'action' => 'index')); ?>"></script>
 </head>
 <body class="phprojekt">
