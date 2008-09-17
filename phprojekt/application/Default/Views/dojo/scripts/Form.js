@@ -145,8 +145,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // delete buttons for access
             // add check all and none functions
             for (i in accessContent) {
+				var idName = "deleteAccess" + userId;
+                phpr.destroyWidgets(idName);
                 var userId     = accessContent[i]["userId"];
-                var idName     = "deleteAccess" + userId;
                 var buttonName = "accessDeleteButton" + userId;
                 var params = {
                     label:     '',
@@ -154,10 +155,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     iconClass: 'cross',
                     alt:       'Delete'
                 };
-				if (!dijit.byId(idName)) {
-					idName = new dijit.form.Button(params);
-					dojo.byId(buttonName).appendChild(idName.domNode);
-				}
+				
+                idName = new dijit.form.Button(params);
+                dojo.byId(buttonName).appendChild(idName.domNode);
                 dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
                 dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
                 dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
@@ -338,9 +338,22 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Add a the row of one user-accees
         //    with the values selected on the first row
-        var userId = dijit.byId("dataAccessAdd").getValue();
-        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
-            var userName = dijit.byId("dataAccessAdd").getDisplayedValue();
+        var userId = dijit.byId("dataAccessAdd").attr('value');
+        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {		
+            phpr.destroyWidgets("dataAccess[" + userId + "]");
+            phpr.destroyWidgets("checkReadAccess[" + userId + "]");
+            phpr.destroyWidgets("checkWriteAccess[" + userId + "]");
+            phpr.destroyWidgets("checkAccessAccess[" + userId + "]");
+            phpr.destroyWidgets("checkCreateAccess[" + userId + "]");
+            phpr.destroyWidgets("checkCopyAccess[" + userId + "]");
+            phpr.destroyWidgets("checkDeleteAccess[" + userId + "]");
+            phpr.destroyWidgets("checkDownloadAccess[" + userId + "]");
+            phpr.destroyWidgets("checkAdminAccess[" + userId + "]");
+            phpr.destroyWidgets("checkNoneAccess[" + userId + "]");
+            phpr.destroyWidgets("deleteAccess" + userId);
+            phpr.destroyWidgets("accessDeleteButton" + userId);
+			
+            var userName = dijit.byId("dataAccessAdd").attr('displayedValue');
             var table    = dojo.byId("accessTable");
             var row      = table.insertRow(table.rows.length);
             row.id       = "trAccessFor" + userId;
@@ -370,8 +383,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             cell.innerHTML = '<div id="accessDeleteButton' + userId + '"></div>';
 
             dojo.parser.parse(row);
-
-            var idName     = "deleteAccess" + userId;
+					
+            var idName = "deleteAccess" + userId;        
             var buttonName = "accessDeleteButton" + userId;
             var params = {
                 label:     '',
@@ -393,16 +406,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
-        phpr.destroySimpleWidget("dataAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkReadAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkWriteAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkAccessAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkCreateAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkCopyAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkDeleteAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkDownloadAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkAdminAccess[" + userId + "]");
-        phpr.destroySimpleWidget("checkNoneAccess[" + userId + "]");
+        phpr.destroyWidgets("dataAccess[" + userId + "]");
+        phpr.destroyWidgets("checkReadAccess[" + userId + "]");
+        phpr.destroyWidgets("checkWriteAccess[" + userId + "]");
+        phpr.destroyWidgets("checkAccessAccess[" + userId + "]");
+        phpr.destroyWidgets("checkCreateAccess[" + userId + "]");
+        phpr.destroyWidgets("checkCopyAccess[" + userId + "]");
+        phpr.destroyWidgets("checkDeleteAccess[" + userId + "]");
+        phpr.destroyWidgets("checkDownloadAccess[" + userId + "]");
+        phpr.destroyWidgets("checkAdminAccess[" + userId + "]");
+        phpr.destroyWidgets("checkNoneAccess[" + userId + "]");
         phpr.destroyWidgets("deleteAccess" + userId);
         phpr.destroyWidgets("accessDeleteButton" + userId);
 
@@ -417,14 +430,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Select all the access
         if (dijit.byId("checkAdminAccess"+str).checked) {
-            dijit.byId("checkReadAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkWriteAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkAccessAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkCreateAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkCopyAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkDeleteAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkDownloadAccess"+str).setAttribute('checked',true);
-            dijit.byId("checkNoneAccess"+str).setAttribute('checked',false);
+            dijit.byId("checkReadAccess"+str).attr('checked',true);
+            dijit.byId("checkWriteAccess"+str).attr('checked',true);
+            dijit.byId("checkAccessAccess"+str).attr('checked',true);
+            dijit.byId("checkCreateAccess"+str).attr('checked',true);
+            dijit.byId("checkCopyAccess"+str).attr('checked',true);
+            dijit.byId("checkDeleteAccess"+str).attr('checked',true);
+            dijit.byId("checkDownloadAccess"+str).attr('checked',true);
+            dijit.byId("checkNoneAccess"+str).attr('checked',false);
         }
     },
 
@@ -434,14 +447,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Un-select all the access
         if (dijit.byId("checkNoneAccess"+str).checked) {
-            dijit.byId("checkReadAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkWriteAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkAccessAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkCreateAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkCopyAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkDeleteAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkDownloadAccess"+str).setAttribute('checked',false);
-            dijit.byId("checkAdminAccess"+str).setAttribute('checked',false);
+            dijit.byId("checkReadAccess"+str).attr('checked',false);
+            dijit.byId("checkWriteAccess"+str).attr('checked',false);
+            dijit.byId("checkAccessAccess"+str).attr('checked',false);
+            dijit.byId("checkCreateAccess"+str).attr('checked',false);
+            dijit.byId("checkCopyAccess"+str).attr('checked',false);
+            dijit.byId("checkDeleteAccess"+str).attr('checked',false);
+            dijit.byId("checkDownloadAccess"+str).attr('checked',false);
+            dijit.byId("checkAdminAccess"+str).attr('checked',false);
         }
     },
 
