@@ -9,7 +9,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     formWidget:       null,
     treeWidget:       null,
     globalModules:    null,
-	_langUrl:         null,   
+	_langUrl:         null,
 
     loadFunctions:function(module) {
         // summary:
@@ -533,47 +533,47 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var value   = '';
         var newline = false;
         var size    = '';
-        for (var i = 0; i < data['data'].length; i++) {
+        for (var i = 0; i < data.length; i++) {
             if (((i % 5) == 0) && i != 0) {
                 newline = true;
             } else {
                 newline = false;
             }
-            if (data['data'][i]['count'] < 5) {
+            if (data[i]['count'] < 5) {
                 size = 10;
-            } else if (data['data'][i]['count'] < 10) {
+            } else if (data[i]['count'] < 10) {
                 size = 12;
-            } else if (data['data'][i]['count'] < 15) {
+            } else if (data[i]['count'] < 15) {
                 size = 14;
-            } else if (data['data'][i]['count'] < 20) {
+            } else if (data[i]['count'] < 20) {
                 size = 16;
-            } else if (data['data'][i]['count'] < 25) {
+            } else if (data[i]['count'] < 25) {
                 size = 18;
-            } else if (data['data'][i]['count'] < 30) {
+            } else if (data[i]['count'] < 30) {
                 size = 20;
-            } else if (data['data'][i]['count'] < 35) {
+            } else if (data[i]['count'] < 35) {
                 size = 22;
-            } else if (data['data'][i]['count'] < 40) {
+            } else if (data[i]['count'] < 40) {
                 size = 24;
-            } else if (data['data'][i]['count'] < 45) {
+            } else if (data[i]['count'] < 45) {
                 size = 26;
-            } else if (data['data'][i]['count'] < 50) {
+            } else if (data[i]['count'] < 50) {
                 size = 28;
-            } else if (data['data'][i]['count'] < 55) {
+            } else if (data[i]['count'] < 55) {
                 size = 30;
-            } else if (data['data'][i]['count'] < 60) {
+            } else if (data[i]['count'] < 60) {
                 size = 32;
-            } else if (data['data'][i]['count'] < 65) {
+            } else if (data[i]['count'] < 65) {
                 size = 33;
-            } else if (data['data'][i]['count'] < 70) {
+            } else if (data[i]['count'] < 70) {
                 size = 34;
-            } else if (data['data'][i]['count'] < 75) {
+            } else if (data[i]['count'] < 75) {
                 size = 36;
-            } else if (data['data'][i]['count'] < 80) {
+            } else if (data[i]['count'] < 80) {
                 size = 38;
-            } else if (data['data'][i]['count'] < 85) {
+            } else if (data[i]['count'] < 85) {
                 size = 40;
-            } else if (data['data'][i]['count'] < 90) {
+            } else if (data[i]['count'] < 90) {
                 size = 42;
             } else {
                 size = 48;
@@ -582,7 +582,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 moduleName: phpr.module,
                 size: size,
                 newline: newline,
-                tag: data['data'][i]['string']
+                tag: data[i]['string']
             });
         }
         dijit.byId("tagsbox").attr('content', value);
