@@ -156,5 +156,19 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
 				}
 			}
 		}
-    }
+    },
+	
+	getParentId: function(id) {
+        // summary:
+        //    Return the parent id of one project
+        // description:
+        //    Return the parent id of one project     		
+		var paths = this._paths[id].toString().split("\/").reverse();
+		for (i in paths) {
+			if (paths[i] > 0) {
+				return paths[i];
+			}
+		}
+		return 1;
+	}  
 });
