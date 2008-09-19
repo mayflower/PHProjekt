@@ -34,18 +34,6 @@ class Phprojekt_RoleModelsRoleModulePermissions_Test extends PHPUnit_Framework_T
         $return    = $roleModel->getRoleModulePermissionsById(2);
         $expected  = array(
               "data" => array(
-                "1" => array(
-                 "id" => 1,
-                 "name" => "Project",
-                 "none" => false,
-                 "read" => true,
-                 "write" => true,
-                 "access" => true,
-                 "create" => true,
-                 "copy" => true,
-                 "delete" => true,
-                 "download" => true,
-                 "admin" => true),
                "4" => array (
                  "id" => "4",
                  "name" => "Timecard",
@@ -57,7 +45,7 @@ class Phprojekt_RoleModelsRoleModulePermissions_Test extends PHPUnit_Framework_T
                  "copy" => false,
                  "delete" => false,
                  "download" => false,
-                 "admin" => false),
+                 "admin" => false)
              )
            );
         $this->assertEquals($expected, $return);

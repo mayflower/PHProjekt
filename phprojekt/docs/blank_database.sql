@@ -72,11 +72,8 @@ CREATE TABLE `DatabaseManager` (
 CREATE TABLE `User` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
-  `password` varchar(32) NOT NULL,
   `firstname` varchar(255) default NULL,
   `lastname` varchar(255) default NULL,
-  `email` varchar(255) default NULL,
-  `language` varchar(5) NOT NULL,
   `status` varchar(1) default 'A',
   PRIMARY KEY(`id`),
   UNIQUE(`username`)
@@ -457,15 +454,28 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'participantId',1, 'participantId' , 'participantId'   , 'multipleSelectValues'  , 8, 1, NULL, 'User'     , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'startTime',  1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endTime',    1, 'endTime'  , 'endTime'  , 'time'    , 5, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'projectId',  1, 'project' , 'project'   , 'tree'    , 6, 1, NULL, 'Project', '', 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Calendar', 'serialType', 1, 'serialType', 'serialType', 'selectValues', 7, 1, NULL, '1#Once|2#Daily|3#Weekly|4#Montlhy|5#Anually', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'serialDays', 1, 'serialDays', 'serialDays', 'selectValues', 7, 1, NULL, '0#All|1#Monday|2#Tuesday|3#Wednesday|4#Thursday|5#Friday|6#Saturday|7#Sunday', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'endDate',    1, 'endDate'  , 'endDate'  , 'date'    , 8, 1, NULL, NULL     , '', 5, 'center', 1, 0, '1', 0, 1, 0);
 
-INSERT INTO `User` (`id`, `username`, `password`, `firstname`, `lastname`, `email`, `language`, `status`) VALUES
-(1,'test','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
-(2,'test1','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A'),
-(3,'test2','156c3239dbfa5c5222b51514e9d12948',NULL,NULL,'gustavo.solt@gmail.com','','A');
+INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`) VALUES
+(1,'test',NULL,NULL,'A'),
+(2,'test1',NULL,NULL,'A'),
+(3,'test2',NULL,NULL,'A');
+
+INSERT INTO `UserSetting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identifier`) VALUES
+(1, 1, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
+(2, 1, 1, 'email','test@example.com', 1),
+(3, 1, 1, 'language','en', 1),
+(4, 1, 1, 'timeZone','2', 1),
+(5, 2, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
+(6, 2, 1, 'email','test@example.com', 1),
+(7, 2, 1, 'language','en', 1),
+(8, 2, 1, 'timeZone','2', 1),
+(9, 3, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
+(10, 3, 1, 'email','test@example.com', 1),
+(11, 3, 1, 'language','en', 1),
+(12, 3, 1, 'timeZone','2', 1);
 
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
 (1, NULL, '/', 'PHProjekt', 'Test', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),
