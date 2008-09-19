@@ -48,14 +48,14 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    private $_defaultSettings = array('timeZone', 'language');
+    private $_defaultSettings = array('password', 'email', 'timeZone', 'language');
 
     /**
      * Range of dates language setting
      *
      * @var array
      */
-    private $_languageRange = array('de', 'en');
+    private $_languageRange = array('de', 'en', 'es');
 
     /**
      * Range of available timezones
@@ -78,10 +78,17 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      *
      * @param int $userId - if a different user of the current user is needed
      */
-    public function __construct() {
+    public function __construct($userId = null) {
         parent::__construct();
         $this->_config   = Zend_Registry::get('config');
-        $this->_userId   = Phprojekt_Auth::getUserId();
+
+        $tmp = Phprojekt_Auth::getUserId();
+
+        if (empty($userId)) {
+            $this->_userId   = Phprojekt_Auth::getUserId();
+        } else {
+            $this->_userId = (int)$userId;
+        }
         $this->_moduleId = Phprojekt_Module::getId('Project');
     }
 
@@ -185,9 +192,11 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
     /**
      * Gets a list of all settings with its values
      *
+     * @param $getAll boolean get all settings instead of only default settings
+     * 
      * @return array with names => values
      */
-    public function getList() {
+    public function getList($getAll = true) {
 
         $settingsArray = array();
 
@@ -196,15 +205,22 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
 
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
         " AND moduleId = ".$this->_db->quote($this->_moduleId));
+        
         foreach ($record as $oneSetting) {
-
-            $data = array();
-            $data['id'] = $oneSetting->id;
-            $data['keyValue'] = $oneSetting->keyValue;
-            $data['value'] = $oneSetting->value;
-
-
-            $settingsArray[] = $data;
+            
+            if ($getAll || in_array($oneSetting->keyValue, $this->_defaultSettings)) {
+                $data = array();
+                $data['id'] = $oneSetting->id;
+                $data['keyValue'] = $oneSetting->keyValue;
+                if ($oneSetting->keyValue != 'password') {
+                    $data['value'] = $oneSetting->value;
+                } else {
+                    $data['value'] = "";
+                }
+    
+                $settingsArray[] = $data;
+                
+            }
 
         }
 
@@ -244,9 +260,6 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
     {
         $converted = array();
         $translate = Zend_Registry::get('translate');
-        if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
-
-        }
 
         // username
         $data = array();
@@ -263,6 +276,39 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         $data['readOnly'] = true;
         $converted[] = $data;
 
+        if (isset($this->keyValue) && $this->keyValue == 'password') {
+
+            $data = array();
+            $data['key']      = 'oldValue';
+            $data['label']    = $translate->translate('Old Password');
+            $data['type']     = 'password';
+            $data['hint']     = $translate->translate('old Password');
+            $data['order']    = 0;
+            $data['position'] = 2;
+            $data['fieldset'] = '';
+            $data['range']    = array('id'   => '',
+            'name' => '');
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+
+            $data = array();
+            $data['key']      = 'confirmValue';
+            $data['label']    = $translate->translate('Confirm Password');
+            $data['type']     = 'password';
+            $data['hint']     = $translate->translate('Confirm Password');
+            $data['order']    = 0;
+            $data['position'] = 3;
+            $data['fieldset'] = '';
+            $data['range']    = array('id'   => '',
+            'name' => '');
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+
+
+        }
+
         // value
         $data = array();
         $data['key']      = 'value';
@@ -270,7 +316,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         $data['type']     = 'text';
         $data['hint']     = $translate->translate('value');
         $data['order']    = 0;
-        $data['position'] = 2;
+        $data['position'] = 4;
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
         'name' => '');
@@ -278,26 +324,31 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         $data['readOnly'] = false;
 
         if (isset($this->keyValue) && in_array($this->keyValue, $this->_defaultSettings)) {
-            $data['type'] = 'selectbox';
-            $data['range'] = array();
+            $tmp = '_'.$this->keyValue.'Range';
+            if (!empty($this->$tmp)) {
+                $data['type'] = 'selectbox';
+                $data['range'] = array();
 
-            switch ($this->keyValue) {
-                case 'timeZone':
-                    $values = $this->_timeZoneRange;
-                    break;
-                case 'language':
-                    $values = $this->_languageRange;
-                    break;
+                switch ($this->keyValue) {
+                    case 'timeZone':
+                        $values = $this->_timeZoneRange;
+                        break;
+                    case 'language':
+                        $values = $this->_languageRange;
+                        break;
+                }
+                if (is_array($values)) {
+                    foreach ($values as $value) {
+                        $data['range'][] = array('id'=> $value, 'name' => $value);
+                    }
+                }
             }
-            foreach ($values as $value) {
-                $data['range'][] = array('id'=> $value, 'name' => $value);
+            elseif (isset($this->keyValue) && $this->keyValue == 'password') {
+                $data['type'] = 'password';
             }
         }
 
-
         $converted[] = $data;
-
-        
 
         return $converted;
     }
@@ -320,6 +371,9 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
                 break;
             case 'language':
                 $return = in_array($value, $this->_languageRange);
+                break;
+            case 'password':
+                $return = !empty($value);
                 break;
         }
         return $return;

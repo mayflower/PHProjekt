@@ -59,21 +59,22 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['required'] = true;
         $data['readOnly'] = false;
         $converted[] = $data;
-
-        // password
-        $data = array();
-        $data['key']      = 'password';
-        $data['label']    = $translate->translate('password');
-        $data['type']     = 'text';
-        $data['hint']     = $translate->translate('password');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $converted[] = $data;
+        if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
+            // password
+            $data = array();
+            $data['key']      = 'password';
+            $data['label']    = $translate->translate('password');
+            $data['type']     = 'password';
+            $data['hint']     = $translate->translate('password');
+            $data['order']    = 0;
+            $data['position'] = 2;
+            $data['fieldset'] = '';
+            $data['range']    = array('id'   => '',
+                                      'name' => '');
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+        }
 
         // firstname
         $data = array();
@@ -106,37 +107,60 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $converted[] = $data;
 
         // email
-        $data = array();
-        $data['key']      = 'email';
-        $data['label']    = $translate->translate('email');
-        $data['type']     = 'text';
-        $data['hint']     = $translate->translate('email');
-        $data['order']    = 0;
-        $data['position'] = 5;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $converted[] = $data;
-
-        // language
-        $data = array();
-        $data['key']      = 'language';
-        $data['label']    = $translate->translate('language');
-        $data['type']     = 'selectbox';
-        $data['hint']     = $translate->translate('language');
-        $data['order']    = 0;
-        $data['position'] = 6;
-        $data['fieldset'] = '';
-        $data['range']    = array(array('id'   => 'es',
-                                        'name' => 'Spanish'),
-                                  array('id'   => 'en',
-                                        'name' => 'English'));
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $converted[] = $data;
-
+        if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
+            $data = array();
+            $data['key']      = 'email';
+            $data['label']    = $translate->translate('email');
+            $data['type']     = 'text';
+            $data['hint']     = $translate->translate('email');
+            $data['order']    = 0;
+            $data['position'] = 5;
+            $data['fieldset'] = '';
+            $data['range']    = array('id'   => '',
+                                      'name' => '');
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+    
+            // language
+            $data = array();
+            $data['key']      = 'language';
+            $data['label']    = $translate->translate('language');
+            $data['type']     = 'selectbox';
+            $data['hint']     = $translate->translate('language');
+            $data['order']    = 0;
+            $data['position'] = 6;
+            $data['fieldset'] = '';
+            $data['range']    = array(array('id'   => 'es',
+                                            'name' => 'Spanish'),
+                                      array('id'   => 'en',
+                                            'name' => 'English'),
+                                            array('id'   => 'de',
+                                            'name' => 'German'));
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+            
+            // timeZone
+            $data = array();
+            $data['key']      = 'timeZone';
+            $data['label']    = $translate->translate('timeZone');
+            $data['type']     = 'selectbox';
+            $data['hint']     = $translate->translate('timeZone');
+            $data['order']    = 0;
+            $data['position'] = 7;
+            $data['fieldset'] = '';
+            $data['range'] = array();
+            for ($i = -12; $i <= 12; $i++) {
+                $tmp = array();
+                $tmp['id'] = $i;
+                $tmp['name'] = $i;
+                $data['range'][] = $tmp;
+            }
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+        }
 
         // status
         $data = array();
@@ -145,7 +169,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['type']     = 'selectbox';
         $data['hint']     = $translate->translate('status');
         $data['order']    = 0;
-        $data['position'] = 7;
+        $data['position'] = 8;
         $data['fieldset'] = '';
         $data['range']    = array(array('id'   => 'A',
                                         'name' => 'Active'),

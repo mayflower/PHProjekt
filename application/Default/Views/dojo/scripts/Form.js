@@ -269,6 +269,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     this.formdata += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                        itemdisabled);
                     break;
+                case 'password':
+                    this.formdata += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                                                                        itemdisabled);
+                    break;
                 case 'textfield':
                 default:
                     this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,

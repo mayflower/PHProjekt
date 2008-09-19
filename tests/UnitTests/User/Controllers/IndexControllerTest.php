@@ -357,7 +357,7 @@ class User_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"id":"1","keyValue":"timezone","value":"3"}')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"id":"4","keyValue":"timeZone","value":"3"}')) > 0);
     }
 
     /**

@@ -126,25 +126,29 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $keepUser = $authNamespace->userId;
 
 		try {
-            $authNamespace->userId = 0;
+		    
+		    $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
 
-			$user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
-			$user->username = 'Foo';
-			$user->password = md5('Bar');
-			$user->language = 'en_GB';
-			$user->save();
+		    $role->name = 'deleteMe';
+		    
+		    $role->save();
+		    
+		    $modulePermissions = $role->modulePermissions->create();
+		    $modulePermissions->moduleId = 1;
+		    $modulePermissions->roleId = $this->id;
+		    
+		    $modulePermissions->access = 199;
+		    
+		    $this->assertTrue($modulePermissions->save());
+		    
+		    $this->assertNotNull($role->id);
+			$this->assertEquals(5, $role->modulePermissions->count());
 
-			$group       = $user->groups->create();
-			$group->name = 'Test';
-			$this->assertTrue($group->save());
-
-			$this->assertNotNull($user->id);
-			$this->assertEquals(1, $user->groups->count());
-
-			$user->delete();
-
-			$this->assertEquals(0, $user->groups->count());
-			$this->assertNull($user->id);
+			$role->delete();
+			
+			$this->assertEquals(4, $role->modulePermissions->count());
+			$this->assertNull($role->id);
+		    
         } catch (Exception $e) {
             $authNamespace->userId = $keepUser;
             $this->fail($e->getMessage());
@@ -180,11 +184,9 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $authNamespace->userId = 0;
             $user = new Phprojekt_User_User(array('db'=>$this->sharedFixture));
             $user->username  = 'gustavo';
-            $user->password  = md5('gustavo');
             $user->firstname = 'Gustavo';
             $user->lastname  = 'Solt';
-            $user->language  = 'es_AR';
-
+            
             $this->assertTrue($user->save());
 
             $gustavo = new Phprojekt_User_User(array('db' => $this->sharedFixture));

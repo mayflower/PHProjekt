@@ -26,9 +26,9 @@
  */
 class Core_UserController extends Core_IndexController
 {
-    
+
     const DEACTIVATED_USER_TEXT = "The user was set as inactive correctly";
-    
+
     /**
      * Return a list of all the users except the current user
      *
@@ -115,9 +115,9 @@ class Core_UserController extends Core_IndexController
         }
 
         $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => implode(',', $showId));
+        'message' => $message,
+        'code'    => 0,
+        'id'      => implode(',', $showId));
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -133,17 +133,11 @@ class Core_UserController extends Core_IndexController
         $settings = new Phprojekt_User_UserSetting();
         $metadata = $settings->getFieldDefinition();
         $records  = $settings->getList();
-        
-        $data = array();
-        $data['id'] = -1;
-        $data['keyValue'] = "Password";
-        $data['value'] = "";
-        $records[] = $data;
-        
+
         $numRows  = array('numRows' => count($records));
         $data     = array("metadata"=> $metadata,
-                          "data"    => $records,
-                          "numRows" => count($records));
+        "data"    => $records,
+        "numRows" => count($records));
         echo Phprojekt_Converter_Json::convert($data);
     }
 
@@ -170,40 +164,119 @@ class Core_UserController extends Core_IndexController
         }
         echo Phprojekt_Converter_Json::convert($return);
     }
-    
+
     /**
-     * Deactivate a certain user
-     * 
-     * If the user do not exist
-     * return a Phprojekt_PublishedException
+     * Returns the detail for a Settings in JSON.
      *
      * @requestparam integer id ...
      *
      * @return void
      */
-    public function jsonDeleteAction()
+    public function jsonDetailAction()
+    {
+        $translate  = Zend_Registry::get('translate');
+        $user = new Phprojekt_User_User();
+        $id       = $this->getRequest()->getParam("id");
+
+
+        $user->find($id);
+        $data = array();
+        $data['id'] = $user->id;
+        $data['username'] = (empty($user->username))?"":$user->username;
+        $data['firstname'] = (empty($user->firstname))?"":$user->firstname;
+        $data['lastname'] = (empty($user->lastname))?"":$user->lastname;
+        $data['status'] = (empty($user->status))?"":$user->status;
+
+        $settings = new Phprojekt_User_UserSetting($data["id"], 1);
+
+        $tmp = $settings->getList(false);
+
+        foreach ($tmp as $dummy => $oneSetting) {
+
+            $dummy = $oneSetting["keyValue"];
+            if (!empty($data["id"])) {
+                $data[$dummy] = $oneSetting["value"];
+            } else {
+                $data[$dummy] = "";
+            }
+        }
+
+        $records = array($data);
+
+
+        $metadata = $user->getInformation(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+
+        $metadata = $metadata->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+
+        $numRows  = array('numRows' => count($records));
+        $data     = array("metadata"=> $metadata,
+        "data"    => $records,
+        "numRows" => count($records));
+
+        echo Phprojekt_Converter_Json::convert($data);
+
+    }
+
+    /**
+     * Saves the current item
+     * Save if you are add one or edit one.
+     * Use the model module for get the data
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException
+     * If not, the return is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonSaveAction()
     {
         $translate = Zend_Registry::get('translate');
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
-        }
-
-        $user = $this->getModelObject()->find($id);
-
-        if ($user instanceof Phprojekt_Model_Interface) {
-            $user->delete();
-            
-            $message = $translate->translate(self::DEACTIVATED_USER_TEXT);
-            $return  = array('type'    => 'success',
-                             'message' => $message,
-                             'code'    => 0,
-                             'id'      => $id);
-
-            echo Phprojekt_Converter_Json::convert($return);
+            $model   = $this->getModelObject();
+            $message = $translate->translate(self::ADD_TRUE_TEXT);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            $model   = $this->getModelObject()->find($id);
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
+
+        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
+        // saving the settings
+        $settings = new Phprojekt_User_UserSetting($model->id, 1);
+
+        $tmp = $settings->getList(false);
+
+        foreach ($tmp as $dummy => $oneSetting) {
+            if ($oneSetting["keyValue"] != 'password') {
+
+                $value = $this->getRequest()->getParam($oneSetting["keyValue"], $oneSetting["value"]);
+
+                $settings->setSetting($oneSetting["keyValue"], $value);
+            }
+
+
+            // password, special case
+            $tmp2 = $this->getRequest()->getParam('password');
+
+            if (!empty($tmp2)) {
+                $crypted = Phprojekt_Auth::cryptString($tmp2);
+
+                $settings->setSetting('password', $crypted);
+            }
+
+        }
+
+        $return    = array('type'    => 'success',
+        'message' => $message,
+        'code'    => 0,
+        'id'      => $model->id);
+
+        echo Phprojekt_Converter_Json::convert($return);
     }
+
+
 }

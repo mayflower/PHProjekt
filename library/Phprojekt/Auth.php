@@ -68,8 +68,11 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         try {
+            
+            $settings = new Phprojekt_User_UserSetting($userId, 1);
+            
             // The password does not match with password provided
-            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$user->password)) {
+            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$settings->getSetting("password"))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
         }
@@ -155,8 +158,8 @@ class Phprojekt_Auth extends Zend_Auth
         
         $user = new Phprojekt_User_User();
         if ($user->find($userId)) {
-            $user->password = $cryptedPassword;
-            $user->save();
+            $settings = new Phprojekt_User_UserSetting($userId, 1);
+            $settings->setSetting('password', $cryptedPassword);
         } else {
             return false;
         }
@@ -174,5 +177,10 @@ class Phprojekt_Auth extends Zend_Auth
     private function _cryptPassword($password)
     {
         return md5($password);
+    }
+    
+    public static function cryptString($string) {
+        $cryptedString = 'phprojektmd5'.$string;
+        return Phprojekt_Auth::_cryptPassword($cryptedString);
     }
 }

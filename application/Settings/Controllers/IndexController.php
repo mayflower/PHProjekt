@@ -45,31 +45,46 @@ class Settings_IndexController extends IndexController
         $message    = $translate->translate(self::ADD_TRUE_TEXT);
         $id         = (int)$this->getRequest()->getParam('id');
         $value      = $this->getRequest()->getParam('value');
-        $setting    = new Phprojekt_User_UserSetting();
-        if ($id != -1) {
-            $setting->find($id);
 
-            if ($setting->validateSetting($setting->keyValue, $value)) {
+        $setting    = new Phprojekt_User_UserSetting();
+
+        $setting->find($id);
+
+        if ($setting->validateSetting($setting->keyValue, $value)) {
+
+            if ($setting->keyValue != 'password') {
+
+
+
                 $setting->setSetting($setting->keyValue, $value);
                 $message = $translate->translate(self::EDIT_TRUE_TEXT);
                 $type = "success";
                 if ($setting->keyValue == 'language') {
                     $message .= ". ".$translate->translate("Please, logout and login again on application to apply the changes.");
                 }
+
             } else {
-                $message = $translate->translate("The value for the setting is incorrect");
-                $type = "error";
+                $confirmValue = $this->getRequest()->getParam('confirmValue');
+                $oldValue = $this->getRequest()->getParam('oldValue', null);
+                
+                if ($value == $confirmValue && !empty($value)) {
+                    if ($setting->getSetting('password') == Phprojekt_Auth::cryptString($oldValue)) {
+                        Phprojekt_Auth::setPassword($value);
+                        $message = $translate->translate(self::EDIT_TRUE_TEXT);
+                        $type = "success";
+                    }
+                    else {
+                        $message = $translate->translate("The old password provided is invalid");
+                        $type = "error";
+                    }
+                } else {
+                    $message = $translate->translate("The password and confirmation are different or empty");
+                    $type = "error";
+                }
             }
         } else {
-            $confirmValue = $this->getRequest()->getParam('confirmValue');
-            if ($value == $confirmValue && !empty($value)) {
-                Phprojekt_Auth::setPassword($value);
-                $message = $translate->translate(self::EDIT_TRUE_TEXT);
-                $type = "success";
-            } else {
-                $message = $translate->translate("The password and confirmation are different or empty");
-                $type = "error";
-            }
+            $message = $translate->translate("The value for the setting is incorrect");
+            $type = "error";
         }
 
         $return = array('type'    => $type,
@@ -92,14 +107,19 @@ class Settings_IndexController extends IndexController
         $translate  = Zend_Registry::get('translate');
         $settings = new Phprojekt_User_UserSetting();
         $id       = $this->getRequest()->getParam("id");
+
+        
+        
         if (empty($id)) {
             $records  = $settings->getList();
-        } elseif ($id == -1) {
+        } elseif ($settings->getSettingNameById($id) == 'password') {
+            $settings->find($id);
             $data = array();
             $data['id'] = -1;
-            $data['keyValue'] = "Password";
+            $data['keyValue'] = "password";
             $data['value'] = "";
             $data['confirmValue'] = "";
+            $data['oldValue'] = "";
             $records = array($data);
         } else {
             //$settings->id = (int)$id;
@@ -112,23 +132,6 @@ class Settings_IndexController extends IndexController
         }
 
         $metadata = $settings->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        
-        if ($id == -1) {
-
-            $data = array();
-            $data['key']      = 'confirmValue';
-            $data['label']    = $translate->translate('Confirm Password');
-            $data['type']     = 'text';
-            $data['hint']     = $translate->translate('Confirm Password');
-            $data['order']    = 0;
-            $data['position'] = 3;
-            $data['fieldset'] = '';
-            $data['range']    = array('id'   => '',
-            'name' => '');
-            $data['required'] = true;
-            $data['readOnly'] = false;
-            $metadata[] = $data;
-        }
 
         $numRows  = array('numRows' => count($records));
         $data     = array("metadata"=> $metadata,
