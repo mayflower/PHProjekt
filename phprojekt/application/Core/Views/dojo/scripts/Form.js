@@ -52,5 +52,9 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                }
             })
         });
+    },
+	
+    updateData:function() {
+        phpr.DataStore.deleteData({url: this._url});
     }
 });
