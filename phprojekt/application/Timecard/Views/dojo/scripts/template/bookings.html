@@ -1,4 +1,34 @@
-<div>{{project}}</div>
-<div>{{amount}}&nbsp;<button dojoType="dijit.form.Button" baseClass="negative" id="deleteBookingButton_{{id}}" type="submit" iconClass="cross">Delete</button></div>
-<div>{{notes}}</div>
-<br />
+<div id="projectBookingForm_{{id}}" style="display:none;">
+    <form dojoType="dijit.form.Form" id="bookingForm_{{id}}" name="bookingForm_{{id}}" style="display:inline;" onsubmit="return false;">
+    <input dojoType="dijit.form.TextBox" type="hidden" name="date" id="bookingDate_{{id}}" value="{{date}}" />
+    <input dojoType="dijit.form.TextBox" type="hidden" name="projectId" id="projectId_{{id}}" value="{{projectId}}" />
+    <table class="projectBookingForm">
+    <tr>
+        <td>
+            <label>{{projectIdLabel}}</label>
+        </td>    
+        <td>
+            <div id="projectName_{{id}}">{{projectName}}</div>
+        </td>
+    </tr>    
+    <tr>
+        <td>
+            <label for="{{amount}}">{{amountLabel}}</label>
+        </td>    
+        <td>
+            <input type="text" id="amount_{{id}}"  name="amount" dojoType="dijit.form.TimeTextBox" constraints=" {formatLength:'short', timePattern:'HH:mm'}" value="T{{amount}}" style="width:55px" />
+            <button dojoType="dijit.form.Button" baseClass="positive" id="saveBookingButton_{{id}}" type="submit" iconClass="tick"> {{saveText}}</button>
+            <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton_{{id}}" type="submit" iconClass="cross">{{deleteText}}</button>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">    
+            <label for="{{notes}}">{{notesLabel}}</label>
+        </td>
+        <td>
+            <input type="text" id="notes_{{id}}" name="notes" dojoType="dijit.form.TextBox" required="true" ucfirst="false" value="{{notes}}" />        
+        </td>
+    </tr>    
+    </table>        
+    </form>
+</div>
