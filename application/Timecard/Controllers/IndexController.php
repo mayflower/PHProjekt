@@ -271,8 +271,15 @@ class Timecard_IndexController extends IndexController
     public function jsonBookingSaveAction()
     {
         $translate = Zend_Registry::get('translate');
-        $model     = Phprojekt_Loader::getModel('Timecard','Timeproj');
-        $message   = $translate->translate(self::ADD_TRUE_TEXT);
+        $id        = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            $model   = Phprojekt_Loader::getModel('Timecard','Timeproj');
+            $message = $translate->translate(self::ADD_TRUE_TEXT);
+        } else {
+            $model   = Phprojekt_Loader::getModel('Timecard','Timeproj')->find($id);
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+        }
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 

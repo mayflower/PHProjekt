@@ -127,15 +127,16 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
      */    
     public function getRecords($date)
     {       
-        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
-        $order  = ' projectId ASC ';    
+        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);  
+        $order  = ' id ASC ';    
         $models = $this->fetchAll($where, $order);
         
         $information     = $this->getInformation($order);
         $fieldDefinition = $information->getFieldDefinition($order);
 
-        $datas   = array();
-        $data    = array();
+        $data   = array();
+        $datas  = array('timecard' => array(),
+                        'timeproj' => array());
         $numRows = 0;
 
         foreach ($models as $cmodel) {
@@ -150,12 +151,35 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
                 }
                 $data['rights'] = $cmodel->getRights();
             }
-            $datas[] = $data;
+            $datas['timeproj'][] = $data;
         }
 
+        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $order  = 'startTime ASC';  
+        $timecard = new Timecard_Models_Timecard();
+        $timecardRecords = $timecard->fetchall($where, $order);
+        
+        $information     = $timecard->getInformation($order);
+        $timeCardfieldDefinition = $information->getFieldDefinition($order);
+
+        foreach ($timecardRecords as $cmodel) {
+            $data['id'] = $cmodel->id;
+            foreach ($timeCardfieldDefinition as $field) {
+                $key   = $field['key'];
+                $value = $cmodel->$key;
+                if (is_scalar($value)) {
+                    $data[$key] = $value;
+                } else {
+                    $data[$key] = (string) $value;
+                }
+                $data['rights'] = $cmodel->getRights();
+            }
+            $datas['timecard'][] = $data;
+        }
+        
         $numRows = count($datas);
         $data = array('metadata' => $fieldDefinition,
-                      'data'     => $datas,
+                      'data'     => $datas,                      
                       'numRows'  => (int)$numRows);
 
         return $data;
