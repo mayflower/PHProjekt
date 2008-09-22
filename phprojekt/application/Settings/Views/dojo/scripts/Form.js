@@ -43,5 +43,5 @@ dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
                 }
             })
         });
-    },
+    }
 });

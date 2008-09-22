@@ -8,6 +8,6 @@ dojo.declare("phpr.User.Form", phpr.Core.Form, {
         // users can't be deleted
         this._deletePermissions = false;
         this._accessPermissions = true;
-    },
+    }
     
 });
