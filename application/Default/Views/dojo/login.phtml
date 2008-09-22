@@ -59,7 +59,7 @@
                     }
                 ?>
         		</div>
-			    <form method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
+			    <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
      				<table width="100%" align="center" class="form">
      				<col class="col1" />
     					<tr>
@@ -75,11 +75,12 @@
         					</td>
     					</tr>
     					<tr>
-    						<td  class="label"><button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
+    						<td></td>
+    						<td><button dojoType="dijit.form.Button" baseClass="positive" id="loginButton" type="submit" iconClass="tick">
 									Login
 								</button>
 							</td>
-    						<td></td>
+    						
     					</tr>
     				</table>
     			</form>
@@ -88,3 +89,16 @@
     </div>
 </body>
 </html>
+<script language="javascript">
+function init() {
+    dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
+        if (e.keyCode == dojo.keys.ENTER) {
+            dojo.byId("loginForm").submit();
+        }
+        else {
+            return true;
+        }
+    });
+}
+dojo.addOnLoad(init);
+</script>
