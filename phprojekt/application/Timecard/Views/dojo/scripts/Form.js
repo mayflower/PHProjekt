@@ -104,7 +104,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
                 start: data[i].startTime,
                 end: data[i].endTime,
-                id:  data[i].id
+                id:  data[i].id,
+                deleteText: phpr.nls.get('Delete')				
             });
         }   	
 		
@@ -115,7 +116,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             timecardStartText: phpr.nls.get("Start"),
             timecardEndText: phpr.nls.get("End"),
             hoursdata: hoursdata,
-			totalHours: this.convertTime(totalHours)
+			totalHours: this.convertTime(totalHours),
+            saveText:   phpr.nls.get('Save')
 		});
         
         for (var i = 0; i < data.length; i++) {

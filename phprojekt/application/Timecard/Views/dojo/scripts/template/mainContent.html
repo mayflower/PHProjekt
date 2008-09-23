@@ -3,9 +3,26 @@
     <div dojoType="dijit.layout.ContentPane" style="width:70%;" splitter="true" region="leading" class="prepend-24" id="detailsBox">
     </div>
     <!-- Timecards summary views buttons -->
-    <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24" style="height:5%;">
-        <a href="javascript:dojo.publish('Timecard.changeListView',['month']);">Month</a>
-        <a href="javascript:dojo.publish('Timecard.changeListView',['today']);">Today</a>
+    <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24" style="height:7%;">
+        <div style="float: left; width: 50%">
+            <label for="selectDate">{{selectDate}}</label>
+            <br />
+            <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" value="{{date}}" style="width:70%"
+                onMouseEnter=""
+                onMouseLeave=""
+                onKeyDown=""            
+                onChange="
+                if (this.value != null) {
+                    dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]);
+                    dojo.byId('hoursSaveButton').focus();
+                } ">
+        </div>
+        <div style="float: left; width: 25%">
+            <a href="javascript:dojo.publish('Timecard.changeListView',['month']);">Month</a>
+        </div>
+        <div style="float: left; width: 25%">
+            <a href="javascript:dojo.publish('Timecard.changeListView',['today']);">Today</a>
+        </div>
     </div>
     <!-- Timecards summary  -->
     <div dojoType="dijit.layout.ContentPane" region="center" id="gridBox" class="prepend-24">
