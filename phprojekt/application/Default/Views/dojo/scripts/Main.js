@@ -279,7 +279,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     phpr.module   = 'Project';
                 }
 
-                phpr.destroySimpleWidget("newEntry");
                 var navigation ='<ul id="nav_main">';
                 var activeTab = false;
                 for (var i = 0; i < modules.length; i++) {
@@ -311,7 +310,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         currentModule != 'BasicData') {
                         var params = {
                             label:     '',
-                            id:        'newEntry',
                             iconClass: 'add',
                             alt:       'Add'
                         };
@@ -326,7 +324,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 }
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
                 if (createPermissions) {
-                    dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
+                    dojo.connect(dijit.byId(newEntry.id), "onClick", dojo.hitch(this, "newEntry"));
                 }
 
                 this.customSetSubmoduleNavigation();
@@ -340,18 +338,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    Delete all the submodules and put the add button
         dojo.byId("subModuleNavigation").innerHTML = '';
-        phpr.destroySimpleWidget("newEntry");
         var newEntry = null;
         var params = {
             label:     '',
-            id:        'newEntry',
             iconClass: 'add',
             alt:       'Add'
         };
         newEntry = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(newEntry.domNode);
         //phpr.initWidgets(dojo.byId("subModuleNavigation"));
-        dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
+        dojo.connect(dijit.byId(newEntry.id), "onClick", dojo.hitch(this, "newEntry"));
     },
 
     customSetSubmoduleNavigation:function() {

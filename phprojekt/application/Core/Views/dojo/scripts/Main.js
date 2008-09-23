@@ -34,7 +34,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
 		phpr.destroyWidgets("buttonRow");
-        var newEntry   = null;
         var navigation = '<ul id="nav_main">';
         var activeTab  = false;
         var modules    = new Array();
@@ -64,13 +63,12 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 	
         var params = {
             label:     '',
-            id:        'newEntry',
             iconClass: 'add',
             alt:       'Add'
         };
-        newEntry = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(newEntry.domNode);
+        var tmp = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(tmp.domNode);
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
-        dojo.connect(dijit.byId("newEntry"), "onClick", dojo.hitch(this, "newEntry"));
+        dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "newEntry"));
 	 }
 });
