@@ -95,7 +95,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         phpr.destroyWidgets("checkAdminAccessAdd");
         phpr.destroyWidgets("checkWriteAccessAdd");
         phpr.destroyWidgets("checkReadAccessAdd");
-
+        var userList = this.userStore.getList();
+        for (var i in userList) {
+            phpr.destroyWidgets("dataAccess[" + userList[i].id + "]");
+            phpr.destroyWidgets("checkReadAccess[" + userList[i].id + "]");
+            phpr.destroyWidgets("checkWriteAccess[" + userList[i].id + "]");
+			phpr.destroyWidgets("checkAccessAccess[" + userList[i].id + "]");
+			phpr.destroyWidgets("checkCreateAccess[" + userList[i].id + "]");
+			phpr.destroyWidgets("checkCopyAccess[" + userList[i].id + "]");
+			phpr.destroyWidgets("checkDeleteAccess[" + userList[i].id + "]");
+			phpr.destroyWidgets("checkDownloadAccess[" + userList[i].id + "]");
+            phpr.destroyWidgets("checkAdminAccess[" + userList[i].id + "]");
+			phpr.destroyWidgets("checkNoneAccess[" + userList[i].id + "]");
+        }
+		
         // Except the current user
         var accessContent = new Array();
         var currentUser   = 0;
@@ -122,7 +135,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 accessAdminText:    phpr.nls.get('Admin'),
                 accessNoneText:     phpr.nls.get('None'),
                 accessActionText:   phpr.nls.get('Action'),
-                users:              this.userStore.getList(),
+                users:              userList,
                 currentUser:        currentUser,
                 accessContent:      accessContent
             });
