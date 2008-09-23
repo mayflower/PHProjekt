@@ -38,7 +38,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-		phpr.destroySimpleWidget("newEntry");
+		phpr.destroyWidgets("buttonRow");
         var navigation = '<ul id="nav_main">';
         var activeTab  = false;
         var modules    = new Array();

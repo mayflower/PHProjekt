@@ -43,7 +43,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        phpr.destroySimpleWidget("newEntry");
+        phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
 	
         phpr.destroySimpleWidget("workingtimesStart");
