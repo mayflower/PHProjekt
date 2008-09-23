@@ -28,7 +28,11 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("exportGrid");
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
-        this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+			selectDate:    phpr.nls.get('Select other date'),
+			date:          this._date,
+			webpath:       phpr.webpath,
+			currentModule: phpr.module});
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
@@ -40,10 +44,31 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
     setSubGlobalModulesNavigation:function(currentModule) {
         phpr.destroySimpleWidget("newEntry");
-		var buttons = "<a href='javascript:dojo.publish(\"Workingtimes.start\")'>"+phpr.nls.get("Start working time")+"</a>";
-		buttons += "&nbsp;";
-		buttons += "<a href='javascript:dojo.publish(\"Workingtimes.stop\")>"+phpr.nls.get("Stop working time")+"</a>";
-        dojo.byId("subModuleNavigation").innerHTML = buttons;
+        dojo.byId("subModuleNavigation").innerHTML = '';
+	
+        phpr.destroySimpleWidget("workingtimesStart");
+        var workingtimesStart = null;
+        var params = {
+            label:     '',
+            id:        'workingtimesStart',
+            iconClass: 'cross',
+            alt:       phpr.nls.get("Start working time")
+        };
+        workingtimesStart = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(workingtimesStart.domNode);
+        dojo.connect(dijit.byId("workingtimesStart"), "onClick", dojo.hitch(this, "workingtimesStart"));
+				
+        phpr.destroySimpleWidget("workingtimesStop");
+        var workingtimesStop = null;
+        var params = {
+            label:     '',
+            id:        'workingtimesStop',
+            iconClass: 'cross',
+            alt:       phpr.nls.get("Stop working time")
+        };
+        workingtimesStop = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(workingtimesStop.domNode);
+        dojo.connect(dijit.byId("workingtimesStop"), "onClick", dojo.hitch(this, "workingtimesStop"));
     },
 
     changeListView:function(view) {
