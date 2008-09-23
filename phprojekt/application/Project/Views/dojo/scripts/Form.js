@@ -79,18 +79,15 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             // delete buttons for role-user relation
             for (i in relationList) {
                 var userId     = relationList[i].userId;
-                var idName     = "deleteRelation" + userId;
                 var buttonName = "relationDeleteButton" + userId;
-                phpr.destroyWidgets(idName);
                 var params = {
                     label:     '',
-                    id:        idName,
                     iconClass: 'cross',
                     alt:       'Delete'
                 };
-                idName = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(idName.domNode);
-                dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
+                tmp = new dijit.form.Button(params);
+                dojo.byId(buttonName).appendChild(tmp.domNode);
+                dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
             }
         }
     },
@@ -110,11 +107,11 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // description:
         //    Add a new row of one user-role
         //    with the values selected on the first row
-        var roleId = dijit.byId("relationRoleAdd").getValue();
-        var userId = dijit.byId("relationUserAdd").getValue();
+        var roleId = dijit.byId("relationRoleAdd").attr('value');
+        var userId = dijit.byId("relationUserAdd").attr('value');
         if (!dojo.byId("trRelationFor" + userId) && userId > 0) {
-            var roleName = dijit.byId("relationRoleAdd").getDisplayedValue();
-            var userName = dijit.byId("relationUserAdd").getDisplayedValue();
+            var roleName = dijit.byId("relationRoleAdd").attr('displayedValue');
+            var userName = dijit.byId("relationUserAdd").attr('displayedValue');
             var table    = dojo.byId("relationTable");
             var row      = table.insertRow(table.rows.length);
             row.id       = "trRelationFor" + userId;
@@ -128,17 +125,15 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
             dojo.parser.parse(row);
 
-            var idName     = "deleteRelation" + userId;
             var buttonName = "relationDeleteButton" + userId;
             var params = {
                 label:     '',
-                id:        idName,
                 iconClass: 'cross',
                 alt:       'Delete'
             };
-            idName = new dijit.form.Button(params);
-            dojo.byId(buttonName).appendChild(idName.domNode);
-            dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
+            tmp = new dijit.form.Button(params);
+            dojo.byId(buttonName).appendChild(tmp.domNode);
+            dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
         }
     },
 

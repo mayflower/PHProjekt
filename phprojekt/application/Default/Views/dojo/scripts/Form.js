@@ -145,20 +145,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // delete buttons for access
             // add check all and none functions
             for (i in accessContent) {
-				var idName = "deleteAccess" + userId;
-                phpr.destroyWidgets(idName);
                 var userId     = accessContent[i]["userId"];
                 var buttonName = "accessDeleteButton" + userId;
                 var params = {
                     label:     '',
-                    id:        idName,
                     iconClass: 'cross',
                     alt:       'Delete'
                 };
 				
-                idName = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(idName.domNode);
-                dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
+                var tmp = new dijit.form.Button(params);
+                dojo.byId(buttonName).appendChild(tmp.domNode);
+                dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteAccess", userId));
                 dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
                 dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
             }
@@ -358,7 +355,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             phpr.destroyWidgets("checkDownloadAccess[" + userId + "]");
             phpr.destroyWidgets("checkAdminAccess[" + userId + "]");
             phpr.destroyWidgets("checkNoneAccess[" + userId + "]");
-            phpr.destroyWidgets("deleteAccess" + userId);
             phpr.destroyWidgets("accessDeleteButton" + userId);
 			
             var userName = dijit.byId("dataAccessAdd").attr('displayedValue');
@@ -392,17 +388,15 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
             dojo.parser.parse(row);
 					
-            var idName = "deleteAccess" + userId;        
             var buttonName = "accessDeleteButton" + userId;
             var params = {
                 label:     '',
-                id:        idName,
                 iconClass: 'cross',
                 alt:       'Delete'
             };
-            idName = new dijit.form.Button(params);
-            dojo.byId(buttonName).appendChild(idName.domNode);
-            dojo.connect(dijit.byId(idName), "onClick", dojo.hitch(this, "deleteAccess", userId));
+            var tmp = new dijit.form.Button(params);
+            dojo.byId(buttonName).appendChild(tmp.domNode);
+            dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteAccess", userId));
             dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
             dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
         }
@@ -423,8 +417,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         phpr.destroyWidgets("checkDeleteAccess[" + userId + "]");
         phpr.destroyWidgets("checkDownloadAccess[" + userId + "]");
         phpr.destroyWidgets("checkAdminAccess[" + userId + "]");
-        phpr.destroyWidgets("checkNoneAccess[" + userId + "]");
-        phpr.destroyWidgets("deleteAccess" + userId);
+        phpr.destroyWidgets("checkNoneAccess[" + userId + "]");       
         phpr.destroyWidgets("accessDeleteButton" + userId);
 
         var e = dojo.byId("trAccessFor" + userId);
