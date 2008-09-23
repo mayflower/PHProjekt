@@ -110,7 +110,10 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                         }
                     }
                     var node = _tree._itemNodeMap[item.id];
-                    _tree.focusNode(node);
+					if (node) {
+						_tree.focusNode(node);
+						node.labelNode.style.fontWeight = "bold";
+					}
             }});
 		}
     },
@@ -126,9 +129,12 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         this.tree.model.store.fetch({
             query: {parent: id.toString()},
             onItem: function(item){
-                node = _tree._itemNodeMap[item.id];
-				_paths[item.id] = item.path;				
+                _paths[item.id] = item.path;				
 				_this.initTree(item.id);
+				node = _tree._itemNodeMap[item.id];
+                if (node) {
+					node.labelNode.style.fontWeight = "normal";
+				}
             }
         });		
 	},
@@ -141,15 +147,17 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
 		if (id > 1) {
 			var _tree = this.tree;
 			var _this = this;
-			var usedPath = this._paths[id].toString().split("\/");
-			for (i in this._paths) {
-				if (id != i) {
-					path = this._paths[i].toString().split("\/");
-					for (j in path) {
-						if (path[j] != usedPath[j]) {
-							node = _tree._itemNodeMap[path[j]];
-							if (node) {
-								_tree._collapseNode(node);
+			if (this._paths[id]) {
+				var usedPath = this._paths[id].toString().split("\/");
+				for (i in this._paths) {
+					if (id != i) {
+						path = this._paths[i].toString().split("\/");
+						for (j in path) {
+							if (path[j] != usedPath[j]) {
+								node = _tree._itemNodeMap[path[j]];
+								if (node) {
+									_tree._collapseNode(node);
+								}
 							}
 						}
 					}
@@ -162,11 +170,13 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         // summary:
         //    Return the parent id of one project
         // description:
-        //    Return the parent id of one project     		
-		var paths = this._paths[id].toString().split("\/").reverse();
-		for (i in paths) {
-			if (paths[i] > 0) {
-				return paths[i];
+        //    Return the parent id of one project
+		if (this._paths[id]) {
+			var paths = this._paths[id].toString().split("\/").reverse();
+			for (i in paths) {
+				if (paths[i] > 0) {
+					return paths[i];
+				}
 			}
 		}
 		return 1;
