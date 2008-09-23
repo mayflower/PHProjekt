@@ -46,6 +46,7 @@ dojo.require("dojox.dtl");
 dojo.require("dojox.dtl.Context");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.widget.Toaster");
+dojo.require("dojox.layout.ScrollPane");
 
 // global vars
 var module = null;

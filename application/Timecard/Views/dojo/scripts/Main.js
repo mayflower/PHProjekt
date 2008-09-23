@@ -45,14 +45,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		buttons += "<a href='javascript:dojo.publish(\"Workingtimes.stop\")>"+phpr.nls.get("Stop working time")+"</a>";
         dojo.byId("subModuleNavigation").innerHTML = buttons;
     },
-	
-    setDate:function(date) {
-         dateFormatted = dojo.date.locale.format(date, {formatLength:'full',selector:'date', locale:this.lang});
-         dojo.byId("tcFormHeader").innerHTML = "<h3>Zeiterfassung f&uuml;r den "+dateFormatted+"</h3>";
-         dojo.byId("tcBookingsSummary").innerHTML = "<h4>Zeit die am "+dateFormatted+" erfasst wurde:</h4>";
-         dojo.byId('tcProjectDate').value = date;
-         dojo.byId('tcDate').value = date;
-    },
 
     changeListView:function(view) {
         // summary:

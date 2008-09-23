@@ -47,7 +47,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Load all the views  		
         this.setHourUrl();
         this.setBookUrl();		
-        this.getFormData(1,0,1);
+        this.getFormData(1,1,1);
 	},
 	
     setHourUrl:function() {
@@ -128,9 +128,33 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // summary:
         //    Reload the Date view
         // description:
-        //    Reload the HDate picker div with the current date		
+        //    Reload the HDate picker div with the current date
+
+        var month = this._dateObject.getMonth();       
+        var year  = this._dateObject.getFullYear();
+		var dd    = new Date(year, month, 0);
+        var lastDay = dd.getDate() + 1;
+		var week    = dd.getDay();
+		var days = new Array();
+
+        var months = ['January', 'February', 'March', 'April', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
+		var weeks = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        var monthString = phpr.nls.get(months[month-1]);
+		
+		for (var i = 1; i < lastDay; i++) {
+			var weekString = phpr.nls.get(weeks[week]);
+			days.push({'day': i, 'month': monthString, 'week': weekString});
+			week++;
+			if (week > 6) {
+				week = 0;
+			}
+		}
         this.render(["phpr.Timecard.template", "date.html"], dojo.byId('TimecardDate') , {
-            date: this._date
+            date: this._date,
+			days: days,
+			today: this._dateObject.getDate(),
+			monthNumber: month,
+			yearNumber:  year
 		});		
 	},
 	
