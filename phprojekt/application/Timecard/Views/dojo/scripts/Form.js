@@ -110,7 +110,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         }   	
 		
 		this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
-            dateForm: dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang}),
 			date: this._date,
             timecardWorkingTimesText: phpr.nls.get("Working Times"),
             timecardStartText: phpr.nls.get("Start"),
@@ -228,9 +227,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
 			hours: hours,
 			hourWidth: hourWidth, 
-            dateForm: dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang}),
             date: this._date,
-			timecardProjectTimesText: phpr.nls.get("Project"),
+			timecardProjectTimesText: phpr.nls.get("Project bookings"),
 			values: range,
 			bookingdata: bookingdata
         });

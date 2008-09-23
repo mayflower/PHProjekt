@@ -1,5 +1,5 @@
 <div>
-    <h4 style="color: #294064; font-weight: bold;">{{timecardProjectTimesText}}<br />{{dateForm}}</h4>
+    <h4 style="color: #294064; font-weight: bold;">{{timecardProjectTimesText}}</h4>
 </div>
 
 <div dojoType="dojo.dnd.Source" id="projectBookingSource" copyOnly="true" selfAccept="false" style="background-color: white; border: 2px solid black; width:700px; margin: 4px; padding-top: 4px;">
@@ -7,7 +7,8 @@
     <div class="dojoDndItem" id="{{item.id}}">{{item.name}}</div>
 {% endfor %}
 </div>
-    
+<br />
+<br />  
 <div style="width:700px; margin: 4px;">
 {% for hour in hours %}
     <div id="hours{{hour}}" dojoType="dijit.layout.ContentPane" style="background-color: white; display:block; float: left; width: {{hourWidth}}px;">
