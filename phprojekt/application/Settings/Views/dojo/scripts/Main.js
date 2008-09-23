@@ -42,7 +42,7 @@ dojo.declare("phpr.Settings.Main", phpr.Default.Main, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        phpr.destroySimpleWidget("newEntry");
+        phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
     }
 });

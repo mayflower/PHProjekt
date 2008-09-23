@@ -33,6 +33,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
+		phpr.destroyWidgets("buttonRow");
         var newEntry   = null;
         var navigation = '<ul id="nav_main">';
         var activeTab  = false;
@@ -61,7 +62,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         navigation += "</ul>";
         dojo.byId("subModuleNavigation").innerHTML = navigation;
 	
-        phpr.destroySimpleWidget("newEntry");
         var params = {
             label:     '',
             id:        'newEntry',

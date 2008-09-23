@@ -234,6 +234,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
+		phpr.destroyWidgets("buttonRow");
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self = this;
         var usefirstModule = true;
