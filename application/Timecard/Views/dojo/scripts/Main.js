@@ -29,7 +29,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-			selectDate:    phpr.nls.get('Select other date'),
+			selectDate:    phpr.nls.get('Select date'),
+			dateForm:      dojo.date.locale.format(this._date, {formatLength:'full', selector:'date', locale: this.lang}),
 			date:          this._date,
 			webpath:       phpr.webpath,
 			currentModule: phpr.module});
