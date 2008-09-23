@@ -191,7 +191,8 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":1')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower(',{"key":"projectId","label":"Project","type":"selectbox","hint":"parent","order":0,"position":3')) > 0);
         $this->assertTrue(strpos($response, '"numRows":6}') > 0);
     }
 
@@ -277,7 +278,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":2,"fieldset":')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":1')) > 0);
     }
 
     /**
@@ -362,7 +363,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         // checking some parts of the index template
-        $this->assertTrue(strpos(strtolower($response), strtolower('{"metadata":[{"key":"projectId","label":"Project","type":"selectbox","hint":"parent","order":0,"position":1')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('{"key":"title","label":"Title","type":"textfield","hint":"title","order":0,"position":1')) > 0);
         $this->assertTrue(strpos($response, '"numRows":1}') > 0);
     }
 
@@ -814,11 +815,11 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $config = Zend_Registry::get('config');
         $config->language = "en";
 
-        $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Project'));
+        $request->setParams(array('action'=>'jsonGetModulesPermission','controller'=>'index','module'=>'Project'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonSave');
-        $request->setPathInfo('/Project/index/jsonSave');
-        $request->setRequestUri('/Project/index/jsonSave');
+        $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonSave/');
+        $request->setPathInfo('/Project/index/jsonSave/');
+        $request->setRequestUri('/Project/index/jsonSave/');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -889,6 +890,7 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
             $error_produced = true;
         }
         $response = ob_get_contents();
+
         ob_end_clean();
 
         // checking the response for invalid project

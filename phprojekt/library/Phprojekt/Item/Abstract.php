@@ -270,6 +270,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         if (null !== $value && is_string($value)) {
             $value = stripslashes($value);
         }
+        
+        $types = $this->_dbManager->getTypes(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        if ($types[$varname] == 'textarea' && strlen($value) == 0) {
+           $value = $value . " \n ";
+        }
 
         return $value;
     }

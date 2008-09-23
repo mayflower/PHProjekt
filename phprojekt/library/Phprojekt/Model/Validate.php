@@ -137,7 +137,7 @@ class Phprojekt_Model_Validate
                     $valid = Inspector::validate('timestamp', $value, $messages, false);
                     break;
                 default:
-                    $valid = Inspector::validate('string', $value, $messages, false);
+                    $valid = Inspector::validate('string', $value, $messages, true);
                     break;
             }
         }
