@@ -326,6 +326,23 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
         return $result;
     }
+    
+    /**
+     * Return an array with form types to simplify things
+     *
+     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     *
+     * @return array
+     */
+    public function getTypes($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    {
+        $result = array();
+        foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
+            $tmp = $field->tableField;
+            $result[$tmp] = $field->formType;
+        }
+        return $result;
+    }
 
     /**
      * Gets the data range for a select using a model
