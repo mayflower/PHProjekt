@@ -173,12 +173,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
                              date("s", $u), date("m"), date("d"), date("Y"));
 
-                    $value = date("H:i:s", $value);
-
-                    // running again the sanitizer to normalize the format
-                    $value = Inspector::sanitize('time', $value, $messages, false);
-
-
+                    $value = date("H:i:s", $value);                   
                     break;
                 case 'datetime':
                 case 'timestamp':
@@ -193,7 +188,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
                     // running again the sanitizer to normalize the format
                     $value = Inspector::sanitize('timestamp', $value, $messages, false);
-
                     break;
                 default:
                     $value = Inspector::sanitize('string', $value, $messages, false);

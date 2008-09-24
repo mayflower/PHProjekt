@@ -27,7 +27,6 @@
  */
 class Inspector_Sanitizer
 {
-    
     /**
      * Registered Types for Sanitizing
      *
@@ -55,7 +54,6 @@ class Inspector_Sanitizer
         'word'         => 'Word',
         'html'         => 'Html'
     );
-    
     
     /**
      * Sanitize value to 'Word'
@@ -130,18 +128,17 @@ class Inspector_Sanitizer
      * 
      * @return mixed sanitized value
      */    
-    public function sanitizeIsoTime($value, &$messages){   
-         
-        $format = 'H:i:s';
-        
+    public function sanitizeIsoTime($value, &$messages)
+    {       
+    	$format = 'H:i:s'; 
         if (is_int($value)) {
             return date($format, $value);
         } else {
-            $time = strtotime($value);
-            if ($time === false) {
-                return null;
+        	if (ereg("([A-Za-z0-9 \r\t])?([0-9]{1,2}):([0-9]{1,2}):?([0-9]{1,2})?(A-Za-z0-9 \r\t])?", $value, $regs)) {
+                return date($format, mktime($regs[2], $regs[3], 0, date("m"), date("d"), date("Y")));        	      
+        	} else {
+        		return null;
             }
-            return date($format, $time);
         }
     }
     
@@ -197,7 +194,6 @@ class Inspector_Sanitizer
      */
     public function sanitizeInt($value, &$messages)
     {
-        
         // sanitize numerics and non-strings
         if ((! is_string($value)) || (is_numeric($value))) {
             // we double-cast here to honor scientific notation.
@@ -241,7 +237,8 @@ class Inspector_Sanitizer
      * 
      * @return mixed sanitized value
      */
-    public function sanitizeHtml($value, &$messages){
+    public function sanitizeHtml($value, &$messages)
+    {
          return HTMLPurifier::getInstance()->purify($value);
     }
     
@@ -255,7 +252,6 @@ class Inspector_Sanitizer
      */
     public function sanitizeFloat($value, &$messages)
     {
-    
         // normal sanitize.  non-string, or already numeric, get converted in
         // place.
         if (! is_string($value) || is_numeric($value)) {
@@ -317,7 +313,6 @@ class Inspector_Sanitizer
      */
     public function sanitizeBool($value, &$messages)
     {
-        
         // PHP booleans
         if ($value === true || $value === false) {
             return $value;
@@ -375,5 +370,4 @@ class Inspector_Sanitizer
             return $result;
         }
     }
-
 }
