@@ -3,11 +3,9 @@ dojo.provide("phpr.Settings.Form");
 dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
     
     setPermissions:function (data) {
-        if (this.id > 0) {
-            this._writePermissions  = true;
-            this._deletePermissions = false;
-            this._accessPermissions = true;
-        }
+        this._writePermissions  = true;
+        this._deletePermissions = false;
+        this._accessPermissions = true;
     },
     
     addBasicFields:function() {

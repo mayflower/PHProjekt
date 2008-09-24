@@ -196,6 +196,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @param integer $rootEventId id of one root event
      * @param boolean $onlyUsers indicates if only the user list is necessary
+     * 
      * @return array with startDate => participantId => event id or only participantId => event id if it is indicated
      */
     public function getRelatedEvents ($rootEventId, $onlyUsers = false) {
