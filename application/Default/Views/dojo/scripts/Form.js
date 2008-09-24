@@ -283,8 +283,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     this.formdata += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
-                case 'upload':
-                    this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                case 'percentage':
+                    this.formdata += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
                 case 'textfield':

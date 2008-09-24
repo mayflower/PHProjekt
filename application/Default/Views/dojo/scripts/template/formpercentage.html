@@ -1,0 +1,27 @@
+<tr>
+    <td class="label">
+        <label for="{{labelfor}}">{{label}}</label>
+    </td>
+    <td>
+        <div dojoType="dijit.form.HorizontalSlider" name="{{id}}"
+             onChange="dojo.byId('{{id}}Text').value=dojo.number.format(arguments[0]/100,{places:1,pattern:'#%'});"
+             value="{{value}}"
+             maximum="100"
+             minimum="0"
+             pageIncrement="100"
+             showButtons="false"
+             intermediateChanges="true"
+             style="width:50%; height: 20px;"
+            {{disabled}}
+            id="{{id}}">
+            <ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" 
+                style="height:1.2em;font-size:75%;color:gray;" count="5" numericMargin="1"></ol>
+            <div dojoType="dijit.form.HorizontalRule" container="topDecoration" 
+                 count=5 style="height:5px;"></div>
+            <div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" 
+                 count=10 style="height:5px;"></div>
+        </div>
+
+        <input type="hidden" readonly id="{{id}}Text" name="{{id}}Text" size="4" value="{{value}}" required="{{required}}">
+    </td>
+</tr>

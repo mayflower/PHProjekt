@@ -36,6 +36,16 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							disabled: (itemdisabled) ? "disabled" : ''
 				});
 	},
+	percentageFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
+		return this.render(["phpr.Default.template", "formpercentage.html"], null, {
+							label: itemlabel,
+							labelfor: itemid,
+							id: itemid,
+							value: itemvalue,
+							required: itemrequired,
+							disabled: (itemdisabled) ? "disabled" : ''
+				});
+	},
 	textAreaRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
 		return this.render(["phpr.Default.template", "formtextarea.html"], null, {
 							label: itemlabel,

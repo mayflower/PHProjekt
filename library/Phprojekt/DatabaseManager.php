@@ -174,6 +174,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $entry['type'] = 'multipleselectbox';
                     $converted[] = $entry;
                     break;
+                case 'percentage':
                 case 'textarea':
                 case 'textfield':
                 case 'checkbox':
