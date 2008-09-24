@@ -12,7 +12,9 @@
 
 .phprojekt .dijitInputField INPUT,
 .phprojekt .dijitTextBox,
+.phprojekt .dijitMultiSelect,
 .phprojekt .dijitComboBox,
+.phprojekt select,
 .phprojekt .dijitSpinner {
 	margin: 0em 0.1em;
 	width: 300px;
@@ -20,6 +22,8 @@
 
 .phprojekt .dijitTextBox,
 .phprojekt .dijitComboBox,
+.phprojekt .dijitMultiSelect,
+.phprojekt select,
 .phprojekt .dijitSpinner,
 .phprojekt .dijitInlineEditor input,
 .phprojekt .dijitTextArea {
@@ -36,7 +40,9 @@
 
 .phprojekt .dijitTextBoxDisabled,
 .phprojekt .dijitComboBoxDisabled,
+.phprojekt select,
 .phprojekt .dijitSpinnerDisabled,
+.phprojekt .dijitMultiSelect,
 .phprojekt .dijitTextAreaDisabled {
 	color: gray;
 }
@@ -47,7 +53,8 @@
 	color: #eee;
 }
 
-.phprojekt .dijitComboBox .dijitButtonNode {
+.phprojekt .dijitComboBox .dijitButtonNode,
+.phprojekt select {
 	padding: 0 0.2em;
 }
 .phprojekt .dijitComboBox .dijitButtonNode,
@@ -59,6 +66,7 @@
 
 .phprojekt .dijitTextBoxFocused,
 .phprojekt .dijitComboBoxFocused,
+.phprojekt select,
 .phprojekt .dijitSpinnerFocused,
 .phprojekt .dijitTextAreaFocused {
 	/* input field when focused (ie: typing affects it) */
