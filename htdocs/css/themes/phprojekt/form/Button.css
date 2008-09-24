@@ -37,6 +37,21 @@
 	width: 16px;
 	height: 16px;
 }
+
+.phprojekt .start {
+    background-image: url(../images/clock_play.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.phprojekt .stop {
+    background-image: url(../images/clock_stop.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
 .phprojekt .dijitButtonNode {
 	/* enabled state - inner */
 	/* border:1px outset #a0a0a0; */

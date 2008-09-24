@@ -4,10 +4,11 @@
 
 <div dojoType="dojo.dnd.Source" id="projectBookingSource" copyOnly="true" selfAccept="false" style="background-color: white; border: 2px solid black; width:700px; margin: 4px; padding-top: 4px;">
 {% for item in values %}
-    <div class="dojoDndItem" id="{{item.id}}">{{item.name}}</div>
+    <div class="dojoDndItem" id="{{item.id}}" style="cursor: move;">{{item.name}}</div>
 {% endfor %}
 </div>
 <br />
+<div class="greyContainer" style="width:698px; font-weight: bold; text-align:center;">{{helpText}}</div>
 <br />  
 <div style="width:700px; margin: 4px;">
 {% for hour in hours %}

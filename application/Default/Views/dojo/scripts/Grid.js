@@ -94,7 +94,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 field:    "id",
                 width:    "40px",
                 editable: false,
-                styles:   "text-decoration:underline;"
+                styles:   "text-decoration:underline; cursor:pointer;"
             });
         }
         for (var i = 0; i < meta.length; i++) {
@@ -130,7 +130,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         type:       phpr.grid.cells.DateTextBox,
                         formatter:  phpr.grid.formatDate,
                         constraint: {formatLength: 'short', selector: "date"},
-                        editable: meta[i]['readOnly'] ? false : true
+                        editable:   meta[i]['readOnly'] ? false : true
                     });
                     break;
 
@@ -142,23 +142,33 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         styles:     "text-align:center;",
                         type:       dojox.grid.cells.Input,
                         formatter:  phpr.grid.formatTime,
-                        editable: meta[i]['readOnly'] ? false : true
+                        editable:   meta[i]['readOnly'] ? false : true
                     });
                     break;
 
                 default:
                     this.gridLayout.push({
-                        width:  porcent,
-                        name:   meta[i]["label"],
-                        field:  meta[i]["key"],
-                        type:   dojox.grid.cells.Input,
+                        width:    porcent,
+                        name:     meta[i]["label"],
+                        field:    meta[i]["key"],
+                        type:     dojox.grid.cells.Input,
+						styles:   "",
                         editable: meta[i]['readOnly'] ? false : true
                     });
                     break;
             }
         }
+		this.customGridLayout(meta);
     },
 
+
+    customGridLayout:function(meta) {	
+        // summary:
+        //    Custom functions for the layout
+        // description:
+        //    Custom functions for the layout
+	},
+	
     setClickEdit:function() {
         // summary:
         //    Set the edit type

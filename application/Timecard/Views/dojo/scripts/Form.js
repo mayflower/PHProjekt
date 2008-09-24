@@ -104,8 +104,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
                 start: data[i].startTime,
                 end: data[i].endTime,
-                id:  data[i].id,
-                deleteText: phpr.nls.get('Delete')				
+                id:  data[i].id,			
             });
         }   	
 		
@@ -116,7 +115,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             timecardEndText: phpr.nls.get("End"),
             hoursdata: hoursdata,
 			totalHours: this.convertTime(totalHours),
-            saveText:   phpr.nls.get('Save')
 		});
         
         for (var i = 0; i < data.length; i++) {
@@ -156,7 +154,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 			today: this._dateObject.getDate(),
 			monthNumber: month,
 			yearNumber:  year
-		});		
+		});	
+		
+		dojo.byId("dateLongText").innerHTML = dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang});
+		dijit.byId("selectDate").attr('value', null);	
 	},
 	
     reloadBookingView: function() {
@@ -225,12 +226,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 	   
 	   // Complete view
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
-			hours: hours,
-			hourWidth: hourWidth, 
-            date: this._date,
+			hours:                    hours,
+			hourWidth:                hourWidth, 
+            date:                     this._date,
 			timecardProjectTimesText: phpr.nls.get("Project bookings"),
-			values: range,
-			bookingdata: bookingdata
+			values:                   range,
+			helpText:                 phpr.nls.get('Add working time and drag projects into the bar'),
+			bookingdata:              bookingdata
         });
     
         this.contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
