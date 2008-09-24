@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
-    <style>
+    <style type="text/css">
         @import "<?php echo $this->webpath; ?>dojo/dojo/resources/dojo.css";
         @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojekt.css";
         @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit.css";
@@ -19,6 +19,16 @@
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.layout.BorderContainer");
 		dojo.require("dijit.layout.ContentPane");
+		function init() {
+            dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
+                if (e.keyCode == dojo.keys.ENTER) {
+                    dojo.byId("loginForm").submit();
+                } else {
+                    return true;
+                }
+            });
+        }
+        dojo.addOnLoad(init);
 	</script>
 </head>
 <body class="phprojekt">
@@ -28,7 +38,7 @@
         </div>
         <!-- Border Container which splits page in navigation and form/list view: -->
         <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
-        <!-- navigation panel -->
+            <!-- navigation panel -->
             <div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
                 <div id="subheader" class="block">
                     <div id="navigation-container-titel">
@@ -51,12 +61,12 @@
         		<!-- Exception Form -->
         		<div id="serverFeedback" class="prepend-24">
         		<?php
-                    if ($this->message) {
-                        echo '<div class="error">'.$this->message.'</div>';
-                    }
-                    if ($this->errors) {
-                        echo '<div class="error">'.$this->errors.'</div>';
-                    }
+                if ($this->message) {
+                    echo '<div class="error">'.$this->message.'</div>';
+                }
+                if ($this->errors) {
+                    echo '<div class="error">'.$this->errors.'</div>';
+                }
                 ?>
         		</div>
 			    <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
@@ -65,17 +75,17 @@
     					<tr>
         					<td class="label"><label for="username">Username:</label></td>
         					<td>
-        					    <input dojoType="dijit.form.TextBox" type="text" name="username" value="<?php echo $this->username; ?>" />
+        					    <input dojoType="dijit.form.TextBox" id="username" type="text" name="username" value="<?php echo $this->username; ?>" />
         					</td>
     					</tr>
     					<tr>
         					<td class="label"><label for="password">Password:</label></td>
         					<td>
-        					    <input dojoType="dijit.form.TextBox" type="password" name="password" value="" />
+        					    <input dojoType="dijit.form.TextBox" id="password" type="password" name="password" value="" />
         					</td>
     					</tr>
     					<tr>
-    						<td></td>
+    						<td>&nbsp;</td>
     						<td><button dojoType="dijit.form.Button" baseClass="positive" id="loginButton" type="submit" iconClass="tick">
 									Login
 								</button>
@@ -89,16 +99,3 @@
     </div>
 </body>
 </html>
-<script language="javascript">
-function init() {
-    dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
-        if (e.keyCode == dojo.keys.ENTER) {
-            dojo.byId("loginForm").submit();
-        }
-        else {
-            return true;
-        }
-    });
-}
-dojo.addOnLoad(init);
-</script>
