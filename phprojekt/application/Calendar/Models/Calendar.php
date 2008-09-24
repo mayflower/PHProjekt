@@ -144,9 +144,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     
                 }
                 
-    
+
                 Default_Helpers_Save::save($model, $request->getParams());
-    
+
                 if ($rootEventId == 0) {
                     $rootEventId = $model->id;
                     $request->setParam('parentId', $rootEventId);
@@ -228,7 +228,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         return $relatedEvents;
     }
-    
+
     /**
      * Validate the data of the current record
      *
@@ -237,11 +237,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     public function recordValidate() {
         
         // one is the unique value available because calendar is a global module
-    //var_dump(Phprojekt_Module::getId());
-    if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_name)) == 1) {
-	        $this->projectId = 1;
-	        return true;
+        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_name)) >= 1) {
+            $this->projectId = 1;
         }
+        return true;
     }
 
     /**
