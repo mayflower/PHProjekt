@@ -3,11 +3,11 @@
         <div style="color: #294064; font-size: 25px; text-align: center">
             {{hoursDiff}}
         </div>
+        <div style="float: right; text-align: center; margin-top: -40px;">
+            <button dojoType="dijit.form.Button" baseClass="negative" id="deleteHourButton_{{id}}" type="submit" iconClass="cross"></button>
+        </div>
         <div style="color: #294064; text-align: center">
             {{start}} - {{end}}
-        </div>
-        <div style="text-align: center; padding-top:5px;">
-            <button dojoType="dijit.form.Button" baseClass="negative" id="deleteHourButton_{{id}}" type="submit" iconClass="cross">{{deleteText}}</button>
         </div>
     </div>
 </div>

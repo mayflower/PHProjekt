@@ -29,9 +29,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-			selectDate:    phpr.nls.get('Select date'),
+			selectDate:    phpr.nls.get('Change date'),
 			dateForm:      dojo.date.locale.format(this._date, {formatLength:'full', selector:'date', locale: this.lang}),
-			date:          this._date,
 			webpath:       phpr.webpath,
 			currentModule: phpr.module});
         this.setSubGlobalModulesNavigation();
@@ -52,7 +51,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         var params = {
             label:     '',
             id:        'workingtimesStart',
-            iconClass: 'cross',
+            iconClass: 'start',
             alt:       phpr.nls.get("Start working time")
         };
         workingtimesStart = new dijit.form.Button(params);
@@ -64,7 +63,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         var params = {
             label:     '',
             id:        'workingtimesStop',
-            iconClass: 'cross',
+            iconClass: 'stop',
             alt:       phpr.nls.get("Stop working time")
         };
         workingtimesStop = new dijit.form.Button(params);

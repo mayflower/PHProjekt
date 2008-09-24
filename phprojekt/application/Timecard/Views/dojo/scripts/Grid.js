@@ -36,6 +36,10 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         return false;
     },
 	
+	customGridLayout:function(meta) {
+	   this.gridLayout[0].styles = "cursor:pointer;"	
+	},
+	
     showForm:function(e) {
         if (e.cellIndex == 0) {
             var item  = this.grid.getItem(e.rowIndex);
