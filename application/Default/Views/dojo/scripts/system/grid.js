@@ -21,6 +21,10 @@ phpr.grid.formatTime = function(value) {
         return value;
     }
 },
+phpr.grid.formatPercentage = function(value) {
+	value = dojo.number.round(value, 2);
+    return value;
+},
 
 phpr.grid.formatDate = function(value) {
     var date = '';
