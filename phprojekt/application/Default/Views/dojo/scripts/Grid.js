@@ -12,7 +12,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     _oldRowValues: new Array(),
     gridData:      new Array(),
     url:           null,
-	_tagUrl:       null,
+    _tagUrl:       null,
 
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
@@ -131,6 +131,19 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         formatter:  phpr.grid.formatDate,
                         constraint: {formatLength: 'short', selector: "date"},
                         editable:   meta[i]['readOnly'] ? false : true
+                    });
+                    break;
+
+                case'percentage':
+                    this.gridLayout.push({
+                        width:       porcent,
+                        name:        meta[i]["label"],
+                        field:       meta[i]["key"],
+                        styles:      "text-align:center;",
+                        type:        dojox.grid.cells._Widget,
+                        widgetClass: "dijit.form.HorizontalSlider",
+                        formatter:   phpr.grid.formatPercentage,
+                        editable:    meta[i]['readOnly'] ? false : true
                     });
                     break;
 
@@ -278,10 +291,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // summary:
         //    Check the access of the item for the user
         // description:
-        //    If the user can´t edit the item keep the current value for restor it later
-        //    We can´t stop the edition, but we can restore the value
+        //    If the user canï¿½t edit the item keep the current value for restor it later
+        //    We canï¿½t stop the edition, but we can restore the value
         if (!this.canEdit(inRowIndex)) {
-            // Keep the old value if the user can´t edit
+            // Keep the old value if the user canï¿½t edit
             if (!this._oldRowValues[inRowIndex]) {
                 this._oldRowValues[inRowIndex] = {};
             }
@@ -310,7 +323,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Save the changed values for store
         // description:
         //    Save only the items that was changed, for save it later
-        //    If the user can´t edit the item, restore the last value
+        //    If the user canï¿½t edit the item, restore the last value
         if (!this.canEdit(inRowIndex)) {
             var item  = this.grid.getItem(inRowIndex);
             var value = this._oldRowValues[inRowIndex][inFieldIndex];
