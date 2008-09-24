@@ -337,6 +337,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function is responsible for displaying the Navigation of the current Global Module
         // description:
         //    Delete all the submodules and put the add button
+		phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
         var newEntry = null;
         var params = {
@@ -346,7 +347,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         };
         newEntry = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(newEntry.domNode);
-        //phpr.initWidgets(dojo.byId("subModuleNavigation"));
         dojo.connect(dijit.byId(newEntry.id), "onClick", dojo.hitch(this, "newEntry"));
     },
 
