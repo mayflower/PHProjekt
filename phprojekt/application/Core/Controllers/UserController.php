@@ -26,9 +26,6 @@
  */
 class Core_UserController extends Core_IndexController
 {
-
-    const DEACTIVATED_USER_TEXT = "The user was set as inactive correctly";
-
     /**
      * Return a list of all the users except the current user
      *
@@ -74,7 +71,6 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonSetSettingAction()
     {
-        $message      = '';
         $settingName  = (string) $this->getRequest()->getParam('name', null);
         $settingValue = (string) $this->getRequest()->getParam('value', null);
 
@@ -115,9 +111,9 @@ class Core_UserController extends Core_IndexController
         }
 
         $return = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => implode(',', $showId));
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => implode(',', $showId));
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -134,10 +130,9 @@ class Core_UserController extends Core_IndexController
         $metadata = $settings->getFieldDefinition();
         $records  = $settings->getList();
 
-        $numRows  = array('numRows' => count($records));
         $data     = array("metadata"=> $metadata,
-        "data"    => $records,
-        "numRows" => count($records));
+                          "data"    => $records,
+                          "numRows" => count($records));
         echo Phprojekt_Converter_Json::convert($data);
     }
 
@@ -150,7 +145,6 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonDeleteSettingAction()
     {
-        $message     = '';
         $settingName = (string) $this->getRequest()->getParam('name', null);
         if (!empty($settingName)) {
             $setting = new Phprojekt_User_UserSetting();
@@ -174,25 +168,23 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonDetailAction()
     {
-        $translate  = Zend_Registry::get('translate');
         $user = new Phprojekt_User_User();
         $id       = $this->getRequest()->getParam("id");
 
-
         $user->find($id);
         $data = array();
-        $data['id'] = $user->id;
-        $data['username'] = (empty($user->username))?"":$user->username;
+        
+        $data['id']        = $user->id;
+        $data['username']  = (empty($user->username))?"":$user->username;
         $data['firstname'] = (empty($user->firstname))?"":$user->firstname;
-        $data['lastname'] = (empty($user->lastname))?"":$user->lastname;
-        $data['status'] = (empty($user->status))?"":$user->status;
+        $data['lastname']  = (empty($user->lastname))?"":$user->lastname;
+        $data['status']    = (empty($user->status))?"":$user->status;
 
         $settings = new Phprojekt_User_UserSetting($data["id"], 1);
 
         $tmp = $settings->getList(false);
 
         foreach ($tmp as $dummy => $oneSetting) {
-
             $dummy = $oneSetting["keyValue"];
             if (!empty($data["id"])) {
                 $data[$dummy] = $oneSetting["value"];
@@ -203,18 +195,14 @@ class Core_UserController extends Core_IndexController
 
         $records = array($data);
 
-
         $metadata = $user->getInformation(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
         $metadata = $metadata->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        $numRows  = array('numRows' => count($records));
         $data     = array("metadata"=> $metadata,
-        "data"    => $records,
-        "numRows" => count($records));
+                          "data"    => $records,
+                          "numRows" => count($records));
 
         echo Phprojekt_Converter_Json::convert($data);
-
     }
 
     /**
@@ -248,35 +236,27 @@ class Core_UserController extends Core_IndexController
         // saving the settings
         $settings = new Phprojekt_User_UserSetting($model->id, 1);
 
-        $tmp = $settings->getList(false);
+        $settingsList = $settings->getList(false);
 
-        foreach ($tmp as $dummy => $oneSetting) {
+        foreach ($settingsList as $oneSetting) {
             if ($oneSetting["keyValue"] != 'password') {
-
                 $value = $this->getRequest()->getParam($oneSetting["keyValue"], $oneSetting["value"]);
-
                 $settings->setSetting($oneSetting["keyValue"], $value);
             }
-
-
             // password, special case
-            $tmp2 = $this->getRequest()->getParam('password');
+            $password = $this->getRequest()->getParam('password');
 
-            if (!empty($tmp2)) {
-                $crypted = Phprojekt_Auth::cryptString($tmp2);
-
+            if (!empty($password)) {
+                $crypted = Phprojekt_Auth::cryptString($password);
                 $settings->setSetting('password', $crypted);
             }
-
         }
 
         $return    = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => $model->id);
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-
-
 }

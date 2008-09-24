@@ -28,7 +28,6 @@
  */
 class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
 {
-
     /**
      * User Id related with settings - by default the session userId
      *
@@ -72,17 +71,15 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      */
     protected $_config = null;
 
-
     /**
      * User Setting constructor
      *
      * @param int $userId - if a different user of the current user is needed
      */
-    public function __construct($userId = null) {
+    public function __construct($userId = null)
+    {
         parent::__construct();
         $this->_config   = Zend_Registry::get('config');
-
-        $tmp = Phprojekt_Auth::getUserId();
 
         if (empty($userId)) {
             $this->_userId   = Phprojekt_Auth::getUserId();
@@ -97,8 +94,8 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      *
      * @return void
      */
-    public function checkDefaultSettings() {
-
+    public function checkDefaultSettings()
+    {
         foreach ($this->_defaultSettings as $oneSettingKey) {
             $value = '';
             $tmp = $this->getSetting($oneSettingKey);
@@ -119,8 +116,8 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @param string $settingName name of the setting to be found
      * @return string value of the setting
      */
-    public function getSetting($settingName) {
-
+    public function getSetting($settingName)
+    {
         // Cache the settings for this user
         $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
         if (isset($userSettingsNamespace->$settingName)) {
@@ -144,10 +141,11 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @param integer $id name of the setting to be found
      * @return string name of the setting
      */
-    public function getSettingNameById($id) {
+    public function getSettingNameById($id)
+    {
         $toReturn = '';
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-        " AND id = ".$this->_db->quote($id));
+                                  " AND id = ".$this->_db->quote($id));
         if (!empty($record)) {
             $toReturn = $record[0]->keyValue;
         }
@@ -161,13 +159,13 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @param string $settingValue the value to be stored
      * @return boolean if it was saved or not.
      */
-    public function setSetting($settingName, $settingValue) {
-
+    public function setSetting($settingName, $settingValue)
+    {
         if ($this->validateSetting($settingName, $settingValue)) {
 
             $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-            " AND keyValue = ".$this->_db->quote($settingName) .
-            " AND moduleId = ".$this->_db->quote($this->_moduleId));
+                                      " AND keyValue = ".$this->_db->quote($settingName) .
+                                      " AND moduleId = ".$this->_db->quote($this->_moduleId));
             if (!empty($record)) {
                 $record = $record[0];
             } else {
@@ -196,15 +194,15 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * 
      * @return array with names => values
      */
-    public function getList($getAll = true) {
-
+    public function getList($getAll = true)
+    {
         $settingsArray = array();
 
         // check default settings
         $this->checkDefaultSettings();
 
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-        " AND moduleId = ".$this->_db->quote($this->_moduleId));
+                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
         
         foreach ($record as $oneSetting) {
             
@@ -217,13 +215,9 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
                 } else {
                     $data['value'] = "";
                 }
-    
                 $settingsArray[] = $data;
-                
             }
-
         }
-
         return $settingsArray;
     }
 
@@ -233,11 +227,11 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @param boolean $settingName the name of the setting to be deleted
      * @return boolean it it was deleted sucessfull
      */
-    public function deleteSetting($settingName) {
-
+    public function deleteSetting($settingName)
+    {
         $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
-        " AND keyValue = ".$this->_db->quote($settingName) .
-        " AND moduleId = ".$this->_db->quote($this->_moduleId));
+                                  " AND keyValue = ".$this->_db->quote($settingName) .
+                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $record = $record[0];
             $record->delete();
@@ -271,43 +265,11 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         $data['position'] = 1;
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
-        'name' => '');
+                                  'name' => '');
         $data['required'] = true;
         $data['readOnly'] = true;
         $converted[] = $data;
 
-        if (isset($this->keyValue) && $this->keyValue == 'password') {
-
-            $data = array();
-            $data['key']      = 'oldValue';
-            $data['label']    = $translate->translate('Old Password');
-            $data['type']     = 'password';
-            $data['hint']     = $translate->translate('old Password');
-            $data['order']    = 0;
-            $data['position'] = 2;
-            $data['fieldset'] = '';
-            $data['range']    = array('id'   => '',
-            'name' => '');
-            $data['required'] = true;
-            $data['readOnly'] = false;
-            $converted[] = $data;
-
-            $data = array();
-            $data['key']      = 'confirmValue';
-            $data['label']    = $translate->translate('Confirm Password');
-            $data['type']     = 'password';
-            $data['hint']     = $translate->translate('Confirm Password');
-            $data['order']    = 0;
-            $data['position'] = 3;
-            $data['fieldset'] = '';
-            $data['range']    = array('id'   => '',
-            'name' => '');
-            $data['required'] = true;
-            $data['readOnly'] = false;
-            $converted[] = $data;
-
-
-        }
 
         // value
         $data = array();
@@ -316,10 +278,10 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         $data['type']     = 'text';
         $data['hint']     = $translate->translate('value');
         $data['order']    = 0;
-        $data['position'] = 4;
+        $data['position'] = 2;
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
-        'name' => '');
+                                  'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
 
@@ -342,13 +304,41 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
                         $data['range'][] = array('id'=> $value, 'name' => $value);
                     }
                 }
-            }
-            elseif (isset($this->keyValue) && $this->keyValue == 'password') {
+            } elseif (isset($this->keyValue) && $this->keyValue == 'password') {
                 $data['type'] = 'password';
             }
         }
-
         $converted[] = $data;
+                       
+        if (isset($this->keyValue) && $this->keyValue == 'password') {
+            $data = array();
+            $data['key']      = 'confirmValue';
+            $data['label']    = $translate->translate('Confirm Password');
+            $data['type']     = 'password';
+            $data['hint']     = $translate->translate('Confirm Password');
+            $data['order']    = 0;
+            $data['position'] = 3;
+            $data['fieldset'] = '';
+            $data['range']    = array('id'   => '',
+                                      'name' => '');
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;
+            
+            $data = array();
+            $data['key']      = 'oldValue';
+            $data['label']    = $translate->translate('Old Password');
+            $data['type']     = 'password';
+            $data['hint']     = $translate->translate('Old Password');
+            $data['order']    = 0;
+            $data['position'] = 4;
+            $data['fieldset'] = '';
+            $data['range']    = array('id'   => '',
+                                      'name' => '');
+            $data['required'] = true;
+            $data['readOnly'] = false;
+            $converted[] = $data;            
+        }
 
         return $converted;
     }
@@ -361,8 +351,8 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      *
      * @return boolean true if the value is valid for the provied key.
      */
-    public function validateSetting($key, $value) {
-
+    public function validateSetting($key, $value)
+    {
         $return = true;
 
         switch ($key) {
@@ -378,5 +368,4 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         }
         return $return;
     }
-
 }

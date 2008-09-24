@@ -14,5 +14,13 @@ dojo.declare("phpr.Settings.Grid", phpr.Default.Grid, {
 
     useIdInGrid: function() {
         return false;
-    }
+    },
+	
+    customGridLayout:function(meta) {
+       this.gridLayout[0].styles = "cursor:pointer;"    
+    },
+	
+    canEdit:function(inRowIndex) {
+        return false;
+    }		
 });
