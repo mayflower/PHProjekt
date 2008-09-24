@@ -228,6 +228,21 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         return $relatedEvents;
     }
+    
+    /**
+     * Validate the data of the current record
+     *
+     * @return boolean
+     */
+    public function recordValidate() {
+        
+        // one is the unique value available because calendar is a global module
+    //var_dump(Phprojekt_Module::getId());
+    if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_name)) == 1) {
+	        $this->projectId = 1;
+	        return true;
+        }
+    }
 
     /**
      * Sets on participantId the list of all participants of one event

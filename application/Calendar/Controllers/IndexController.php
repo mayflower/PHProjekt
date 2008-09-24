@@ -133,13 +133,10 @@ class Calendar_IndexController extends IndexController
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
-        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
         $itemId    = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
-        } else if (!empty($projectId)) {
-            $records = $this->getModelObject()->fetchAll('projectId = ' . (int) $projectId . ' AND participantId = '. PHprojekt_Auth::getUserId(), null, $count, $offset);
         } else {
             $records = $this->getModelObject()->fetchAll('participantId = '. PHprojekt_Auth::getUserId(), null, $count, $offset);
         }
