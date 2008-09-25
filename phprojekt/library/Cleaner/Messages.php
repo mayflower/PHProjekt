@@ -6,8 +6,8 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
  * 
  */
@@ -18,12 +18,12 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Messages
+class Cleaner_Messages
 {
     /**
      * Cached translation messages
@@ -40,7 +40,7 @@ class Inspector_Messages
     protected $_messages;
     
     /**
-     * Constructor of Inspector_Messages
+     * Constructor of Cleaner_Messages
      *
      */
     public function __construct()
@@ -90,8 +90,7 @@ class Inspector_Messages
     public function add($message)
     {
         $this->_messages[] = $message;
-    }
-    
+    }    
     
     /**
      * Check, if a certain messagekey was added
@@ -123,15 +122,13 @@ class Inspector_Messages
      * @return array
      */
     protected static function _load($locale)
-    {
-        
+    {        
         $filename = 'Locale/' . $locale . '.php';
         
         if (!file_exists($filename)) {
-            throw new Inspector_SystemException('Locale not available');
+            throw new Cleaner_SystemException('Locale not available');
         }
         
         return (include $filename);
-    }
-    
+    }    
 }

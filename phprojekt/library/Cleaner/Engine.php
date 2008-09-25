@@ -6,58 +6,57 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
  * 
  */
 
 /**
- * Inspector Engine
+ * Cleaner Engine
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Engine
-{
-    
+class Cleaner_Engine
+{    
     /**
      * Class Name for Messages
      *
      * @var string
      */
-    protected $_messagesClass = 'Inspector_Messages';
+    protected $_messagesClass = 'Cleaner_Messages';
     
     /**
      * Class Name for Sanitizer
      *
      * @var string
      */
-    protected $_sanitizerClass = 'Inspector_Sanitizer';
+    protected $_sanitizerClass = 'Cleaner_Sanitizer';
     
     /**
      * Class Name for Escaper
      *
      * @var string
      */
-    protected $_escaperClass = 'Inspector_Escaper';
+    protected $_escaperClass = 'Cleaner_Escaper';
     
     /**
      * Default Class Name for Validator
      *
      * @var string
      */
-    protected $_validatorClass = 'Inspector_Validator';
+    protected $_validatorClass = 'Cleaner_Validator';
 
     /**
-     * Instance of Inspector_Engine (Singleton)
+     * Instance of Cleaner_Engine (Singleton)
      *
-     * @var Inspector_Engine
+     * @var Cleaner_Engine
      * 
      */
     protected static $_instance = null;
@@ -70,7 +69,7 @@ class Inspector_Engine
     public static function getInstance()
     {
         if (self::$_instance === null) {
-            self::$_instance  = new Inspector_Engine();
+            self::$_instance  = new Cleaner_Engine();
         }
         
         return self::$_instance;
@@ -123,8 +122,7 @@ class Inspector_Engine
         $name = self::$_instance->_escaperClass;
         return new $name();
     }
-    
-    
+        
     /**
      * Set classname of individual Sanitizer implementation
      *
@@ -172,8 +170,7 @@ class Inspector_Engine
     {
         self::$_instance->_messagesClass = $className;
     }
-    
-    
+        
     /**
      * Escapes a value by a certain scope and type
      *
@@ -191,20 +188,19 @@ class Inspector_Engine
         $escaper = self::getEscaper();
         
         if (!array_key_exists($scope, $escaper->escapers)) {
-            throw new Inspector_Exception('Escaper for Scope '.$scope.
+            throw new Cleaner_Exception('Escaper for Scope '.$scope.
             ' does not exist');
         }
         
         $scopeTypes = $escaper->escapers[$scope];
         
         if (!array_key_exists($type, $scopeTypes)) {
-            throw new Inspector_Exception('Escaper of Type '.$type.
+            throw new Cleaner_Exception('Escaper of Type '.$type.
             ' does not exist');
         }
         
         return call_user_method('escape' . $scopeTypes[$type], $escaper,
-         $value);
-        
+         $value);        
     }
     
     /**
@@ -223,13 +219,12 @@ class Inspector_Engine
         $sanitizer = self::getSanitizer();
         
         if (!array_key_exists($type, $sanitizer->sanitizers)) {
-            throw new Inspector_Exception('Sanitizer of Type '.$type.
+            throw new Cleaner_Exception('Sanitizer of Type '.$type.
             ' does not exist');
         }
         
         return call_user_method_array('sanitize' . 
-        $sanitizer->sanitizers[$type], $sanitizer, array($value, $messages));
-        
+        $sanitizer->sanitizers[$type], $sanitizer, array($value, $messages));        
     }
     
     /**
@@ -248,16 +243,12 @@ class Inspector_Engine
         $validator = self::getValidator();
         
         if (!array_key_exists($type, $validator->validators)) {
-            throw new Inspector_Exception('Validator of Type ' . $type . 
+            throw new Cleaner_Exception('Validator of Type ' . $type . 
             ' does not exist');
         }
         
         return call_user_method_array('validate' . 
         $validator->validators[$type], $validator, 
-        array($value, $messages));
-        
-    }
-    
-    
-    
+        array($value, $messages));        
+    }    
 }

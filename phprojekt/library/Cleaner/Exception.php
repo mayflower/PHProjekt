@@ -6,7 +6,7 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
+ * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/inspector
  * @since      File available since Release 1.0
  * 
@@ -23,9 +23,8 @@
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Exception extends Exception
-{
-    
+class Cleaner_Exception extends Exception
+{   
     /**
      * Constructor of Exception
      *
@@ -36,6 +35,5 @@ class Inspector_Exception extends Exception
     public function __construct($message)
     {
         parent::__construct($message);
-    }
-    
+    }    
 }

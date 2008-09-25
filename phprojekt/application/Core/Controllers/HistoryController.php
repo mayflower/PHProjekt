@@ -49,8 +49,8 @@ class Core_HistoryController extends Core_IndexController
         $startDate  = $this->getRequest()->getParam('startDate', null);
         $endDate    = $this->getRequest()->getParam('endDate', null);
 
-        $startDate  = Inspector::sanitize('date', $startDate, $messages, false);
-        $endDate    = Inspector::sanitize('date', $endDate, $messages, false);
+        $startDate  = Cleaner::sanitize('date', $startDate, $messages, false);
+        $endDate    = Cleaner::sanitize('date', $endDate, $messages, false);
 
         if (empty($moduleId)) {
             $moduleId = Phprojekt_Module::getId($moduleName);

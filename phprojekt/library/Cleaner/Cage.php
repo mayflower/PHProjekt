@@ -6,8 +6,8 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
  * 
  */
@@ -20,12 +20,12 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Cage
+class Cleaner_Cage
 {
     /**
      * Key/Identifier of scope
@@ -47,11 +47,11 @@ class Inspector_Cage
      * @param array  &$scope Scope to wrap
      * @param string $key    Name of Scope
      * 
-     * @return Inspector_Cage Wrapped Scope
+     * @return Cleaner_Cage Wrapped Scope
      */
     public static function getInstance(&$scope, $key)
     {
-        return new Inspector_Cage($scope, $key);
+        return new Cleaner_Cage($scope, $key);
     }
     
     /**
@@ -82,7 +82,7 @@ class Inspector_Cage
     public function validate($type, $name, &$messages, $empty = false)
     {
         $value = isset($this->_scope[$name]) ? $this->_scope[$name] : null;
-        return Inspector::validate($type, $value, $messages, $empty);
+        return Cleaner::validate($type, $value, $messages, $empty);
     }
     
     /**
@@ -100,7 +100,7 @@ class Inspector_Cage
     $empty = false)
     {
         $value = isset($this->_scope[$name]) ? $this->_scope[$name] : null;
-        return Inspector::sanitize($type, $value, $messages, $default, $empty);
+        return Cleaner::sanitize($type, $value, $messages, $default, $empty);
     }
     
     /**
@@ -116,40 +116,40 @@ class Inspector_Cage
      * @param bool   $sanitize Wheather sanitize value of parameter/item, 
      *                         when value is invalid
      * 
-     * @return Inspector_Parameter Instance, representing selected 
+     * @return Cleaner_Parameter Instance, representing selected 
      *                             parameter/item in Scope
      */
     public function getParameter($type, $name, $empty = false, $default = null,
     $sanitize = true)
     {
-        $messages = Inspector_Engine::getMessages();
+        $messages = Cleaner_Engine::getMessages();
         
         if (!isset($this->_scope[$name]) || 
-            Inspector_Util::isBlank($this->_scope[$name])) {
+            Cleaner_Util::isBlank($this->_scope[$name])) {
             
             if (!$empty) {
                 $messages->add('INVALID_REQUIRED');
             }
             
-            return new Inspector_Parameter(null, null, $default, 
+            return new Cleaner_Parameter(null, null, $default, 
                                            $empty, false, true, 
                                            $messages, 
                                            $type, $name, $this->_key);
         }
     
-        $engine = Inspector_Engine::getInstance();
+        $engine = Cleaner_Engine::getInstance();
 
         $value = $this->_scope[$name];
         
         if ($engine->validate($type, $value, $messages)) {
-            return new Inspector_Parameter(null, $value, $default, 
+            return new Cleaner_Parameter(null, $value, $default, 
                                            true, false, false, 
                                            $messages, 
                                            $type, $name, $this->_key);
         }
         
         if (!$sanitize) {
-            return new Inspector_Parameter(null, $value, $default, 
+            return new Cleaner_Parameter(null, $value, $default, 
                                            false, false, false, 
                                            $messages, 
                                            $type, $name, $this->_key);
@@ -157,25 +157,20 @@ class Inspector_Cage
         
         $clean = $engine->sanitze($type, $value, $messages);
         
-        if (is_null($clean)) {
-            
+        if (is_null($clean)) {            
             if (!$empty) {
                 $messages->add('SANITIZE_DEFAULT');
             }
             
-            return new Inspector_Parameter(null, null, $default, 
+            return new Cleaner_Parameter(null, null, $default, 
                                            $empty, true, true, 
                                            $messages, 
                                            $type, $name, $this->_key);
         }
-        
-        
-        return new Inspector_Parameter($clean, $value, $default, 
+               
+        return new Cleaner_Parameter($clean, $value, $default, 
                                        false, true, false, 
                                        $messages, 
                                        $type, $name, $this->_key);
-        
     }
-    
 }
-
