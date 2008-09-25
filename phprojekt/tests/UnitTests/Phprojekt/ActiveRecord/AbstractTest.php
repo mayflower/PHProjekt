@@ -125,18 +125,15 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 	    $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $keepUser = $authNamespace->userId;
 
-		try {
-		    
+		try {	    
 		    $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
 
-		    $role->name = 'deleteMe';
-		    
+		    $role->name = 'deleteMe';		    
 		    $role->save();
 		    
 		    $modulePermissions = $role->modulePermissions->create();
 		    $modulePermissions->moduleId = 1;
-		    $modulePermissions->roleId = $this->id;
-		    
+		    $modulePermissions->roleId = $role->id;		    
 		    $modulePermissions->access = 199;
 		    
 		    $this->assertTrue($modulePermissions->save());

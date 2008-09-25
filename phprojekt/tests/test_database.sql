@@ -478,15 +478,15 @@ INSERT INTO `User` (`id`, `username`, `firstname`, `lastname`, `status`) VALUES
 INSERT INTO `UserSetting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identifier`) VALUES
 (1, 1, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
 (2, 1, 1, 'email','test@example.com', 1),
-(3, 1, 1, 'language','de_DE', 1),
+(3, 1, 1, 'language','en', 1),
 (4, 1, 1, 'timeZone','2', 1),
 (5, 2, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
 (6, 2, 1, 'email','test@example.com', 1),
-(7, 2, 1, 'language','de_DE', 1),
+(7, 2, 1, 'language','en', 1),
 (8, 2, 1, 'timeZone','2', 1),
 (9, 3, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
 (10, 3, 1, 'email','test@example.com', 1),
-(11, 3, 1, 'language','de_DE', 1),
+(11, 3, 1, 'language','en', 1),
 (12, 3, 1, 'timeZone','2', 1);
 
 

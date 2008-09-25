@@ -45,9 +45,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
 
         $frontController = Zend_Controller_Front::getInstance();
 
-        // getting the view information
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        // Languages Set
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
         Zend_Registry::set('translate', $translate);
 
         $view = new Zend_View();
@@ -142,8 +142,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -229,8 +230,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -314,8 +316,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -400,8 +403,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -486,8 +490,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -573,8 +578,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -660,8 +666,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -745,8 +752,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -815,11 +823,11 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         $config = Zend_Registry::get('config');
         $config->language = "en";
 
-        $request->setParams(array('action'=>'jsonGetModulesPermission','controller'=>'index','module'=>'Project'));
+        $request->setParams(array('action'=>'jsonSave','controller'=>'index','module'=>'Project'));
 
-        $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonSave/');
-        $request->setPathInfo('/Project/index/jsonSave/');
-        $request->setRequestUri('/Project/index/jsonSave/');
+        $request->setBaseUrl($config->webpath.'index.php/Project/index/jsonSave');
+        $request->setPathInfo('/Project/index/jsonSave');
+        $request->setRequestUri('/Project/index/jsonSave');
 
         // getting the view information
         $request->setModuleKey('module');
@@ -837,8 +845,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -931,8 +940,9 @@ class Phprojekt_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
