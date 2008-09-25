@@ -30,9 +30,10 @@ phpr.grid.formatDate = function(value) {
     var date = '';
     if (value) {
         if (String(value).match(/\d{4}-\d{2}-\d{2}/)) {
-            var iso = String(value).replace(" ", "T"); // Make it a real date ISO string
-            var dateObj = dojo.date.stamp.fromISOString(iso);
-            date = dojo.date.locale.format(dateObj, this.constraint);
+            //var iso = String(value).replace(" ", "T"); // Make it a real date ISO string
+            //var dateObj = dojo.date.stamp.fromISOString(iso);
+            //date = dojo.date.locale.format(dateObj, this.constraint);
+        	date = value;
         } else {
             date = dojo.date.locale.format(new Date(value), this.constraint);
         }
