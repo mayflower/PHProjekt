@@ -339,8 +339,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $result = array();
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
-            $tmp = $field->tableField;
-            $result[$tmp] = $field->formType;
+            $result[$field->tableField] = $field->formType;
         }
         return $result;
     }

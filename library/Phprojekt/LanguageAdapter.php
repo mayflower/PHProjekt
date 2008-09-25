@@ -87,10 +87,9 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 	 *
 	 * @return void
 	 */
-	public function __construct($data, $locale = null)
+	public function __construct($data, $locale = 'en')
     {
         $locale = $this->_convertToZendLocale($locale);
-		
         parent::__construct($data, $locale, array());
 	}
 	
@@ -122,8 +121,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 	protected function _loadTranslationData($data, $locale, array $options = array())
     {
 		$options = array_merge ($this->_options, $options);
-		if (true === $options ['clear'] || false === isset ($this->_translate [$locale])) {
-			$this->_translate [$locale] = array ();
+		if (true === $options['clear'] || false === isset ($this->_translate[$locale])) {
+			$this->_translate[$locale] = array ();
 		}
 		
 		/* Get the translated string from the session if exists */
@@ -144,6 +143,9 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 include_once($languageDir . $langFile);
                 Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                 if (isset($lang)) {
+                	if (!isset($this->_translate[$locale])) {
+                		$this->_translate[$locale] = array();
+                	}
                     $this->_translate[$locale]  = array_merge ($this->_translate[$locale], $lang);
                     $this->_langLoaded[$locale] = 1;
                 }
@@ -161,8 +163,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 						include_once($languageDir . $langFile);
 						Phprojekt_Loader::loadFile($langFile, $languageDir, true);
 						if (isset($lang)) {
-                            $this->_translate[$locale]   = array_merge ($this->_translate[$locale], $lang);							
-                            $this->_langLoaded [$locale] = 1;
+                            if (!isset($this->_translate[$locale])) {
+                                $this->_translate[$locale] = array();
+                            }							
+                            $this->_translate[$locale]  = array_merge ($this->_translate[$locale], $lang);						
+                            $this->_langLoaded[$locale] = 1;
 						}
 					}
 				}

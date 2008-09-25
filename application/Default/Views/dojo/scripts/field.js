@@ -51,7 +51,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							label: itemlabel,
 							labelfor: itemid,
 							id: itemid,
-							value: itemvalue,
+							value: (itemvalue) ?  itemvalue : '\n\n',
 							required: itemrequired,
 							disabled: (itemdisabled) ? "disabled" : ''
 				});
