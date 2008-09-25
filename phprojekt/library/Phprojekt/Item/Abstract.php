@@ -239,7 +239,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
                     break;
                 case 'time':
-
                     $timeZone = (int)$this->_timezone;
                     $u = strtotime($value);
 
@@ -247,11 +246,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                              date("m"), date("d"), date("Y"));
 
                     $value = date("H:i:s", $value);
-
                     break;
                 case 'datetime':
                 case 'timestamp':
-
                     $timeZone = (int)$this->_timezone * -1;
                     $u = strtotime($value);
 
@@ -264,12 +261,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         if (null !== $value && is_string($value)) {
             $value = stripslashes($value);
         }
-        
-        $types = $this->_dbManager->getTypes(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        if (isset($types[$varname]) && ($types[$varname] == 'textarea') && (strlen($value) == 0)) {
-           $value = $value . " \n ";
-        }
-
+       
         return $value;
     }
 
