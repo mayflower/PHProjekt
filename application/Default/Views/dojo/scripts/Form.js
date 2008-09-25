@@ -318,9 +318,22 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
 
         this.addModuleTabs(data);
+		
+		// Delete the data if is not used the cache
+		if (!this.useCache()) {
+			phpr.DataStore.deleteData({url: this._url});			
+		}
     },
 
-    setFormContent: function() {
+    useCache:function() {
+        // summary:
+        //    Return true or false if the cache is used
+        // description:
+        //    Return true or false if the cache is used		
+        return true;	
+	},
+	
+    setFormContent:function() {
         // summary:
         //    Set the Container
         // description:

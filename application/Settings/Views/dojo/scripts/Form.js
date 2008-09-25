@@ -2,6 +2,9 @@ dojo.provide("phpr.Settings.Form");
 
 dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
     
+    initData:function() {
+    },
+	
     setPermissions:function (data) {
         this._writePermissions  = true;
         this._deletePermissions = false;
@@ -17,6 +20,10 @@ dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
     addModuleTabs:function(data) {
     },
     
+	useCache:function() {
+        return false;
+	},
+	    
     submitForm: function() {
         // summary:
         //    This function is responsible for submitting the formdata
@@ -41,5 +48,5 @@ dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
                 }
             })
         });
-    }
+    }	
 });
