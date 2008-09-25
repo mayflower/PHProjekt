@@ -127,8 +127,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         name:       meta[i]["label"],
                         field:      meta[i]["key"],
                         styles:     "text-align:center;",
-                        type:       dojox.grid.cells.DateTextBox,
-                        formatter:  phpr.grid.formatDate,
+                        type:       phpr.grid.cells.DateTextBox,
+                        //formatter:  phpr.grid.formatDate,
                         promptMessage: 'yyyy-MM-dd',
                         constraint: {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
                         editable:   meta[i]['readOnly'] ? false : true
