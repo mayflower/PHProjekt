@@ -65,15 +65,47 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
 
 dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     // summary:
-    //    Redefine the function for return the correct value
+    //    Redefine the function for work with iso format
     // description:
-    //    Redefine the function for return the correct value
-	format: function(inRowIndex, inItem) {
-        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
-            return this.formatEditing(d, inRowIndex);
-        } else {
-            return phpr.grid.formatDate(d);
+    //    Redefine the function for work with iso format	
+    widgetClass: "dijit.form.DateTextBox",
+        
+    getValue: function(inRowIndex){
+        var date = this.widget.attr('value');
+        var day = date.getDate();       
+        if (day < 10) {
+            day = '0'+day; 
         }
-	}
+        var month = (date.getMonth()+1);       
+        if (month < 10) {
+            month = '0'+month 
+        }
+        return date.getFullYear() + '-' + month + '-' + day;
+    },
+			
+    setValue:function(inRowIndex, inValue) {
+        if (this.widget) {
+			var parts = inValue.split("-"); 
+			var year  = parts[0];
+			var month = parts[1]-1;
+			var day   = parts[2];
+            this.widget.attr('value',new Date(year, month, day));
+        } else {
+            this.inherited(arguments);
+        }
+    },
+        
+    getWidgetProps: function(inDatum){
+        var parts = inDatum.split("-"); 
+        var year  = parts[0];
+        var month = parts[1]-1;
+        var day   = parts[2]; 		
+        return dojo.mixin(this.inherited(arguments), {          
+            value: new Date(year, month, day)
+        });
+    }
 });
+var dgc = dojox.grid.cells;
+dgc.DateTextBox.markupFactory = function(node, cell){
+    dgc._Widget.markupFactory(node, cell);
+};
