@@ -26,7 +26,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
 
 	submitForm:function() {
         for(var i = 0; i < this.formsWidget.length; i++) {
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].getValues());
+            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
 		phpr.send({
 			url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonSave/id/' + this.id,

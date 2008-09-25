@@ -327,7 +327,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the hours form
         // description:
         //    Save the hours form and reload only the grid and the hours form      		
-	   this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').getValues());	   
+	   this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));	   
         if (this.sendData.endTime) {
             this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
         }
@@ -355,7 +355,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the booking form
         // description:
         //    Save the booking form and reload only the grid and the booking form		
-       this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).getValues());     
+       this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));     
         if (this.sendData.amount) {
             this.sendData.amount = this.main.getIsoTime(this.sendData.amount);
         }

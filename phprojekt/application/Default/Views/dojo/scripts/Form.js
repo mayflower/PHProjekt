@@ -492,7 +492,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function sends the form data as json data to the server
         //    and call the reload routine
         for(var i = 0; i < this.formsWidget.length; i++) {
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].getValues());
+            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
 
         phpr.send({
