@@ -63,7 +63,8 @@
 
 .phprojekt .dijitButtonNode button { 
 	border: 0px; 
-	background-color: transparent; 
+	background-color: transparent;
+	cursor: pointer;
 } 
  
 .phprojekt .dijitButtonText {
