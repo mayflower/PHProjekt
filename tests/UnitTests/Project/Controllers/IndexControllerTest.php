@@ -58,8 +58,9 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -151,8 +152,9 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -244,8 +246,9 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();
@@ -329,8 +332,9 @@ class Project_IndexController_Test extends PHPUnit_Framework_TestCase
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
         // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_CORE_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         // Front controller stuff
         $front = Zend_Controller_Front::getInstance();

@@ -103,8 +103,9 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $log = new Phprojekt_Log($config);
         Zend_Registry::set('log', $log);
 
+        // Languages Set
         Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
-        $translate = new Phprojekt_Language($config->language);
+        $translate = new Phprojekt_Language('en');
         Zend_Registry::set('translate', $translate);
 
         $db = Zend_Db::factory($config->database->type, array(
