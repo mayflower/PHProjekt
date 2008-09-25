@@ -122,22 +122,22 @@ class Phprojekt_Model_Validate
 
             switch ($type) {
                 case 'int':
-                    $valid = Inspector::validate('integer', $value, $messages, false);
+                    $valid = Cleaner::validate('integer', $value, $messages, false);
                     break;
                 case 'float':
-                    $valid = Inspector::validate('float', $value, $messages, false);
+                    $valid = Cleaner::validate('float', $value, $messages, false);
                     break;
                 case 'date':
-                    $valid = Inspector::validate('date', $value, $messages, false);
+                    $valid = Cleaner::validate('date', $value, $messages, false);
                     break;
                 case 'time':
-                    // $valid = Inspector::validate('timestamp', $value, $messages, false);
+                    // $valid = Cleaner::validate('timestamp', $value, $messages, false);
                     break;
                 case 'timestamp':
-                    $valid = Inspector::validate('timestamp', $value, $messages, false);
+                    $valid = Cleaner::validate('timestamp', $value, $messages, false);
                     break;
                 default:
-                    $valid = Inspector::validate('string', $value, $messages, true);
+                    $valid = Cleaner::validate('string', $value, $messages, true);
                     break;
             }
         }

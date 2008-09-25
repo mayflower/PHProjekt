@@ -150,10 +150,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
             switch ($type) {
                 case 'int':
-                    $value = Inspector::sanitize('integer', $value, $messages, false);
+                    $value = Cleaner::sanitize('integer', $value, $messages, false);
                     break;
                 case 'float':
-                    $value = Inspector::sanitize('float', $value, $messages, false);
+                    $value = Cleaner::sanitize('float', $value, $messages, false);
                     if ($value !== false) {
                         $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
                     } else {
@@ -161,10 +161,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     }
                     break;
                 case 'date':
-                    $value = Inspector::sanitize('date', $value, $messages, false);
+                    $value = Cleaner::sanitize('date', $value, $messages, false);
                     break;
                 case 'time':
-                    $value = Inspector::sanitize('time', $value, $messages, false);
+                    $value = Cleaner::sanitize('time', $value, $messages, false);
 
                     // moving the value to UTC
                     $timeZomeComplement = (int)$this->_timezone * -1;
@@ -177,7 +177,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'datetime':
                 case 'timestamp':
-                    $value = Inspector::sanitize('timestamp', $value, $messages, false);
+                    $value = Cleaner::sanitize('timestamp', $value, $messages, false);
 
                     // moving the value to UTC
                     $timeZomeComplement = (int)$this->_timezone * -1;
@@ -187,14 +187,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                              date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
 
                     // running again the sanitizer to normalize the format
-                    $value = Inspector::sanitize('timestamp', $value, $messages, false);
+                    $value = Cleaner::sanitize('timestamp', $value, $messages, false);
                     break;
                 default:
-                    $value = Inspector::sanitize('string', $value, $messages, false);
+                    $value = Cleaner::sanitize('string', $value, $messages, false);
                     break;
             }
         } else {
-            $value = Inspector::sanitize('string', $value, $messages, false);
+            $value = Cleaner::sanitize('string', $value, $messages, false);
         }
 
         if ($value === false) {

@@ -6,7 +6,7 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
+ * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/inspector
  * @since      File available since Release 1.0
  * 
@@ -20,14 +20,13 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
+ * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/inspector
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Escaper
-{
-    
+class Cleaner_Escaper
+{    
     /**
      * Registered Types of Escapers
      *
@@ -40,9 +39,7 @@ class Inspector_Escaper
         'javascript' => array(),
         'sql'        => array('value' => 'SqlValue')
     );
-    
-
-    
+        
     /**
      * Escapes html url value
      *
@@ -53,8 +50,7 @@ class Inspector_Escaper
     public function escapeHtmlUrl($value)
     {
         return urlencode(utf8_encode($value));
-    }
-    
+    }    
     
     /**
      * Escapes HTML Values
@@ -66,8 +62,7 @@ class Inspector_Escaper
     public function escapeHtmlValue($value)
     {
         return htmlentities($value, ENT_QUOTES);
-    }
-    
+    }    
     
     /**
      * Escapes SQL Value

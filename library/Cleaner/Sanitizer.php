@@ -6,8 +6,8 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
  * 
  */
@@ -20,12 +20,12 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Sanitizer
+class Cleaner_Sanitizer
 {
     /**
      * Registered Types for Sanitizing
@@ -91,7 +91,7 @@ class Inspector_Sanitizer
      */
     public function sanitizeNumeric($value, &$messages)
     {
-        $instance       = Inspector_Engine::getInstance();
+        $instance       = Cleaner_Engine::getInstance();
         $floatSanitizer = $instance->getSanitizer('float');
         
         return (string) $floatSanitizer->sanitize($value, $messages);
@@ -116,8 +116,7 @@ class Inspector_Sanitizer
                 return null;
             }
             return date($format, $time);
-        }
-        
+        }        
     }
     
     /**

@@ -6,8 +6,8 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
  * 
  */
@@ -20,14 +20,13 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Validator
-{
-    
+class Cleaner_Validator
+{    
     /**
      * Registered Validator types
      *
@@ -53,9 +52,7 @@ class Inspector_Validator
         'numeric'      => 'Numeric',
         'string'       => 'String',
         'word'         => 'Word'
-    );
-    
-    
+    );    
     
     /**
      * Validates if value is of type 'Alnum'
@@ -338,6 +335,5 @@ class Inspector_Validator
         }
         
         return $valid;
-    }
-    
+    }   
 }

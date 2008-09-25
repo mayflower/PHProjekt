@@ -6,37 +6,37 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaners
  * @since      File available since Release 1.0
  * 
  */
 
 set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
 
-require_once 'Inspector/Cage.php';
-require_once 'Inspector/Engine.php';
-require_once 'Inspector/Exception.php';
-require_once 'Inspector/Messages.php';
-require_once 'Inspector/Parameter.php';
-require_once 'Inspector/Sanitizer.php';
-require_once 'Inspector/Validator.php';
-require_once 'Inspector/Escaper.php';
-require_once 'Inspector/Util.php';
+require_once 'Cleaner/Cage.php';
+require_once 'Cleaner/Engine.php';
+require_once 'Cleaner/Exception.php';
+require_once 'Cleaner/Messages.php';
+require_once 'Cleaner/Parameter.php';
+require_once 'Cleaner/Sanitizer.php';
+require_once 'Cleaner/Validator.php';
+require_once 'Cleaner/Escaper.php';
+require_once 'Cleaner/Util.php';
 
 /**
- * Inspector is a PHP written sanitizing and 
+ * Cleaner is a PHP written sanitizing and 
  * escaping class. 
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector
+class Cleaner
 {
 
     const INPUT_SCOPE_GET     = 'get';
@@ -58,9 +58,9 @@ class Inspector
     const PLUGIN_TYPE_ESCAPER   = 'escaper';
 
     /**
-     * Sigleton Instance of Inspector
+     * Sigleton Instance of Cleaner
      *
-     * @var Inspector Instance (Singleton) of Inspector
+     * @var Cleaner Instance (Singleton) of Cleaner
      */
     private static $_instance = null;
     
@@ -73,14 +73,14 @@ class Inspector
     
 
     /**
-     * Getter for Singleton instance of Inspector
+     * Getter for Singleton instance of Cleaner
      *
-     * @return Inspector Instance (Singleton) of Inspector
+     * @return Cleaner Instance (Singleton) of Cleaner
      */
     private static function _getInstance()
     {
         if (self::$_instance === null) {
-            self::$_instance = new Inspector();
+            self::$_instance = new Cleaner();
         }
         
         return self::$_instance;
@@ -88,7 +88,7 @@ class Inspector
     
     
     /**
-     * Set a individual Implementation of Inspector_Messages
+     * Set a individual Implementation of Cleaner_Messages
      *
      * @param string $className Name of class to use
      * 
@@ -96,12 +96,12 @@ class Inspector
      */
     public static function setMessagesClass($className)
     {
-        Inspector_Engine::_getInstance()->setMessagesClass($className);
+        Cleaner_Engine::_getInstance()->setMessagesClass($className);
     }
     
     
     /**
-     * Set a individual Implementation of Inspector_Sanitizer
+     * Set a individual Implementation of Cleaner_Sanitizer
      *
      * @param string $className Name of class to use
      * 
@@ -109,12 +109,12 @@ class Inspector
      */
     public static function setSanitizerClass($className)
     {
-        Inspector_Engine::_getInstance()->setSanitizerClass($className);
+        Cleaner_Engine::_getInstance()->setSanitizerClass($className);
     }
     
     
     /**
-     * Set a individual Implementation of Inspector_Validator
+     * Set a individual Implementation of Cleaner_Validator
      *
      * @param string $className Name of class to use
      * 
@@ -122,11 +122,11 @@ class Inspector
      */
     public static function setValidatorClass($className)
     {
-        Inspector_Engine::_getInstance()->setValidatorClass($className);
+        Cleaner_Engine::_getInstance()->setValidatorClass($className);
     }
     
     /**
-     * Set a individual Implementation of Inspector_Escaper
+     * Set a individual Implementation of Cleaner_Escaper
      *
      * @param string $className Name of class to use
      * 
@@ -134,7 +134,7 @@ class Inspector
      */
     public static function setEscaperClass($className)
     {
-        Inspector_Engine::_getInstance()->setEscaperClass($className);
+        Cleaner_Engine::_getInstance()->setEscaperClass($className);
     }
     
 
@@ -143,7 +143,7 @@ class Inspector
      *
      * @param string $scope Name of Scope (use constants 
      *
-     * @return Inspector_Cage scope abstraction object
+     * @return Cleaner_Cage scope abstraction object
      */
     public static function getCage($scope)
     {
@@ -153,7 +153,7 @@ class Inspector
             return $instance->_cages[$scope];
         }
         
-        throw new Inspector_Exception("Can't return Cage because 
+        throw new Cleaner_Exception("Can't return Cage because 
         given Scope is not defined");
     }
     
@@ -170,11 +170,11 @@ class Inspector
      */
     public static function escape($scope, $type, $value, $default = null)
     {
-        if (Inspector_Util::isBlank($value)) {
+        if (Cleaner_Util::isBlank($value)) {
             return $default;
         }
         
-        return Inspector_Engine::getInstance()->escape($scope, $type, $value);
+        return Cleaner_Engine::getInstance()->escape($scope, $type, $value);
     }
     
     
@@ -191,10 +191,10 @@ class Inspector
     public static function validate($type, $value, &$messages, $empty = false)
     {
         if (!isset($messages)) {
-            $messages = Inspector_Engine::getMessages();
+            $messages = Cleaner_Engine::getMessages();
         }
         
-        if (Inspector_Util::isBlank($value)) {
+        if (Cleaner_Util::isBlank($value)) {
             
             if (!$empty) {
                 $messages->add('INVALID_REQUIRED');
@@ -203,7 +203,7 @@ class Inspector
             return $empty;
         }
         
-        return Inspector_Engine::getInstance()->validate($type, $value, $messages);
+        return Cleaner_Engine::getInstance()->validate($type, $value, $messages);
 
     }
     
@@ -224,12 +224,12 @@ class Inspector
     {
         
         if (!isset($messages)) {
-            $messages = Inspector_Engine::getMessages();
+            $messages = Cleaner_Engine::getMessages();
         }
         
         /* If strings are empty they are totally valid as 
            long as $empty is not specified */
-        if (Inspector_Util::isBlank($value) && ($type != 'string' || $empty)) {
+        if (Cleaner_Util::isBlank($value) && ($type != 'string' || $empty)) {
             
             if (!$empty) {
                 $messages->add('SANITIZE_DEFAULT');
@@ -238,7 +238,7 @@ class Inspector
             return $default;
         }
         
-        $instance = Inspector_Engine::getInstance();
+        $instance = Cleaner_Engine::getInstance();
         $result   = $instance->sanitize($type, $value, $messages);
         
         if (is_null($result)) {
@@ -266,7 +266,7 @@ class Inspector
      * @param bool   $sanitize Wheather sanitize value of parameter/item, when 
      *                         value is invalid
      *
-     * @return Inspector_Parameter Instance, representing selected 
+     * @return Cleaner_Parameter Instance, representing selected 
      *         parameter/item in Scope
      */
     public static function getParameter($type, $scope, $name, 
@@ -279,23 +279,23 @@ class Inspector
     
     
     /**
-     * Creates a new Instance (Singleton) of Inspector
+     * Creates a new Instance (Singleton) of Cleaner
      *
      */
     protected function __construct()
     {
         
-        $this->_configuration = Inspector_Engine::_getInstance();
+        $this->_configuration = Cleaner_Engine::_getInstance();
         
         $this->_cages = array(
-            self::INPUT_SCOPE_GET     => Inspector_Cage::getInstance($_GET, self::INPUT_SCOPE_GET), 
-            self::INPUT_SCOPE_POST    => Inspector_Cage::getInstance($_POST, self::INPUT_SCOPE_POST), 
-            self::INPUT_SCOPE_REQUEST => Inspector_Cage::getInstance($_REQUEST, self::INPUT_SCOPE_REQUEST), 
-            self::INPUT_SCOPE_COOKIE  => Inspector_Cage::getInstance($_COOKIE, self::INPUT_SCOPE_COOKIE), 
-            self::INPUT_SCOPE_FILES   => Inspector_Cage::getInstance($_FILES, self::INPUT_SCOPE_FILES),
-            self::INPUT_SCOPE_SESSION => Inspector_Cage::getInstance($_SESSION, self::INPUT_SCOPE_SESSION),
-            self::INPUT_SCOPE_ENV     => Inspector_Cage::getInstance($_ENV, self::INPUT_SCOPE_ENV),
-            self::INPUT_SCOPE_SERVER  => Inspector_Cage::getInstance($_SERVER, self::INPUT_SCOPE_SERVER)
+            self::INPUT_SCOPE_GET     => Cleaner_Cage::getInstance($_GET, self::INPUT_SCOPE_GET), 
+            self::INPUT_SCOPE_POST    => Cleaner_Cage::getInstance($_POST, self::INPUT_SCOPE_POST), 
+            self::INPUT_SCOPE_REQUEST => Cleaner_Cage::getInstance($_REQUEST, self::INPUT_SCOPE_REQUEST), 
+            self::INPUT_SCOPE_COOKIE  => Cleaner_Cage::getInstance($_COOKIE, self::INPUT_SCOPE_COOKIE), 
+            self::INPUT_SCOPE_FILES   => Cleaner_Cage::getInstance($_FILES, self::INPUT_SCOPE_FILES),
+            self::INPUT_SCOPE_SESSION => Cleaner_Cage::getInstance($_SESSION, self::INPUT_SCOPE_SESSION),
+            self::INPUT_SCOPE_ENV     => Cleaner_Cage::getInstance($_ENV, self::INPUT_SCOPE_ENV),
+            self::INPUT_SCOPE_SERVER  => Cleaner_Cage::getInstance($_SERVER, self::INPUT_SCOPE_SERVER)
         );    
         
         if (isset($GLOBALS['HTTP_SERVER_VARS'])) {

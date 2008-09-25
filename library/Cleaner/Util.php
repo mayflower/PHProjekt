@@ -6,26 +6,26 @@
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
  * 
  */
 
 /**
- * Inspector Util
+ * Cleaner Util
  * 
  * Some Utility Functions used by the Framework
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license    
- * @package    Inspector
- * @link       http://www.thinkforge.org/projects/inspector
+ * @package    Cleaner
+ * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @since      File available since Release 1.0
  */
-class Inspector_Util
+class Cleaner_Util
 {
     /**
      * Tests if value is null, empty or only whitespace(s)
@@ -41,6 +41,5 @@ class Inspector_Util
         }
         
         return trim($value) == '';
-    }
-    
+    }   
 }
