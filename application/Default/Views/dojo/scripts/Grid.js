@@ -388,7 +388,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 if (response.type =='success') {
                     this._newRowValues = {};
                     this._oldRowValues = {};
-                    this.updateData();
+					this.publish("updateCacheData");
                     this.publish("reload");
                 }
             }),
