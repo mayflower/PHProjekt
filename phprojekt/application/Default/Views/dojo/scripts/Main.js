@@ -531,7 +531,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var newline = false;
         var size    = '';
         for (var i = 0; i < data.length; i++) {
-            if (((i % 5) == 0) && i != 0) {
+            if (((i % 3) == 0) && i != 0) {
                 newline = true;
             } else {
                 newline = false;
