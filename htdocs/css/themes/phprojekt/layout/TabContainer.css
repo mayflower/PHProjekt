@@ -17,7 +17,6 @@
 	padding-left: 0px;
 }
 
-
 .phprojekt .dijitTabInnerDiv {
     color: #CBCBCB;
 	padding-left: 7px;
@@ -30,10 +29,10 @@
 .phprojekt .dijitTab {
 	line-height:normal;
 	margin:0 2px 0 0;	/* space between one tab and the next in top/bottom mode */
-	padding-left:7px;
+	padding-left: 0px;
 	/* background: url("../images/tabContainerSprite.gif") no-repeat 0 -300px; */
 	color: #243C5F;
-	border-bottom: 1px #B1BADF solid;
+	/* border-bottom: 1px #B1BADF solid;*/
 }
 
 .phprojekt .dijitTabInnerDiv .dijitTabContent {
@@ -41,6 +40,7 @@
 	padding:5px 3px 4px 4px;
 	/* background: url("../images/tabContainerSprite.gif") repeat-x 0 -350px; */
 	position: relative;
+    padding-right: 7px;
 }
 
 .dijitTabSpacer {
@@ -49,54 +49,53 @@
 
 /* hovered tab */
 .phprojekt .dijitTabHover,
-.phprojekt .dijitTabCloseButtonHover {
-    color: #ffffff;
-    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+.phprojekt .dijitTabCloseButtonHover {	
+    color: white;
     text-decoration: none;
-    padding-left: 0px;
 }
 
 .phprojekt .dijitTabHover,
 .phprojekt .dijitTabCloseButtonHover a:hover span {
-    background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
-    padding-right: 0px;
+    background: #294064;
+	color: white;
 }
 
 .phprojekt .dijitTabHover .dijitTabInnerDiv,
 .phprojekt .dijitTabCloseButtonHover .dijitTabInnerDiv {
-    color: #ffffff;
-    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    color: white;
+    background: #294064;
     text-decoration: none;
-    padding-left: 0px;
+	background: url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
 }
 
 .phprojekt .dijitTabHover .dijitTabInnerDiv .dijitTabContent,
 .phprojekt .dijitTabCloseButtonHover .dijitTabInnerDiv .dijitTabContent {
+	color: white;
+	background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
+	padding-right: 7px;
 }
 
 /* checked tab*/
 .phprojekt .dijitTabChecked,
-.phprojekt .dijitTabCloseButtonChecked
-{
+.phprojekt .dijitTabCloseButtonChecked {
 	/* the selected tab (with or without hover) */
-    color: #ffffff;
-    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    color: white;
+    background: #294064;
     text-decoration: none;
-    padding-left: 0px
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv {
-    color: #ffffff;
-    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    color: white;
+    background: #294064;
     text-decoration: none;
-    padding-left: 0px
+	background: url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
 	/* background: url("../images/tabContainerSprite.gif") repeat-x 0 -50px; */
-	color: #ffffff;
-    background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
-    padding-right: 0px;
+	color: white;
+	background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
+    padding-right: 7px;
 }
 
 .phprojekt .dijitTab .dijitClosable .closeImage {
@@ -142,6 +141,7 @@
 	margin-bottom: -1px;
 	border-color: #ffffff;
 	padding-left: 3px;
+	margin-top: -1px;
 }
 
 /* top container */
