@@ -42,6 +42,7 @@
 
 .phprojekt .dijitTreeNode .dijitTreeRow {
     background-color: #F1CE47;
+	height: 20px;
 }
 
 .phprojek .dijitTreeNode .dijitTreeNodeHover {
