@@ -54,7 +54,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    private $_languageRange = array('de', 'en', 'es');
+    private $_languageRange = array('de' => 'German', 'en' => 'English', 'es' => 'Spanish');
 
     /**
      * Range of available timezones
@@ -62,7 +62,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
      * @var array
      */
     private $_timeZoneRange = array(-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0,
-    1, 2, 3, 4, 5, 6, 7, 8, 99, 10, 11, 12);
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
     /**
      * Config for inicializes children objects
@@ -98,9 +98,9 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
     {
         foreach ($this->_defaultSettings as $oneSettingKey) {
             $value = '';
-            $tmp = $this->getSetting($oneSettingKey);
+            $settingValue = $this->getSetting($oneSettingKey);
 
-            if (empty($tmp)) {
+            if ($settingValue === false) {
 
                 if (!empty($this->_config->$oneSettingKey)) {
                     $value = $this->_config->$oneSettingKey;
@@ -123,7 +123,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         if (isset($userSettingsNamespace->$settingName)) {
             $toReturn = $userSettingsNamespace->$settingName;
         } else {
-            $toReturn = '';
+            $toReturn = false;
             $record = $this->fetchAll("userId = ". $this->_db->quote($this->_userId) .
             " AND keyValue = ".$this->_db->quote($settingName) .
             " AND moduleId = ".$this->_db->quote($this->_moduleId));
@@ -180,7 +180,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
 
             $userSettingsNamespace = new Zend_Session_Namespace('UserSetting'.$this->_userId);
             $userSettingsNamespace->$settingName = $settingValue;
-
+            
             return $record->save();
         } else {
             return false;
@@ -269,8 +269,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
         $data['required'] = true;
         $data['readOnly'] = true;
         $converted[] = $data;
-
-
+        
         // value
         $data = array();
         $data['key']      = 'value';
@@ -294,23 +293,26 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
                 switch ($this->keyValue) {
                     case 'timeZone':
                         $values = $this->_timeZoneRange;
+                        foreach ($values as $key => $value) {
+                            $data['range'][] = array('id'=> $value, 'name' => $value);
+                        }
                         break;
                     case 'language':
                         $values = $this->_languageRange;
+                        foreach ($values as $key => $value) {
+                             $data['range'][] = array('id'=> $key, 'name' => $value);
+                         }
                         break;
-                }
-                if (is_array($values)) {
-                    foreach ($values as $value) {
-                        $data['range'][] = array('id'=> $value, 'name' => $value);
-                    }
                 }
             } elseif (isset($this->keyValue) && $this->keyValue == 'password') {
                 $data['type'] = 'password';
             }
         }
         $converted[] = $data;
-                       
-        if (isset($this->keyValue) && $this->keyValue == 'password') {
+
+        if (isset($this->keyValue) && $this->keyValue == 'password' 
+            && $ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
+
             $data = array();
             $data['key']      = 'confirmValue';
             $data['label']    = $translate->translate('Confirm Password');
@@ -360,7 +362,7 @@ class Phprojekt_User_UserSetting extends Phprojekt_ActiveRecord_Abstract
                 $return = in_array($value, $this->_timeZoneRange);
                 break;
             case 'language':
-                $return = in_array($value, $this->_languageRange);
+                $return = array_key_exists($value, $this->_languageRange);
                 break;
             case 'password':
                 $return = !empty($value);
