@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 // General
 $lang["Module"] = "Modul";
-$lang["Active"] = "Aktiv";
+$lang["Active"] = "Aktiv"; 
 $lang["Role"] = "Rolle";
 $lang["Start"] = "Start";
 $lang["End"] = "Ende";
@@ -30,23 +30,23 @@ $lang["parent"] = "Oberprojekt";
 $lang["projectId"] = "Projekt ID";
 $lang["startDate"] = "Beginn";
 $lang["endDate"] = "Ende";
-$lang["priority"] = "Priorit�t";
+$lang["priority"] = "Priorität";
 $lang["currentStatus"] = "Status";
 $lang["completePercent"] = "Fortschritt";
 $lang["budget"] = "Budget";
 $lang["UserId"] = "User";
-$lang["ItemId"] = "Item";
-$lang["Field"] = "Field";
+$lang["ItemId"] = "Datensatz";
+$lang["Field"] = "Feld";
 $lang["OldValue"] = "Old Value";
 $lang["NewValue"] = "New Value";
 $lang["Datetime"] = "Datetime";
-$lang["comments"] = "Comments";
-$lang["category"] = "Category";
-$lang["participantId"] = "Participant";
-$lang["startTime"] = "Start Time";
-$lang["endTime"] = "End Time";
-$lang["sum"] = "Sum";
-$lang["bookings"] = "Bookings";
+$lang["comments"] = "Kommentar";
+$lang["category"] = "Kategorie";
+$lang["participantId"] = "TeilnehmerIn";
+$lang["startTime"] = "Startzeit";
+$lang["endTime"] = "Zeitende";
+$lang["sum"] = "Summe";
+$lang["bookings"] = "Buchungen";
 $lang["amount"] = "Menge";
 $lang["serialType"] = "Serientyp";
 $lang["serialDays"] = "Serientermin";
@@ -65,30 +65,30 @@ $lang["Action"] = "Aktion";
 
 // Buttons
 $lang["Save"] = "Speichern";
-$lang["Delete"] = "L�schen";
+$lang["Delete"] = "Löschen";
 
 // Messages
-$lang["The are no results"] = "Es sind keine Eintr�ge vorhanden";
+$lang["There are no entries on this level"] = "Es sind keine Einträge vorhanden";
 $lang["You do not have access for edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
 $lang["The Item was added correctly"] = "Der Datensatz wurde angelegt";
-$lang["The Item was edited correctly"] = "Der Datensatz wurde ge�ndert";
-$lang["The Items was edited correctly"] = "Die Datens�tze wurden ge�ndert";
-$lang["The Item can't be deleted"] = "Der Datensatz kann nicht gel�scht werden";
-$lang["The Item was deleted correctly"] = "Der Datensatz wurde gel�scht";
+$lang["The Item was edited correctly"] = "Der Datensatz wurde geändert";
+$lang["The Items was edited correctly"] = "Die Datens�tze wurden geändert";
+$lang["The Item can't be deleted"] = "Der Datensatz kann nicht gelöscht werden";
+$lang["The Item was deleted correctly"] = "Der Datensatz wurde gelöscht";
 $lang["Is a required field"] = "Pflichtfeld";
-$lang["Invalid format for date"] = "Ung�ltiges Datumsforma";
-$lang["Invalid Format"] = "Ung�ltiges Format";
-$lang["The Tags was added correctly"] = "Die Tags wurden hinzugef�gt";
-$lang["The Tags was deleted correctly"] = "The Tags wurden gel�scht";
+$lang["Invalid format for date"] = "Ungültiges Datumsformat";
+$lang["Invalid Format"] = "Ungültiges Format";
+$lang["The Tags was added correctly"] = "Die Tags wurden hinzugefügt";
+$lang["The Tags was deleted correctly"] = "The Tags wurden gelöscht";
 $lang["The Item was not found"] = "Der Datensatz wurde nicht gefunden";
 $lang["You do not have write access into the parent project"] = "Sie haben keine Schreibberechtigung auf dem Oberelement";
 $lang["You do not have access for add projects on the parent project"] = "Sie haben keine Berechtigung, auf dem Oberelement Projekte anzulegen";
-$lang["The parent project do not have enabled this module"] = "Dieses Projekt hat dieses Modul nicht verf�gbar";
+$lang["The parent project do not have enabled this module"] = "Dieses Projekt hat dieses Modul nicht verfügbar";
 $lang["The project can not saved under itself"] = "Das Projekt kann nicht unter sich selbst gespeichert werden";
 $lang["The project can not saved under his children"] = "Das Projekt kann nicht in einem Unterlement gespeichert werden";
 $lang["ID parameter required"] = "Der ID parameter ist obligatorisch";
-$lang["Invalid module or item"] = "ung�ltiges Modul oder Datensatz";
-$lang["Module not given"] = "Modul nicht verf�gbar";
+$lang["Invalid module or item"] = "ungültiges Modul oder Datensatz";
+$lang["Module not given"] = "Modul nicht verfügbar";
 $lang["Module not found"] = "Modul nicht gefunden";
 $lang["Expect two arguments"] = "Zwei Parameter werden erwartet";
 $lang["Second parameter needs to be an array"] = "Der zweite Parameter muss ein Array sein";
