@@ -602,6 +602,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    The server return the found records and the function display it
         var self = this;
 
+        // Destroy the navigation
+        phpr.destroyWidgets("buttonRow");
+        dojo.byId("subModuleNavigation").innerHTML = '';
+				
         // Destroy form view
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
