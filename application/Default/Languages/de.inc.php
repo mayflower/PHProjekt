@@ -1,38 +1,38 @@
 <?php
 // General
-$lang["Module"] = "Module";
-$lang["Active"] = "Active";
-$lang["Role"] = "Role";
+$lang["Module"] = "Modul";
+$lang["Active"] = "Aktiv";
+$lang["Role"] = "Rolle";
 $lang["Start"] = "Start";
-$lang["End"] = "End";
-$lang["Project"] = "Project";
+$lang["End"] = "Ende";
+$lang["Project"] = "Projekt";
 $lang["Tag"] = "Tag";
-$lang["No"] = "No";
-$lang["Yes"] = "Yes";
-$lang["Count"] = "Count";
+$lang["No"] = "Nein";
+$lang["Yes"] = "Ja";
+$lang["Count"] = "Nummer";
 
 // General Fiels
-$lang["project"] = "Project";
-$lang["notes"] = "Notes";
-$lang["date"] = "Date";
+$lang["project"] = "Projekt";
+$lang["notes"] = "Notiz";
+$lang["date"] = "Datum";
 $lang["name"] = "Name";
 $lang["label"] = "Label";
-$lang["active"] = "Active";
+$lang["active"] = "Aktiv";
 $lang["username"] = "Username";
-$lang["password"] = "Password";
-$lang["firstname"] = "Firstname";
-$lang["lastname"] = "Lastname";
+$lang["password"] = "Passwort";
+$lang["firstname"] = "Vorname";
+$lang["lastname"] = "Nachname";
 $lang["email"] = "Email";
-$lang["language"] = "Language";
+$lang["language"] = "Sprache";
 $lang["status"] = "Status";
-$lang["title"] = "Title";
-$lang["parent"] = "Project";
-$lang["projectId"] = "Project";
-$lang["startDate"] = "Start Date";
-$lang["endDate"] = "End Date";
-$lang["priority"] = "Priority";
-$lang["currentStatus"] = "Current Status";
-$lang["completePercent"] = "Complete Percent";
+$lang["title"] = "Titel";
+$lang["parent"] = "Oberprojekt";
+$lang["projectId"] = "Projekt ID";
+$lang["startDate"] = "Beginn";
+$lang["endDate"] = "Ende";
+$lang["priority"] = "Priorität";
+$lang["currentStatus"] = "Status";
+$lang["completePercent"] = "Fortschritt";
 $lang["budget"] = "Budget";
 $lang["UserId"] = "User";
 $lang["ItemId"] = "Item";
@@ -47,78 +47,78 @@ $lang["startTime"] = "Start Time";
 $lang["endTime"] = "End Time";
 $lang["sum"] = "Sum";
 $lang["bookings"] = "Bookings";
-$lang["amount"] = "Amount";
-$lang["serialType"] = "Serial Type";
-$lang["serialDays"] = "Serial Days";
+$lang["amount"] = "Menge";
+$lang["serialType"] = "Serientyp";
+$lang["serialDays"] = "Serientermin";
 
 // Access
 $lang["User"] = "User";
-$lang["Read"] = "Read";
-$lang["Write"] = "Write";
-$lang["Create"] = "Create";
-$lang["Access"] = "Access";
-$lang["Copy"] = "Copy";
+$lang["Read"] = "Lesen";
+$lang["Write"] = "Schreiben";
+$lang["Create"] = "Anlegen";
+$lang["Access"] = "Zugriff";
+$lang["Copy"] = "Kopie";
 $lang["Download"] = "Download";
 $lang["Admin"] = "Admin";
-$lang["None"] = "None";
-$lang["Action"] = "Action";
+$lang["None"] = "Kein";
+$lang["Action"] = "Aktion";
 
 // Buttons
-$lang["Save"] = "Save";
-$lang["Delete"] = "Delete";
+$lang["Save"] = "Speichern";
+$lang["Delete"] = "Löschen";
 
 // Messages
-$lang["The are no results"] = "The are no results";
-$lang["You do not have access for edit this item"] = "You do not have access for edit this item";
-$lang["The Item was added correctly"] = "The Item was added correctly";
-$lang["The Item was edited correctly"] = "The Item was edited correctly";
-$lang["The Items was edited correctly"] = "The Items was edited correctly";
-$lang["The Item can't be deleted"] = "The Item can't be deleted";
-$lang["The Item was deleted correctly"] = "The Item was deleted correctly";
-$lang["Is a required field"] = "Is a required field";
-$lang["Invalid format for date"] = "Invalid format for date";
-$lang["Invalid Format"] = "Invalid Format";
-$lang["The Tags was added correctly"] = "The Tags was added correctly";
-$lang["The Tags was deleted correctly"] = "The Tags was deleted correctly";
-$lang["The Item was not found"] = "The Item was not found";
-$lang["You do not have write access into the parent project"] = "You do not have write access into the parent project";
-$lang["You do not have access for add projects on the parent project"] = "You do not have access for add projects on the parent project";
-$lang["The parent project do not have enabled this module"] = "The parent project do not have enabled this module";
-$lang["The project can not saved under itself"] = "The project can not saved under itself";
-$lang["The project can not saved under his children"] = "The project can not saved under his children";
-$lang["ID parameter required"] = "ID parameter required";
-$lang["Invalid module or item"] = "Invalid module or item";
-$lang["Module not given"] = "Module not given";
-$lang["Module not found"] = "Module not found";
-$lang["Expect two arguments"] = "Expect two arguments";
-$lang["Second parameter needs to be an array"] = "Second parameter needs to be an array";
-$lang["No parent id found in parameters or passed"] = "No parent id found in parameters or passed";
+$lang["The are no results"] = "Es sind keine Einträge vorhanden";
+$lang["You do not have access for edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
+$lang["The Item was added correctly"] = "Der Datensatz wurde angelegt";
+$lang["The Item was edited correctly"] = "Der Datensatz wurde geändert";
+$lang["The Items was edited correctly"] = "Die Datensätze wurden geändert";
+$lang["The Item can't be deleted"] = "Der Datensatz kann nicht gelöscht werden";
+$lang["The Item was deleted correctly"] = "Der Datensatz wurde gelöscht";
+$lang["Is a required field"] = "Pflichtfeld";
+$lang["Invalid format for date"] = "Ungültiges Datumsforma";
+$lang["Invalid Format"] = "Ungültiges Format";
+$lang["The Tags was added correctly"] = "Die Tags wurden hinzugefügt";
+$lang["The Tags was deleted correctly"] = "The Tags wurden gelöscht";
+$lang["The Item was not found"] = "Der Datensatz wurde nicht gefunden";
+$lang["You do not have write access into the parent project"] = "Sie haben keine Schreibberechtigung auf dem Oberelement";
+$lang["You do not have access for add projects on the parent project"] = "Sie haben keine Berechtigung, auf dem Oberelement Projekte anzulegen";
+$lang["The parent project do not have enabled this module"] = "Dieses Projekt hat dieses Modul nicht verfügbar";
+$lang["The project can not saved under itself"] = "Das Projekt kann nicht unter sich selbst gespeichert werden";
+$lang["The project can not saved under his children"] = "Das Projekt kann nicht in einem Unterlement gespeichert werden";
+$lang["ID parameter required"] = "Der ID parameter ist obligatorisch";
+$lang["Invalid module or item"] = "ungültiges Modul oder Datensatz";
+$lang["Module not given"] = "Modul nicht verfügbar";
+$lang["Module not found"] = "Modul nicht gefunden";
+$lang["Expect two arguments"] = "Zwei Parameter werden erwartet";
+$lang["Second parameter needs to be an array"] = "Der zweite Parameter muss ein Array sein";
+$lang["No parent id found in parameters or passed"] = "Kein Oberelement gefunden";
 
 // System Modules
 $lang["Administration"] = "Administration";
-$lang["Calendar"] = "Calendar";
-$lang["Note"] = "Note";
-$lang["Settings"] = "Setting";
-$lang["Timecard"] = "Timecard";
-$lang["Todo"] = "Todo";
-$lang["Help"] = "Help";
-$lang["Logout"] = "Logout";
-$lang["Groups"] = "Group";
-$lang["Role"] = "Role";
-$lang["Tab"] = "Tab";
+$lang["Calendar"] = "Kalender";
+$lang["Note"] = "Notizen";
+$lang["Settings"] = "Einstellungen";
+$lang["Timecard"] = "Zeitkarte";
+$lang["Todo"] = "Aufgaben";
+$lang["Help"] = "Hilfe";
+$lang["Logout"] = "Abmelden";
+$lang["Groups"] = "Gruppe";
+$lang["Role"] = "Rolle";
+$lang["Tab"] = "Reiter";
 $lang["User"] = "User";
-$lang["History"] = "History";
-$lang["Basic Data"] = "Basic Data";
+$lang["History"] = "Historie";
+$lang["Basic Data"] = "Basisdaten";
 
 // Titles
-$lang["Search results"] = "Search results";
-$lang["Tag results"] = "Tag results";
+$lang["Search results"] = "Suchergebnisse";
+$lang["Tag results"] = "Tag Ergebnisse";
 
 // Special System words of the module
 // Timecard
-$lang["Working Times"] = "Working Times";
-$lang["Start working time"] = "Start working time";
-$lang["Stop working time"] = "Stop working time";
-$lang["Hours"] = "Hours";
-$lang["The end time must be after the start time"] = "The end time must be after the start time";
+$lang["Working Times"] = "Arbeitszeiten";
+$lang["Start working time"] = "Arbeitszeit Start";
+$lang["Stop working time"] = "Arbeitszeit Ende";
+$lang["Hours"] = "Stunden";
+$lang["The end time must be after the start time"] = "Die Endzeit muss hinter der Startzeit liegen";
 ?>
