@@ -53,9 +53,6 @@ class Settings_IndexController extends IndexController
         if ($setting->validateSetting($setting->keyValue, $value)) {
 
             if ($setting->keyValue != 'password') {
-
-
-
                 $setting->setSetting($setting->keyValue, $value);
                 $message = $translate->translate(self::EDIT_TRUE_TEXT);
                 $type = "success";
