@@ -42,7 +42,7 @@
     {% for rel in relations %}
     <tr id="trRelationFor{{rel.userId}}">
         <td>
-            <input id="roleRelation[{{rel.userId}}]"
+            <input
             name="roleRelation[{{rel.userId}}]"
             type="hidden"
             value="{{rel.roleId}}"
@@ -50,7 +50,7 @@
             {{rel.roleName}}
         </td>
         <td>
-            <input id="userRelation[{{rel.userId}}]"
+            <input
             name="userRelation[{{rel.userId}}]"
             type="hidden"
             value="{{rel.userId}}"
