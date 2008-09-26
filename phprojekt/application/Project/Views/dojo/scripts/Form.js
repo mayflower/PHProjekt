@@ -117,9 +117,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             row.id       = "trRelationFor" + userId;
 
             var cell = row.insertCell(0);
-            cell.innerHTML = '<input id="roleRelation[' + userId + ']" name="roleRelation[' + userId + ']" type="hidden" value="' + roleId + '" dojoType="dijit.form.TextBox" />' + roleName;
+            cell.innerHTML = '<input name="roleRelation[' + userId + ']" type="hidden" value="' + roleId + '" dojoType="dijit.form.TextBox" />' + roleName;
             var cell = row.insertCell(1);
-            cell.innerHTML = '<input id="userRelation[' + userId + ']" name="userRelation[' + userId + ']" type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
+            cell.innerHTML = '<input name="userRelation[' + userId + ']" type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(2);
             cell.innerHTML = '<div id="relationDeleteButton' + userId + '"></div>';
 
@@ -143,8 +143,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // description:
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
-        phpr.destroySimpleWidget("roleRelation[" + userId + "]");
-        phpr.destroySimpleWidget("userRelation[" + userId + "]");
         phpr.destroyWidgets("deleteRelation" + userId);
         phpr.destroyWidgets("relationDeleteButton" + userId);
 
