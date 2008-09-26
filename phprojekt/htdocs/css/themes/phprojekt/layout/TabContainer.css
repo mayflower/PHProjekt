@@ -19,24 +19,27 @@
 
 
 .phprojekt .dijitTabInnerDiv {
-	padding:0px 3px 0px 0px;
-	margin: 0 0 0 4px;
-	background: url("../images/tabContainerSprite.gif") no-repeat;
-	background-position: right -400px;
+    color: #CBCBCB;
+	padding-left: 7px;
+    text-transform: uppercase;
+    font-family: Verdana;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .phprojekt .dijitTab {
 	line-height:normal;
 	margin:0 2px 0 0;	/* space between one tab and the next in top/bottom mode */
-	padding:0px;
-	background: url("../images/tabContainerSprite.gif") no-repeat 0 -300px;
+	padding-left:7px;
+	/* background: url("../images/tabContainerSprite.gif") no-repeat 0 -300px; */
 	color: #243C5F;
 	border-bottom: 1px #B1BADF solid;
 }
 
 .phprojekt .dijitTabInnerDiv .dijitTabContent {
+    color: #CBCBCB;
 	padding:5px 3px 4px 4px;
-	background: url("../images/tabContainerSprite.gif") repeat-x 0 -350px;
+	/* background: url("../images/tabContainerSprite.gif") repeat-x 0 -350px; */
 	position: relative;
 }
 
@@ -47,18 +50,28 @@
 /* hovered tab */
 .phprojekt .dijitTabHover,
 .phprojekt .dijitTabCloseButtonHover {
-	color: #243C5F;
-	background: url("../images/tabContainerSprite.gif") no-repeat 0px -150px;
+    color: #ffffff;
+    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    text-decoration: none;
+    padding-left: 0px;
+}
+
+.phprojekt .dijitTabHover,
+.phprojekt .dijitTabCloseButtonHover a:hover span {
+    background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
+    padding-right: 0px;
 }
 
 .phprojekt .dijitTabHover .dijitTabInnerDiv,
 .phprojekt .dijitTabCloseButtonHover .dijitTabInnerDiv {
-	background: url("../images/tabContainerSprite.gif") no-repeat right -250px;
+    color: #ffffff;
+    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    text-decoration: none;
+    padding-left: 0px;
 }
 
 .phprojekt .dijitTabHover .dijitTabInnerDiv .dijitTabContent,
 .phprojekt .dijitTabCloseButtonHover .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabContainerSprite.gif") repeat-x 0 -200px;
 }
 
 /* checked tab*/
@@ -66,16 +79,24 @@
 .phprojekt .dijitTabCloseButtonChecked
 {
 	/* the selected tab (with or without hover) */
-	background: url("../images/tabContainerSprite.gif") no-repeat 0px -0px;
+    color: #ffffff;
+    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    text-decoration: none;
+    padding-left: 0px
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv {
-	background: url("../images/tabContainerSprite.gif") no-repeat right -100px;
+    color: #ffffff;
+    background: #294064 url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    text-decoration: none;
+    padding-left: 0px
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabContainerSprite.gif") repeat-x 0 -50px;
-	color: #243C5F !important;
+	/* background: url("../images/tabContainerSprite.gif") repeat-x 0 -50px; */
+	color: #ffffff;
+    background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
+    padding-right: 0px;
 }
 
 .phprojekt .dijitTab .dijitClosable .closeImage {
@@ -119,7 +140,7 @@
 /* top tabs */
 .phprojekt .dijitTabContainerTop-tabs {
 	margin-bottom: -1px;
-	border-color: #ccc;
+	border-color: #ffffff;
 	padding-left: 3px;
 }
 
@@ -130,7 +151,7 @@
 
 /* checked tabs */
 .phprojekt .dijitTabContainerTop-tabs .dijitTabChecked {
-	border-bottom-color: #94b4e6;
+	border-bottom-color: #ffffff;
 }
 
 /* strip */
@@ -165,7 +186,7 @@
 
 /* checked tabs */
 .phprojekt .dijitTabContainerBottom-tabs .dijitTabChecked {
-	border-top-color:#94b4e6;
+	border-top-color:#ffffff;
 }
 
 
@@ -225,8 +246,8 @@
 .phprojekt .dijitTabContainerBottom-spacer,
 .phprojekt .dijitTabContainerTop-spacer {
 	height: 2px;
-	border: 1px solid #8ba0bd;
-	background: #94b4e6;
+	border: 1px solid #ffffff;
+	background: #ffffff;
 }
 
 
@@ -257,7 +278,7 @@
 
 /* checked tabs */
 .phprojekt .dijitTabContainerRight-tabs .dijitTabChecked {
-	border-left-color: #94b4e6;
+	border-left-color: #ffffff;
 }
 
 .phprojekt .dijitTabContainerRight-tabs .dijitTabChecked {
