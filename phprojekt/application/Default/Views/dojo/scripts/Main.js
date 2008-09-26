@@ -271,12 +271,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     });
                 }
 
-                if (currentModule == 'undefined') {
+                if (!currentModule) {
                     if (firstModule && usefirstModule) {
-                        phpr.module   = firstModule;
+                        phpr.module = firstModule;
                     }
                 } else if (currentModule == "BasicData") {
-                    phpr.module   = 'Project';
+                    phpr.module = 'Project';
                 }
 
                 var navigation ='<ul id="nav_main">';
