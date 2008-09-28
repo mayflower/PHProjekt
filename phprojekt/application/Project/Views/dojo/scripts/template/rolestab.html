@@ -40,7 +40,11 @@
         <td><div id="relationAddButton"></div></td>
     </tr>
     {% for rel in relations %}
-    <tr id="trRelationFor{{rel.userId}}">
+    <tr id="trRelationFor{{rel.userId}}"
+        {% ifequal currentUser rel.userId %}
+        style="display: none;"
+        {% endifequal %}
+    >
         <td>
             <input
             name="roleRelation[{{rel.userId}}]"

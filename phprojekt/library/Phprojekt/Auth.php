@@ -67,16 +67,14 @@ class Phprojekt_Auth extends Zend_Auth
             throw new Phprojekt_Auth_Exception('User Inactive', 5);
         }
 
-        try {
-            
+        try {           
             $settings = new Phprojekt_User_UserSetting($userId, 1);
             
             // The password does not match with password provided
             if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$settings->getSetting("password"))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
 
@@ -93,10 +91,9 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return integet user ID or false if there isn't user logged
      */
-    public function getUserId() {
-
-        $returnValue = false;
-
+    public function getUserId()
+    {
+        $returnValue   = false;
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         if (isset($authNamespace->userId)) {
@@ -113,10 +110,9 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function logout()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $authNamespace->unsetAll();
+    	Zend_Session::destroy();
         return true;
-    }
+    }   
 
     /**
      * Compare a string with a user password

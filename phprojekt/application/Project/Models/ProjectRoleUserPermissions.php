@@ -47,7 +47,6 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             $roles['data'][$role->id]['users'] = array();
         }
         $where  = ' ProjectRoleUserPermissions.projectId = ' . $projectId;
-        $where .= ' AND User.id != '. (int) Phprojekt_Auth::getUserId();
         $order  = ' ProjectRoleUserPermissions.userId ASC';
         $select = ' User.username ';
         $join   = ' LEFT JOIN User ON User.id = ProjectRoleUserPermissions.userId ';

@@ -55,8 +55,16 @@ final class Default_Helpers_Save
             }
         }
 
+        if (empty($node->getActiveRecord()->id)) {
+            $newItem = true;
+        } else {
+            $newItem = false;
+        }
+                
         // Set the owner
-        $node->ownerId = Phprojekt_Auth::getUserId();
+        if ($newItem) {
+            $node->ownerId = Phprojekt_Auth::getUserId();
+        }
 
         // Parent Project
         if (!isset($node->projectId) || null === $node->projectId) {
@@ -93,7 +101,10 @@ final class Default_Helpers_Save
             $right['download'] = true;
             $right['admin']    = true;
 
-            $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
+            // Only set the full access if is a new item
+            if ($newItem) {
+                $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
+            }
             if (isset($params['dataAccess'])) {
                 $ids = array_keys($params['dataAccess']);
                 foreach ($ids as $accessId) {
@@ -151,8 +162,14 @@ final class Default_Helpers_Save
             }
         }
 
+        if (empty($model->id)) {
+            $newItem = true;
+        } else {
+            $newItem = false;
+        }
+        
         // Set the owner
-        if (isset($model->ownerId)) {
+        if ($newItem) {
             $model->ownerId = Phprojekt_Auth::getUserId();
         }
 
@@ -187,7 +204,10 @@ final class Default_Helpers_Save
             $right['download'] = true;
             $right['admin']    = true;
 
-            $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
+            // Only set the full access if is a new item
+            if ($newItem) {
+                $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
+            }
             if (isset($params['dataAccess'])) {
                 $ids = array_keys($params['dataAccess']);
                 foreach ($ids as $accessId) {
