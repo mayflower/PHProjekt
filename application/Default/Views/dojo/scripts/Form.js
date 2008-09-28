@@ -109,16 +109,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 			phpr.destroyWidgets("checkNoneAccess[" + userList[i].id + "]");
         }
 		
-        // Except the current user
-        var accessContent = new Array();
+        var accessContent = data[0]["rights"];
         var currentUser   = 0;
         if (this.id > 0) {
             currentUser = data[0]["rights"]["currentUser"]["userId"];
-            for (i in data[0]["rights"]) {
-                if (i != "currentUser") {
-                    accessContent.push(data[0]["rights"][i]);
-                }
-            }
         }
 
         if (this._accessPermissions) {

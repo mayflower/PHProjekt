@@ -53,6 +53,11 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         phpr.destroyWidgets("newRoleUser");
 
         if (this._accessPermissions) {
+            var currentUser   = 0;
+            if (this.id > 0) {
+                currentUser = data[0]["rights"]["currentUser"]["userId"];
+            }
+					
             var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
                 accessUserText:   phpr.nls.get('User'),
@@ -60,6 +65,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 accessActionText: phpr.nls.get('Action'),
                 users:            this.userStore.getList(),
                 roles:            this.roleStore.getList(),
+				currentUser:      currentUser,
                 relations:        relationList
             });
 
