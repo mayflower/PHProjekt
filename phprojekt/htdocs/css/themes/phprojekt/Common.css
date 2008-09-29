@@ -338,11 +338,13 @@ h1,h2,h3,h4,h5,h6 {
     vertical-align: center;
     color: #fff;
     font-family: "Verdana";
-    font-size: 18px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 600;
     font-style: normal;
     overflow:hidden !important;
     background-color: #294064;
+	padding-bottom: 2px;
+	padding-top: 2px;
 }
 
 .phprojekt .searchsuggesttitle a {
