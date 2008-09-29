@@ -102,8 +102,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 			totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {
                 hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
-                start: data[i].startTime,
-                end: data[i].endTime,
+                start: data[i].startTime.substr(0, 5),
+                end: data[i].endTime.substr(0, 5),
                 id:  data[i].id			
             });
         }   	
@@ -128,13 +128,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Reload the Date view
         // description:
         //    Reload the HDate picker div with the current date
-
-        var month = this._dateObject.getMonth();       
-        var year  = this._dateObject.getFullYear();
-		var dd    = new Date(year, month, 0);
+        var month   = this._dateObject.getMonth();       
+        var year    = this._dateObject.getFullYear();
+		var dd      = new Date(year, month, 0);
         var lastDay = dd.getDate() + 1;
 		var week    = dd.getDay();
-		var days = new Array();
+		var days    = new Array();
+		var today   = this._dateObject.getDate();
 
         var months = ['January', 'February', 'March', 'April', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
 		var weeks = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -151,13 +151,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.render(["phpr.Timecard.template", "date.html"], dojo.byId('TimecardDate') , {
             date: this._date,
 			days: days,
-			today: this._dateObject.getDate(),
+			today: today,
 			monthNumber: month,
 			yearNumber:  year
 		});	
-		
-		dojo.byId("dateLongText").innerHTML = dojo.date.locale.format(this._dateObject, {formatLength:'full', selector:'date', locale: this.lang});
-		dijit.byId("selectDate").attr('value', null);	
 	},
 	
     reloadBookingView: function() {
