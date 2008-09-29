@@ -19,6 +19,12 @@
 	width: 16px;
 	height: 16px;
 }
+.phprojekt .tinytick {
+    background-image: url(../images/tick.png);
+    background-repeat: no-repeat;
+    width: 8px;
+    height: 8px;
+}
 .phprojekt .disk {
 	background-image: url(../images/disk.png);
 	background-repeat: no-repeat;

@@ -30,7 +30,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("gridNode");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
 			selectDate:    phpr.nls.get('Change date'),
-			dateForm:      dojo.date.locale.format(this._date, {formatLength:'full', selector:'date', locale: this.lang}),
 			webpath:       phpr.webpath,
 			currentModule: phpr.module});
         this.setSubGlobalModulesNavigation();
@@ -93,6 +92,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
 		this.form.setDate(this._date);
 		this.form.loadView(this._date);
+        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), (this._date.getMonth()+1), this._date.getDate()));
     },
 	
     getIsoDate:function(date) {
