@@ -351,28 +351,27 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
     messages:[],
     displayedMessages:[],
     
-        addMessage: function(message){
-            this.messages.push(message);
-            this.displayMessage(message);
-        },
-        deleteLastMessage: function(message){
-            this.messages.pop();
-        },
+    addMessage: function(message){
+        this.messages.push(message);
+        this.displayMessage(message);
+    },
+        
+    deleteLastMessage: function(message){
+        this.messages.pop();
+    },
 
-        displayMessage: function(message){
-            this.displayedMessages = [message];
-            for (i in this.displayedMessages) {
-            	out = this.displayedMessages[i];
-				dojo.publish("ServerFeedback", 
-				[{
-					message:out.output, 
-					type: out.cssClass
-        		}]
-     			);
-			}
+    displayMessage: function(message){
+        this.displayedMessages = [message];
+        for (i in this.displayedMessages) {
+            out = this.displayedMessages[i];
+            dojo.publish("ServerFeedback", [{
+                message:out.output, 
+                type: out.cssClass
+                }]
+            );
         }
     }
-);
+});
 
 dojo.declare("phpr.loading", null, {
     // summary:
