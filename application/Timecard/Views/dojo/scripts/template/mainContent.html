@@ -5,13 +5,13 @@
     <!-- Timecards summary views buttons -->
     <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24" style="height:6%; overflow:hidden;">
         <div>
-            <div style="float:left; width:35%; margin-left: 0px;">
+            <div style="float:left; width:45%; margin-left: 0px;">
+                <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 85px;">
+            </div>        
+            <div style="float:left; width:auto; margin-left: 2px;">
                 {{selectDate}}
             </div>
-            <div style="float:left; width:40%; margin-left: 0px;">
-                <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 100%">
-            </div>
-            <div style="float:right; margin-left: 0px; margin-right: 2px;">
+            <div style="float:right; width:auto; margin-left: 2px;">
                 <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick" onClick="
                 if (dijit.byId('selectDate').attr('value') != null) {
                     dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]);

@@ -256,7 +256,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			dojo.style(tmp, "color", '#292929');
 			dojo.style(tmp, "display", 'inline');
-			dojo.style(tmp, "border", '1px solid #BABABA');
+			dojo.style(tmp, "border", '2px solid #000');
 			dojo.style(tmp, "position", 'absolute');
 			dojo.style(tmp, "left", left);
 			dojo.style(tmp, "width", width);
@@ -287,8 +287,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 							}
 						}
 						var tmpDraw = surface.createRect({x: lastHour -4, y: 0, width: bookingWith - 2, height: 22});
-					    tmpDraw.setFill([255, 0, 0, 0.3]);
-						tmpDraw.setStroke("red");
+					    tmpDraw.setFill([0,255,0,0.3]);
+						tmpDraw.setStroke("green");
                         timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingWith, 'id'   : timeprojData[j].id});
 						
 						if (finish) {

@@ -31,7 +31,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
 			selectDate:    phpr.nls.get('Change date'),
 			webpath:       phpr.webpath,
-			currentModule: phpr.module});
+			currentModule: phpr.module
+        });
+		dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
@@ -92,7 +94,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 		this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
 		this.form.setDate(this._date);
 		this.form.loadView(this._date);
-        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), (this._date.getMonth()+1), this._date.getDate()));
+        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
     },
 	
     getIsoDate:function(date) {
