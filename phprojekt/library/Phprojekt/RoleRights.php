@@ -90,7 +90,7 @@ class Phprojekt_RoleRights
      */
     public function hasRight($right, $moduleId = null)
     {
-        if ($moduleId != null) {
+        if (null != $moduleId) {
             $this->_setModule($moduleId);
         }
 
