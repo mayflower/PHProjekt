@@ -185,8 +185,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         || !($config['db'] instanceof Zend_Db_Adapter_Abstract)) {
             throw new
             Phprojekt_ActiveRecord_Exception("ActiveRecord class must "
-            . "be initialized using a valid "
-            . "Zend_Db_Adapter_Abstract");
+                                           . "be initialized using a valid "
+                                           . "Zend_Db_Adapter_Abstract");
 
         }
 
