@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `GroupsUserRelation`;
 DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `UserSetting`;
+DROP TABLE IF EXISTS `Setting`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
@@ -217,9 +218,9 @@ CREATE TABLE `Todo` (
 
 
 --
--- Table structure for table `UserSetting`
+-- Table structure for table `Setting`
 --
-CREATE TABLE `UserSetting` (
+CREATE TABLE `Setting` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
@@ -463,19 +464,19 @@ INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`) VALUES
 (2,'test1',NULL,NULL,'A'),
 (3,'test2',NULL,NULL,'A');
 
-INSERT INTO `UserSetting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identifier`) VALUES
-(1, 1, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
-(2, 1, 1, 'email','test@example.com', 1),
-(3, 1, 1, 'language','en', 1),
-(4, 1, 1, 'timeZone','2', 1),
-(5, 2, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
-(6, 2, 1, 'email','test@example.com', 1),
-(7, 2, 1, 'language','en', 1),
-(8, 2, 1, 'timeZone','2', 1),
-(9, 3, 1, 'password','156c3239dbfa5c5222b51514e9d12948', 1),
-(10, 3, 1, 'email','test@example.com', 1),
-(11, 3, 1, 'language','en', 1),
-(12, 3, 1, 'timeZone','2', 1);
+INSERT INTO `Setting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identifier`) VALUES
+(1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
+(2, 1, 0, 'email','test@example.com', 'Core'),
+(3, 1, 0, 'language','en', 'Core'),
+(4, 1, 0, 'timeZone','2', 'Core'),
+(5, 2, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
+(6, 2, 0, 'email','test@example.com', 'Core'),
+(7, 2, 0, 'language','en', 'Core'),
+(8, 2, 0, 'timeZone','2', 'Core'),
+(9, 3, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
+(10, 3, 0, 'email','test@example.com', 'Core'),
+(11, 3, 0, 'language','en', 'Core'),
+(12, 3, 0, 'timeZone','2', 'Core');
 
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
 (1, NULL, '/', 'PHProjekt', 'Test', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),

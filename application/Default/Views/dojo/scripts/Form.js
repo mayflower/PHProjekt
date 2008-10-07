@@ -187,6 +187,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Add a tab and if have form, add the values
         //    to the array of values for save it later
+		phpr.destroyWidgets(formId);
         var html = this.render(["phpr.Default.template", "tabs.html"], null,{
             innerTabs: innerTabs,
             formId:    formId || ''

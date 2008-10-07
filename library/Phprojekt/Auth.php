@@ -68,13 +68,15 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         try {           
-            $settings = new Phprojekt_User_UserSetting($userId, 1);
+            $setting = new Setting_Models_Setting();
+            $setting->setModule('User');
             
             // The password does not match with password provided
-            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$settings->getSetting("password"))) {
+            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$setting->getSetting("password", $userId))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
         } catch (Exception $e) {
+        	$e->getMessage();;
             throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
 
@@ -93,7 +95,7 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function getUserId()
     {
-        $returnValue   = false;
+        $returnValue   = 0;
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
         if (isset($authNamespace->userId)) {
@@ -135,32 +137,6 @@ class Phprojekt_Auth extends Zend_Auth
         // Please add other valid methods here (e.g. not crypted password)
         // None of the methods works
         return false;
-    }
-    
-    /**
-     * Compare a string with a user password
-     *
-     * @param string $string   key uncryted to check if it is the password
-     * @param string $password crypted password
-     *
-     * @return boolean true if the string crypted is equal to provide password
-     */
-    public static function setPassword($password)
-    {
-        $userId = Phprojekt_Auth::getUserId();
-        
-        $cryptedPassword = 'phprojektmd5'.$password;
-        $cryptedPassword = Phprojekt_Auth::_cryptPassword($cryptedPassword);
-        
-        $user = new Phprojekt_User_User();
-        if ($user->find($userId)) {
-            $settings = new Phprojekt_User_UserSetting($userId, 1);
-            $settings->setSetting('password', $cryptedPassword);
-        } else {
-            return false;
-        }
-        
-        return true;
     }
 
     /**
