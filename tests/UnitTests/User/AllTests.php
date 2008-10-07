@@ -21,7 +21,6 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
 require_once 'Models/UserTest.php';
-require_once 'Models/UserModuleSettingTest.php';
 
 /**
  * Test suite for the user module
@@ -56,7 +55,6 @@ class User_AllTests
         $suite = new PHPUnit_Framework_TestSuite('User Controller');
         $suite->addTestSuite('User_IndexController_Test');
         $suite->addTestSuite('User_User_Test');
-        $suite->addTestSuite('User_ModuleSetting_Test');
         return $suite;
     }
 }
