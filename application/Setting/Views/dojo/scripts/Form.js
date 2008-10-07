@@ -1,7 +1,11 @@
-dojo.provide("phpr.Settings.Form");
+dojo.provide("phpr.Setting.Form");
 
-dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
-    
+dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
+
+    setUrl:function() {
+        this._url = phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/moduleName/" + phpr.submodule;
+    },
+	
     initData:function() {
     },
 	
@@ -35,7 +39,7 @@ dojo.declare("phpr.Settings.Form", phpr.Default.Form, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/moduleName/' + phpr.submodule,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
