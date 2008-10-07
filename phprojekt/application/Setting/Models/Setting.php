@@ -40,6 +40,11 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      */
     protected $_moduleId = 0;
 
+    /**
+     * Class of the setting module
+     *
+     * @var Object class
+     */
     protected $_object = null;
     
     /**
@@ -85,6 +90,13 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         return $results;    	
     }
     
+    /**
+     * Define the current module to use in the settings
+     *
+     * @param string $module The module name
+     * 
+     * @return void
+     */
     public function setModule($module)
     {
         $this->_moduleId = Phprojekt_Module::getId($module);
@@ -92,11 +104,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     }
     
     /**
-     * Get the information manager
+     * Get the object class to use for manage the settings
      *
-     * @see Phprojekt_Model_Interface::getInformation()
-     *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Object class
      */
     public function getModel()
     {
@@ -111,6 +121,14 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         return $this->_object;
     }
     
+    /**
+     * Return the value of one setting
+     *
+     * @param string  $settingName The name of the setting
+     * @param integer $userId      The user id, if is not setted, the current user is used.
+     * 
+     * @return mix
+     */
     public function getSetting($settingName, $userId = 0)
     {
         $toReturn = null;
@@ -126,6 +144,14 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         return $toReturn;
     }
         
+    /**
+     * Collect all the values of the settings and return it in one row
+     *
+     * @param integer $moduleId The current moduleId
+     * @param array   $metadata Array with all the fields
+     * 
+     * @return array
+     */
     public function getList($moduleId, $metadata)
     {
         $settings  = array();
@@ -153,6 +179,13 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         return $settings;
     }
     
+    /**
+     * Validation functions for all the values
+     *
+     * @param array $params $_POST fields
+     * 
+     * @return string
+     */
     public function validateSettings($params)
     {
     	$message = null;
@@ -162,6 +195,13 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     	return $message;
     }  
        
+    /**
+     * Save the settings into the table
+     *
+     * @param array $params $_POST fields
+     * 
+     * @return void
+     */
     public function setSettings($params)
     {   	
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
