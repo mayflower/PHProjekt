@@ -31,7 +31,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      *
      * @var array
      */
-    public $hasMany = array('settings' => array('classname' => 'Phprojekt_User_UserSetting',
+    public $hasMany = array('settings' => array('classname' => 'Core_Models_UserSetting',
                                                 'module'    => 'User',
                                                 'model'     => 'UserSetting'));
 
@@ -239,9 +239,10 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     static public function getSetting($settingName, $defaultValue = null)
     {
-        $settings = new Phprojekt_User_UserSetting();
+        $setting = new Setting_Models_Setting();
+        $setting->setModule('User');
         
-        $value = $settings->getSetting($settingName);
+        $value = $setting->getSetting($settingName);
         if (empty($value)) {
             $value = $defaultValue;
         }

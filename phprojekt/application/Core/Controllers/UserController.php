@@ -43,123 +43,6 @@ class Core_UserController extends Core_IndexController
     }
 
     /**
-     * Gets the content of a setting
-     *
-     * @uses name parameter as setting key
-     *
-     * @return void
-     */
-    public function jsonGetSettingAction()
-    {
-        $value       = '';
-        $settingName = (string) $this->getRequest()->getParam('name', null);
-
-        if (!empty($settingName)) {
-            $setting = new Phprojekt_User_UserSetting();
-            $value   = $setting->getSetting($settingName);
-        }
-        echo Phprojekt_Converter_Json::convert($value);
-    }
-
-    /**
-     * Sets the value for a setting
-     *
-     * @uses name and value parameters
-     *
-     * @return void
-     *
-     */
-    public function jsonSetSettingAction()
-    {
-        $settingName  = (string) $this->getRequest()->getParam('name', null);
-        $settingValue = (string) $this->getRequest()->getParam('value', null);
-
-        if (!empty($settingName)) {
-            $setting = new Phprojekt_User_UserSetting();
-            if ($setting->setSetting($settingName, $settingValue)) {
-                $return = 'Value saved successful';
-            } else {
-                $return = 'Value not saved. Error at saving.';
-            }
-        } else {
-            $return = 'A key value needs to be provided';
-        }
-        echo Phprojekt_Converter_Json::convert($return);
-    }
-
-    /**
-     * Save settings fields from grid, using the multple save action request
-     *
-     * @requestparam string data Array with fields and values
-     *
-     * @return void
-     */
-    public function jsonSaveMultipleSettingAction()
-    {
-        $translate = Zend_Registry::get('translate');
-        $data      = (array) $this->getRequest()->getParam('data');
-
-        $message = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
-        $showId = array();
-        foreach ($data as $id => $fields) {
-            if (array_key_exists('value', $fields)) {
-                $setting     = new Phprojekt_User_UserSetting();
-                $settingName = $setting->getSettingNameById($id);
-                $setting->setSetting($settingName, $fields['value']);
-                $showId[] = $id;
-            }
-        }
-
-        $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => implode(',', $showId));
-
-        echo Phprojekt_Converter_Json::convert($return);
-    }
-
-    /**
-     * Gets the list of all settings and it is returned as an array
-     *
-     * @return void
-     *
-     */
-    public function jsonGetSettingListAction()
-    {
-        $settings = new Phprojekt_User_UserSetting();
-        $metadata = $settings->getFieldDefinition();
-        $records  = $settings->getList();
-
-        $data     = array("metadata"=> $metadata,
-                          "data"    => $records,
-                          "numRows" => count($records));
-        echo Phprojekt_Converter_Json::convert($data);
-    }
-
-    /**
-     * Deletes the indicated setting
-     *
-     * @uses name parameter
-     *
-     * @return boolean
-     */
-    public function jsonDeleteSettingAction()
-    {
-        $settingName = (string) $this->getRequest()->getParam('name', null);
-        if (!empty($settingName)) {
-            $setting = new Phprojekt_User_UserSetting();
-            if ($setting->deleteSetting($settingName)) {
-                $return = 'Value deleted successful';
-            } else {
-                $return = 'Value not found.';
-            }
-        } else {
-            $return = 'A key value needs to be provided';
-        }
-        echo Phprojekt_Converter_Json::convert($return);
-    }
-
-    /**
      * Returns the detail for a Settings in JSON.
      *
      * @requestparam integer id ...
@@ -180,17 +63,21 @@ class Core_UserController extends Core_IndexController
         $data['lastname']  = (empty($user->lastname))?"":$user->lastname;
         $data['status']    = (empty($user->status))?"":$user->status;
 
-        $settings = new Phprojekt_User_UserSetting($data["id"], 1);
+        $setting = new Setting_Models_Setting();
+        $setting->setModule('User');
 
-        $tmp = $settings->getList(false);
+        $tmp = $setting->getList(0, $setting->getModel()->getFieldDefinition());
 
-        foreach ($tmp as $dummy => $oneSetting) {
-            $dummy = $oneSetting["keyValue"];
-            if (!empty($data["id"])) {
-                $data[$dummy] = $oneSetting["value"];
-            } else {
-                $data[$dummy] = "";
-            }
+        foreach ($tmp as $values) {
+        	foreach ($values as $key => $value) {
+        		if ($key != 'id') {
+                    if (!empty($data["id"])) {
+                        $data[$key] = $value;
+                    } else {
+                        $data[$key] = "";
+                    }
+        		}
+        	}
         }
 
         $records = array($data);
@@ -233,24 +120,10 @@ class Core_UserController extends Core_IndexController
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
-        // saving the settings
-        $settings = new Phprojekt_User_UserSetting($model->id, 1);
-
-        $settingsList = $settings->getList(false);
-
-        foreach ($settingsList as $oneSetting) {
-            if ($oneSetting["keyValue"] != 'password') {
-                $value = $this->getRequest()->getParam($oneSetting["keyValue"], $oneSetting["value"]);
-                $settings->setSetting($oneSetting["keyValue"], $value);
-            }
-            // password, special case
-            $password = $this->getRequest()->getParam('password');
-
-            if (!empty($password)) {
-                $crypted = Phprojekt_Auth::cryptString($password);
-                $settings->setSetting('password', $crypted);
-            }
-        }
+        // Saving the settings
+        $setting = new Setting_Models_Setting();
+        $setting->setModule('User');
+        $setting->setSettings($this->getRequest()->getParams());
 
         $return    = array('type'    => 'success',
                            'message' => $message,

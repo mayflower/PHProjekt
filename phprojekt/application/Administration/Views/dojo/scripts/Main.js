@@ -25,6 +25,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("exportGrid");
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
+		phpr.destroyWidgets("detailsBox");
         this.render(["phpr.Default.template", "mainContentEmpty.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         this.setSubmoduleNavigation();
         this.hideSuggest();

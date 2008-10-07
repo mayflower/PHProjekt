@@ -95,15 +95,16 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 	},
 
 	multipleSelectBoxRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple){
-		var options=new Array();
-		var j=0;
-		for (j in range){
-		    if (itemvalue.indexOf("," + range[j].id + ",") >= 0) {
-		        range[j].selected = 'selected';
-		    }
-		    else {
-		        range[j].selected = '';
-		    }
+		var options = new Array();
+		var tmp     = itemvalue.split(',');
+		for (var j in range){
+			for(var k in tmp) {
+				range[j].selected = '';
+				if (tmp[k] == range[j].id) {
+				    range[j].selected = 'selected';
+					break;	
+				}
+			}
 			options.push(range[j]);
 			j++;
 		}

@@ -87,7 +87,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public static function saveEvent($request) {
         $userId        = Phprojekt_Auth::getUserId();
-        $rootEventId   = 0;
         $id            = (int) $request->getParam('id');
         $participantId = $request->getParam('participantId');
         $moduleName    = $request->getModuleName();
@@ -252,18 +251,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function getAllParticipants() {
         $relatedEvents = array();
-        $tmp           = "";
 
         if (!empty($this->id)) {
             $rootEventId   = $this->getRootEventId($this->id);
             $relatedEvents = $this->getRelatedEvents($rootEventId, true);
-            
-            $tmp = ",";
-            $relatedEvents = array_keys($relatedEvents);
-            foreach ($relatedEvents as $value) {
-                $tmp .= $value.",";
-            }
-            $this->participantId = $tmp;
+                        
+            $this->participantId = implode(",", array_keys($relatedEvents));
         }
     }
 

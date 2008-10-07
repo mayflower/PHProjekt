@@ -28,6 +28,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("exportGrid");
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
+		phpr.destroyWidgets("detailsBox");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
 			selectDate:    phpr.nls.get('Change date'),
 			webpath:       phpr.webpath,

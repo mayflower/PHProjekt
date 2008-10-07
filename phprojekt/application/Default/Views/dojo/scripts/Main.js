@@ -117,6 +117,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroySimpleWidget("exportGrid");
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
+		phpr.destroyWidgets("detailsBox");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
         if (this._isGlobalModule(this.module)) {
             this.setSubGlobalModulesNavigation();
@@ -146,13 +147,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var separator = new dijit.ToolbarSeparator();
         toolbar.addChild(separator);
 
-        // Settings
+        // Setting
         var button = new dijit.form.Button({
             id:        "globalModuleSettings",
             label:     phpr.nls.get('Settings'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
-                dojo.publish("Settings.reload");
+                dojo.publish("Setting.reload");
             })
         });
         toolbar.addChild(button);
@@ -213,7 +214,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // System Global Modules
         if (module == 'Administration' ||
-		    module == 'Settings' ||
+		    module == 'Setting' ||
 			module == 'User' ||
 			module == 'Role' ||
             module == 'Module') {
