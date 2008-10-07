@@ -31,8 +31,6 @@ class Timecard_Models_TimecardSetting
     /**
      * Return an array of field information.
      *
-     * @param integer $ordering An ordering constant
-     *
      * @return array
      */
     public function getFieldDefinition()
@@ -77,22 +75,33 @@ class Timecard_Models_TimecardSetting
         return $converted;
     }     
 
-
+    /**
+     * getter for the "favorites" field
+     *
+     * @param string $value Serialized array of Ids
+     * 
+     * @return array
+     */
     public function getFavorites($value)
     {
         return implode(",",unserialize($value));
     }
         
+    /**
+     * Save the settings for the timecard
+     *
+     * @param array $params $_POST values
+     * 
+     * @return void
+     */
     public function setSettings($params)
-    {    
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $setting->setModule('User');            
+    {            
         $fields = $this->getFieldDefinition();          
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key']) {
                     $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-                    $setting->setModule('User');                    
+                    $setting->setModule('Timecard');                    
                     if (($key == 'favorites')) {
                         $value = serialize($value);
                     }                    

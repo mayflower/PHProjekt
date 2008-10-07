@@ -289,5 +289,46 @@ class Timecard_IndexController extends IndexController
                            'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
-    }    
+    }
+    
+    /**
+     * Return a list of Project Ids saved as "favorites" for th
+     *
+     * @return void
+     */
+    public function jsonGetFavoritesProjectsAction()
+    {
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting->setModule('Timecard');
+
+        $favorites = $setting->getSetting('favorites');
+        if (!empty($favorites)) {
+        	$favorites = unserialize($favorites);
+        } else {
+        	$favorites = array();
+        }
+        echo Phprojekt_Converter_Json::convert($favorites);
+    }
+    
+    /**
+     * Save the favorties projects for the current user
+     *
+     * @return void
+     */
+    public function jsonFavortiesSaveAction()
+    {
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting->setModule('Timecard');
+        
+        $setting->setSettings($this->getRequest()->getParams());
+
+        $translate = Zend_Registry::get('translate');
+        $message = $translate->translate(self::EDIT_TRUE_TEXT);
+        $return    = array('type'    => 'success',
+                           'message' => $message,
+                           'code'    => 0,
+                           'id'      => 0);
+
+        echo Phprojekt_Converter_Json::convert($return);
+    }
 }

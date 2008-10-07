@@ -1,14 +1,15 @@
 dojo.provide("phpr.Timecard.Form");
 
 dojo.declare("phpr.Timecard.Form", phpr.Component, {
-    sendData:    new Array(),
-    formdata:    '',
-    _hourUrl:    null,
-	_bookUrl:    null,
-    _formNode:   null,
-    _date:       null,
-	_dateObject: null,
-	contentBar:  null,
+    sendData:      new Array(),
+    formdata:      '',
+    _hourUrl:      null,
+	_bookUrl:      null,
+	_favoritesUrl: null,
+    _formNode:     null,
+    _date:         null,
+	_dateObject:   null,
+	contentBar:    null,
 	timecardProjectPositions: new Array(),
 	
     constructor:function(main, id, module, date) {
@@ -63,7 +64,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Set the url for get the data
         // description:
         //    Set the url for get the data
-        this._bookUrl = phpr.webpath+"index.php/" + phpr.module + "/index/jsonBookingDetail/date/" + this._date
+        this._bookUrl      = phpr.webpath+"index.php/" + phpr.module + "/index/jsonBookingDetail/date/" + this._date
+		this._favoritesUrl = phpr.webpath+"index.php/" + phpr.module + "/index/jsonGetFavoritesProjects";
     },
 
     getFormData:function(hours, date, books) {
@@ -75,9 +77,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             this.reloadDateView();
         }
 		
-		if (books) {
-    		phpr.DataStore.addStore({url: this._bookUrl});
-			phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, "reloadBookingView")});
+		if (books) {			
+            phpr.DataStore.addStore({url: this._favoritesUrl});
+            phpr.DataStore.requestData({url: this._favoritesUrl, processData: dojo.hitch(this, function() {
+                    phpr.DataStore.addStore({url: this._bookUrl});
+                    phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, "reloadBookingView")});				
+                })
+			});			
         }
         
 		if (hours) {
@@ -94,10 +100,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Reload the Hours view with the form and all the hours saved for the current day 	
         var hoursdata = "";
 
-        meta = phpr.DataStore.getMetaData({url: this._hourUrl});
-        data = phpr.DataStore.getData({url: this._hourUrl});
-       
-        totalHours = 0;
+        var meta      = phpr.DataStore.getMetaData({url: this._hourUrl});
+        var data      = phpr.DataStore.getData({url: this._hourUrl});
+
+        var totalHours = 0;
         for (var i = 0; i < data.length; i++) {
 			totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {
@@ -166,16 +172,16 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 		phpr.destroyWidgets("projectId");
 		phpr.destroyWidgets("notes");
 		phpr.destroyWidgets("amount");
+		phpr.destroySimpleWidget("manageFavorites");
 		
-		var bookingdata = '';
-		
-        meta = phpr.DataStore.getMetaData({url: this._bookUrl});
-        data = phpr.DataStore.getData({url: this._bookUrl});
-		range = meta[1]['range'];
-		timecardProjectPositions = new Array();
-        
+		var bookingdata  = '';		
+        var meta         = phpr.DataStore.getMetaData({url: this._bookUrl});
+        var data         = phpr.DataStore.getData({url: this._bookUrl});
+        var favorites    = phpr.DataStore.getData({url: this._favoritesUrl});				
+		var range        = meta[1]['range'];        
 		var timeprojData = data['timeproj'];
 		var timecardData = data['timecard'];
+        timecardProjectPositions = new Array();
 		
         // Fixed hours 8-20 and 700 px for the bar
         var hours = new Array();		
@@ -220,17 +226,41 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             deleteText:     phpr.nls.get('Cancel'),			
             id:             0
         });
-	   
-	   // Complete view
+
+        // Favorites
+        var favoritesList = new Array();		
+        for (var k in favorites) {
+			 for (var j in range) {
+                if (range[j]['id'] == favorites[k]) {
+                    favoritesList.push(range[j]);
+                }
+            }
+        }
+		var allProjects   = new Array();
+		for (var j in range) {
+			var found = false;
+            for (var k in favorites) {
+                if (range[j]['id'] == favorites[k]) {
+					found = true;
+                }
+            }
+			if (!found) {   
+                allProjects.push(range[j]);
+            }
+        }		
+        // Complete view
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
 			hours:                    hours,
 			hourWidth:                hourWidth, 
             date:                     this._date,
 			timecardProjectTimesText: phpr.nls.get("Project bookings"),
-			values:                   range,
+			values:                   favoritesList,
+			allProjects:              allProjects,
+			manageFavoritesText:      phpr.nls.get('Manage Favorites'),
 			helpText:                 phpr.nls.get('Add working time and drag projects into the bar'),
 			bookingdata:              bookingdata
         });
+		dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
     
         this.contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
         var surface     = dojox.gfx.createSurface('projectBookingContainer', 700, 22);
@@ -369,6 +399,24 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                }
             })
         });		
+	},
+	
+	submitFavoritesForm:function() {
+        // summary:
+        //    Save the favorites projects
+        // description:
+        //    Save the favorites projects       
+       this.sendData['favorites[]'] = dojo.byId('selectedProjectFavorites').value.split(","); 
+        phpr.send({
+            url:       phpr.webpath + 'index.php/Timecard/index/jsonFavortiesSave',
+            content:   this.sendData,
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    phpr.DataStore.deleteData({url: this._favoritesUrl});
+               }
+            })
+        });	   
 	},
 	
     deleteForm:function(id) {

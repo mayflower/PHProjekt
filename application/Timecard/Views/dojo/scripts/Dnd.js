@@ -3,25 +3,27 @@ dojo.provide("phpr.Timecard.ContentBar");
 
 dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
     onDndDrop:function(source, nodes, copy) {
-		dojo.byId('projectId_0').value = nodes[0].id;
-		dojo.byId('projectName_0').innerHTML = nodes[0].innerHTML;
-        for (var i in timecardProjectPositions) {
-            var id = timecardProjectPositions[i].id;
-			var node = dojo.byId('projectBookingForm_' + id);
-			if (node) {
-				dojo.style(node, "display", "none");
+		if (source.node.id == 'projectBookingSource') {
+			dojo.byId('projectId_0').value = nodes[0].id;
+			dojo.byId('projectName_0').innerHTML = nodes[0].innerHTML;
+			for (var i in timecardProjectPositions) {
+				var id = timecardProjectPositions[i].id;
+				var node = dojo.byId('projectBookingForm_' + id);
+				if (node) {
+					dojo.style(node, "display", "none");
+				}
 			}
-        }		
-        dojo.fadeIn({
-            node: dojo.byId('projectBookingForm_0'),
-            duration: 1000,
-            beforeBegin:function() {
-                var node = dojo.byId('projectBookingForm_0');
-                dojo.style(node, "opacity", 0);
-                dojo.style(node, "display", "block");
-            }
-        }).play();							
-        this.onDndCancel();  // cleanup the drop state
+			dojo.fadeIn({
+				node: dojo.byId('projectBookingForm_0'),
+				duration: 1000,
+				beforeBegin: function(){
+					var node = dojo.byId('projectBookingForm_0');
+					dojo.style(node, "opacity", 0);
+					dojo.style(node, "display", "block");
+				}
+			}).play();
+			this.onDndCancel(); // cleanup the drop state
+		}
     },
 
     markupFactory:function(params, node) {
@@ -90,5 +92,40 @@ dojo.declare("phpr.Timecard.ContentBar", null, {
         var hours   = (time.substr(0,2) * hourWith);
 		var minutes = Math.floor((time.substr(3,2)/60) * hourWith);
 		return hours + minutes;
+    }
+});
+
+dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
+    onDrop: function(source, nodes, copy){
+        if(this != source) {
+			this.onDropExternal(source, nodes, copy);
+			if (source.node.id == 'projectFavoritesSource') {
+				// Add a item
+				var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
+				dojo.byId('selectedProjectFavorites').value += id + ",";
+				dojo.byId('projectBookingSource').innerHTML += '<span class="dojoDndItem" id="' + id + '" style="cursor: move;">' + nodes[0].innerHTML + '</span>';
+				projectBookingSource.sync();				
+			} else if (source.node.id == 'projectFavoritesTarget') {
+				// Delete a items
+				var tmp = '';
+				dojo.byId('projectBookingSource').innerHTML = '';
+				projectFavoritesTarget.getAllNodes().forEach(function(node){
+					var id = node.id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
+					var name = node.innerHTML;
+					tmp += id + ',';
+                    dojo.byId('projectBookingSource').innerHTML += '<span class="dojoDndItem" id="' + id + '" style="cursor: move;">' + name + '</span>';
+				});
+				dojo.byId('selectedProjectFavorites').value = tmp;
+                projectBookingSource.sync();
+            }
+        }else{
+			alert('b');
+            this.onDropInternal(nodes, copy);
+        }
+    },
+
+    markupFactory:function(params, node) {
+        params._skipStartup = true;
+        return new phpr.Timecard.Favorites(node, params);
     }
 });
