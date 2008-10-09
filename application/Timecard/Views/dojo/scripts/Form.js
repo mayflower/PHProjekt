@@ -316,7 +316,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 								bookingWith = end - lastHour;
 							}
 						}
-						var tmpDraw = surface.createRect({x: lastHour -4, y: 0, width: bookingWith - 2, height: 22});
+						var tmpDraw = surface.createRect({x: lastHour -4, y: 0, width: bookingWith + 1, height: 22});
 					    tmpDraw.setFill([0,255,0,0.3]);
 						tmpDraw.setStroke("green");
                         timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingWith, 'id'   : timeprojData[j].id});

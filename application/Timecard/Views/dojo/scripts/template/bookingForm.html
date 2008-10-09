@@ -4,10 +4,10 @@
 
 <p dojoType="dojo.dnd.Source" id="projectBookingSource" jsId="projectBookingSource" copyOnly="true" selfAccept="false" style="background-color: white; border: 2px solid black; width:700px; margin: 4px; padding-top: 4px;">
 {% for item in values %}
-    <span class="dojoDndItem" id="{{item.id}}" style="cursor: move;">{{item.name}}</span>
+    <span class="dojoDndItem" id="{{item.id}}" style="cursor: move; padding-left: 10px;">{{item.name}}</span>
 {% endfor %}
 </p>
-<button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').show()">{{manageFavoritesText}}</button>
+<button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').show()" style="margin: 6px;">{{manageFavoritesText}}</button>
 <div dojoType="dijit.Dialog" id="manageFavorites" title="{{manageFavoritesText}}" draggable="false" style="background-color: white; width:auto; height:auto;">
     <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesSource" selfAccept="false" style="background-color: white; border: 2px solid black; width:200px; margin: 4px; padding-top: 4px; float:left;">
         {% for item in allProjects %}
@@ -20,7 +20,7 @@
         {% endfor %}
     </div>
     <input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden" value="{% for item in values %}{{item.id}},{% endfor %}" />
-    <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').hide();" style="float: right;">OK</button>
+    <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').hide();" style="float: right;" baseClass="positive" iconClass="tick"></button>
 </div>    
 <br />
 <div class="greyContainer" style="width:698px; font-weight: bold; text-align:center;">{{helpText}}</div>
