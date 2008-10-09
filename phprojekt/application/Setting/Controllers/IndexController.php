@@ -26,6 +26,11 @@
  */
 class Setting_IndexController extends IndexController
 {		
+	/**
+	 * Return all the modules that contain settings
+	 *
+	 * @return void
+	 */
     public function jsonGetModulesAction()
     {
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
@@ -34,6 +39,11 @@ class Setting_IndexController extends IndexController
         echo Phprojekt_Converter_Json::convert($data);
     }    	
     	
+    /**
+     * Return the setting fields for one module
+     *
+     * @return void
+     */
     public function jsonDetailAction()
     {
         $module   = $this->getRequest()->getParam('moduleName', null);
@@ -44,22 +54,17 @@ class Setting_IndexController extends IndexController
         $metadata = $setting->getModel()->getFieldDefinition();
         $records  = $setting->getList($moduleId, $metadata);
         
-        $data     = array("metadata" => $metadata,
-                          "data"     => $records,
-                          "numRows"  => count($records));
+        $data = array("metadata" => $metadata,
+                      "data"     => $records,
+                      "numRows"  => count($records));
+        
         echo Phprojekt_Converter_Json::convert($data);
     }
         
     /**
-     * Saves the current item
-     * Save if you are add one or edit one.
-     * Use the model module for get the data
+     * Saves the settings
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
-     *
-     * @requestparam integer id ...
+     * @requestparam string moduleName ...
      *
      * @return void
      */

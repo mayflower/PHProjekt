@@ -1,20 +1,20 @@
 <?php
 /**
- * Administration overview module for PHProjekt 6.0
+ * Configuration Module Controller for PHProjekt 6.0
  *
  * LICENSE: Licensed under the terms of the PHProjekt 6 License
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id:
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
 
 /**
- * Administration overview module for PHProjekt 6.0
+ * Configuration Module Controller for PHProjekt 6.0
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -22,19 +22,75 @@
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Administration_IndexController extends IndexController
 {
     /**
-     * List the administration modules
+     * Return all the modules that contain admin configurations
      *
      * @return void
      */
-    public function jsonListAction()
+    public function jsonGetModulesAction()
     {
-        $modules = Phprojekt_Loader::getModel('Administration', 'AdminModels');
+        $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
+        $data          = $configuration->getModules();
+        
+        echo Phprojekt_Converter_Json::convert($data);
+    }
+    
+    /**
+     * Return the admin configurations fields for one module
+     *
+     * @return void
+     */
+    public function jsonDetailAction()
+    {
+        $module   = $this->getRequest()->getParam('moduleName', null);
+        $moduleId = (int) Phprojekt_Module::getId($module);
+        
+        $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
+        $configuration->setModule($module);
+        $metadata = $configuration->getModel()->getFieldDefinition();
+        $records  = $configuration->getList($moduleId, $metadata);
+        
+        $data     = array("metadata" => $metadata,
+                          "data"     => $records,
+                          "numRows"  => count($records));
+        
+        echo Phprojekt_Converter_Json::convert($data);
+    }
+        
+    /**
+     * Saves the admin configurations
+     *
+     * @requestparam string moduleName ...
+     *
+     * @return void
+     */
+    public function jsonSaveAction()
+    {
+        $translate     = Zend_Registry::get('translate');
+        $module        = $this->getRequest()->getParam('moduleName', null);        
+        $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
+        $configuration->setModule($module);
 
-        echo Phprojekt_Converter_Json::convert($modules->fetchAll());
+        $message = $configuration->validateConfigurations($this->getRequest()->getParams());
+        
+        if (!empty($message)) {
+            $message = $translate->translate($message);
+            $type    = "error";
+        } else {
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $configuration->setConfigurations($this->getRequest()->getParams());
+            $type = "success";
+        }
+
+        $return = array('type'    => $type,
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => 0);
+
+        echo Phprojekt_Converter_Json::convert($return);
     }
 }

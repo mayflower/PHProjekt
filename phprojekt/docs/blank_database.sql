@@ -225,7 +225,7 @@ CREATE TABLE `Setting` (
   `userId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
   `keyValue` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
+  `value` text default NULL,
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 );
@@ -339,7 +339,7 @@ CREATE TABLE `Note` (
 CREATE TABLE `Configuration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `moduleId` int(11) NOT NULL,
-  `key` varchar(255) NOT NULL,
+  `keyValue` varchar(255) NOT NULL,
   `value` text default NULL,
   PRIMARY KEY  (`id`)
 );
