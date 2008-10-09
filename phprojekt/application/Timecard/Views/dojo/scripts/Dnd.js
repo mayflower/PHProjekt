@@ -103,7 +103,7 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
 				// Add a item
 				var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
 				dojo.byId('selectedProjectFavorites').value += id + ",";
-				dojo.byId('projectBookingSource').innerHTML += '<span class="dojoDndItem" id="' + id + '" style="cursor: move;">' + nodes[0].innerHTML + '</span>';
+				dojo.byId('projectBookingSource').innerHTML += '<span class="dojoDndItem" id="' + id + '" style="cursor: move; padding-left: 10px;">' + nodes[0].innerHTML + '</span>';
 				projectBookingSource.sync();				
 			} else if (source.node.id == 'projectFavoritesTarget') {
 				// Delete a items
@@ -113,13 +113,12 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
 					var id = node.id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
 					var name = node.innerHTML;
 					tmp += id + ',';
-                    dojo.byId('projectBookingSource').innerHTML += '<span class="dojoDndItem" id="' + id + '" style="cursor: move;">' + name + '</span>';
+                    dojo.byId('projectBookingSource').innerHTML += '<span class="dojoDndItem" id="' + id + '" style="cursor: move; padding-left: 10px;">' + name + '</span>';
 				});
 				dojo.byId('selectedProjectFavorites').value = tmp;
                 projectBookingSource.sync();
             }
         }else{
-			alert('b');
             this.onDropInternal(nodes, copy);
         }
     },
