@@ -78,12 +78,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             }
             if (is_dir($path)) {
                 $settingClass = Phprojekt_Loader::getModelClassname($dir, sprintf('%sSetting', $dir));
-                try {
-                    Phprojekt_Loader::loadClass($settingClass);
+                if (Phprojekt_Loader::tryToLoadClass($settingClass)) {
                     $results[] = array('name'  => $dir,
                                        'label' => Zend_Registry::get('translate')->translate($dir));
-                } catch (Zend_Exception $ze) {
-                    $ze->getMessage();
                 }
             }
         }

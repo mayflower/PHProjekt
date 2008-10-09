@@ -85,11 +85,14 @@ class Phprojekt_Loader extends Zend_Loader
             }
         }
 
-        if (!class_exists($class)) {
+        if (!class_exists($class, false)) {
+        	if (null === $dirs) {
+        		$dirs = self::$_directories;
+        	}
             parent::loadClass($class, $dirs);
         }
     }
-
+        
     /**
      * The autoload method used to load classes on demand
      * Returns either the name of the class or false, if
@@ -105,10 +108,7 @@ class Phprojekt_Loader extends Zend_Loader
             self::loadClass($class, self::$_directories);
             return $class;
         } catch (Exception $e) {
-            //if (Zend_Registry::isRegistered('log')) {
-            //    $log = Zend_Registry::get('log');
-            //    $log->debug((string) $e->getMessage());
-            //}
+        	$e->getMessage();
             return false;
         }
 
@@ -155,7 +155,7 @@ class Phprojekt_Loader extends Zend_Loader
         $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
         $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
 
-        if (class_exists($cIdentifier)) {
+        if (class_exists($cIdentifier, false)) {
             return $cIdentifier;
         } else {
             return $nIdentifier;
@@ -272,5 +272,28 @@ class Phprojekt_Loader extends Zend_Loader
         $args = array_slice(func_get_args(), 2);
 
         return self::_newInstance($name, $args);
+    }
+    
+    /**
+     * Try to include a file by the class name
+     *
+     * @param strung $class The name of the class
+     * 
+     * @return boolean
+     */
+    public function tryToLoadClass($class)
+    {
+        $names  = explode('_', $class);
+        $file   = PHPR_CORE_PATH;
+        foreach ($names as $name) {
+        	$file .= DIRECTORY_SEPARATOR . $name;
+        }
+        $file .= '.php';
+        if (file_exists($file)) {
+        	self::_includeFile($file, true);
+        	return true;
+        } else {
+        	return false;
+        }
     }
 }
