@@ -47,4 +47,34 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
         $controller = parent::formatControllerName($unformatted);
         return $controller;
     }
+    
+    /**
+     * Formats a string from a URI into a PHP-friendly name.
+     *
+     * By default, replaces words separated by the word separator character(s)
+     * with camelCaps. If $isAction is false, it also preserves replaces words
+     * separated by the path separation character with an underscore, making
+     * the following word Title cased. All non-alphanumeric characters are
+     * removed.
+     *
+     * @param string $unformatted
+     * @param boolean $isAction Defaults to false
+     * @return string
+     */
+    protected function _formatName($unformatted, $isAction = false)
+    {
+        // preserve directories
+        if (!$isAction) {
+            $segments = explode($this->getPathDelimiter(), $unformatted);
+        } else {
+            $segments = (array) $unformatted;
+        }
+
+        foreach ($segments as $segment) {
+            $segment        = str_replace($this->getWordDelimiter(), ' ', $segment);
+            $segment        = preg_replace('/[^a-z0-9 ]/', '', $segment);
+        }
+
+        return implode('_', $segments);
+    }    
 }

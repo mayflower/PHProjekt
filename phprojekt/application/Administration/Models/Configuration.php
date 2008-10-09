@@ -71,12 +71,9 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             }
             if (is_dir($path)) {
                 $configClass = Phprojekt_Loader::getModelClassname($dir, sprintf('%sConfiguration', $dir));
-                try {
-                    Phprojekt_Loader::loadClass($configClass);
+                if (Phprojekt_Loader::tryToLoadClass($configClass)) {
                     $results[] = array('name'  => $dir,
                                        'label' => Zend_Registry::get('translate')->translate($dir));
-                } catch (Zend_Exception $ze) {
-                    $ze->getMessage();
                 }
             }
         }
