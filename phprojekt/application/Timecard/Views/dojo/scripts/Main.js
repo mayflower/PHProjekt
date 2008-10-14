@@ -30,9 +30,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("gridNode");
 		phpr.destroyWidgets("detailsBox");
         this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-			selectDate:    phpr.nls.get('Change date'),
-			webpath:       phpr.webpath,
-			currentModule: phpr.module
+			selectDate:    phpr.nls.get('Change date')
         });
 		dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.setSubGlobalModulesNavigation();

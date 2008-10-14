@@ -22,10 +22,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Setting.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-			webpath:phpr.webpath,
-			currentModule:phpr.module
-        });
+        this.render(["phpr.Setting.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();

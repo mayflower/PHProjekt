@@ -20,10 +20,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-            webpath:phpr.webpath,
-			currentModule:phpr.module
-        });
+        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();

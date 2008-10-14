@@ -22,10 +22,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Administration.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-            webpath:phpr.webpath,
-            currentModule:phpr.module
-        });
+        this.render(["phpr.Administration.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
@@ -45,10 +42,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Administration.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-            webpath:phpr.webpath,
-            currentModule:phpr.module
-        });		
+        this.render(["phpr.Administration.template", "mainContent.html"],dojo.byId('centerMainContent'));		
         this.setSubGlobalModulesNavigation();
         this.form = new this.formWidget(this,0,this.module);
     },
