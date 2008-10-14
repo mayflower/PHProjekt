@@ -414,7 +414,8 @@ INSERT INTO `Module` (`id`, `name`, `saveType`, `active`) VALUES
 (2, 'Todo', 0, 1),
 (3, 'Note', 0, 1),
 (4, 'Timecard', 1, 1),
-(5, 'Calendar', 1, 1);
+(5, 'Calendar', 1, 1),
+(6, 'Gantt', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
@@ -524,24 +525,28 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 3, 139),
 (1, 4, 139),
 (1, 5, 139),
+(1, 6, 139),
 
 (2, 1, 0),
 (2, 2, 1),
 (2, 3, 0),
 (2, 4, 0),
 (2, 5, 1),
+(2, 6, 0),
 
 (3, 1, 139),
 (3, 2, 0),
 (3, 3, 0),
 (3, 4, 0),
 (3, 5, 139),
+(3, 6, 0),
 
 (4, 1, 1),
 (4, 2, 1),
 (4, 3, 1),
 (4, 4, 1),
-(4, 5, 1);
+(4, 5, 1),
+(4, 6, 1);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
@@ -566,13 +571,17 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (3, 1),
 (4, 1),
 (5, 1),
+(6, 1),
 
 (1, 2),
 (2, 2),
 (3, 2),
+(6, 2),
 
 (1, 3),
 (2, 3),
+(6, 3),
 
-(1, 4);
+(1, 4),
+(6, 4);
 COMMIT;

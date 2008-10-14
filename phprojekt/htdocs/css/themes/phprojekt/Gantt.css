@@ -1,0 +1,45 @@
+.phprojekt #ganttChart ul,li {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.phprojekt #ganttChart .ganttcontent {
+    position:absolute;
+    left:0;
+    width:100%;
+    top:100px;
+    padding-bottom:20px;
+}
+
+.phprojekt #ganttChart .timeline {
+    position:absolute;
+    left:0;
+    top:0px;
+	width:100%;
+}
+
+.phprojekt #ganttChart .project_list {
+    position:absolute;
+    left:0;
+    width:100%;
+    top:20px;   
+}
+	
+.phprojekt #ganttChart .sub_project .title {
+    width:25%;
+    border-left:1px solid #7d7d7d;
+	border-right:1px solid #7d7d7d;
+	border-bottom:1px solid #7d7d7d;
+	float: left;
+}
+
+.phprojekt #ganttChart .sub_project .slider {
+    margin-top: 0px;
+	margin-left: 0px;
+}
+
+.phprojekt #ganttChart .sub_project .separator {
+    width: 10px;
+	float: left;
+}
