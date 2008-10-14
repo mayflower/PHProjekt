@@ -142,7 +142,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 		var days    = new Array();
 		var today   = this._dateObject.getDate();
 
-        var months = ['January', 'February', 'March', 'April', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
 		var weeks = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         var monthString = phpr.nls.get(months[month-1]);
 		

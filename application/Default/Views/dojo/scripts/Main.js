@@ -81,10 +81,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             currentModule:phpr.module
         });
 
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-            webpath:phpr.webpath,
-            currentModule:phpr.module
-        });
+        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.hideSuggest();
     
         this._langUrl = phpr.webpath+"index.php/Default/index/getTranslatedStrings/language/"+ phpr.language;
@@ -118,7 +115,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
 		phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent') ,{webpath:phpr.webpath, currentModule:phpr.module});
+        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         if (this._isGlobalModule(this.module)) {
             this.setSubGlobalModulesNavigation();
         } else {
@@ -622,9 +619,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             handleAs: "json",
             onSuccess: dojo.hitch(this,function(data){
                 this.render(["phpr.Default.template.results", "mainContentResults.html"],dojo.byId('centerMainContent') ,{
-                    resultsTitle:   resultsTitle,
-                    webpath:        phpr.webpath,
-                    currentModule:  phpr.module
+                    resultsTitle:   resultsTitle
                 });
                 var search        = '';
                 var results       = {};
