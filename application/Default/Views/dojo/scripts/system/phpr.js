@@ -9,6 +9,9 @@ dojo.require("dojo.dnd.move");
 dojo.require("dojo.dnd.TimedMoveable");
 dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("dojo.data.ItemFileWriteStore");
+dojo.require("dojo.dnd.Container");
+dojo.require("dojo.dnd.Manager");
+dojo.require("dojo.dnd.Source");
 
 dojo.require("dijit.dijit");
 dojo.require("dijit.form.MultiSelect");
@@ -35,6 +38,8 @@ dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit._Templated");
 dojo.require("dijit.Tree");
 dojo.require("dijit._Calendar");
+dojo.require("dijit.form.DateTextBox");
+dojo.require('dijit.Tooltip');
 
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojox.gfx");
@@ -47,6 +52,7 @@ dojo.require("dojox.dtl.Context");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.widget.Toaster");
 dojo.require("dojox.layout.ScrollPane");
+dojo.require('dojox.form.RangeSlider');
 
 // global vars
 var module = null;
@@ -331,7 +337,6 @@ dojo.declare("phpr.ReadData", dojox.data.QueryReadStore, {
     }
 });
 
-dojo.require("dijit.form.DateTextBox");
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
     serialize: function(d, options) {
         // summary:

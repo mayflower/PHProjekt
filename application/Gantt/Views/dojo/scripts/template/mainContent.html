@@ -1,0 +1,29 @@
+<div id="ganttChart" style="background-color: white; width:98%; height:98%; margin:10px;">
+    <div style="background-color: #ffffff; border:20px solid #ffffff; display:block; position:relative; width:100%; border: solid #efefef" dojoAttachPoint='ganttContainer'>
+        <table>
+        <tr>
+            <td style="width:10px;">
+                &nbsp;                
+            </td>
+            <td>
+                <fieldset style="border:1px solid; padding:5px;width:500px;">
+                <legend>{{selectedProjectTimelineText}}:</legend>
+                <div id='TgtMin'></div><div id='TgtMax'></div>
+                </fieldset>
+            </td>
+        </tr>
+        </table>
+      
+        <div dojoType="dijit.Dialog" id="ganttDialog" title="Warning" execute="dojo.publish('Gantt.dialogCallback',[arguments[0]]);">
+        <div id="message_text"></div>
+            <br/><button dojoType="dijit.form.Button" type="submit">OK</button>
+        </div>
+        
+        <div class="ganttcontent" style="width:100%;">       
+            <div id="gantt_timeline" class="timeline" style="width:100%; text-align:center;">
+            </div>                  
+            <div id="projectList" class="project_list" style="width:100%;">        
+            </div>
+        </div>            
+    </div>
+</div>
