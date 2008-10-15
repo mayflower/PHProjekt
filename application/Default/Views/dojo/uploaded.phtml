@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+    <style type="text/css">
+        @import "<?php echo $this->webpath; ?>dojo/dojo/resources/dojo.css";
+        @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojekt.css";
+        @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit.css";
+        @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit_rtl.css";
+    </style>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"
+     djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dijit.form.Form");
+    	dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.TextBox");
+		dojo.require("dijit.layout.BorderContainer");
+		dojo.require("dijit.layout.ContentPane");
+		function init() {
+            dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
+                if (e.keyCode == dojo.keys.ENTER) {
+                    dojo.byId("loginForm").submit();
+                } else {
+                    return true;
+                }
+            });
+        }
+        dojo.addOnLoad(init);        
+	</script>
+</head>
+<body class="phprojekt">
+<input type="hidden" id="noProcess" name="noProcess" value="true" />
+File uploaded.
+</body>
+</html>

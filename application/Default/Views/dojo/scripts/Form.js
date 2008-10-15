@@ -282,6 +282,23 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     this.formdata += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
+                case 'upload':
+                    iFramePath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/';
+                    formPath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadFile/';
+                    downloadlink = '';
+                    downloadtext = '';
+                    if (itemvalue.indexOf('|') > 0) {
+                        downloadlink = phpr.webpath + 'index.php/' + phpr.module + '/index/downloadFile/id/' + this.id + '/field/' + itemid;
+                        downloadtext = itemvalue.substring(itemvalue.indexOf('|') + 1, itemvalue.length);
+                        md5mane = itemvalue.substring(0, itemvalue.indexOf('|'));
+                    } else {
+                        md5name = itemvalue;
+                    }
+                    
+                    this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                                                                        itemdisabled, iFramePath, formPath, downloadlink,
+                                                                        downloadtext);
+                    break;
                 case 'textfield':
                 default:
                     this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,

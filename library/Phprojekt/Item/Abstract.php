@@ -189,6 +189,24 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     // running again the sanitizer to normalize the format
                     $value = Cleaner::sanitize('timestamp', $value, $messages, false);
                     break;
+                case 'varchar':
+                    $value = Cleaner::sanitize('string', $value, $messages, false);
+                    if ($info['metadata'][$varname]['LENGTH'] == '255') {
+                        $itemTypes = $this->_dbManager->getTypes(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+                        
+                        if (isset($itemTypes[$varname]) && $itemTypes[$varname] == 'upload') {
+                            
+                            $uploadNamespace = new Zend_Session_Namespace('PHProjekt_Upload');
+                            
+                            if (isset($uploadNamespace->$value) && $uploadNamespace->$value !== true) {
+                                
+                                $value .= "|" . $uploadNamespace->$value;
+                                unset($uploadNamespace->$value);
+                            }
+                            
+                        }
+                    }
+                    break;
                 default:
                     $value = Cleaner::sanitize('string', $value, $messages, false);
                     break;
@@ -229,7 +247,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __get($varname)
     {
         $info = $this->info();
-
+        
         $value = parent::__get($varname);
 
         if (true == isset($info['metadata'][$varname])) {
@@ -255,6 +273,24 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
                              date("m", $u), date("d", $u), date("Y", $u));
                     break;
+                case 'varchar':
+                    if ($info['metadata'][$varname]['LENGTH'] == '255') {
+                        $itemTypes = $this->_dbManager->getTypes(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+                        
+                        if (isset($itemTypes[$varname]) && $itemTypes[$varname] == 'upload') {
+                            $uploadNamespace = new Zend_Session_Namespace('PHProjekt_Upload');
+                            
+                            if(empty($value)) {
+                               $value = md5(uniqid(rand(),1));
+                               $uploadNamespace->$value = true;
+                            } else {
+                                list($md5Name, $fileName) = explode("|", $value);
+                                $uploadNamespace->$md5Name = true;
+                            }
+                        }
+                    }
+                    break;
+                  
             }
         }
 
