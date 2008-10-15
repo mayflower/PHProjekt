@@ -54,6 +54,11 @@ dojo.require("dojox.widget.Toaster");
 dojo.require("dojox.layout.ScrollPane");
 dojo.require('dojox.form.RangeSlider');
 
+dojo.addOnLoad(function(){
+    dijit.byId('dijit_layout_ContentPane_1').resize();
+});
+
+
 // global vars
 var module = null;
 var webpath = null;
@@ -417,3 +422,4 @@ dojo.declare("phpr.translator", null, {
 		}
     }
 });
+
