@@ -33,14 +33,14 @@
  */
 class IndexController extends Zend_Controller_Action
 {
-	const ADD_TRUE_TEXT           = "The Item was added correctly";
-	const EDIT_TRUE_TEXT          = "The Item was edited correctly";
-	const EDIT_MULTIPLE_TRUE_TEXT = "The Items was edited correctly";
+    const ADD_TRUE_TEXT           = "The Item was added correctly";
+    const EDIT_TRUE_TEXT          = "The Item was edited correctly";
+    const EDIT_MULTIPLE_TRUE_TEXT = "The Items was edited correctly";
     const DELETE_FALASE_TEXT      = "The Item can't be deleted";
     const DELETE_TRUE_TEXT        = "The Item was deleted correctly";
     const NOT_FOUND               = "The Item was not found";
     const ID_REQUIRED_TEXT        = "ID parameter required";
-                
+
     /**
      * Init function
      *
@@ -183,9 +183,9 @@ class IndexController extends Zend_Controller_Action
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
         $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
+        'message' => $message,
+        'code'    => 0,
+        'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -217,9 +217,9 @@ class IndexController extends Zend_Controller_Action
         }
 
         $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => implode(',', $showId));
+        'message' => $message,
+        'code'    => 0,
+        'id'      => implode(',', $showId));
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -255,9 +255,9 @@ class IndexController extends Zend_Controller_Action
                 $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
             $return  = array('type'    => 'success',
-                             'message' => $message,
-                             'code'    => 0,
-                             'id'      => $id);
+            'message' => $message,
+            'code'    => 0,
+            'id'      => $id);
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
@@ -364,7 +364,7 @@ class IndexController extends Zend_Controller_Action
 
         Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
-    
+
     /**
      * Return all the words translated in each modules for the $language
      *
@@ -374,7 +374,74 @@ class IndexController extends Zend_Controller_Action
      */
     public function getTranslatedStringsAction()
     {
-    	$language = $this->getRequest()->getParam('language', 'en');
+        $language = $this->getRequest()->getParam('language', 'en');
         echo Phprojekt_Converter_Json::convert(Zend_Registry::get('translate')->getTranslatedStrings($language));
+    }
+
+    /**
+     * Shows the template page form 
+     *
+     * @return void
+     */
+    public function uploadFormAction()
+    {
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->clearBody();
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
+        $this->render('upload');
+    }
+
+    /**
+     * Handle the files from upload form
+     *
+     * @return void
+     */
+    public function uploadFileAction()
+    {
+        $uploadNamespace = new Zend_Session_Namespace('PHProjekt_Upload');
+
+        if (is_array($_FILES) && !empty($_FILES)) {
+            foreach ($_FILES as $oneFileKey => $oneFile) {
+                if (isset($uploadNamespace->$oneFileKey)) {
+                    move_uploaded_file($oneFile['tmp_name'], Zend_Registry::get('config')->uploadpath . $oneFileKey);
+                    $uploadNamespace->$oneFileKey = $oneFile['name'];
+                }
+            }
+        }
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->clearBody();
+        $this->view->webpath = Zend_Registry::get('config')->webpath;
+        $this->render('uploaded');
+    }
+
+    /**
+     * Retrieve the file from upload folder
+     *
+     * @return void
+     */
+    public function downloadFileAction()
+    {
+        $id    = (int) $this->getRequest()->getParam('id', null);
+        $fieldName = (string) $this->getRequest()->getParam('field', null);
+
+        $model   = $this->getModelObject()->find($id);
+        if (!empty($model->$fieldName)) {
+
+            list($md5Name, $fileName) = explode("|", $model->$fieldName);
+
+            $md5Name = Zend_Registry::get('config')->uploadpath . $md5Name;
+            if (file_exists($md5Name)) {
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+                header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+                header("Cache-Control: no-store, no-cache, must-revalidate");
+                header("Cache-Control: post-check=0, pre-check=0", false);
+                header("Pragma: no-cache");
+                header('Content-Length: ' . filesize($md5Name));
+                header("Content-Disposition: attachment; filename=\"" . (string)$fileName . "\"");
+                header('Content-Type: download');
+                $fh = fopen($md5Name,'r');
+                fpassthru($fh);
+            }
+        }
     }
 }

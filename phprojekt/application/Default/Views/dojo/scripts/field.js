@@ -26,6 +26,21 @@ dojo.declare("phpr.Default.field", phpr.Component, {
 							disabled: (itemdisabled) ? "disabled" : ''
 				});
 	},
+	uploadFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled,iFramePath,formPath,downloadlink, md5name){
+		return this.render(["phpr.Default.template", "formupload.html"], null, {
+							label: itemlabel,
+							labelfor: itemid,
+							id: itemid,
+							value: itemvalue,
+							required: itemrequired,
+							disabled: (itemdisabled) ? "disabled" : '',
+							iFramePath: iFramePath,
+							formPath: formPath,
+							downloadlink: downloadlink,
+							downloadtext: downloadtext,
+							md5name: md5name
+				});
+	},
 	passwordFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled){
 		return this.render(["phpr.Default.template", "formpassword.html"], null, {
 							label: itemlabel,
