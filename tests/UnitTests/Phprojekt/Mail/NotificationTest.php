@@ -36,15 +36,15 @@ class Phprojekt_NotificationTest extends PHPUnit_Framework_TestCase
         $mailNotification = new Phprojekt_Mail_Notification($smarty);
 
         /* Send an email without problems */
-        $mailNotification->sendNotificationText('Testing subject',array(1), 'Testing body');
+        $mailNotification->sendNotificationText('Testing subject', array(1), 'Testing body');
 
         /* Send an HTML email without problems */
-        $mailNotification->sendNotification('Testing subject',array(1), 'mail');
+        $mailNotification->sendNotification('Testing subject', array(1), 'mail');
 
         /* send an email to an invalid user */
         $error = 0;
         try {
-            $mailNotification->sendNotificationText('Testing subject',array(3), 'Testing body');
+            $mailNotification->sendNotificationText('Testing subject', array(3), 'Testing body');
         }
         catch (Exception $ae) {
             $error = $ae->getCode();
@@ -54,7 +54,7 @@ class Phprojekt_NotificationTest extends PHPUnit_Framework_TestCase
         /* send an email with not recipient */
         $error = 0;
         try {
-            $mailNotification->sendNotificationText('Testing subject',null, 'Testing body');
+            $mailNotification->sendNotificationText('Testing subject', null, 'Testing body');
         }
         catch (Exception $ae) {
             $error = $ae->getCode();
@@ -64,7 +64,7 @@ class Phprojekt_NotificationTest extends PHPUnit_Framework_TestCase
         /* send an email without subject */
         $error = 0;
         try {
-            $mailNotification->sendNotificationText(null,array(1), 'Testing body');
+            $mailNotification->sendNotificationText(null, array(1), 'Testing body');
         }
         catch (Exception $ae) {
             $error = $ae->getCode();
@@ -74,7 +74,7 @@ class Phprojekt_NotificationTest extends PHPUnit_Framework_TestCase
         /* send an email without body */
         $error = 0;
         try {
-            $mailNotification->sendNotificationText('Test subject' ,array(1), null);
+            $mailNotification->sendNotificationText('Test subject' , array(1), null);
         }
         catch (Exception $ae) {
             $error = $ae->getCode();
@@ -98,7 +98,7 @@ class Phprojekt_NotificationTest extends PHPUnit_Framework_TestCase
         /* Parsing an email */
         $html = $mailNotification->getHtmlFromTemplate(array(), 'mail');
 
-        $this->assertEquals('<!DOCTYPE HTML',substr($html,0,14));
+        $this->assertEquals('<!DOCTYPE HTML',substr($html, 0, 14));
 
         /* try to parse an invalid template */
         $error = 0;

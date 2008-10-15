@@ -42,7 +42,7 @@ class Core_Models_UserSetting
      */
     private $_timeZoneRange = array(-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0,
                                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
-    	
+    
     /**
      * Return an array of field information.
      *
@@ -159,18 +159,18 @@ class Core_Models_UserSetting
     
     public function validateSettings($params)
     {
-    	$translate = Zend_Registry::get('translate');
+        $translate = Zend_Registry::get('translate');
         $message   = null;
         $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $setting->setModule('User');    	
+        $setting->setModule('User');        
         
-    	// Passwords
+        // Passwords
         $confirmPassValue = $params['confirmValue'];
         $oldPassValue     = $params['oldValue'];
         $newPassValue     = $params['password'];
                         
         if (!empty($newPassValue) && $newPassValue != $confirmPassValue) {
-        	$message = $translate->translate("The password and confirmation are different or empty");
+            $message = $translate->translate("The password and confirmation are different or empty");
         } else if (!empty($newPassValue) && $setting->getSetting('password') != Phprojekt_Auth::cryptString($oldPassValue)) {
             $message = $translate->translate("The old password provided is invalid");
         }
@@ -182,7 +182,7 @@ class Core_Models_UserSetting
         
         // Language
         if (!array_key_exists($params['language'], $this->_languageRange)) {
-        	$message = $translate->translate("The Language value do not exists");
+            $message = $translate->translate("The Language value do not exists");
         }
         return $message;
     }
@@ -190,18 +190,18 @@ class Core_Models_UserSetting
     public function setSettings($params)
     {    
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $setting->setModule('User');     		
+        $setting->setModule('User');
         if (empty($params['password'])) {
-        	$password = $setting->getSetting('password');
+            $password = $setting->getSetting('password');
         } else {
-        	$password = Phprojekt_Auth::cryptString($params['password']);
-        } 	
-    	$fields = $this->getFieldDefinition();      	
+            $password = Phprojekt_Auth::cryptString($params['password']);
+        }     
+        $fields = $this->getFieldDefinition();          
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {
                     $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-                    $setting->setModule('User');                   	
+                    $setting->setModule('User');                       
                     if (($key == 'password')) {
                         $value = $password;
                     }                    
@@ -212,7 +212,7 @@ class Core_Models_UserSetting
                         $record[0]->keyValue = $key;
                         $record[0]->value    = $value;
                         $record[0]->save();                        
-                    } else {                     	
+                    } else {                         
                         $setting->userId     = Phprojekt_Auth::getUserId();
                         $setting->moduleId   = 0;
                         $setting->keyValue   = $key;

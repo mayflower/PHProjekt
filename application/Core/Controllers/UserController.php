@@ -69,15 +69,15 @@ class Core_UserController extends Core_IndexController
         $tmp = $setting->getList(0, $setting->getModel()->getFieldDefinition());
 
         foreach ($tmp as $values) {
-        	foreach ($values as $key => $value) {
-        		if ($key != 'id') {
+            foreach ($values as $key => $value) {
+                if ($key != 'id') {
                     if (!empty($data["id"])) {
                         $data[$key] = $value;
                     } else {
                         $data[$key] = "";
                     }
-        		}
-        	}
+                }
+            }
         }
 
         $records = array($data);

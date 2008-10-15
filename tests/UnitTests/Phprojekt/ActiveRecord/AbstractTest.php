@@ -86,72 +86,72 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-	 *
-	 */
-	public function testDeleteProject ()
-	{
-		try {
-			$project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-			$project->title = 'Hello World Project to delete';
-			$project->startDate = '1981-05-12';
-			$project->endDate = '1981-05-12';
-			$project->priority = 1;
-			$project->projectId = 1;
-			$project->path = '/';
-			$project->save();
+     *
+     */
+    public function testDeleteProject ()
+    {
+        try {
+            $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+            $project->title = 'Hello World Project to delete';
+            $project->startDate = '1981-05-12';
+            $project->endDate = '1981-05-12';
+            $project->priority = 1;
+            $project->projectId = 1;
+            $project->path = '/';
+            $project->save();
 
-			$this->assertNotNull($project->id);
-			$id = $project->id;
-			$project->delete();
+            $this->assertNotNull($project->id);
+            $id = $project->id;
+            $project->delete();
 
-			$project->find($id);
-			$this->assertNull($project->title);
+            $project->find($id);
+            $this->assertNull($project->title);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
-	}
+    }
 
-	public function testGetTableName()
-	{
-	   $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
-	   $this->assertEquals('ModuleInstance', $instance->getTableName());
-	}
+    public function testGetTableName()
+    {
+       $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
+       $this->assertEquals('ModuleInstance', $instance->getTableName());
+    }
 
-	/*
-	 *
-	 */
-	public function testDeleteHasManyAndBelongsToMany()
-	{
-	    $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+    /*
+     *
+     */
+    public function testDeleteHasManyAndBelongsToMany()
+    {
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $keepUser = $authNamespace->userId;
 
-		try {	    
-		    $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
+        try {        
+            $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
 
-		    $role->name = 'deleteMe';		    
-		    $role->save();
-		    
-		    $modulePermissions = $role->modulePermissions->create();
-		    $modulePermissions->moduleId = 1;
-		    $modulePermissions->roleId = $role->id;		    
-		    $modulePermissions->access = 199;
-		    
-		    $this->assertTrue($modulePermissions->save());
-		    
-		    $this->assertNotNull($role->id);
-			$this->assertEquals(5, $role->modulePermissions->count());
+            $role->name = 'deleteMe';            
+            $role->save();
+            
+            $modulePermissions = $role->modulePermissions->create();
+            $modulePermissions->moduleId = 1;
+            $modulePermissions->roleId = $role->id;            
+            $modulePermissions->access = 199;
+            
+            $this->assertTrue($modulePermissions->save());
+            
+            $this->assertNotNull($role->id);
+            $this->assertEquals(5, $role->modulePermissions->count());
 
-			$role->delete();
-			
-			$this->assertEquals(4, $role->modulePermissions->count());
-			$this->assertNull($role->id);
-		    
+            $role->delete();
+            
+            $this->assertEquals(4, $role->modulePermissions->count());
+            $this->assertNull($role->id);
+            
         } catch (Exception $e) {
             $authNamespace->userId = $keepUser;
             $this->fail($e->getMessage());
         }
         $authNamespace->userId = $keepUser;
-	}
+    }
 
     /**
      *

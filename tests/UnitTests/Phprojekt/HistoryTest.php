@@ -33,7 +33,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
         $this->setExpectedException('Exception');
-        $history->saveFields('','add');
+        $history->saveFields('', 'add');
     }
 
     /**
@@ -67,8 +67,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $found = 0;
         foreach ($data as $key => $values) {
             /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'],0,10);
-            $result = array_diff_assoc($values,$array);
+            $values['datetime'] = substr($values['datetime'], 0, 10);
+            $result = array_diff_assoc($values, $array);
 
             if (empty($result)) {
                 $found = 1;
@@ -94,7 +94,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $data = $history->getHistoryData($project,$project->id);
+        $data = $history->getHistoryData($project, $project->id);
         $array = array('userId'   => '1',
                        'moduleId' => '1',
                        'itemId'   => Zend_Registry::get('insertedId'),
@@ -106,7 +106,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $found = 0;
         foreach ($data as $key => $values) {
             /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'],0,10);
+            $values['datetime'] = substr($values['datetime'], 0, 10);
             $result = array_diff_assoc($values,$array);
 
             if (empty($result)) {
@@ -135,8 +135,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $found = 0;
         foreach ($data as $key => $values) {
             /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'],0,10);
-            $result = array_diff_assoc($values,$array);
+            $values['datetime'] = substr($values['datetime'], 0, 10);
+            $result = array_diff_assoc($values, $array);
 
             if (empty($result)) {
                 $found = 1;
@@ -172,8 +172,8 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $found = 0;
         foreach ($data as $key => $values) {
             /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'],0,10);
-            $result = array_diff_assoc($values,$array);
+            $values['datetime'] = substr($values['datetime'], 0, 10);
+            $result = array_diff_assoc($values, $array);
 
             if (empty($result)) {
                 $found = 1;
