@@ -93,6 +93,7 @@ $lang["Module not found"] = "Module not found";
 $lang["Expect two arguments"] = "Expect two arguments";
 $lang["Second parameter needs to be an array"] = "Second parameter needs to be an array";
 $lang["No parent id found in parameters or passed"] = "No parent id found in parameters or passed";
+$lang["There are no entries on this level"] = "There are no entries on this level";
 
 // System Modules
 $lang["Administration"] = "Administration";
@@ -121,4 +122,24 @@ $lang["Start working time"] = "Start working time";
 $lang["Stop working time"] = "Stop working time";
 $lang["Hours"] = "Hours";
 $lang["The end time must be after the start time"] = "The end time must be after the start time";
+$lang["Change date"] = "Change date";
+$lang["Project bookings"] = "Project bookings";
+$lang["Add working time and drag projects into the bar"] = "Add working time and drag projects into the bar";
+
+// Settings module
+$lang["Please, logout and login again on application to apply the changes."] = "Please, logout and login again on application to apply the changes.";
+$lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
+$lang["The password and confirmation are different or empty"] = "The password and confirmation are different or empty";
+$lang["The old password provided is invalid"] = "The old password provided is invalid";
+$lang["keyValue"] = "Configurration";
+$lang["value"] = "value";
+$lang["confirm password"] = "confirm password";
+$lang["Old Password"] = "Old Password";
+$lang["language"] = "language";
+$lang["email"] = "email";
+$lang["timeZone"] = "timeZone";
+
+// Search
+$lang["View all"] = "View all";
+
 ?>

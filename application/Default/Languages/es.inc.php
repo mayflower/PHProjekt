@@ -5,7 +5,7 @@ $lang["Active"] = "Activo";
 $lang["Role"] = "Rol";
 $lang["Start"] = "Comienzo";
 $lang["End"] = "Fin";
-$lang["Project"] = "Projecto";
+$lang["Project"] = "Proyecto";
 $lang["Tag"] = "Tag";
 $lang["No"] = "No";
 $lang["Yes"] = "Si";
@@ -26,8 +26,8 @@ $lang["email"] = "Email";
 $lang["language"] = "Idioma";
 $lang["status"] = "Estado";
 $lang["title"] = "Título";
-$lang["parent"] = "Projecto";
-$lang["projectId"] = "Projecto";
+$lang["parent"] = "Proyecto";
+$lang["projectId"] = "Proyecto";
 $lang["startDate"] = "Fecha de Inicio";
 $lang["endDate"] = "Fecha final";
 $lang["priority"] = "Prioridad";
@@ -42,7 +42,7 @@ $lang["NewValue"] = "Valor nuevo";
 $lang["Datetime"] = "Fecha";
 $lang["comments"] = "Comentarios";
 $lang["category"] = "Categoría";
-$lang["participantId"] = "Participante";
+$lang["participantId"] = "Participantes";
 $lang["startTime"] = "Tiempo de inicio";
 $lang["endTime"] = "Tiempo final";
 $lang["sum"] = "Suma";
@@ -82,7 +82,7 @@ $lang["The Tags was added correctly"] = "Los tags fueron agregados correctamente
 $lang["The Tags was deleted correctly"] = "Los tags fueron borrados correctamente";
 $lang["The Item was not found"] = "No se encontró el item";
 $lang["You do not have write access into the parent project"] = "No tiene permisos de escritura en el proyecto padre";
-$lang["You do not have access for add projects on the parent project"] = "No tiene permiso para agregar proyectos en el projecto padre";
+$lang["You do not have access for add projects on the parent project"] = "No tiene permiso para agregar proyectos en el proyecto padre";
 $lang["The parent project do not have enabled this module"] = "El proyecto padre no tiene este módulo habilitado";
 $lang["The project can not saved under itself"] = "El proyecto no puedo grabarse bajo sigo mismo";
 $lang["The project can not saved under his children"] = "El proyecto no puedo grabarse bajo uno de sus hijos";
@@ -93,6 +93,7 @@ $lang["Module not found"] = "No se encontró el módulo";
 $lang["Expect two arguments"] = "Se esperan dos argumentos";
 $lang["Second parameter needs to be an array"] = "El segundo parámetro tiene que ser un array";
 $lang["No parent id found in parameters or passed"] = "No se encontró el projecto padre en los parámetros";
+$lang["There are no entries on this level"] = "No hay elementos en este nivel";
 
 // System Modules
 $lang["Administration"] = "Administración";
@@ -107,7 +108,7 @@ $lang["Groups"] = "Grupo";
 $lang["Role"] = "Rol";
 $lang["Tab"] = "Tab";
 $lang["User"] = "Usuario";
-$lang["History"] = "Hitorial";
+$lang["History"] = "Historial";
 $lang["Basic Data"] = "Datos Básicos";
 
 // Titles
@@ -121,4 +122,23 @@ $lang["Start working time"] = "Empezar tiempo de trabajo";
 $lang["Stop working time"] = "Terminar tiempo de trabajo";
 $lang["Hours"] = "Horas";
 $lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
+$lang["Change date"] = "Cambiar día";
+$lang["Project bookings"] = "Horas de proyectos";
+$lang["Add working time and drag projects into the bar"] = "Agregar tiempo de trabajo y luego arrastrar los proyectos en la barra";
+
+// Settings module
+$lang["Please, logout and login again on application to apply the changes."] = "Por favor, salga e ingrese nuevamente a la aplicación para guardar los cambios.";
+$lang["The value for the setting is incorrect"] = "El valor elegido para la configuración es inválido";
+$lang["The password and confirmation are different or empty"] = "La contraseña y su confirmación son diferentes";
+$lang["The old password provided is invalid"] = "La contraseña anterior no es correcta";
+$lang["keyValue"] = "Configuración";
+$lang["value"] = "Valor";
+$lang["confirm password"] = "Confirmar contraseña";
+$lang["Old Password"] = "Contraseña anterior";
+$lang["language"] = "Idioma";
+$lang["email"] = "Dirección de correo";
+$lang["timeZone"] = "Huso horario";
+
+// Search
+$lang["View all"] = "Ver todos";
 ?>
