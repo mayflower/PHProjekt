@@ -1,14 +1,14 @@
 
 /**** Disabled cursor *****/
 .phprojekt .dijitSliderDisabled *,
-.phprojekt .dijitDisabledClickableRegion,	/* a region the user would be able to click on, but it's disabled */
+.phprojekt .dijitDisabledClickableRegion,    /* a region the user would be able to click on, but it's disabled */
 .phprojekt .dijitSpinnerDisabled *,
 .phprojekt .dijitButtonDisabled *,
 .phprojekt .dijitDropDownButtonDisabled *,
 .phprojekt .dijitComboButtonDisabled *,
 .phprojekt .dijitComboBoxDisabled *
 {
-	cursor: not-allowed !important;
+    cursor: not-allowed !important;
 }
 
 .phprojekt .body {
@@ -239,25 +239,25 @@ h1,h2,h3,h4,h5,h6 {
 /* DnD avatar-specific settings */
 /* For now it uses a default set of rules. Some other DnD classes can be modified as well. */
 .phprojekt .dojoDndItemBefore {
-	border-top: 2px solid #369;
+    border-top: 2px solid #369;
 }
 .phprojekt .dojoDndItemAfter {
-	border-bottom: 2px solid #369;
+    border-bottom: 2px solid #369;
 }
 
 .phprojekt .dojoDndItemOver {
-	cursor:pointer;
+    cursor:pointer;
 }
 
 .phprojekt table.dojoDndAvatar { -moz-border-radius: 0; border: 1px solid #ccc; border-collapse: collapse; background-color: #fff; font-size: 75%; color: black;}
-.phprojekt .dojoDndAvatar td	{ border: none; }
-.phprojekt .dojoDndAvatar tr	{ border: none; }
-.phprojekt .dojoDndAvatarHeader td	{ height: 20px; padding: 0 0 0 21px; }
+.phprojekt .dojoDndAvatar td    { border: none; }
+.phprojekt .dojoDndAvatar tr    { border: none; }
+.phprojekt .dojoDndAvatarHeader td    { height: 20px; padding: 0 0 0 21px; }
 .phprojekt .dojoDndAvatarItem td { padding: 2px;}
-.phprojekt.dojoDndMove .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(images/dndNoMove.png); background-repeat: no-repeat; background-position: 2px center;}
-.phprojekt.dojoDndCopy .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(images/dndNoCopy.png); background-repeat: no-repeat; background-position: 2px center;}
-.phprojekt.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(images/dndMove.png); background-repeat: no-repeat; background-position: 2px center;}
-.phprojekt.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(images/dndCopy.png); background-repeat: no-repeat; background-position: 2px center;}
+.phprojekt.dojoDndMove .dojoDndAvatarHeader    {background-color: #f58383; background-image: url(images/dndNoMove.png); background-repeat: no-repeat; background-position: 2px center;}
+.phprojekt.dojoDndCopy .dojoDndAvatarHeader    {background-color: #f58383; background-image: url(images/dndNoCopy.png); background-repeat: no-repeat; background-position: 2px center;}
+.phprojekt.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader    {background-color: #97e68d; background-image: url(images/dndMove.png); background-repeat: no-repeat; background-position: 2px center;}
+.phprojekt.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader    {background-color: #97e68d; background-image: url(images/dndCopy.png); background-repeat: no-repeat; background-position: 2px center;}
 
 /* Results */
 .phprojekt .results {
@@ -327,7 +327,7 @@ h1,h2,h3,h4,h5,h6 {
     margin-right: 0px;
     background-color: #ccc;
     position: absolute;
-	border: 1px solid black;
+    border: 1px solid black;
     right: 0px;
     top:  50px;
     margin: 10px 0px;
@@ -343,8 +343,8 @@ h1,h2,h3,h4,h5,h6 {
     font-style: normal;
     overflow:hidden !important;
     background-color: #294064;
-	padding-bottom: 2px;
-	padding-top: 2px;
+    padding-bottom: 2px;
+    padding-top: 2px;
 }
 
 .phprojekt .searchsuggesttitle a {
@@ -377,7 +377,7 @@ h1,h2,h3,h4,h5,h6 {
     padding-left: 10px;
     padding-right: 10px;
     margin-left: 10px;
-	margin-right: 10px;
+    margin-right: 10px;
     margin-bottom: 1em;
     -o-border-radius: 10px;
     -moz-border-radius: 12px;

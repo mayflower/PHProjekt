@@ -2,15 +2,15 @@ dojo.provide("phpr.Project.Main");
 
 dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     constructor:function() {
-		this.module = 'Project';
-		this.loadFunctions(this.module);
+        this.module = 'Project';
+        this.loadFunctions(this.module);
 
         dojo.subscribe("Project.basicData", this, "basicData");
 
-		this.gridWidget = phpr.Project.Grid;
-		this.formWidget = phpr.Project.Form;
-		this.treeWidget = phpr.Project.Tree;
-	},
+        this.gridWidget = phpr.Project.Grid;
+        this.formWidget = phpr.Project.Form;
+        this.treeWidget = phpr.Project.Tree;
+    },
 
     loadResult:function(id, module, projectId) {
         phpr.currentProjectId = id;

@@ -155,25 +155,25 @@ phpr.send = function(/*Object*/paramsIn) {
         };
     }
     dojo.xhrPost({
-        url		:	params.url,
-        content	:	params.content,
+        url        :    params.url,
+        content    :    params.content,
         handleAs:   params.handleAs,
         sync    :   params.sync,
-        error	:	_onError,
-        load	:	_onSuccess
+        error    :    _onError,
+        load    :    _onSuccess
     });
 };
 
 phpr.handleResponse = function(resultArea,result)
 {
-	phpr.loading.hide();
+    phpr.loading.hide();
     var css = 'error';
     if(result.type =='success'){
         css = 'success';
     }
     var message= result.message
     if (!message) {
-    	return;
+        return;
     }
     phpr.serverFeedback.addMessage({cssClass: css, output:message});
 };
@@ -222,7 +222,7 @@ dojo.declare("phpr.DataStore", null, {
             params.processData = null;
         }
         if (this._internalCache[params.url]['data'].length == 0) {
-			 phpr.loading.show();
+             phpr.loading.show();
             this._internalCache[params.url]['store'].fetch({onComplete: dojo.hitch(this, "saveData", {url: params.url, processData: params.processData})});
         } else if (params.processData) {
             params.processData.call();
@@ -387,17 +387,17 @@ dojo.declare("phpr.loading", null, {
     // summary:
     //     Simple class for show or hide the loading icon
     // description:
-    //     Simple class for show or hide the loading icon	
+    //     Simple class for show or hide the loading icon    
     hide:function() {
-		if (dojo.byId('loadingIcon')) {
-			dojo.byId('loadingIcon').style.display = 'none';
-		}
+        if (dojo.byId('loadingIcon')) {
+            dojo.byId('loadingIcon').style.display = 'none';
+        }
     },
-	
+    
     show:function() {
-		if (dojo.byId('loadingIcon')) {
-			dojo.byId('loadingIcon').style.display = 'inline';
-		}
+        if (dojo.byId('loadingIcon')) {
+            dojo.byId('loadingIcon').style.display = 'inline';
+        }
     }
 });
 phpr.loading =  new phpr.loading();
@@ -407,19 +407,19 @@ dojo.declare("phpr.translator", null, {
     //     Trasnlation class
     // description:
     //     Collect all the trasnlated strings into an array
-	//     and return the request string translateds    	
+    //     and return the request string translateds        
     _strings: {},
-	
+    
     constructor:function(translatedStrings) {
-	   this._strings = 	translatedStrings;
-	},
-	
+       this._strings =     translatedStrings;
+    },
+    
     get:function(string) {
-		if (this._strings[string]) {
-			return this._strings[string];
-		} else {
-			return string;
-		}
+        if (this._strings[string]) {
+            return this._strings[string];
+        } else {
+            return string;
+        }
     }
 });
 

@@ -26,8 +26,8 @@
  */
 class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
-	public $hasMany = array('modulePermissions' => array('classname' => 'Phprojekt_Role_RoleModulePermissions'));
-	
+    public $hasMany = array('modulePermissions' => array('classname' => 'Phprojekt_Role_RoleModulePermissions'));
+    
     /**
      * Id of user
      * @var int $user
@@ -100,9 +100,9 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function saveRights($rights)
     {
-    	foreach($this->modulePermissions->fetchAll() as $relation) {
-    		$relation->delete();
-    	}
+        foreach($this->modulePermissions->fetchAll() as $relation) {
+            $relation->delete();
+        }
         foreach ($rights as $moduleId => $access) {
             $modulePermissions = $this->modulePermissions->create();
             $modulePermissions->moduleId = $moduleId;

@@ -83,11 +83,11 @@ class Cleaner_Engine
     public static function getMessages()
     {
         $name = self::getInstance()->_messagesClass;
-		if (class_exists($name)) {
-			return new $name();
-		} else {
-			throw new Exception('Message class not found');
-		}
+        if (class_exists($name)) {
+            return new $name();
+        } else {
+            throw new Exception('Message class not found');
+        }
     }
     
     /**

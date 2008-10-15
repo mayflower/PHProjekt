@@ -1,15 +1,15 @@
 dojo.provide("phpr.Timecard.Grid");
 
 dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
-	
+    
     reloadView:function(/*String*/ view, /*int*/ year, /*int*/ month) {
-		phpr.destroySimpleWidget('gridNode');
-		this.gridLayout = new Array();
-		this.setUrl(year, month, view);
+        phpr.destroySimpleWidget('gridNode');
+        this.gridLayout = new Array();
+        this.setUrl(year, month, view);
         phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
-		
+        
     setUrl: function(year, month, view) {
         if (typeof year == "undefined") {
             date = new Date();
@@ -31,28 +31,28 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     canEdit: function(inRowIndex) {
         return false;
     },
-	
+    
     useIdInGrid: function () {
         return false;
     },
-	
-	customGridLayout:function(meta) {
-	   this.gridLayout[0].styles = "cursor:pointer;"	
-	},
-	
+    
+    customGridLayout:function(meta) {
+       this.gridLayout[0].styles = "cursor:pointer;"    
+    },
+    
     showForm:function(e) {
         if (e.cellIndex == 0) {
             var item  = this.grid.getItem(e.rowIndex);
-			var date = this.grid.store.getValue(item, 'date');
-			if (date) {
-				var year = date.substr(0, 4);
-				var month = date.substr(5, 2);
-				var day = date.substr(8, 2);
-				var date = new Date(year, (month - 1), day);
-				this.main.form.setDate(date);
-				this.main.form.reloadDateView();
-				this.publish("changeDate", [date]);
-			}
+            var date = this.grid.store.getValue(item, 'date');
+            if (date) {
+                var year = date.substr(0, 4);
+                var month = date.substr(5, 2);
+                var day = date.substr(8, 2);
+                var date = new Date(year, (month - 1), day);
+                this.main.form.setDate(date);
+                this.main.form.reloadDateView();
+                this.publish("changeDate", [date]);
+            }
         }
     }
 });

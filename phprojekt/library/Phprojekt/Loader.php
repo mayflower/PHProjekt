@@ -86,9 +86,9 @@ class Phprojekt_Loader extends Zend_Loader
         }
 
         if (!class_exists($class, false)) {
-        	if (null === $dirs) {
-        		$dirs = self::$_directories;
-        	}
+            if (null === $dirs) {
+                $dirs = self::$_directories;
+            }
             parent::loadClass($class, $dirs);
         }
     }
@@ -108,7 +108,7 @@ class Phprojekt_Loader extends Zend_Loader
             self::loadClass($class, self::$_directories);
             return $class;
         } catch (Exception $e) {
-        	$e->getMessage();
+            $e->getMessage();
             return false;
         }
 
@@ -286,14 +286,14 @@ class Phprojekt_Loader extends Zend_Loader
         $names  = explode('_', $class);
         $file   = PHPR_CORE_PATH;
         foreach ($names as $name) {
-        	$file .= DIRECTORY_SEPARATOR . $name;
+            $file .= DIRECTORY_SEPARATOR . $name;
         }
         $file .= '.php';
         if (file_exists($file)) {
-        	self::_includeFile($file, true);
-        	return true;
+            self::_includeFile($file, true);
+            return true;
         } else {
-        	return false;
+            return false;
         }
     }
 }

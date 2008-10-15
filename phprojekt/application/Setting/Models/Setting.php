@@ -84,7 +84,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-        return $results;    	
+        return $results;        
     }
     
     /**
@@ -107,14 +107,14 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      */
     public function getModel()
     {
-    	if (null === $this->_object) {
+        if (null === $this->_object) {
             // System settings
             if ($this->_module == 'User') {
                 $this->_object = Phprojekt_Loader::getModel('Core', sprintf('%sSetting', $this->_module));
             } else {
                 $this->_object = Phprojekt_Loader::getModel($this->_module, sprintf('%sSetting', $this->_module));
             }
-    	}    	
+        }        
         return $this->_object;
     }
     
@@ -130,7 +130,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $toReturn = null;
         if (!$userId) {
-        	$userId = Phprojekt_Auth::getUserId();
+            $userId = Phprojekt_Auth::getUserId();
         }
         $record = $this->fetchAll("userId = ". (int) $userId .
                                   " AND keyValue = ".$this->_db->quote($settingName) .
@@ -160,15 +160,15 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         $data['id'] = 0;
         foreach ($metadata as $meta) {            
             $data[$meta['key']] = '';
-            foreach ($record as $oneSetting) {       	
+            foreach ($record as $oneSetting) {           
                 if ($oneSetting->keyValue == $meta['key']) {
-                	$getter = 'get'.ucfirst($oneSetting->keyValue);
+                    $getter = 'get'.ucfirst($oneSetting->keyValue);
                     if (in_array($getter, $functions)) {
                         $data[$meta['key']] = call_user_method($getter, $this->getModel(), $oneSetting->value);
                     } else {
-                    	$data[$meta['key']] = $oneSetting->value;
+                        $data[$meta['key']] = $oneSetting->value;
                     }
-                	break;
+                    break;
                 }
             }
         }
@@ -185,11 +185,11 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      */
     public function validateSettings($params)
     {
-    	$message = null;
-    	if (in_array('validateSettings', get_class_methods($this->getModel()))) {
-    		$message = call_user_method('validateSettings', $this->getModel(), $params);
-    	}
-    	return $message;
+        $message = null;
+        if (in_array('validateSettings', get_class_methods($this->getModel()))) {
+            $message = call_user_method('validateSettings', $this->getModel(), $params);
+        }
+        return $message;
     }  
        
     /**
@@ -200,13 +200,13 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      * @return void
      */
     public function setSettings($params)
-    {   	
+    {       
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
             call_user_method('setSettings', $this->getModel(), $params);
         } else {
-        	$fields = $this->getModel()->getFieldDefinition();
+            $fields = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
-            	foreach ($params as $key => $value) {
+                foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
                         $record = $this->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
                                                   " AND keyValue = ".$this->_db->quote($key) .
@@ -225,8 +225,8 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                             $clone->save();
                         }
                         break;
-            		}
-            	}
+                    }
+                }
             }
         }
     }    

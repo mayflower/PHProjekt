@@ -12,6 +12,6 @@ $lang["timecardNotes"] = "Notizen";
 $lang["timecardTimes"] = "Zeit";
 $lang["timecardH"] = "Std";
 $lang["timecardM"] = "M";
-$lang["timecardSavedTimes"] = "Bewahrte Zeit f&uuml;r";	
+$lang["timecardSavedTimes"] = "Bewahrte Zeit f&uuml;r";
 
 ?>

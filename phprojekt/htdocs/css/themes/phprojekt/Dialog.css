@@ -1,62 +1,62 @@
 /* Dialog */
 
 .phprojekt .dijitDialog {
-	background: #eee;
-	border: 1px solid #cbcbcb;
-	-webkit-box-shadow: 0px 5px 10px #adadad;
-	padding: 0px;
+    background: #eee;
+    border: 1px solid #cbcbcb;
+    -webkit-box-shadow: 0px 5px 10px #adadad;
+    padding: 0px;
 }
 
 .phprojekt .dijitDialog .dijitDialogTitle {
-	border-top: none;
-	border-left: none;
-	border-right: none;
-	font-size: 0.9em;
-	color: #3243C5F;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: 0.9em;
+    color: #3243C5F;
 }
 
 .phprojekt .dijitDialog .dijitDialogPaneContent {
-	background: #ffffff;
-	border:none;
-	border-top: 1px solid #b1badf; /* w/out this, an <h1> on the top line causes a gap between the .content and .label */
-	padding:10px;
+    background: #ffffff;
+    border:none;
+    border-top: 1px solid #b1badf; /* w/out this, an <h1> on the top line causes a gap between the .content and .label */
+    padding:10px;
 
 }
 
 .phprojekt .dijitDialogTitleBar {
-	/* outer container for the titlebar of the dialog */
-	background: #294064;
-	color: #ffffff;
-	padding: 5px 6px 3px 6px;
-	cursor: move;
-	outline:0; /* remove this line if keyboard focus on dialog startup is an issue. tab still takes you to first focusable element */
+    /* outer container for the titlebar of the dialog */
+    background: #294064;
+    color: #ffffff;
+    padding: 5px 6px 3px 6px;
+    cursor: move;
+    outline:0; /* remove this line if keyboard focus on dialog startup is an issue. tab still takes you to first focusable element */
 }
 
 .phprojekt .dijitDialogTitle {
-	/* typography and styling of the dialog title */
-	font-weight: bold;
-	padding: 4px;
-	outline:0;
+    /* typography and styling of the dialog title */
+    font-weight: bold;
+    padding: 4px;
+    outline:0;
 }
 
 .phprojekt .dijitDialogCloseIcon {
-	/* the default close icon for the dialog */
-	background : url("images/spriteRoundedIconsSmallBl.png") no-repeat right top;
-	position: absolute;
-	vertical-align: middle;
-	right: 6px;
-	top: 4px;
-	height: 15px;
-	width: 15px;
-	cursor: pointer;
+    /* the default close icon for the dialog */
+    background : url("images/spriteRoundedIconsSmallBl.png") no-repeat right top;
+    position: absolute;
+    vertical-align: middle;
+    right: 6px;
+    top: 4px;
+    height: 15px;
+    width: 15px;
+    cursor: pointer;
 }
 .dj_ie .phprojekt .dijitDialogCloseIcon {
-	background : url("images/spriteRoundedIconsSmallBl.gif") no-repeat right top;
+    background : url("images/spriteRoundedIconsSmallBl.gif") no-repeat right top;
 }
 
 .phprojekt .dijitDialogContent {
-	/* the body of the dialog */
-	padding: 8px;
+    /* the body of the dialog */
+    padding: 8px;
 }
 
 
@@ -64,107 +64,107 @@
 
 .phprojekt .dijitTooltip,
 .phprojekt .dijitTooltipDialog {
-	/* the outermost dom node, holding the connector and container */
-	background: transparent;	/* make the area on the sides of the arrow transparent */
+    /* the outermost dom node, holding the connector and container */
+    background: transparent;    /* make the area on the sides of the arrow transparent */
 }
 
 .dijitTooltipBelow {
-	/* leave room for arrow above content */
-	padding-top: 10px;
+    /* leave room for arrow above content */
+    padding-top: 10px;
 }
 
 .dijitTooltipAbove {
-	/* leave room for arrow below content */
-	padding-bottom: 10px;
+    /* leave room for arrow below content */
+    padding-bottom: 10px;
 }
 
 .phprojekt .dijitTooltipContainer {
-	/*
-		The part with the text.
+    /*
+        The part with the text.
 
-		NOTE:
-			FF doesn't clip images used as CSS bgs if you specify a border
-			radius. If you use a solid color, it does. Webkit gets it right.
-			Sigh.
-		background: #ffffff url("images/popupMenuBg.gif") repeat-x bottom left;
-	*/
-	background-color: #fff;
-	border:1px solid #cbcbcb;
-	padding:0.45em;
+        NOTE:
+            FF doesn't clip images used as CSS bgs if you specify a border
+            radius. If you use a solid color, it does. Webkit gets it right.
+            Sigh.
+        background: #ffffff url("images/popupMenuBg.gif") repeat-x bottom left;
+    */
+    background-color: #fff;
+    border:1px solid #cbcbcb;
+    padding:0.45em;
 }
 
 .phprojekt .dijitTooltipConnector {
-	/* the arrow piece */
-	border:0px;
-	z-index: 2;
+    /* the arrow piece */
+    border:0px;
+    z-index: 2;
 }
 
 .phprojekt .dijitTooltipABRight .dijitTooltipConnector {
-	/* above or below tooltip, but the arrow appears on the right,
-		and the right edges of target and tooltip are aligned rather than the left */
-	left: auto !important;
-	right: 6px;
+    /* above or below tooltip, but the arrow appears on the right,
+        and the right edges of target and tooltip are aligned rather than the left */
+    left: auto !important;
+    right: 6px;
 }
 
 .phprojekt .dijitTooltipBelow .dijitTooltipConnector {
-	/* the arrow piece for tooltips below an element */
-	top: 0px;
-	left: 6px;
-	background:url("images/tooltipConnectorUp.png") no-repeat top left;
-	width:17px;
-	height:11px;
+    /* the arrow piece for tooltips below an element */
+    top: 0px;
+    left: 6px;
+    background:url("images/tooltipConnectorUp.png") no-repeat top left;
+    width:17px;
+    height:11px;
 }
 
 .dj_ie .phprojekt .dijitTooltipBelow .dijitTooltipConnector {
-	background-image: url("images/tooltipConnectorUp.gif");
+    background-image: url("images/tooltipConnectorUp.gif");
 }
 
 .phprojekt .dijitTooltipAbove .dijitTooltipConnector {
-	/* the arrow piece for tooltips above an element */
-	bottom: 0px;
-	left: 6px;
-	background:url("images/tooltipConnectorDown.png") no-repeat top left;
-	width:17px;
-	height:11px;
+    /* the arrow piece for tooltips above an element */
+    bottom: 0px;
+    left: 6px;
+    background:url("images/tooltipConnectorDown.png") no-repeat top left;
+    width:17px;
+    height:11px;
 }
 .dj_ie .phprojekt .dijitTooltipAbove .dijitTooltipConnector {
-	background-image: url("images/tooltipConnectorDown.gif");
+    background-image: url("images/tooltipConnectorDown.gif");
 }
 .dj_ie6 .phprojekt .dijitTooltipAbove .dijitTooltipConnector {
-	background-image: url("images/tooltipConnectorDown.gif");
-	bottom: -5px;
+    background-image: url("images/tooltipConnectorDown.gif");
+    bottom: -5px;
 }
 
 .phprojekt .dijitTooltipLeft {
-	padding-right: 10px;
+    padding-right: 10px;
 }
 .dj_ie6 .phprojekt .dijitTooltipLeft {
-	padding-left: 11px;
+    padding-left: 11px;
 }
 .phprojekt .dijitTooltipLeft .dijitTooltipConnector {
-	/* the arrow piece for tooltips to the left of an element, bottom borders aligned */
-	right: 0px;
-	bottom: 3px;
-	background:url("images/tooltipConnectorRight.png") no-repeat top left;
-	width:11px;
-	height:17px;
+    /* the arrow piece for tooltips to the left of an element, bottom borders aligned */
+    right: 0px;
+    bottom: 3px;
+    background:url("images/tooltipConnectorRight.png") no-repeat top left;
+    width:11px;
+    height:17px;
 }
 .dj_ie .phprojekt .dijitTooltipLeft .dijitTooltipConnector {
-	background-image: url("images/tooltipConnectorRight.gif");
+    background-image: url("images/tooltipConnectorRight.gif");
 }
 
 .phprojekt .dijitTooltipRight {
-	padding-left: 10px;
+    padding-left: 10px;
 }
 .phprojekt .dijitTooltipRight .dijitTooltipConnector {
-	/* the arrow piece for tooltips to the right of an element, bottom borders aligned */
-	left: 0px;
-	bottom: 3px;
-	background:url("images/tooltipConnectorLeft.png") no-repeat top left;
-	width:11px;
-	height:17px;
+    /* the arrow piece for tooltips to the right of an element, bottom borders aligned */
+    left: 0px;
+    bottom: 3px;
+    background:url("images/tooltipConnectorLeft.png") no-repeat top left;
+    width:11px;
+    height:17px;
 }
 .dj_ie .phprojekt .dijitTooltipRight .dijitTooltipConnector {
-	background-image: url("images/tooltipConnectorLeft.gif");
+    background-image: url("images/tooltipConnectorLeft.gif");
 }
 

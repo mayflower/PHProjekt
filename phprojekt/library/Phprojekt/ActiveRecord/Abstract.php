@@ -897,7 +897,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         if (array_key_exists('id', $this->_data)) {
             if (array_key_exists('hasMany', $this->_relations)
-            || count($this->hasMany) > 0) {           	
+            || count($this->hasMany) > 0) {
                 foreach (array_keys($this->hasMany) as $key) {
                     $className = $this->_getClassNameForRelationship($key,
                     $this->hasMany);

@@ -12,14 +12,14 @@
     </style>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"
      djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
-	<script type="text/javascript">
-		dojo.require("dojo.parser");
-		dojo.require("dijit.form.Form");
-    	dojo.require("dijit.form.Button");
-		dojo.require("dijit.form.TextBox");
-		dojo.require("dijit.layout.BorderContainer");
-		dojo.require("dijit.layout.ContentPane");
-		function init() {
+    <script type="text/javascript">
+        dojo.require("dojo.parser");
+        dojo.require("dijit.form.Form");
+        dojo.require("dijit.form.Button");
+        dojo.require("dijit.form.TextBox");
+        dojo.require("dijit.layout.BorderContainer");
+        dojo.require("dijit.layout.ContentPane");
+        function init() {
             dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
                 if (e.keyCode == dojo.keys.ENTER) {
                     dojo.byId("loginForm").submit();
@@ -29,7 +29,7 @@
             });
         }
         dojo.addOnLoad(init);
-	</script>
+    </script>
 </head>
 <body class="phprojekt">
     <div dojoType="dijit.layout.BorderContainer" id="completeContent">
@@ -39,28 +39,28 @@
         <!-- Border Container which splits page in navigation and form/list view: -->
         <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
             <!-- navigation panel -->
-            <div dojoType="dijit.layout.ContentPane" duration="200"	minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
+            <div dojoType="dijit.layout.ContentPane" duration="200"    minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
                 <div id="subheader" class="block">
                     <div id="navigation-container-titel">
-        			</div>
-				</div>
-     		</div>
-   			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%; background-color:#FFFFFF" id="centerContent" >
+                    </div>
+                </div>
+             </div>
+               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%; background-color:#FFFFFF" id="centerContent" >
                 <!-- Submodule navigation: -->
-    			<div class="block">
-        			<div class="column">
-        				<img src="<?php echo $this->webpath; ?>img/subheaderborder.png" alt="" />
-        			</div>
-        			<div class="column left span-17 append-1 align-left" id="subModuleNavigation">
-					</div>
- 				</div>
- 				<!-- spaces -->
-        		<hr class="space"/>
-        		<hr />
-        		<hr class="space"/>
-        		<!-- Exception Form -->
-        		<div id="serverFeedback" class="prepend-24">
-        		<?php
+                <div class="block">
+                    <div class="column">
+                        <img src="<?php echo $this->webpath; ?>img/subheaderborder.png" alt="" />
+                    </div>
+                    <div class="column left span-17 append-1 align-left" id="subModuleNavigation">
+                    </div>
+                 </div>
+                 <!-- spaces -->
+                <hr class="space"/>
+                <hr />
+                <hr class="space"/>
+                <!-- Exception Form -->
+                <div id="serverFeedback" class="prepend-24">
+                <?php
                 if ($this->message) {
                     echo '<div class="error">'.$this->message.'</div>';
                 }
@@ -68,34 +68,34 @@
                     echo '<div class="error">'.$this->errors.'</div>';
                 }
                 ?>
-        		</div>
-			    <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
-     				<table width="100%" align="center" class="form">
-     				<col class="col1" />
-    					<tr>
-        					<td class="label"><label for="username">Username:</label></td>
-        					<td>
-        					    <input dojoType="dijit.form.TextBox" id="username" type="text" name="username" value="<?php echo $this->username; ?>" />
-        					</td>
-    					</tr>
-    					<tr>
-        					<td class="label"><label for="password">Password:</label></td>
-        					<td>
-        					    <input dojoType="dijit.form.TextBox" id="password" type="password" name="password" value="" />
-        					</td>
-    					</tr>
-    					<tr>
-    						<td>&nbsp;</td>
-    						<td><button dojoType="dijit.form.Button" baseClass="positive" id="loginButton" type="submit" iconClass="tick">
-									Login
-								</button>
-							</td>
-    						
-    					</tr>
-    				</table>
-    			</form>
-         	</div>
-		</div>
+                </div>
+                <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
+                     <table width="100%" align="center" class="form">
+                     <col class="col1" />
+                        <tr>
+                            <td class="label"><label for="username">Username:</label></td>
+                            <td>
+                                <input dojoType="dijit.form.TextBox" id="username" type="text" name="username" value="<?php echo $this->username; ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label"><label for="password">Password:</label></td>
+                            <td>
+                                <input dojoType="dijit.form.TextBox" id="password" type="password" name="password" value="" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td><button dojoType="dijit.form.Button" baseClass="positive" id="loginButton" type="submit" iconClass="tick">
+                                    Login
+                                </button>
+                            </td>
+                            
+                        </tr>
+                    </table>
+                </form>
+             </div>
+        </div>
     </div>
 </body>
 </html>

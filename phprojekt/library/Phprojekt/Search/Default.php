@@ -177,17 +177,17 @@ class Phprojekt_Search_Default
             $limitedFoundResults = array();
             foreach ($tmpFoundResults as $moduleData) {
                 if (!isset($results[$moduleData['moduleId']])) {
-                	$results[$moduleData['moduleId']] = 0;
+                    $results[$moduleData['moduleId']] = 0;
                 }
                 $results[$moduleData['moduleId']]++;
                 if ($results[$moduleData['moduleId']] <= $count) {
-                	if (count($limitedFoundResults) < 10) {
+                    if (count($limitedFoundResults) < 10) {
                         $limitedFoundResults[] = $moduleData;
-                	}
+                    }
                 }
             }
         } else {
-        	$limitedFoundResults = $tmpFoundResults;
+            $limitedFoundResults = $tmpFoundResults;
         }
         
         foreach ($limitedFoundResults as $moduleData) {

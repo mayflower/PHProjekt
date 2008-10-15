@@ -12,14 +12,14 @@
     </style>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"
      djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
-	<script type="text/javascript">
-		dojo.require("dojo.parser");
-		dojo.require("dijit.form.Form");
-    	dojo.require("dijit.form.Button");
-		dojo.require("dijit.form.TextBox");
-		dojo.require("dijit.layout.BorderContainer");
-		dojo.require("dijit.layout.ContentPane");
-		function init() {
+    <script type="text/javascript">
+        dojo.require("dojo.parser");
+        dojo.require("dijit.form.Form");
+        dojo.require("dijit.form.Button");
+        dojo.require("dijit.form.TextBox");
+        dojo.require("dijit.layout.BorderContainer");
+        dojo.require("dijit.layout.ContentPane");
+        function init() {
             dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
                 if (e.keyCode == dojo.keys.ENTER) {
                     dojo.byId("loginForm").submit();
@@ -29,7 +29,7 @@
             });
         }
         dojo.addOnLoad(init);
-	</script>
+    </script>
 </head>
 <body class="phprojekt">
 </body>

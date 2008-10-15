@@ -1,67 +1,67 @@
 
 /*
  *  CheckBox and Radio Widgets,
- *	and the CSS to embed a checkbox or radio icon inside a ToggleButton.
+ *    and the CSS to embed a checkbox or radio icon inside a ToggleButton.
  *
- *	Order of images in the default sprite (from L to R, checkbox and radio in same image):
- *		checkbox	normal 	 - checked
- *							 - unchecked
- *					disabled - checked
- *							 - unchecked
- *					hover 	 - checked
- *							 - unchecked
+ *    Order of images in the default sprite (from L to R, checkbox and radio in same image):
+ *        checkbox    normal      - checked
+ *                             - unchecked
+ *                    disabled - checked
+ *                             - unchecked
+ *                    hover      - checked
+ *                             - unchecked
  *
- *		radio		normal 	 - checked
- *							 - unchecked
- *					disabled - checked
- *							 - unchecked
- *					hover 	 - checked
- *							 - unchecked
+ *        radio        normal      - checked
+ *                             - unchecked
+ *                    disabled - checked
+ *                             - unchecked
+ *                    hover      - checked
+ *                             - unchecked
 */
 
 .phprojekt .dijitToggleButton .dijitCheckBox,
 .phprojekt .dijitToggleButton .dijitCheckBoxIcon {
-	background-image: url('../images/spriteCheckbox.gif');
+    background-image: url('../images/spriteCheckbox.gif');
 }
 
 .phprojekt .dijitCheckBox,
-.phprojekt .dijitCheckBoxIcon {		/* inside a toggle button */
-	background-image: url('../images/spriteCheckbox.gif'); /* checkbox sprite image */
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
-	margin: 0;
-	padding: 0;
+.phprojekt .dijitCheckBoxIcon {        /* inside a toggle button */
+    background-image: url('../images/spriteCheckbox.gif'); /* checkbox sprite image */
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
 }
 
 .phprojekt .dijitCheckBox,
 .phprojekt .dijitToggleButton .dijitCheckBoxIcon {
-	/* unchecked */
-	background-position: -16px;
+    /* unchecked */
+    background-position: -16px;
 }
 
 .phprojekt .dijitCheckBoxChecked,
 .phprojekt .dijitToggleButtonChecked .dijitCheckBoxIcon {
-	/* checked */
-	background-position: 0px;
+    /* checked */
+    background-position: 0px;
 }
 
 .phprojekt .dijitCheckBoxDisabled {
-	/* disabled */
-	background-position: -48px;
+    /* disabled */
+    background-position: -48px;
 }
 
 .phprojekt .dijitCheckBoxCheckedDisabled {
-	/* disabled but checked */
-	background-position: -32px;
+    /* disabled but checked */
+    background-position: -32px;
 }
 
 .phprojekt .dijitCheckBoxHover {
-	/* hovering over an unchecked enabled checkbox */
-	background-position: -80px;
+    /* hovering over an unchecked enabled checkbox */
+    background-position: -80px;
 }
 
 .phprojekt .dijitCheckBoxCheckedHover {
-	/* hovering over a checked enabled checkbox */
-	background-position: -64px;
+    /* hovering over a checked enabled checkbox */
+    background-position: -64px;
 }

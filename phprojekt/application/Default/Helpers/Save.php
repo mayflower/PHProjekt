@@ -81,10 +81,10 @@ final class Default_Helpers_Save
         } else if (!self::_checkModule(1, $projectId)) {
             throw new Phprojekt_PublishedException('You do not have access for add projects on the parent project');
         } else {
-        	if (null === $node->id || $node->id == 0) {
-        		$parentNode->appendNode($node);
-        	} else {
-        		$node->projectId = 0;
+            if (null === $node->id || $node->id == 0) {
+                $parentNode->appendNode($node);
+            } else {
+                $node->projectId = 0;
                 $node->setParentNode($parentNode);
             }
 
@@ -311,9 +311,9 @@ final class Default_Helpers_Save
             if ($projectId == 1 && Phprojekt_Module::getSaveType($moduleId) > 0) {
                 $boolean = true;
             } else {
-            	if (Phprojekt_Module::getSaveType($moduleId) > 0) {
-            		$boolean = true;
-            	} else {
+                if (Phprojekt_Module::getSaveType($moduleId) > 0) {
+                    $boolean = true;
+                } else {
                     $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
                     $modules  = $relation->getProjectModulePermissionsById($projectId);
                     if ($modules['data'][$moduleId]['inProject']) {
@@ -321,7 +321,7 @@ final class Default_Helpers_Save
                     } else {
                         $boolean = false;
                     }
-            	}
+                }
             }
         } else {
             $boolean = true;

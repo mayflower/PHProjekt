@@ -73,8 +73,8 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
         this._list = new Array();
         for (i in modules) {
             this._list.push({"id":modules[i]['id'],
-			                 "name":modules[i]['name'],
-							 "label":modules[i]['label'],
+                             "name":modules[i]['name'],
+                             "label":modules[i]['label'],
                              "inProject":modules[i]['inProject']})
         }
     }
@@ -123,10 +123,10 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
         //    This function get all the roles and their assignes user for onw project
         var modules = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
-		for (i in modules) {
-		    this._list.push({"id":modules[i]['id'],"name":modules[i]['name'],
-		                     "read":modules[i]['read'],"write":modules[i]['write'],
-		                     "create":modules[i]['create'],"admin":modules[i]['admin']})
-		}
+        for (i in modules) {
+            this._list.push({"id":modules[i]['id'],"name":modules[i]['name'],
+                             "read":modules[i]['read'],"write":modules[i]['write'],
+                             "create":modules[i]['create'],"admin":modules[i]['admin']})
+        }
     }
 });

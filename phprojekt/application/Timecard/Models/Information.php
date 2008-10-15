@@ -46,8 +46,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $translate = Zend_Registry::get('translate');
 
         switch ($ordering) {
-        	case 'today':
-        	default:
+            case 'today':
+            default:
                 // Sum of hours
                 $data = array();
                 $data['key']      = 'startTime';
@@ -78,7 +78,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['readOnly'] = false;
                 $converted[] = $data;
                 break;
-        	case 'month':
+            case 'month':
                 // date
                 $data = array();
                 $data['key']      = 'date';
@@ -94,7 +94,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['readOnly'] = true;
                 $converted[] = $data;
         
-        		// Sum of hours
+                // Sum of hours
                 $data = array();
                 $data['key']      = 'sum';
                 $data['label']    = $translate->translate('Working Times');

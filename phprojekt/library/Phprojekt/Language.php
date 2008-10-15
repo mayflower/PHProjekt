@@ -31,8 +31,8 @@
  */
 class Phprojekt_Language extends Zend_Translate
 {
-	private $_locale = null;
-	
+    private $_locale = null;
+    
     /**
      * Constructor function
      *

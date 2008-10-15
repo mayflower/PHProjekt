@@ -2,14 +2,14 @@ dojo.provide("phpr.Core.Main");
 
 dojo.declare("phpr.Core.Main", phpr.Default.Main, {
     constructor:function() {
-	 	this.module = "Core";
-	 	this.loadFunctions(this.module);
+        this.module = "Core";
+        this.loadFunctions(this.module);
 
-		this.gridWidget = phpr.Core.Grid;
-		this.formWidget = phpr.Core.Form;
-		this.treeWidget = phpr.Core.Tree;
+        this.gridWidget = phpr.Core.Grid;
+        this.formWidget = phpr.Core.Form;
+        this.treeWidget = phpr.Core.Tree;
     },
-	
+    
     reload:function() {
         phpr.module    = this.module;
         phpr.submodule = this.module;

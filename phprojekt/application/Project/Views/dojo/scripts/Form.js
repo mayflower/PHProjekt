@@ -13,7 +13,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl});
-		
+        
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this.userStore.fetch();
@@ -57,7 +57,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             if (this.id > 0) {
                 currentUser = data[0]["rights"]["currentUser"]["userId"];
             }
-					
+                    
             var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
                 accessUserText:   phpr.nls.get('User'),
@@ -65,7 +65,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 accessActionText: phpr.nls.get('Action'),
                 users:            this.userStore.getList(),
                 roles:            this.roleStore.getList(),
-				currentUser:      currentUser,
+                currentUser:      currentUser,
                 relations:        relationList
             });
 

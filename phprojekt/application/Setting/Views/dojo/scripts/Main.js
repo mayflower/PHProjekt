@@ -6,15 +6,15 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         this.loadFunctions(this.module);
 
         this.gridWidget = phpr.Setting.Grid;
-		this.formWidget = phpr.Setting.Form;
-		this.treeWidget = phpr.Setting.Tree;
+        this.formWidget = phpr.Setting.Form;
+        this.treeWidget = phpr.Setting.Tree;
         
-		dojo.subscribe("Setting.loadSubModule", this, "loadSubModule");
+        dojo.subscribe("Setting.loadSubModule", this, "loadSubModule");
     },
  
     reload:function() {
         phpr.module    = this.module;
-		phpr.submodule = '';
+        phpr.submodule = '';
         phpr.destroyWidgets("bottomContent");
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
@@ -28,17 +28,17 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
     },
-	 
+     
     loadSubModule:function(/*String*/module) {
         //summary: this function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
-		phpr.submodule = module;
-		this.setSubGlobalModulesNavigation();
+        phpr.submodule = module;
+        this.setSubGlobalModulesNavigation();
         this.form = new this.formWidget(this,0,this.module);
     },
-	
+    
     setSubGlobalModulesNavigation:function(currentModule) {
         phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
@@ -72,8 +72,8 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
             })
         })
     },
-	
+    
     updateCacheData:function() {
         this.form.updateData();
-    }	
+    }
 });

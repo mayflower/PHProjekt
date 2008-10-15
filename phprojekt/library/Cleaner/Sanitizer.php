@@ -129,14 +129,14 @@ class Cleaner_Sanitizer
      */    
     public function sanitizeIsoTime($value, &$messages)
     {       
-    	$format = 'H:i:s'; 
+        $format = 'H:i:s'; 
         if (is_int($value)) {
             return date($format, $value);
         } else {
-        	if (ereg("([A-Za-z0-9 \r\t])?([0-9]{1,2}):([0-9]{1,2}):?([0-9]{1,2})?(A-Za-z0-9 \r\t])?", $value, $regs)) {
-                return date($format, mktime($regs[2], $regs[3], 0, date("m"), date("d"), date("Y")));        	      
-        	} else {
-        		return null;
+            if (ereg("([A-Za-z0-9 \r\t])?([0-9]{1,2}):([0-9]{1,2}):?([0-9]{1,2})?(A-Za-z0-9 \r\t])?", $value, $regs)) {
+                return date($format, mktime($regs[2], $regs[3], 0, date("m"), date("d"), date("Y")));                  
+            } else {
+                return null;
             }
         }
     }

@@ -9,14 +9,14 @@ dojo.declare('phpr.Project.GanttBase', null, {
         this.STEPPING = 192;
         this.MIN_DATE = 1213187363000;
         this.MAX_DATE = 1229804778000;
-        this.DAY_MSEC = 86400000;			
+        this.DAY_MSEC = 86400000;            
     },
-	
+    
     findArrayIndex:function(sliderName) {
         // summary:
         //    walks the projectDataBuffer array, returns array index on name match
         // description:
-        //    walks the projectDataBuffer array, returns array index on name match	
+        //    walks the projectDataBuffer array, returns array index on name match    
         var pipeIndexSearch = sliderName.lastIndexOf('|');
         
         // try to find the named project element in the list and store last values
@@ -42,33 +42,33 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    which contains project textual name
         // description:
         //    implicates for existance of DOM element lbl_*projectid*
-        //    which contains project textual name		
-		var element = document.getElementById('lbl_'+ nodeName);
+        //    which contains project textual name        
+        var element = document.getElementById('lbl_'+ nodeName);
         if(element) {
             var caption = element.getElementsByTagName('a')[0].getElementsByTagName('strong')[0].innerHTML;
             return caption.substr(caption.lastIndexOf('.')+1);
         }
         return nodeName;
     },
-	
-	showDialog:function(pText, pChildName, pPosMin, pPosMax) {
+    
+    showDialog:function(pText, pChildName, pPosMin, pPosMax) {
         // summary:
         //    Shows the dialog box to alert a conflict
         // description:
-        //    Shows the dialog box to alert a conflict       				
-		var element       = dijit.byId('ganttDialog');		
-		this.callbackOpts = new Array(pPosMin,pPosMax,pChildName);	
-		dojo.byId('message_text').innerHTML = pText;
-		element.show();
-	},
-	
-	dialogCallback:function(pValues) {
+        //    Shows the dialog box to alert a conflict                       
+        var element       = dijit.byId('ganttDialog');        
+        this.callbackOpts = new Array(pPosMin,pPosMax,pChildName);    
+        dojo.byId('message_text').innerHTML = pText;
+        element.show();
+    },
+    
+    dialogCallback:function(pValues) {
         // summary:
         //    The callback function is executed by the dialog box continue the onChange event
         // description:
-        //    The callback function is executed by the dialog box continue the onChange event  		
-		this.assertUpdate(this.callbackOpts[0],this.callbackOpts[1], this.callbackOpts[2], true);
-	},
+        //    The callback function is executed by the dialog box continue the onChange event          
+        this.assertUpdate(this.callbackOpts[0],this.callbackOpts[1], this.callbackOpts[2], true);
+    },
 
     processDialog:function (dialogType, parentName, childName, posMin, posMax) {
         // summary:
@@ -76,11 +76,11 @@ dojo.declare('phpr.Project.GanttBase', null, {
         // description:
         //    This function delivers the error text and executes showDialog()
         switch(dialogType) {
-            case 0:				
+            case 0:                
                 this.showDialog('Attention: parent project "' + this.getProjectCaption(parentName) + '"' +
                                ' starts after subproject "' + this.getProjectCaption(childName) + '"!<br />' +
                                'Click "OK" to adjust parent project to new start date<br />' +
-                               'Click "x" to reset current project', childName, posMin, posMax);				 						
+                               'Click "x" to reset current project', childName, posMin, posMax);                                         
             case 1:
                 this.showDialog('Attention: parent project "'+this.getProjectCaption(parentName)+ '"' +
                                ' ends before subproject "'+this.getProjectCaption(childName)+'"!<br />' +
@@ -95,11 +95,11 @@ dojo.declare('phpr.Project.GanttBase', null, {
                 this.showDialog('Attention: subproject "'+this.getProjectCaption(parentName) + '"' +
                                ' starts before parent project "'+this.getProjectCaption(childName)+'"!<br />' +
                                'Click "OK" to adjust subproject to new start date<br />' +
-                               'Click "x" to reset current project', childName, posMin, posMax);           			
-			return false;
+                               'Click "x" to reset current project', childName, posMin, posMax);                       
+            return false;
         }
     },
-	
+    
     getParentName:function(ownName) {
         // summary:
         //    estimate parent object name scan in the list for match.
@@ -116,12 +116,12 @@ dojo.declare('phpr.Project.GanttBase', null, {
         }
         return false;
     },
-	
+    
     convertIndex2DateString:function(position) {
         // summary:
         //    calculates date string from numeric day offset
         // description:
-        //    calculates date string from numeric day offset		
+        //    calculates date string from numeric day offset        
         var date = new Date(this.MIN_DATE + Math.floor(position * this.DAY_MSEC));
         var year = date.getYear();
         // FF returns 103 for year 2003, IE returns 2003
@@ -137,16 +137,16 @@ dojo.declare('phpr.Project.GanttBase', null, {
         if (month < 10) {
             month = '0'+month 
         }
-		return year + '-' + month + '-' + day;
+        return year + '-' + month + '-' + day;
     },
 
     processUpdate:function(values, sliderName) {
         // summary:
         //    initiates conflict check
         // description:
-        //    initiates conflict check		
-		this.sliderValues = values;
-		this.sliderName   = sliderName;
+        //    initiates conflict check        
+        this.sliderValues = values;
+        this.sliderName   = sliderName;
         if(sliderName && this.activeSlider.length > 1) {
             values = this.normalizeValues(values, sliderName);
             this.assertUpdate(values[0], values[1], sliderName);
@@ -154,27 +154,27 @@ dojo.declare('phpr.Project.GanttBase', null, {
             dojo.byId('maxDate').value = this.convertIndex2DateString(values[1]);
         }
     },
-	
+    
     setRangeSelect:function(new_date, side) {
         // summary:
         //    assign range slider value from calendar
         // description:
-        //    assign range slider value from calendar   		
+        //    assign range slider value from calendar           
         if(this.activeSlider.length > 1) {
             var current =  this.normalizeValues(dijit.byId(this.activeSlider).attr('value'));
             // min value has array index 0, max := 1
             var index = (side == 'min')? 0 : 1;
-            current[index] = this.convertStampToIndex(new_date.getTime());			
+            current[index] = this.convertStampToIndex(new_date.getTime());            
             this.assertUpdate(current[0], current[1], this.activeSlider);
-            dijit.byId(this.activeSlider).attr('value', current);		
+            dijit.byId(this.activeSlider).attr('value', current);        
         }
     },
-	
-    convertStampToIndex:function (stamp) {	
+    
+    convertStampToIndex:function (stamp) {    
         // summary:
         //    incoming stamp is unix time stamp in microseconds
         // description:
-        //    incoming stamp is unix time stamp in microseconds	
+        //    incoming stamp is unix time stamp in microseconds    
         //    on js side we have a calculation error
         return 1 + Math.floor((stamp - this.MIN_DATE) / this.DAY_MSEC);
     },
@@ -185,7 +185,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         // description:
         //    buffer the name of the clicked slider and store its current values
         //    in the projects. This function also resetes previous confirmation
-        //    dialogs.	
+        //    dialogs.    
         if(sliderName) {
             this.skipConfirmation = false;
             /* important hack:
@@ -213,10 +213,10 @@ dojo.declare('phpr.Project.GanttBase', null, {
     normalizeValues:function(rawData) {
         // summary:
         //    values inbound might be integer, float or even string,
-		//    for comparisons and assignments we need clean integer values
+        //    for comparisons and assignments we need clean integer values
         // description:
         //    values inbound might be integer, float or even string,
-        //    for comparisons and assignments we need clean integer values  		
+        //    for comparisons and assignments we need clean integer values          
         if(rawData && 2 == rawData.length) {
             rawData[0] = Math.floor(1 * rawData[0]);
             rawData[1] = Math.floor(1 * rawData[1])
@@ -234,18 +234,18 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    checks current update values for date collisions in dependent projects:
         //    checks are performed against parents and child nodes. The _recursion_ is
         //    triggered by the update event of the adjusted slider
-		var ownListIndex     = this.findArrayIndex(nodeName);
+        var ownListIndex     = this.findArrayIndex(nodeName);
         if(ownListIndex < 0) {
             return 0;
         }
-		this.skipConfirmation= pDialogCallback;	
+        this.skipConfirmation= pDialogCallback;    
 
         var dependencyUpdate  = false;
         var projectReverse    = false;
         // widening current time line, parent processing req.
         if(this.projectDataBuffer[ownListIndex][1] > posMin || this.projectDataBuffer[ownListIndex][2] < posMax) {
             var parent = this.getParentName(nodeName);
-			
+            
             // parent exists
             if(parent != false) {
                 var parentValues = this.normalizeValues(dijit.byId(parent).attr('value'));
@@ -279,7 +279,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
 
         // narrowing selected time line, child processing req.
         if(this.projectDataBuffer[ownListIndex][1] < posMin || this.projectDataBuffer[ownListIndex][2] > posMax) {
-            // variate id to expected parentid for search			
+            // variate id to expected parentid for search            
             var owner      = nodeName.split(':');
             owner          = 'p:' + owner[2];
             var listIndex  = -1;
@@ -314,7 +314,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
                       //  projectReverse = true;
                     }
                 }
-				
+                
                if(this.projectReverse) {
                     this.revertSlider(projectReverse, ownListIndex, nodeName);
                     return;
@@ -339,7 +339,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         // summary:
         //    Update the value of the slider
         // description:
-        //    Update the value of the slider				
+        //    Update the value of the slider
         if(shouldUpdate) {
             dijit.byId(projectId).attr('value', sliderValues);
             var projectIndex = this.findArrayIndex(projectId);

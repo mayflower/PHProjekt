@@ -81,7 +81,7 @@ class Timecard_IndexController extends IndexController
         }
 
         if (null == $this->getRequest()->getParam('startTime', null)) {
-        	
+            
             // Date filter to find the open register
             $dateFilter = array();
 
@@ -303,9 +303,9 @@ class Timecard_IndexController extends IndexController
 
         $favorites = $setting->getSetting('favorites');
         if (!empty($favorites)) {
-        	$favorites = unserialize($favorites);
+            $favorites = unserialize($favorites);
         } else {
-        	$favorites = array();
+            $favorites = array();
         }
         echo Phprojekt_Converter_Json::convert($favorites);
     }
