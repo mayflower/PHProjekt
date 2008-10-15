@@ -1,81 +1,81 @@
 
 /* Menu */
 .phprojekt .dijitMenu {
-	border: 1px solid #cbcbcb;
-	margin: 0px;
-	padding: 0px;
-	background-color: #fff;
+    border: 1px solid #cbcbcb;
+    margin: 0px;
+    padding: 0px;
+    background-color: #fff;
 }
 
 .phprojekt .dijitMenuItem {
-	background-color: #fff;
-	font-family: sans-serif;
-	margin: 0px;
-	color: #243C5F;
+    background-color: #fff;
+    font-family: sans-serif;
+    margin: 0px;
+    color: #243C5F;
 }
 .phprojekt .dijitMenuPreviousButton, .phprojekt .dijitMenuNextButton {
-	font-style: italic;
+    font-style: italic;
 }
 .phprojekt .dijitMenuItem TD {
-	padding:1px;
+    padding:1px;
 }
 
 .phprojekt .dijitMenuItemHover {
-	background-color: #d9e6f9; /* #95a0b0; #555555; #aaaaaa; #646464;  #60a1ea; #848484; */
-	color: #243C5F;
+    background-color: #d9e6f9; /* #95a0b0; #555555; #aaaaaa; #646464;  #60a1ea; #848484; */
+    color: #243C5F;
 }
 
 .phprojekt .dijitMenuItemIcon {
-	width: 15px;
-	height: 15px;
-	/* padding-right: 3px; */
+    width: 15px;
+    height: 15px;
+    /* padding-right: 3px; */
 }
 
 .phprojekt .dijitMenuExpand {
-	/* margin-top:4px;  */
-	width:15px;
-	height:15px;
-	background-image: url('images/spriteRoundedIconsSmall.png');
-	background-repeat: no-repeat;
-	background-position: -30px top;
-	display:block;
+    /* margin-top:4px;  */
+    width:15px;
+    height:15px;
+    background-image: url('images/spriteRoundedIconsSmall.png');
+    background-repeat: no-repeat;
+    background-position: -30px top;
+    display:block;
 }
 .dj_ie6 .phprojekt .dijitMenuExpand {
-	background-image: url('images/spriteRoundedIconsSmall.gif');
+    background-image: url('images/spriteRoundedIconsSmall.gif');
 }
 
 .phprojekt .dijitMenuSeparator {
-	background-color: #fff;
-	height: 1px;
+    background-color: #fff;
+    height: 1px;
 }
 
 /* separator can be two pixels -- set border of either one to 0px to have only one */
 .phprojekt .dijitMenuSeparatorTop {
-	border-bottom: 1px solid #fff; /*97adcb; */
+    border-bottom: 1px solid #fff; /*97adcb; */
 }
 
 .phprojekt .dijitMenuSeparatorBottom {
-	border-top: 1px solid #8ba0bd;
+    border-top: 1px solid #8ba0bd;
 }
 
 /* the checked menu item */
 .phprojekt .dijitCheckedMenuItemIconChar {
-	display: none;
+    display: none;
 }
 
 .phprojekt .dijitCheckedMenuItemIcon {
-	background-image: url('images/spriteCheckBox.gif');
-	background-position: -16px;
+    background-image: url('images/spriteCheckBox.gif');
+    background-position: -16px;
 }
 
 .phprojekt .dijitCheckedMenuItemIconChecked {
-	background-position: 0px;
+    background-position: 0px;
 }
 
 .phprojekt .dijitMenuItemHover .dijitCheckedMenuItemIcon {
-	background-position: -80px;
+    background-position: -80px;
 }
 
 .phprojekt .dijitMenuItemHover .dijitCheckedMenuItemIconChecked {
-	background-position: -64px;
+    background-position: -64px;
 }

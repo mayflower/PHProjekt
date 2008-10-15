@@ -1,13 +1,13 @@
 
 .phprojekt .dijitToolbar {
-	color:#FFFFFF;
+    color:#FFFFFF;
     font-size:11px;
     font-weight:bold;
     margin:15px;
 }
 a:hover.dijitToolbar,
 a:focus.dijitToolbar {
-	color: #F1CE47;
+    color: #F1CE47;
 }
 a.dijitToolbar,
 a:visited.dijitToolbar,
@@ -17,34 +17,34 @@ a:focus.dijitToolbar{
 }
 
 .phprojekt .dijitToolbar * {
-	padding: 0px;
-	margin: 0px;
-	/* #margin-top: -1px; */
-	/*IE*/
+    padding: 0px;
+    margin: 0px;
+    /* #margin-top: -1px; */
+    /*IE*/
 }
 .dj_ie .phprojekt .dijitToolbar {
-	padding-bottom: 1px;
+    padding-bottom: 1px;
 }
 
 .phprojekt .dijitToolbar .dijitButtonNode {
-	padding: 0px;
-	margin: 1px;
-	border: 1px solid transparent;
-	background: none;
+    padding: 0px;
+    margin: 1px;
+    border: 1px solid transparent;
+    background: none;
     color: #FFFFFF;
-	_margin: 1px;
-	_padding: 0px 1px 0px 1px;
-	_border: 0px;
+    _margin: 1px;
+    _padding: 0px 1px 0px 1px;
+    _border: 0px;
 }
 
 .phprojekt .dijitToolbar .dijitButtonNode,
 .phprojekt .dijitToolbar .dijitComboButton .dijitButtonContents,
 .phprojekt .dijitToolbar .dijitComboButton .dijitDownArrowButton {
-	background: none;
-	margin: 0px;
-	padding: 0px;
-	border: none;
-	font-size: 12px;
+    background: none;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    font-size: 12px;
 }
 
 .phprojekt .dijitToolbar .dijitButton,
@@ -52,23 +52,23 @@ a:focus.dijitToolbar{
 .phprojekt .dijitToolbar .dijitDropDownButton,
 .phprojekt .dijitToolbar .dijitComboButton .dijitButtonContents,
 .phprojekt .dijitToolbar .dijitComboButton .dijitDownArrowButton {
-	background: none;
-	padding: 1px;	/* on hover etc., margin replaced w/border */
+    background: none;
+    padding: 1px;    /* on hover etc., margin replaced w/border */
 }
 
 .phprojekt .dijitToolbar .dijitButtonChecked,
 .phprojekt .dijitToolbar .dijitToggleButtonChecked {
-	background-color:#C1D2EE;
-	border:1px solid #316AC5;
-	padding: 0px;
+    background-color:#C1D2EE;
+    border:1px solid #316AC5;
+    padding: 0px;
 }
 
 .phprojekt .dijitToolbar .dijitButtonCheckedHover,
 .phprojekt .dijitToolbar .dijitToggleButtonCheckedHover
  {
-	padding: 0px;
-	border-color: #366dba;
-	background-color: #9abbea !important;
+    padding: 0px;
+    border-color: #366dba;
+    background-color: #9abbea !important;
 }
 
 .phprojekt .dijitToolbar .dijitButtonHover,
@@ -79,15 +79,15 @@ a:focus.dijitToolbar{
     color: #F1CE47;
 }
 
-.phprojekt .dijitToolbar label {	
-	padding: 3px 3px 0 6px;
+.phprojekt .dijitToolbar label {    
+    padding: 3px 3px 0 6px;
 }
 
 .dj_ie .phprojekt .dijitToolbar .dijitComboButton .dijitButtonContentsFocused,
 .dj_ie .phprojekt .dijitToolbar .dijitComboButton .dijitDownArrowButtonFocused,
 .dj_ff2 .phprojekt.dijitToolbar .dijitComboButton .dijitButtonContentsFocused,
 .dj_ff2 .phprojekt .dijitToolbar .dijitComboButton .dijitDownArrowButtonFocused {
-	/* focus border doesn't appear on <td> for FF2 or IE, so need to add it manually */
-	border: 1px #777 dotted !important;
-	padding: 0px;
+    /* focus border doesn't appear on <td> for FF2 or IE, so need to add it manually */
+    border: 1px #777 dotted !important;
+    padding: 0px;
 }

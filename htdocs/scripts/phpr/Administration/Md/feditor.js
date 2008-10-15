@@ -25,7 +25,7 @@ feditor.destroyWidgets = function(el) {
 feditor.getData = function(url, callback){
     dojo.xhrPost(
     {
-        url         :	url,
+        url         :    url,
         handleAs    :   'json',
         timeout     :   10000,
         load: function(data) {
@@ -35,7 +35,7 @@ feditor.getData = function(url, callback){
             alert('Error! No data received! ' + ioArgs);
             return response;
         },
-        sync		:	true,
+        sync        :    true,
     }
     )
 };

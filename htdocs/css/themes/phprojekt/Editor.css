@@ -1,21 +1,21 @@
 .dijitIEFixedToolbar {
-	position:absolute;
-	/* top:0; */
-	top: expression(eval((document.documentElement||document.body).scrollTop));
+    position:absolute;
+    /* top:0; */
+    top: expression(eval((document.documentElement||document.body).scrollTop));
 }
 
 .phprojekt .dijitToolbar .dijitToolbarSeparator {
-	background: url('images/editor.gif');
+    background: url('images/editor.gif');
 }
 
 /**** ICONS *****/
 
 .phprojekt .dijitEditorIcon {
-	background-image: url('images/editor.gif'); /* editor icons sprite image */
-	background-repeat: no-repeat;
-	width: 18px;
-	height: 18px;
-	text-align: center;
+    background-image: url('images/editor.gif'); /* editor icons sprite image */
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    text-align: center;
 }
 .phprojekt .dijitEditorIconSep { background-position: 0px; }
 .phprojekt .dijitEditorIconBackColor { background-position: -18px; }
@@ -57,7 +57,7 @@
 .phprojekt .dijitEditorIconUndo { background-position: -666px; }
 .phprojekt .dijitEditorIconWikiword { background-position: -684px; }
 .phprojekt .dijitEditorIconToggleDir { background-position: -540px; /* padding: 0; margin: 0; color:#555555;
-									font-family:verdana,arial,sans-serif; font-weight: 800; font-size: 70%; */}
+                                    font-family:verdana,arial,sans-serif; font-weight: 800; font-size: 70%; */}
 .phprojekt .dijitEditorIconTabIndent { background-position: -702px; }
 .phprojekt .dijitEditorIconSelectAll { background-position: -720px; }
 .phprojekt .dijitEditorIconUnlink { background-position: -738px; }

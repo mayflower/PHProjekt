@@ -13,16 +13,16 @@ phpr.grid.formatDateTime = function(date) {
 phpr.grid.formatTime = function(value) {
 
     var isoRegExp = /^(?:(\d{2})(\d{2})?)$/;
-	var match = isoRegExp.exec(value);
-	if(match) {
-		match.shift();
-		return match[0] + ':' + match[1];
+    var match = isoRegExp.exec(value);
+    if(match) {
+        match.shift();
+        return match[0] + ':' + match[1];
     } else {
         return value;
     }
 },
 phpr.grid.formatPercentage = function(value) {
-	value = dojo.number.round(value, 2);
+    value = dojo.number.round(value, 2);
     return value;
 },
 
@@ -33,7 +33,7 @@ phpr.grid.formatDate = function(value) {
             //var iso = String(value).replace(" ", "T"); // Make it a real date ISO string
             //var dateObj = dojo.date.stamp.fromISOString(iso);
             //date = dojo.date.locale.format(dateObj, this.constraint);
-        	date = value;
+            date = value;
         } else {
             date = dojo.date.locale.format(new Date(value), this.constraint);
         }
@@ -67,7 +67,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     // summary:
     //    Redefine the function for work with iso format
     // description:
-    //    Redefine the function for work with iso format	
+    //    Redefine the function for work with iso format    
     widgetClass: "dijit.form.DateTextBox",
         
     getValue: function(inRowIndex){
@@ -82,13 +82,13 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         }
         return date.getFullYear() + '-' + month + '-' + day;
     },
-			
+            
     setValue:function(inRowIndex, inValue) {
         if (this.widget) {
-			var parts = inValue.split("-"); 
-			var year  = parts[0];
-			var month = parts[1]-1;
-			var day   = parts[2];
+            var parts = inValue.split("-"); 
+            var year  = parts[0];
+            var month = parts[1]-1;
+            var day   = parts[2];
             this.widget.attr('value',new Date(year, month, day));
         } else {
             this.inherited(arguments);
@@ -99,7 +99,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         var parts = inDatum.split("-"); 
         var year  = parts[0];
         var month = parts[1]-1;
-        var day   = parts[2]; 		
+        var day   = parts[2];
         return dojo.mixin(this.inherited(arguments), {          
             value: new Date(year, month, day)
         });

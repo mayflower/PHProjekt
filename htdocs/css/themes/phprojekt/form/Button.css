@@ -1,23 +1,23 @@
 
 /*****
-		dijit.form.Button
-		dijit.form.DropDownButton
-		dijit.form.ComboButton
-		dijit.form.ComboBox (partial)
+        dijit.form.Button
+        dijit.form.DropDownButton
+        dijit.form.ComboButton
+        dijit.form.ComboBox (partial)
  *****/
 /* Icons used with PHProjekt Buttons */
 
 .phprojekt .cross {
-	background-image: url(../images/cross.png);
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+    background-image: url(../images/cross.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
 }
 .phprojekt .tick {
-	background-image: url(../images/tick.png);
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+    background-image: url(../images/tick.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
 }
 .phprojekt .tinytick {
     background-image: url(../images/tick.png);
@@ -26,22 +26,22 @@
     height: 8px;
 }
 .phprojekt .disk {
-	background-image: url(../images/disk.png);
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+    background-image: url(../images/disk.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
 }
 .phprojekt .export {
-	background-image: url(../images/export.png);
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+    background-image: url(../images/export.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
 }
 .phprojekt .add {
-	background-image: url(../images/add.png);
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+    background-image: url(../images/add.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
 }
 
 .phprojekt .start {
@@ -59,40 +59,40 @@
 }
 
 .phprojekt .dijitButtonNode {
-	/* enabled state - inner */
-	/* border:1px outset #a0a0a0; */
-	border: 1px solid #8ba0bd;
-	border-bottom:1px solid #657c9c;
-	padding: 0.1em 0.2em 0.2em 0.2em; 
-	background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
+    /* enabled state - inner */
+    /* border:1px outset #a0a0a0; */
+    border: 1px solid #8ba0bd;
+    border-bottom:1px solid #657c9c;
+    padding: 0.1em 0.2em 0.2em 0.2em; 
+    background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
 }
 
 .phprojekt .dijitButtonNode button { 
-	border: 0px; 
-	background-color: transparent;
-	cursor: pointer;
+    border: 0px; 
+    background-color: transparent;
+    cursor: pointer;
 } 
  
 .phprojekt .dijitButtonText {
-	text-align: center; 
-	padding: 0 0.3em;
+    text-align: center; 
+    padding: 0 0.3em;
 }
 
 .phprojekt .dijitComboBox .dijitButtonNode {
-	border-width: 0px 0px 0px 1px;
+    border-width: 0px 0px 0px 1px;
 }
 
 .phprojekt .dijitArrowButton {
-	color: #111;
+    color: #111;
 }
 
 .phprojekt .dijitComboButton .dijitDownArrowButton {
-	padding-right:4px;
+    padding-right:4px;
 }
 
 .dj_ff2 .phprojekt .dijitComboButton .dijitButtonContentsFocused,
 .dj_ff2 .phprojekt .dijitComboButton .dijitDownArrowButtonFocused {
-	border: 1px black dotted !important;
+    border: 1px black dotted !important;
 }
 
 .phprojekt .dijitButtonDisabled .dijitButtonNode,
@@ -102,10 +102,10 @@
 .phprojekt .dijitComboBoxDisabled,
 .phprojekt .dijitSpinnerDisabled,
 .phprojekt .dijitSpinnerDisabled .dijitButtonNode {
-	/* disabled state - inner */
-	border-color: #b9bbdd #b9bbdd #b9bbdd #b9bbdd;
-	background:#c3d3e5 url("../images/buttonDisabled.png") top repeat-x;
-	opacity: 0.60; /* Safari, Opera and Mozilla */
+    /* disabled state - inner */
+    border-color: #b9bbdd #b9bbdd #b9bbdd #b9bbdd;
+    background:#c3d3e5 url("../images/buttonDisabled.png") top repeat-x;
+    opacity: 0.60; /* Safari, Opera and Mozilla */
 }
 
 .phprojekt .dijitButtonHover .dijitButtonNode,
@@ -117,10 +117,10 @@
 .phprojekt .dijitComboBoxHover .dijitDownArrowButton,
 .phprojekt .dijitSpinnerUpArrowHover .dijitUpArrowButton,
 .phprojekt .dijitSpinnerDownArrowHover .dijitDownArrowButton {
-	/* hover state - inner */
-	/* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
-	color:#000;
-	background:#acc5e2 url("../images/buttonHover.png") repeat-x top left;
+    /* hover state - inner */
+    /* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
+    color:#000;
+    background:#acc5e2 url("../images/buttonHover.png") repeat-x top left;
 }
 
 .phprojekt .dijitSpinnerUpArrowActive .dijitUpArrowButton,
@@ -131,27 +131,27 @@
 .phprojekt .dijitComboButtonActive .dijitButtonContents,
 .phprojekt .dijitDownArrowActive .dijitDownArrowButton,
 .phprojekt .dijitComboBoxActive .dijitDownArrowButton {
-	/* active state - inner (for when you are pressing a normal button, or
-	 * when a toggle button is in a depressed state
-	 */
-	border-color:#657c9c;
-	background: #91b4e5 url("../images/buttonActive.png") top left repeat-x;
+    /* active state - inner (for when you are pressing a normal button, or
+     * when a toggle button is in a depressed state
+     */
+    border-color:#657c9c;
+    background: #91b4e5 url("../images/buttonActive.png") top left repeat-x;
 }
 
 
 .phprojekt .dijitArrowButtonInner {
-	background:url("../images/spriteArrows.png") no-repeat left top;
-	width: 11px;
+    background:url("../images/spriteArrows.png") no-repeat left top;
+    width: 11px;
 }
 .phprojekt .dijitUpArrowButton .dijitArrowButtonInner { 
-	background:url("../images/spriteArrows.png") no-repeat -22px top; 
-	width: 11px;
+    background:url("../images/spriteArrows.png") no-repeat -22px top; 
+    width: 11px;
 }
 .dj_ie6 .phprojekt .dijitArrowButtonInner {
-	background:url("../images/spriteArrows.gif") no-repeat left top;
-	width: 11px;
+    background:url("../images/spriteArrows.gif") no-repeat left top;
+    width: 11px;
 }
 .dj_ie6 .phprojekt .dijitUpArrowButton .dijitArrowButtonInner {
-	background:url("../images/spriteArrows.gif") no-repeat -22px top;
-	width: 11px;
+    background:url("../images/spriteArrows.gif") no-repeat -22px top;
+    width: 11px;
 }

@@ -2,15 +2,15 @@ dojo.provide("phpr.Administration.Main");
 
 dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
     constructor:function() {
-		this.module = "Administration";
-		this.loadFunctions(this.module);
+        this.module = "Administration";
+        this.loadFunctions(this.module);
 
-		this.gridWidget = phpr.Administration.Grid;
-		this.formWidget = phpr.Administration.Form;
-		this.treeWidget = phpr.Administration.Tree;
-		
-		dojo.subscribe("Administration.loadSubModule", this, "loadSubModule");
-	},
+        this.gridWidget = phpr.Administration.Grid;
+        this.formWidget = phpr.Administration.Form;
+        this.treeWidget = phpr.Administration.Tree;
+        
+        dojo.subscribe("Administration.loadSubModule", this, "loadSubModule");
+    },
 
     reload:function() {
         phpr.module    = this.module;
@@ -42,11 +42,11 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Administration.template", "mainContent.html"],dojo.byId('centerMainContent'));		
+        this.render(["phpr.Administration.template", "mainContent.html"],dojo.byId('centerMainContent'));        
         this.setSubGlobalModulesNavigation();
         this.form = new this.formWidget(this,0,this.module);
     },
-	  
+      
     setSubGlobalModulesNavigation:function(currentModule) {
         phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
@@ -56,28 +56,28 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.DataStore.requestData({
             url: subModuleUrl,
             processData: dojo.hitch(this,function() {
-                var modules = new Array();				
-				modules.push({"name":"User", "label": phpr.nls.get("User"), "moduleFunction": "reload", "module": "User"});
+                var modules = new Array();                
+                modules.push({"name":"User", "label": phpr.nls.get("User"), "moduleFunction": "reload", "module": "User"});
                 modules.push({"name":"Role", "label": phpr.nls.get("Role"), "moduleFunction": "reload", "module": "Role"});
                 modules.push({"name":"Module", "label": phpr.nls.get("Module"), "moduleFunction": "reload", "module": "Module"});
-				tmp = phpr.DataStore.getData({url: subModuleUrl});
-				for (var i = 0; i < tmp.length; i++) {
+                tmp = phpr.DataStore.getData({url: subModuleUrl});
+                for (var i = 0; i < tmp.length; i++) {
                     modules.push({"name": tmp[i].name, "label": tmp[i].label, "moduleFunction": "loadSubModule", "module": "Administration"});
-				}                		
+                }                        
                 var navigation ='<ul id="nav_main">';
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction;
-					var module         = modules[i].module;
+                    var module         = modules[i].module;
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
                     navigation += self.render(["phpr.Administration.template", "navigation.html"], null, {
                         moduleName :    moduleName,
                         moduleLabel:    moduleLabel,
-						module:         module,
+                        module:         module,
                         liclass:        liclass,
                         moduleFunction: moduleFunction
                     });
@@ -88,9 +88,9 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                 this.customSetSubmoduleNavigation();
             })
         })
-    },	
-	
+    },
+    
     updateCacheData:function() {
         this.form.updateData();
-    }	
+    }
 });

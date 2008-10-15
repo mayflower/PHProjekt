@@ -24,13 +24,13 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
     addModuleTabs:function(data) {
     },
 
-	submitForm:function() {
+    submitForm:function() {
         for(var i = 0; i < this.formsWidget.length; i++) {
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
-		phpr.send({
-			url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonSave/id/' + this.id,
-			content:   this.sendData,
+        phpr.send({
+            url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonSave/id/' + this.id,
+            content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type =='success') {
@@ -39,7 +39,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 }
             })
         });
-	},
+    },
 
     deleteForm: function() {
         phpr.send({
@@ -53,7 +53,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             })
         });
     },
-	
+
     updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
     }

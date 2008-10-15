@@ -22,8 +22,8 @@ dojo.declare("phpr.Adminsitration.Md.Main", phpr.Component, {
         // Do this after complete page load (= window.onload).
         dojo.addOnLoad(dojo.hitch(this, function() {
             // Load the elements
-			//initialize data store for elements:
-			//this.elementsStore = new dojo.data.ItemFileReadStore({url:'display_elements.json'});
+            //initialize data store for elements:
+            //this.elementsStore = new dojo.data.ItemFileReadStore({url:'display_elements.json'});
             this.elements = new phpr.Adminsitration.Md.Elements(this);
         })
         );

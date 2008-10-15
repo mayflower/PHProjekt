@@ -6,7 +6,7 @@ dojo.declare("phpr.Note.Main", phpr.Default.Main, {
         this.loadFunctions(this.module);
 
         this.gridWidget = phpr.Note.Grid;
-		this.formWidget = phpr.Note.Form;
-		this.treeWidget = phpr.Note.Tree;
-	}
+        this.formWidget = phpr.Note.Form;
+        this.treeWidget = phpr.Note.Tree;
+    }
 });

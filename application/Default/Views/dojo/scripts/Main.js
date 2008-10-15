@@ -2,14 +2,14 @@ dojo.provide("phpr.Default.Main");
 
 dojo.declare("phpr.Default.Main", phpr.Component, {
     // summary: class for initialilzing a default module
-    tree: 	          null,
+    tree:             null,
     grid:             null,
     module:           null,
     gridWidget:       null,
     formWidget:       null,
     treeWidget:       null,
     globalModules:    null,
-	_langUrl:         null,
+    _langUrl:         null,
 
     loadFunctions:function(module) {
         // summary:
@@ -17,23 +17,23 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    Add the all the functions for the current module
         //    So is possible use Module.Function
-		dojo.subscribe(module+".load", this, "load");
-		dojo.subscribe(module+".changeProject",this, "loadSubElements");
-		dojo.subscribe(module+".reload", this, "reload");
-		dojo.subscribe(module+".openForm", this, "openForm");
-		dojo.subscribe(module+".showSuggest", this, "showSuggest");
-		dojo.subscribe(module+".hideSuggest", this, "hideSuggest");
-		dojo.subscribe(module+".setSuggest", this, "setSuggest");
-		dojo.subscribe(module+".showSearchResults", this, "showSearchResults");
-		dojo.subscribe(module+".drawTagsBox", this, "drawTagsBox");
-		dojo.subscribe(module+".showTagsResults", this, "showTagsResults");
+        dojo.subscribe(module+".load", this, "load");
+        dojo.subscribe(module+".changeProject",this, "loadSubElements");
+        dojo.subscribe(module+".reload", this, "reload");
+        dojo.subscribe(module+".openForm", this, "openForm");
+        dojo.subscribe(module+".showSuggest", this, "showSuggest");
+        dojo.subscribe(module+".hideSuggest", this, "hideSuggest");
+        dojo.subscribe(module+".setSuggest", this, "setSuggest");
+        dojo.subscribe(module+".showSearchResults", this, "showSearchResults");
+        dojo.subscribe(module+".drawTagsBox", this, "drawTagsBox");
+        dojo.subscribe(module+".showTagsResults", this, "showTagsResults");
         dojo.subscribe(module+".clickResult", this, "clickResult");
-		dojo.subscribe(module+".updateCacheData", this, "updateCacheData");
-		dojo.subscribe(module+".loadResult", this, "loadResult");
-		dojo.subscribe(module+".setLanguage", this, "setLanguage");
-		dojo.subscribe(module+"._isGlobalModule", this, "_isGlobalModule");
+        dojo.subscribe(module+".updateCacheData", this, "updateCacheData");
+        dojo.subscribe(module+".loadResult", this, "loadResult");
+        dojo.subscribe(module+".setLanguage", this, "setLanguage");
+        dojo.subscribe(module+"._isGlobalModule", this, "_isGlobalModule");
     },
-	
+    
     openForm:function(/*int*/id, /*String*/module) {
         //summary: this function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
@@ -94,9 +94,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.setSearchForm();
                 var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
                 this.tree     = new this.treeWidget(this);
-                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);		
-		  })
-        });			
+                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);        
+          })
+        });            
     },
 
     reload:function() {
@@ -114,7 +114,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroySimpleWidget("exportGrid");
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
-		phpr.destroyWidgets("detailsBox");
+        phpr.destroyWidgets("detailsBox");
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         if (this._isGlobalModule(this.module)) {
             this.setSubGlobalModulesNavigation();
@@ -211,9 +211,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // System Global Modules
         if (module == 'Administration' ||
-		    module == 'Setting' ||
-			module == 'User' ||
-			module == 'Role' ||
+            module == 'Setting' ||
+            module == 'User' ||
+            module == 'Role' ||
             module == 'Module') {
             return true;
         } else {
@@ -232,7 +232,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-		phpr.destroyWidgets("buttonRow");
+        phpr.destroyWidgets("buttonRow");
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var self = this;
         var usefirstModule = true;
@@ -335,7 +335,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function is responsible for displaying the Navigation of the current Global Module
         // description:
         //    Delete all the submodules and put the add button
-		phpr.destroyWidgets("buttonRow");
+        phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
         var newEntry = null;
         var params = {
@@ -603,7 +603,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Destroy the navigation
         phpr.destroyWidgets("buttonRow");
         dojo.byId("subModuleNavigation").innerHTML = '';
-				
+                
         // Destroy form view
         phpr.destroyWidgets("submitButton");
         phpr.destroyWidgets("deleteButton");
@@ -658,24 +658,24 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // summary:
         //    This function reload the grid place with the result of a search or a tagt
         // description:
-        //    The server return the found records and the function display it		
+        //    The server return the found records and the function display it        
         this.grid.updateData();
         this.form.updateData();
     },
-	
-	setLanguage:function(language) {
+    
+    setLanguage:function(language) {
         // summary:
         //    Request to the server the languagues strings and change the current lang
         // description:
         //    Request to the server the languagues strings and change the current lang
-		//    Call the reload function then		
-		phpr.language = language;
-		this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
-		phpr.DataStore.addStore({url: this._langUrl});
-		phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
-			phpr.nls    = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
-			this.reload();
+        //    Call the reload function then        
+        phpr.language = language;
+        this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
+        phpr.DataStore.addStore({url: this._langUrl});
+        phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
+            phpr.nls    = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+            this.reload();
             })
         });
-	}
+    }
 });

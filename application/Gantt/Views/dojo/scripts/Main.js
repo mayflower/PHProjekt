@@ -1,20 +1,20 @@
 dojo.provide("phpr.Gantt.Main");
 
 dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
-	gantt: null,
-		
+    gantt: null,
+        
     constructor:function() {
         this.module = 'Gantt';
         this.loadFunctions(this.module);
 
         this.gridWidget = phpr.Gantt.Grid;
-		this.formWidget = phpr.Gantt.Form;
-		this.treeWidget = phpr.Gantt.Tree;
-		
+        this.formWidget = phpr.Gantt.Form;
+        this.treeWidget = phpr.Gantt.Tree;
+        
         dojo.subscribe("Gantt.dialogCallback", this, "dialogCallback");
-		dojo.subscribe("Gantt.toggle", this, "toggle");
-	},
-	
+        dojo.subscribe("Gantt.toggle", this, "toggle");
+    },
+    
     reload:function() {
         phpr.module = this.module;
         phpr.destroyWidgets("bottomContent");
@@ -24,9 +24,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         phpr.destroySimpleWidget("saveChanges");
         phpr.destroySimpleWidget("gridNode");
         phpr.destroyWidgets("detailsBox");
-		phpr.destroyWidgets("ganttChart");
+        phpr.destroyWidgets("ganttChart");
         this.render(["phpr.Gantt.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-			selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline")
+            selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline")
         });
         if (this._isGlobalModule(this.module)) {
             this.setSubGlobalModulesNavigation();
@@ -35,14 +35,14 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         }
         this.hideSuggest();
         this.setSearchForm();
-        this.tree  = new this.treeWidget(this);		
-		
-		this.gantt = new phpr.Project.GanttBase();		
+        this.tree  = new this.treeWidget(this);        
+        
+        this.gantt = new phpr.Project.GanttBase();        
         this.gantt.store = new phpr.ReadData({
             url: phpr.webpath+"index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId
         });
-		this.gantt.store.fetch({onComplete: dojo.hitch(this, 'prepareData')});
-		
+        this.gantt.store.fetch({onComplete: dojo.hitch(this, 'prepareData')});
+        
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
             writePermissions:  true,
             deletePermissions: false,
@@ -53,13 +53,13 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Action buttons for the form
         dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
-	
+    
     prepareData:function(items, request) {
         // summary:
         //    Render all the views
         // description:
         //    Get all the data and render all the views
-		var data = this.gantt.store.getValue(items[0], "data");  
+        var data = this.gantt.store.getValue(items[0], "data");  
 
         this.gantt.projectDataBuffer = data["projects"] || Array();
 
@@ -70,21 +70,21 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.gantt.MAX_DATE = 1000 * data["max"];
                                             
         // Render the projects information
-		dojo.byId('projectList').innerHTML = '';
-		for (var j in this.gantt.projectDataBuffer) {
-			phpr.destroySimpleWidget(this.gantt.projectDataBuffer[j].name);
-			phpr.destroyWidgets(this.gantt.projectDataBuffer[j].name);
-			dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
+        dojo.byId('projectList').innerHTML = '';
+        for (var j in this.gantt.projectDataBuffer) {
+            phpr.destroySimpleWidget(this.gantt.projectDataBuffer[j].name);
+            phpr.destroyWidgets(this.gantt.projectDataBuffer[j].name);
+            dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
                 name:     this.gantt.projectDataBuffer[j].name,
-				level:    this.gantt.projectDataBuffer[j].level,
-				caption:  this.gantt.projectDataBuffer[j].caption,
-				STEPPING: this.gantt.STEPPING - 1,
-				width:    (this.gantt.STEPPING *2) + 4,
-				webpath:  phpr.webpath
+                level:    this.gantt.projectDataBuffer[j].level,
+                caption:  this.gantt.projectDataBuffer[j].caption,
+                STEPPING: this.gantt.STEPPING - 1,
+                width:    (this.gantt.STEPPING *2) + 4,
+                webpath:  phpr.webpath
             });
-		}
-		dojo.parser.parse(dojo.byId('projectList'));
-		
+        }
+        dojo.parser.parse(dojo.byId('projectList'));
+        
         // set timeline
         this.setTimeline();
         // insert 2 date widgets dynamically
@@ -94,21 +94,21 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //this.setToggle();       
         this.setHeight();    
     },
-		
+        
     installCalendars:function() {
         // summary:
         //    Render the calendar widgets
         // description:
-        //    Render the calendar widgets		
+        //    Render the calendar widgets        
         phpr.destroyWidgets("minDate");
         phpr.destroyWidgets("maxDate");
         // the project begin date widget (calendar view)
         this.gantt.DateMin = new dijit.form.DateTextBox({name:          'minDate',
                                                          id:            'minDate',
                                                          constraints:   {datePattern:'yyyy-MM-dd', strict:true},
-														 promptMessage: "yyyy-MM-dd",
+                                                         promptMessage: "yyyy-MM-dd",
                                                          onChange:      dojo.hitch(this,function() { this.gantt.setRangeSelect(arguments[0], 'min'); }),                                                         
-														 style:         'width:150px;',
+                                                         style:         'width:150px;',
                                                          required:      true},
                                                          dojo.byId('TgtMin'));
         // the project end date widget (calendar view)
@@ -116,12 +116,12 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                                                          id:            'maxDate',
                                                          constraints:   {datePattern:'yyyy-MM-dd', strict:true},
                                                          promptMessage: "yyyy-MM-dd",
-														 onChange:      dojo.hitch(this,function() { this.gantt.setRangeSelect(arguments[0], 'max'); }),
+                                                         onChange:      dojo.hitch(this,function() { this.gantt.setRangeSelect(arguments[0], 'max'); }),
                                                          style:         'width:150px;',
                                                          required:      true},
                                                          dojo.byId('TgtMax'));
     },
-	
+    
 
     installProjects:function() {
         // summary:
@@ -160,10 +160,10 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // summary:
         //    This function assigns the function to toggle the lines.
         // description:
-        //    The assignment is not flexible due to the 'ProjectChart' instance.	       
+        //    The assignment is not flexible due to the 'ProjectChart' instance.           
         this.gantt.toggleElement = new Object(); 
         var i    = 0;
-		var self = this;
+        var self = this;
         dojo.query('.project_list .sub_project').forEach(function(el){
             var par = Number(el.id.split(':')[1].split('|')[0]);
             var id  = Number(el.id.split(':')[2]);           
@@ -177,8 +177,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             if ((value - 1) >= 0) {             
                 var element = dojo.query(".project_list .sub_project .expander")[(value - 1)];
                 if (element.innerHTML.indexOf('[-]') == -1) {
-					element.innerHTML = "[-] " + element.innerHTML;
-				}
+                    element.innerHTML = "[-] " + element.innerHTML;
+                }
             }
         }
     },
@@ -187,7 +187,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // summary:
         //    This function checks whether the element is expanded or not to replace the +/-
         // description:
-        //    This function checks whether the element is expanded or not to replace the +/-		   
+        //    This function checks whether the element is expanded or not to replace the +/-           
         if (element.innerHTML.indexOf('+') > 0 || pDirect == false) {
             element.innerHTML = element.innerHTML.replace("[+]", "[-]");
             return true;
@@ -202,7 +202,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // summary:
         //    This function is triggerd by the a-element to toggle the childs.
         // description:
-        //    This function is triggerd by the a-element to toggle the childs.		         
+        //    This function is triggerd by the a-element to toggle the childs.                 
         var myEle     = dojo.query('.project_list .sub_project .expander')[(pId-1)];      
         var myHandler = this.switchController(myEle); 
         
@@ -213,14 +213,14 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var myMax =  Number(pId)+Number(childs);
             
             if (myHandler == true) {
-				var myQu = myPar >= pId;
-			}          
+                var myQu = myPar >= pId;
+            }          
             if (myHandler == false) {
-				var myQu = myPar >= pId && myPar <= myMax;
-			}
+                var myQu = myPar >= pId && myPar <= myMax;
+            }
             
             if (myQu) {
-				el.style.display = (myHandler == true) ? 'block' : 'none';
+                el.style.display = (myHandler == true) ? 'block' : 'none';
             }
         });
         
@@ -232,94 +232,94 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    This function creates the timeline on top of the gantt
         // description:
         //    The months are saved in an array and should be loaded in the selected language.
-        //    The time spread is dynamically created by the given time scope.		      
+        //    The time spread is dynamically created by the given time scope.              
         var element   =  dojo.byId('gantt_timeline');
         var startDate = new Date(this.gantt.MIN_DATE);
         var endDate   = new Date(this.gantt.MAX_DATE);
         var months    = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec'];        
         
-		var html = '<ul class="sub_project">';
-		html += '<li style="border-left:none; border-right:none; width:25%; float: left;">&nbsp;</li>';
-		html += '<li style="width:12px; float: left;">&nbsp;</li>';
-		html += '<li class="slider" style="margin-top:0px; left:0px;">';
-		html += '<ul style="margin-top:0px; width:100%; left:0px;">';
-		html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
-		
+        var html = '<ul class="sub_project">';
+        html += '<li style="border-left:none; border-right:none; width:25%; float: left;">&nbsp;</li>';
+        html += '<li style="width:12px; float: left;">&nbsp;</li>';
+        html += '<li class="slider" style="margin-top:0px; left:0px;">';
+        html += '<ul style="margin-top:0px; width:100%; left:0px;">';
+        html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
+        
         for (var i = 0 ; true ; i++) {
-			if (i > 0) {
-				startDate = dojo.date.add(startDate, 'month', 1);
-			}            
+            if (i > 0) {
+                startDate = dojo.date.add(startDate, 'month', 1);
+            }            
             var check = dojo.date.compare(startDate, endDate);
             if (check == 1) {
                 break;
             }
-			var year   = startDate.getFullYear();     
+            var year   = startDate.getFullYear();     
             var width  = (dojo.date.getDaysInMonth(startDate) * 2);
 
             html += '<li style="width:'+width+'px; border-top:1px solid #7d7d7d; float:left;">' + phpr.nls.get(months[i]) + " " + year + "</li>";
-			html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d;margin-left: -2px;"></li>';
+            html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d;margin-left: -2px;"></li>';
         }
-		html += '</ul></li></ul>';
-		element.innerHTML = html;
+        html += '</ul></li></ul>';
+        element.innerHTML = html;
     },
-		
+        
     dialogCallback:function(values) {
         // summary:
         //    The callback function is executed by the dialog box continue the onChange event
         // description:
-        //    The callback function is executed by the dialog box continue the onChange event    		
+        //    The callback function is executed by the dialog box continue the onChange event            
         this.gantt.dialogCallback(values);
     },
-	
-	submitForm:function() {
+    
+    submitForm:function() {
         // summary:
         //    Collect all the project values and save it
         // description:
-        //    Collect all the project values and save it		    
+        //    Collect all the project values and save it            
         var sendData   = new Array();
-		var projects   = new Array();
+        var projects   = new Array();
         var listIndex  = -1;
         var listLength = this.gantt.projectDataBuffer.length;
         var ids        = new Array();
         while(++listIndex < listLength) {
             var name  = this.gantt.projectDataBuffer[listIndex][0];
-            var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));						
+            var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));                        
             var id    = name.split(':')[2];
             projects[listIndex] = id + "," + this.gantt.convertIndex2DateString(value[0]) + "," + this.gantt.convertIndex2DateString(value[1]);
-			ids.push(id);
+            ids.push(id);
         }       
-		sendData['projects[]'] = projects;
+        sendData['projects[]'] = projects;
         phpr.send({
             url:       phpr.webpath + 'index.php/Gantt/index/jsonSave/',
             content:   sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-					this.updateCacheData(ids);
-					this.reload();
+                    this.updateCacheData(ids);
+                    this.reload();
                 }
             })
         });    
     },
-	
-	updateCacheData:function(ids) {
+    
+    updateCacheData:function(ids) {
         // summary:
         //    Update all the caches
         // description:
-		//    Update list, parent and from cached for the changed projects
-		for (var i in ids) {
-			// List
-			var listUrl = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + ids[i];
-			phpr.DataStore.deleteData({url: listUrl});
-			
-			// Delete parent cache
-			var parentId = this.tree.getParentId(ids[i]);
-			var listUrl  = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + parentId;
-			phpr.DataStore.deleteData({url: listUrl});
-			
-			// Form
-			var formUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + ids[i];
-			phpr.DataStore.deleteData({url: formUrl});
-		}		
+        //    Update list, parent and from cached for the changed projects
+        for (var i in ids) {
+            // List
+            var listUrl = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + ids[i];
+            phpr.DataStore.deleteData({url: listUrl});
+            
+            // Delete parent cache
+            var parentId = this.tree.getParentId(ids[i]);
+            var listUrl  = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + parentId;
+            phpr.DataStore.deleteData({url: listUrl});
+            
+            // Form
+            var formUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + ids[i];
+            phpr.DataStore.deleteData({url: formUrl});
+        }
     }
 });

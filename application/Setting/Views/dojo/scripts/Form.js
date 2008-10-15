@@ -5,10 +5,10 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
     setUrl:function() {
         this._url = phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/moduleName/" + phpr.submodule;
     },
-	
+    
     initData:function() {
     },
-	
+    
     setPermissions:function (data) {
         this._writePermissions  = true;
         this._deletePermissions = false;
@@ -24,10 +24,10 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
     addModuleTabs:function(data) {
     },
     
-	useCache:function() {
+    useCache:function() {
         return false;
-	},
-	    
+    },
+        
     submitForm: function() {
         // summary:
         //    This function is responsible for submitting the formdata
@@ -52,5 +52,5 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
                 }
             })
         });
-    }	
+    }
 });

@@ -25,20 +25,20 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Setting_IndexController extends IndexController
-{		
-	/**
-	 * Return all the modules that contain settings
-	 *
-	 * @return void
-	 */
+{        
+    /**
+     * Return all the modules that contain settings
+     *
+     * @return void
+     */
     public function jsonGetModulesAction()
     {
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $data    = $setting->getModules();
         
         echo Phprojekt_Converter_Json::convert($data);
-    }    	
-    	
+    }        
+        
     /**
      * Return the setting fields for one module
      *
@@ -81,8 +81,8 @@ class Setting_IndexController extends IndexController
             $message = $translate->translate($message);
             $type = "error";
         } else {
-        	$message = $translate->translate(self::EDIT_TRUE_TEXT);
-        	$setting->setSettings($this->getRequest()->getParams());
+            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $setting->setSettings($this->getRequest()->getParams());
             $type = "success";
         }
 

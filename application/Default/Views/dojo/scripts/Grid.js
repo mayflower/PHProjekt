@@ -65,7 +65,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    Draw the tags
         // Get the module tags
-		this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
             this.publish("drawTagsBox",[phpr.DataStore.getData({url: this._tagUrl})]);
@@ -166,23 +166,23 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
                         type:     dojox.grid.cells.Input,
-						styles:   "",
+                        styles:   "",
                         editable: meta[i]['readOnly'] ? false : true
                     });
                     break;
             }
         }
-		this.customGridLayout(meta);
+        this.customGridLayout(meta);
     },
 
 
-    customGridLayout:function(meta) {	
+    customGridLayout:function(meta) {    
         // summary:
         //    Custom functions for the layout
         // description:
         //    Custom functions for the layout
-	},
-	
+    },
+    
     setClickEdit:function() {
         // summary:
         //    Set the edit type
@@ -389,7 +389,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 if (response.type =='success') {
                     this._newRowValues = {};
                     this._oldRowValues = {};
-					this.publish("updateCacheData");
+                    this.publish("updateCacheData");
                     this.publish("reload");
                 }
             }),
@@ -414,6 +414,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // description:
         //    Delete the cache for this grid
         phpr.DataStore.deleteData({url: this.url});
-		phpr.DataStore.deleteData({url: this._tagUrl});
+        phpr.DataStore.deleteData({url: this._tagUrl});
     }
 });

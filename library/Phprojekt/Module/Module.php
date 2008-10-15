@@ -124,7 +124,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
             // Add the new module to the root project
             if ($saveNewModule) {
-            	$project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
+                $project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
                 $project->addModule($this->id);
             }
             return $this->id;

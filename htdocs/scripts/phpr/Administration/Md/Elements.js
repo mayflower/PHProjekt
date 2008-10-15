@@ -9,9 +9,9 @@ dojo.declare("phpr.Adminsitration.Md.Elements", phpr.Component, {
     _data: null,
     constructor:function(main) {
         this.main = main;
-		this._data = phpr.getData('display_elements.json',dojo.hitch(this, 'receiveData'));
-		this.metadataStore = new dojo.data.ItemFileReadStore({url: 'geography.json'});
-		dojo.connect(dojo.byId('edit_pane'), "onclick", dojo.hitch(this, "displayValues"));
+        this._data = phpr.getData('display_elements.json',dojo.hitch(this, 'receiveData'));
+        this.metadataStore = new dojo.data.ItemFileReadStore({url: 'geography.json'});
+        dojo.connect(dojo.byId('edit_pane'), "onclick", dojo.hitch(this, "displayValues"));
     },
     showTextbox: function (elName)
     {
@@ -47,12 +47,12 @@ dojo.declare("phpr.Adminsitration.Md.Elements", phpr.Component, {
                 dojo.forEach(buttons,
                 function(elements) {
                     var elementId = elements.getAttribute("id");
-					var uID = dojo.dnd.getUniqueId();
-					var current = phpr.getCurrent(self.meta,'id',elementId);
-					var ident =current.id;
-					current.id = uID;
-					self.render(["phpr.Adminsitration.Md.template", current.type+".html"],mynodes[0],current);
-					dijit.byId(uID).editorId=ident;
+                    var uID = dojo.dnd.getUniqueId();
+                    var current = phpr.getCurrent(self.meta,'id',elementId);
+                    var ident =current.id;
+                    current.id = uID;
+                    self.render(["phpr.Adminsitration.Md.template", current.type+".html"],mynodes[0],current);
+                    dijit.byId(uID).editorId=ident;
                     dojo.dnd.manager().nodes = mynodes;
                 });
             }
@@ -61,12 +61,12 @@ dojo.declare("phpr.Adminsitration.Md.Elements", phpr.Component, {
     },
     displayValues: function(event)
     {
-		var parentEvent = event.target.id;
+        var parentEvent = event.target.id;
         var output = '';
         var widget = dijit.getEnclosingWidget(dojo.byId(event.target.id));
-		console.debug('widget id'+widget.editorId);
-     	this.metadataStore.fetchItemByIdentity({identity:widget.editorId,onItem:this.metadaRender})
-		console.debug('der editortype:'+widget.editorId);
+        console.debug('widget id'+widget.editorId);
+         this.metadataStore.fetchItemByIdentity({identity:widget.editorId,onItem:this.metadaRender})
+        console.debug('der editortype:'+widget.editorId);
         var html = this.render(["phpr.Adminsitration.Md.template", "label.html"],null,{label:'Wert'});
         dojo.byId('myvalues').innerHTML =html;
         //dojo.connect(dojo.byId(newId2), "onchange",dojo.hitch(this, "updateValues"));
@@ -89,8 +89,8 @@ dojo.declare("phpr.Adminsitration.Md.Elements", phpr.Component, {
             }
             */
     },
-	metadaRender: function(item,request) {
+    metadaRender: function(item,request) {
       console.debug('Pepper is in aisle ' + item.getAttribute('label'));
     }
-	
+    
 });

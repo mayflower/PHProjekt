@@ -31,9 +31,9 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         } else {
             this.tree = dijit.byId(this._idName);
         }
-		this.initTree(1);
-		this.selecteCurrent(phpr.currentProjectId);
-		this.closeTree(phpr.currentProjectId);    
+        this.initTree(1);
+        this.selecteCurrent(phpr.currentProjectId);
+        this.closeTree(phpr.currentProjectId);    
     },
 
     getStore:function() {
@@ -52,7 +52,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             id:       this._idName,
             model:    this._model,
             showRoot: false,
-			persist:  false
+            persist:  false
         }, document.createElement('div'));
     },
 
@@ -91,13 +91,13 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         }
         this.publish("changeProject", [item]);
     },
-	
+    
     selecteCurrent:function(id) {
         // summary:
         //    Select the current projects and all the parents
         // description:
-        //    Select the current projects and all the parents		
-		if (id > 1) {
+        //    Select the current projects and all the parents        
+        if (id > 1) {
             var _tree = this.tree;
             var _this = this;
             this.tree.model.store.fetchItemByIdentity({identity: id,
@@ -110,75 +110,75 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                         }
                     }
                     var node = _tree._itemNodeMap[item.id];
-					if (node) {
-						_tree.focusNode(node);
-						node.labelNode.style.fontWeight = "bold";
-					}
+                    if (node) {
+                        _tree.focusNode(node);
+                        node.labelNode.style.fontWeight = "bold";
+                    }
             }});
-		}
+        }
     },
-	
-	initTree:function(id) {
+    
+    initTree:function(id) {
         // summary:
         //    Add the path of every project into an array
         // description:
-        //    Add the path of every project into an array		
-		var _tree = this.tree;
-		var _this = this;
-		var _paths = this._paths;
+        //    Add the path of every project into an array        
+        var _tree = this.tree;
+        var _this = this;
+        var _paths = this._paths;
         this.tree.model.store.fetch({
             query: {parent: id.toString()},
             onItem: function(item){
-                _paths[item.id] = item.path;				
-				_this.initTree(item.id);
-				node = _tree._itemNodeMap[item.id];
+                _paths[item.id] = item.path;                
+                _this.initTree(item.id);
+                node = _tree._itemNodeMap[item.id];
                 if (node) {
-					node.labelNode.style.fontWeight = "normal";
-				}
+                    node.labelNode.style.fontWeight = "normal";
+                }
             }
-        });		
-	},
-	
-	closeTree:function(id) {
+        });        
+    },
+    
+    closeTree:function(id) {
         // summary:
         //    Close all the projects exept the current branch
         // description:
-        //    Close all the projects exept the current branch       		
-		if (id > 1) {
-			var _tree = this.tree;
-			var _this = this;
-			if (this._paths[id]) {
-				var usedPath = this._paths[id].toString().split("\/");
-				for (i in this._paths) {
-					if (id != i) {
-						path = this._paths[i].toString().split("\/");
-						for (j in path) {
-							if (path[j] != usedPath[j]) {
-								node = _tree._itemNodeMap[path[j]];
-								if (node) {
-									_tree._collapseNode(node);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+        //    Close all the projects exept the current branch               
+        if (id > 1) {
+            var _tree = this.tree;
+            var _this = this;
+            if (this._paths[id]) {
+                var usedPath = this._paths[id].toString().split("\/");
+                for (i in this._paths) {
+                    if (id != i) {
+                        path = this._paths[i].toString().split("\/");
+                        for (j in path) {
+                            if (path[j] != usedPath[j]) {
+                                node = _tree._itemNodeMap[path[j]];
+                                if (node) {
+                                    _tree._collapseNode(node);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     },
-	
-	getParentId: function(id) {
+    
+    getParentId: function(id) {
         // summary:
         //    Return the parent id of one project
         // description:
         //    Return the parent id of one project
-		if (this._paths[id]) {
-			var paths = this._paths[id].toString().split("\/").reverse();
-			for (i in paths) {
-				if (paths[i] > 0) {
-					return paths[i];
-				}
-			}
-		}
-		return 1;
-	}  
+        if (this._paths[id]) {
+            var paths = this._paths[id].toString().split("\/").reverse();
+            for (i in paths) {
+                if (paths[i] > 0) {
+                    return paths[i];
+                }
+            }
+        }
+        return 1;
+    }  
 });

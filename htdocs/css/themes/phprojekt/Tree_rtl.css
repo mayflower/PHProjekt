@@ -7,7 +7,7 @@
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeIsRoot {
-	margin-left: auto;
+    margin-left: auto;
     margin-right: 0;
     background-image: none;
 }
@@ -22,13 +22,13 @@
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeExpandoOpened {
-	background: url('images/spriteTree_rtl.gif') no-repeat -18px top;
+    background: url('images/spriteTree_rtl.gif') no-repeat -18px top;
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeExpandoClosed {
-	background-image: url('images/spriteTree_rtl.gif');
+    background-image: url('images/spriteTree_rtl.gif');
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeExpandoLeaf {
-	background: url('images/spriteTree_rtl.gif') no-repeat -36px top;
+    background: url('images/spriteTree_rtl.gif') no-repeat -36px top;
 }
