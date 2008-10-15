@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: phprojekt-mvc
 -- ------------------------------------------------------
--- Server version	5.0.38-Ubuntu_0ubuntu1-log
+-- Server version    5.0.38-Ubuntu_0ubuntu1-log
 
 BEGIN;
 

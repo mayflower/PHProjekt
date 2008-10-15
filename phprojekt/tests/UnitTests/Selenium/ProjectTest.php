@@ -169,7 +169,7 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->type("title", "Test Project 2");
 
         $this->type("startDate", "2007-10-10");
-	$this->type("endDate", "2007-12-31");
+        $this->type("endDate", "2007-12-31");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
         try {
@@ -206,7 +206,7 @@ class Selenium_ProjectTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->type("notes", "Notes for new entry");
         $this->type("priority", "1");
         $this->type("startDate", "2007-10-10");
-	$this->type("endDate", "2007-12-31");
+        $this->type("endDate", "2007-12-31");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
         try {
