@@ -30,7 +30,7 @@
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
     public $hasMany = array('modulePermissions' => array('classname' => 'Project_Models_ProjectModulePermissions'));
-    	
+        
     /**
      * Validate function for the projectId field
      *
@@ -116,7 +116,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $modulePermissions = $this->modulePermissions->create();
         $modulePermissions->moduleId = $moduleId;
         $modulePermissions->projectId = $this->id;
-        $modulePermissions->save();    	
+        $modulePermissions->save();        
     }
         
     /**
@@ -128,19 +128,19 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function delete()
     {
-    	if ($this->id > 1) {
-        	$relations = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
-    	
-        	// Delete related items
+        if ($this->id > 1) {
+            $relations = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+        
+            // Delete related items
             $modules = $relations->getProjectModulePermissionsById($this->id);
             foreach ($modules['data'] as $moduleData) {
-            	if ($moduleData['inProject']) {
-            	   $module = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
-        	      $records = $module->fetchAll('projectId = ' . $this->id);
-        	       foreach ($records as $record) {
-        	   	       $record->delete();
-            	   }
-            	}
+                if ($moduleData['inProject']) {
+                   $module = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
+                  $records = $module->fetchAll('projectId = ' . $this->id);
+                   foreach ($records as $record) {
+                          $record->delete();
+                   }
+                }
             }
         
             // Delete module-project relaton
@@ -153,7 +153,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $relations = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
             $records = $relations->fetchAll('projectId = ' . $this->id);
             foreach ($records as $record) {
-            	$record->delete();
+                $record->delete();
             }        
 
             // Delete the project itself

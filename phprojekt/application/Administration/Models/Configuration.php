@@ -77,7 +77,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 }
             }
         }
-        return $results;    	
+        return $results;
     }
     
     /**
@@ -100,9 +100,9 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
      */
     public function getModel()
     {
-    	if (null === $this->_object) {
+        if (null === $this->_object) {
             $this->_object = Phprojekt_Loader::getModel($this->_module, sprintf('%sConfiguration', $this->_module));
-    	}    	
+        }
         return $this->_object;
     }
     
@@ -142,15 +142,15 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         $data['id'] = 0;
         foreach ($metadata as $meta) {            
             $data[$meta['key']] = '';
-            foreach ($record as $config) {       	
+            foreach ($record as $config) {
                 if ($config->keyValue == $meta['key']) {
-                	$getter = 'get'.ucfirst($config->keyValue);
+                    $getter = 'get'.ucfirst($config->keyValue);
                     if (in_array($getter, $functions)) {
                         $data[$meta['key']] = call_user_method($getter, $this->getModel(), $config->value);
                     } else {
-                    	$data[$meta['key']] = $config->value;
+                        $data[$meta['key']] = $config->value;
                     }
-                	break;
+                    break;
                 }
             }
         }
@@ -167,11 +167,11 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
      */
     public function validateConfigurations($params)
     {
-    	$message = null;
-    	if (in_array('validateConfigurations', get_class_methods($this->getModel()))) {
-    		$message = call_user_method('validateConfigurations', $this->getModel(), $params);
-    	}
-    	return $message;
+        $message = null;
+        if (in_array('validateConfigurations', get_class_methods($this->getModel()))) {
+            $message = call_user_method('validateConfigurations', $this->getModel(), $params);
+        }
+        return $message;
     }  
        
     /**
@@ -182,13 +182,13 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
      * @return void
      */
     public function setConfigurations($params)
-    {   	
+    {       
         if (in_array('setConfigurations', get_class_methods($this->getModel()))) {
             call_user_method('setConfigurations', $this->getModel(), $params);
         } else {
-        	$fields = $this->getModel()->getFieldDefinition();
+            $fields = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
-            	foreach ($params as $key => $value) {
+                foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
                         $record = $this->fetchAll("keyValue = ".$this->_db->quote($key) .
                                                   " AND moduleId = ".$this->_db->quote($this->_moduleId));                        
@@ -204,8 +204,8 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                             $clone->save();
                         }
                         break;
-            		}
-            	}
+                    }
+                }
             }
         }
     }    

@@ -69,7 +69,7 @@ class JsController extends IndexController
                 }
                 $this->_modules[] = $file;
                 if ($file != 'Core') {
-                	echo 'dojo.registerModulePath("phpr.'.$file.'", "../../../application/'.$file.'/Views/dojo/scripts");';
+                    echo 'dojo.registerModulePath("phpr.'.$file.'","../../../application/'.$file.'/Views/dojo/scripts");';
                     echo $this->_getModuleScripts($scripts, $file);
                 } else {
                     echo $this->_getCoreModuleScripts($scripts);
@@ -107,24 +107,24 @@ class JsController extends IndexController
 
     public function jsonGetTemplateAction()
     {
-    	$path = $this->getRequest()->getParam('path', null);
-    	$name = $this->getRequest()->getParam('name', null);
-    	
-    	$path = split("\.", $path);
+        $path = $this->getRequest()->getParam('path', null);
+        $name = $this->getRequest()->getParam('name', null);
+        
+        $path = split("\.", $path);
         $module = $path[1];
         
         $extendPath = '';
         foreach ($path as $tmp => $folder) {
-        	if ($tmp > 1) {
-        		$extendPath .= $path[$tmp].'/';
-        	}
+            if ($tmp > 1) {
+                $extendPath .= $path[$tmp].'/';
+            }
         }
         $extendPath .= $name;
         
         $template = file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/'.$extendPath);
         
-        $template = ereg_replace("\n","",$template);
-        $template = ereg_replace("\r","",$template);
+        $template = ereg_replace("\n", "",$template);
+        $template = ereg_replace("\r", "",$template);
         $template = addslashes($template);
         echo '"'.$template.'"';
     }
@@ -188,7 +188,7 @@ class JsController extends IndexController
      */
     private function _getCoreModuleScripts($scripts)
     {
-    	$output = '';
+        $output = '';
         foreach ($scripts as $script) {
             if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.' && ($script != 'nls')) {
                 $coreScripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
