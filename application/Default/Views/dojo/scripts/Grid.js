@@ -160,6 +160,18 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
+                case'upload':
+                    this.gridLayout.push({
+                        width:       porcent,
+                        name:        meta[i]["label"],
+                        field:       meta[i]["key"],
+                        styles:      "text-align:center;",
+                        type:        dojox.grid.cells._Widget,
+                        formatter:   phpr.grid.formatUpload,
+                        editable:    meta[i]['readOnly'] ? false : true
+                    });
+                    break;
+					
                 default:
                     this.gridLayout.push({
                         width:    porcent,

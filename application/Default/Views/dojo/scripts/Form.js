@@ -283,21 +283,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                                         itemdisabled);
                     break;
                 case 'upload':
-                    iFramePath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/';
-                    formPath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadFile/';
-                    downloadlink = '';
-                    downloadtext = '';
-                    if (itemvalue.indexOf('|') > 0) {
-                        downloadlink = phpr.webpath + 'index.php/' + phpr.module + '/index/downloadFile/id/' + this.id + '/field/' + itemid;
-                        downloadtext = itemvalue.substring(itemvalue.indexOf('|') + 1, itemvalue.length);
-                        md5mane = itemvalue.substring(0, itemvalue.indexOf('|'));
-                    } else {
-                        md5name = itemvalue;
-                    }
-                    
+				    iFramePath   = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
                     this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                        itemdisabled, iFramePath, formPath, downloadlink,
-                                                                        downloadtext);
+                                                                        itemdisabled, iFramePath);
                     break;
                 case 'textfield':
                 default:

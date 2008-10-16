@@ -43,13 +43,16 @@ class Gantt_IndexController extends IndexController
         $min = mktime(0, 0, 0, 12, 31, 2030);
         $max = mktime(0, 0, 0,  1,  1, 1970);  
         foreach ($tree as $node) {
-            if ($node->id > 1) {
+            if ($node->id != self::INVISIBLE_ROOT) {
                 $key    = $node->id;
                 $parent = ($node->getParentNode()) ? $node->getParentNode()->id : 0;
+                
                 list($startYear, $startMonth, $startDay) = split("-", $node->startDate);
-                list($endYear, $endMonth, $endDay) = split("-", $node->endDate);
+                list($endYear, $endMonth, $endDay)       = split("-", $node->endDate);
+                
                 $start  = mktime(0, 0, 0, $startMonth, $startDay, $startYear);
-                $end    = mktime(0, 0, 0, $endMonth,   $endDay,   $endYear); 
+                $end    = mktime(0, 0, 0, $endMonth,   $endDay,   $endYear);
+                 
                 if ($start < $min) {
                     $min = $start;
                 }

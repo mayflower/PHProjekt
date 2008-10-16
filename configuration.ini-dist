@@ -17,6 +17,9 @@ log.debug.filename   = C:\Programme\Zend\Apache2\htdocs\phprojekt6\logs\debug.lo
 log.crit.filename    = C:\Programme\Zend\Apache2\htdocs\phprojekt6\logs\crit.log
 itemsPerPage         = 3;
 
+; Upload Files
+uploadpath           = " C:\Programme\Zend\Apache2\htdocs\phprojekt6\tmp\";
+
 [testing-mysql]
 
 ; Language configuration

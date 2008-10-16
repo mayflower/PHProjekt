@@ -40,6 +40,7 @@ class IndexController extends Zend_Controller_Action
     const DELETE_TRUE_TEXT        = "The Item was deleted correctly";
     const NOT_FOUND               = "The Item was not found";
     const ID_REQUIRED_TEXT        = "ID parameter required";
+    const INVISIBLE_ROOT          = 1;
 
     /**
      * Init function
@@ -182,10 +183,10 @@ class IndexController extends Zend_Controller_Action
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
-        $return    = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => $model->id);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -217,9 +218,9 @@ class IndexController extends Zend_Controller_Action
         }
 
         $return = array('type'    => 'success',
-        'message' => $message,
-        'code'    => 0,
-        'id'      => implode(',', $showId));
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => implode(',', $showId));
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -254,10 +255,10 @@ class IndexController extends Zend_Controller_Action
             } else {
                 $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
-            $return  = array('type'    => 'success',
-            'message' => $message,
-            'code'    => 0,
-            'id'      => $id);
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $id);
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
@@ -384,10 +385,29 @@ class IndexController extends Zend_Controller_Action
      * @return void
      */
     public function uploadFormAction()
-    {
+    {                    
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
-        $this->view->webpath = Zend_Registry::get('config')->webpath;
+        
+        $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $value  = $this->getRequest()->getParam('value', null);
+        $itemId = (int) $this->getRequest()->getParam('id', null);
+        $field  = $this->getRequest()->getParam('field', null);
+        
+        $this->view->webpath      = Zend_Registry::get('config')->webpath;        
+        $this->view->formPath     = $link . '/index/uploadFile/';
+        $this->view->downloadLink = '';
+        $this->view->fileName     = null;
+        $this->view->itemId       = $itemId;
+        $this->view->field        = $field;
+        $this->view->value        = $value;
+        $this->view->upload       = false;
+        
+        $fileName = strstr($value, '|');
+        if (!empty($fileName)) {
+            $this->view->downloadLink = $link . '/index/downloadFile/file/' . $value;
+            $this->view->fileName     = substr($fileName, 1);
+        }
         $this->render('upload');
     }
 
@@ -398,20 +418,42 @@ class IndexController extends Zend_Controller_Action
      */
     public function uploadFileAction()
     {
-        $uploadNamespace = new Zend_Session_Namespace('PHProjekt_Upload');
+        $field    = $this->getRequest()->getParam('field', null);
+        $value    = null;
+        $fileName = null;
 
-        if (is_array($_FILES) && !empty($_FILES)) {
-            foreach ($_FILES as $oneFileKey => $oneFile) {
-                if (isset($uploadNamespace->$oneFileKey)) {
-                    move_uploaded_file($oneFile['tmp_name'], Zend_Registry::get('config')->uploadpath . $oneFileKey);
-                    $uploadNamespace->$oneFileKey = $oneFile['name'];
-                }
-            }
+        // Fix name for save it as md5
+        if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
+            $md5mane  = md5(uniqid(rand(),1));
+            $value    = $md5mane . '|' . $_FILES['uploadedFile']['name'];
+            $fileName = $_FILES['uploadedFile']['name'];
+            $_FILES['uploadedFile']['name'] = $md5mane;
         }
+        
+        $adapter = new Zend_File_Transfer_Adapter_Http();
+        $adapter->setDestination(Zend_Registry::get('config')->uploadpath);        
+        
+        $adapter->receive();
+            
         $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-        $this->view->webpath = Zend_Registry::get('config')->webpath;
-        $this->render('uploaded');
+        $this->getResponse()->clearBody();        
+
+        $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $itemId = (int) $this->getRequest()->getParam('itemId', null);
+        $field  = $this->getRequest()->getParam('field', null);
+        
+        $this->view->webpath      = Zend_Registry::get('config')->webpath;  
+        $this->view->downloadLink = '';      
+        $this->view->formPath     = $link . '/index/uploadFile/';
+        $this->view->itemId       = $itemId;
+        $this->view->field        = $field;
+        $this->view->upload       = true;
+        if (!empty($fileName)) {
+            $this->view->downloadLink = $link . '/index/downloadFile/file/' . $value;
+            $this->view->fileName     = $fileName;
+            $this->view->value        = $value;
+        }
+        $this->render('upload');
     }
 
     /**
@@ -421,14 +463,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function downloadFileAction()
     {
-        $id    = (int) $this->getRequest()->getParam('id', null);
-        $fieldName = (string) $this->getRequest()->getParam('field', null);
+        $file = (string) $this->getRequest()->getParam('file', null);
 
-        $model   = $this->getModelObject()->find($id);
-        if (!empty($model->$fieldName)) {
-
-            list($md5Name, $fileName) = explode("|", $model->$fieldName);
-
+        $fileName = strstr($file, '|');
+        if (!empty($fileName)) {
+            list($md5Name, $fileName) = explode("|", $file);
             $md5Name = Zend_Registry::get('config')->uploadpath . $md5Name;
             if (file_exists($md5Name)) {
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");

@@ -11,26 +11,33 @@
         @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit_rtl.css";
     </style>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"
-     djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
-    <script type="text/javascript">
-        dojo.require("dojo.parser");
-        dojo.require("dijit.form.Form");
-        dojo.require("dijit.form.Button");
-        dojo.require("dijit.form.TextBox");
-        dojo.require("dijit.layout.BorderContainer");
-        dojo.require("dijit.layout.ContentPane");
-        function init() {
-            dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
-                if (e.keyCode == dojo.keys.ENTER) {
-                    dojo.byId("loginForm").submit();
-                } else {
-                    return true;
-                }
-            });
-        }
-        dojo.addOnLoad(init);
+     djConfig="isDebug: false, parseOnLoad: true, useCommentedJson: true"></script>
+     <script type="text/javascript">
+        function updateInput() {        
+            var par     = window.parent.document;
+            var input   = par.getElementById("<?php echo $this->field; ?>");
+            input.value = "<?php echo $this->value; ?>";
+        } 
     </script>
 </head>
 <body class="phprojekt">
+    <?php
+    if (null !== $this->fileName) {
+        echo '<div style="display:inline;"><a href="'. $this->downloadLink .'" target=_blank>'. $this->fileName . '</a></div>&nbsp;';
+    }   
+    ?>
+    <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
+        <div style="display:inline;">
+            <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
+            <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
+            <input type="file" name="uploadedFile"  id="uploadedFile" onChange="dojo.byId('upload').submit();" />
+        </div>
+    </form>
+    <?php
+    if ($this->upload) {        
+        echo '<script type="text/javascript">updateInput();</script>';
+    }    
+    ?>
 </body>
 </html>
