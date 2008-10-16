@@ -4,18 +4,6 @@
     </td>
     <td>
       <input type="hidden" dojoType="dijit.form.TextBox" name="{{id}}" id="{{id}}" value="{{value}}" />
-      <script>
-      function {{id}}_loadFrame(f) {
-        if ({{id}}_iframe.document.getElementById("noProcess") == null) {
-            {{id}}_iframe.document.body.innerHTML += '
-            <form name="upload" method="post" id="upload" action="{{formPath}}" enctype="multipart/form-data">
-              <input type="file" class="dijittTextBox" dojoType="dijit.form.TextBox" name="{{md5name}}" id="{{md5name}}" onChange="document.forms[0].submit()" />
-              <a href="{{downloadlink}}" alt="{{downloadtext}}">{{downloadtext}}</a>
-            </form>';  
-        }
-          
-      }
-      </script>
-      <iframe name="{{id}}_iframe" id="{{id}}_iframe" src="{{iFramePath}}" height="25px" width="100%" onLoad="{{id}}_loadFrame(this);"></iframe>
+      <iframe src="{{iFramePath}}" height="25px" width="100%"></iframe>
     </td>
 </tr>

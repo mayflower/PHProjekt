@@ -26,6 +26,13 @@ phpr.grid.formatPercentage = function(value) {
     return value;
 },
 
+phpr.grid.formatUpload = function(value) {
+    if (value.indexOf('|') > 0) {
+		value = value.substring(value.indexOf('|') + 1, value.length);
+	}
+	return value;
+},
+
 phpr.grid.formatDate = function(value) {
     var date = '';
     if (value) {

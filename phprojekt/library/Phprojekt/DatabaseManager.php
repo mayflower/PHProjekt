@@ -70,6 +70,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected $_model;
 
+    /**
+     * Cache
+     *
+     * @var array
+     */
+    protected $_fieldTypes = array();
+        
     const COLUMN_NAME  = 'tableField';
     const COLUMN_TITLE = 'formLabel';
 
@@ -93,6 +100,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         parent::__construct($db);
         $this->_model = $model;
+        $this->getTypes();
     }
 
     /**
@@ -337,13 +345,27 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getTypes($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        $result = array();
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
-            $result[$field->tableField] = $field->formType;
+            $this->_fieldTypes[$field->tableField] = $field->formType;
         }
-        return $result;
     }
 
+    /**
+     * Return the type of one field
+     *
+     * @param string $fieldName The name of the field to chekc
+     * 
+     * @return string
+     */
+    public function getType($fieldName)
+    {
+        $return = null;
+        if (isset($this->_fieldTypes[$fieldName])) {
+            $return = $this->_fieldTypes[$fieldName];
+        }
+        return $return;    
+    }
+    
     /**
      * Gets the data range for a select using a model
      *
