@@ -81,7 +81,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     },
 
     updateData:function() {
-        phpr.destroySimpleWidget(this._idName);
+        phpr.destroyWidget(this._idName);
     },
 
     onItemClick:function(item) {
@@ -89,7 +89,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         if(!item) {
           item = [];
         }
-        this.publish("changeProject", [item]);
+        this.publish("changeProject", [item.id]);
     },
     
     selecteCurrent:function(id) {

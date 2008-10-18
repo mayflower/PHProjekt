@@ -22,17 +22,11 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
     reload:function() {
         phpr.module = this.module;
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-        phpr.destroySimpleWidget("exportGrid");
-        phpr.destroySimpleWidget("saveChanges");
-        phpr.destroySimpleWidget("gridNode");
-        phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Timecard.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             selectDate:    phpr.nls.get('Change date')
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
+        this.cleanPage();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
@@ -43,32 +37,26 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        phpr.destroyWidgets("buttonRow");
-        dojo.byId("subModuleNavigation").innerHTML = '';
-    
-        phpr.destroySimpleWidget("workingtimesStart");
+        this.cleanPage();    
         var workingtimesStart = null;
         var params = {
             label:     '',
-            id:        'workingtimesStart',
             iconClass: 'start',
             alt:       phpr.nls.get("Start working time")
         };
         workingtimesStart = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(workingtimesStart.domNode);
-        dojo.connect(dijit.byId("workingtimesStart"), "onClick", dojo.hitch(this, "workingtimesStart"));
-                
-        phpr.destroySimpleWidget("workingtimesStop");
+        dojo.connect(workingtimesStart, "onClick", dojo.hitch(this, "workingtimesStart"));
+
         var workingtimesStop = null;
         var params = {
             label:     '',
-            id:        'workingtimesStop',
             iconClass: 'stop',
             alt:       phpr.nls.get("Stop working time")
         };
         workingtimesStop = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(workingtimesStop.domNode);
-        dojo.connect(dijit.byId("workingtimesStop"), "onClick", dojo.hitch(this, "workingtimesStop"));
+        dojo.connect(workingtimesStop, "onClick", dojo.hitch(this, "workingtimesStop"));
     },
 
     changeListView:function(view) {

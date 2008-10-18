@@ -3,7 +3,7 @@ dojo.provide("phpr.Timecard.Grid");
 dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     
     reloadView:function(/*String*/ view, /*int*/ year, /*int*/ month) {
-        phpr.destroySimpleWidget('gridNode');
+        this.main.setSubGlobalModulesNavigation();
         this.gridLayout = new Array();
         this.setUrl(year, month, view);
         phpr.DataStore.addStore({url: this.url});
@@ -38,6 +38,9 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     
     customGridLayout:function(meta) {
        this.gridLayout[0].styles = "cursor:pointer;"    
+    },
+    
+    setSaveChangesButton:function(meta) {
     },
     
     showForm:function(e) {

@@ -17,17 +17,10 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     
     reload:function() {
         phpr.module = this.module;
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-        phpr.destroySimpleWidget("exportGrid");
-        phpr.destroySimpleWidget("saveChanges");
-        phpr.destroySimpleWidget("gridNode");
-        phpr.destroyWidgets("detailsBox");
-        phpr.destroyWidgets("ganttChart");
-        this.render(["phpr.Gantt.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline")
         });
+        this.cleanPage();
         if (this._isGlobalModule(this.module)) {
             this.setSubGlobalModulesNavigation();
         } else {
@@ -54,6 +47,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
     
+    setNewEntry:function() {
+    },
+
     prepareData:function(items, request) {
         // summary:
         //    Render all the views
@@ -72,8 +68,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Render the projects information
         dojo.byId('projectList').innerHTML = '';
         for (var j in this.gantt.projectDataBuffer) {
-            phpr.destroySimpleWidget(this.gantt.projectDataBuffer[j].name);
-            phpr.destroyWidgets(this.gantt.projectDataBuffer[j].name);
             dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
                 name:     this.gantt.projectDataBuffer[j].name,
                 level:    this.gantt.projectDataBuffer[j].level,
@@ -100,8 +94,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    Render the calendar widgets
         // description:
         //    Render the calendar widgets        
-        phpr.destroyWidgets("minDate");
-        phpr.destroyWidgets("maxDate");
+        phpr.destroyWidget("minDate");
+        phpr.destroyWidget("maxDate");
         // the project begin date widget (calendar view)
         this.gantt.DateMin = new dijit.form.DateTextBox({name:          'minDate',
                                                          id:            'minDate',

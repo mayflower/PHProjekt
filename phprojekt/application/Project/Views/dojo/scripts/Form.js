@@ -32,7 +32,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for allow/disallow modules on the project
         // description:
         //    Add Tab for allow/disallow modules on the project
-        phpr.destroyWidgets("tabModules");
         if (this._accessPermissions) {
             var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
                 moduleNameText:   phpr.nls.get('Module'),
@@ -49,9 +48,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for user-role relation into the project
         // description:
         //    Add Tab for user-role relation into the project
-        phpr.destroyWidgets("tabRoles");
-        phpr.destroyWidgets("newRoleUser");
-
         if (this._accessPermissions) {
             var currentUser   = 0;
             if (this.id > 0) {
@@ -74,13 +70,12 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             // add button for role-user
             var params = {
                 label:     '',
-                id:        'newRoleUser',
                 iconClass: 'add',
                 alt:       'Add'
             };
             newRoleUser = new dijit.form.Button(params);
             dojo.byId("relationAddButton").appendChild(newRoleUser.domNode);
-            dojo.connect(dijit.byId("newRoleUser"), "onClick", dojo.hitch(this, "newRoleUser"));
+            dojo.connect(newRoleUser, "onClick", dojo.hitch(this, "newRoleUser"));
 
             // delete buttons for role-user relation
             for (i in relationList) {
@@ -116,6 +111,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var roleId = dijit.byId("relationRoleAdd").attr('value');
         var userId = dijit.byId("relationUserAdd").attr('value');
         if (!dojo.byId("trRelationFor" + userId) && userId > 0) {
+            phpr.destroyWidget("roleRelation[" + userId + "]");
+            phpr.destroyWidget("userRelation[" + userId + "]");            
+            phpr.destroyWidget("relationDeleteButton" + userId);
+            
             var roleName = dijit.byId("relationRoleAdd").attr('displayedValue');
             var userName = dijit.byId("relationUserAdd").attr('displayedValue');
             var table    = dojo.byId("relationTable");
@@ -149,14 +148,50 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // description:
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
-        phpr.destroyWidgets("deleteRelation" + userId);
-        phpr.destroyWidgets("relationDeleteButton" + userId);
+        phpr.destroyWidget("roleRelation[" + userId + "]");
+        phpr.destroyWidget("userRelation[" + userId + "]");         
+        phpr.destroyWidget("relationDeleteButton" + userId);
 
         var e = dojo.byId("trRelationFor" + userId);
         var parent = e.parentNode;
         parent.removeChild(e);
     },
 
+    submitForm: function() {
+        // summary:
+        //    This function is responsible for submitting the formdata
+        // description:
+        //    This function sends the form data as json data to the server
+        //    and call the reload routine
+        for(var i = 0; i < this.formsWidget.length; i++) {
+            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
+        }
+
+        phpr.send({
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
+            content:   this.sendData,
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
+               if (!this.id) {
+                   this.id = data['id'];
+               }
+               if (data.type == 'success') {
+                   phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' + this.id,
+                        content:   this.sendData,
+                        onSuccess: dojo.hitch(this, function(data) {
+                            new phpr.handleResponse('serverFeedback', data);
+                            if (data.type =='success') {
+                                this.publish("updateCacheData");
+                                this.publish("changeProject", [this.id]);
+                            }
+                        })
+                    });
+               }
+            })
+        });
+    },
+    
     updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;

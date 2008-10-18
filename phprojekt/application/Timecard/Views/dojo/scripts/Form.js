@@ -167,13 +167,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // summary:
         //    Reload the Booking view
         // description:
-        //    Reload the Booking view with the form and all the Bookings saved for the current day        
-        phpr.destroyWidgets("TimecardBooking");
-        phpr.destroyWidgets("projectId");
-        phpr.destroyWidgets("notes");
-        phpr.destroyWidgets("amount");
-        phpr.destroySimpleWidget("manageFavorites");
-        
+        //    Reload the Booking view with the form and all the Bookings saved for the current day                
         var bookingdata  = '';        
         var meta         = phpr.DataStore.getMetaData({url: this._bookUrl});
         var data         = phpr.DataStore.getData({url: this._bookUrl});

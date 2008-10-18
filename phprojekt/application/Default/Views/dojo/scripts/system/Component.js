@@ -20,18 +20,33 @@ dojo.declare("phpr.Component", null, {
                 }
             });
         }
-        var tpl = new dojox.dtl.Template(tplContent);
+        
+        var tpl = new dojox.dtl.Template(tplContent);        
+        var content = tpl.render(context);
+        
+        // [a-zA-Z1-9[]:|]
+        var eregId = /id=\\?["'][\w\x5b\x5d\x3a\x7c]*\\?["']/gi;
+        var result = content.match(eregId);
+        if (result) {
+            for (i = 0; i < result.length; i++) {
+                var id = result[i].replace(/id=\\?["']/gi, '').replace(/\\?["']/gi, '');
+                if (dijit.byId(id)) {
+                    dijit.byId(id).destroy();
+                }
+            }
+        }
+        
         if(node) {
             var dojoType = node.getAttribute('dojoType');
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
-                dijit.byId(node.getAttribute('id')).attr('content', tpl.render(context));
+                dijit.byId(node.getAttribute('id')).attr('content', content);
             } else {
-                node.innerHTML = tpl.render(context);
+                node.innerHTML = content;
                 phpr.initWidgets(node);
             }
         } else {
-            return tpl.render(context);
+            return content;
         }
     },
 
