@@ -124,9 +124,10 @@ final class Default_Helpers_Save
             $node->getActiveRecord()->saveRights($rights);
 
             // Save the module-project relation
-            if (isset($params['checkModuleRelation'])) {
-                $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
+            if (!isset($params['checkModuleRelation'])) {
+                $params['checkModuleRelation'] = array();
             }
+            $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
 
             // Save the role-user-project relation
             if (isset($params['userRelation'])) {

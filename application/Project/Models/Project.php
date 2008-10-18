@@ -97,7 +97,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         }
         foreach ($rights as $moduleId) {
             $modulePermissions = $this->modulePermissions->create();
-            $modulePermissions->moduleId = $moduleId;
+            $modulePermissions->moduleId  = $moduleId;
             $modulePermissions->projectId = $this->id;
             $modulePermissions->save();
         }

@@ -47,25 +47,27 @@ class Gantt_IndexController extends IndexController
                 $key    = $node->id;
                 $parent = ($node->getParentNode()) ? $node->getParentNode()->id : 0;
                 
-                list($startYear, $startMonth, $startDay) = split("-", $node->startDate);
-                list($endYear, $endMonth, $endDay)       = split("-", $node->endDate);
+                if (strstr($node->startDate, '-') && strstr($node->endDate, '-')) { 
+                    list($startYear, $startMonth, $startDay) = split("-", $node->startDate);
+                    list($endYear, $endMonth, $endDay)       = split("-", $node->endDate);
                 
-                $start  = mktime(0, 0, 0, $startMonth, $startDay, $startYear);
-                $end    = mktime(0, 0, 0, $endMonth,   $endDay,   $endYear);
+                    $start = mktime(0, 0, 0, $startMonth, $startDay, $startYear);
+                    $end   = mktime(0, 0, 0, $endMonth,   $endDay,   $endYear);
                  
-                if ($start < $min) {
-                    $min = $start;
+                    if ($start < $min) {
+                        $min = $start;
+                    }
+                    if ($end > $max) {
+                        $max = $end;
+                    }
+                    $data['data']["projects"][] = array('id'      => $key,
+                                                        'level'   => $node->getDepth() * 10,
+                                                        'childs'  => count($node->getChildren()),
+                                                        'caption' => $node->title,
+                                                        'name'    => "p:".$parent."|own:".$key,
+                                                        'start'   => $start,
+                                                        'end'     => $end);
                 }
-                if ($end > $max) {
-                    $max = $end;
-                }
-                $data['data']["projects"][] = array('id'      => $key,
-                                                    'level'   => $node->getDepth() * 10,
-                                                    'childs'  => count($node->getChildren()),
-                                                    'caption' => $node->title,
-                                                    'name'    => "p:".$parent."|own:".$key,
-                                                    'start'   => $start,
-                                                    'end'     => $end);
             }
         }
         $data['data']['min'] = mktime(0, 0, 0,  1,  1, date("Y", $min));

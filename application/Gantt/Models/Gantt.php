@@ -26,4 +26,11 @@
  */
 class Gantt_Models_Gantt
 {
+    /**
+     * Needed for delete projects
+     *
+     * @return void
+     */
+    public function fetchAll($projectId) {
+    }
 }
