@@ -14,24 +14,21 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
     loadResult:function(id, module, projectId) {
         phpr.currentProjectId = id;
-        this.reload();
-        this.openForm(id, module);
+        this.basicData();
     },
 
     basicData:function() {
         phpr.module = this.module;
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-        phpr.destroySimpleWidget("exportGrid");
-        phpr.destroySimpleWidget("saveChanges");
-        phpr.destroySimpleWidget("gridNode");
         this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.setSubmoduleNavigation('BasicData');
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
         this.openForm(phpr.currentProjectId, phpr.module);
+        // Remove delete button
+        if (dijit.byId("deleteButton")) {
+            dijit.byId("deleteButton").destroy();
+        }
     },
 
     updateCacheData:function() {

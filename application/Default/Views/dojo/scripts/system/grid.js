@@ -28,9 +28,9 @@ phpr.grid.formatPercentage = function(value) {
 
 phpr.grid.formatUpload = function(value) {
     if (value.indexOf('|') > 0) {
-		value = value.substring(value.indexOf('|') + 1, value.length);
-	}
-	return value;
+        value = value.substring(value.indexOf('|') + 1, value.length);
+    }
+    return value;
 },
 
 phpr.grid.formatDate = function(value) {

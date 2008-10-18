@@ -13,6 +13,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     gridData:      new Array(),
     url:           null,
     _tagUrl:       null,
+    _saveChanges:  null,
 
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
@@ -29,10 +30,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         this.setUrl();
         this.setNode();
-
-        phpr.destroySimpleWidget("exportGrid");
-        phpr.destroySimpleWidget("saveChanges");
-        phpr.destroySimpleWidget("gridNode");
 
         this.gridLayout = new Array();
 
@@ -171,7 +168,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         editable:    meta[i]['readOnly'] ? false : true
                     });
                     break;
-					
+                    
                 default:
                     this.gridLayout.push({
                         width:    porcent,
@@ -203,34 +200,48 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.grid.singleClickEdit = true;
     },
 
-    setExport:function(meta) {
+    setExportButton:function(meta) {
         // summary:
         //    Set the export button
         // description:
         //    If there is any row, render export Button
         if (meta.length > 0) {
-            if (!dijit.byId("exportGrid")) {
-                var params = {
-                    baseClass: "positive",
-                    id: "exportGrid",
-                    iconClass: "export",
-                    alt: "Export",
-                    disabled: false
-                };
-                var exportButton = new dijit.form.Button(params);
-                dojo.byId("buttonRow").appendChild(exportButton.domNode);
-                dojo.connect(dijit.byId("exportGrid"), "onClick", dojo.hitch(this, "exportData"));
-            }
+            var params = {
+                baseClass: "positive",
+                iconClass: "export",
+                alt: "Export",
+                disabled: false
+            };
+            var exportButton = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(exportButton.domNode);
+            dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
         }
     },
 
+    setSaveChangesButton:function(meta) {
+        // summary:
+        //    Set the Save changes button
+        // description:
+        //    If there is any row, render Save changes button
+        if (meta.length > 0) {
+            var params = {
+                baseClass: "positive",
+                iconClass: "disk",
+                alt: "Save",
+                disabled: true
+            };
+            this._saveChanges = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(this._saveChanges.domNode);
+            dojo.connect(this._saveChanges, "onClick", dojo.hitch(this, "saveChanges"));
+        }
+    },
+    
     onLoaded:function(dataContent) {
         // summary:
         //    This function is called when the grid is loaded
         // description:
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
-        phpr.destroyWidgets("gridNode");
         // Data of the grid
         this.gridData = {
             items: []
@@ -245,27 +256,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render save Button
-        if (!dijit.byId("saveChanges") && (meta.length >0)) {
-            var params = {
-                baseClass: "positive",
-                id: "saveChanges",
-                iconClass: "disk",
-                alt: "Save",
-                disabled: true
-            };
-            var saveButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(saveButton.domNode);
-            dojo.connect(dijit.byId("saveChanges"), "onClick", dojo.hitch(this, "saveChanges"));
-        }
-
-        this.setExport(meta);
+        this.setSaveChangesButton(meta);
+        
+        // Render export Button
+        this.setExportButton(meta);
 
         if (meta.length == 0) {
             this._node.attr('content', phpr.nls.get('There are no entries on this level'));
         } else {
             this.setGridLayout(meta);
             this.grid = new dojox.grid.DataGrid({
-                id: "gridNode",
                 store: store,
                 structure: [{
                             defaultCell: {
@@ -359,17 +359,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    highlight when button gets avtivated
         // description:
         //    highlight when button gets avtivated
-        saveButton = dijit.byId('saveChanges');
-        if (saveButton.disabled == true) {
+        if (this._saveChanges.disabled == true) {
             dojox.fx.highlight({
-                node:'saveChanges',
-                color:'#ffff99',
-                duration:1600
+                node:     this._saveChanges.id,
+                color:    '#ffff99',
+                duration: 1600
             }).play();
         }
         // Activate/Deactivate "save changes" buttons.
-        saveButton.disabled = false;
-        saveButton = dojo.byId('saveChanges');
+        this._saveChanges.disabled = false;
+        var saveButton = dojo.byId(this._saveChanges.id);
         saveButton.disabled = false;
     },
 

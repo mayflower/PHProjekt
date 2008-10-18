@@ -15,14 +15,8 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
     reload:function() {
         phpr.module    = this.module;
         phpr.submodule = '';
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-        phpr.destroySimpleWidget("exportGrid");
-        phpr.destroySimpleWidget("saveChanges");
-        phpr.destroySimpleWidget("gridNode");
-        phpr.destroyWidgets("detailsBox");
-        this.render(["phpr.Setting.template", "mainContent.html"],dojo.byId('centerMainContent'));
+        this.render(["phpr.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        this.cleanPage();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
@@ -40,8 +34,6 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
     },
     
     setSubGlobalModulesNavigation:function(currentModule) {
-        phpr.destroyWidgets("buttonRow");
-        dojo.byId("subModuleNavigation").innerHTML = '';
         var subModuleUrl = phpr.webpath + 'index.php/Setting/index/jsonGetModules';
         var self = this;
         phpr.DataStore.addStore({url: subModuleUrl});

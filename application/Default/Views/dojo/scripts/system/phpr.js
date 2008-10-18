@@ -75,7 +75,7 @@ phpr.initWidgets = function(el) {
     dojo.parser.parse(el);
 };
 
-phpr.destroyWidgets = function(el) {
+phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
     if (dojo.byId(el)) {
         var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
@@ -89,9 +89,9 @@ phpr.destroyWidgets = function(el) {
     }
 };
 
-phpr.destroySimpleWidget = function(el) {
+phpr.destroyWidget = function(el) {
     // Destroy only one widgwt using the id
-    if (dojo.byId(el)) {
+    if (dijit.byId(el)) {
         dijit.byId(el).destroy();
     }
 };

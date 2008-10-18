@@ -89,26 +89,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Display all the users and the acces
         //    The user can assign to each user different access on the item
-        phpr.destroyWidgets("tabAccess");
-        phpr.destroyWidgets("newAccess");
-        phpr.destroyWidgets("dataAccessAdd");
-        phpr.destroyWidgets("checkAdminAccessAdd");
-        phpr.destroyWidgets("checkWriteAccessAdd");
-        phpr.destroyWidgets("checkReadAccessAdd");
         var userList = this.userStore.getList();
-        for (var i in userList) {
-            phpr.destroyWidgets("dataAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkReadAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkWriteAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkAccessAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkCreateAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkCopyAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkDeleteAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkDownloadAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkAdminAccess[" + userList[i].id + "]");
-            phpr.destroyWidgets("checkNoneAccess[" + userList[i].id + "]");
-        }
-        
         var accessContent = data[0]["rights"];
         var currentUser   = 0;
         if (this.id > 0) {
@@ -139,13 +120,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // add button for access
             var params = {
                 label:     '',
-                id:        'newAccess',
                 iconClass: 'add',
                 alt:       'Add'
             };
             newAccess = new dijit.form.Button(params);
             dojo.byId("accessAddButton").appendChild(newAccess.domNode);
-            dojo.connect(dijit.byId("newAccess"), "onClick", dojo.hitch(this, "newAccess"));
+            dojo.connect(newAccess, "onClick", dojo.hitch(this, "newAccess"));
             dojo.connect(dijit.byId("checkAdminAccessAdd"), "onClick", dojo.hitch(this, "checkAllAccess", "Add"));
             dojo.connect(dijit.byId("checkNoneAccessAdd"), "onClick", dojo.hitch(this, "checkNoneAccess", "Add"));
 
@@ -162,7 +142,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 
                 var tmp = new dijit.form.Button(params);
                 dojo.byId(buttonName).appendChild(tmp.domNode);
-                dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteAccess", userId));
+                dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteAccess", userId));
                 dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
                 dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
             }
@@ -187,7 +167,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Add a tab and if have form, add the values
         //    to the array of values for save it later
-        phpr.destroyWidgets(formId);
+        phpr.destroyWidget(id);
+        phpr.destroyWidget(formId);
         var html = this.render(["phpr.Default.template", "tabs.html"], null,{
             innerTabs: innerTabs,
             formId:    formId || ''
@@ -209,17 +190,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
-        phpr.destroyWidgets(this._formNode.attr("id"));
-
-        phpr.destroyWidgets("formtab");
-        phpr.destroyWidgets("tabBasicData");
-        phpr.destroyWidgets("tabHistory");
-
-
-        phpr.destroyWidgets("bottomContent");
-        phpr.destroyWidgets("submitButton");
-        phpr.destroyWidgets("deleteButton");
-
         this.formdata = "";
 
         meta = phpr.DataStore.getMetaData({url: this._url});
@@ -283,7 +253,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                                         itemdisabled);
                     break;
                 case 'upload':
-				    iFramePath   = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
+                    iFramePath   = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
                     this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled, iFramePath);
                     break;
@@ -339,7 +309,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Set the Container
         return new dijit.layout.TabContainer({
-            id:   'formtab',
             style: 'height:100%;'
         }, document.createElement('div'));
     },
@@ -371,17 +340,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    with the values selected on the first row
         var userId = dijit.byId("dataAccessAdd").attr('value');
         if (!dojo.byId("trAccessFor" + userId) && userId > 0) {        
-            phpr.destroyWidgets("dataAccess[" + userId + "]");
-            phpr.destroyWidgets("checkReadAccess[" + userId + "]");
-            phpr.destroyWidgets("checkWriteAccess[" + userId + "]");
-            phpr.destroyWidgets("checkAccessAccess[" + userId + "]");
-            phpr.destroyWidgets("checkCreateAccess[" + userId + "]");
-            phpr.destroyWidgets("checkCopyAccess[" + userId + "]");
-            phpr.destroyWidgets("checkDeleteAccess[" + userId + "]");
-            phpr.destroyWidgets("checkDownloadAccess[" + userId + "]");
-            phpr.destroyWidgets("checkAdminAccess[" + userId + "]");
-            phpr.destroyWidgets("checkNoneAccess[" + userId + "]");
-            phpr.destroyWidgets("accessDeleteButton" + userId);
+            phpr.destroyWidget("dataAccess[" + userId + "]");
+            phpr.destroyWidget("checkReadAccess[" + userId + "]");
+            phpr.destroyWidget("checkWriteAccess[" + userId + "]");
+            phpr.destroyWidget("checkAccessAccess[" + userId + "]");
+            phpr.destroyWidget("checkCreateAccess[" + userId + "]");
+            phpr.destroyWidget("checkCopyAccess[" + userId + "]");
+            phpr.destroyWidget("checkDeleteAccess[" + userId + "]");
+            phpr.destroyWidget("checkDownloadAccess[" + userId + "]");
+            phpr.destroyWidget("checkAdminAccess[" + userId + "]");
+            phpr.destroyWidget("checkNoneAccess[" + userId + "]");
+            phpr.destroyWidget("accessDeleteButton" + userId);
             
             var userName = dijit.byId("dataAccessAdd").attr('displayedValue');
             var table    = dojo.byId("accessTable");
@@ -434,17 +403,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
-        phpr.destroyWidgets("dataAccess[" + userId + "]");
-        phpr.destroyWidgets("checkReadAccess[" + userId + "]");
-        phpr.destroyWidgets("checkWriteAccess[" + userId + "]");
-        phpr.destroyWidgets("checkAccessAccess[" + userId + "]");
-        phpr.destroyWidgets("checkCreateAccess[" + userId + "]");
-        phpr.destroyWidgets("checkCopyAccess[" + userId + "]");
-        phpr.destroyWidgets("checkDeleteAccess[" + userId + "]");
-        phpr.destroyWidgets("checkDownloadAccess[" + userId + "]");
-        phpr.destroyWidgets("checkAdminAccess[" + userId + "]");
-        phpr.destroyWidgets("checkNoneAccess[" + userId + "]");       
-        phpr.destroyWidgets("accessDeleteButton" + userId);
+        phpr.destroyWidget("dataAccess[" + userId + "]");
+        phpr.destroyWidget("checkReadAccess[" + userId + "]");
+        phpr.destroyWidget("checkWriteAccess[" + userId + "]");
+        phpr.destroyWidget("checkAccessAccess[" + userId + "]");
+        phpr.destroyWidget("checkCreateAccess[" + userId + "]");
+        phpr.destroyWidget("checkCopyAccess[" + userId + "]");
+        phpr.destroyWidget("checkDeleteAccess[" + userId + "]");
+        phpr.destroyWidget("checkDownloadAccess[" + userId + "]");
+        phpr.destroyWidget("checkAdminAccess[" + userId + "]");
+        phpr.destroyWidget("checkNoneAccess[" + userId + "]");       
+        phpr.destroyWidget("accessDeleteButton" + userId);
 
         var e = dojo.byId("trAccessFor" + userId);
         var parent = e.parentNode;
