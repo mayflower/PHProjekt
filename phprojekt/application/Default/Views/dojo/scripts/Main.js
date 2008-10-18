@@ -60,7 +60,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.currentProjectId = phpr.rootProjectId;
         }
         if (this._isGlobalModule(this.module)) {
-            dojo.publish("Project.changeProject", [phpr.phpr.currentProjectId]);
+            dojo.publish("Project.changeProject", [phpr.currentProjectId]);
         } else {
             var subModuleUrl   = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
