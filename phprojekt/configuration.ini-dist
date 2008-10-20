@@ -4,7 +4,7 @@
 language             = "de"
 
 ; Path options
-webpath              = http://localhost/phprojekt6/htdocs/
+webpath              = http://localhost/phprojekt6/htdocs
 ; Database options
 database.type        = pdo_mysql
 database.host        = localhost
