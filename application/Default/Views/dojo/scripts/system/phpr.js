@@ -55,7 +55,7 @@ dojo.require("dojox.layout.ScrollPane");
 dojo.require('dojox.form.RangeSlider');
 
 dojo.addOnLoad(function(){
-    dijit.byId('dijit_layout_ContentPane_1').resize();
+    dijit.byId('completeContent').resize();
 });
 
 
