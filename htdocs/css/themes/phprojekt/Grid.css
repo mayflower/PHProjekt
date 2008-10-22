@@ -263,7 +263,8 @@
     position: absolute;
     left: -1000px;
     top: -1000px;
-    height: 0px, width: 0px;
+    height: 0px;
+    width: 0px;
 }
 
 .dijit_a11y .dojoxGridRowbarSelected {
