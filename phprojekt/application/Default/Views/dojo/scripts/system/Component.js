@@ -41,6 +41,9 @@ dojo.declare("phpr.Component", null, {
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
                 dijit.byId(node.getAttribute('id')).attr('content', content);
+                dojo.addOnLoad(function(){
+                    dijit.byId(node.getAttribute('id')).resize();
+                });
             } else {
                 node.innerHTML = content;
                 phpr.initWidgets(node);
