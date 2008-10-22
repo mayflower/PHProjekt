@@ -1,3 +1,4 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
 /**
  * Setup routine
@@ -18,13 +19,15 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>PHProjekt 6 - Setup routine</title>
-    <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" />
-    <style>
-        @import "../scripts/dojo/dojo/dojo.css";
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+    <style type="text/css">
+        @import "../dojo/dojo/resources/dojo.css";
         @import "../css/themes/phprojekt/phprojekt.css";
+        @import "../dojo/dijit/themes/dijit.css";
+        @import "../dojo/dijit/themes/dijit_rtl.css";
     </style>
-    <script type="text/javascript" src="../scripts/dojo/dojo/dojo.js"
+    <script type="text/javascript" src="../dojo/dojo/dojo.js"
      djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
     <script type="text/javascript">
         dojo.require("dojo.parser");
@@ -49,12 +52,12 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
 
             <div dojoType="dijit.layout.ContentPane" duration="200"    minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
                 <div id="subheader" class="block">
-                     <div id="navigation-container-titel">
+                    <div id="navigation-container-titel">
                     </div>
                 </div>
              </div>
-               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%;" id="centerContent" >
-            <!-- Submodule navigation: -->
+               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%; background-color:#FFFFFF" id="centerContent" >
+                <!-- Submodule navigation: -->
                 <div class="block">
 
                     <div class="column">
@@ -66,8 +69,7 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
                  </div>
                  <!-- spaces -->
                 <hr class="space"/>
-                <hr>
-
+                <hr />
                 <hr class="space"/>
                 <!-- Exception Form -->
                 <div id="serverFeedback" class="prepend-24"><%ERROR_MESSAGE%>
