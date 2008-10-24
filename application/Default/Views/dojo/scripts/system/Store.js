@@ -3,6 +3,7 @@ dojo.provide("phpr.Store.User");
 dojo.provide("phpr.Store.Module");
 dojo.provide("phpr.Store.Role");
 dojo.provide("phpr.Store.RoleModuleAccess");
+dojo.provide("phpr.Store.Tab");
 
 dojo.declare("phpr.Store", phpr.Component, {
     // summary:
@@ -127,6 +128,24 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
             this._list.push({"id":modules[i]['id'],"name":modules[i]['name'],
                              "read":modules[i]['read'],"write":modules[i]['write'],
                              "create":modules[i]['create'],"admin":modules[i]['admin']})
+        }
+    }
+});
+
+dojo.declare("phpr.Store.Tab", phpr.Store, {
+    constructor:function(id) {
+        this._url = phpr.webpath+"index.php/Core/Tab/jsonList";
+    },
+
+    makeSelect: function() {
+        // summary:
+        //    This function get all the roles and their assignes user for onw project
+        // description:
+        //    This function get all the roles and their assignes user for onw project
+        var tabs = phpr.DataStore.getData({url: this._url});
+        this._list = new Array();
+        for (i in tabs) {
+            this._list.push({"id":tabs[i]['id'],"name":tabs[i]['label'],"nameId":tabs[i]['label'].split(' ').join('')})
         }
     }
 });
