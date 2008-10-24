@@ -29,10 +29,37 @@ dojo.declare("phpr.Default.field", phpr.Component, {
                             id: itemid,
                             value: itemvalue,
                             required: itemrequired,
+                            type: 'text',
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
     
+    hiddenFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+        phpr.destroyWidget(itemid);
+        return this.render(["phpr.Default.template", "formtext.html"], null, {
+                            label: itemlabel,
+                            labelfor: itemid,
+                            id: itemid,
+                            value: itemvalue,
+                            required: itemrequired,
+                            type: 'hidden',
+                            disabled: (itemdisabled) ? "disabled" : ''
+                });
+    },    
+    
+    passwordFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+        phpr.destroyWidget(itemid);
+        return this.render(["phpr.Default.template", "formtext.html"], null, {
+                            label: itemlabel,
+                            labelfor: itemid,
+                            id: itemid,
+                            value: itemvalue,
+                            required: itemrequired,
+                            type: 'password',
+                            disabled: (itemdisabled) ? "disabled" : ''
+                });
+    },
+            
     uploadFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled,iFramePath) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formupload.html"], null, {
@@ -44,19 +71,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : '',
                             iFramePath: iFramePath
                 });
-    },
-    
-    passwordFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
-        phpr.destroyWidget(itemid);
-        return this.render(["phpr.Default.template", "formpassword.html"], null, {
-                            label: itemlabel,
-                            labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
-                            required: itemrequired,
-                            disabled: (itemdisabled) ? "disabled" : ''
-                });
-    },
+    },   
     
     percentageFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
         phpr.destroyWidget(itemid);
@@ -169,6 +184,18 @@ dojo.declare("phpr.Default.field", phpr.Component, {
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
                             options: options
+                });
+    },
+    
+    buttonActionRender: function(itemlabel, itemid, itemtext, icon, action) {
+        phpr.destroyWidget(itemid);
+        return this.render(["phpr.Default.template", "formactionbutton.html"], null, {
+                            label: itemlabel,
+                            labelfor: itemid,
+                            id: itemid,
+                            text: itemtext,
+                            icon: icon,
+                            action: action
                 });
     }
 });
