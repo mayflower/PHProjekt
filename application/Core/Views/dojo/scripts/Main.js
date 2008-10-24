@@ -33,6 +33,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 var modules = new Array();              
                 modules.push({"name":"User", "label": phpr.nls.get("User"), "moduleFunction": "reload", "module": "User"});
                 modules.push({"name":"Role", "label": phpr.nls.get("Role"), "moduleFunction": "reload", "module": "Role"});
+                modules.push({"name":"Tab", "label": phpr.nls.get("Tab"), "moduleFunction": "reload", "module": "Tab"});
                 modules.push({"name":"Module", "label": phpr.nls.get("Module"), "moduleFunction": "reload", "module": "Module"});
                 tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
