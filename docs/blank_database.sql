@@ -584,4 +584,8 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 
 (1, 4),
 (6, 4);
+
+INSERT INTO `Tab` (`id`, `label` ) VALUES
+(1, 'Basic Data');
+
 COMMIT;
