@@ -62,7 +62,7 @@ final class Default_Helpers_Save
         }
                 
         // Set the owner
-        if ($newItem) {
+        if ($newItem && isset($node->ownerId)) {
             $node->ownerId = Phprojekt_Auth::getUserId();
         }
 
@@ -170,7 +170,7 @@ final class Default_Helpers_Save
         }
         
         // Set the owner
-        if ($newItem) {
+        if ($newItem && isset($model->ownerId)) {
             $model->ownerId = Phprojekt_Auth::getUserId();
         }
 
