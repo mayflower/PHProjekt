@@ -115,6 +115,18 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
+     * Delete a Tab
+     * It prevents deletion of Tab 1 -Basic Data-
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        if ($this->id > 1) {     
+            parent::delete();
+        }
+    }    
+    /**
      * Function to print this class
      *
      * @return string
