@@ -133,7 +133,31 @@ class Phprojekt_Table {
 
             $sqlString .= " AFTER " . (string)$position;
         }
-die($sqlString);
+
+        return $this->_db->getConnection()->exec($sqlString);
+    }
+
+    /**
+     * Deletes a field on a table
+     *
+     * @param $tableName String table name
+     * @param $fieldDefinition array with field definition
+     *                         Options: 'name', 'type', 'length', 'null', 'default')
+     * 
+     * @return boolean
+     */
+    public function deleteField($tableName, $fieldDefinition)
+    {
+        $sqlString = "ALTER TABLE ".(string)$tableName." DROP ";
+
+        if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
+
+            $sqlString .= $fieldDefinition['name'];
+
+        } else {
+            return false;
+        }
+
         return $this->_db->getConnection()->exec($sqlString);
     }
 
@@ -156,7 +180,7 @@ die($sqlString);
                 if ($fieldType == 'auto_increment') {
                     $fieldType = 'integer';
                 }
-                
+
 
                 break;
             case 'pgsql':
@@ -191,5 +215,85 @@ die($sqlString);
         }
 
         return $fieldDefinition;
+    }
+
+    /**
+     * Synchronizes a table with the provided definition
+     *
+     * @param $tableName String table name
+     * @param $fields array with fieldnames as key
+     *                Options: 'type', 'length', 'null', 'default')
+     * @param $keys array with primary keys
+     * 
+     * @return boolean
+     */
+    public function syncTable($tableName, $fields, $keys = array())
+    {
+        try {
+            $tableFields = $this->_db->describeTable($tableName);
+        } catch (Exception $e) {
+            return $this->createTable($tableName, $fields, $keys);
+
+        }
+
+        if(is_array($fields) && !empty($fields)) {
+            foreach ($fields as $fieldName => $fieldDefinition) {
+
+                if (array_key_exists($fieldName, $tableFields)) {
+
+                    $fieldDefinition['name'] = $fieldName;
+                    $this->modifyField($tableName, $fieldDefinition);
+
+                    unset($tableFields[$fieldName]);
+                } else {
+                    $fieldDefinition['name'] = $fieldName;
+                    $this->addField($tableName, $fieldDefinition);
+
+                }
+
+            }
+
+        } else {
+            return false;
+        }
+
+        if (is_array($tableFields) && !empty($tableFields)) {
+            foreach ($tableFields as $fieldName => $fieldDefinition) {
+
+                $fieldDefinition['name'] = $fieldName;
+                $this->deleteField($tableName, $fieldDefinition);
+
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Modifies a field on a table
+     *
+     * @param $tableName String table name
+     * @param $fieldDefinition array with field definition
+     *                         Options: 'name', 'type', 'length', 'null', 'default')
+     * 
+     * @return boolean
+     */
+    public function modifyField($tableName, $fieldDefinition, $position = null)
+    {
+        $sqlString = "ALTER TABLE ".(string)$tableName." MODIFY ";
+
+        if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
+            $fieldDefinition['length'] = (empty($fieldDefinition['length']))?"":$fieldDefinition['length'];
+            $fieldDefinition['null'] = (empty($fieldDefinition['null']))?"":$fieldDefinition['null'];
+            $fieldDefinition['default'] = (empty($fieldDefinition['default']))?"":$fieldDefinition['default'];
+
+            $sqlString .= $fieldDefinition['name'];
+            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
+            $fieldDefinition['null'], $fieldDefinition['default']);
+        } else {
+            return false;
+        }
+
+        return $this->_db->getConnection()->exec($sqlString);
     }
 }
