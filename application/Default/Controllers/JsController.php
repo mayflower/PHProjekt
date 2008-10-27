@@ -69,7 +69,8 @@ class JsController extends IndexController
                 }
                 $this->_modules[] = $file;
                 if ($file != 'Core') {
-                    echo 'dojo.registerModulePath("phpr.'.$file.'","../../../application/'.$file.'/Views/dojo/scripts");';
+                    echo 'dojo.registerModulePath("phpr.'.$file.'", 
+                                                  "../../../application/'.$file.'/Views/dojo/scripts");';
                     echo $this->_getModuleScripts($scripts, $file);
                 } else {
                     echo $this->_getCoreModuleScripts($scripts);
@@ -81,7 +82,7 @@ class JsController extends IndexController
         
         echo '
         dojo.declare("phpr.Main", null, {
-            constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId, /*String*/language) {
+            constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId,/*String*/language) {
                 phpr.module           = currentModule;
                 phpr.submodule        = null;
                 phpr.webpath          = webpath;
@@ -123,8 +124,8 @@ class JsController extends IndexController
         
         $template = file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/'.$extendPath);
         
-        $template = ereg_replace("\n", "",$template);
-        $template = ereg_replace("\r", "",$template);
+        $template = ereg_replace("\n", "", $template);
+        $template = ereg_replace("\r", "", $template);
         $template = addslashes($template);
         echo '"'.$template.'"';
     }
@@ -193,13 +194,16 @@ class JsController extends IndexController
             if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.' && ($script != 'nls')) {
                 $coreScripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
                 if (in_array('Main.js', $coreScripts)) {
-                    $output .= 'dojo.registerModulePath("phpr.'.$script.'", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
-                    $output .= 'dojo.registerModulePath("phpr.'.$script.'.nls", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
+                    $output .= 'dojo.registerModulePath("phpr.'.$script.'", 
+                               "../../../application/Core/Views/dojo/scripts/'.$script.'");';
+                    $output .= 'dojo.registerModulePath("phpr.'.$script.'.nls", 
+                               "../../../application/Core/Views/dojo/scripts/'.$script.'");';
                     $this->_modules[] = $script;
                 }
                 foreach ($coreScripts as $coreScript) {
                     if (substr($coreScript, -3) == '.js') {
-                        $output .= file_get_contents(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script.'/'.$coreScript);
+                        $output .= 
+                          file_get_contents(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script.'/'.$coreScript);
                     }
                 }
             }

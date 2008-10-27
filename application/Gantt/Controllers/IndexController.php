@@ -41,7 +41,7 @@ class Gantt_IndexController extends IndexController
         $tree = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree->setup();
         $min = mktime(0, 0, 0, 12, 31, 2030);
-        $max = mktime(0, 0, 0,  1,  1, 1970);  
+        $max = mktime(0, 0, 0, 1, 1, 1970);  
         foreach ($tree as $node) {
             if ($node->id != self::INVISIBLE_ROOT) {
                 $key    = $node->id;
@@ -70,7 +70,7 @@ class Gantt_IndexController extends IndexController
                 }
             }
         }
-        $data['data']['min'] = mktime(0, 0, 0,  1,  1, date("Y", $min));
+        $data['data']['min'] = mktime(0, 0, 0, 1, 1, date("Y", $min));
         $data['data']['max'] = mktime(0, 0, 0, 12, 31, date("Y", $min));        
         $data['data']['step'] = (date("L", $min)) ? 366 : 365;
         echo Phprojekt_Converter_Json::convert($data);
@@ -88,7 +88,7 @@ class Gantt_IndexController extends IndexController
         $projects = $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         foreach ($projects as $project) {
-            list($id,$startDate,$endDate) = split(",",$project);
+            list($id, $startDate, $endDate) = split(",", $project);
             $activeRecord->find($id);
             $activeRecord->startDate = $startDate;
             $activeRecord->endDate   = $endDate;

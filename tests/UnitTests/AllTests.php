@@ -17,14 +17,14 @@
  */
 
 /* use command line switches to overwrite this */
-define("DEFAULT_CONFIG_FILE",    "configuration.ini");
+define("DEFAULT_CONFIG_FILE", "configuration.ini");
 define("DEFAULT_CONFIG_SECTION", "testing-mysql");
 
-define('PHPR_ROOT_PATH',    realpath( dirname(__FILE__) . '/../../') );
-define('PHPR_CORE_PATH',    PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
+define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
+define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
-define('PHPR_CONFIG_FILE',  PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
-define('PHPR_TEMP_PATH',    PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
+define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
+define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
 
 set_include_path('.' . PATH_SEPARATOR
 . PHPR_LIBRARY_PATH . PATH_SEPARATOR
@@ -95,7 +95,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
         if (!is_object($config)) {
-            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, array("allowModifications" => true));
+            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, 
+                                          array("allowModifications" => true));
             Zend_Registry::set('config', $config);
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
         }
