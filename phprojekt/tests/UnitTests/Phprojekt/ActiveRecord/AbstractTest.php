@@ -42,19 +42,19 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         try {
             $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
             $project->fetchAll();
-            $this->assertEquals(7,$project->count());
+            $this->assertEquals(7, $project->count());
 
             $project->find(3);
             $this->assertNull($project->title);
 
             $projects = $project->fetchAll(null, null, null, null, null,
                'RIGHT JOIN ProjectRoleUserPermissions ON ProjectRoleUserPermissions.projectId = Project.id');
-            $this->assertEquals(1,count($projects));
+            $this->assertEquals(1, count($projects));
 
             $projects = $project->fetchAll(null, null, null, null, "ProjectRoleUserPermissions.roleId",
                'LEFT JOIN ProjectRoleUserPermissions ON ProjectRoleUserPermissions.projectId = Project.id');
 
-            $this->assertEquals(6,count($projects));
+            $this->assertEquals(6, count($projects));
 
         } catch (Exception $e) {
             $this->fail($e->getMessage().$e->getTraceAsString());
@@ -71,7 +71,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
 
             if ($users == NULL) {
-                $this->fail ('No user found');
+                $this->fail('No user found');
             }
 
             $david        = $users[0];
@@ -161,10 +161,10 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         try {
             $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
             $project->find(1);
-            $module_instance = $project->instances->create();
-            $module_instance->name = 'My TestModule';
-            $module_instance->module = 'TestModule';
-            $this->assertTrue($module_instance->save());
+            $moduleInstance = $project->instances->create();
+            $moduleInstance->name = 'My TestModule';
+            $moduleInstance->module = 'TestModule';
+            $this->assertTrue($moduleInstance->save());
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }

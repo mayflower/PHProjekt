@@ -95,7 +95,8 @@ function preInstallChecks() {
         'dbname'   => $_REQUEST['server_database']
         ));
     } catch (Exception $e) {
-        $_SESSION['error_message'] = "Can't connect to server at '".$_REQUEST['server_host']."' using '".$_REQUEST['server_user']."' user";
+        $_SESSION['error_message'] = "Can't connect to server at '".$_REQUEST['server_host'].
+                                     "' using '".$_REQUEST['server_user']."' user";
         $returnValue = false;
     }
 
@@ -1537,7 +1538,8 @@ function installPhprojekt() {
 
     if (!file_exists($logsDir)) {
         if (!mkdir($logsDir)) {
-            $_SESSION['error_message'] = "Please, create the dir ".$logsDir." to save the logs. Otherwise, modify the log path on configuration.ini flie.";
+            $_SESSION['error_message'] = 
+            "Please create the dir ".$logsDir." to save the logs or modify the log path on configuration.ini file.";
         }
     }
 
@@ -1545,10 +1547,12 @@ function installPhprojekt() {
 
     if (!file_exists($uploadDir)) {
         if (!mkdir($uploadDir)) {
-            $_SESSION['error_message'] = "Please, create the dir ".$uploadDir." to upload files. Otherwise, modify the upload path on configuration.ini flie.";
+            $_SESSION['error_message'] = 
+            "Please create the dir ".$uploadDir." to upload files or modify the upload path on configuration.ini file.";
         }
     } elseif (!is_writable($uploadDir)) {
-        $_SESSION['error_message'] = "Please, set apache permission to writo on ".$uploadDir." to allow file upload fields on modules.";
+        $_SESSION['error_message'] = 
+        "Please, set apache permission to writo on ".$uploadDir." to allow file upload fields on modules.";
     }
 
     // getting the language
@@ -1561,18 +1565,17 @@ function installPhprojekt() {
         $headers['Accept-Language'] = $_ENV['HTTP_ACCEPT_LANGUAGE'];
     }
     if ((!empty($headers['Accept-Language'])) && strlen($headers['Accept-Language']) > 1) {
-        $clientLanguaje = substr($headers['Accept-Language'],0,2);
+        $clientLanguaje = substr($headers['Accept-Language'], 0, 2);
     }
 
     if (strlen($_SERVER['REQUEST_URI']) > 16) {
         $webPath = "http://".$_SERVER['HTTP_HOST'].substr($_SERVER['REQUEST_URI'], 0, -15);
-    }
-    else {
+    } else {
         $webPath = "http://".$_SERVER['HTTP_HOST']."/";
     }
 
     // Creating the configuration file
-    $configurationFileContent = '[production]
+    $configurationFileContent = '[production] 
 
 ; Language configuration
 language             = "'.$clientLanguaje.'"
@@ -1593,6 +1596,6 @@ log.debug.filename   = '.$logsDir.'\debug.log
 log.crit.filename    = '.$logsDir.'\crit.log
 itemsPerPage         = 3;';
 
-    file_put_contents($baseDir."configuration.ini",$configurationFileContent);
+    file_put_contents($baseDir."configuration.ini", $configurationFileContent);
 
 }
