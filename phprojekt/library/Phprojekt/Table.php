@@ -42,6 +42,13 @@ class Phprojekt_Table {
     protected $_dbType = null;
 
     /**
+     * Exclude system fields
+     *
+     * @var array
+     */
+    protected $_excludeFields = array('id','ownerId');
+
+    /**
      * Initialize a new table admin
      *
      * @param array                   $db    Db configurations
@@ -72,12 +79,12 @@ class Phprojekt_Table {
             foreach ($fields as $fieldName => $fieldDefinition) {
 
                 $fieldDefinition['length']  = (empty($fieldDefinition['length']))? "" : $fieldDefinition['length'];
-                $fieldDefinition['null']    = (empty($fieldDefinition['null'])  )? "" : $fieldDefinition['null'];
+                $fieldDefinition['null']    = $fieldDefinition['null'];
                 $fieldDefinition['default'] = (empty($fieldDefinition['default']))? "" : $fieldDefinition['default'];
 
                 $sqlString .= $fieldName;
                 $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                $fieldDefinition['null'], $fieldDefinition['default']) . ", ";
+                                                        $fieldDefinition['null'], $fieldDefinition['default']) . ", ";
             }
         } else {
             return false;
@@ -118,13 +125,13 @@ class Phprojekt_Table {
         $sqlString = "ALTER TABLE ".(string)$tableName." ADD ";
 
         if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            $fieldDefinition['length'] = (empty($fieldDefinition['length']))?"":$fieldDefinition['length'];
-            $fieldDefinition['null'] = (empty($fieldDefinition['null']))?"":$fieldDefinition['null'];
+            $fieldDefinition['length']  = (empty($fieldDefinition['length']))?"":$fieldDefinition['length'];
+            $fieldDefinition['null']    = $fieldDefinition['null'];
             $fieldDefinition['default'] = (empty($fieldDefinition['default']))?"":$fieldDefinition['default'];
 
             $sqlString .= $fieldDefinition['name'];
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-            $fieldDefinition['null'], $fieldDefinition['default']);
+                                                    $fieldDefinition['null'], $fieldDefinition['default']);
         } else {
             return false;
         }
@@ -134,6 +141,7 @@ class Phprojekt_Table {
             $sqlString .= " AFTER " . (string)$position;
         }
 
+        Zend_Registry::get('log')->debug($sqlString);
         return $this->_db->getConnection()->exec($sqlString);
     }
 
@@ -157,7 +165,7 @@ class Phprojekt_Table {
         } else {
             return false;
         }
-
+        Zend_Registry::get('log')->debug($sqlString);
         return $this->_db->getConnection()->exec($sqlString);
     }
 
@@ -171,7 +179,7 @@ class Phprojekt_Table {
      *
      * @return string
      */
-    private function _getTypeDefinition($fieldType, $fieldLength = null, $allowNull = null, $default = null)
+    private function _getTypeDefinition($fieldType, $fieldLength = null, $allowNull = true, $default = null)
     {
 
         switch ($this->_dbType) {
@@ -180,38 +188,39 @@ class Phprojekt_Table {
                 if ($fieldType == 'auto_increment') {
                     $fieldType = 'integer';
                 }
-
-
                 break;
             case 'pgsql':
                 if ($fieldType == 'auto_increment') {
                     $fieldType = 'serial';
                 }
                 if ($fieldType == 'int') {
-                    $fieldType = 'integer';
+                    $fieldType   = 'integer';
                     $fieldLength = null;
                 }
-
                 break;
             default:
                 if ($fieldType == 'auto_increment') {
                     $fieldType = 'int(11) NOT NULL auto_increment';
                 }
                 break;
-
         }
 
         $fieldDefinition = " " . $fieldType;
         if (!empty($fieldLength)) {
-            $fieldDefinition .= "(" . (int)$fieldLength . ")";
+            if (($fieldType == 'int') ||
+                ($fieldType == 'varchar')) {
+                $fieldDefinition .= "(" . (int)$fieldLength . ") ";
+            }
         }
 
-        if (!empty($allowNull)) {
-            $fieldDefinition .= " NOT NULL";
+        if (!$allowNull) {
+            $fieldDefinition .= " NOT NULL ";
         }
 
         if (!empty($default)) {
-            $fieldDefinition = "DEFAULT " . (string)$default;
+            $fieldDefinition .= " DEFAULT '" . (string)$default ."'";
+        } else {
+            $fieldDefinition .= " DEFAULT NULL";
         }
 
         return $fieldDefinition;
@@ -238,31 +247,25 @@ class Phprojekt_Table {
 
         if(is_array($fields) && !empty($fields)) {
             foreach ($fields as $fieldName => $fieldDefinition) {
-
                 if (array_key_exists($fieldName, $tableFields)) {
-
                     $fieldDefinition['name'] = $fieldName;
                     $this->modifyField($tableName, $fieldDefinition);
-
                     unset($tableFields[$fieldName]);
                 } else {
                     $fieldDefinition['name'] = $fieldName;
                     $this->addField($tableName, $fieldDefinition);
-
                 }
-
             }
-
         } else {
             return false;
         }
 
         if (is_array($tableFields) && !empty($tableFields)) {
             foreach ($tableFields as $fieldName => $fieldDefinition) {
-
-                $fieldDefinition['name'] = $fieldName;
-                $this->deleteField($tableName, $fieldDefinition);
-
+                if (!in_array($fieldName, $this->_excludeFields)) {
+                    $fieldDefinition['name'] = $fieldName;
+                    $this->deleteField($tableName, $fieldDefinition);
+                }
             }
         }
 
@@ -283,17 +286,18 @@ class Phprojekt_Table {
         $sqlString = "ALTER TABLE ".(string)$tableName." MODIFY ";
 
         if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            $fieldDefinition['length'] = (empty($fieldDefinition['length']))?"":$fieldDefinition['length'];
-            $fieldDefinition['null'] = (empty($fieldDefinition['null']))?"":$fieldDefinition['null'];
-            $fieldDefinition['default'] = (empty($fieldDefinition['default']))?"":$fieldDefinition['default'];
+            $fieldDefinition['length']  = (empty($fieldDefinition['length']))  ? "" : $fieldDefinition['length'];
+            $fieldDefinition['null']    = $fieldDefinition['null'];
+            $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
 
             $sqlString .= $fieldDefinition['name'];
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-            $fieldDefinition['null'], $fieldDefinition['default']);
+                                                    $fieldDefinition['null'], $fieldDefinition['default']);
         } else {
             return false;
         }
 
+        Zend_Registry::get('log')->debug($sqlString);
         return $this->_db->getConnection()->exec($sqlString);
     }
 }
