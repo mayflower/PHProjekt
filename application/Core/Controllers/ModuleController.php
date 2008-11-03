@@ -44,12 +44,6 @@ class Core_ModuleController extends Core_IndexController
             $record = $this->getModelObject();
         } else {
             $record = $this->getModelObject()->find($id);
-            $record->tabs->create();
-            $tabs = Phprojekt_Tabs::getTabsByModule($id);
-            $record->tabs = ",";
-            foreach ($tabs as $tabData) {
-                $record->tabs .= $tabData['id'].",";
-            }
         }
 
         echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
@@ -72,13 +66,12 @@ class Core_ModuleController extends Core_IndexController
     {
         $translate = Zend_Registry::get('translate');
         $id        = (int) $this->getRequest()->getParam('id');
-
+        
         if (empty($id)) {
             $model   = $this->getModelObject();
             $message = $translate->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-
             $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 
