@@ -228,12 +228,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                                        itemdisabled);
                     break;
                 case'multipleselectbox':
-                    this.formdata += this.fieldTemplate.multipleSelectBoxRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled, 5, "multiple");
-                    break;
-                case 'multipleselect':
                     this.formdata += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                                itemdisabled);
+                                                                       itemdisabled, 5, "multiple");
                     break;
                 case'date':
                     this.formdata += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue, itemrequired,
@@ -260,7 +256,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled, iFramePath);
                     break;
-                case 'textfield':
                 default:
                     this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);

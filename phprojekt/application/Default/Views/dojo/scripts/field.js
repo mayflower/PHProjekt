@@ -140,7 +140,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
                 });
     },
 
-    multipleSelectBoxRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple) {
+    multipleSelectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple) {
         phpr.destroyWidget(itemid);
         var options = new Array();
         var tmp     = itemvalue.split(',');
@@ -168,25 +168,6 @@ dojo.declare("phpr.Default.field", phpr.Component, {
                 });
     },
 
-    multipleSelectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
-        phpr.destroyWidget(itemid);
-        var options = new Array();
-        var j       = 0;
-        for (j in range) {
-            options.push(range[j]);
-            j++;
-        }
-        return this.render(["phpr.Default.template", "formmultipleselect.html"], null, {
-                            label: itemlabel,
-                            labelfor: itemid,
-                            id: itemid,
-                            values: itemvalue,
-                            required: itemrequired,
-                            disabled: (itemdisabled) ? "disabled" : '',
-                            options: options
-                });
-    },
-    
     buttonActionRender: function(itemlabel, itemid, itemtext, icon, action) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formactionbutton.html"], null, {
