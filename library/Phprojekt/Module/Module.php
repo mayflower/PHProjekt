@@ -27,15 +27,6 @@
 class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * Has many and belongs to many declrations
-     *
-     * @var array
-     */
-    public $hasManyAndBelongsToMany = array('tabs' =>  array('classname' => 'Phprojekt_Tab_Tab',
-                                                             'module'    => 'Tab',
-                                                             'model'     => 'Tab'));
-
-    /**
      * The standard information manager with hardcoded
      * field definitions
      *
@@ -112,9 +103,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 $saveNewModule = true;
             }
             $this->save();
-            if (isset($params['tabs'])) {
-                Phprojekt_Tabs::saveModuleTabRelation($params['tabs'], $this->id);
-            }
+            
             // Reset cache for root project
             $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-1');
             if (isset($projectModulePermissionsNamespace->modules)
