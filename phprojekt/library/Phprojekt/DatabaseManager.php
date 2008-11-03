@@ -76,6 +76,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * @var array
      */
     protected $_fieldTypes = array();
+
+    /**
+     * Error Class
+     *
+     * @var Phprojekt_Error
+     */
+    protected $_error = null;
         
     const COLUMN_NAME  = 'tableField';
     const COLUMN_TITLE = 'formLabel';
@@ -178,29 +185,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $converted[] = $this->_convertSelect($field);
                     break;
                 case 'multipleSelectValues':
-                    $entry = $this->_convertSelect($field);
+                    $entry         = $this->_convertSelect($field);
                     $entry['type'] = 'multipleselectbox';
-                    $converted[] = $entry;
-                    break;
-                case 'percentage':
-                case 'textarea':
-                case 'textfield':
-                case 'checkbox':
-                case 'date':
-                case 'upload':
-                case 'time':
-                case 'datetime':
-                case 'timestamp':
-                    $converted[] = $this->_convertStandard($field);
-                    break;
-                case 'multipleselect':
-                case 'select_multiple':
-                    $converted[]   = $this->_convertStandard($field);
-                    $entry['type'] = 'multipleselect';
-                    $converted[]   = $entry;
-                case 'text':
-                    $entry         = $this->_convertStandard($field);
-                    $entry['type'] = 'textfield';
                     $converted[]   = $entry;
                     break;
                 case 'display':
@@ -209,10 +195,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $entry['readOnly'] = true;
                     $converted[]       = $entry;
                     break;
-                case 'tree':
-                    $entry             = $this->_convertTree($field);
-                    $entry['type']     = 'selectbox';
-                    $converted[]       = $entry;
+                default:
+                    $converted[] = $this->_convertStandard($field);
                     break;
             }
         }
@@ -267,32 +251,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                        'name' => $field->formRange);
         $converted['required'] = (boolean) $field->isRequired;
         $converted['readOnly'] = false;
-
-        return $converted;
-    }
-
-    /**
-     * Convert to a selectbox using tree values
-     *
-     * @param array $field
-     *
-     * @return array
-     */
-    public function _convertTree(Phprojekt_ModelInformation_Interface $field)
-    {
-        $converted          = $this->_convertStandard($field);
-        $converted['range'] = array();
-        $converted['type']  = 'selectbox';
-
-        $activeRecord = Phprojekt_Loader::getModel($field->formRange, $field->formRange);
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree->setup();
-        foreach ($tree as $node) {
-            $key   = $node->id;
-            $value = str_repeat('....', $node->getDepth()) . $node->title;
-            $converted['range'][] = array('id'   => $key,
-                                          'name' => $value);
-        }
 
         return $converted;
     }
@@ -375,18 +333,76 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function getRangeFromModel(Phprojekt_ModelInformation_Interface $field)
     {
         $options = array();
-        switch ($field->formRange) {
+        list($module, $key, $value) = explode('#', $field->formRange);
+        switch ($module) {
+            case 'Project':
+                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+                $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+                $tree->setup();
+                foreach ($tree as $node) {
+                    $showKey   = $node->$key;
+                    $showValue = str_repeat('....', $node->getDepth()) . $node->$value;
+                    $options[] = array('id'   => $showKey,
+                                       'name' => $showValue);
+                }
+                break;
             case 'User':
                 $activeRecord = new Phprojekt_User_User();
                 $result       = $activeRecord->fetchAll("status = 'A'");
                 foreach ($result as $oneUser) {
-                    $options[] = array('id'   => $oneUser->id,
-                                       'name' => $oneUser->username);
+                    $options[] = array('id'   => $oneUser->$key,
+                                       'name' => $oneUser->$value);
                 }
-                break;
+                break; 
+        }
+        return $options;
+    }
+
+    public function getError()
+    {
+        return array_pop($this->_error->getError());
+    }
+
+    /**
+     * Delete all entries for the current table and create the new one
+     *
+     * @param string $table The table name
+     * @param array  $data  All the data of each field
+     *
+     * @return void
+     */
+    public function saveData($table, $data)
+    {
+        $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
+        $result = $this->fetchAll($where);
+        foreach ($result as $row) {
+            $row->delete();
+        }       
+        foreach ($data as $values) {
+            $databaseManager = clone($this);
+            foreach ($values as $key => $value) {
+                if (isset($databaseManager->$key)) {
+                    $databaseManager->$key = $value;
+                }
+            }
+            $databaseManager->save();
+        }
+    }
+
+    public function getDataDefinition()
+    {
+        $fields = $this->_getFields('formPosition');
+        $data   = array();
+        $i      = 0; 
+        foreach ($fields as $field) {
+            while($field->valid()) {
+                $key = $field->key();
+                $data[$i][$key] = $field->$key;
+                $field->next();
+            }
+            $i++;
         }
 
-        return $options;
-
+        return $data;
     }
 }
