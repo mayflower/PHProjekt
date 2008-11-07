@@ -36,7 +36,7 @@ dojo.declare("phpr.Default.field", phpr.Component, {
     
     hiddenFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
         phpr.destroyWidget(itemid);
-        return this.render(["phpr.Default.template", "formtext.html"], null, {
+        return this.render(["phpr.Default.template", "formhidden.html"], null, {
                             label: itemlabel,
                             labelfor: itemid,
                             id: itemid,
