@@ -328,6 +328,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * Gets the data range for a select using a model
      *
      * @param Phprojekt_ModelInformation_Interface $field the field description
+     *
      * @return an array with key and value to be used as datarange
      */
     public function getRangeFromModel(Phprojekt_ModelInformation_Interface $field)
@@ -358,6 +359,91 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         return $options;
     }
 
+    /**
+     * Validate the fields definitions per each field
+     *
+     * @param string $module The module table name
+     * @param array  $data   The field definition
+     *
+     * @return boolean
+     */
+    public function recordValidate($module, $data)
+    {
+        $validated    = true;
+        $this->_error = new Phprojekt_Error();
+        $translate    = Zend_Registry::get('translate');
+
+        if (empty($data)) {
+            $validated = false;
+            $this->_error->addError(array(
+                'field'   => $translate->translate('Module Designer'),
+                'message' => $translate->translate('The module must contain fields')));
+        }
+
+        if (empty($data[0]['tableName'])) {
+            $validated = false;
+            $this->_error->addError(array(
+                'field'   => $translate->translate('Module Designer'),
+                'message' => $translate->translate('The module must contain a name')));
+        }
+        
+        $foundProjectId = false;
+        foreach ($data as $field) {
+            if (empty($field['tableField'])) {
+                $validated = false;
+                $this->_error->addError(array(
+                    'field'   => $translate->translate('Module Designer'),
+                    'message' => $translate->translate('The Table Field must be completed for all the fields')));
+                break;
+            }
+
+            if ($field['tableType'] == 'varchar') {
+                if ($field['tableLenght'] < 1 && $field['tableLenght'] > 255) {
+                    $validated = false;
+                    $this->_error->addError(array(
+                        'field'   => $translate->translate('Module Designer'),
+                        'message' => $translate->translate('The lenght of the varchar fields must be between 1 and 255')));
+                    break;
+                }
+            }
+
+            if ($field['tableType'] == 'int') {
+                if ($field['tableLenght'] < 1 && $field['tableLenght'] > 11) {
+                    $validated = false;
+                    $this->_error->addError(array(
+                        'field'   => $translate->translate('Module Designer'),
+                        'message' => $translate->translate('The lenght of the int fields must be between 1 and 11')));
+                    break;
+                }
+            }
+
+            if ($field['formType'] == 'selectValues') {
+                if (!strstr($field['formRange'], '#')) {
+                    $validated = false;
+                    $this->_error->addError(array('field'   => $translate->translate('Module Designer'),
+                                                  'message' => $translate->translate('Invalid form Range for the select field')));
+                    break;
+                } 
+                if ($field['tableField'] == 'projectId') {
+                    $foundProjectId = true;
+                }
+            }
+        }        
+
+        if (!$foundProjectId) {
+            $validated = false;
+            $this->_error->addError(array('field'   => $translate->translate('Module Designer'),
+                                          'message' => $translate->translate('The module must have a project selector called projectId')));
+        }
+        
+        return $validated;
+    }
+
+    /**
+     * Return an error array if there is any error
+     *
+     * @return array
+     */
     public function getError()
     {
         return array_pop($this->_error->getError());
@@ -389,20 +475,84 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
     }
 
+    /**
+     * Return an array with the definitions of the field
+     * from the databasemanager and the module table itself
+     *
+     * The length don't work from int field types
+     *
+     * @return array
+     */
     public function getDataDefinition()
     {
         $fields = $this->_getFields('formPosition');
         $data   = array();
         $i      = 0; 
+        $info   = $this->_model->info();
+
         foreach ($fields as $field) {
+            $data[$i]['tableName'] = $info['name'];
             while($field->valid()) {
                 $key = $field->key();
-                $data[$i][$key] = $field->$key;
+                if ($key != 'tableName') {
+                    $data[$i][$key] = $field->$key;
+                }
                 $field->next();
             }
+            $data[$i]['tableType']   = $info['metadata'][$field->tableField]['DATA_TYPE'];
+            $data[$i]['tableLength'] = $info['metadata'][$field->tableField]['LENGTH'];
             $i++;
         }
 
         return $data;
+    }
+
+    /**
+     * Check the current Fields and make the sync in the table of the module
+     *
+     * @paran array  $newFields Array with all the data per new field
+     * @param string $tableName Name of the module Table
+     * @param array  $tableData Array with the table data definition per new field
+     *
+     * @return void
+     */
+    public function syncTable($newFields, $tableName, $tableData)
+    {
+        $tableManager = new Phprojekt_Table(Zend_Registry::get('db'));
+        $oldFields    = $this->getDataDefinition();
+        $tableFields  = $tableManager->getTableFields($tableName, $tableData);
+
+        // Search for Modify and Delete
+        foreach ($oldFields as $oldValues) {
+            $found = false;
+            foreach ($newFields as $newValues) {
+                if ($oldValues['id'] == $newValues['id']) {
+                    $fieldDefinition            = $tableData[$newValues['tableField']];
+                    $fieldDefinition['name']    = $newValues['tableField'];
+                    if ($oldValues['tableField'] == $newValues['tableField']) {
+                        $tableManager->modifyField($tableName, $fieldDefinition);
+                    } else {
+                        $fieldDefinition['oldName'] = $oldValues['tableField'];
+                        $tableManager->changeField($tableName, $fieldDefinition);
+                    }
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $fieldDefinition         = array();
+                $fieldDefinition['name'] = $oldValues['tableField'];
+                $tableManager->deleteField($tableName, $fieldDefinition);
+            }
+        }
+
+        // Search for Add
+        foreach ($newFields as $newValues) {
+            if ($newValues['id'] == 0) {
+                $fieldDefinition         = $tableData[$newValues['tableField']];
+                $fieldDefinition['name'] = $newValues['tableField'];
+                $tableManager->addField($tableName, $fieldDefinition); 
+            }
+        }
     }
 }

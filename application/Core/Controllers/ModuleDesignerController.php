@@ -72,13 +72,12 @@ class Core_ModuleDesignerController extends Core_IndexController
 
         // Validate
         if ($databaseManager->recordValidate($module, $data)) {
-            // Update DatabaseManager Table
-            $databaseManager->saveData($module, $data);
-        
             // Update Table Structure
             list($tableName, $tableData) = $this->_getTableData($data);
-            $tableManager = new Phprojekt_Table(Zend_Registry::get('db'));
-            $result = $tableManager->syncTable($tableName, $tableData);
+            $databaseManager->syncTable($data, $tableName, $tableData);
+
+            // Update DatabaseManager Table
+            $databaseManager->saveData($module, $data);
 
             if (empty($id)) {
                 $message = $translate->translate(self::ADD_TRUE_TEXT);
