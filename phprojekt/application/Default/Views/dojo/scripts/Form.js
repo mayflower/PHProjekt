@@ -256,6 +256,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled, iFramePath);
                     break;
+                case 'hidden':
+                    this.formdata += this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue, itemrequired,
+                                                                        itemdisabled);
+                    break;
                 default:
                     this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
@@ -451,6 +455,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             dijit.byId("checkAdminAccess"+str).attr('checked',false);
         }
     },
+    
+    prepareSubmission:function() {
+    	// summary:
+        //    This function prepares the data for submission
+        // description:
+    	//    This function prepares the content of this.sendData before it is
+    	//    submitted to the Server.
+    },
 
     submitForm: function() {
         // summary:
@@ -459,8 +471,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function sends the form data as json data to the server
         //    and call the reload routine
         for(var i = 0; i < this.formsWidget.length; i++) {
+            if (!this.formsWidget[i].isValid()) {
+                var parent = this.formsWidget[i].containerNode.parentNode.id;
+                this.form.selectChild(parent);
+                this.formsWidget[i].validate();
+                return false;
+            }
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
+        
+        this.prepareSubmission();
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
