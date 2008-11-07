@@ -47,7 +47,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 phpr.makeModuleDesignerSource = function() {
     var element = dojo.byId('moduleDesignerSource');
     var html    = '';
-    var types   = new Array('text', 'date', 'time', 'selectValues', 'percentaje', 'textarea', 'password', 'upload')
+    var types   = new Array('text', 'date', 'time', 'selectValues', 'percentage', 'textarea', 'password', 'upload')
 
     for (i in types) {
         var id = dojo.dnd.getUniqueId();
@@ -98,6 +98,7 @@ phpr.editModuleDesignerField = function(object, target) {
     var listPosition = '';    
     var status       = '';    
     var isRequired   = '';
+    var id           = '';
     dojo.query('.hiddenValue', object.node).forEach(function(ele) {
         switch (ele.name) {
             case 'selectType':
@@ -133,6 +134,9 @@ phpr.editModuleDesignerField = function(object, target) {
             case 'isRequired':
                 isRequired = ele.value;
                 break;
+            case 'id':
+                id = ele.value;
+                break;
         }
     });
 
@@ -157,8 +161,6 @@ phpr.editModuleDesignerField = function(object, target) {
         case 'password':
         case 'checkbox':
         case 'selectValues':
-        case 'user':
-        case 'tree':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
             fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', tableType, true, false);
@@ -172,9 +174,9 @@ phpr.editModuleDesignerField = function(object, target) {
             tableTypeRange.push({'id': 'time', 'name': 'TIME'});
             fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'time', true, false);
             break;
-        case 'percentaje':
-            tableTypeRange.push({'id': 'float', 'name': 'FLOAT'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'float', true, false);
+        case 'percentage':
+            tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
+            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'varchar', true, false);
             break;
         case 'textarea':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
@@ -188,8 +190,6 @@ phpr.editModuleDesignerField = function(object, target) {
     
     switch (formType) {
         case 'selectValues':
-        case 'user':
-        case 'tree':
             var selectTypeRange = new Array();
             selectTypeRange.push({'id': 'project', 'name': 'Project List'});
             selectTypeRange.push({'id': 'user', 'name': 'User List'});
@@ -197,6 +197,8 @@ phpr.editModuleDesignerField = function(object, target) {
             fieldsTable += template.selectRender(selectTypeRange, 'Select Type', 'selectType', selectType, true, false);
             break;
     }
+
+    fieldsTable += '<input type="hidden" name="id" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + id + '" />';
 
     fieldsTable += '<tr><td class="label">';
     fieldsTable += '<label for="moduleDesignerSubmitButtonTable">&nbsp;</label>';
@@ -209,8 +211,6 @@ phpr.editModuleDesignerField = function(object, target) {
     
     switch (formType) {
         case 'selectValues':
-        case 'user':
-        case 'tree':
             if (!formRange) {
                 formRange = 'id1 # value1 | id2 # value2';
             }
@@ -287,10 +287,10 @@ phpr.editModuleDesignerField = function(object, target) {
                 dijit.byId("formRange").attr('value', 'id1 # value1 | id2 # value2');
                 break;
             case 'project':
-                dijit.byId("formRange").attr('value', 'Project');
+                dijit.byId("formRange").attr('value', 'Project # id # title');
                 break;
             case 'user':
-                dijit.byId("formRange").attr('value', 'User');
+                dijit.byId("formRange").attr('value', 'User # id # username');
                 break;
         }
     });
@@ -327,33 +327,6 @@ phpr.saveModuleDesignerField = function(nodeId, target, formType){
     params = dojo.mixin(params, dijit.byId('formList' + '_' + nodeId).attr('value'));
     params = dojo.mixin(params, dijit.byId('formGeneral' + '_' + nodeId).attr('value'));
         
-    switch (formType) {
-        case 'selectValues':
-        case 'user':
-        case 'tree':
-            switch (dijit.byId("selectType").attr('value')) {
-                case 'custom':
-                default:                
-                    params['formRangeTmp'] = new Array();
-                    var options = params['formRange'].split("|");
-                    for (var i in options) {
-                        var values = options[i].split("#");
-                        if (values[0] && values[1]) {
-                            params['formRangeTmp'].push({
-                                'id':   values[0],
-                                'name': values[1]
-                            });     
-                        }
-                    }
-                    params['formRange'] = params['formRangeTmp']; 
-                    break;
-                case 'project':
-                case 'user':
-                    break;
-            }
-            break;
-    }
-                    
     dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
     dojo.style(dojo.byId('moduleDesignerEditor'), "opacity", 0);
     dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "inline");    
@@ -363,13 +336,13 @@ phpr.saveModuleDesignerField = function(nodeId, target, formType){
 };
 
 phpr.makeModuleDesignerField = function(formType, params) {
-    var html     = '';
-    var formLabel    = null;
-    var labelFor = null;
-    var tableField      = null;
-    var required = null;
-    var labelTxt = null;
-    var inputTxt = null;            
+    var html       = '';
+    var formLabel  = null;
+    var labelFor   = null;
+    var tableField = null;
+    var required   = null;
+    var labelTxt   = null;
+    var inputTxt   = null;            
     if (!params) {
         params = new Array();
     }            
@@ -377,13 +350,32 @@ phpr.makeModuleDesignerField = function(formType, params) {
     var formLabel    = '';
     var selectType   = params['selectType'] || 'custom';
     var tableType    = params['tableType'] || 'varchar';
-    var tableLenght  = params['tableLenght'] || 255;
+    if (tableType == 'int') {
+        var tableLenght  = params['tableLenght'] || 11;
+    } else {
+        var tableLenght  = params['tableLenght'] || 255;
+    }
     var tableField   = params['tableField'] || '';
     var formRange    = params['formRange'] || '';
     var defaultValue = params['defaultValue'] || '';
     var listPosition = params['listPosition'] || 1;
     var status       = params['status'] || 1;
     var isRequired   = params['isRequired'] || 0;
+    var id           = params['id'] || 0;
+
+    if (formType == 'selectValues') {
+        var options = formRange.split("|");
+        for (var i in options) {
+            var values = options[i].split("#");
+            if (values[0] && values[1] && !values[2]) {
+                selectType = 'custom';
+                break;
+            } else if (values[0] && values[1] && values[2]) {
+                selectType = values[0].replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
+                break;
+            }
+        }
+    }
         
     switch (formType) {
         case 'text':
@@ -413,46 +405,63 @@ phpr.makeModuleDesignerField = function(formType, params) {
             inputTxt = '<input type="text" dojoType="dijit.form.TimeTextBox" constraints="{formatLength:\'short\', timePattern:\'HH:mm\'}" />';
             break;
         case 'selectValues':
-        case 'user':
-        case 'tree':
             formLabel = params['formLabel'] || 'Select';
-            labelFor = 'select';
+            labelFor  = 'select';
             
-            var formRangeValues = new Array();
-            formRangeValues.push({'id': 'id1', 'name': 'value1'});
-            formRangeValues.push({'id': 'id2', 'name': 'value2'});
-            var formRangeOptions = params['formRange'] || formRangeValues;
+//            var formRangeValues = new Array();
+//            formRangeValues.push({'id': 'id1', 'name': 'value1'});
+//            formRangeValues.push({'id': 'id2', 'name': 'value2'});
+//            var formRangeOptions = params['formRange'] || formRangeValues;
             
-            if (!formRange) {
-                formRange = 'id1 # value1 | id2 # value2';
-            } else if (formRange != 'Project' && formRange != 'User') {
-                var formRangeTmp = '';
-                for (var i in formRange) {
-                    formRangeTmp += formRange[i]['id'] + '#' + formRange[i]['name'];
-                    if (i < (formRange.length - 1)) {
-                        formRangeTmp += '|';
-                    }
-                }
-                formRange = formRangeTmp;
-            }
+//            if (!formRange) {
+//                formRange = 'id1 # value1 | id2 # value2';
+//                var formRangeOptions = formRangeValues;
+//            } else if (selectType == 'custom') {
+//                var formRangeTmp = '';
+//                for (var i in formRange) {
+//                    formRangeTmp += formRange[i]['id'] + '#' + formRange[i]['name'];
+//                    if (i < (formRange.length - 1)) {
+//                        formRangeTmp += '|';
+//                    }
+//                }
+//                formRange = formRangeTmp;
+//            }
             inputTxt = '<select dojoType="dijit.form.FilteringSelect" autocomplete="true" searchAttr="name" invalidMessage="" >';
+            //if (!formRange) {
+//                formRange = 'id1 # value1 | id2 # value2';
+//                var formRangeOptions = formRangeValues;
+
             
-            if (formRange == 'Project') {
+            if (selectType == 'project') {
                 inputTxt += '<option value="1">Example Project 1</option>';
                 inputTxt += '<option value="2">Example Project 2</option>';
-            } else if (formRange == 'User') {
+            } else if (selectType == 'user') {
                 inputTxt += '<option value="1">Example User 1</option>';
                 inputTxt += '<option value="2">Example User 2</option>';
             } else {
+                if (!formRange) {
+                    formRange = 'id1 # value1 | id2 # value2';
+                }
+                var formRangeOptions = new Array();
+                var options = formRange.split("|");
+                for (var i in options) {
+                    var values = options[i].split("#");
+                        if (values[0] && values[1]) {
+                            formRangeOptions.push({
+                                'id':   values[0],
+                                'name': values[1]
+                        });
+                    }
+                }
                 for (i in formRangeOptions) {
                     inputTxt += '<option value="' + formRangeOptions[i]['id'] + '">' + formRangeOptions[i]['name'] + '</option>';
                 }
             }
             inputTxt += '</select>';
             break;
-        case 'percentaje':
+        case 'percentage':
             formLabel = params['formLabel'] || 'Percentaje';
-            labelFor = 'percentaje';
+            labelFor = 'percentage';
             inputTxt = '<div dojoType="dijit.form.HorizontalSlider" maximum="100" minimum="0" pageIncrement="100" showButtons="false"';
             inputTxt += ' intermediateChanges="true" style="height: 20px;">';
             inputTxt += '<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"';
@@ -497,6 +506,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
 
     html += '<input type="hidden" name="status" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + status + '" />';
     html += '<input type="hidden" name="isRequired" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + isRequired + '" />';
+    html += '<input type="hidden" name="id" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + id + '" />';
 
     html += '</td></tr></table>';
     

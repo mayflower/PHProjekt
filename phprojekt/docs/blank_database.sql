@@ -147,9 +147,9 @@ CREATE TABLE `Project` (
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
-  `completePercent` float default '0',
-  `hourlyWageRate` float default NULL,
-  `budget` float default NULL,
+  `completePercent` text default '0',
+  `hourlyWageRate` varchar(10) default NULL,
+  `budget` varchar(10) default NULL,
   PRIMARY KEY (`id`)
 );
 

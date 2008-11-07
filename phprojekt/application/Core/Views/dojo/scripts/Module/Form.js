@@ -109,6 +109,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                         case 'isRequired':
                             data[i]['isRequired'] = ele.value;
                             break;
+                        case 'id':
+                            data[i]['id'] = ele.value;
+                            break;
                     }
                 });
             });

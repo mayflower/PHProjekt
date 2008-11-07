@@ -51,13 +51,12 @@ class Phprojekt_Table {
     /**
      * Initialize a new table admin
      *
-     * @param array                   $db    Db configurations
+     * @param array $db Db configurations
      */
     public function __construct($db = null)
     {
-        $this->_db = $db;
+        $this->_db     = $db;
         $this->_dbType = get_class($db);
-
         $this->_dbType = strtolower(substr($this->_dbType, strpos($this->_dbType, "Pdo") + 4));
     }
 
@@ -65,9 +64,9 @@ class Phprojekt_Table {
      * Creates a table
      *
      * @param $tableName String table name
-     * @param $fields array with fieldnames as key
-     *                Options: 'type', 'length', 'null', 'default')
-     * @param $keys array with primary keys
+     * @param $fields    Array with fieldnames as key
+     *                   Options: 'type', 'length', 'null', 'default')
+     * @param $keys      Array with primary keys
      * 
      * @return boolean
      */
@@ -75,12 +74,12 @@ class Phprojekt_Table {
     {
         $sqlString = "CREATE TABLE ".(string)$tableName." (";
 
-        if(is_array($fields) && !empty($fields)) {
+        if (is_array($fields) && !empty($fields)) {
             foreach ($fields as $fieldName => $fieldDefinition) {
 
-                $fieldDefinition['length']  = (empty($fieldDefinition['length']))? "" : $fieldDefinition['length'];
+                $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ? "" : $fieldDefinition['length'];
                 $fieldDefinition['null']    = $fieldDefinition['null'];
-                $fieldDefinition['default'] = (empty($fieldDefinition['default']))? "" : $fieldDefinition['default'];
+                $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
 
                 $sqlString .= $fieldName;
                 $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
@@ -113,10 +112,10 @@ class Phprojekt_Table {
     /**
      * Add a field on a table
      *
-     * @param $tableName String table name
-     * @param $fieldDefinition array with field definition
+     * @param $tableName       String table name
+     * @param $fieldDefinition Array with field definition
      *                         Options: 'name', 'type', 'length', 'null', 'default')
-     * @param $position after position
+     * @param $position        After position
      * 
      * @return boolean
      */
@@ -124,10 +123,10 @@ class Phprojekt_Table {
     {
         $sqlString = "ALTER TABLE ".(string)$tableName." ADD ";
 
-        if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            $fieldDefinition['length']  = (empty($fieldDefinition['length']))?"":$fieldDefinition['length'];
+        if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
+            $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ?"":$fieldDefinition['length'];
             $fieldDefinition['null']    = $fieldDefinition['null'];
-            $fieldDefinition['default'] = (empty($fieldDefinition['default']))?"":$fieldDefinition['default'];
+            $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ?"":$fieldDefinition['default'];
 
             $sqlString .= $fieldDefinition['name'];
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
@@ -141,15 +140,60 @@ class Phprojekt_Table {
             $sqlString .= " AFTER " . (string)$position;
         }
 
-        Zend_Registry::get('log')->debug($sqlString);
+        return $this->_db->getConnection()->exec($sqlString);
+    }
+
+    /**
+     * Change the name and parameteres of a field
+     *
+     * @param $tableName       String table name
+     * @param $fieldDefinition Array with field definition
+     *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default')
+     * 
+     * @return boolean
+     */
+    public function changeField($tableName, $fieldDefinition, $position = null)
+    {
+        return $this->modifyField($tableName, $fieldDefinition, $position);
+    }
+
+    /**
+     * Modifies a field on a table
+     *
+     * @param $tableName       String table name
+     * @param $fieldDefinition Array with field definition
+     *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default')
+     * 
+     * @return boolean
+     */
+    public function modifyField($tableName, $fieldDefinition, $position = null)
+    {
+        $sqlString = "ALTER TABLE ".(string)$tableName." MODIFY ";
+
+        if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
+            $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ? "" : $fieldDefinition['length'];
+            $fieldDefinition['null']    = $fieldDefinition['null'];
+            $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
+
+            if (isset($fieldDefinition['oldName'])) {
+                $sqlString .= $fieldDefinition['oldName'] .' ';
+            }
+            $fieldDefinition['name'];
+            $sqlString .= $fieldDefinition['name'];
+            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
+                                                    $fieldDefinition['null'], $fieldDefinition['default']);
+        } else {
+            return false;
+        }
+
         return $this->_db->getConnection()->exec($sqlString);
     }
 
     /**
      * Deletes a field on a table
      *
-     * @param $tableName String table name
-     * @param $fieldDefinition array with field definition
+     * @param $tableName       String table name
+     * @param $fieldDefinition Array with field definition
      *                         Options: 'name', 'type', 'length', 'null', 'default')
      * 
      * @return boolean
@@ -158,30 +202,28 @@ class Phprojekt_Table {
     {
         $sqlString = "ALTER TABLE ".(string)$tableName." DROP ";
 
-        if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
+        if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
 
             $sqlString .= $fieldDefinition['name'];
 
         } else {
             return false;
         }
-        Zend_Registry::get('log')->debug($sqlString);
         return $this->_db->getConnection()->exec($sqlString);
     }
 
     /**
      * Return an string with the field definition for each table type.
      *
-     * @param string $fieldType regular field type names
-     * @param int $fieldLength field length 
+     * @param string  $fieldType   Regular field type names
+     * @param int     $fieldLength Field length 
      * @param boolean $allowNull 
-     * @param string $default default value
+     * @param string  $default     Default value
      *
      * @return string
      */
     private function _getTypeDefinition($fieldType, $fieldLength = null, $allowNull = true, $default = null)
     {
-
         switch ($this->_dbType) {
             case 'sqlite':
             case 'sqlite2':
@@ -227,77 +269,24 @@ class Phprojekt_Table {
     }
 
     /**
-     * Synchronizes a table with the provided definition
+     * Check the table and return the field
+     * If the table don`t exist, try to create it
      *
-     * @param $tableName String table name
-     * @param $fields array with fieldnames as key
-     *                Options: 'type', 'length', 'null', 'default')
-     * @param $keys array with primary keys
-     * 
-     * @return boolean
-     */
-    public function syncTable($tableName, $fields, $keys = array())
+     * @param string $tableName The name of the table
+     * @param array  $fields    The fields definitions
+     * @param array  $keys      The PRIMARY KEY values
+     *
+     * @return array
+     */ 
+    public function getTableFields($tableName, $fields, $keys = array('id'))
     {
         try {
             $tableFields = $this->_db->describeTable($tableName);
+            return $tableFields;
         } catch (Exception $e) {
-            return $this->createTable($tableName, $fields, $keys);
-
+            $this->createTable($tableName, $fields, $keys);
+            $tableFields = $this->_db->describeTable($tableName);
+            return $tableFields;
         }
-
-        if(is_array($fields) && !empty($fields)) {
-            foreach ($fields as $fieldName => $fieldDefinition) {
-                if (array_key_exists($fieldName, $tableFields)) {
-                    $fieldDefinition['name'] = $fieldName;
-                    $this->modifyField($tableName, $fieldDefinition);
-                    unset($tableFields[$fieldName]);
-                } else {
-                    $fieldDefinition['name'] = $fieldName;
-                    $this->addField($tableName, $fieldDefinition);
-                }
-            }
-        } else {
-            return false;
-        }
-
-        if (is_array($tableFields) && !empty($tableFields)) {
-            foreach ($tableFields as $fieldName => $fieldDefinition) {
-                if (!in_array($fieldName, $this->_excludeFields)) {
-                    $fieldDefinition['name'] = $fieldName;
-                    $this->deleteField($tableName, $fieldDefinition);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Modifies a field on a table
-     *
-     * @param $tableName String table name
-     * @param $fieldDefinition array with field definition
-     *                         Options: 'name', 'type', 'length', 'null', 'default')
-     * 
-     * @return boolean
-     */
-    public function modifyField($tableName, $fieldDefinition, $position = null)
-    {
-        $sqlString = "ALTER TABLE ".(string)$tableName." MODIFY ";
-
-        if(is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            $fieldDefinition['length']  = (empty($fieldDefinition['length']))  ? "" : $fieldDefinition['length'];
-            $fieldDefinition['null']    = $fieldDefinition['null'];
-            $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
-
-            $sqlString .= $fieldDefinition['name'];
-            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                    $fieldDefinition['null'], $fieldDefinition['default']);
-        } else {
-            return false;
-        }
-
-        Zend_Registry::get('log')->debug($sqlString);
-        return $this->_db->getConnection()->exec($sqlString);
     }
 }
