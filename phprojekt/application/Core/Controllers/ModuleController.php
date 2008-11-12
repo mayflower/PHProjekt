@@ -75,6 +75,8 @@ class Core_ModuleController extends Core_IndexController
             $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 
+        $moduleName = $this->getRequest()->getParam('name', null);
+        $this->getRequest()->setParam('name', ucfirst($moduleName));
         $model->saveModule($this->getRequest()->getParams());
 
         $return    = array('type'    => 'success',

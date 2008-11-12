@@ -98,9 +98,17 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     public function saveDisplay($object, $moduleId, $itemId)
     {
-        $firstDisplay  = $object->{$object->searchFirstDisplayField};
-        $secondDisplay = $object->{$object->searchSecondDisplayField};
+        $firstDisplay  = '';
+        $secondDisplay = '';
+        $firstField    = $object->searchFirstDisplayField;
+        $secondField   = $object->searchSecondDisplayField;
         $projectId     = $object->projectId;
+        if (isset($object->$firstField)) {
+            $firstDisplay  = $object->$firstField;
+        }
+        if (isset($object->$secondField)) {
+            $secondDisplay = $object->$secondField;
+        }
         if (!$this->_exists($moduleId, $itemId)) {
             $this->_save($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay);
         } else {

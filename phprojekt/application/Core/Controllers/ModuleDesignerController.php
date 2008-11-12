@@ -62,19 +62,23 @@ class Core_ModuleDesignerController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $translate       = Zend_Registry::get('translate');
-        $id              = (int) $this->getRequest()->getParam('id');
-        $data            = $this->getRequest()->getParam('designerData');
-        $module          = Phprojekt_Module::getModuleName($id);
-        $model           = Phprojekt_Loader::getModel($module, $module);
+        $translate  = Zend_Registry::get('translate');
+        $id         = (int) $this->getRequest()->getParam('id');
+        $data       = $this->getRequest()->getParam('designerData');
+	    $model      = null;
+        $module     = $this->getRequest()->getParam('name');
+        $module = ucfirst($module);
+        if ($id > 0) {
+            $model = Phprojekt_Loader::getModel($module, $module);
+	    }
         $databaseManager = new Phprojekt_DatabaseManager($model);
         $data            = Zend_Json_Decoder::decode($data);
 
         // Validate
         if ($databaseManager->recordValidate($module, $data)) {
             // Update Table Structure
-            list($tableName, $tableData) = $this->_getTableData($data);
-            $databaseManager->syncTable($data, $tableName, $tableData);
+            $tableData = $this->_getTableData($data);
+            $databaseManager->syncTable($data, $module, $tableData);
 
             // Update DatabaseManager Table
             $databaseManager->saveData($module, $data);
@@ -99,9 +103,15 @@ class Core_ModuleDesignerController extends Core_IndexController
         echo Phprojekt_Converter_Json::convert($return);
     }
 
+    /**
+     * Get the length and type from the values
+     *
+     * @param array $data Array $_POST
+     *
+     * @return array
+     */
     private function _getTableData($data)
     {
-        $tableName = null;
         $tableData = array();
 
         foreach ($data as $field) {
@@ -109,16 +119,14 @@ class Core_ModuleDesignerController extends Core_IndexController
             $tableData[$field['tableField']]['null']    = true;
             $tableData[$field['tableField']]['default'] = null;
             foreach ($field as $key => $value) {
-                if ($key == 'tableName') {
-                    $tableName = $field['tableName'];
-                } else if ($key == 'tableType') {
+                if ($key == 'tableType') {
                     $tableData[$field['tableField']]['type'] = $field['tableType'];
-                } else if ($key == 'tableLenght') {
-                    $tableData[$field['tableField']]['length'] = $field['tableLenght'];
+                } else if ($key == 'tableLength') {
+                    $tableData[$field['tableField']]['length'] = $field['tableLength'];
                 }
             }
         }
 
-        return array($tableName, $tableData);
+        return $tableData;
     }
 }
