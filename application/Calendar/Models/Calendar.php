@@ -101,6 +101,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $serialDates[] = array(1 => (int)$serialDates);
         }
         
+        //TODO: create a better GLOBALLY unique uid
+        $request->setParam('uid', md5(time()));
+        
         // getting reqesuted dates for the serial meeting (if it is serial)
         $eventDates = self::getSerialDates($startDate, $endDate, $serialType, $serialDates);
 
