@@ -103,7 +103,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * @param Phprojekt_Item_Abstract $model Phprojekt_Item_Abstract
      * @param array                   $db    Db configurations
      */
-    public function __construct(Phprojekt_Item_Abstract $model, $db = null)
+    public function __construct(Phprojekt_Item_Abstract $model = null, $db = null)
     {
         parent::__construct($db);
         $this->_model = $model;
@@ -142,12 +142,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (!empty($this->_dbFields[$order])) {
             $result = $this->_dbFields[$order];
         } else {
-            $table = $this->_model->getTableName();
+            if (null !== $this->_model) {
+                $table = $this->_model->getTableName();
 
-            if (in_array($order, $this->_mapping)) {
-                $where = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
-                $result = $this->fetchAll($where, $order);
-                $this->_dbFields[$order] = $result;
+                if (in_array($order, $this->_mapping)) {
+                    $where = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
+                    $result = $this->fetchAll($where, $order);
+                    $this->_dbFields[$order] = $result;
+                }
+            } else {
+                $this->_dbFields[$order] = array();
             }
         }
         return $result;
@@ -335,6 +339,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $options = array();
         list($module, $key, $value) = explode('#', $field->formRange);
+        $module = trim($module);
+        $key    = trim($key);
+        $value  = trim($value);
         switch ($module) {
             case 'Project':
                 $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
@@ -459,7 +466,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function saveData($table, $data)
     {
-        $where = $this->getAdapter()->quoteInto('tableName = ?', $table);
+        $where  = $this->getAdapter()->quoteInto('tableName = ?', $table);
         $result = $this->fetchAll($where);
         foreach ($result as $row) {
             $row->delete();
@@ -471,6 +478,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $databaseManager->$key = $value;
                 }
             }
+            $databaseManager->tableName = $table;
             $databaseManager->save();
         }
     }
@@ -487,21 +495,22 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $fields = $this->_getFields('formPosition');
         $data   = array();
-        $i      = 0; 
-        $info   = $this->_model->info();
-
-        foreach ($fields as $field) {
-            $data[$i]['tableName'] = $info['name'];
-            while($field->valid()) {
-                $key = $field->key();
-                if ($key != 'tableName') {
-                    $data[$i][$key] = $field->$key;
+        $i      = 0;
+        if (null !== $this->_model) {
+            $info   = $this->_model->info();
+            foreach ($fields as $field) {
+                $data[$i]['tableName'] = $info['name'];
+                while($field->valid()) {
+                    $key = $field->key();
+                    if ($key != 'tableName') {
+                        $data[$i][$key] = $field->$key;
+                    }
+                    $field->next();
                 }
-                $field->next();
+                $data[$i]['tableType']   = $info['metadata'][$field->tableField]['DATA_TYPE'];
+                $data[$i]['tableLength'] = $info['metadata'][$field->tableField]['LENGTH'];
+                $i++;
             }
-            $data[$i]['tableType']   = $info['metadata'][$field->tableField]['DATA_TYPE'];
-            $data[$i]['tableLength'] = $info['metadata'][$field->tableField]['LENGTH'];
-            $i++;
         }
 
         return $data;
@@ -520,7 +529,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $tableManager = new Phprojekt_Table(Zend_Registry::get('db'));
         $oldFields    = $this->getDataDefinition();
-        $tableFields  = $tableManager->getTableFields($tableName, $tableData);
+        $tableDataForCreate['id'] = array('type'   => 'auto_increment',
+                                          'length' => 11);
+        $tableDataForCreate['ownerId'] = array('type'   => 'int',
+                                               'length' => 11);
+        array_merge($tableDataForCreate, $tableData);
+        $tableFields  = $tableManager->getTableFields($tableName, $tableDataForCreate);
 
         // Search for Modify and Delete
         foreach ($oldFields as $oldValues) {

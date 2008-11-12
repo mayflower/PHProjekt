@@ -65,4 +65,20 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
         }
         return $modules;
     }
+
+    /**
+     * Add a new relation module-role without delete any entry
+     * Used for add modules to the role 1
+     *
+     * @param int $moduleId  The Module Id to add
+     *
+     * @return void
+     */
+    public function addModuleToAdminRole($moduleId)
+    {
+        $this->roleId   = 1;
+        $this->moduleId = $moduleId;
+        $this->access   = 139;
+        $this->save();        
+    } 
 }

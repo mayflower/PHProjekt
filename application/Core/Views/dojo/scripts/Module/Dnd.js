@@ -89,7 +89,7 @@ phpr.editModuleDesignerField = function(object, target) {
     var nodeId       = null;    
     var selectType   = '';
     var tableType    = ''
-    var tableLenght  = '';
+    var tableLength  = '';
     var tableField   = '';
     var formLabel    = '';
     var formType     = '';
@@ -107,8 +107,8 @@ phpr.editModuleDesignerField = function(object, target) {
             case 'tableType':
                 tableType = ele.value;
                 break;
-            case 'tableLenght':
-                tableLenght = ele.value;
+            case 'tableLength':
+                tableLength = ele.value;
                 break;
             case 'tableField':
                 tableField = ele.value;
@@ -164,7 +164,7 @@ phpr.editModuleDesignerField = function(object, target) {
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
             fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', tableType, true, false);
-            fieldsTable += template.textFieldRender('Table Lenght', 'tableLenght', tableLenght, true, false);
+            fieldsTable += template.textFieldRender('Table Lenght', 'tableLength', tableLength, true, false);
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
@@ -351,9 +351,9 @@ phpr.makeModuleDesignerField = function(formType, params) {
     var selectType   = params['selectType'] || 'custom';
     var tableType    = params['tableType'] || 'varchar';
     if (tableType == 'int') {
-        var tableLenght  = params['tableLenght'] || 11;
+        var tableLength  = params['tableLength'] || 11;
     } else {
-        var tableLenght  = params['tableLenght'] || 255;
+        var tableLength  = params['tableLength'] || 255;
     }
     var tableField   = params['tableField'] || '';
     var formRange    = params['formRange'] || '';
@@ -494,7 +494,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         
     html += '<input type="hidden" name="selectType" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + selectType + '" />';
     html += '<input type="hidden" name="tableType" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + tableType + '" />';
-    html += '<input type="hidden" name="tableLenght" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + tableLenght + '" />';
+    html += '<input type="hidden" name="tableLength" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + tableLength + '" />';
     html += '<input type="hidden" name="tableField" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + tableField + '" />';
     
     html += '<input type="hidden" name="formLabel" class="hiddenValue" dojoType="dijit.form.TextBox" value="' + formLabel + '" />';

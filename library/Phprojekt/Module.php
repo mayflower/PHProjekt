@@ -61,8 +61,7 @@ class Phprojekt_Module
 
         $db     = Zend_Registry::get('db');
         $select = $db->select()
-                     ->from('Module')
-                     ->where('active = 1');
+                     ->from('Module');
         $stmt = $db->query($select);
         $rows = $stmt->fetchAll();
 

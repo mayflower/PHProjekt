@@ -84,8 +84,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                         case 'tableType':
                             data[i]['tableType'] = ele.value;
                             break;
-                        case 'tableLenght':
-                            data[i]['tableLenght'] = ele.value;
+                        case 'tableLength':
+                            data[i]['tableLength'] = ele.value;
                             break;
                         case 'formLabel':
                             data[i]['formLabel']   = ele.value;

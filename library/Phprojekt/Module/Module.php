@@ -94,7 +94,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
      */
     public function saveModule(array $params)
     {
-        $this->name   = $params['name'];
+        $this->name   = ucfirst($params['name']);
         $this->active = (int) $params['active'];
 
         if ($this->recordValidate()) {
@@ -115,6 +115,13 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             if ($saveNewModule) {
                 $project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
                 $project->addModule($this->id);
+
+                // Save Module into the role 1 with 255 access
+                $role  = new Phprojekt_Role_RoleModulePermissions();
+                $role->addModuleToAdminRole($this->id);
+
+                // Copy Templates files
+                $this->_copyTemplates(array('Template'));
             }
             return $this->id;
         } else {
@@ -175,5 +182,92 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
      */
     public function saveRights()
     {
+    }
+
+
+    /**
+     * Create a folder if this not exists in the system
+     * The folder is created with 0770 permissions and then
+     * change it to 0775
+     *
+     * @param array $pathToFolder Array with all the folder names
+     *
+     * @return void
+     */
+    private function _makeFolder($pathToFolder)
+    {
+        $folderPath = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $this->name;
+        if (!is_dir($folderPath)) {
+            if (mkdir($folderPath, 0770)) {
+                chmod($folderPath, 0775);
+            } else {
+                Zend_Registry::get('log')->debug('Error on create folder ' . $path);
+            }
+        }
+
+        foreach ($pathToFolder as $key => $path) {
+            if ($key > 0) {
+                $folderPath .= DIRECTORY_SEPARATOR . $path;
+            }
+        }
+        if (mkdir($folderPath, 0770)) {
+            chmod($folderPath, 0775);
+        } else {
+            Zend_Registry::get('log')->debug('Error on create folder ' . $folderPath);
+        }
+    }    
+
+    /**
+     * Read the Template folder and try to reproduce it
+     * into the aplication folder
+     *
+     * All the strings ##TEMPLATE##
+     * are reemplaced by the name of the module
+     *
+     * @param array $paths Array with all the folder names
+     *
+     * @return void
+     */
+    private function _copyTemplates($paths)
+    {
+        $templatePath = PHPR_LIBRARY_PATH;
+        foreach ($paths as $path) {
+            $templatePath .= DIRECTORY_SEPARATOR . $path;
+        }
+        $files = scandir($templatePath);
+        foreach ($files as $file) {
+            if ($file != '.'  &&
+                $file != '..' &&
+                $file != '.svn') {
+                if (is_dir($templatePath . DIRECTORY_SEPARATOR .$file)) {
+                    array_push($paths, $file);
+                    $this->_makeFolder($paths);
+                    $this->_copyTemplates($paths);
+                    array_pop($paths);
+                } else {
+                    $templateContent = file_get_contents($templatePath . DIRECTORY_SEPARATOR .$file);
+                    $templateContent = ereg_replace("##TEMPLATE##", $this->name, $templateContent);
+                    if ($file == 'Template.php') {
+                        $file = $this->name . '.php';
+                    }
+
+                    $modulePath = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $this->name;
+                    foreach ($paths as $key => $path) {
+                        if ($key > 0) {
+                            $modulePath .= DIRECTORY_SEPARATOR . $path;
+                        }
+                    }
+                    if ($newFile = fopen($modulePath . DIRECTORY_SEPARATOR .$file, 'w')) {
+                        if (false === fwrite($newFile, $templateContent)) {
+                            Zend_Registry::get('log')->debug('Error on copy file ' .
+                                                             $modulePath .
+                                                             DIRECTORY_SEPARATOR .
+                                                             $file);
+                        }
+                        fclose($newFile);
+                    }
+                }
+            }
+        }
     }
 }

@@ -72,7 +72,8 @@ class Phprojekt_Table {
      */
     public function createTable($tableName, $fields, $keys = array())
     {
-        $sqlString = "CREATE TABLE ".(string)$tableName." (";
+        $tableName = ucfirst($tableName);
+        $sqlString = "CREATE TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " (";
 
         if (is_array($fields) && !empty($fields)) {
             foreach ($fields as $fieldName => $fieldDefinition) {
@@ -121,14 +122,15 @@ class Phprojekt_Table {
      */
     public function addField($tableName, $fieldDefinition, $position = null)
     {
-        $sqlString = "ALTER TABLE ".(string)$tableName." ADD ";
+        $tableName = ucfirst($tableName);
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " ADD ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
             $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ?"":$fieldDefinition['length'];
             $fieldDefinition['null']    = $fieldDefinition['null'];
             $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ?"":$fieldDefinition['default'];
 
-            $sqlString .= $fieldDefinition['name'];
+            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                                                     $fieldDefinition['null'], $fieldDefinition['default']);
         } else {
@@ -168,7 +170,8 @@ class Phprojekt_Table {
      */
     public function modifyField($tableName, $fieldDefinition, $position = null)
     {
-        $sqlString = "ALTER TABLE ".(string)$tableName." MODIFY ";
+        $tableName = ucfirst($tableName);
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " MODIFY ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
             $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ? "" : $fieldDefinition['length'];
@@ -176,10 +179,9 @@ class Phprojekt_Table {
             $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
 
             if (isset($fieldDefinition['oldName'])) {
-                $sqlString .= $fieldDefinition['oldName'] .' ';
+                $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['oldName']) . ' ';
             }
-            $fieldDefinition['name'];
-            $sqlString .= $fieldDefinition['name'];
+            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                                                     $fieldDefinition['null'], $fieldDefinition['default']);
         } else {
@@ -200,12 +202,11 @@ class Phprojekt_Table {
      */
     public function deleteField($tableName, $fieldDefinition)
     {
-        $sqlString = "ALTER TABLE ".(string)$tableName." DROP ";
+        $tableName = ucfirst($tableName);
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " DROP ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
-
-            $sqlString .= $fieldDefinition['name'];
-
+            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
         } else {
             return false;
         }
@@ -261,7 +262,7 @@ class Phprojekt_Table {
 
         if (!empty($default)) {
             $fieldDefinition .= " DEFAULT '" . (string)$default ."'";
-        } else {
+        } else if ($allowNull) {
             $fieldDefinition .= " DEFAULT NULL";
         }
 
@@ -284,6 +285,7 @@ class Phprojekt_Table {
             $tableFields = $this->_db->describeTable($tableName);
             return $tableFields;
         } catch (Exception $e) {
+            $tableName = ucfirst($tableName);
             $this->createTable($tableName, $fields, $keys);
             $tableFields = $this->_db->describeTable($tableName);
             return $tableFields;
