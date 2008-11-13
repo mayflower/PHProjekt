@@ -52,7 +52,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['type']     = 'text';
         $data['hint']     = $translate->translate('name');
         $data['order']    = 0;
-        $data['position'] = 2;
+        $data['position'] = 1;
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
@@ -61,6 +61,23 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
 
         $converted[] = $data;
         
+
+        // label
+        $data = array();
+        $data['key']      = 'label';
+        $data['label']    = $translate->translate('Label');
+        $data['type']     = 'text';
+        $data['hint']     = $translate->translate('Label');
+        $data['order']    = 0;
+        $data['position'] = 2;
+        $data['fieldset'] = '';
+        $data['range']    = array('id'   => '',
+                                  'name' => '');
+        $data['required'] = true;
+        $data['readOnly'] = false;
+
+        $converted[] = $data;
+                
         // active
         $data = array();
         $data['key']      = 'active';

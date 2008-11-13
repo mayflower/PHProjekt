@@ -43,7 +43,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']        = $module->id;
             $modules['data'][$module->id]['name']      = $module->name;
-            $modules['data'][$module->id]['label']     = Zend_Registry::get("translate")->translate($module->name);
+            $modules['data'][$module->id]['label']     = Zend_Registry::get("translate")->translate($module->label);
             $modules['data'][$module->id]['inProject'] = false;
         }
         $where  = ' ProjectModulePermissions.projectId = ' . $projectId;

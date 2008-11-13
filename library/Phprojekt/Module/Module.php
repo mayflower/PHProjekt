@@ -95,6 +95,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     public function saveModule(array $params)
     {
         $this->name   = ucfirst($params['name']);
+        $this->label  = $params['label'];
         $this->active = (int) $params['active'];
 
         if ($this->recordValidate()) {
