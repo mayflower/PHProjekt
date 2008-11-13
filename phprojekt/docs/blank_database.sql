@@ -89,6 +89,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
   `saveType` int(1) NOT NULL default 0,
   `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`)
@@ -427,13 +428,13 @@ CREATE TABLE `Calendar` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `name`, `saveType`, `active`) VALUES
-(1, 'Project', 0, 1),
-(2, 'Todo', 0, 1),
-(3, 'Note', 0, 1),
-(4, 'Timecard', 1, 1),
-(5, 'Calendar', 1, 1),
-(6, 'Gantt', 0, 1);
+INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
+(1, 'Project', 'Project', 0, 1),
+(2, 'Todo', 'Todo', 0, 1),
+(3, 'Note', 'Note', 0, 1),
+(4, 'Timecard', 'Timecard', 1, 1),
+(5, 'Calendar', 'Calendar', 1, 1),
+(6, 'Gantt', 'Gantt', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),

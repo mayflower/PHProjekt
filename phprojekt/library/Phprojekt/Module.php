@@ -67,6 +67,7 @@ class Phprojekt_Module
 
         foreach ($rows as $row) {
            self::$_cache[$row['name']] = array('id'       => $row['id'],
+                                               'label'    => $row['label'],
                                                'saveType' => $row['saveType']);
         }
 
@@ -115,6 +116,26 @@ class Phprojekt_Module
         return null;
     }
 
+    /**
+     * Returns the label for a given module id
+     *
+     * @param integer $id The module id
+     *
+     * @return string
+     */
+    public static function getModuleLabel($id)
+    {
+        $modules = self::_getCachedIds();
+
+        foreach ($modules as $data) {
+            if ($data['id'] == $id) {
+                return $data['label'];
+            }
+        }
+
+        return null;
+    }
+        
     /**
      * Returns the saveType for a given module
      *

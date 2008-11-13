@@ -71,7 +71,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
             $result = array('id'            => $itemId,
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                            'moduleLabel'   => Zend_Registry::get("translate")->translate(Phprojekt_Module::getModuleName($moduleId)),
+                            'moduleLabel'   => Zend_Registry::get("translate")->translate(Phprojekt_Module::getModuleLabel($moduleId)),
                             'firstDisplay'  => $tmpResult[0]['firstDisplay'],
                             'secondDisplay' => $tmpResult[0]['secondDisplay'],
                             'projectId'     => $tmpResult[0]['projectId']);
@@ -79,7 +79,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
             $result = array('id'            => $itemId,
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                            'moduleLabel'   => Zend_Registry::get("translate")->translate(Phprojekt_Module::getModuleName($moduleId)),
+                            'moduleLabel'   => Zend_Registry::get("translate")->translate(Phprojekt_Module::getModuleLabel($moduleId)),
                             'firstDisplay'  => '',
                             'secondDisplay' => '',
                             'projectId'     => 1);

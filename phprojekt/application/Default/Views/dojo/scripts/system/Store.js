@@ -125,9 +125,13 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
         var modules = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in modules) {
-            this._list.push({"id":modules[i]['id'],"name":modules[i]['name'],
-                             "read":modules[i]['read'],"write":modules[i]['write'],
-                             "create":modules[i]['create'],"admin":modules[i]['admin']})
+            this._list.push({"id":modules[i]['id'],
+                             "name":modules[i]['name'],
+                             "label":modules[i]['label'],
+                             "read":modules[i]['read'],
+                             "write":modules[i]['write'],
+                             "create":modules[i]['create'],
+                             "admin":modules[i]['admin']})
         }
     }
 });
