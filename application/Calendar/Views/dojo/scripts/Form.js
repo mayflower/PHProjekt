@@ -18,7 +18,10 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 		    // set until value if available
 		    if (this.sendData.rrule_until) {
 		    	until = this.sendData.rrule_until;
-		    	until = dojo.date.add(until, 'minutes', until.getTimezoneOffset());
+		    	until.setHours(this.sendData.startTime.getHours());
+		    	until.setMinutes(this.sendData.startTime.getMinutes());
+		    	until.setSeconds(this.sendData.startTime.getSeconds());
+		    	until = dojo.date.add(until, 'minute', until.getTimezoneOffset());
 		    	rrule += ';UNTIL='+dojo.date.locale.format(until, {datePattern: 'yyyyMMdd\'T\'HHmmss\'Z\'', selector: 'date'});
 		    	this.sendData.rrule_until = null;
 		    }
@@ -67,19 +70,17 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 			UNTIL: '',
 			BYDAY: ''
 		};
-		
 		// parse data to fill the form
 		if (data[0].rrule && data[0].rrule.length > 0) {
 			rrule = data[0].rrule.split(';');
 			for (i = 0; i < rrule.length; i++) {
 				rule = rrule[i].split('=');
-				console.debug(rule);
 				name = rule[0];
 				value = rule[1];
 				switch (name) {
 					case 'UNTIL':
-						value = dojo.date.locale.parse(value, {datePattern: 'yyyyMMdd\'T\'HHmmss\'Z\''});
-						//TODO: Tiomezone conversion 
+						value = dojo.date.locale.parse(value, {datePattern: "yyyyMMdd'T'HHmmss'Z'", selector: 'date'});
+						value = dojo.date.add(value, 'minute', -value.getTimezoneOffset());
 						value = dojo.date.locale.format(value, {datePattern: 'yyyy-MM-dd', selector: 'date'});
 						break;
 				}
