@@ -67,10 +67,14 @@ class Core_ModuleDesignerController extends Core_IndexController
         $data       = $this->getRequest()->getParam('designerData');
 	    $model      = null;
         $module     = $this->getRequest()->getParam('name');
-        $module = ucfirst($module);
+        if (empty($module)) {
+            $module = $this->getRequest()->getParam('label');
+        }
+        $module = ucfirst(ereg_replace(" ", "", $module));
         if ($id > 0) {
             $model = Phprojekt_Loader::getModel($module, $module);
 	    }
+
         $databaseManager = new Phprojekt_DatabaseManager($model);
         $data            = Zend_Json_Decoder::decode($data);
 
@@ -84,9 +88,9 @@ class Core_ModuleDesignerController extends Core_IndexController
             $databaseManager->saveData($module, $data);
 
             if (empty($id)) {
-                $message = $translate->translate(self::ADD_TRUE_TEXT);
+                $message = $translate->translate('The table module was created correctly');
             } else {
-                $message = $translate->translate(self::EDIT_TRUE_TEXT);
+                $message = $translate->translate('The table module was edited correctly');
             }
             $type = 'success';
         } else {
@@ -102,7 +106,7 @@ class Core_ModuleDesignerController extends Core_IndexController
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-
+        
     /**
      * Get the length and type from the values
      *

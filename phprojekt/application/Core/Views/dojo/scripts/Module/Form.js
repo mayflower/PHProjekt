@@ -1,11 +1,6 @@
 dojo.provide("phpr.Module.Form");
 
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
-    setPermissions:function (data) {
-        this._writePermissions = true;
-        this._deletePermissions = false;
-        this._accessPermissions = true;
-    },
     
     initData: function() {
         // Get all the tabs
@@ -17,13 +12,45 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         phpr.DataStore.addStore({url: this._moduleDesignerUrl});
         phpr.DataStore.requestData({url: this._moduleDesignerUrl});
     },
-        
+
     addBasicFields:function() {
+        // Button for open the dialog
         this.formdata += this.fieldTemplate.buttonActionRender('Designer', 'designerButton', 'Open Dialog', '', 'dojo.publish(\'Module.openDialog\');');
+
+        // Hidden field for the MD data
         var designerData = new Object();
         designerData = phpr.DataStore.getData({url: this._moduleDesignerUrl});
+        if (!designerData.length) {
+            designerData = new Object();
+            designerData[0] = new Object();
+            designerData[0]['tableName']     = '';
+            designerData[0]['formPosition']  = 1;
+            designerData[0]['formTab']       = 1;
+            designerData[0]['formColumns']   = 1;
+            designerData[0]['formRegexp']    = null;
+            designerData[0]['listAlign']     = 'center';
+            designerData[0]['listUseFilter'] = 1;
+            designerData[0]['altPosition']   = 0;
+            designerData[0]['isInteger']     = 0;
+            designerData[0]['isUnique']      = 0;
+            designerData[0]['tableField']    = 'projectId';
+            designerData[0]['selectType']    = 'project';
+            designerData[0]['tableType']     = 'int';
+            designerData[0]['tableLength']   = 11;
+            designerData[0]['formLabel']     = 'Project';
+            designerData[0]['formTooltip']   = 'Project';
+            designerData[0]['formType']      = 'selectValues';
+            designerData[0]['formRange']     = 'Project # id # title';
+            designerData[0]['defaultValue']  = 1;
+            designerData[0]['listPosition']  = 1;
+            designerData[0]['status']        = 1;
+            designerData[0]['isRequired']    = 1;
+        }
         var jsonDesignerData = dojo.toJson(designerData);
-        this.formdata += this.fieldTemplate.textFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
+        this.formdata += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
+        
+        // Add onBlur to the label field for update the tableName
+        dojo.connect(dijit.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));
     },
     
     openDialog: function() {
@@ -60,7 +87,11 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                 i++;
                 data[i] = new Object();
                 if (!this.id) {
-                    data[i]['tableName'] = dijit.byId('name').attr('value');
+                    if (dijit.byId('name').attr('value') != '') {
+                        data[i]['tableName'] = dijit.byId('name').attr('value');
+                    } else {
+                        data[i]['tableName'] = this.convertLabelIntoTableName(dijit.byId('label').attr('value'));
+                    }
                 }
                 formPosition++;
                 data[i]['formPosition']  = formPosition;
@@ -120,6 +151,29 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         dijit.byId('designerData').attr('value', json);
     },
 
+    updateDedignerData: function(event) {
+        var data = dojo.fromJson(dijit.byId('designerData').attr('value'));
+        if (this.id > 0) {
+            var value = dijit.byId('name').attr('value');
+        } else {
+            var value = dijit.byId('label').attr('value');
+        }
+        for (var i in data) {
+            data[i]['tableName'] = this.convertLabelIntoTableName(value);
+        }
+        data = dojo.toJson(data);
+        dijit.byId('designerData').attr('value', data);
+        event.stopPropagation();
+        event.preventDefault();
+        dojo.stopEvent(event);
+    },
+    
+    convertLabelIntoTableName: function(value) {
+        value = value.replace(/\s+/g, '');
+        var first = value.charAt(0).toUpperCase();
+        return first + value.substr(1, value.length-1);
+    },
+    
     submitForm: function() {
         for(var i = 0; i < this.formsWidget.length; i++) {
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
@@ -136,10 +190,16 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
-                            if (data.type =='success') {
+                            if (data.type == 'success') {
+                                if (!this.id) {
+                                    var response     = {};
+                                    response.type    = 'notice';
+                                    response.message = phpr.nls.get('YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE');
+                                    new phpr.handleResponse('serverFeedback', response);
+                                }   
                                 this.publish("updateCacheData");
                                 this.publish("reload");
-                            }
+                            }         
                         })
                     });
                }
@@ -147,6 +207,19 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         });
     },
 
+    deleteForm: function() {
+        phpr.send({
+            url:       phpr.webpath + 'index.php/Core/module/jsonDelete/id/' + this.id,
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
+               if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    this.publish("reload");
+               }
+            })
+        });
+    },
+        
     updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._moduleDesignerUrl});

@@ -47,7 +47,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 phpr.makeModuleDesignerSource = function() {
     var element = dojo.byId('moduleDesignerSource');
     var html    = '';
-    var types   = new Array('text', 'date', 'time', 'selectValues', 'percentage', 'textarea', 'password', 'upload')
+    var types   = new Array('text', 'date', 'time', 'selectValues', 'percentage', 'textarea', 'upload')
 
     for (i in types) {
         var id = dojo.dnd.getUniqueId();
@@ -68,7 +68,7 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
             var tab = eval("moduleDesignerTarget" + tabs[j]['nameId']);
             var element = dojo.byId('moduleDesignerTarget' + tabs[j]['nameId']);
             var html = '';
-            
+        
             for (var i in data) {
                 if (data[i]['formTab'] == tabs[j]['id']) {
                     var id = dojo.dnd.getUniqueId();
@@ -158,7 +158,6 @@ phpr.editModuleDesignerField = function(object, target) {
     var tableTypeRange = new Array();
     switch (formType) {
         case 'text':
-        case 'password':
         case 'checkbox':
         case 'selectValues':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
@@ -285,12 +284,18 @@ phpr.editModuleDesignerField = function(object, target) {
             case 'custom':
             default:
                 dijit.byId("formRange").attr('value', 'id1 # value1 | id2 # value2');
+                dijit.byId("tableType").attr('value', 'int');
+                dijit.byId("tableLength").attr('value', 11);
                 break;
             case 'project':
                 dijit.byId("formRange").attr('value', 'Project # id # title');
+                dijit.byId("tableType").attr('value', 'int');
+                dijit.byId("tableLength").attr('value', 11);                
                 break;
             case 'user':
                 dijit.byId("formRange").attr('value', 'User # id # username');
+                dijit.byId("tableType").attr('value', 'int');
+                dijit.byId("tableLength").attr('value', 11);                
                 break;
         }
     });
@@ -384,11 +389,6 @@ phpr.makeModuleDesignerField = function(formType, params) {
             labelFor = 'text';
             inputTxt = '<input type="text" dojoType="dijit.form.TextBox" ucfirst="true" />'
             break;
-        case 'password':
-            formLabel = params['formLabel'] || 'Password';
-            labelFor = 'password';
-            inputTxt = '<input type="password" dojoType="dijit.form.TextBox" />'
-            break;
         case 'checkbox':
             formLabel = params['formLabel'] || 'Checkbox';
             labelFor = 'checkbox';
@@ -407,30 +407,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         case 'selectValues':
             formLabel = params['formLabel'] || 'Select';
             labelFor  = 'select';
-            
-//            var formRangeValues = new Array();
-//            formRangeValues.push({'id': 'id1', 'name': 'value1'});
-//            formRangeValues.push({'id': 'id2', 'name': 'value2'});
-//            var formRangeOptions = params['formRange'] || formRangeValues;
-            
-//            if (!formRange) {
-//                formRange = 'id1 # value1 | id2 # value2';
-//                var formRangeOptions = formRangeValues;
-//            } else if (selectType == 'custom') {
-//                var formRangeTmp = '';
-//                for (var i in formRange) {
-//                    formRangeTmp += formRange[i]['id'] + '#' + formRange[i]['name'];
-//                    if (i < (formRange.length - 1)) {
-//                        formRangeTmp += '|';
-//                    }
-//                }
-//                formRange = formRangeTmp;
-//            }
             inputTxt = '<select dojoType="dijit.form.FilteringSelect" autocomplete="true" searchAttr="name" invalidMessage="" >';
-            //if (!formRange) {
-//                formRange = 'id1 # value1 | id2 # value2';
-//                var formRangeOptions = formRangeValues;
-
             
             if (selectType == 'project') {
                 inputTxt += '<option value="1">Example Project 1</option>';

@@ -144,14 +144,7 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function delete()
     {
-        if ($this->id > 1) {            
-            // Delete project-role-user relation    
-            //$relations = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
-            //$records = $relations->fetchAll('roleId = ' . $this->id);
-            //foreach ($records as $record) {
-            //    $record->delete();
-            //}
-                        
+        if ($this->id > 1) {     
             parent::delete();
         }
     }
