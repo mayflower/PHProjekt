@@ -392,8 +392,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $this->_error->addError(array(
                 'field'   => $translate->translate('Module Designer'),
                 'message' => $translate->translate('The module must contain a name')));
+        } else {
+            if (!preg_match("/^[a-zA-Z]/", $data[0]['tableName'])) {
+                $validated = false;
+                $this->_error->addError(array(
+                    'field'   => $translate->translate('Module Designer'),
+                    'message' => $translate->translate('The module name must start with a letter')));
+            }
         }
         
+        $foundFields    = array();
         $foundProjectId = false;
         foreach ($data as $field) {
             if (empty($field['tableField'])) {
@@ -402,6 +410,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     'field'   => $translate->translate('Module Designer'),
                     'message' => $translate->translate('The Table Field must be completed for all the fields')));
                 break;
+            } else {
+                if (in_array($field['tableField'], $foundFields)) {
+                    $validated = false;
+                    $this->_error->addError(array(
+                        'field'   => $translate->translate('Module Designer'),
+                        'message' => $translate->translate('There are two fields with the same Field Name')));
+                    break;                    
+                } else {
+                    $foundFields[] = $field['tableField'];
+                }
             }
 
             if ($field['tableType'] == 'varchar') {
@@ -568,5 +586,23 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $tableManager->addField($tableName, $fieldDefinition); 
             }
         }
+    }
+    
+    /**
+     * Delete all the entries for the current Module
+     * And drop the table
+     *
+     * @return boolean
+     */
+    public function deleteModule()
+    {
+        $table  = $this->_model->getTableName();
+        $where  = $this->getAdapter()->quoteInto(' tableName = ? ', $table);
+        $result = $this->fetchAll($where);
+        foreach ($result as $record) {
+            $record->delete();
+        }
+        $tableManager = new Phprojekt_Table(Zend_Registry::get('db'));
+        return $tableManager->dropTable($table);
     }
 }

@@ -49,7 +49,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data = array();
         $data['key']      = 'name';
         $data['label']    = $translate->translate('name');
-        $data['type']     = 'text';
+        $data['type']     = 'hidden';
         $data['hint']     = $translate->translate('name');
         $data['order']    = 0;
         $data['position'] = 1;

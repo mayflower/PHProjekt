@@ -168,8 +168,10 @@ phpr.handleResponse = function(resultArea,result)
 {
     phpr.loading.hide();
     var css = 'error';
-    if(result.type =='success'){
+    if (result.type == 'success') {
         css = 'success';
+    } else if (result.type == 'notice') {
+        css = 'notice';
     }
     var message= result.message
     if (!message) {

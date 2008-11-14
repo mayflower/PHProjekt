@@ -69,20 +69,27 @@ class Core_ModuleController extends Core_IndexController
         
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate(self::ADD_TRUE_TEXT);
+            $message = $translate->translate('The module was added correctly');
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = $translate->translate('The module was edited correctly');
         }
 
-        $moduleName = $this->getRequest()->getParam('name', null);
-        $this->getRequest()->setParam('name', ucfirst($moduleName));
+        // Set the hidden name to name or label
+        // use ucfirst and delete spaces
+        $module = $this->getRequest()->getParam('name');
+        if (empty($module)) {
+            $module = $this->getRequest()->getParam('label');
+        }
+        $module = ucfirst(ereg_replace(" ", "", $module));
+        $this->getRequest()->setParam('name', $module);
+
         $model->saveModule($this->getRequest()->getParams());
 
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -103,5 +110,47 @@ class Core_ModuleController extends Core_IndexController
             $modules['data'][$module->id]['label']     = $module->name;
         }
         echo Phprojekt_Converter_Json::convert($modules);
+    }
+    
+   /**
+     * Deletes the module entries, the module itself
+     * the databasemanager entry and the table itself
+     *
+     * @requestparam integer id ...
+     *
+     * @return void
+     */
+    public function jsonDeleteAction()
+    {
+        $translate = Zend_Registry::get('translate');
+        $id        = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+
+        $model = $this->getModelObject()->find($id);
+
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $databaseModel   = Phprojekt_Loader::getModel($model->name, $model->name);            
+            $databaseManager = new Phprojekt_DatabaseManager($databaseModel);
+            $tmpModule       = $model->delete();
+            $tmpDatabase     = $databaseManager->deleteModule();
+            
+            if ($tmpModule === false || $tmpDatabase === false) {
+                $message = $translate->translate('The module can not be deleted');
+            } else {
+                $message = $translate->translate('The module was deleted correctly');
+            }
+            
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $id);
+
+            echo Phprojekt_Converter_Json::convert($return);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
     }
 }

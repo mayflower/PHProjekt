@@ -82,5 +82,20 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
         $this->moduleId = $moduleId;
         $this->access   = 139;
         $this->save();        
-    } 
+    }
+
+    /**
+     * Delete a role-module relation
+     *
+     * @param int $moduleId  The Module Id to delete
+     *
+     * @return void
+     */
+    public function deleteModuleRelation($moduleId)
+    {
+        $where = $this->getAdapter()->quoteInto(' moduleId = ? ', (int) $moduleId);
+        foreach ($this->fetchAll($where) as $relation) {
+            $relation->delete();
+        }
+    }
 }

@@ -291,4 +291,19 @@ class Phprojekt_Table {
             return $tableFields;
         }
     }
+    
+    /**
+     * Delete the table
+     *
+     * @param string $tableName The name of the table
+     * 
+     * @return boolean
+     */
+    public function dropTable($tableName)
+    {
+        $tableName = ucfirst($tableName);
+        $sqlString = "DROP TABLE " . $this->_db->quoteIdentifier((string)$tableName);
+        
+        return $this->_db->getConnection()->exec($sqlString);
+    }
 }

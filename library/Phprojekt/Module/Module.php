@@ -154,15 +154,27 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
      */
     public function delete()
     {
-    }
+        // Delete all the project-module relations
+        $project  = new Project_Models_ProjectModulePermissions();
+        $project->deleteModuleRelation($this->id);
 
-    /**
-     * Delete all the entries for the current module
-     * This function is used by the system when a folder module is deleted
-     *
-     * @return void
-     */
-    public function safeDelete() {
+        // Delete all the role-module relations
+        $role  = new Phprojekt_Role_RoleModulePermissions();
+        $role->deleteModuleRelation($this->id);
+
+        // Delete the items and tags
+        $tag     = Phprojekt_Tags_Default::getInstance();
+        $model   = Phprojekt_Loader::getModel($this->name, $this->name);        
+        $results = $model->fetchAll();
+        foreach ($results as $record) {
+            $tag->deleteTagsByItem($this->id, $record->id);
+            $record->delete();
+        }
+                
+        // Delete Files
+        $this->_deleteFolder(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $this->name);
+
+        // Delete module entry
         parent::delete();
     }
         
@@ -270,5 +282,31 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 }
             }
         }
+    }
+    
+    /**
+     * Delete a folder with subfolders and files
+     *
+     * @param srting $path The full path of the folder
+     * 
+     * @return boolean
+     */
+    private function _deleteFolder($path)
+    {
+        if (is_dir($path) && !is_link($path)) {
+            if ($directory = opendir($path)) {
+                while (($file = readdir($directory)) !== false) {
+                    if ($file == '.' || $file == '..') {
+                        continue;
+                    }
+                    if (!$this->_deleteFolder($path . DIRECTORY_SEPARATOR . $file)) {
+                        Zend_Registry::get('log')->debug($path . DIRECTORY_SEPARATOR . $file .' could not be deleted');
+                    }
+                }
+                closedir($directory);
+            }
+            return rmdir($path);
+        }
+        return unlink($path);
     }
 }
