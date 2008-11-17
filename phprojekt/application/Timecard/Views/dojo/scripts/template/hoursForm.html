@@ -1,21 +1,20 @@
 <form dojoType="dijit.form.Form" id="hoursForm" name="hoursForm" style="display:inline;" onsubmit="return false;">
 <h4 style="color: #294064; font-weight: bold;">{{timecardWorkingTimesText}}</h4>
-<div style="vertical-align: baseline; margin-left:10px; margin-right:10px; background: #F1CE47; border: 1px solid #F1CE47; radius:8pt; -moz-border-radius:8pt 8pt; padding:5px;">
-    <div style="vertical-align: baseline; margin-left:1px; margin-right:1px; background: #fff; border: 1px solid #F1CE47; radius:8pt; -moz-border-radius:8pt 8pt; padding:5px;">
-        <div style="color: #294064; text-align: center">
-            <input dojoType="dijit.form.TextBox" type="hidden" id="date" name="date" value="{{date}}" />
-            <div style="color: #294064;">
-                <div style="width:100%">{{timecardStartText}}</div>
-                <input style="width:52px;" type="text" name="startTime" dojoType="dijit.form.TimeTextBox" constraints="{formatLength:'short', timePattern:'HH:mm'}" />
+<div style="vertical-align: baseline; margin-left:10px; margin-right:10px; background: #fff; border: 3px solid #F1CE47; radius:8pt; -moz-border-radius:8pt 8pt; padding:5px;">
+    <div style="color: #294064; text-align: center">
+        <input dojoType="dijit.form.TextBox" type="hidden" id="date" name="date" value="{{date}}" />
+        <div style="color: #294064;">
+            <div style="width:100%">{{timecardStartText}}</div>
+                <input style="width:52px;" type="text" name="startTime" dojoType="dijit.form.TextBox" constraints="{formatLength:'short', timePattern:'HHmm'}" />
             </div>
             <div style="color: #294064;">
                 <div style="width:100%">{{timecardEndText}}</div>
-                <input style="width:52px" type="text" name="endTime" dojoType="dijit.form.TimeTextBox" constraints="{formatLength:'short', timePattern:'HH:mm'}" />
-            </div>
+                    <input style="width:52px" type="text" name="endTime" dojoType="dijit.form.TextBox" constraints="{formatLength:'short', timePattern:'HHmm'}" />
+                </div>
             <div>
-                <br />
-                <button dojoType="dijit.form.Button" baseClass="positive" id="hoursSaveButton" type="submit" iconClass="tick"></button>
-            </div>
+            <br />
+            <button dojoType="dijit.form.Button" baseClass="positive" id="hoursSaveButton" type="submit" iconClass="tick">
+            </button>
         </div>
     </div>
 </div>

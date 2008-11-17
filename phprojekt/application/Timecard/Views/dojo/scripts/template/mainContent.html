@@ -1,26 +1,29 @@
-<div dojoType="dijit.layout.BorderContainer" design="sidebar" style="width:100%; height:100%">
+<div dojoType="dijit.layout.BorderContainer" style="width:100%; height:100%">
+    <!-- Timecards summary views buttons -->
+    <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24" style="width: 100%; height:6%; overflow:hidden;">
+        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="start" alt="{{startWorkingTimeText}}"
+            onClick="dojo.publish('Timecard.Workingtimes.start');">
+        </button>
+        &nbsp;
+        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="stop" alt="{{stopWorkingTimeText}}"
+            onClick="dojo.publish('Timecard.Workingtimes.stop');">
+        </button>
+        &nbsp;
+        {{selectDate}}
+        &nbsp;
+        <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 85px;">
+        &nbsp;
+        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
+            onClick="
+            if (dijit.byId('selectDate').attr('value') != null) {
+                dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]);
+                dojo.byId('hoursSaveButton').focus();
+            }">
+        </button>
+    </div>
     <!-- Timecards main Content -->
     <div dojoType="dijit.layout.ContentPane" style="width:80%;" splitter="false" region="leading" class="prepend-24" id="detailsBox">
-    </div>
-    <!-- Timecards summary views buttons -->
-    <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24" style="height:6%; overflow:hidden;">
-        <div>
-            <div style="float:left; width:45%; margin-left: 0px;">
-                <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 85px;">
-            </div>        
-            <div style="float:left; width:auto; margin-left: 2px;">
-                {{selectDate}}
-            </div>
-            <div style="float:right; width:auto; margin-left: 2px;">
-                <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick" onClick="
-                if (dijit.byId('selectDate').attr('value') != null) {
-                    dojo.publish('Timecard.changeDate',[dijit.byId('selectDate').attr('value')]);
-                    dojo.byId('hoursSaveButton').focus();
-                }
-                "></button>
-            </div>
-        </div>
-    </div>
+    </div>    
     <!-- Timecards summary  -->
     <div dojoType="dijit.layout.ContentPane" region="center" id="gridBox" class="prepend-24">
     </div>
