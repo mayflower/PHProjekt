@@ -23,7 +23,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     reload:function() {
         phpr.module = this.module;
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
-            selectDate:    phpr.nls.get('Change date')
+            selectDate:           phpr.nls.get('Change date'),
+            startWorkingTimeText: phpr.nls.get('Start Working Time'),
+            stopWorkingTimeText:  phpr.nls.get('Stop Working Time'),
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.cleanPage();
@@ -37,26 +39,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        this.cleanPage();    
-        var workingtimesStart = null;
-        var params = {
-            label:     '',
-            iconClass: 'start',
-            alt:       phpr.nls.get("Start working time")
-        };
-        workingtimesStart = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(workingtimesStart.domNode);
-        dojo.connect(workingtimesStart, "onClick", dojo.hitch(this, "workingtimesStart"));
-
-        var workingtimesStop = null;
-        var params = {
-            label:     '',
-            iconClass: 'stop',
-            alt:       phpr.nls.get("Stop working time")
-        };
-        workingtimesStop = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(workingtimesStop.domNode);
-        dojo.connect(workingtimesStop, "onClick", dojo.hitch(this, "workingtimesStop"));
+        this.cleanPage();
     },
 
     changeListView:function(view) {
@@ -105,7 +88,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         //    Convert a js time into ISO time
         // description:
         //    Convert a js time into ISO time        
-       return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+       time        = time.replace(":", "");
+       var minutes = time.substr(time.length - 2);
+       var hour    = time.substr(0,time.length-2);
+       return hour + ':' + minutes;
     },
         
     workingtimesStop:function() {

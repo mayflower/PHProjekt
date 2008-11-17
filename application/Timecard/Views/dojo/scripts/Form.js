@@ -108,19 +108,19 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {
                 hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
-                start: data[i].startTime.substr(0, 5),
-                end: data[i].endTime.substr(0, 5),
-                id:  data[i].id            
+                start:     data[i].startTime.substr(0, 5),
+                end:       data[i].endTime.substr(0, 5),
+                id:        data[i].id            
             });
         }       
         
         this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
             date: this._date,
             timecardWorkingTimesText: phpr.nls.get("Working Times"),
-            timecardStartText: phpr.nls.get("Start"),
-            timecardEndText: phpr.nls.get("End"),
-            hoursdata: hoursdata,
-            totalHours: this.convertTime(totalHours)
+            timecardStartText:        phpr.nls.get("Start"),
+            timecardEndText:          phpr.nls.get("End"),
+            hoursdata:                hoursdata,
+            totalHours:               this.convertTime(totalHours)
         });
         
         for (var i = 0; i < data.length; i++) {
@@ -153,14 +153,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             if (week > 6) {
                 week = 0;
             }
-        }
-        this.render(["phpr.Timecard.template", "date.html"], dojo.byId('TimecardDate') , {
-            date: this._date,
-            days: days,
-            today: today,
-            monthNumber: month,
-            yearNumber:  year
-        });    
+        }   
     },
     
     reloadBookingView: function() {
@@ -179,10 +172,22 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         
         // Fixed hours 8-20 and 700 px for the bar
         var hours = new Array();        
-        for (var i = 8; i < 20; i++) {
-            hours.push(i);
+        var pair  = 0;
+        var show  = '';
+        for (var i = 8; i < 21; i++) {
+            show = '';
+            if ((i % 2) == 0) {
+                pair = 1;
+            } else {
+                pair = 0;
+            }
+            if (i.lenght == 1) {
+                show = '0';
+            }
+            show = show + i + ':00';
+            hours.push({"hour": show, "pair": pair});
         }
-        var hourWidth = Math.floor(700 / 12);
+        var hourHeight = 20;
 
         // Bookings forms         
         for (var i = 0; i < timeprojData.length; i++) {
@@ -214,7 +219,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             date:           this._date,
             notes:          '',
             notesLabel:     'Notes',
-            amount:         '00:00',
+            amount:         '',
             amountLabel:    'Amount',
             saveText:       phpr.nls.get('Save'),
             deleteText:     phpr.nls.get('Cancel'),            
@@ -245,83 +250,76 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Complete view
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
             hours:                    hours,
-            hourWidth:                hourWidth, 
+            hourHeight:                hourHeight, 
             date:                     this._date,
             timecardProjectTimesText: phpr.nls.get("Project bookings"),
             values:                   favoritesList,
             allProjects:              allProjects,
-            manageFavoritesText:      phpr.nls.get('Manage Favorites'),
-            helpText:                 phpr.nls.get('Add working time and drag projects into the bar'),
+            manageFavoritesText:      phpr.nls.get('Manage project list'),
             bookingdata:              bookingdata
         });
         dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
     
         this.contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
-        var surface     = dojox.gfx.createSurface('projectBookingContainer', 700, 22);
+        var surface     = dojox.gfx.createSurface('projectBookingContainer', 400, 260);
         var lastHour    = 0;
-        var totalWith   = 0;
+        var totalHeight = 0;
         for (var j = 0; j < timeprojData.length; j++) {
             timeprojData[j].displayed = 0;
-            timeprojData[j].remaind = 0;
+            timeprojData[j].remaind   = 0;
         }
                                
         // Draw hours block                               
         for (var i = 0; i < timecardData.length; i++) {
-            var start = this.contentBar.convertHourToPixels(hourWidth, timecardData[i].startTime);
-            var end   = this.contentBar.convertHourToPixels(hourWidth, timecardData[i].endTime);
-            var left  = start + 'px';
-            var width = end - start + 'px';
-            var totalbookingWith = 0;
+            var start = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].startTime);
+            var end   = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].endTime);
+            var top  = start + 'px';
+            var height = (end - start) - 6 + 'px';
+            var totalbookingHeight = 0;
             var finish = 0;
-            totalWith += (end - start);
+            totalHeight += (end - start);
                         
             var tmp = dojo.doc.createElement ("div");
             tmp.id = 'targetBooking' + timecardData[i].id;
             tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            dojo.style(tmp, "color", '#292929');
-            dojo.style(tmp, "display", 'inline');
-            dojo.style(tmp, "border", '2px solid #000');
-            dojo.style(tmp, "position", 'absolute');
-            dojo.style(tmp, "left", left);
-            dojo.style(tmp, "width", width);
-            dojo.style(tmp, "height", '20px');
-            dojo.style(tmp, "float", 'left');
+            dojo.addClass(tmp, "timecardtarget");
+            dojo.style(tmp, "top", top);
+            dojo.style(tmp, "height", height);
             dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
-            tgt = new phpr.Timecard.Booking(tmp.id);
+            var target = new phpr.Timecard.Booking(tmp.id);
 
             // Draw Bookings
             for (var j = 0; j < timeprojData.length; j++) {
                 if (timeprojData[j].displayed == 0) {                    
                     if (timeprojData[j].remaind > 0) {
-                        var bookingWith = timeprojData[j].remaind;
+                        var bookingHeight = timeprojData[j].remaind;
                     }
                     else {
-                        var bookingWith = this.contentBar.convertAmountToPixels(hourWidth, timeprojData[j].amount);
+                        var bookingHeight = this.contentBar.convertAmountToPixels(hourHeight, timeprojData[j].amount);
                     }
                     
-                    if (totalbookingWith <= (end - start)) {
+                    if (totalbookingHeight <= (end - start)) {
                         if (lastHour == 0) {
                             lastHour = start;
                         }
-                        if (bookingWith > (end - lastHour)) {
-                            timeprojData[j].remaind = bookingWith - (end - lastHour);
+                        if (bookingHeight > (end - lastHour)) {
+                            timeprojData[j].remaind = bookingHeight - (end - lastHour);
                             if (timeprojData[j].remaind > 0) {
                                 finish = 1;
-                                bookingWith = end - lastHour;
+                                bookingHeight = end - lastHour;
                             }
                         }
-                        var tmpDraw = surface.createRect({x: lastHour -4, y: 0, width: bookingWith + 1, height: 22});
-                        tmpDraw.setFill([0,255,0,0.3]);
-                        tmpDraw.setStroke("green");
-                        timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingWith, 'id'   : timeprojData[j].id});
+                        var tmpDraw = surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3, width: 197, r: 13});
+                        tmpDraw.setFill([68,74,82,1]);
+                        tmpDraw.setStroke({color:[68,74,82,1], width: 2});
+                        timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
                         
                         if (finish) {
-                            totalbookingWith += bookingWith + end;
+                            totalbookingHeight += bookingHeight + end;
                             lastHour = 0;
-                        }
-                        else {
-                            totalbookingWith += bookingWith;
-                            lastHour += bookingWith;
+                        } else {
+                            totalbookingHeight += bookingHeight;
+                            lastHour += bookingHeight;
                             timeprojData[j].displayed = 1;
                         }
                     }
@@ -348,7 +346,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the hours form
         // description:
         //    Save the hours form and reload only the grid and the hours form              
-       this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));       
+        this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));       
         if (this.sendData.endTime) {
             this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
         }
@@ -376,7 +374,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the booking form
         // description:
         //    Save the booking form and reload only the grid and the booking form        
-       this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));     
+        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));     
         if (this.sendData.amount) {
             this.sendData.amount = this.main.getIsoTime(this.sendData.amount);
         }
@@ -477,15 +475,15 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Convert a number of minutes into HH:mm
         // description:
         //    Convert a number of minutes into HH:mm        
-        hoursDiff = Math.floor(time / 60);
+        hoursDiff   = Math.floor(time / 60);
         minutesDiff = time - (hoursDiff * 60);
         
         if (hoursDiff == 0 || hoursDiff < 10) {
-            hoursDiff = '0'+hoursDiff;
+            hoursDiff = '0' + hoursDiff;
         }
         if (minutesDiff == 0 || minutesDiff < 10) {
-            minutesDiff = '0'+minutesDiff;
+            minutesDiff = '0' + minutesDiff;
         }
-        return hoursDiff+':'+minutesDiff;
+        return hoursDiff + ':' + minutesDiff;
     }
 });
