@@ -241,9 +241,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
         
         for (var i = 0 ; true ; i++) {
-            if (i > 0) {
-                startDate = dojo.date.add(startDate, 'month', 1);
-            }            
+            startDate = dojo.date.add(startDate, 'month', 1);
             var check = dojo.date.compare(startDate, endDate);
             if (check == 1) {
                 break;
