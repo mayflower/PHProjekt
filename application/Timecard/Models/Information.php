@@ -61,6 +61,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = false;
+                $data['tab']      = 1;                
+                
                 $converted[] = $data;
 
                 // Sum of hours
@@ -76,6 +78,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = false;
                 $data['readOnly'] = false;
+                $data['tab']      = 1;
+                
                 $converted[] = $data;
                 break;
             case 'month':
@@ -92,6 +96,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                   'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = true;
+                $data['tab']      = 1;                
+                
                 $converted[] = $data;
         
                 // Sum of hours
@@ -107,6 +113,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = true;
+                $data['tab']      = 1;                
+                
                 $converted[] = $data;
 
                 // Sum of Bookinks
@@ -122,6 +130,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = true;
+                $data['tab']      = 1;                
+                
                 $converted[] = $data;                
                 break;
         }

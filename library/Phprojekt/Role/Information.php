@@ -58,6 +58,8 @@ class Phprojekt_Role_Information extends EmptyIterator implements Phprojekt_Mode
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
 
         return $converted;

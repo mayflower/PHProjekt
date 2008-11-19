@@ -8,7 +8,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     //    in a dojo form with tabs
 
     sendData:    new Array(),
-    formdata:    '',
+    formdata:    new Array(),
     historyData: '',
 
     _url:               null,
@@ -36,6 +36,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.setUrl();
         this.setNode();
 
+        // Get all the tabs
+        this.tabStore = new phpr.Store.Tab();
+        this.tabStore.fetch();
+                
         this.initData();
 
         // Render the form element on the right bottom
@@ -187,16 +191,29 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
+    getTabs: function() {
+        // summary:
+        //    Return the tab list for make the form
+        // description:
+        //    Return the tab list for make the form or an empty array
+        if (this.tabStore) {
+            result = this.tabStore.getList();
+        }
+        return result;
+    },
+    
     getFormData: function(items, request) {
         // summary:
         //    This function renders the form data according to the database manager settings
         // description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
-        this.formdata = "";
+        this.formdata    = new Array();
+        this.formdata[0] = new Array();
 
-        meta = phpr.DataStore.getMetaData({url: this._url});
-        data = phpr.DataStore.getData({url: this._url});
+        var meta = phpr.DataStore.getMetaData({url: this._url});
+        var data = phpr.DataStore.getData({url: this._url});
+        var tabs = this.getTabs();
 
         this.setPermissions(data);
 
@@ -211,57 +228,63 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             itemlabel    = meta[i]["label"];
             itemvalue    = data[0][itemid];
             itemrange    = meta[i]["range"];
+            itemtab      = meta[i]["tab"] || 1;
 
             // Special workaround for new projects - set parent to current ProjectId
             if(itemid == 'projectId' && !itemvalue){
                 itemvalue = phpr.currentProjectId;
             }
 
+            // Init formdata
+            if (!this.formdata[itemtab]) {
+                this.formdata[itemtab] = '';
+            }            
+            
             // Render the fields according to their type
             switch (itemtype) {
                 case 'checkbox':
-                    this.formdata += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue);
+                    this.formdata[itemtab] += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue);
                     break;
 
                 case'selectbox':
-                    this.formdata += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
                                                                        itemdisabled);
                     break;
                 case'multipleselectbox':
-                    this.formdata += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
                                                                        itemdisabled, 5, "multiple");
                     break;
                 case'date':
-                    this.formdata += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                    itemdisabled);
                     break;
                 case 'time':
-                    this.formdata += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                    itemdisabled);
                     break;
                 case 'textarea':
-                    this.formdata += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                        itemdisabled);
                     break;
                 case 'password':
-                    this.formdata += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
                 case 'percentage':
-                    this.formdata += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
                 case 'upload':
                     iFramePath   = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
-                    this.formdata += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled, iFramePath);
                     break;
                 case 'hidden':
-                    this.formdata += this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
                 default:
-                    this.formdata += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
+                    this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
                                                                         itemdisabled);
                     break;
             }
@@ -273,7 +296,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.form = this.setFormContent();
         this.formsWidget = new Array();
 
-        this.addTab(this.formdata, 'tabBasicData', 'Basic Data', 'dataFormTab');
+        for (t in tabs) {
+            if (this.formdata[tabs[t].id]) {
+                this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, phpr.nls.get(tabs[t].name), 'dataFormTab' + tabs[t].id);
+            }
+        }
 
         this._formNode.attr('content',this.form.domNode);
         this.form.startup();
@@ -331,7 +358,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Add some special fields
         // description:
         //    Add some special fields
-        this.formdata += this.displayTagInput();
+        this.formdata[1] += this.displayTagInput();
     },
 
     newAccess: function () {
