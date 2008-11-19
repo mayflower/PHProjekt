@@ -75,11 +75,11 @@ class Phprojekt_Date_Collection {
      *                          FALSE otherwise
      */
     public function applyRrule($rrule) {
-    	// Clear collection
-    	$this->elements = array();
+        // Clear collection
+        $this->elements = array();
         // Parse RRule
-    	$rules = self::parseRrule($rrule);
-    	// Detect mathod to use for increment
+        $rules = self::parseRrule($rrule);
+        // Detect mathod to use for increment
         switch ($rules['FREQ']) {
             case 'YEARLY':
                $method = 'addYear';
@@ -93,7 +93,7 @@ class Phprojekt_Date_Collection {
                 $method = 'addDay';
                 break;
             default:
-            	// Frequence is not supported
+                // Frequence is not supported
                 return false;
         }
         $date = new Zend_Date($this->minDate);
@@ -210,12 +210,12 @@ class Phprojekt_Date_Collection {
      */
     public function filter($exclude) {
         for ($dateIndex = 0; $dateIndex < count($this->elements); $dateIndex++) {
-	    	foreach ($exclude as $exDate) {
-	    		if ($exDate->compare($this->elements[$dateIndex]) == 0) {
-	    			unset($this->elements[$dateIndex]);
-	    			continue;
-	    		}
-	    	}
+            foreach ($exclude as $exDate) {
+                if ($exDate->compare($this->elements[$dateIndex]) == 0) {
+                    unset($this->elements[$dateIndex]);
+                    continue;
+                }
+            }
         }
     }
 

@@ -457,11 +457,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
     
     prepareSubmission:function() {
-    	// summary:
+        // summary:
         //    This function prepares the data for submission
         // description:
-    	//    This function prepares the content of this.sendData before it is
-    	//    submitted to the Server.
+        //    This function prepares the content of this.sendData before it is
+        //    submitted to the Server.
     },
 
     submitForm: function() {

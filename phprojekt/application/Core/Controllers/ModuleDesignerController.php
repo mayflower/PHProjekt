@@ -65,7 +65,7 @@ class Core_ModuleDesignerController extends Core_IndexController
         $translate  = Zend_Registry::get('translate');
         $id         = (int) $this->getRequest()->getParam('id');
         $data       = $this->getRequest()->getParam('designerData');
-	    $model      = null;
+        $model      = null;
         $module     = $this->getRequest()->getParam('name');
         if (empty($module)) {
             $module = $this->getRequest()->getParam('label');
@@ -73,7 +73,7 @@ class Core_ModuleDesignerController extends Core_IndexController
         $module = ucfirst(ereg_replace(" ", "", $module));
         if ($id > 0) {
             $model = Phprojekt_Loader::getModel($module, $module);
-	    }
+        }
 
         $databaseManager = new Phprojekt_DatabaseManager($model);
         $data            = Zend_Json_Decoder::decode($data);
