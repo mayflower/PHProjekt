@@ -36,7 +36,7 @@ class IndexController extends Zend_Controller_Action
     const ADD_TRUE_TEXT           = "The Item was added correctly";
     const EDIT_TRUE_TEXT          = "The Item was edited correctly";
     const EDIT_MULTIPLE_TRUE_TEXT = "The Items was edited correctly";
-    const DELETE_FALASE_TEXT      = "The Item can't be deleted";
+    const DELETE_FALSE_TEXT       = "The Item can't be deleted";
     const DELETE_TRUE_TEXT        = "The Item was deleted correctly";
     const NOT_FOUND               = "The Item was not found";
     const ID_REQUIRED_TEXT        = "ID parameter required";
@@ -251,7 +251,7 @@ class IndexController extends Zend_Controller_Action
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
             if ($tmp === false) {
-                $message = $translate->translate(self::DELETE_FALASE_TEXT);
+                $message = $translate->translate(self::DELETE_FALSE_TEXT);
             } else {
                 $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
