@@ -183,7 +183,7 @@ class Timecard_IndexController extends IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
             if ($tmp === false) {
-                $message = $translate->translate(self::DELETE_FALASE_TEXT);
+                $message = $translate->translate(self::DELETE_FALSE_TEXT);
             } else {
                 $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
