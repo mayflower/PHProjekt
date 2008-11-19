@@ -11,7 +11,7 @@ dojo.declare("phpr.Role.Form", phpr.Core.Form, {
     },
 
     addBasicFields:function() {
-        this.formdata += this.render(["phpr.Core.Role.template", "formAccess.html"], null, {
+        this.formdata[1] += this.render(["phpr.Core.Role.template", "formAccess.html"], null, {
             accessModuleText: phpr.nls.get('Module'),
             accessReadText: phpr.nls.get('Read'),
             accessWriteText: phpr.nls.get('Write'),

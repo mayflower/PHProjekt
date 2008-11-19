@@ -58,7 +58,10 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
+        
         if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
             // password
             $data = array();
@@ -73,6 +76,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                       'name' => '');
             $data['required'] = true;
             $data['readOnly'] = false;
+            $data['tab']      = 1;
+            
             $converted[] = $data;
         }
 
@@ -89,6 +94,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+        
         $converted[] = $data;
 
         // lastname
@@ -104,6 +111,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
 
         // email
@@ -120,6 +129,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                       'name' => '');
             $data['required'] = true;
             $data['readOnly'] = false;
+            $data['tab']      = 1;            
+            
             $converted[] = $data;
     
             // language
@@ -139,6 +150,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                             'name' => 'German'));
             $data['required'] = true;
             $data['readOnly'] = false;
+            $data['tab']      = 1;            
+            
             $converted[] = $data;
             
             // timeZone
@@ -159,6 +172,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             }
             $data['required'] = true;
             $data['readOnly'] = false;
+            $data['tab']      = 1;            
+            
             $converted[] = $data;
         }
 
@@ -177,6 +192,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                         'name' => 'Inactive'));
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;        
+        
         $converted[] = $data;
 
         return $converted;

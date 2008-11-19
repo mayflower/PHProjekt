@@ -58,6 +58,8 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = true;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
         
         // projectId
@@ -82,6 +84,8 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         }
         $data['required'] = true;
         $data['readOnly'] = true;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
                 
         // notes
@@ -97,6 +101,8 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = true;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
 
         // amount 
@@ -112,6 +118,8 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = true;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
     
         return $converted;

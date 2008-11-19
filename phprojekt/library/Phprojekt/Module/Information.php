@@ -58,6 +58,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
 
         $converted[] = $data;
         
@@ -75,6 +76,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
 
         $converted[] = $data;
                 
@@ -93,7 +95,8 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
                                   'name' => $translate->translate('Yes'));
         $data['required'] = false;
         $data['readOnly'] = false;
-
+        $data['tab']      = 1;
+        
         $converted[] = $data;
 
         return $converted;

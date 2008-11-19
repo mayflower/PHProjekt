@@ -255,6 +255,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                        'name' => $field->formRange);
         $converted['required'] = (boolean) $field->isRequired;
         $converted['readOnly'] = false;
+        $converted['tab']      = $field->formTab;
 
         return $converted;
     }
@@ -423,7 +424,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             }
 
             if ($field['tableType'] == 'varchar') {
-                if ($field['tableLenght'] < 1 && $field['tableLenght'] > 255) {
+                if ($field['tableLength'] < 1 && $field['tableLength'] > 255) {
                     $validated = false;
                     $this->_error->addError(array(
                         'field'   => $translate->translate('Module Designer'),
@@ -433,7 +434,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             }
 
             if ($field['tableType'] == 'int') {
-                if ($field['tableLenght'] < 1 && $field['tableLenght'] > 11) {
+                if ($field['tableLength'] < 1 && $field['tableLength'] > 11) {
                     $validated = false;
                     $this->_error->addError(array(
                         'field'   => $translate->translate('Module Designer'),

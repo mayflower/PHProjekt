@@ -15,7 +15,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
     addBasicFields:function() {
         // Button for open the dialog
-        this.formdata += this.fieldTemplate.buttonActionRender('Designer', 'designerButton', 'Open Dialog', '', 'dojo.publish(\'Module.openDialog\');');
+        this.formdata[1] += this.fieldTemplate.buttonActionRender('Designer', 'designerButton', 'Open Dialog', '', 'dojo.publish(\'Module.openDialog\');');
 
         // Hidden field for the MD data
         var designerData = new Object();
@@ -47,7 +47,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             designerData[0]['isRequired']    = 1;
         }
         var jsonDesignerData = dojo.toJson(designerData);
-        this.formdata += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
+        this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
         
         // Add onBlur to the label field for update the tableName
         dojo.connect(dijit.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));

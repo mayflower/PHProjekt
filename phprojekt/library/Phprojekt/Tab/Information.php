@@ -58,6 +58,8 @@ class Phprojekt_Tab_Information extends EmptyIterator implements Phprojekt_Model
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
 
         return $converted;

@@ -68,6 +68,8 @@ class Core_Models_UserSetting
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
         
         $data = array();
@@ -82,6 +84,8 @@ class Core_Models_UserSetting
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+        
         $converted[] = $data;
                     
         $data = array();
@@ -96,6 +100,8 @@ class Core_Models_UserSetting
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;      
                     
         // email
@@ -111,6 +117,8 @@ class Core_Models_UserSetting
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
         
         // language
@@ -129,6 +137,8 @@ class Core_Models_UserSetting
         }
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
 
         // timeZone
@@ -146,7 +156,9 @@ class Core_Models_UserSetting
                                      'name' => $value);
         }
         $data['required'] = true;
-        $data['readOnly'] = false;        
+        $data['readOnly'] = false;
+        $data['tab']      = 1;
+        
         $converted[] = $data;
 
         return $converted;

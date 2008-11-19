@@ -5,7 +5,6 @@ dojo.declare("phpr.Default.field", phpr.Component, {
     //    class for rendering form fields
     // description:
     //    this class renders the different form types which are available in a PHProjekt Detail View
-    formdata: '',
     
     checkRender: function(itemlabel, itemid,itemvalue) {
         phpr.destroyWidget(itemid);

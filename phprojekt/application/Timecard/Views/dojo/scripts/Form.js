@@ -2,7 +2,7 @@ dojo.provide("phpr.Timecard.Form");
 
 dojo.declare("phpr.Timecard.Form", phpr.Component, {
     sendData:      new Array(),
-    formdata:      '',
+    formdata:      new Array(),
     _hourUrl:      null,
     _bookUrl:      null,
     _favoritesUrl: null,

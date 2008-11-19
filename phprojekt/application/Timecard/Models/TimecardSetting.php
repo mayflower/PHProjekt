@@ -51,6 +51,8 @@ class Timecard_Models_TimecardSetting
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
+                
         $converted[] = $data;
     
         // Favorites
@@ -71,7 +73,10 @@ class Timecard_Models_TimecardSetting
         }
         $data['required'] = true;
         $data['readOnly'] = false;
-        $converted[] = $data;        
+        $data['tab']      = 1;
+                
+        $converted[] = $data;
+             
         return $converted;
     }     
 
