@@ -25,7 +25,7 @@ function checkServer() {
     $tmp = phpversion('pdo_mysql');
     $tmp2 = phpversion('pdo_sqlite2');
     $tmp3 = phpversion('pdo_pgsql');
-    
+
     if (empty($tmp) && empty($tmp) && empty($tmp)) {
         die("Sorry, you need pdo_mysql, pdo_pgsql or pdo_sqlite extension to install PHProjekt 6");
     }
@@ -39,10 +39,10 @@ function checkServer() {
 }
 
 function displaySetupForm() {
-    
+
     $availableEngines = array ("pdo_mysql" => "MySQL",
-                               "pdo_pgsql" => "PostgreSQL",
-                               "pdo_sqlite2" => "SQLite");
+    "pdo_pgsql" => "PostgreSQL",
+    "pdo_sqlite2" => "SQLite");
 
     $serverType = (empty($_REQUEST['server_type'])?"pdo_mysql":$_REQUEST['server_type']);
     $serverHost = (empty($_REQUEST['server_host'])?"localhost":$_REQUEST['server_host']);
@@ -51,11 +51,11 @@ function displaySetupForm() {
     $serverDatabase = (empty($_REQUEST['server_database'])?"phprojekt6":$_REQUEST['server_database']);
     $errorMessage = (empty($_SESSION['error_message'])?"":$_SESSION['error_message']);
     unset($_SESSION['error_message']);
-    
-    
+
+
 
     $formContent = file_get_contents("setupForm.php");
-    
+
     $tmp = '';
     foreach ($availableEngines as $key => $value) {
         $tmp .= '<option value="'.$key.'"';
@@ -86,7 +86,7 @@ function preInstallChecks() {
             $returnValue = false;
         }
     }
-    
+
     try {
         $db = Zend_Db::factory($_REQUEST['server_type'], array(
         'host'     => $_REQUEST['server_host'],
@@ -96,7 +96,7 @@ function preInstallChecks() {
         ));
     } catch (Exception $e) {
         $_SESSION['error_message'] = "Can't connect to server at '".$_REQUEST['server_host'].
-                                     "' using '".$_REQUEST['server_user']."' user";
+        "' using '".$_REQUEST['server_user']."' user";
         $returnValue = false;
     }
 
@@ -188,322 +188,450 @@ function installPhprojekt() {
         $db->getConnection()->exec("DROP TABLE IF EXISTS ".$oneTable);
     }
 
-    $result = $db->getConnection()->exec('CREATE TABLE DatabaseManager (
-      id int NOT NULL AUTO_INCREMENT,
-      tableName varchar(50) default NULL,
-      tableField varchar(60) default NULL,
-      formTab int(11) default NULL,
-      formLabel varchar(255) default NULL,
-      formTooltip varchar(255) default NULL,
-      formType varchar(50) default NULL,
-      formPosition int(11) default NULL,
-      formColumns int(11) default NULL,
-      formRegexp varchar(255) default NULL,
-      formRange text default NULL,
-      defaultValue varchar(255) default NULL,
-      listPosition int(11) default NULL,
-      listAlign varchar(20) default NULL,
-      listUseFilter int(4) default NULL,
-      altPosition int(11) default NULL,
-      status varchar(20) default NULL,
-      isInteger int(4) default NULL,
-      isRequired int(4) default NULL,
-      isUnique int(11) default NULL,
-      PRIMARY KEY  (id)
-    )');
+    $tableManager = new Phprojekt_Table($db);
 
-    if ($result === false) die("Error creating DatabaseManager table");
+    $result = $tableManager->createTable('databaseManager',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'tableName' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    'tableField' => array(
+        'type' => 'varchar', 'length' => 60, 'null' => true),
+    'formTab' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'formLabel' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'formTooltip' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'formType' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    'formPosition' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'formColumns' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'formRegexp' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'formRange' => array(
+        'type' => 'text', 'null' => true),
+    'defaultValue' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'listPosition' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'listAlign' => array(
+        'type' => 'varchar', 'length' => 20, 'null' => true),
+    'listUseFilter' => array(
+        'type' => 'int', 'length' => 4, 'null' => true),
+    'altPosition' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'status' => array(
+        'type' => 'varchar', 'length' => 20, 'null' => true),
+    'isInteger' => array(
+        'type' => 'int', 'length' => 4, 'null' => true),
+    'isRequired' => array(
+        'type' => 'int', 'length' => 4, 'null' => true),
+    'isUnique' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    // primary keys
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE User (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      username varchar(255) NOT NULL,
-      firstname varchar(255) default NULL,
-      lastname varchar(255) default NULL,
-      status varchar(1) default \'A\',
-      PRIMARY KEY(id),
-      UNIQUE(username)
-    )');
+    $result = $tableManager->createTable('User',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'username' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'firstname' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'lastname' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'status' => array(
+        'type' => 'varchar', 'length' => 1, 'null' => true, 'default' => 'A'),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating User table");
+    $result = $tableManager->createTable('Module',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'name' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'label' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'saveType' => array(
+        'type' => 'int', 'length' => 1, 'null' => false, 'default' => '0'),
+    'active' => array(
+        'type' => 'int', 'length' => 1, 'null' => false, 'default' => '1'),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE Module (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      name varchar(255) NOT NULL,
-      saveType int(1) NOT NULL default 0,
-      active int(1) NOT NULL default 1,
-      PRIMARY KEY  (id)
-    )');
+    $result = $tableManager->createTable('Groups',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'name' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating Module table");
+    $result = $tableManager->createTable('GroupsUserRelation',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'groupsId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'userId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE Groups (
-      id int NOT NULL AUTO_INCREMENT,
-      name varchar(255),
-      PRIMARY KEY  (id)
-    )');
+    $result = $tableManager->createTable('History',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'userId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'itemId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'field' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'oldValue' => array(
+        'type' => 'varchar', 'length' => 100, 'null' => true),
+    'newValue' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'action' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    'datetime' => array(
+        'type' => 'timestamp', 'length' => 255, 'null' => false, 'default' => 'CURRENT_TIMESTAMP',
+    'default_no_quote' => true),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating Groups table");
+    $result = $tableManager->createTable('Project',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'path' => array(
+        'type' => 'varchar', 'length' => 25, 'null' => true, 'default' => '/'),
+    'title' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'notes' => array(
+        'type' => 'text', 'null' => true),
+    'ownerId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'startDate' => array(
+        'type' => 'date', 'null' => true),
+    'endDate' => array(
+        'type' => 'date', 'null' => true),
+    'priority' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'currentStatus' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true, 'default' => 'working'),
+    'completePercent' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    'hourlyWageRate' => array(
+        'type' => 'varchar', 'length' => 10, 'null' => true),
+    'budget' => array(
+        'type' => 'varchar', 'length' => 10, 'null' => true),
 
-
-    $result = $db->getConnection()->exec('CREATE TABLE GroupsUserRelation (
-      id int NOT NULL AUTO_INCREMENT,
-      groupsId int(11) NOT NULL,
-      userId int(11) NOT NULL,
-      PRIMARY KEY  (id)
-    )');
-
-    if ($result === false) die("Error creating GroupsUserRelation table");
-
-
-    $result = $db->getConnection()->exec('CREATE TABLE History (
-      id int(11) NOT NULL auto_increment,
-      moduleId int(11) NOT NULL,
-      userId int(11) NOT NULL,
-      itemId int(11) NOT NULL,
-      field varchar(255) NOT NULL,
-      oldValue varchar(100) default NULL,
-      newValue varchar(255) default NULL,
-      action varchar(50) NOT NULL,
-      datetime timestamp NOT NULL default CURRENT_TIMESTAMP,
-      PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating history table");
-
-    $result = $db->getConnection()->exec("CREATE TABLE Project (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      projectId int(11) default NULL,
-      path varchar(25) NOT NULL default '/',
-      title varchar(255) NOT NULL,
-      notes text default NULL,
-      ownerId int(11) default NULL,
-      startDate date default NULL,
-      endDate date default NULL,
-      priority int(11) default NULL,
-      currentStatus varchar(50) NOT NULL default 'working',
-      completePercent float default '0',
-      hourlyWageRate float default NULL,
-      budget float default NULL,
-      PRIMARY KEY (id)
-    )");
-
-    if ($result === false) die("Error creating Project table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE ProjectModulePermissions (
-        id int(11) NOT NULL AUTO_INCREMENT,
-        moduleId int(11) NOT NULL,
-        projectId int(11) NOT NULL,
-        PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating ProjectModulePermissions table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE Role (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      name varchar(255) NOT NULL,
-      parent int(11) default NULL,
-      PRIMARY KEY(id)
-    )');
-
-    if ($result === false) die("Error creating Role table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE ProjectRoleUserPermissions (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      projectId int(11) NOT NULL,
-      userId int(11) NOT NULL,
-      roleId int(11) NOT NULL,
-      PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating ProjectRoleUserPermissions table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE RoleModulePermissions (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      roleId int(11) NOT NULL,
-      moduleId int(11) NOT NULL,
-      access int(3) NOT NULL,
-      PRIMARY KEY  (id)
-    )');
-
-    if ($result === false) die("Error creating RoleModulePermissions table");
+    ),
+    array('id'));
 
 
-    $result = $db->getConnection()->exec('CREATE TABLE Todo (
-      id int(11) NOT NULL auto_increment,
-      title varchar(255) NOT NULL,
-      notes text default NULL,
-      ownerId int(11) default NULL,
-      projectId int(11) default NULL,
-      startDate date default NULL,
-      endDate date default NULL,
-      priority int(11) default NULL,
-      currentStatus varchar(50) NOT NULL default \'working\',
-      PRIMARY KEY  (id)
-    )');
+    $result = $tableManager->createTable('ProjectModulePermissions',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating Todo table");
+    $result = $tableManager->createTable('Role',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'name' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => false),
+    'parent' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE Setting (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      userId int(11) NOT NULL,
-      moduleId int(11) NOT NULL,
-      keyValue varchar(255) NOT NULL,
-      value varchar(255) NOT NULL,
-      identifier  varchar(50) NOT NULL,
-      PRIMARY KEY (id)
-    )');
+    $result = $tableManager->createTable('ProjectRoleUserPermissions',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'userId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'roleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating Setting table");
+    $result = $tableManager->createTable('RoleModulePermissions',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'roleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'access' => array(
+        'type' => 'int', 'length' => 3, 'null' => false),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE SearchWords (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      word varchar(255) NOT NULL,
-      count int(11) NOT NULL,
-      PRIMARY KEY  (id)
-    )');
+    $result = $tableManager->createTable('Todo',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'title' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'notes' => array(
+        'type' => 'text', 'null' => true),
+    'ownerId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'startDate' => array(
+        'type' => 'date', 'null' => true),
+    'endDate' => array(
+        'type' => 'date', 'null' => true),
+    'priority' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'currentStatus' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true, 'default' => 'working'),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating SearchWords table");
+    $result = $tableManager->createTable('Setting',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'userId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'keyValue' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'value' => array(
+        'type' => 'text', 'null' => true),
+    'identifier' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE SearchWordModule (
-      moduleId int(11) NOT NULL,
-      itemId int(11) NOT NULL,
-      wordId int(11) NOT NULL,
-      PRIMARY KEY  (itemId,moduleId,wordId)
-    )');
+    $result = $tableManager->createTable('SearchWords',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'word' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'count' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating SearchWordsModule table");
+    $result = $tableManager->createTable('SearchWordModule',
+    array('moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'itemId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'wordId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    ),
+    array('itemId', 'moduleId', 'wordId'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE SearchDisplay (
-      moduleId int(11) NOT NULL,
-      itemId int(11) NOT NULL,
-      firstDisplay varchar(255),
-      secondDisplay varchar(255),
-      projectId int(11) NOT NULL,
-      PRIMARY KEY  (itemId,moduleId)
-    )');
+    $result = $tableManager->createTable('SearchDisplay',
+    array('moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'itemId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'firstDisplay' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'secondDisplay' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    ),
+    array('itemId', 'moduleId'));
 
-    if ($result === false) die("Error creating SearchDisplay table");
+    $result = $tableManager->createTable('Tags',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'word' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => false),
+    'crc32' => array(
+        'type' => 'bigint', 'null' => false),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE Tags (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      word varchar(255) NOT NULL,
-      crc32 bigint NOT NULL,
-      PRIMARY KEY  (id)
-    )');
+    $result = $tableManager->createTable('TagsUsers',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'userId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'tagId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating Tags table");
+    $result = $tableManager->createTable('TagsModules',
+    array('moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'itemId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'tagUserId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    ),
+    array('moduleId', 'itemId', 'tagUserId'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE TagsUsers (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      userId int(11) NOT NULL,
-      tagId int(11) NOT NULL,
-      PRIMARY KEY  (id)
-    )');
+    $result = $tableManager->createTable('Tab',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'label' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => false),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating TagsUsers table");
+    $result = $tableManager->createTable('ModuleTabRelation',
+    array('tabId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    ),
+    array('tabId', 'moduleId'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE TagsModules (
-      moduleId int(11) NOT NULL,
-      itemId int(11) NOT NULL,
-      tagUserId int(11) NOT NULL,
-      PRIMARY KEY  (moduleId, itemId, tagUserId)
-    )');
+    $result = $tableManager->createTable('Note',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'title' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'comments' => array(
+        'type' => 'text', 'null' => true),
+    'category' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    'ownerId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating TagsModule table");
+    $result = $tableManager->createTable('Configuration',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'keyValue' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => false),
+    'value' => array(
+        'type' => 'text', 'null' => true),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE Tab (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      label varchar(255) NOT NULL,
-      PRIMARY KEY (id)
-    )');
+    $result = $tableManager->createTable('ItemRights',
+    array('moduleId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'itemId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'userId' => array(
+        'type' => 'int', 'length' => 11, 'null' => false),
+    'access' => array(
+        'type' => 'int', 'length' => 3, 'null' => false),
+    ),
+    array('moduleId', 'itemId', 'userId'));
 
-    if ($result === false) die("Error creating Tab table");
+    $result = $tableManager->createTable('Timecard',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'ownerId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'date' => array(
+        'type' => 'date', 'null' => true),
+    'startTime' => array(
+        'type' => 'time', 'null' => true),
+    'endTime' => array(
+        'type' => 'time', 'null' => true),
+    ),
+    array('id'));
 
-    $result = $db->getConnection()->exec('CREATE TABLE ModuleTabRelation (
-      tabId int(11) NOT NULL,
-      moduleId int(11) NOT NULL,
-      PRIMARY KEY (tabId, moduleId)
-    )');
+    $result = $tableManager->createTable('Timeproj',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'notes' => array(
+        'type' => 'text', 'null' => true),
+    'ownerId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'date' => array(
+        'type' => 'date', 'null' => true),
+    'amount' => array(
+        'type' => 'time', 'null' => true),
+    'startTime' => array(
+        'type' => 'time', 'null' => true),
+    'endTime' => array(
+        'type' => 'time', 'null' => true),
+    ),
+    array('id'));
 
-    if ($result === false) die("Error creating ModuleTableRelation table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE Note (
-      id int(11) NOT NULL auto_increment,
-      projectId int(11) default NULL,
-      title varchar(255) NOT NULL,
-      comments text default NULL,
-      category varchar(50) default NULL,
-      ownerId int(11) default NULL,
-      PRIMARY KEY  (id)
-    )');
-
-    if ($result === false) die("Error creating Note table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE Configuration (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      moduleId int(11) NOT NULL,
-      `key` varchar(255) NOT NULL,
-      `value` text default NULL,
-      PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating Configuration table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE ItemRights (
-      moduleId int(11) NOT NULL,
-      itemId int(11) NOT NULL,
-      userId int(11) NOT NULL,
-      access int(3) NOT NULL,
-      PRIMARY KEY (moduleId,itemId,userId)
-    )');
-
-    if ($result === false) die("Error creating ItemRights table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE Timecard (
-      id int(11) NOT NULL auto_increment,
-      ownerId int(11) default NULL,
-      date date default NULL,
-      startTime time default NULL,
-      endTime time default NULL,
-      PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating Timecard table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE Timeproj (
-      id int(11) NOT NULL auto_increment,
-      notes text default NULL,
-      ownerId int(11) default NULL,
-      projectId int(11) default NULL,
-      date date default NULL,
-      amount  time default NULL,
-      PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating Timeproj table");
-
-    $result = $db->getConnection()->exec('CREATE TABLE Calendar (
-      id int(11) NOT NULL auto_increment,
-      title varchar(255) default NULL,
-      notes text default NULL,
-      ownerId int(11) default NULL,
-      projectId int(11) default NULL,
-      startDate date default NULL,
-      participantId int(11) default NULL,
-      startTime time default NULL,
-      endTime time default NULL,
-      parentId int(11) default NULL,
-      serialType int(11) default NULL,
-      serialDays int(11) default NULL,
-      endDate date default NULL,
-      PRIMARY KEY (id)
-    )');
-
-    if ($result === false) die("Error creating Calendar table");
+    $result = $tableManager->createTable('Calendar',
+    array('id' => array (
+        'type' => 'auto_increment', 'null' => false),
+    'parentId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'ownerId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'title' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'notes' => array(
+        'type' => 'text', 'null' => true),
+    'uid' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'recurrence_id' => array(
+        'type' => 'varchar', 'length' => 100, 'null' => true),
+    'startDate' => array(
+        'type' => 'date', 'null' => true),
+    'startTime' => array(
+        'type' => 'time', 'null' => true),
+    'endDate' => array(
+        'type' => 'date', 'null' => true),
+    'endTime' => array(
+        'type' => 'time', 'null' => true),
+    'created' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    'modified' => array(
+        'type' => 'int', 'length' => 10, 'null' => true),
+    'timezone' => array(
+        'type' => 'varchar', 'length' => 50, 'null' => true),
+    'location' => array(
+        'type' => 'varchar', 'length' => 255, 'null' => true),
+    'categories' => array(
+        'type' => 'text', 'null' => true),
+    'attendee' => array(
+        'type' => 'text', 'null' => true),
+    'status' => array(
+        'type' => 'int', 'length' => 1, 'null' => true),
+    'priority' => array(
+        'type' => 'int', 'length' => 1, 'null' => true),
+    'class' => array(
+        'type' => 'int', 'length' => 1, 'null' => true),
+    'transparent' => array(
+        'type' => 'int', 'length' => 1, 'null' => true),
+    'rrule' => array(
+        'type' => 'text', 'null' => true),
+    'properties' => array(
+        'type' => 'text', 'null' => true),
+    'deleted' => array(
+        'type' => 'int', 'length' => 1, 'null' => true),
+    'participantId' => array(
+        'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('id'));
 
     $db->insert('Module', array(
     'id' => 1,
     'name' => 'Project',
+    'label' => 'Project',
     'saveType' => 0,
     'active' => 1
     ));
@@ -511,6 +639,7 @@ function installPhprojekt() {
     $db->insert('Module', array(
     'id' => 2,
     'name' => 'Todo',
+    'label' => 'Todo',
     'saveType' => 0,
     'active' => 1
     ));
@@ -518,6 +647,7 @@ function installPhprojekt() {
     $db->insert('Module', array(
     'id' => 3,
     'name' => 'Note',
+    'label' => 'Note',
     'saveType' => 0,
     'active' => 1
     ));
@@ -525,6 +655,7 @@ function installPhprojekt() {
     $db->insert('Module', array(
     'id' => 4,
     'name' => 'Timecard',
+    'label' => 'Timecard',
     'saveType' => 1,
     'active' => 1
     ));
@@ -532,6 +663,7 @@ function installPhprojekt() {
     $db->insert('Module', array(
     'id' => 5,
     'name' => 'Calendar',
+    'label' => 'Calendar',
     'saveType' => 1,
     'active' => 1
     ));
@@ -539,10 +671,10 @@ function installPhprojekt() {
     $db->insert('Module', array(
     'id' => 6,
     'name' => 'Gantt',
+    'label' => 'Gantt',
     'saveType' => 0,
     'active' => 1
     ));
-
 
     $db->insert('DatabaseManager', array(
     'id' => 1,
@@ -597,11 +729,11 @@ function installPhprojekt() {
     'formTab' => 1,
     'formLabel' => 'parent',
     'formTooltip' => 'parent',
-    'formType' => 'tree',
+    'formType' => 'selectValues',
     'formPosition' => 3,
     'formColumns' => 1,
     'formRegexp' => '',
-    'formRange' => 'Project',
+    'formRange' => 'Project#id#title',
     'defaultValue' => '1',
     'listPosition' => 0,
     'listAlign' => '',
@@ -896,11 +1028,11 @@ function installPhprojekt() {
     'formTab' => 1,
     'formLabel' => 'project',
     'formTooltip' => 'project',
-    'formType' => 'tree',
+    'formType' => 'selectValues',
     'formPosition' => 3,
     'formColumns' => 1,
     'formRegexp' => '',
-    'formRange' => 'Project',
+    'formRange' => 'Project#id#title',
     'defaultValue' => '',
     'listPosition' => 0,
     'listAlign' => '',
@@ -914,213 +1046,29 @@ function installPhprojekt() {
 
     $db->insert('DatabaseManager', array(
     'id' => 17,
-    'tableName' => 'History',
-    'tableField' => 'userId',
+    'tableName' => 'Note',
+    'tableField' => 'projectId',
     'formTab' => 1,
-    'formLabel' => 'UserId',
-    'formTooltip' => 'UserId',
-    'formType' => 'userId',
-    'formPosition' => 1,
+    'formLabel' => 'project',
+    'formTooltip' => 'project',
+    'formType' => 'selectValues',
+    'formPosition' => 3,
     'formColumns' => 1,
     'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '0',
-    'listPosition' => 1,
-    'listAlign' => 'left',
+    'formRange' => 'Project#id#title',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
     'listUseFilter' => 1,
     'altPosition' => 1,
     'status' => '1',
-    'isInteger' => 1,
+    'isInteger' => 0,
     'isRequired' => 1,
     'isUnique' => 0
     ));
 
     $db->insert('DatabaseManager', array(
     'id' => 18,
-    'tableName' => 'History',
-    'tableField' => 'itemId',
-    'formTab' => 1,
-    'formLabel' => 'ItemId',
-    'formTooltip' => 'ItemId',
-    'formType' => 'text',
-    'formPosition' => 2,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '0',
-    'listPosition' => 2,
-    'listAlign' => 'center',
-    'listUseFilter' => 1,
-    'altPosition' => 2,
-    'status' => '1',
-    'isInteger' => 1,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 19,
-    'tableName' => 'History',
-    'tableField' => 'moduleId',
-    'formTab' => 1,
-    'formLabel' => 'Module',
-    'formTooltip' => 'Module',
-    'formType' => 'text',
-    'formPosition' => 3,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 3,
-    'listAlign' => 'left',
-    'listUseFilter' => 1,
-    'altPosition' => 3,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 20,
-    'tableName' => 'History',
-    'tableField' => 'field',
-    'formTab' => 1,
-    'formLabel' => 'Field',
-    'formTooltip' => 'Field',
-    'formType' => 'text',
-    'formPosition' => 4,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 4,
-    'listAlign' => 'left',
-    'listUseFilter' => 1,
-    'altPosition' => 4,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 21,
-    'tableName' => 'History',
-    'tableField' => 'oldValue',
-    'formTab' => 1,
-    'formLabel' => 'OldValue',
-    'formTooltip' => 'OldValue',
-    'formType' => 'text',
-    'formPosition' => 5,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 0,
-    'listAlign' => '',
-    'listUseFilter' => 0,
-    'altPosition' => 0,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 22,
-    'tableName' => 'History',
-    'tableField' => 'newValue',
-    'formTab' => 1,
-    'formLabel' => 'NewValue',
-    'formTooltip' => 'NewValue',
-    'formType' => 'text',
-    'formPosition' => 6,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 0,
-    'listAlign' => '',
-    'listUseFilter' => 0,
-    'altPosition' => 0,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 23,
-    'tableName' => 'History',
-    'tableField' => 'action',
-    'formTab' => 1,
-    'formLabel' => 'Action',
-    'formTooltip' => 'Action',
-    'formType' => 'text',
-    'formPosition' => 7,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 7,
-    'listAlign' => 'left',
-    'listUseFilter' => 1,
-    'altPosition' => 7,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 24,
-    'tableName' => 'History',
-    'tableField' => 'datetime',
-    'formTab' => 1,
-    'formLabel' => 'Datetime',
-    'formTooltip' => 'Datetime',
-    'formType' => 'datetime',
-    'formPosition' => 8,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 8,
-    'listAlign' => 'center',
-    'listUseFilter' => 1,
-    'altPosition' => 8,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 25,
-    'tableName' => 'Note',
-    'tableField' => 'projectId',
-    'formTab' => 1,
-    'formLabel' => 'project',
-    'formTooltip' => 'project',
-    'formType' => 'tree',
-    'formPosition' => 3,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => 'Project',
-    'defaultValue' => '',
-    'listPosition' => 0,
-    'listAlign' => '',
-    'listUseFilter' => 1,
-    'altPosition' => 1,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 26,
     'tableName' => 'Note',
     'tableField' => 'title',
     'formTab' => 1,
@@ -1143,7 +1091,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 27,
+    'id' => 19,
     'tableName' => 'Note',
     'tableField' => 'comments',
     'formTab' => 1,
@@ -1166,13 +1114,13 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 28,
+    'id' => 20,
     'tableName' => 'Note',
     'tableField' => 'category',
     'formTab' => 1,
     'formLabel' => 'category',
     'formTooltip' => 'category',
-    'formType' => 'selectSqlAddOne',
+    'formType' => 'text',
     'formPosition' => 4,
     'formColumns' => 2,
     'formRegexp' => '',
@@ -1189,7 +1137,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 29,
+    'id' => 21,
     'tableName' => 'Calendar',
     'tableField' => 'title',
     'formTab' => 1,
@@ -1212,7 +1160,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 30,
+    'id' => 22,
     'tableName' => 'Calendar',
     'tableField' => 'notes',
     'formTab' => 1,
@@ -1235,7 +1183,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 31,
+    'id' => 23,
     'tableName' => 'Calendar',
     'tableField' => 'startDate',
     'formTab' => 1,
@@ -1258,30 +1206,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 32,
-    'tableName' => 'Calendar',
-    'tableField' => 'participantId',
-    'formTab' => 1,
-    'formLabel' => 'participantId',
-    'formTooltip' => 'participantId',
-    'formType' => 'multipleSelectValues',
-    'formPosition' => 8,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => 'User',
-    'defaultValue' => '',
-    'listPosition' => 2,
-    'listAlign' => 'left',
-    'listUseFilter' => 1,
-    'altPosition' => 1,
-    'status' => '1',
-    'isInteger' => 1,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 33,
+    'id' => 24,
     'tableName' => 'Calendar',
     'tableField' => 'startTime',
     'formTab' => 1,
@@ -1304,14 +1229,37 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 34,
+    'id' => 25,
+    'tableName' => 'Calendar',
+    'tableField' => 'endDate',
+    'formTab' => 1,
+    'formLabel' => 'endDate',
+    'formTooltip' => 'endDate',
+    'formType' => 'date',
+    'formPosition' => 5,
+    'formColumns' => 1,
+    'formRegexp' => '',
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 5,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 26,
     'tableName' => 'Calendar',
     'tableField' => 'endTime',
     'formTab' => 1,
     'formLabel' => 'endTime',
     'formTooltip' => 'endTime',
     'formType' => 'time',
-    'formPosition' => 5,
+    'formPosition' => 6,
     'formColumns' => 1,
     'formRegexp' => '',
     'formRange' => '',
@@ -1322,71 +1270,48 @@ function installPhprojekt() {
     'altPosition' => 0,
     'status' => '1',
     'isInteger' => 0,
-    'isRequired' => 0,
+    'isRequired' => 1,
     'isUnique' => 0
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 35,
+    'id' => 27,
     'tableName' => 'Calendar',
-    'tableField' => 'serialType',
+    'tableField' => 'participantId',
     'formTab' => 1,
-    'formLabel' => 'serialType',
-    'formTooltip' => 'serialType',
-    'formType' => 'selectValues',
-    'formPosition' => 7,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '1#Once|2#Daily|3#Weekly|4#Montlhy|5#Anually',
-    'defaultValue' => '1',
-    'listPosition' => 0,
-    'listAlign' => 'center',
-    'listUseFilter' => 1,
-    'altPosition' => 0,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 0,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 36,
-    'tableName' => 'Calendar',
-    'tableField' => 'serialDays',
-    'formTab' => 1,
-    'formLabel' => 'serialDays',
-    'formTooltip' => 'serialDays',
-    'formType' => 'selectValues',
-    'formPosition' => 7,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '0#All|1#Monday|2#Tuesday|3#Wednesday|4#Thursday|5#Friday|6#Saturday|7#Sunday',
-    'defaultValue' => '1',
-    'listPosition' => 0,
-    'listAlign' => 'center',
-    'listUseFilter' => 1,
-    'altPosition' => 0,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 0,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 37,
-    'tableName' => 'Calendar',
-    'tableField' => 'endDate',
-    'formTab' => 1,
-    'formLabel' => 'endDate',
-    'formTooltip' => 'endDate',
-    'formType' => 'date',
+    'formLabel' => 'participantId',
+    'formTooltip' => 'participantId',
+    'formType' => 'multipleSelectValues',
     'formPosition' => 8,
+    'formColumns' => 1,
+    'formRegexp' => '',
+    'formRange' => 'User#id#username',
+    'defaultValue' => '',
+    'listPosition' => 2,
+    'listAlign' => 'left',
+    'listUseFilter' => 1,
+    'altPosition' => 1,
+    'status' => '1',
+    'isInteger' => 1,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 28,
+    'tableName' => 'Calendar',
+    'tableField' => 'rrule',
+    'formTab' => 1,
+    'formLabel' => 'rrule',
+    'formTooltip' => 'rrule',
+    'formType' => 'hidden',
+    'formPosition' => 9,
     'formColumns' => 1,
     'formRegexp' => '',
     'formRange' => '',
     'defaultValue' => '',
-    'listPosition' => 5,
-    'listAlign' => 'center',
+    'listPosition' => 0,
+    'listAlign' => '',
     'listUseFilter' => 1,
     'altPosition' => 0,
     'status' => '1',
@@ -1452,6 +1377,18 @@ function installPhprojekt() {
     'name' => 'Admin Role',
     'parent' => null));
 
+    $db->insert('groupsUserRelation', array(
+    'id' => 1,
+    'groupsId' => 1,
+    'userId' => 1
+    ));
+
+    $db->insert('ProjectRoleUserPermissions', array(
+    'projectId' => 1,
+    'userId' => 1,
+    'roleId' => 1
+    ));
+
     $db->insert('RoleModulePermissions', array(
     'roleId' => 1,
     'moduleId' => 1,
@@ -1486,12 +1423,6 @@ function installPhprojekt() {
     'roleId' => 1,
     'moduleId' => 6,
     'access' => 139
-    ));
-
-    $db->insert('ProjectRoleUserPermissions', array(
-    'projectId' => 1,
-    'userId' => 1,
-    'roleId' => 1
     ));
 
     $db->insert('ItemRights', array(
@@ -1531,6 +1462,11 @@ function installPhprojekt() {
     'projectId' => 1
     ));
 
+    $db->insert('Tab', array(
+    'id' => 1,
+    'label' => 'Basic Data'
+    ));
+
     // creating log folders
     $baseDir = substr($_SERVER['SCRIPT_FILENAME'], 0, -22);
 
@@ -1538,7 +1474,7 @@ function installPhprojekt() {
 
     if (!file_exists($logsDir)) {
         if (!mkdir($logsDir)) {
-            $_SESSION['error_message'] = 
+            $_SESSION['error_message'] =
             "Please create the dir ".$logsDir." to save the logs or modify the log path on configuration.ini file.";
         }
     }
@@ -1547,11 +1483,11 @@ function installPhprojekt() {
 
     if (!file_exists($uploadDir)) {
         if (!mkdir($uploadDir)) {
-            $_SESSION['error_message'] = 
+            $_SESSION['error_message'] =
             "Please create the dir ".$uploadDir." to upload files or modify the upload path on configuration.ini file.";
         }
     } elseif (!is_writable($uploadDir)) {
-        $_SESSION['error_message'] = 
+        $_SESSION['error_message'] =
         "Please, set apache permission to writo on ".$uploadDir." to allow file upload fields on modules.";
     }
 
@@ -1575,7 +1511,7 @@ function installPhprojekt() {
     }
 
     // Creating the configuration file
-    $configurationFileContent = '[production] 
+    $configurationFileContent = '[production]
 
 ; Language configuration
 language             = "'.$clientLanguaje.'"

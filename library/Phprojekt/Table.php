@@ -81,10 +81,12 @@ class Phprojekt_Table {
                 $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ? "" : $fieldDefinition['length'];
                 $fieldDefinition['null']    = $fieldDefinition['null'];
                 $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
+                $fieldDefinition['default_no_quote'] = (empty($fieldDefinition['default_no_quote'])) ? false : $fieldDefinition['default_no_quote'];
 
                 $sqlString .= $fieldName;
                 $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                        $fieldDefinition['null'], $fieldDefinition['default']) . ", ";
+                                                        $fieldDefinition['null'], $fieldDefinition['default'],
+                                                        $fieldDefinition['default_no_quote']) . ", ";
             }
         } else {
             return false;
@@ -129,10 +131,12 @@ class Phprojekt_Table {
             $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ?"":$fieldDefinition['length'];
             $fieldDefinition['null']    = $fieldDefinition['null'];
             $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ?"":$fieldDefinition['default'];
+            $fieldDefinition['default_no_quote'] = (empty($fieldDefinition['default_no_quote'])) ? false : $fieldDefinition['default_no_quote'];
 
             $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                    $fieldDefinition['null'], $fieldDefinition['default']);
+                                                    $fieldDefinition['null'], $fieldDefinition['default'],
+                                                    $fieldDefinition['default_no_quote']);
         } else {
             return false;
         }
@@ -177,13 +181,15 @@ class Phprojekt_Table {
             $fieldDefinition['length']  = (empty($fieldDefinition['length'])) ? "" : $fieldDefinition['length'];
             $fieldDefinition['null']    = $fieldDefinition['null'];
             $fieldDefinition['default'] = (empty($fieldDefinition['default'])) ? "" : $fieldDefinition['default'];
+            $fieldDefinition['default_no_quote'] = (empty($fieldDefinition['default_no_quote'])) ? false : $fieldDefinition['default_no_quote'];
 
             if (isset($fieldDefinition['oldName'])) {
                 $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['oldName']) . ' ';
             }
             $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                    $fieldDefinition['null'], $fieldDefinition['default']);
+                                                    $fieldDefinition['null'], $fieldDefinition['default'],
+                                                    $fieldDefinition['default_no_quote']);
         } else {
             return false;
         }
@@ -223,7 +229,7 @@ class Phprojekt_Table {
      *
      * @return string
      */
-    private function _getTypeDefinition($fieldType, $fieldLength = null, $allowNull = true, $default = null)
+    private function _getTypeDefinition($fieldType, $fieldLength = null, $allowNull = true, $default = null, $defaultNoQuotes = false)
     {
         switch ($this->_dbType) {
             case 'sqlite':
@@ -261,7 +267,11 @@ class Phprojekt_Table {
         }
 
         if (!empty($default)) {
-            $fieldDefinition .= " DEFAULT '" . (string)$default ."'";
+        	if (empty($defaultNoQuotes)) {
+                $fieldDefinition .= " DEFAULT '" . (string)$default ."'";
+        	} else {
+        		$fieldDefinition .= " DEFAULT " . (string)$default;
+        	}
         } else if ($allowNull) {
             $fieldDefinition .= " DEFAULT NULL";
         }
