@@ -267,11 +267,11 @@ class Phprojekt_Table {
         }
 
         if (!empty($default)) {
-        	if (empty($defaultNoQuotes)) {
+            if (empty($defaultNoQuotes)) {
                 $fieldDefinition .= " DEFAULT '" . (string)$default ."'";
-        	} else {
-        		$fieldDefinition .= " DEFAULT " . (string)$default;
-        	}
+            } else {
+                $fieldDefinition .= " DEFAULT " . (string)$default;
+            }
         } else if ($allowNull) {
             $fieldDefinition .= " DEFAULT NULL";
         }
