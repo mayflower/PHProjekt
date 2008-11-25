@@ -114,12 +114,11 @@ class Phprojekt_Tags_Default
      * If the $limit is set,
      * the returned array is limited to the $limit tags
      *
-     * @param integer $projectId The current Project Id
-     * @param integer $limit     The number of tags for return, 0 for all
+     * @param integer $limit The number of tags for return, 0 for all
      *
      * @return array
      */
-    public function getTags($projectId, $limit = 0)
+    public function getTags($limit = 0)
     {
         $foundResults = array();
 
@@ -131,7 +130,7 @@ class Phprojekt_Tags_Default
         foreach ($tmpResults as $tagUserId => $tagId) {
             $tagName = $this->_tags->getTagName($tagId);
 
-            $modules = $this->_tagsModules->getModulesByRelationId($tagUserId, $projectId);
+            $modules = $this->_tagsModules->getModulesByRelationId($tagUserId);
             if (!isset($foundResults[$tagName])) {
                 $foundResults[$tagName] = 0;
             }
@@ -148,8 +147,10 @@ class Phprojekt_Tags_Default
         $tmp = $foundResults;
         $foundResults = array();
         foreach ($tmp as $tagName => $count) {
-            $foundResults[] = array('string' => $tagName,
-                                    'count'  => $count);
+            if ($count > 0) {
+                $foundResults[] = array('string' => $tagName,
+                                        'count'  => $count);
+            }
         }
 
         return $foundResults;
@@ -162,16 +163,17 @@ class Phprojekt_Tags_Default
      * the returned array is limited to the $limit tags
      *
      * @param string  $tag       The tag for search
-     * @param integer $projectId The current Project Id
      * @param integer $limit     The number of modules for return, 0 for all
      *
      * @return array
      */
-    public function getModulesByTag($tag, $projectId, $limit = 0)
+    public function getModulesByTag($tag, $limit = 0)
     {
         $foundResults = array();
         $results      = array();
-
+        $rights       = new Phprojekt_Item_Rights();
+        $userId       = Phprojekt_Auth::getUserId();
+        
         if (!empty($tag)) {
             // Find the tag
             $tagId = $this->_tags->getTagId($tag);
@@ -181,7 +183,7 @@ class Phprojekt_Tags_Default
                 $tagUserId = $this->_tagsUsers->getUserTagIds(0, $tagId);
 
                 // Get The modules data
-                $foundResults = $this->_tagsModules->getModulesByRelationId($tagUserId, $projectId);
+                $foundResults = $this->_tagsModules->getModulesByRelationId($tagUserId);
 
                 // Return the $limit tags
                 if ($limit > 0) {
@@ -190,7 +192,9 @@ class Phprojekt_Tags_Default
 
                 $display = new Phprojekt_Search_Display();
                 foreach ($foundResults as $result) {
-                    $results[] = $display->getDisplay($result['moduleId'], $result['itemId']);
+                    if ($rights->getItemRight($result['moduleId'], $result['itemId'], $userId) > 0) {
+                        $results[] = $display->getDisplay($result['moduleId'], $result['itemId']);
+                    }
                 }
             }
         }

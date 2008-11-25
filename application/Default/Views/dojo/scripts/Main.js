@@ -43,6 +43,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
+        this.cleanPage();
         phpr.currentProjectId = projectId;
         this.loadSubElements(projectId);
         this.openForm(id, module);
@@ -60,7 +61,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.currentProjectId = phpr.rootProjectId;
         }
         if (this._isGlobalModule(this.module)) {
-            dojo.publish("Project.changeProject", [phpr.currentProjectId]);
+            // System Global Modules
+            if (this.module == 'Administration' ||
+                this.module == 'Setting' ||
+                this.module == 'User' ||
+                this.module == 'Role' ||
+                this.module == 'Module') {
+                dojo.publish("Project.changeProject", [phpr.currentProjectId]);
+            } else {
+                dojo.publish(this.module + ".reload");
+            }
         } else {
             var subModuleUrl   = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
@@ -590,7 +600,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function reload the grid place with the result of the tag search
         // description:
         //    The server return the found records and the function display it
-        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag +'/nodeId/'+ phpr.currentProjectId;
+        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag;
         var resultsTitle = phpr.nls.get('Tag results');
         this.showResults(getDataUrl, resultsTitle);
     },
