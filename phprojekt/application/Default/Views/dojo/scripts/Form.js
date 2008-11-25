@@ -7,18 +7,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
-    sendData:    new Array(),
-    formdata:    new Array(),
-    historyData: '',
-
+    sendData:           new Array(),
+    formdata:           new Array(),
     _url:               null,
     _formNode:          null,
-    _urlUsers:          null,
-    _urlHistory:        null,
     _writePermissions:  true,
     _deletePermissions: false,
-    _accessPermissions: true,
+    _accessPermissions: true,    
+    _initData:          new Array(),
     _tagUrl:            null,
+    _historyUrl:        null,
 
     constructor:function(main, id, module) {
         // summary:
@@ -36,15 +34,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.setUrl();
         this.setNode();
 
-        // Get all the tabs
+        this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Store.Tab();
-        this.tabStore.fetch();
-                
+        this._initData.push({'store': this.tabStore});        
         this.initData();
-
-        // Render the form element on the right bottom
-        phpr.DataStore.addStore({url: this._url});
-        phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, "getFormData")});
+        this.getInitData();
     },
 
     setUrl:function() {
@@ -63,6 +57,30 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._formNode = dijit.byId("detailsBox");
     },
 
+    getInitData: function(params) {
+        // summary:
+        //    Process all the POST in cascade for get all the data from the server
+        // description:
+        //    Process all the POST in cascade for get all the data from the server
+        params = this._initData.pop();
+        
+        if (params.url || params.store) {
+            if (!params.noCache) {
+                params.noCache = false;
+            }       
+            if (!params.processData) {
+                params.processData = dojo.hitch(this, "getInitData");
+            }
+        }
+
+        if (params.url) {
+            phpr.DataStore.addStore({'url': params.url, 'noCache': params.noCache});
+            phpr.DataStore.requestData({'url': params.url, 'processData': params.processData});
+        } else if (params.store) {
+            params.store.fetch(params.processData);
+        }
+    },
+    
     initData: function() {
         // summary:
         //    Init all the data before draw the form
@@ -70,21 +88,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function call all the needed data before the form is drawed
         //    The form will wait for all the data are loaded.
         //    Each module can overwrite this function for load the own data
-        if (this.id > 0) {
-            this.historyStore = new phpr.ReadHistory({
-                url: phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
-            });
-            this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
-        }
+        
+        // Get all the active users
+        this.userStore = new phpr.Store.User();
+        this._initData.push({'store': this.userStore});
 
         // Get the tags
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
-        phpr.DataStore.addStore({url: this._tagUrl});
-        phpr.DataStore.requestData({url: this._tagUrl});
+        this._initData.push({'url': this._tagUrl});
 
-        // Get all the active users
-        this.userStore = new phpr.Store.User();
-        this.userStore.fetch();
+        // History data
+        if (this.id > 0) {
+            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            this._initData.push({'url': this._historyUrl, 'noCache': true});
+        }        
     },
 
     addAccessTab:function(data) {
@@ -349,7 +366,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Add all the tabs that are not the basic data
         this.addAccessTab(data);
         if (this.id > 0) {
-            this.addTab(this.historyData, 'tabHistory', 'History');
+            this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }
     },
 
@@ -585,24 +602,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, false, false);
     },
 
-    getHistoryData: function(items, request) {
+    getHistoryData: function() {
         // summary:
         //    This function renders the history data
         // description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
-        var history = "";
-
-        this.historyData = '<tr><td class="label" colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
-
-        history = this.historyStore.getValue(items[0], "history");
-        
-        
+        var history     = phpr.DataStore.getData({url: this._historyUrl});
+        var historyData = '<tr><td class="label" colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
+                
         if (history.length > 0) {
-            this.historyData += "<tr><td><label>" + phpr.nls.get('Date');
-            this.historyData += "</label></td><td><label>" + phpr.nls.get('User');
-            this.historyData += "</label></td><td><label>" + phpr.nls.get('Field');
-            this.historyData += "</label></td><td><label>" + phpr.nls.get('Old value') + "</label></td></tr>";
+            historyData += "<tr><td><label>" + phpr.nls.get('Date');
+            historyData += "</label></td><td><label>" + phpr.nls.get('User');
+            historyData += "</label></td><td><label>" + phpr.nls.get('Field');
+            historyData += "</label></td><td><label>" + phpr.nls.get('Old value') + "</label></td></tr>";
         }
 
         for (var i = 0; i < history.length; i++) {
@@ -615,12 +628,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             historyAction   = history[i]["action"];
             historyDate     = history[i]["datetime"];
 
-            this.historyData += "<tr><td>" + historyDate;
-            this.historyData += "</td><td>" + historyUser;
-            this.historyData += "</td><td>" + historyField;
-            this.historyData += "</td><td>" + historyOldValue;
+            historyData += "<tr><td>" + historyDate;
+            historyData += "</td><td>" + historyUser;
+            historyData += "</td><td>" + historyField;
+            historyData += "</td><td>" + historyOldValue;
         }
-        this.historyData += "</table></td></tr>";
+        historyData += "</table></td></tr>";
+        
+        return historyData;
     },
 
     updateData:function() {

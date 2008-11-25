@@ -2,29 +2,27 @@ dojo.provide("phpr.Project.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     initData: function() {
-        if (this.id > 0) {
-            this.historyStore = new phpr.ReadHistory({
-                url: phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
-            });
-            this.historyStore.fetch({onComplete: dojo.hitch(this, "getHistoryData")});
-        }
-
-        // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
-        phpr.DataStore.addStore({url: this._tagUrl});
-        phpr.DataStore.requestData({url: this._tagUrl});
-        
         // Get all the active users
         this.userStore = new phpr.Store.User();
-        this.userStore.fetch();
-
+        this._initData.push({'store': this.userStore});
+                
         // Get modules
         this.roleStore = new phpr.Store.Role(this.id);
-        this.roleStore.fetch();
-
+        this._initData.push({'store': this.roleStore});
+                
         // Get modules
         this.moduleStore = new phpr.Store.Module(this.id);
-        this.moduleStore.fetch();
+        this._initData.push({'store': this.moduleStore});
+        
+        // Get the tags
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
+        this._initData.push({'url': this._tagUrl});
+        
+        // History data
+        if (this.id > 0) {
+            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            this._initData.push({'url': this._historyUrl, 'noCache': true});
+        }
     },
 
     addModuleTab:function(data) {
@@ -98,7 +96,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.addModuleTab(data);
         this.addRoleTab(data);
         if (this.id > 0) {
-            this.addTab(this.historyData, 'tabHistory', 'History');
+            this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }
     },
 

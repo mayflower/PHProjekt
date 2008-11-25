@@ -7,7 +7,7 @@ dojo.declare("phpr.Role.Form", phpr.Core.Form, {
     initData:function() {
         // Get modules
         this.roleModuleAccessStore = new phpr.Store.RoleModuleAccess(this.id);
-        this.roleModuleAccessStore.fetch();
+        this._initData.push({'store': this.roleModuleAccessStore});
     },
 
     addBasicFields:function() {

@@ -197,8 +197,7 @@ dojo.declare("phpr.DataStore", null, {
     // description:
     //    The data is request to the server
     //    and then is cached for the future used.
-    _internalCache:  new Array(),
-    _onComplete:     null,
+    _internalCache: new Array(),
 
     addStore:function(params) {
         // summary:
@@ -211,6 +210,12 @@ dojo.declare("phpr.DataStore", null, {
                 data: new Array(),
                 store: store
             };
+        } else if (params.noCache) {
+            store = new phpr.ReadStore({url: params.url});
+            this._internalCache[params.url] = {
+                data: new Array(),
+                store: store
+            };            
         }
     },
 
@@ -243,12 +248,12 @@ dojo.declare("phpr.DataStore", null, {
             params.processData.call();
         }
     },
-
+    
     getData:function(params) {
         // summary:
         //    Return the "data" tag from the server
         // description:
-        //    Return the "data" tag from the server
+        //    Return the "data" tag from the server    
         return this.getStore(params).getValue(this._internalCache[params.url]['data'][0], "data") || Array();
     },
 
@@ -269,7 +274,7 @@ dojo.declare("phpr.DataStore", null, {
            this._internalCache[params.url]['data'] = new Array();
         }
     },
-
+    
     getStore:function(params) {
         // summary:
         //    Return the current data.store
@@ -278,7 +283,7 @@ dojo.declare("phpr.DataStore", null, {
         return this._internalCache[params.url]['store'];
     }
 });
-
+            
 phpr.DataStore = new phpr.DataStore();
 
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
@@ -289,8 +294,11 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     //    data and metadata values
     requestMethod:"post",
     doClientPaging:false,
-
-    _filterResponse:function(data) {
+    
+    _assertIsItem: function(item) {
+	},
+		    
+    _filterResponse: function(data) {
         if (typeof data.data == 'undefined') {
             data.data = new Array();
         }
@@ -306,40 +314,6 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
                 {"data":     retData},
                 {"metadata": retMetaData}]
         }
-        return ret;
-    }
-});
-
-dojo.declare("phpr.ReadHistory", dojox.data.QueryReadStore, {
-    // We need the store explicitly here, since we have to pass it to the grid model.
-    requestMethod:"post",
-    doClientPaging:false,
-
-    _filterResponse: function(data) {
-        if (!data.history) {
-            data.history = {};
-        }
-        ret = {
-            items: [{
-               "history": data.history}]
-        };
-        return ret;
-    }
-});
-
-dojo.declare("phpr.ReadData", dojox.data.QueryReadStore, {
-    // We need the store explicitly here, since we have to pass it to the grid model.
-    requestMethod:"post",
-    doClientPaging:false,
-
-    _filterResponse: function(data) {
-        if (!data.data) {
-            data.data = {};
-        }
-        ret = {
-            items: [{
-               "data": data.data}]
-        };
         return ret;
     }
 });
@@ -377,8 +351,8 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
         for (i in this.displayedMessages) {
             out = this.displayedMessages[i];
             dojo.publish("ServerFeedback", [{
-                message:out.output, 
-                type: out.cssClass
+                message: out.output, 
+                type:    out.cssClass
                 }]
             );
         }
@@ -413,7 +387,7 @@ dojo.declare("phpr.translator", null, {
     _strings: {},
     
     constructor:function(translatedStrings) {
-       this._strings =     translatedStrings;
+       this._strings = translatedStrings;
     },
     
     get:function(string) {
@@ -424,4 +398,3 @@ dojo.declare("phpr.translator", null, {
         }
     }
 });
-
