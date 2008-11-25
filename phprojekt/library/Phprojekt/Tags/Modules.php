@@ -74,21 +74,24 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      * Return all the modules with the relation User-Tag
      *
      * @param integer $tagUserId Relation User-Tag Id
-     * @param integer $projectId Current Project Id
      *
      * @return array
      */
-    public function getModulesByRelationId($tagUserId, $projectId)
+    public function getModulesByRelationId($tagUserId)
     {
         $where        = array();
         $foundResults = array();
+        $rights       = new Phprojekt_Item_Rights();
+        $userId       = Phprojekt_Auth::getUserId();
 
         $where[] = 'tagUserId  = '. $this->getAdapter()->quote($tagUserId);
 
         $modules = $this->fetchAll($where, 'itemId DESC');
         foreach ($modules as $moduleData) {
-            $foundResults[] = array('itemId'     => $moduleData->itemId,
-                                    'moduleId'   => $moduleData->moduleId);
+            if ($rights->getItemRight($moduleData->moduleId, $moduleData->itemId, $userId) > 0) {
+                $foundResults[] = array('itemId'     => $moduleData->itemId,
+                                        'moduleId'   => $moduleData->moduleId);
+            }
         }
 
         return $foundResults;

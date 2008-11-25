@@ -33,19 +33,15 @@ class TagController extends IndexController
      * Get an array with tags
      * order by number of ocurrences
      *
-     * @requestparam integer $projectId The current project Id
-     * @requestparam integer $limit     Limit the number of tags for return
+     * @requestparam integer $limit Limit the number of tags for return
      *
      * @return void
      */
     public function jsonGetTagsAction()
     {
         $tagObj = Phprojekt_Tags_Default::getInstance();
-
-        $projectId = (int) $this->getRequest()->getParam('nodeId');
-        $limit     = (int) $this->getRequest()->getParam('limit', 0);
-
-        $tags   = $tagObj->getTags($projectId, $limit);
+        $limit  = (int) $this->getRequest()->getParam('limit', 0);
+        $tags   = $tagObj->getTags($limit);
         $fields = $tagObj->getFieldDefinition();
 
         echo Phprojekt_Converter_Json::convert($tags, $fields);
@@ -83,21 +79,17 @@ class TagController extends IndexController
     /**
      * Get an array with all the modules with a tag
      *
-     * @requestparam string  $tag       Tag to search
-     * @requestparam integer $projectId The current project Id
-     * @requestparam integer $limit     Limit the number of tags for return
+     * @requestparam string  $tag   Tag to search
+     * @requestparam integer $limit Limit the number of tags for return
      *
      * @return void
      */
     public function jsonGetModulesByTagAction()
     {
         $tagObj = Phprojekt_Tags_Default::getInstance();
-
-        $tag       = $this->getRequest()->getParam('tag', '');
-        $projectId = (int) $this->getRequest()->getParam('nodeId');
-        $limit     = (int) $this->getRequest()->getParam('limit', 0);
-
-        $tags   = $tagObj->getModulesByTag($tag, $projectId, $limit);
+        $tag    = $this->getRequest()->getParam('tag', '');
+        $limit  = (int) $this->getRequest()->getParam('limit', 0);
+        $tags   = $tagObj->getModulesByTag($tag, $limit);
 
         echo Phprojekt_Converter_Json::convert($tags);
     }

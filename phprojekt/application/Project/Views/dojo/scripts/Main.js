@@ -13,6 +13,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     },
 
     loadResult:function(id, module, projectId) {
+        this.cleanPage();
         phpr.currentProjectId = id;
         this.basicData();
     },
