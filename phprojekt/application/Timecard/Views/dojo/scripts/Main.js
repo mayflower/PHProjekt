@@ -25,7 +25,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             selectDate:           phpr.nls.get('Change date'),
             startWorkingTimeText: phpr.nls.get('Start Working Time'),
-            stopWorkingTimeText:  phpr.nls.get('Stop Working Time'),
+            stopWorkingTimeText:  phpr.nls.get('Stop Working Time')
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.cleanPage();
