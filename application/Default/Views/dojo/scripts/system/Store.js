@@ -14,13 +14,22 @@ dojo.declare("phpr.Store", phpr.Component, {
     _url:  null,
     _list: null,
 
-    fetch:function() {
+    fetch:function(processData) {
         // summary:
         //    Get all the active users
         // description:
         //    Get all the active users
+        self = this;
+        if (typeof processData == "undefined") {
+            processData = null;
+        }
         phpr.DataStore.addStore({url: this._url});
-        phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, "makeSelect")});
+        phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
+            self.makeSelect();
+            if (processData) {
+                processData.call();
+            }
+        })});
     },
 
     makeSelect: function() {

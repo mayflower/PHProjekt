@@ -32,7 +32,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.tree  = new this.treeWidget(this);        
         
         this.gantt = new phpr.Project.GanttBase();        
-        this.gantt.store = new phpr.ReadData({
+        this.gantt.store = new phpr.ReadStore({
             url: phpr.webpath+"index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId
         });
         this.gantt.store.fetch({onComplete: dojo.hitch(this, 'prepareData')});

@@ -62,7 +62,7 @@ class Core_HistoryController extends Core_IndexController
             $db      = Zend_Registry::get('db');
             $history = new Phprojekt_History(array('db' => $db));
             $data    = $history->getHistoryData(null, $itemId, $moduleId, $startDate, $endDate, $userId);
-            $data    = array('history' => $data);
+            $data    = array('data' => $data);
             echo Phprojekt_Converter_Json::convert($data);
         }
     }

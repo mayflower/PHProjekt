@@ -98,12 +98,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Reload the Hours view
         // description:
         //    Reload the Hours view with the form and all the hours saved for the current day     
-        var hoursdata = "";
-
-        var meta      = phpr.DataStore.getMetaData({url: this._hourUrl});
-        var data      = phpr.DataStore.getData({url: this._hourUrl});
-
+        var hoursdata  = "";
         var totalHours = 0;
+        var meta       = phpr.DataStore.getMetaData({url: this._hourUrl});
+        var data       = phpr.DataStore.getData({url: this._hourUrl});        
+        
         for (var i = 0; i < data.length; i++) {
             totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {

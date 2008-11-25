@@ -3,14 +3,9 @@ dojo.provide("phpr.Module.Form");
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     
     initData: function() {
-        // Get all the tabs
-        this.tabStore = new phpr.Store.Tab();
-        this.tabStore.fetch();
-
-        // Get the module Designer data
+        // Get all the active users
         this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/id/' + this.id;
-        phpr.DataStore.addStore({url: this._moduleDesignerUrl});
-        phpr.DataStore.requestData({url: this._moduleDesignerUrl});
+        this._initData.push({'url': this._moduleDesignerUrl});
     },
 
     addBasicFields:function() {
