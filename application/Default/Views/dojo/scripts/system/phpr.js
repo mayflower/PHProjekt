@@ -200,6 +200,7 @@ dojo.declare("phpr.DataStore", null, {
     _internalCache: new Array(),
 
     addStore:function(params) {
+        console.debug('ADD ' + params.url);
         // summary:
         //    Set a new store for save the data
         // description:
@@ -207,13 +208,13 @@ dojo.declare("phpr.DataStore", null, {
         if (!this._internalCache[params.url]) {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data: new Array(),
+                data:  new Array(),
                 store: store
             };
         } else if (params.noCache) {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data: new Array(),
+                data:  new Array(),
                 store: store
             };            
         }
@@ -229,8 +230,13 @@ dojo.declare("phpr.DataStore", null, {
             params.processData = null;
         }
         if (this._internalCache[params.url]['data'].length == 0) {
-             phpr.loading.show();
-            this._internalCache[params.url]['store'].fetch({onComplete: dojo.hitch(this, "saveData", {url: params.url, processData: params.processData})});
+            phpr.loading.show();
+            this._internalCache[params.url]['store'].fetch({
+                onComplete: dojo.hitch(this, "saveData", {
+                    url:         params.url,
+                    processData: params.processData
+                })}
+            );
         } else if (params.processData) {
             params.processData.call();
         }
@@ -253,7 +259,7 @@ dojo.declare("phpr.DataStore", null, {
         // summary:
         //    Return the "data" tag from the server
         // description:
-        //    Return the "data" tag from the server    
+        //    Return the "data" tag from the server
         return this.getStore(params).getValue(this._internalCache[params.url]['data'][0], "data") || Array();
     },
 
@@ -281,6 +287,19 @@ dojo.declare("phpr.DataStore", null, {
         // description:
         //    Return the current data.store
         return this._internalCache[params.url]['store'];
+    },
+    
+    deleteAllCache:function() {
+        // summary:
+        //    Delete all the cache
+        // description:
+        //    Delete all the cache
+        for (var i in this._internalCache) {
+            // Special case for global modules since are not reloaded
+            if (this._internalCache[i] && i != phpr.webpath + "index.php/Core/module/jsonGetGlobalModules") {
+                this._internalCache[i]['data'] = new Array();
+            }
+        }
     }
 });
             
