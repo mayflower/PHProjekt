@@ -216,7 +216,6 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
         
     updateData:function() {
-        phpr.DataStore.deleteData({url: this._url});
-        phpr.DataStore.deleteData({url: this._moduleDesignerUrl});
+        phpr.DataStore.deleteAllCache();        
     }
 });
