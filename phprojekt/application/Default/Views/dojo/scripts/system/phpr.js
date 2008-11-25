@@ -138,9 +138,15 @@ phpr.send = function(/*Object*/paramsIn) {
         // If you define onSuccess, make sure to also show the error, for ret=False!!!!!!!
         _onSuccess = function(data, ioArgs) {
             try {
-                params.onSuccess(data, ioArgs);
-                _onEnd();
-                phpr.loading.hide();
+                // 500 is the error code for logut
+                if (data.code && data.code == 500) {
+                    location = phpr.webpath+"index.php/Login/logout";
+                    return;
+                } else {
+                    params.onSuccess(data, ioArgs);
+                    _onEnd();
+                    phpr.loading.hide();
+                }
             } catch(e) {
                 var response = {};
                 response.type ='error';
@@ -317,6 +323,13 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 	},
 		    
     _filterResponse: function(data) {
+        
+        // 500 is the error code for logut
+        if (data.code && data.code == 500) {
+            location = phpr.webpath + "index.php/Login/logout";
+            return;
+        }
+        
         if (typeof data.data == 'undefined') {
             data.data = new Array();
         }

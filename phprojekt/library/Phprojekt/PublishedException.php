@@ -38,7 +38,21 @@
  */
 class Phprojekt_PublishedException extends Exception
 {
+    /**
+     * Message to display
+     *
+     * @var string
+     */
     public $message;
+    
+    /**
+     * Special error codes
+     *
+     * 0   Normal meesage
+     * 500 Expired login -> must Logout
+     * 
+     * @var integer
+     */
     public $code = 0;
 
     /**
