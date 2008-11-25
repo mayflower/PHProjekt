@@ -200,7 +200,6 @@ dojo.declare("phpr.DataStore", null, {
     _internalCache: new Array(),
 
     addStore:function(params) {
-        console.debug('ADD ' + params.url);
         // summary:
         //    Set a new store for save the data
         // description:
