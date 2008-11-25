@@ -32,10 +32,10 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.tree  = new this.treeWidget(this);        
         
         this.gantt = new phpr.Project.GanttBase();        
-        this.gantt.store = new phpr.ReadStore({
-            url: phpr.webpath+"index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId
-        });
-        this.gantt.store.fetch({onComplete: dojo.hitch(this, 'prepareData')});
+
+        this._url = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
+        phpr.DataStore.addStore({'url': this._url, 'noCache': true});
+        phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
         
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
             writePermissions:  true,
@@ -56,7 +56,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    Render all the views
         // description:
         //    Get all the data and render all the views
-        var data = this.gantt.store.getValue(items[0], "data");  
+        var data = phpr.DataStore.getData({url: this._url});        
 
         this.gantt.projectDataBuffer = data["projects"] || Array();
 
