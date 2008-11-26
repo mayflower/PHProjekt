@@ -234,7 +234,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         this.setPermissions(data);
 
-        this.fieldTemplate = new phpr.Default.field();
+        this.fieldTemplate = new phpr.Default.Field();
 
         for (var i = 0; i < meta.length; i++) {
             itemtype     = meta[i]["type"];
@@ -523,7 +523,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
-        
+
         this.prepareSubmission();
 
         phpr.send({

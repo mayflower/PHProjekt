@@ -18,6 +18,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         if (!designerData.length) {
             designerData = new Object();
             designerData[0] = new Object();
+            designerData[0]['id']            = 0;
             designerData[0]['tableName']     = '';
             designerData[0]['formPosition']  = 1;
             designerData[0]['formTab']       = 1;
@@ -149,12 +150,13 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     updateDedignerData: function(event) {
         var data = dojo.fromJson(dijit.byId('designerData').attr('value'));
         if (this.id > 0) {
-            var value = dijit.byId('name').attr('value');
+            var tableName = this.convertLabelIntoTableName(dijit.byId('name').attr('value'));
         } else {
-            var value = dijit.byId('label').attr('value');
+            var tableName = this.convertLabelIntoTableName(dijit.byId('label').attr('value'));
+            dijit.byId('name').attr('value', tableName);
         }
         for (var i in data) {
-            data[i]['tableName'] = this.convertLabelIntoTableName(value);
+            data[i]['tableName'] = this.convertLabelIntoTableName(tableName);
         }
         data = dojo.toJson(data);
         dijit.byId('designerData').attr('value', data);
@@ -164,8 +166,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
     
     convertLabelIntoTableName: function(value) {
-        value = value.replace(/\s+/g, '');
+        value     = value.replace(/\s+/g, '');
         var first = value.charAt(0).toUpperCase();
+        
         return first + value.substr(1, value.length-1);
     },
     
@@ -173,6 +176,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         for(var i = 0; i < this.formsWidget.length; i++) {
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
+
+        this.prepareSubmission();
 
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/id/' + this.id,
