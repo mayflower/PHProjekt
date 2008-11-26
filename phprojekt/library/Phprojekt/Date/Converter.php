@@ -11,8 +11,9 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-class Phprojekt_Date_Converter {
-    
+
+class Phprojekt_Date_Converter
+{    
     /**
      * Converts a String in one of the following formats:
      *     - yyyyMMdd'T'HHmmss'Z'
@@ -24,7 +25,8 @@ class Phprojekt_Date_Converter {
      * @param String $timezone     Timeezone of the date-time
      * @return Zend_Date           Object for further transformation
      */
-    public static function parseIsoDateTime($dateTime, $timezone = 'UTC') {
+    public static function parseIsoDateTime($dateTime, $timezone = 'UTC')
+    {
         $matches = array();
         if (preg_match('/(\d{8})T(\d{6})(Z?)/', $dateTime, $matches)) {
             if ($matches[3] == 'Z') {
@@ -40,7 +42,4 @@ class Phprojekt_Date_Converter {
             return $date;
         }
     }
-
 }
-
-?>
