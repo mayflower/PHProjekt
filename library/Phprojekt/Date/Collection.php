@@ -12,7 +12,9 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
  */
-class Phprojekt_Date_Collection {
+
+class Phprojekt_Date_Collection
+{
     /**
      * Array holding the elements of the collection. Each Element
      * is stored as a Zend_Date object.
@@ -20,13 +22,16 @@ class Phprojekt_Date_Collection {
      * @var array
      */
     private $elements = array();
+
     /**
      * The highest value that should be allowed. If a higher value is added
      * it will be dropped.
      *
      * @var Zend_Date
      */
+
     private $maxDate = null;
+
     /**
      * The lowest value that should be allowed. If a lower value is added
      * it will be dropped.
@@ -41,7 +46,8 @@ class Phprojekt_Date_Collection {
      * @param Zend_Date $startDate      The lowsest allowed value
      * @param Zend_Date $endDate        The highest allowed valueed
      */
-    public function __construct($minDate, $maxDate = null) {
+    public function __construct($minDate, $maxDate = null)
+    {
         $this->minDate = $minDate;
         $this->maxDate = $maxDate;
     }
@@ -52,16 +58,16 @@ class Phprojekt_Date_Collection {
      *
      * @param Zend_Date|Array $element      A(n array of) Zend_Date object(s)
      */
-    public function add($element) {
+    public function add($element)
+    {
         if (is_array($element)) {
             foreach ($element as $e) {
                 $this->add($e);
             }
         } else {
-            if ($element->compare($this->minDate) >= 0
-                && $element->compare($this->maxDate) <= 0) {
-                    $this->elements[] = $element;
-                }
+            if ($element->compare($this->minDate) >= 0 && $element->compare($this->maxDate) <= 0) {
+                $this->elements[] = $element;
+            }
         }
     }
     
@@ -74,7 +80,8 @@ class Phprojekt_Date_Collection {
      * @return boolean          TRUE if parsing was successfull,
      *                          FALSE otherwise
      */
-    public function applyRrule($rrule) {
+    public function applyRrule($rrule)
+    {
         // Clear collection
         $this->elements = array();
         // Parse RRule
@@ -102,7 +109,7 @@ class Phprojekt_Date_Collection {
         // Calculate the dates
         $offset = 0;
         while ($date < $rules['UNTIL']) {
-            $date = call_user_func_array($method, array($rules['INTERVAL']*($offset++)));
+            $date  = call_user_func_array($method, array($rules['INTERVAL']*($offset++)));
             $dates = $this->rruleByXXX($rules, $date);
             $this->add($dates);
         }
@@ -115,7 +122,8 @@ class Phprojekt_Date_Collection {
      * @param String $rrule     RRULE to parse
      * @return Array            Array containing the parsed rule
      */
-    private static function parseRrule($rrule) {
+    private static function parseRrule($rrule)
+    {
         $rrule = explode(';', $rrule);
         $rules = array();
         
@@ -132,7 +140,9 @@ class Phprojekt_Date_Collection {
         
         foreach ($rrule as $rule) {
             list($name, $value) = explode('=', $rule, 2);
-            if ($value == '') continue;
+            if ($value == '') {
+                continue;
+            }
             switch ($name) {
                 case 'UNTIL':
                     $value = Phprojekt_Date_Converter::parseIsoDateTime($value);
@@ -165,7 +175,8 @@ class Phprojekt_Date_Collection {
      * @param Zend_Date $date       The date to start from
      * @return array                Array with all generated Zend_Date objects
      */
-    private function rruleByXXX($rules, $date) {
+    private function rruleByXXX($rules, $date)
+    {
         $bys = array(
             'BYMONTH' => 'setMonth',
             'BYWEEKNO' => 'setWeek',
@@ -182,14 +193,14 @@ class Phprojekt_Date_Collection {
                 $res = array();
                 foreach ($rules[$by] as $value) {
                     foreach ($dates as $date) {
-//                        echo $setter.':'.$value.'<br>';
-                        $date = call_user_func_array(array($date, $setter), array($value));
+                        $date  = call_user_func_array(array($date, $setter), array($value));
                         $res[] = new Zend_Date($date);
                     }
                 }
                 $dates = $res;
             }
         }
+        
         return $dates;
     }
     
@@ -198,7 +209,8 @@ class Phprojekt_Date_Collection {
      *
      * @return Array    Returns all dates (Zend_Date) of the collection as an array
      */
-    public function getValues() {
+    public function getValues()
+    {
         return $this->elements;
     }
     
@@ -208,7 +220,8 @@ class Phprojekt_Date_Collection {
      * @param Array $exclude        Array with Zend_Dates that should be removed from
      *                              the collection
      */
-    public function filter($exclude) {
+    public function filter($exclude)
+    {
         for ($dateIndex = 0; $dateIndex < count($this->elements); $dateIndex++) {
             foreach ($exclude as $exDate) {
                 if ($exDate->compare($this->elements[$dateIndex]) == 0) {
@@ -220,5 +233,3 @@ class Phprojekt_Date_Collection {
     }
 
 }
-
-?>
