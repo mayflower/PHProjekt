@@ -47,7 +47,8 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 phpr.makeModuleDesignerSource = function() {
     var element = dojo.byId('moduleDesignerSource');
     var html    = '';
-    var types   = new Array('text', 'date', 'time', 'selectValues', 'percentage', 'textarea', 'upload')
+    var types   = new Array('text', 'date', 'time', 'selectValues', 'checkbox',
+                            'percentage', 'textarea', 'upload')
 
     for (i in types) {
         var id = dojo.dnd.getUniqueId();
@@ -150,7 +151,7 @@ phpr.editModuleDesignerField = function(object, target) {
     var fieldsForm    = '';
     var fieldsList    = '';
     var fieldsGeneral = '';
-    var template      = new phpr.Default.field();
+    var template      = new phpr.Default.Field();
     var render        = new phpr.Component();
     
     // Table

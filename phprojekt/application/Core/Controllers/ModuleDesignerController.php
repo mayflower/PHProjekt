@@ -82,17 +82,20 @@ class Core_ModuleDesignerController extends Core_IndexController
         if ($databaseManager->recordValidate($module, $data)) {
             // Update Table Structure
             $tableData = $this->_getTableData($data);
-            $databaseManager->syncTable($data, $module, $tableData);
-
-            // Update DatabaseManager Table
-            $databaseManager->saveData($module, $data);
-
-            if (empty($id)) {
-                $message = $translate->translate('The table module was created correctly');
+            if (!$databaseManager->syncTable($data, $module, $tableData)) {
+                $type    = 'error';
+                $message = $translate->translate('There was an error writing the table');
             } else {
-                $message = $translate->translate('The table module was edited correctly');
+                // Update DatabaseManager Table
+                $databaseManager->saveData($module, $data);
+
+                if (empty($id)) {
+                    $message = $translate->translate('The table module was created correctly');
+                } else {
+                    $message = $translate->translate('The table module was edited correctly');
+                }
+                $type = 'success';
             }
-            $type = 'success';
         } else {
             $error   = $databaseManager->getError();
             $message = $error['field'].': '.$error['message'];

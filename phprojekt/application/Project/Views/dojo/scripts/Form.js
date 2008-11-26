@@ -165,6 +165,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
 
+        this.prepareSubmission();
+
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
             content:   this.sendData,

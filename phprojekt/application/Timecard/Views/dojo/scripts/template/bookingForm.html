@@ -9,6 +9,7 @@
     left: 0px;
     width: 195px;
     float: left;
+    cursor: pointer; 
 }
 .timecardsource {
     border: 1px dotted skyblue;
@@ -26,7 +27,7 @@
 <div style="position: absolute; top:10%; width:50%; left:0%; float: left;">
     <div dojoType="dojo.dnd.Source" id="projectBookingSource" jsId="projectBookingSource" copyOnly="true" selfAccept="false" style="margin: 4px; padding: 4px;">
     {% for item in values %}
-        <div class="dojoDndItem timecardsource" id="{{item.id}}">
+        <div class="dojoDndItem timecardsource" style="cursor: move;" id="{{item.id}}">
             {{item.name}}
         </div>
         <br />

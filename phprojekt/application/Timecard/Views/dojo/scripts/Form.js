@@ -340,18 +340,27 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         dojo.connect(dijit.byId("saveBookingButton_0"), "onClick", dojo.hitch(this, "submitBookingForm", [0]));
     },
     
+    prepareSubmission:function() {
+        if (this.sendData.endTime) {
+            this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
+        }
+        if (this.sendData.startTime) {
+            this.sendData.startTime = this.main.getIsoTime(this.sendData.startTime);
+        }        
+        if (this.sendData.amount) {
+            this.sendData.amount = this.main.getIsoTime(this.sendData.amount);
+        }        
+    },
+    
     submitForm:function() {
         // summary:
         //    Save the hours form
         // description:
         //    Save the hours form and reload only the grid and the hours form              
         this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));       
-        if (this.sendData.endTime) {
-            this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
-        }
-        if (this.sendData.startTime) {
-            this.sendData.startTime = this.main.getIsoTime(this.sendData.startTime);
-        }
+
+        this.prepareSubmission();
+
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonSave/',
             content:   this.sendData,
@@ -373,10 +382,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the booking form
         // description:
         //    Save the booking form and reload only the grid and the booking form        
-        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));     
-        if (this.sendData.amount) {
-            this.sendData.amount = this.main.getIsoTime(this.sendData.amount);
-        }
+        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));
+        
+        this.prepareSubmission();
+        
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonBookingSave/id/' + id,
             content:   this.sendData,
@@ -397,7 +406,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the favorites projects
         // description:
         //    Save the favorites projects       
-       this.sendData['favorites[]'] = dojo.byId('selectedProjectFavorites').value.split(","); 
+        this.sendData['favorites[]'] = dojo.byId('selectedProjectFavorites').value.split(","); 
+        
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonFavortiesSave',
             content:   this.sendData,

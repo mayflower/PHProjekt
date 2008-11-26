@@ -542,7 +542,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * @param string $tableName Name of the module Table
      * @param array  $tableData Array with the table data definition per new field
      *
-     * @return void
+     * @return boolean
      */
     public function syncTable($newFields, $tableName, $tableData)
     {
@@ -553,9 +553,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $tableDataForCreate['ownerId'] = array('type'   => 'int',
                                                'length' => 11);
         array_merge($tableDataForCreate, $tableData);
-        $tableFields  = $tableManager->getTableFields($tableName, $tableDataForCreate);
+        $tableFields = $tableManager->getTableFields($tableName, $tableDataForCreate);
 
         // Search for Modify and Delete
+        $return = true;
         foreach ($oldFields as $oldValues) {
             $found = false;
             foreach ($newFields as $newValues) {
@@ -563,10 +564,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $fieldDefinition            = $tableData[$newValues['tableField']];
                     $fieldDefinition['name']    = $newValues['tableField'];
                     if ($oldValues['tableField'] == $newValues['tableField']) {
-                        $tableManager->modifyField($tableName, $fieldDefinition);
+                        if (!$tableManager->modifyField($tableName, $fieldDefinition)) {
+                            $return = false;
+                        }
                     } else {
                         $fieldDefinition['oldName'] = $oldValues['tableField'];
-                        $tableManager->changeField($tableName, $fieldDefinition);
+                        if (!$tableManager->changeField($tableName, $fieldDefinition)) {
+                            $return = false;
+                        }
                     }
                     $found = true;
                     break;
@@ -575,7 +580,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             if (!$found) {
                 $fieldDefinition         = array();
                 $fieldDefinition['name'] = $oldValues['tableField'];
-                $tableManager->deleteField($tableName, $fieldDefinition);
+                if (!$tableManager->deleteField($tableName, $fieldDefinition)) {
+                    $return = false;
+                }
             }
         }
 
@@ -584,9 +591,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             if ($newValues['id'] == 0) {
                 $fieldDefinition         = $tableData[$newValues['tableField']];
                 $fieldDefinition['name'] = $newValues['tableField'];
-                $tableManager->addField($tableName, $fieldDefinition); 
+                if (!$tableManager->addField($tableName, $fieldDefinition)) {
+                    $return = false;
+                }
             }
         }
+        
+        return $return;
     }
     
     /**

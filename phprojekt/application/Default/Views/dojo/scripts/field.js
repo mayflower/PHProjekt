@@ -1,126 +1,126 @@
-dojo.provide("phpr.Default.field");
+dojo.provide("phpr.Default.Field");
 
-dojo.declare("phpr.Default.field", phpr.Component, {
+dojo.declare("phpr.Default.Field", phpr.Component, {
     // summary:
     //    class for rendering form fields
     // description:
     //    this class renders the different form types which are available in a PHProjekt Detail View
     
-    checkRender: function(itemlabel, itemid,itemvalue) {
+    checkRender: function(itemlabel, itemid, itemvalue) {
         phpr.destroyWidget(itemid);
         var itemchecked = null;
         if (itemvalue == "on") {
             itemchecked = "checked";
         }
         return this.render(["phpr.Default.template", "formcheck.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            checked:itemchecked
+                            id:       itemid,
+                            checked: (itemchecked) ? "checked" : ''
                 });
     },
     
-    textFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    textFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtext.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
-                            type: 'text',
+                            type:     'text',
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
     
-    hiddenFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    hiddenFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formhidden.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
-                            type: 'hidden',
+                            type:     'hidden',
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },    
     
-    passwordFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    passwordFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtext.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
-                            type: 'password',
+                            type:     'password',
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
             
-    uploadFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled,iFramePath) {
+    uploadFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formupload.html"], null, {
-                            label: itemlabel,
-                            labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
-                            required: itemrequired,
-                            disabled: (itemdisabled) ? "disabled" : '',
+                            label:      itemlabel,
+                            labelfor:   itemid,
+                            id:         itemid,
+                            value:      itemvalue,
+                            required:   itemrequired,
+                            disabled:   (itemdisabled) ? "disabled" : '',
                             iFramePath: iFramePath
                 });
     },   
     
-    percentageFieldRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    percentageFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formpercentage.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
     
-    textAreaRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    textAreaRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtextarea.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: (itemvalue) ?  itemvalue : '\n\n',
+                            id:       itemid,
+                            value:    (itemvalue) ?  itemvalue : '\n\n',
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
     
-    dateRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    dateRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formdate.html"], null, {
-                             label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
     
-    timeRender: function(itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    timeRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtime.html"], null, {
-                             label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
     
-    selectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled) {
+    selectRender: function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         var options = new Array();
         var j       = 0;
@@ -129,17 +129,17 @@ dojo.declare("phpr.Default.field", phpr.Component, {
             j++;
         }
         return this.render(["phpr.Default.template", "formfilterselect.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            value: itemvalue,
+                            id:       itemid,
+                            value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
-                            values: options
+                            values:   options
                 });
     },
 
-    multipleSelectRender: function(range, itemlabel, itemid,itemvalue,itemrequired,itemdisabled, itemsize, itemmultiple) {
+    multipleSelectRender: function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemsize, itemmultiple) {
         phpr.destroyWidget(itemid);
         var options = new Array();
         var tmp     = itemvalue.split(',');
@@ -155,27 +155,27 @@ dojo.declare("phpr.Default.field", phpr.Component, {
             j++;
         }
         return this.render(["phpr.Default.template", "formselect.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            values: itemvalue,
+                            id:       itemid,
+                            values:   itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
                             multiple: itemmultiple,
-                            size: itemsize,
-                            options: options
+                            size:     itemsize,
+                            options:  options
                 });
     },
 
     buttonActionRender: function(itemlabel, itemid, itemtext, icon, action) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formactionbutton.html"], null, {
-                            label: itemlabel,
+                            label:    itemlabel,
                             labelfor: itemid,
-                            id: itemid,
-                            text: itemtext,
-                            icon: icon,
-                            action: action
+                            id:       itemid,
+                            text:     itemtext,
+                            icon:     icon,
+                            action:   action
                 });
     }
 });
