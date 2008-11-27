@@ -19,7 +19,7 @@ dojo.declare("phpr.Store", phpr.Component, {
         //    Get all the active users
         // description:
         //    Get all the active users
-        self = this;
+        var self = this;
         if (typeof processData == "undefined") {
             processData = null;
         }

@@ -11,12 +11,29 @@
         @import "<?php echo $this->webpath; ?>dojo/dijit/themes/dijit_rtl.css";
     </style>
     <script type="text/javascript">
-        var djConfig = {isDebug: true, parseOnLoad: false, preventBackButtonFix: false,
+        var djConfig = {isDebug: false, parseOnLoad: false, preventBackButtonFix: false,
                         bindEncoding: "utf-8", dojoIframeHistoryUrl: '../resources/iframe_history.html',
                         locale: '<?php echo $this->language; ?>', useCommentedJson: true};
     </script>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
     <script type="text/javascript" src="<?php echo $this->url(array('controller' => 'js', 'action' => 'index')); ?>"></script>
+    <script type="text/javascript">
+        function init() {   
+            if (document.layers) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            } else if (document.all) {
+                availHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
+            } else if (document.getElementById) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            }
+            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
+            dijit.byId('completeContent').resize();
+
+            dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 55) + "px");
+            dijit.byId('completeCenterContent').resize();
+        }
+        dojo.addOnLoad(init);
+    </script>    
 </head>
 <body class="phprojekt">
     <script type="text/javascript">

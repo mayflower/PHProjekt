@@ -609,7 +609,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
-        var historyData = '<tr><td class="label" colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
+        var historyData = '<tr><td colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
                 
         if (history.length > 0) {
             historyData += "<tr><td><label>" + phpr.nls.get('Date');
