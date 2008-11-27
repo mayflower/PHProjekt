@@ -1,40 +1,52 @@
-<div id="completeContent" dojoType="dijit.layout.BorderContainer" style="width: 100%; height: 100%;">
+<div id="completeContent" dojoType="dijit.layout.BorderContainer"
+style="width: 100%; height: 1000px;">
+    <!-- Left Content -->		
+    <div dojoType="dijit.layout.ContentPane" region="left" splitter="true" minSize="20" maxSize="300"
+    style="width:15%;">       
+        <div id="navigation-container" dojoType="dijit.layout.BorderContainer" region="left">
+            <div id="tagsbox" dojoType="dojox.layout.ExpandoPane" title="Tags" region="bottom" maxHeight="150">
+            <br /><br /><br /><br /><br /><br /><br /><br />
+            </div>
+            <div region="center" dojoType="dijit.layout.ContentPane">
+                <div id="subheader" class="block">
+                    <div id="navigation-container-titel">
+                    </div>
+                </div>
+                <!-- Tree menu -->
+                <div id="tree-navigation">
+                    <div dojoType="dijit.layout.ContentPane" id="treeBox">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Top Bar menu -->
-    <div dojoType="dijit.layout.ContentPane" id="header" region="top" style="height:55px;" splitter="false">
+    <div dojoType="dijit.layout.ContentPane" region="top" id="header"
+    style="height:55px; overflow:hidden;">
         <img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6" onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")' />
-        <form dojoType="dijit.form.Form" id="searchform" name="searchform" style="display:inline" onsubmit='dojo.publish("{{currentModule}}.showSearchResults",[dojo.byId("searchfield").value]); return false;'>
+        <form dojoType="dijit.form.Form" id="searchform" name="searchform" onsubmit='dojo.publish("{{currentModule}}.showSearchResults",[dojo.byId("searchfield").value]); return false;'
+        style="display:inline">
         <div id="search-bar" class="last right align-right">
             <input id="searchfield" name="searchfield" onmousedown='this.focus(); dojo.publish("{{currentModule}}.showSuggest");' />
         </div>
         </form>
         <div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
         </div>
-        <div id="loadingIcon" class="right align-right" style="margin-top: 5px; margin-bottom:5px">
+        <div id="loadingIcon" class="right align-right"
+        style="margin-top: 5px; margin-bottom:5px">
             <img class="left" src="{{webpath}}img/ajax-loader.gif" alt="Loadding" />
         </div>
     </div>
-    <!-- Left Content -->
-    <div id="navigation-container" dojoType="dijit.layout.BorderContainer" region="left" style="width:15%;" splitter="true" minSize="20" maxSize="300">
-        <div id="tagsbox" dojoType="dojox.layout.ExpandoPane" title="Tags" region="bottom" maxHeight="150">
-        <br /><br /><br /><br /><br /><br /><br /><br />
-        </div>
-        <div region="center" dojoType="dijit.layout.ContentPane">
-            <div id="subheader" class="block">
-                <div id="navigation-container-titel">
-                </div>
-            </div>
-            <!-- Tree menu -->
-            <div id="tree-navigation">
-                <div dojoType="dijit.layout.ContentPane" id="treeBox">
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <!-- Center Content -->
-    <div dojoType="dijit.layout.ContentPane" region="center">
-        <div dojoType="dijit.layout.BorderContainer" design="sidebar" style="width: 100%; height: 100%;">
+    <div id="completeCenterContent" dojoType="dijit.layout.ContentPane" region="center"
+    style="width: 100%; height: 1000px;">	
+        <div dojoType="dijit.layout.BorderContainer" design="sidebar"
+        style="width: 100%; height: 100%;">
             <!-- Second Top Bar -->
-            <div dojoType="dijit.layout.ContentPane" region="top" class="block" style="height: 7%;" splitter="false">
+            <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
+            style="height: 7%;">
                 <div class="column">
                     <img src="{{webpath}}img/subheaderborder.png" alt="" />
                 </div>
@@ -48,15 +60,18 @@
                 <div id="ServerFeedback" dojoType="dojox.widget.Toaster" messageTopic="ServerFeedback" positionDirection="tr-left" duration="5000" >
                 </div>
             </div>
-            <!-- Main Content -->
-            <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
-            </div>
             <!-- Form buttons -->
-            <div dojoType="dijit.layout.ContentPane" region="bottom" id="bottomContent" class="block" style="height: 5%; overflow:hidden;" splitter="false">
+            <div dojoType="dijit.layout.ContentPane" region="bottom" id="bottomContent" class="block" splitter="false"
+            style="height: 5%; overflow:hidden;">
+            </div>            
+            <!-- Main Content -->
+            <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent"
+            style="width: 85%;">
             </div>
         </div>
     </div>
 </div>
 <!-- Suggest seacrh -->
-<div id="searchsuggest" style="z-index:100; display:inline">
+<div id="searchsuggest"
+style="z-index:100; display:inline">
 </div>
