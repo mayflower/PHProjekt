@@ -137,7 +137,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         if (true === empty($this->_translate[$locale]) && empty($session->translatedStrings)) {            
             // Default
             $langFile    = $this->_getLangFile($locale);
-            $languageDir = $data;
+            $languageDir = PHPR_CORE_PATH . '/Default/Languages/';
             $lang        = array();
             if (file_exists($languageDir . $langFile)) {
                 include_once($languageDir . $langFile);
