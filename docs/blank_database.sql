@@ -260,8 +260,8 @@ CREATE TABLE `SearchWordModule` (
 CREATE TABLE `SearchDisplay` (
   `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
-  `firstDisplay` varchar(255),
-  `secondDisplay` varchar(255),
+  `firstDisplay` text,
+  `secondDisplay` text,
   `projectId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`)
 );
