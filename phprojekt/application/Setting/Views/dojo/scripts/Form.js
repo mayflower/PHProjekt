@@ -34,12 +34,9 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
         // description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
-        this.sendData = new Array();
-        for(var i = 0; i < this.formsWidget.length; i++) {
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
+        if (!this.prepareSubmission()) {
+            return false;
         }
-
-        this.prepareSubmission();
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/moduleName/' + phpr.submodule,

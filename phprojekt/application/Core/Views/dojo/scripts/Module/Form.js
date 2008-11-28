@@ -173,12 +173,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
     
     submitForm: function() {
-        this.sendData = new Array();
-        for(var i = 0; i < this.formsWidget.length; i++) {
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
+        if (!this.prepareSubmission()) {
+            return false;
         }
-
-        this.prepareSubmission();
 
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/id/' + this.id,

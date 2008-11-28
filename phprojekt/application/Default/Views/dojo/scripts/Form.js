@@ -506,14 +506,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    This function prepares the content of this.sendData before it is
         //    submitted to the Server.
-    },
-
-    submitForm: function() {
-        // summary:
-        //    This function is responsible for submitting the formdata
-        // description:
-        //    This function sends the form data as json data to the server
-        //    and call the reload routine
         this.sendData = new Array();
         for(var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
@@ -524,8 +516,18 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
+        return true;   
+    },
 
-        this.prepareSubmission();
+    submitForm: function() {
+        // summary:
+        //    This function is responsible for submitting the formdata
+        // description:
+        //    This function sends the form data as json data to the server
+        //    and call the reload routine
+        if (!this.prepareSubmission()) {
+            return false;
+        }
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,

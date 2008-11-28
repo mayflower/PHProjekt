@@ -3,15 +3,18 @@ dojo.provide("phpr.Calendar.Form");
 dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
     prepareSubmission:function() {
-        // summary:
-        //    This function prepares the data for submission
-        // description:
-        //    This function prepares the content of this.sendData before it is
-        //    submitted to the Server.
-        
+        this.sendData = new Array();
+        for(var i = 0; i < this.formsWidget.length; i++) {
+            if (!this.formsWidget[i].isValid()) {
+                var parent = this.formsWidget[i].containerNode.parentNode.id;
+                this.form.selectChild(parent);
+                this.formsWidget[i].validate();
+                return false;
+            }
+            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
+        }
         // check if rule for reoccurence is set
-        if (this.sendData.rrule_freq) {
-            
+        if (this.sendData.rrule_freq) {            
             // set frequence
             var rrule = 'FREQ='+this.sendData.rrule_freq;
             
@@ -43,7 +46,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         } else {
             this.sendData.rrule = null;
         }
-        this.inherited(arguments);
+        return true;
     },
     
     addModuleTabs:function(data) {
@@ -52,7 +55,10 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // description:
         //    Add all the tabs that are not the basic data
         this.addReoccurenceTab(data);
-        return this.inherited(arguments);
+        this.addAccessTab(data);
+        if (this.id > 0) {
+            this.addTab(this.getHistoryData(), 'tabHistory', 'History');
+        }
     },
     
     addReoccurenceTab:function(data) {
