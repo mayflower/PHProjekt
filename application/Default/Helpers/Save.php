@@ -121,7 +121,9 @@ final class Default_Helpers_Save
                     $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
                 }
             }
-            $node->getActiveRecord()->saveRights($rights);
+            if (count($rights) > 0) {
+                $node->getActiveRecord()->saveRights($rights);
+            }
 
             // Save the module-project relation
             if (!isset($params['checkModuleRelation'])) {
@@ -173,7 +175,7 @@ final class Default_Helpers_Save
         if ($newItem && isset($model->ownerId)) {
             $model->ownerId = Phprojekt_Auth::getUserId();
         }
-
+        
         // Parent Project
         if (isset($model->projectId)) {
             $projectId = $model->projectId;
@@ -182,12 +184,13 @@ final class Default_Helpers_Save
         }
 
         // Checks
+        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
         if (!$model->recordValidate()) {
             $error = array_pop($model->getError());
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         } else if (!self::_checkAccess($projectId)) {
             throw new Phprojekt_PublishedException('You do not have write access into the parent project');
-        } else if (!self::_checkModule(Phprojekt_Module::getId($params['module']), $projectId)) {
+        } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
         } else {
             $model->save();
@@ -225,7 +228,9 @@ final class Default_Helpers_Save
                     $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
                 }
             }
-            $model->saveRights($rights);
+            if (count($rights) > 0) {
+                $model->saveRights($rights);
+            }
             return $model;
         }
     }

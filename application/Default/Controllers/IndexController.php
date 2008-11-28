@@ -214,11 +214,10 @@ class IndexController extends Zend_Controller_Action
     {
         $translate = Zend_Registry::get('translate');
         $data      = (array) $this->getRequest()->getParam('data');
-
-        $message = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
-        $showId = array();
+        $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+        $showId    = array();
         foreach ($data as $id => $fields) {
-            $model   = $this->getModelObject()->find($id);
+            $model = $this->getModelObject()->find($id);
             Default_Helpers_Save::save($model, $fields);
             $showId[] = $id;
         }

@@ -83,9 +83,8 @@ class Project_IndexController extends IndexController
     {
         $translate = Zend_Registry::get('translate');
         $data      = (array) $this->getRequest()->getParam('data');
-
-        $message = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
-        $showId = array();
+        $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+        $showId    = array();
         foreach ($data as $id => $fields) {
             $model   = $this->getModelObject()->find($id);
             $node    = new Phprojekt_Tree_Node_Database($model, $id);
