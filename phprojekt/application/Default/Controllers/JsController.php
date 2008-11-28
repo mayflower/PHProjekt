@@ -190,11 +190,10 @@ class JsController extends IndexController
     {
         $output = '';
         foreach ($scripts as $script) {
-            if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.' && ($script != 'nls')) {
+            if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.') {
                 $coreScripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
                 if (in_array('Main.js', $coreScripts)) {
                     $output .= 'dojo.registerModulePath("phpr.'.$script.'", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
-                    $output .= 'dojo.registerModulePath("phpr.'.$script.'.nls", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
                     $this->_modules[] = $script;
                 }
                 foreach ($coreScripts as $coreScript) {
