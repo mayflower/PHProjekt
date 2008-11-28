@@ -77,6 +77,8 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
     },
     
     updateCacheData:function() {
-        this.form.updateData();
+        if (this.form) {
+            this.form.updateData();
+        }
     }
 });

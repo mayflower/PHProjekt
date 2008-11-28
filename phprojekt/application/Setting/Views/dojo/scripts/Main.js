@@ -66,6 +66,8 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
     },
     
     updateCacheData:function() {
-        this.form.updateData();
+        if (this.form) {
+            this.form.updateData();
+        }
     }
 });

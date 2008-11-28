@@ -662,8 +662,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function reload the grid place with the result of a search or a tagt
         // description:
         //    The server return the found records and the function display it        
-        this.grid.updateData();
-        this.form.updateData();
+        if (this.grid) {
+            this.grid.updateData();
+        }
+        if (this.form) {
+            this.form.updateData();
+        }
     },
     
     setLanguage:function(language) {
