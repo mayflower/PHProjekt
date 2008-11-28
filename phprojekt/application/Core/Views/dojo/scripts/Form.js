@@ -25,6 +25,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
     },
 
     submitForm:function() {
+        this.sendData = new Array();
         for(var i = 0; i < this.formsWidget.length; i++) {
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
