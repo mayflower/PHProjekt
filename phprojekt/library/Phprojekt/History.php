@@ -168,4 +168,41 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         }
         return $result;
     }
+
+
+	/**
+	* Returns the last changes, if there are any, for a specific module and item id.
+	* The result data is used by Mail_Notification class, when telling the users related
+	* to an item that it has been modified.
+	*
+	* @param Phprojekt_Item_Abstract $object    The item object
+	*
+	* @return array
+	*/
+ 
+	public function getLastHistoryData($object)
+    {
+        $moduleId = Phprojekt_Module::getId($object->getTableName());
+		$itemId = $object->id;
+		
+        $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
+        $where .= $this->getAdapter()->quoteInto(' AND itemId = ? AND date_sub(now(), interval 5 second) <= datetime',
+        										 $itemId);
+        $result = array();
+
+        foreach ($this->fetchAll($where) as $row) {
+            $result[] = array('userId'       => $row->userId,
+                              'moduleId'     => $row->moduleId,
+                              'itemId'       => $row->itemId,
+                              'field'        => $row->field,
+                              'oldValue'     => $row->oldValue,
+                              'newValue'     => $row->newValue,
+                              'action'       => $row->action,
+                              'datetime'     => $row->datetime);
+        }
+        
+        return $result;
+    	
+    }
+
 }

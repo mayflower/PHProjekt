@@ -142,4 +142,15 @@ $lang["timeZone"] = "timeZone";
 // Search
 $lang["View all"] = "View all";
 
+// Notifications
+$lang["A "] = "A ";
+$lang[" item has been "] = " item has been ";
+$lang["modified"] = "modified";
+$lang["created"] = "created";
+$lang["Current data"] = "Current data";
+$lang["Changes done"] = "Changes done";
+$lang["Field"] = "Field";
+$lang["Old value"] = "Old value";
+$lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
+
 ?>

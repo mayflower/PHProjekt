@@ -267,11 +267,32 @@ final class Default_Helpers_Save
                 throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
             }
 
-            return self::_saveTree($model, $params, $parentId);
+			$return = self::_saveTree($model, $params, $parentId);
+            
+            //Send mail notification?
+            if (array_key_exists('sendNotification', $params)) {
+            	if ($params['sendNotification'] == 'on') {
+            		$mail = new Phprojekt_Mail_Notification();
+	    			$mail->sendNotificationHtml($model->getActiveRecord());
+            	}
+            }
+
+            return $return;
         }
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            return self::_saveModel($model, $params);
+            $return = self::_saveModel($model, $params);
+            
+            //Send mail notification?
+            if (array_key_exists('sendNotification', $params)) {
+            	if ($params['sendNotification'] == 'on') {
+            		$mail = new Phprojekt_Mail_Notification();
+	    			$mail->sendNotificationHtml($model);
+            	}
+            }
+
+            return $return;
+
         }
 
         return true;

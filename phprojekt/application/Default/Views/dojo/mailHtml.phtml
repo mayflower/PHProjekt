@@ -1,0 +1,45 @@
+<div style="font-family:Arial, Helvetica, sans-serif; font-size:12px;">
+<b><?php echo $this->title ?>.</b><br>
+<br>
+<b><?php echo $this->translate->translate('Current data'); ?>:</b><br>
+<br>
+
+<table>
+<?php
+//All the fields of the item
+foreach ($this->mainFields as $field)
+{ ?><tr>
+		<td><?php echo $field['label'] ?></td>
+		<td width=5></td>
+		<td><i><?php echo $field['value'] ?></i></td>
+	</tr>
+<?php } ?>
+</table>
+
+<br>
+
+<?php
+//If it is a modification, then the changes are showed
+if (!empty($this->changes))
+{ ?>
+	<b><?php echo $this->translate->translate('Changes done'); ?>:</b><br>
+	<br>
+	<table>
+		<tr>
+			<td style="color:#888888;" width=80><b><?php echo strtoupper($this->translate->translate('Field')); ?></b></td>
+			<td style="color:#888888;" width=80><b><?php echo strtoupper($this->translate->translate('Old value')); ?></b></td>
+		</tr>
+	<?php
+	foreach ($this->changes as $change)
+	{
+	?><tr>
+		<td><i><?php echo $change['field'] ?></i></td>
+		<td><i><?php echo $change['oldValue'] ?></i></td>
+	</tr>
+	<?php } ?>
+</table>
+<?php } ?>
+<br>
+<br>
+<?php echo $this->translate->translate('PHProjekt 6.0 - Copyright  2007 Mayflower GmbH'); ?><br>
+</div>
