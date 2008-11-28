@@ -311,7 +311,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             if (!this._oldRowValues[inRowIndex]) {
                 this._oldRowValues[inRowIndex] = {};
             }
-            var item = this.grid.getItem(inRowIndex);
+            var item  = this.grid.getItem(inRowIndex);
             var value = this.grid.store.getValue(item, inCell.field);
             this._oldRowValues[inRowIndex][inCell.field] = value;
         }
@@ -340,11 +340,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         if (!this.canEdit(inRowIndex)) {
             var item  = this.grid.getItem(inRowIndex);
             var value = this._oldRowValues[inRowIndex][inFieldIndex];
-            this.grid.store.setValue(item,inFieldIndex,value);
-            var result = Array();
-            result.type = 'error';
+            this.grid.store.setValue(item, inFieldIndex, value);
+            var result     = Array();
+            result.type    = 'error';
             result.message = phpr.nls.get('You do not have access for edit this item');
-            new phpr.handleResponse('serverFeedback',result);
+            new phpr.handleResponse('serverFeedback', result);
         } else {
             if (!this._newRowValues[inRowIndex]) {
                 this._newRowValues[inRowIndex] = {};
