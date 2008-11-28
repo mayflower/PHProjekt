@@ -356,7 +356,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // summary:
         //    Save the hours form
         // description:
-        //    Save the hours form and reload only the grid and the hours form              
+        //    Save the hours form and reload only the grid and the hours form
+        this.sendData = new Array();
         this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));       
 
         this.prepareSubmission();

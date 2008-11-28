@@ -514,6 +514,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
+        this.sendData = new Array();
         for(var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
