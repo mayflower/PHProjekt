@@ -98,6 +98,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         if (this.id > 0) {
             this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }
+        this.addNotificationTab(data);
     },
 
     newRoleUser: function () {

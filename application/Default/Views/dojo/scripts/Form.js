@@ -368,6 +368,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (this.id > 0) {
             this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }
+        this.addNotificationTab(data);
     },
 
     addBasicFields:function() {
@@ -648,5 +649,19 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Delete the cache for this form
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._tagUrl});
-    }
+    },
+
+    addNotificationTab:function(data) {
+		// summary:
+        //    Adds a tab for sending a notification.
+        // description:
+        //    Adds a tab for sending a notification to the users with read access, telling them about the item added
+        //	  or modified. It has a "Send Notification" checkbox.
+        
+        // Add field
+        var notificationTab = this.fieldTemplate.checkRender('Send Notification', 'sendNotification', '');
+		
+		// Add the tab to the form	
+		this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
+	}
 });

@@ -141,4 +141,16 @@ $lang["timeZone"] = "Huso horario";
 
 // Search
 $lang["View all"] = "Ver todos";
+
+// Notifications
+$lang["A "] = "Un ";
+$lang[" item has been "] = " item ha sido ";
+$lang["modified"] = "modificado";
+$lang["created"] = "creado";
+$lang["Current data"] = "Datos actuales";
+$lang["Changes done"] = "Cambios realizados";
+$lang["Field"] = "Campo";
+$lang["Old value"] = "Valor anterior";
+$lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
+
 ?>

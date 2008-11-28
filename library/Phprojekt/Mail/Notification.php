@@ -8,7 +8,7 @@
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://phprojekt.com/license PHProjekt 6 License
  * @version    CVS: $Id$
- * @author     Mariano La Penna <mariano.la.penna@gmail.com>
+ * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
  * @link       http://www.phprojekt.com
@@ -25,17 +25,20 @@
  * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     Mariano La Penna <mariano.la.penna@gmail.com>
+ * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
 
 class Phprojekt_Mail_Notification extends Zend_Mail
 {
  
-    const MODE_HTML		  = 'Html'; //Internal
-    const MODE_TEXT		  = 'Text'; //Internal
-	const MAIL_LINEEND_RN = 0;		//External use (configuration.ini)
-	const MAIL_LINEEND_N  = 1;		//External use (configuration.ini)
+    const MODE_HTML		  	= 'Html';
+    const MODE_TEXT		  	= 'Text';
+	const MAIL_LINEEND_RN 	= 0; //External use (configuration.ini)
+	const MAIL_LINEEND_N  	= 1; //External use (configuration.ini)
+	const LAST_ACTION_ADD	= 'add';
+	const LAST_ACTION_EDIT	= 'edit';
+	const LAST_ACTION_NONE	= 'none';
     
 	private $_tableName;
 	private $_customFrom;
@@ -45,7 +48,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 	private $_view;
 	private $_model;
 	private $_customBody;
-
+	private $_changes;
 		
 	
 	/**
@@ -54,7 +57,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 	*
 	* The sender, recipients, subject and body are generated dynamically depending
 	* on the module received in the $model parameter.
-	* For sending a notification in Text mode, use function sendNotificationText()
+	* To send a notification in Text mode, use function sendNotificationText()
 	*
 	* @param Phprojekt_Model_Interface	$model E.g.: A object of the type 
 	*										   Todo_Models_Todo
@@ -81,7 +84,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 	*
 	* The sender, recipients, subject and body are generated dynamically depending
 	* on the module received in the $model parameter.
-	* For sending a notification in Html mode, use function sendNotificationHtml()
+	* To send a notification in Html mode, use function sendNotificationHtml()
 	*
 	* @param Phprojekt_Model_Interface	$model E.g.: A object of the type 
 	*										   Todo_Models_Todo
@@ -103,7 +106,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
 
 	/**
-	* Private function that sends an email notification in Html/Text mode, with
+	* Sends an email notification in Html/Text mode, with
 	* the contents according to a specific module and a specific event.
 	*
 	* The function is called by both sendNotificationHtml() and sendNotificationText()
@@ -117,6 +120,14 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
 	private function _sendNotification()
 	{
+		/* Sometimes, the user may try to modify an existing item and presses Save without having modified even one
+		field. In that case, no mail should be sent. */
+		$history = new Phprojekt_History();
+		$this->_changes = $history->getLastHistoryData($this->_model);
+		if (empty($this->_changes)) {
+			return;
+		}
+
 		$this->_tableName = trim($this->_model->getTableName());
     	if (!isset($this->_customFrom)) $this->_setFromUserLogued();
 		$this->_setTo();
@@ -125,18 +136,18 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_mailNotifSend();
 	}    
 
+
 	/**
-	* Public function for setting the sender name and address. If not called,
-	* then, when sending the email through sendNotificationHtml/Text(), it is
-	* automatically called _setFromUserLogued() that sets the sender to the 
-	* logued user.
+	* Sets the sender name and address. If not called, then, when sending the email
+	* through sendNotificationHtml/Text(), it is automatically called _setFromUserLogued()
+	* that sets the sender to the logued user.
 	*
 	* @param array		$from	An array with two positions: the first value contains
-	*							the name and the second one, the email address.
+	*							the email and the second one, the name (optional).
 	*
 	* @uses		$mailNotif = new Phprojekt_Mail_Notification();
-	*			$from 	   = array("Mariano", "mariano.la.penna@gmail.com");
-	* 			$mailNotif->setCustomFrom($from);
+	* 			$mailNotif->setCustomFrom(array("mariano.lapenna@mayflower.de",
+	*											"Mariano"));
 	*			$mailNotif->sendNotificationHtml($model);
 	*
 	* @return void
@@ -156,8 +167,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     /**
     * Fills the _customFrom property with the name and email of the logued user.
     * This function is called by default if an email is tryed to be sent with
-    * not sender data specified. It means that if the sender data has not
-    * been manually set via setCustomFrom, this function is called.
+    * not sender data specified via setCustomFrom.
     *
     * @see Phprojekt_User_User()
     *
@@ -185,8 +195,8 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 	
 	
 	/**
-	* Private function that fills the recipients variable $_customTo with the
-	* recipients obtained from $this->_model and the class Phprojekt_Item_Rights()
+	* Fills the variable $_customTo with the recipients obtained from $this->_model
+	* through class Phprojekt_Item_Rights()
 	*
 	* @return void
 	*/
@@ -223,8 +233,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 	
 
 	/**
-	* Private function that sets the subject of the email according to the
-	* current module, stored in $this->_model.
+	* Sets the subject of the email according to the current module, stored in $this->_model.
 	*
 	* @return void
 	*/
@@ -243,8 +252,8 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 	
 
 	/**
-	* Private function for setting the body of the email according to the
-	* current module and the event we are informing to the users.
+	* Sets the body of the email according to the current module and the event
+	* we are informing to the users.
 	* It obtains all the data dinamically from the $this->_model object.
 	*
 	* @return void
@@ -256,31 +265,10 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 		
 		$translate = Zend_Registry::get('translate');
 		
-		if ($this->_model->lastAction == Phprojekt_Item_Abstract::LAST_CHANGE_ADD) {
-			$actionLabel = "created";
-		} else if ($this->_model->lastAction == Phprojekt_Item_Abstract::LAST_CHANGE_EDIT) {
-			$actionLabel = "modified";
-		}
-
-		$this->_view->title = $translate->translate('A ') . $this->_tableName . $translate->translate(' item has been ')
-							  . $translate->translate($actionLabel);
-		
-		$this->_view->translate = $translate;
-		
 		$fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 		
 		foreach ($fieldDefinition as $key => $field) {
 			switch ($field['type']) {
-				case 'text':
-				case 'textarea':
-				case 'date':
-				case 'time':
-				case 'percentage':
-				//case 'password' and 'upload' ??
-				default:
-					$value = $this->_model->$field['key'];
-					break;
-				
 				case 'selectbox':
 				case 'multipleselectbox':
 					//Search the value
@@ -289,6 +277,16 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 							$value = $range['name'];
 						}
 					}
+					break;
+				case 'percentage':
+					$value = number_format($this->_model->$field['key'], 2);
+					break;
+				case 'text':
+				case 'textarea':
+				case 'date':
+				case 'time':
+				default:
+					$value = $this->_model->$field['key'];
 					break;
 			}
 			
@@ -300,30 +298,31 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 		$this->_view->mainFields = $fieldsView;
 
 		$history = new Phprojekt_History();
-		$changes = $history->getLastHistoryData($this->_model);
 		
-		
-		/* The following algorithm looks into $changes, searching Integer values
+		/* The following algorithm looks into $this->_changes, searching Integer values
 		that should be converted into Strings. It depends on the type of the field */
 		
 		//Loop in every change done
-		for ($i=0; $i < count($changes); $i++) {
+		for ($i=0; $i < count($this->_changes); $i++) {
  			foreach ($fieldDefinition as $field) {
+ 				
  				//Find the field definition for the field that has been modified
- 				if ($field['key'] == $changes[$i]['field']) {
- 					/* Is the field of a type that has an Integer that should be
- 					converted into a string? */
+ 				if ($field['key'] == $this->_changes[$i]['field']) {
+ 					
+ 					/* Is the field of a type that should be converted into a string? */
  					if ($field['type'] == 'selectbox') {
+ 						
  						//Yes, so translate it into the appropriate meaning
  						foreach ($field['range'] as $range) {
+							
 							//Try to replace oldValue Integer with the String
-							if ($range['id'] == $changes[$i]['oldValue']) {
-								$changes[$i]['oldValue'] = trim($range['name']);
+							if ($range['id'] == $this->_changes[$i]['oldValue']) {
+								$this->_changes[$i]['oldValue'] = trim($range['name']);
 							}	
 							
 							//Try to replace newValue Integer with the String
-							if ($range['id'] == $changes[$i]['newValue']) {
-								$changes[$i]['newValue'] = trim($range['name']);
+							if ($range['id'] == $this->_changes[$i]['newValue']) {
+								$this->_changes[$i]['newValue'] = trim($range['name']);
 							}
 						}
  					}
@@ -331,7 +330,24 @@ class Phprojekt_Mail_Notification extends Zend_Mail
  			}
  		}
 		
-		$this->_view->changes = $changes;
+		//Is it an ADD or EDIT action?
+		switch ($this->_changes[0]['action']) {
+			case self::LAST_ACTION_ADD:
+				$actionLabel = "created";
+				$this->_view->changes = "";
+				break;
+			case self::LAST_ACTION_EDIT:
+			default:
+				$action = self::LAST_ACTION_EDIT;
+				$this->_view->changes = $this->_changes;
+				$actionLabel = "modified";
+		}
+
+		$this->_view->title = $translate->translate('A ') . $this->_tableName . $translate->translate(' item has been ')
+							  . $translate->translate($actionLabel);
+		
+		$this->_view->translate = $translate;
+
 
 		if ($this->_bodyMode == self::MODE_TEXT) {
 
@@ -355,8 +371,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
 		
 	/**
-	* Private function that sends an email notification using the inherited
-	* method send().
+	* Sends an email notification using the inherited method send().
 	*
 	* The function sends an email to the users listed in the $_customTo array.
 	* There are many private properties that must have been defined previously:
@@ -404,28 +419,15 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 break;
         }
         
-       //Creates the Zend_Mail_Transport_Smtp object
-       $smtpTransport= $this->_setTransport();
-        
-       $this->send($smtpTransport);
+		//Creates the Zend_Mail_Transport_Smtp object
+		$smtpTransport= $this->_setTransport();
+ 
+ 		$this->send($smtpTransport);
                 
     }
     
 	/**
-	* Private function used for setting a the SMTP server. The data is obtained from
-	* the configuration.ini file.
-	*
-	* @param $host		string	The SMTP server
-	* @param $user		string  Optional. User name for the server.
-	* @param $password	string  Optional. Password for the server.
-	*
-	* @uses	$mailNotif = new Phprojekt_Mail_Notification();
-	*		$mailNotif->setSmtp('smtp.myServer.com');
-	* 		$mailNotif->sendNotificationHtml($model);
-	*
-	* @uses	$mailNotif = new Phprojekt_Mail_Notification();
-	*		$mailNotif->setSmtp('smtp.myServer.com', 'myUser', 'myPassword');
-	* 		$mailNotif->sendNotificationHtml($model);
+	* Sets the SMTP server. The data is obtained from the configuration.ini file.
 	*
 	* @return Zend_Mail_Transport_Smtp object
 	*/
