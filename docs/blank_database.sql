@@ -126,8 +126,8 @@ CREATE TABLE `History` (
   `userId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `field` varchar(255) NOT NULL,
-  `oldValue` varchar(100) default NULL,
-  `newValue` varchar(255) default NULL,
+  `oldValue` text default NULL,
+  `newValue` text default NULL,
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
