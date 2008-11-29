@@ -6,19 +6,19 @@ echo $this->endOfLine;
 
 //All the fields of the item
 foreach ($this->mainFields as $field) {
-	echo $field['label'] . ': ' . $field['value'] . $this->endOfLine;
+    echo $field['label'] . ': ' . $field['value'] . $this->endOfLine;
 }
 echo $this->endOfLine;
 
 //If it is a modification, then the changes are showed
 if (!empty($this->changes)) {
-	echo $this->translate->translate('Changes done') . ':' . $this->endOfLine;
-	foreach ($this->changes as $change) {
-		echo $this->endOfLine;
-		echo $this->translate->translate('Field') . ': ' . $change['field'] . $this->endOfLine;
-		echo $this->translate->translate('Old value') . ': ' . $change['oldValue'] . $this->endOfLine;
-	}
-echo $this->endOfLine;
+    echo $this->translate->translate('Changes done') . ':' . $this->endOfLine;
+    foreach ($this->changes as $change) {
+        echo $this->endOfLine;
+        echo $this->translate->translate('Field') . ': ' . $change['field'] . $this->endOfLine;
+        echo $this->translate->translate('Old value') . ': ' . $change['oldValue'] . $this->endOfLine;
+    }
+    echo $this->endOfLine;
 }
 echo $this->endOfLine;
 echo $this->translate->translate('PHProjekt 6.0 - Copyright  2007 Mayflower GmbH');

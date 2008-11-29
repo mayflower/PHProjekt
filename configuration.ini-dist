@@ -21,10 +21,10 @@ itemsPerPage         = 3;
 uploadpath           = " C:\Programme\Zend\Apache2\htdocs\phprojekt6\tmp\";
 
 ; Mail Notification
-mailEndOfLine		 = 0 	;(0 = \r\n   1 = \n)
-smtpServer			 = "localhost"
-;smtpUser			 = ""
-;smtpPassword		 = ""
+mailEndOfLine        = 0    ;(0 = \r\n  1 = \n)
+smtpServer           = "localhost"
+;smtpUser            = ""
+;smtpPassword        = ""
 
 [testing-mysql]
 
