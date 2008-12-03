@@ -236,7 +236,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var html = '<ul class="sub_project">';
         html += '<li style="border-left:none; border-right:none; width:25%; float: left;">&nbsp;</li>';
         html += '<li style="width:12px; float: left;">&nbsp;</li>';
-        html += '<li class="slider" style="margin-top:0px; left:0px;">';
+        html += '<li class="slider" style="float:left; margin-top:0px; left:0px;">';
         html += '<ul style="margin-top:0px; width:100%; left:0px;">';
         html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
         

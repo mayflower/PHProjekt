@@ -281,7 +281,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var tmp = dojo.doc.createElement ("div");
             tmp.id = 'targetBooking' + timecardData[i].id;
             tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            dojo.addClass(tmp, "timecardtarget");
+            dojo.addClass(tmp, "dndTarget");
             dojo.style(tmp, "top", top);
             dojo.style(tmp, "height", height);
             dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
@@ -341,16 +341,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
     
     prepareSubmission:function() {
-        this.sendData = new Array();
-        for(var i = 0; i < this.formsWidget.length; i++) {
-            if (!this.formsWidget[i].isValid()) {
-                var parent = this.formsWidget[i].containerNode.parentNode.id;
-                this.form.selectChild(parent);
-                this.formsWidget[i].validate();
-                return false;
-            }
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
-        }
         if (this.sendData.endTime) {
             this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
         }
@@ -369,10 +359,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // description:
         //    Save the hours form and reload only the grid and the hours form
         this.sendData = new Array();
+        this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));
         if (!this.prepareSubmission()) {
             return false;
         }
-        this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));        
 
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonSave/',
@@ -395,11 +385,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the booking form
         // description:
         //    Save the booking form and reload only the grid and the booking form        
-        this.sendData = new Array();              
+        this.sendData = new Array();
+        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));
         if (!this.prepareSubmission()) {
             return false;
         }
-        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));
         
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonBookingSave/id/' + id,

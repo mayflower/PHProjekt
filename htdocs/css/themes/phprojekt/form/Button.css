@@ -155,3 +155,10 @@
     background:url("../images/spriteArrows.gif") no-repeat -22px top;
     width: 11px;
 }
+
+.phprojekt #mainNavigation .dijitButtonContents {
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+}
