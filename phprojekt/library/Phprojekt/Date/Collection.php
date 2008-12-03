@@ -3,16 +3,35 @@
  * Class to hold a collection of dates. These dates can also be automatically
  * calculated from a iCal-rrule.
  *
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
- * @license    http://www.phprojekt.com/license PHProjekt6 License
- * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
  * @subpackage Core
+ * @version    CVS: $Id:
  * @link       http://www.phprojekt.com
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
  * @since      File available since Release 1.0
  */
 
+/**
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt
+ * @subpackage Core
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @version    Release: @package_version@
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 1.0
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ */
 class Phprojekt_Date_Collection
 {
     /**

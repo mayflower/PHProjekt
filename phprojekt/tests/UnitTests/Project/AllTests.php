@@ -3,15 +3,21 @@
  * Test suite for the Project module. This will help to test default module,
  * because in all cases this module uses parent functions.
  *
- * LICENSE: Licensed under the terms of the GNU Publice License
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
- *             GNU Public License 2.0
+ * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: AllTests.php 667 2008-04-14 02:19:16Z polidor $
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
-*/
+ */
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'Default_AllTests::main');
@@ -26,8 +32,7 @@ require_once 'Controllers/IndexControllerTest.php';
  * Test suite for the Project module
  *
  * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
- *             GNU Public License 2.0
+ * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0

@@ -1,12 +1,21 @@
 <?php
 /**
  * Bootstrap file.
+ * 
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
  *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
  * @category   Htdocs
  * @package    Htdocs
  * @copyright  2007 Mayflower GmbH
  * @version    CVS: $Id$
- * @license    http://phprojekt.com/license
+ * @license    LGPL 2.1 (See LICENSE file)
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 define('PHPR_CONFIG_SECTION', 'production');

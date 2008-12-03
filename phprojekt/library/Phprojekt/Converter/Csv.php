@@ -2,27 +2,36 @@
 /**
  * Convert a model into a CSV structure.
  *
- * @copyright 2007 Mayflower GmbH (http://www.mayflower.de)
- * @license   http://www.phprojekt.com/license PHProjekt6 License
- * @version   CVS: $Id: Csv.php 828 2008-07-07 02:05:54Z gustavo $
- * @author    Eduardo Polidor <polidor@mayflower.de>
- * @package   PHProjekt
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 1.0
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @version    CVS: $Id: Csv.php 828 2008-07-07 02:05:54Z gustavo $
+ * @link       http://www.phprojekt.com
+ * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @since      File available since Release 1.0
  */
 
 /**
  * Convert a model into a CSV structure.
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
- * @license    http://www.phprojekt.com/license PHProjekt6 License
- * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
+ * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Converter_Csv
 {
