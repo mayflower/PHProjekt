@@ -64,6 +64,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             saveText: phpr.nls.get('Close'),
             tabs:     this.tabStore.getList()
         });
+        dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
         phpr.makeModuleDesignerSource();
         phpr.makeModuleDesignerTarget(dijit.byId('designerData').attr('value'), this.tabStore.getList());
         dialog.show();

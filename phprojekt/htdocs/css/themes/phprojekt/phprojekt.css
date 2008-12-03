@@ -30,6 +30,6 @@
 @import url("ColorPalette.css");
 @import url("phprojektGrid.css");
 @import url("Toaster.css");
-@import url("Gantt.css");
+@import url("Modules.css");
 
 :focus { -moz-outline-style: none; }

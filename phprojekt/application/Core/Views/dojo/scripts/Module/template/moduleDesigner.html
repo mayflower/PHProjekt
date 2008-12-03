@@ -1,74 +1,32 @@
-<style type="text/css">
-.container {
-    padding: 1em 3em; 
-    cursor: default;
-    radius: 8pt;
-    background: #fff;
-}
-.dojoDndContainerOver {   
-}
-.dojoDndTargetDisabled {
-    background: #eee;
-}
-.dojoDndItem { 
-    padding: 3px;
-}
-.dj_ff2 .dojoDndItem {
-    -moz-user-select: none; 
-} 
-.dojoDndItemOver {
-    background: #ededed;
-    cursor: pointer;
-}
-.dojoDndItemSelected {
-    background: #ededed;
-}
-.dojoDndItemAnchor {
-    background: #ededed;
-}
-.dojoDndItemOver .dojoDndItemSelected {
-    background: #ededed;
-}
-.dojoDndItemOver .dojoDndItemAnchor {
-    background: #ededed;
-}
-.dojoDndItemBefore {
-}
-.dojoDndItemAfter {
-}
-.dojoDndAvatar {
-    font-size: 75%;
-    radius: 8pt;
-}
-    
-.dojoDndAvatarHeader {
-    background: #aaa;
-}
-.dojoDndAvatarItem {
-    background: #fff;
-}
-</style>
-<div style="width:100%; height:100%; background-color: #294064;">
-    <div style="background-color: #294064; height:98%; width: 49%; float:left; margin: 4px;">
+<div id="moduleDesignerContent"
+style="width:100%; height:100%; background-color:#294064;">
+    <div style="background-color:#294064; height:98%; width:49%; float:left; margin:4px;">
         <div dojoType="phpr.Module.Designer" id="moduleDesignerSource" jsId="moduleDesignerSource" copyOnly="false" skipForm="true" selfAccept="false" style="background-color: #fff; height:60%; width: 100%; marging: 4px;">
         </div>
         <br />
-        <div dojoType="dijit.layout.TabContainer" id="moduleDesignerEditor" style="background-color: #fff; height:30%; width: 100%; margin: 0px; filter: alpha(opacity=0); opacity: 0; ">
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorTable" title="Table" style="width:100%; height:95%;">
+        <div dojoType="dijit.layout.TabContainer" id="moduleDesignerEditor"
+        style="display: block; background-color:#fff; height:30%; width:100%; margin:0px;">
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorTable" title="Table"
+            style="width:100%; height:95%;">
             </div>
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorForm" title="Form" style="width:100%; height:95%;">
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorForm" title="Form"
+            style="width:100%; height:95%;">
             </div>        
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorList" title="List" style="width:100%; height:95%;">
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorList" title="List"
+            style="width:100%; height:95%;">
             </div>   
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorGeneral" title="General" style="width:100%; height:95%;">
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorGeneral" title="General"
+            style="width:100%; height:95%;">
             </div>
         </div>
         <br />
-        <div id="moduleDesignerSaveButton" style="width: 100%; margin: 4px; display: inline">
+        <div id="moduleDesignerSaveButton"
+        style="width:100%; margin:4px; display:inline">
             <button dojoType="dijit.form.Button" onclick="dijit.byId('moduleManagerDialog').hide();" baseClass="positive" iconClass="tick">{{saveText}}</button>
         </div>
     </div>        
-    <div dojoType="dijit.layout.TabContainer" style="background-color: #fff; height:98%; width: 49%; float:right; margin: 4px;">
+    <div dojoType="dijit.layout.TabContainer"
+    style="background-color:#fff; height:98%; width:49%; float:right; margin:4px;">
         {% for tab in tabs %}
         <div dojoType="dijit.layout.ContentPane" title="{{tab.name}}">
             <div dojoType="phpr.Module.Designer" id="moduleDesignerTarget{{tab.nameId}}" jsId="moduleDesignerTarget{{tab.nameId}}" skipForm="true" selfAccept="true" style="background-color: #fff; width:100%; height:95%; margin: 0px; padding-top: 0px;">

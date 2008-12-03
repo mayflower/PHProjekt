@@ -8,7 +8,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
             if (this.node.id == m.target.node.id) {
                 if (source.node.id == 'moduleDesignerSource') {                    
                     dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
-                    dojo.style(dojo.byId('moduleDesignerEditor'), "opacity", 0);
+                    dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
                     var t = this._normalizedCreator(nodes[0]);
                     phpr.editModuleDesignerField(t, this);
                 }
@@ -28,7 +28,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
             if (this.node.id != 'moduleDesignerSource') {
                 if (this.current) {
                     dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
-                    dojo.style(dojo.byId('moduleDesignerEditor'), "opacity", 0);
+                    dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
                     var t = this._normalizedCreator(this.current);
                     phpr.editModuleDesignerField(t, this);
                 }
@@ -321,6 +321,7 @@ phpr.editModuleDesignerField = function(object, target) {
             var node = dojo.byId('moduleDesignerEditor');
             dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
             dojo.style(node, "opacity", 0);
+            dojo.style(node, "display", "block");
             dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "none");
         }
     }).play();    
@@ -334,7 +335,7 @@ phpr.saveModuleDesignerField = function(nodeId, target, formType){
     params = dojo.mixin(params, dijit.byId('formGeneral' + '_' + nodeId).attr('value'));
         
     dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
-    dojo.style(dojo.byId('moduleDesignerEditor'), "opacity", 0);
+    dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
     dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "inline");    
     
     dojo.byId(nodeId).innerHTML = phpr.makeModuleDesignerField(formType, params);
@@ -460,7 +461,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
             formLabel = params['formLabel'] || 'Upload';
             labelFor = 'upload';
             inputTxt = '<input type="hidden" id="' + widgetId + '" dojoType="dijit.form.TextBox" />';
-            inputTxt += '<iframe src="' + phpr.webpath + 'index.php/Project/index/uploadForm/field/' + widgetId + '" height="25px" width="100%"></iframe>';
+            inputTxt += '<iframe src="' + phpr.webpath + 'index.php/Project/index/uploadForm/field/' + widgetId + '" height="25px" width="100%" frameborder="0" style="overflow:hidden; border:0px;">></iframe>';
             break;
     }
     labelTxt = '<label for="' + labelFor + '">' + formLabel + '</label>';

@@ -124,7 +124,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.hideSuggest();
-    
+
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/"+ phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
@@ -335,6 +335,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // summary:
         //    Create the Add button
         var params = {
+            baseClass: "positive",
             label:     '',
             iconClass: 'add',
             alt:       'Add'
@@ -525,7 +526,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     showSuggest:function() {
-        dojo.byId("searchsuggest").style.display = 'inline';
+        if (dojo.byId("searchsuggest").innerHTML != '') {
+            dojo.byId("searchsuggest").style.display = 'inline';
+        }
     },
 
     hideSuggest:function() {
