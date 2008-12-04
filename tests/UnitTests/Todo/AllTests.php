@@ -61,7 +61,6 @@ class Todo_AllTests
 
         $suite->addTestSuite('Todo_IndexController_Test');
         
-
         return $suite;
     }
 }

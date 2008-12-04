@@ -58,8 +58,10 @@ class Role_AllTests
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('Role Controller');
+        
         $suite->addTestSuite('Role_IndexController_Test');
         $suite->addTestSuite('Phprojekt_RoleModelsRoleModulePermissions_Test');
+        
         return $suite;
     }
 }

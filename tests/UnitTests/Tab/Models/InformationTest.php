@@ -54,6 +54,7 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
                                   'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
+        $data['tab']      = 1;
         $expected[] = $data;
 
         $this->assertEquals($tabModel->getFieldDefinition(), $expected);

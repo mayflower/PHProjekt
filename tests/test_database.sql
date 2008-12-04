@@ -90,6 +90,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
   `saveType` int(1) NOT NULL default 0,
   `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`)
@@ -126,8 +127,8 @@ CREATE TABLE `History` (
   `userId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `field` varchar(255) NOT NULL,
-  `oldValue` varchar(100) default NULL,
-  `newValue` varchar(255) default NULL,
+  `oldValue` text default NULL,
+  `newValue` text default NULL,
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -148,9 +149,9 @@ CREATE TABLE `Project` (
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
-  `completePercent` float default '0',
-  `hourlyWageRate` float default NULL,
-  `budget` float default NULL,
+  `completePercent` varchar(50) default NULL,
+  `hourlyWageRate` varchar(10) default NULL,
+  `budget` varchar(10) default NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -260,8 +261,8 @@ CREATE TABLE `SearchWordModule` (
 CREATE TABLE `SearchDisplay` (
   `moduleId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
-  `firstDisplay` varchar(255),
-  `secondDisplay` varchar(255),
+  `firstDisplay` text,
+  `secondDisplay` text,
   `projectId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`)
 );
@@ -384,24 +385,43 @@ CREATE TABLE `Timeproj` (
   PRIMARY KEY  (`id`)
 );
 
+
 --
 -- Table structure for table `Calendar`
 --
 CREATE TABLE `Calendar` (
   `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) default NULL,
-  `notes` text default NULL,
+  `parentId` int(11) default NULL,
   `ownerId` int(11) default NULL,
   `projectId` int(11) NOT NULL,
+  `title` varchar(255) default NULL,
+  `notes` text,
+  `uid` varchar(255) NOT NULL,
+  `recurrence_id` varchar(100) default NULL,
   `startDate` date default NULL,
-  `participantId` int(11) NOT NULL,
   `startTime` time default NULL,
-  `endTime` time default NULL,
-  `parentId` int(11) default NULL,
-  `serialType` int(11) default NULL,
-  `serialDays` int(11) default NULL,
   `endDate` date default NULL,
-  PRIMARY KEY  (`id`)
+  `endTime` time default NULL,
+  `created` int(11) default NULL,
+  `modified` int(10) unsigned default NULL,
+  `timezone` varchar(50) NOT NULL,
+  `location` varchar(255) default NULL,
+  `categories` text NOT NULL,
+  `attendee` text,
+  `status` int(1) default NULL,
+  `priority` int(1) default NULL,
+  `class` int(1) default NULL,
+  `transparent` int(1) NOT NULL,
+  `rrule` text,
+  `properties` text,
+  `deleted` int(1) default NULL,
+  `participantId` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `uid` (`uid`),
+  KEY `ownerid` (`ownerId`,`projectId`),
+  KEY `startDate` (`startDate`,`startTime`),
+  KEY `endDate` (`endDate`,`endTime`),
+  KEY `parentId` (`parentId`)
 );
 
 
@@ -421,55 +441,46 @@ CREATE TABLE `ModuleInstance` (
 -- INSERT DATA
 --
 
-INSERT INTO `Module` (`id`, `name`, `saveType`, `active`) VALUES
-(1, 'Project', 0, 1),
-(2, 'Todo', 0, 1),
-(3, 'Note', 0, 1),
-(4, 'Timecard', 1, 1),
-(5, 'Calendar', 1, 1);
+INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
+(1, 'Project', 'Project', 0, 1),
+(2, 'Todo', 'Todo', 0, 1),
+(3, 'Note', 'Note', 0, 1),
+(4, 'Timecard', 'Timecard', 1, 1),
+(5, 'Calendar', 'Calendar', 1, 1),
+(6, 'Gantt', 'Gantt', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Project', 'notes', 1, 'notes', 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Project', 'projectId', 1, 'parent', 'parent', 'tree', 3, 1, NULL, 'Project', '1', 2, 'left', 1, 1, '1', 1, 0, 0),
-(0, 'Project', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Project', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0),
-(0, 'Project', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0),
+(0, 'Project', 'projectId', 1, 'parent', 'parent', 'selectValues', 3, 1, NULL, 'Project#id#title', '1', 0, NULL, 1, 1, '1', 1, 0, 0),
+(0, 'Project', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
+(0, 'Project', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
+(0, 'Project', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
 (0, 'Project', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
 (0, 'Project', 'completePercent', 1, 'completePercent', 'completePercent', 'percentage', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0),
 (0, 'Project', 'budget', 1, 'budget', 'budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0),
 
 (0, 'Todo', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Todo', 'notes', 1, 'notes', 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Todo', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Todo', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 1, 0),
-(0, 'Todo', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 1, 0),
+(0, 'Todo', 'startDate', 1, 'startDate', 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
+(0, 'Todo', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
+(0, 'Todo', 'priority', 1, 'priority', 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
 (0, 'Todo', 'currentStatus', 1, 'currentStatus', 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
-(0, 'Todo', 'projectId', 1, 'project', 'project', 'tree', 3, 1, NULL, 'Project', '', 2, 'center', 1, 1, '1', 1, 0, 0),
+(0, 'Todo', 'projectId', 1, 'project', 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 0, 0),
 
-(0, 'History', 'userId', 1, 'UserId', 'UserId', 'userId', '1', '1', NULL, NULL, 0, 1, 'left', 1, 1, 1, 1, 1, 0),
-(0, 'History', 'itemId', 1, 'ItemId', 'ItemId', 'text', '2', '1', NULL, NULL, 0, 2, 'center', 1, 2, 1, 1, 1, 0),
-(0, 'History', 'moduleId', 1, 'Module', 'Module', 'text', '3', '1', NULL, NULL, '', 3, 'left', 1, 3, 1, 0, 1, 0),
-(0, 'History', 'field', 1, 'Field', 'Field', 'text', '4', '1', NULL, NULL, '', 4, 'left', 1, 4, 1, 0, 1, 0),
-(0, 'History', 'oldValue', 1, 'OldValue', 'OldValue', 'text', '5', '1', NULL, NULL, '', 0, '', 0, 0, 1, 0, 1, 0),
-(0, 'History', 'newValue', 1, 'NewValue', 'NewValue', 'text', '6', '1', NULL, NULL, '', 0, '', 0, 0, 1, 0, 1, 0),
-(0, 'History', 'action', 1, 'Action', 'Action', 'text', '7', '1', NULL, NULL, '', 7, 'left', 1, 7, 1, 0, 1, 0),
-(0, 'History', 'datetime', 1, 'Datetime', 'Datetime', 'datetime', '8', '1', NULL, NULL, '', 8, 'center', 1, 8, 1, 0, 1, 0),
+(0, 'Note', 'projectId', 1, 'project', 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 0, 1, 0),
+(0, 'Note', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 0, 0),
+(0, 'Note', 'comments', 1, 'comments', 'comments', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Note', 'category', 1, 'category', 'category', 'text', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 
-(0, 'Note', 'projectId', 1, 'project', 'project', 'tree', 3, 1, NULL, 'Project', '', 2, 'left', 1, 1, '1', 0, 1, 0),
-(0, 'Note', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
-(0, 'Note', 'comments', 1, 'comments', 'comments', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 1, 0),
-(0, 'Note', 'category', 1, 'category', 'category', 'selectSqlAddOne', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
-
-(0, 'Calendar', 'title',      1, 'title'    , 'title'    , 'text'    , 1, 1, NULL, NULL     , '', 1, 'left'  , 1, 2, '1', 0, 1, 0),
-(0, 'Calendar', 'notes',      1, 'notes'    , 'notes'    , 'textarea', 2, 2, NULL, NULL     , '', 0, NULL    , 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'startDate',  1, 'startDate', 'startDate', 'date'    , 3, 1, NULL, NULL     , '', 3, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'participantId',1, 'participantId' , 'participantId'   , 'multipleSelectValues'  , 8, 1, NULL, 'User'     , '', 2, 'left'  , 1, 1, '1', 1, 1, 0),
-(0, 'Calendar', 'startTime',  1, 'startTime', 'startTime', 'time'    , 4, 1, NULL, NULL     , '', 4, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'endTime',    1, 'endTime'  , 'endTime'  , 'time'    , 5, 1, NULL, NULL     , '', 6, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'serialType', 1, 'serialType', 'serialType', 'selectValues', 7, 1, NULL, '1#Once|2#Daily|3#Weekly|4#Montlhy|5#Anually', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'serialDays', 1, 'serialDays', 'serialDays', 'selectValues', 7, 1, NULL, '0#All|1#Monday|2#Tuesday|3#Wednesday|4#Thursday|5#Friday|6#Saturday|7#Sunday', '1', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'endDate',    1, 'endDate'  , 'endDate'  , 'date'    , 8, 1, NULL, NULL     , '', 5, 'center', 1, 0, '1', 0, 1, 0);
+(0, 'Calendar', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
+(0, 'Calendar', 'notes', 1, 'notes', 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'startDate', 1, 'startDate', 'startDate', 'date', 3, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0),
+(0, 'Calendar', 'startTime', 1, 'startTime', 'startTime', 'time', 4, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'endDate', 1, 'endDate', 'endDate', 'date', 5, 1, NULL, NULL, '', 5, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'endTime', 1, 'endTime', 'endTime', 'time', 6, 1, NULL, NULL, '', 6, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'participantId', 1, 'participantId', 'participantId', 'multipleSelectValues', 8, 1, NULL, 'User#id#username', '', 2, 'left', 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'rrule', 1, 'rrule', 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0);
 
 INSERT INTO `User` (`id`, `username`, `firstname`, `lastname`, `status`) VALUES
 (1,'david', NULL, NULL, 'A'),
@@ -489,7 +500,6 @@ INSERT INTO `Setting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identif
 (10, 3, 0, 'email','test@example.com', 'Core'),
 (11, 3, 0, 'language','en', 'Core'),
 (12, 3, 0, 'timeZone','2', 'Core');
-
 
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
 (1,NULL,'/','Invisible Root','',1,NULL,NULL,NULL,'working',0,NULL,NULL),
@@ -617,3 +627,6 @@ INSERT INTO searchwordmodule (`ModuleId`, `ItemId`, `WordId`) VALUES
 
 INSERT INTO searchdisplay (`ModuleId`, `ItemId`, `firstDisplay`, `projectId`) VALUES
 (1, 1, 'test', 1);
+
+INSERT INTO `Tab` (`id`, `label` ) VALUES
+(1, 'Basic Data');

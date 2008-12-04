@@ -61,7 +61,6 @@ class Project_AllTests
 
         $suite->addTestSuite('Project_IndexController_Test');
         
-
         return $suite;
     }
 }

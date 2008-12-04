@@ -60,7 +60,6 @@ class Calendar_AllTests
 
         $suite->addTestSuite('Calendar_IndexController_Test');
         
-
         return $suite;
     }
 }

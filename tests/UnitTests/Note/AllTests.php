@@ -61,7 +61,6 @@ class Note_AllTests
 
         $suite->addTestSuite('Note_IndexController_Test');
         
-
         return $suite;
     }
 }

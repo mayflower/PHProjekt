@@ -58,8 +58,10 @@ class User_AllTests
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('User Controller');
+        
         $suite->addTestSuite('User_IndexController_Test');
         $suite->addTestSuite('User_User_Test');
+        
         return $suite;
     }
 }

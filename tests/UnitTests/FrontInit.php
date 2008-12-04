@@ -27,32 +27,35 @@ require_once 'PHPUnit/Framework.php';
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 1.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Timeproj_IndexController_Test extends PHPUnit_Framework_TestCase
+class FrontInit extends PHPUnit_Framework_TestCase
 {
+    public $request  = null;
+    public $response = null;
+    public $front    = null;
+    public $config   = null;
+    public $content  = null;
+    public $error    = null;
+    
     /**
-     * Test if the limits work
+     * Init the front for test it
      */
-
-    public function testJsonListAction()
+    public function __construct() 
     {
-        $request = new Zend_Controller_Request_Http();
-        $response = new Zend_Controller_Response_Http();
+        $this->request  = new Zend_Controller_Request_Http();
+        $this->response = new Zend_Controller_Response_Http();
+        $this->config   = Zend_Registry::get('config');
+        
+        $this->config->language = "en";
 
-        $config = Zend_Registry::get('config');
+        $this->request->setModuleName('Default');
+        $this->request->setActionName('index');        
 
-        $request->setParams(array('action'=>'jsonList','controller'=>'index','module'=>'Timeproj'));
-
-        $request->setBaseUrl($config->webpath.'index.php/Timeproj/index/jsonList/nodeId/');
-        $request->setPathInfo('/Timeproj/index/jsonList/startDate/2008-04-01/endDate/2008-04-30');
-        $request->setRequestUri('/Timeproj/index/jsonList/startDate/2008-04-01/endDate/2008-04-30');
-
-        // getting the view information
-        $request->setModuleKey('module');
-        $request->setControllerKey('controller');
-        $request->setActionKey('action');
-        $request->setDispatched(false);
+        // Languages Set
+        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
+        $translate = new Phprojekt_Language('en');
+        Zend_Registry::set('translate', $translate);
 
         $view = new Zend_View();
         $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
@@ -63,17 +66,12 @@ class Timeproj_IndexController_Test extends PHPUnit_Framework_TestCase
 
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
-        // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
-        $translate = new Phprojekt_Language('en');
-        Zend_Registry::set('translate', $translate);
+        /* Front controller stuff */
+        $this->front = Zend_Controller_Front::getInstance();
+        $this->front->setDispatcher(new Phprojekt_Dispatcher());
 
-        // Front controller stuff
-        $front = Zend_Controller_Front::getInstance();
-        $front->setDispatcher(new Phprojekt_Dispatcher());
-
-        $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
-        $front->setDefaultModule('Default');
+        $this->front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
+        $this->front->setDefaultModule('Default');
 
         foreach (scandir(PHPR_CORE_PATH) as $module) {
             $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
@@ -83,7 +81,7 @@ class Timeproj_IndexController_Test extends PHPUnit_Framework_TestCase
             }
 
             if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
-                $front->addModuleDirectory($dir);
+                $this->front->addModuleDirectory($dir);
             }
 
             $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
@@ -95,25 +93,28 @@ class Timeproj_IndexController_Test extends PHPUnit_Framework_TestCase
         }
 
         Zend_Registry::set('view', $view);
-        $view->webPath  = $config->webpath;
+        $view->webPath  = $this->config->webpath;
         Zend_Registry::set('translate', $translate);
 
-        $front->setModuleControllerDirectoryName('Controllers');
-        $front->addModuleDirectory(PHPR_CORE_PATH);
+        $this->front->setModuleControllerDirectoryName('Controllers');
+        $this->front->addModuleDirectory(PHPR_CORE_PATH);
+        $this->front->setParam('useDefaultControllerAlways', true);
 
-        $front->setParam('useDefaultControllerAlways', true);
-
-        $front->throwExceptions(true);
-
-        // Getting the output, otherwise the home page will be displayed
+        $this->front->throwExceptions(true);        
+    }
+    
+    public function getResponse()
+    {
         ob_start();
-
-        $front->dispatch($request, $response);
-        $response = ob_get_contents();
-
+        $this->error = false;
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $e) {
+            $this->error = true;
+        }
+        $this->content = ob_get_contents();
         ob_end_clean();
-
-        // checking some parts of the index template
-        $this->assertTrue(strpos($response, '"numRows":6}') > 0);
+        
+        return $this->content;
     }
 }

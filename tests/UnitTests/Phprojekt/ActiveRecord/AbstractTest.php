@@ -217,13 +217,13 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('default', $user->groups->find(1)->name);
         $this->assertEquals('ninasgruppe', $group[1]->name);
         $this->assertEquals('TEST GROUP', $group[2]->name);
-        $this->assertEquals(3, $user->groups->count());
+        $this->assertEquals(5, $user->groups->count());
 
         $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
         $group->find(1);
         $users = $group->users->fetchAll();
         $this->assertEquals('david', $users[0]->username);
-        $this->assertEquals(1, $group->users->count());
+        $this->assertEquals(4, $group->users->count());
     }
 
     /**

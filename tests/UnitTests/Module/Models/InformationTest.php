@@ -37,7 +37,6 @@ class Phprojekt_ModuleModelInformation_Test extends PHPUnit_Framework_TestCase
      */
     public function testModuleModelsModule()
     {
-
         $moduleModel = new Phprojekt_Module_Information();
         $this->assertEquals($moduleModel->getTitles(), array());
     }

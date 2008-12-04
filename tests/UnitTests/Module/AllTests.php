@@ -64,6 +64,7 @@ class Module_AllTests
         $suite->addTestSuite('Module_IndexController_Test');
         $suite->addTestSuite('Phprojekt_ModuleModelModule_Test');
         $suite->addTestSuite('Phprojekt_ModuleModelInformation_Test');
+        
         return $suite;
     }
 }

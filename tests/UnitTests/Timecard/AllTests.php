@@ -60,7 +60,6 @@ class Timecard_AllTests
 
         $suite->addTestSuite('Timecard_IndexController_Test');
         
-
         return $suite;
     }
 }

@@ -37,9 +37,9 @@ class Phprojekt_TabsTest extends PHPUnit_Framework_TestCase
     public function testSaveTab()
     {
         $tab = new Phprojekt_Tabs();
-        $this->assertEquals(1, $tab->saveTab('TEST TAB 1'));
-        $this->assertEquals(1, $tab->saveTab('CHANGE TEST TAB 1',1));
-        $this->assertEquals(2, $tab->saveTab('TEST TAB 2'));
+        $this->assertEquals(2, $tab->saveTab('TEST TAB 1'));
+        $this->assertEquals(2, $tab->saveTab('CHANGE TEST TAB 1', 2));
+        $this->assertEquals(3, $tab->saveTab('TEST TAB 2'));
     }
 
     /**
@@ -49,8 +49,10 @@ class Phprojekt_TabsTest extends PHPUnit_Framework_TestCase
     {
         $tab = new Phprojekt_Tabs();
         $result = array(array('id' => 1,
-                              'label' => 'CHANGE TEST TAB 1'),
+                              'label' => 'Basic Data'),
                         array('id' => 2,
+                              'label' => 'CHANGE TEST TAB 1'),
+                        array('id' => 3,
                               'label' => 'TEST TAB 2'));
         $this->assertEquals($result, $tab->getTabs());
     }
@@ -60,7 +62,7 @@ class Phprojekt_TabsTest extends PHPUnit_Framework_TestCase
         $tab = new Phprojekt_Tabs();
         $tab->saveModuleTabRelation(1,1);
         $result = array(array('id' => 1,
-                              'label' => 'CHANGE TEST TAB 1'));
+                              'label' => 'Basic Data'));
         $this->assertEquals($result, $tab->getTabsByModule(1));
     }
 }

@@ -48,11 +48,11 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
                         'priority','currentStatus','completePercent','budget');
 
         $this->_listResult = array(
-                        'title','projectId','startDate','endDate','priority',
+                        'title','startDate','endDate','priority',
                         'currentStatus','completePercent');
 
         $this->_listLabelResult = array(
-                        'title','parent','startDate','endDate','priority',
+                        'title','startDate','endDate','priority',
                         'currentStatus','completePercent');
     }
 
