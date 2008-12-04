@@ -40,9 +40,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      *
      * @var array
      */
-    public $hasMany = array('settings' => array('classname' => 'Core_Models_UserSetting',
-                                                'module'    => 'User',
-                                                'model'     => 'UserSetting'));
+    public $hasMany = array('settings' => array('classname' => 'Setting_Models_Setting',
+                                                'module'    => 'Setting',
+                                                'model'     => 'Setting'));
 
     /**
      * Has many and belongs to many declrations
@@ -124,10 +124,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
             return $users[0]->id;
         }
         catch (Phprojekt_ActiveRecord_Exception $are) {
-            $this->_log->warn($are->getMessage());
-        }
-        catch (Exception $e) {
-            $this->_log->warn($e->getMessage());
+            Zend_Registry::get('log')->warn($are->getMessage());
         }
 
         return false;

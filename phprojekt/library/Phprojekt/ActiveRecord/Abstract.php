@@ -465,21 +465,30 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         * as it is called from find()
         */
         if (null !== $where) {
-            $select->where(str_replace($adapter->quoteIdentifier("id"),
-            $adapter->quoteIdentifier("foreign.id"), $where));
+            $select->where(str_replace($adapter->quoteIdentifier($foreignTable),
+            $adapter->quoteIdentifier("foreign"), $where));
         }
 
         if (null !== $this->_log) {
             $this->_log->debug((string) $select);
         }
 
-        $stmt = $this->getAdapter()->query($select);
-        return $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+        $stmt      = $this->getAdapter()->query($select);
+        $dataArray = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+
+        $data  = array(
+            'table'    => $this,
+            'data'     => $dataArray,
+            'rowClass' => $this->_rowClass,
+            'stored'   => true
+        );
+
+        Zend_Loader::loadClass($this->_rowsetClass);
+        return new $this->_rowsetClass($data);
     }
 
     /**
-     * Overrwite fetch method to support hasManyAndBelongsToMany relationship
-     * For more information about that.
+     * Switch fetch method to support hasManyAndBelongsToMany relationship
      *
      * @param string|array $where  Where clause
      * @param string|array $order  Order clause
@@ -488,13 +497,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return array
      */
-    protected function _fetch($where = null, $order = null, $count = null, $offset = null)
+    protected function _fetchWithOutJoin($where = null, $order = null, $count = null, $offset = null)
     {
         if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
         && is_array($this->_relations['hasManyAndBelongsToMany'])) {
             return $this->_fetchHasManyAndBelongsToMany($where);
         } else {
-            return parent::_fetch($where, $order, $count, $offset);
+            return parent::fetchAll($where, $order, $count, $offset);
         }
     }
 
@@ -981,15 +990,19 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         if (null !== $join) {
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
         } else {
-            $rows = parent::fetchAll($where, $order, $count, $offset);
+            $rows = $this->_fetchWithOutJoin($where, $order, $count, $offset, $select);
         }
 
         $result = array();
         foreach ($rows as $row) {
             $instance        = clone $this;
             $instance->_data = array();
-
-            foreach ($row->toArray() as $k => $v) {
+            if ($row instanceof Zend_Db_Table_Row) {
+                $data = $row->toArray();
+            } else {
+                $data = $row;
+            }
+            foreach ($data as $k => $v) {
                 $instance->_data[$k] = $v;
             }
 
@@ -997,7 +1010,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             $result[] = $instance;
         }
-
+        
         return $result;
     }
 
