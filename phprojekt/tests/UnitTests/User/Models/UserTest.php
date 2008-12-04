@@ -33,7 +33,6 @@ class User_User_Test extends PHPUnit_Framework_TestCase
 {
     /**
      * Test valid method
-     *
      */
     public function testUserModelsUser()
     {

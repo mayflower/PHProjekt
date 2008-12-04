@@ -265,27 +265,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         'isInteger'         => '',
         'isRequired'        => '',
         'isUnique'          => ''),
-        'projectId' => array(
-        'id'                => '',
-        'tableName'         => '',
-        'tablefield'        => '',
-        'formTab'           => '',
-        'formLabel'         => '',
-        'formTooltip'       => '',
-        'formType'          => '',
-        'formPosition'      => '',
-        'formColumns'       => '',
-        'formRegexp'        => '',
-        'formRange'         => '',
-        'defaultValue'      => '',
-        'listPosition'      => '',
-        'listAlign'         => '',
-        'listUseFilter'     => '',
-        'altPosition'       => '',
-        'status'            => '',
-        'isInteger'         => '',
-        'isRequired'        => '',
-        'isUnique'          => ''),
         'startDate' => array(
         'id'                => '',
         'tableName'         => '',
@@ -421,7 +400,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->startDate = '1981-05-12';
         $item->priority = 1;
         $item->recordValidate();
-        $this->assertEquals(2, count($item->getError()));
+        $this->assertEquals(1, count($item->getError()));
     }
 
     /**

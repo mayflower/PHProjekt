@@ -97,8 +97,8 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');
         $suite->addTestSuite('Phprojekt_DatabaseManager_FieldTest');
         $suite->addTestSuite('Phprojekt_Item_AbstractTest');
-        $suite->addTestSuite('Phprojekt_LanguageAdapterTest');
         $suite->addTestSuite('Phprojekt_LanguageTest');
+        $suite->addTestSuite('Phprojekt_LanguageAdapterTest');        
         $suite->addTestSuite('Phprojekt_LogTest');
         $suite->addTestSuite('Phprojekt_ErrorTest');
         $suite->addTestSuite('Phprojekt_ActiveRecord_AbstractTest');

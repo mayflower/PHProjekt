@@ -43,9 +43,9 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
         $tag->saveTags(1, 1, 'This is a tag test');
         $result = array('0' => array('string' => 'this',
                                      'count'  => 1),
-                        '1' => array('string' => 'test',
+                        '1' => array('string' => 'tag',
                                      'count'  => 1),
-                        '2' => array('string' => 'tag',
+                        '2' => array('string' => 'test',
                                      'count'  => 1));
 
         $this->assertEquals($tag->getTagsByModule(1, 1), $result);
@@ -57,7 +57,6 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                         '1' => array('string' => 'tag',
                                      'count'  => 1));
         $this->assertEquals($tag->getTagsByModule(1, 1), $result);
-        $tag->saveTags(1, 1, 'This is a tag test');
     }
 
     /**
@@ -70,14 +69,10 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
         $tag = Phprojekt_Tags_Default::getInstance();
         $result = array('0' => array('string' => 'this',
                                      'count'  => 1),
-                        '1' => array('string' => 'todo',
-                                     'count'  => 0),
-                        '2' => array('string' => 'test',
-                                     'count'  => 1),
-                        '3' => array('string' => 'tag',
-                                     'count'  => 1),
+                        '1' => array('string' => 'tag',
+                                     'count'  => 1)
                         );
-        $this->assertEquals($tag->getTags(1), $result);
+        $this->assertEquals($tag->getTags(3), $result);
 
         $tag->saveTags(1, 2, 'This is other test');
         $tag->saveTags(2, 1, 'This is other test for todo');
@@ -85,24 +80,15 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'count'  => 3),
                         '1' => array('string' => 'todo',
                                      'count'  => 1),
-                        '2' => array('string' => 'test',
-                                     'count'  => 3),
-                        '3' => array('string' => 'tag',
+                        '2' => array('string' => 'tag',
                                      'count'  => 1),
+                        '3' => array('string' => 'test',
+                                     'count'  => 2),
                         '4' => array('string' => 'other',
                                      'count'  => 2),
                         '5' => array('string' => 'for',
                                      'count'  => 1));
-        $this->assertEquals($tag->getTags(1), $result);
-
-        // Limit
-        $result = array('0' => array('string' => 'this',
-                                     'count'  => 3),
-                        '1' => array('string' => 'todo',
-                                     'count'  => 1),
-                        '2' => array('string' => 'test',
-                                     'count'  => 3));
-        $this->assertEquals($tag->getTags(1,3), $result);
+        $this->assertEquals($tag->getTags(6), $result);
     }
 
     /**
@@ -135,7 +121,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'firstDisplay'  => '',
                                      'secondDisplay' => '',
                                      'projectId'     => 1));
-        $this->assertEquals($tag->getModulesByTag('this',1), $result);
+        $this->assertEquals($tag->getModulesByTag('this'), $result);
 
         // limit
         $result = array(
@@ -153,11 +139,11 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
                                      'firstDisplay'  => 'test',
                                      'secondDisplay' => '',
                                      'projectId'     => 1));
-        $this->assertEquals($tag->getModulesByTag('this', 1, 2), $result);
+        $this->assertEquals($tag->getModulesByTag('this', 2), $result);
 
         // None
-        $this->assertEquals($tag->getModulesByTag('', 1, 2), array());
-        $this->assertEquals($tag->getModulesByTag('wordthatnotsaved', 1, 2), array());
+        $this->assertEquals($tag->getModulesByTag('', 2), array());
+        $this->assertEquals($tag->getModulesByTag('wordthatnotsaved', 2), array());
     }
 
     /**
@@ -170,9 +156,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
         $tag = Phprojekt_Tags_Default::getInstance();
         $result = array('0' => array('string' => 'this',
                                      'count'  => 1),
-                        '1' => array('string' => 'test',
-                                     'count'  => 1),
-                        '2' => array('string' => 'tag',
+                        '1' => array('string' => 'tag',
                                      'count'  => 1));
         $this->assertEquals($tag->getTagsByModule(1, 1), $result);
 
@@ -184,10 +168,8 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
 
         // Limit
         $result = array('0' => array('string' => 'this',
-                                     'count'  => 1),
-                        '1' => array('string' => 'test',
                                      'count'  => 1));
-        $this->assertEquals($tag->getTagsByModule(1, 1, 2), $result);
+        $this->assertEquals($tag->getTagsByModule(1, 1, 1), $result);
     }
 
     /**
@@ -198,7 +180,7 @@ class Phprojekt_Tags_DefaultTest extends PHPUnit_Framework_TestCase
     public function testGetRelationIdByModule()
     {
         $tag = Phprojekt_Tags_Default::getInstance();
-        $result = array('1', '3', '4');
+        $result = array('1', '3');
         $this->assertEquals($tag->getRelationIdByModule(1, 1), $result);
     }
 }

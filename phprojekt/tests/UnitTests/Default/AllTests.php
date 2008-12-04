@@ -28,7 +28,6 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 // require_once 'Controllers/BaseTest.php';
 require_once 'Controllers/IndexControllerTest.php';
 require_once 'Controllers/LoginControllerTest.php';
-require_once 'Controllers/ErrorControllerTest.php';
 require_once 'Controllers/TagControllerTest.php';
 require_once 'Controllers/SearchControllerTest.php';
 require_once 'Models/DefaultTest.php';
@@ -63,14 +62,13 @@ class Default_AllTests
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
-
-        $suite->addTestSuite('Phprojekt_LoginController_Test');
+        
+        $suite->addTestSuite('Phprojekt_DefaultModelDefault_Test');
         $suite->addTestSuite('Phprojekt_IndexController_Test');
-        //// $suite->addTestSuite('Phprojekt_ErrorController_Test');
         $suite->addTestSuite('Phprojekt_TagController_Test');
         $suite->addTestSuite('Phprojekt_SearchController_Test');
-        $suite->addTestSuite('Phprojekt_SearchController_Test');
-        $suite->addTestSuite('Phprojekt_DefaultModelDefault_Test');
+        $suite->addTestSuite('Phprojekt_LoginController_Test');
+        
         return $suite;
     }
 }
