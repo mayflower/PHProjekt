@@ -96,16 +96,12 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
 
         $currentGroup = $this->find($group);
 
-        $where = $currentGroup->getAdapter()->quoteInto('userId = ?', $this->_userId);
-        $users = $currentGroup->_hasManyAndBelongsToMany('users');
-
-        /* @todo don't use internal functions */
-        $tmp = current((array)$users->_fetchHasManyAndBelongsToMany($where));
-        if ($tmp['userId'] == $this->getUserId()) {
+        if (count($currentGroup->users->find($this->getUserId())) > 0) {
              $groupNamespace->isInGroup = true;
         } else {
              $groupNamespace->isInGroup = false;
         }
+        
         return $groupNamespace->isInGroup;
     }
 
@@ -122,12 +118,11 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
             $groups = $groupNamespace->groups;
         } else {
             $groups = array();
-            $where  = $this->getAdapter()->quoteInto('userId = ?', $this->_userId);
-            $users  = $this->_hasManyAndBelongsToMany('users');
-            /* @todo don't use internal functions */
-            $tmp    = $users->_fetchHasManyAndBelongsToMany($where);
+            $user = new Phprojekt_User_User();
+            $user->find($this->_userId);
+            $tmp = $user->groups->fetchAll();
             foreach ($tmp as $row) {
-                $groups[] = $row['groupsId'];
+                $groups[] = $row->groupsId;
             }
             $groupNamespace->groups = $groups;
         }
