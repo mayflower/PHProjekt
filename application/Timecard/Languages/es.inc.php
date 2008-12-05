@@ -15,5 +15,3 @@ $lang["timecardM"] = "M";
 $lang["timecardSavedTimes"] = "Tiempos grabados para";
 $lang["Hours"] = "Horas";
 $lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
-
-?>

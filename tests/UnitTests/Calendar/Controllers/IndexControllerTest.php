@@ -51,8 +51,8 @@ class Calendar_IndexController_Test extends FrontInit
             . 'endDate/Mon Jun 09 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
             . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
             . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
-            . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');      
-        $response = $this->getResponse();        
+            . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
+        $response = $this->getResponse();
         $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
     }
 
@@ -66,7 +66,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setBaseUrl($this->config->webpath . 'index.php/Calendar/index/jsonDetail/id/1');
         $this->request->setPathInfo('/Calendar/index/jsonDetail/id/1');
         $this->request->setRequestUri('/Calendar/index/jsonDetail/id/1');
-        $response = $this->getResponse();      
+        $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":1') > 0);
     }
 
@@ -80,7 +80,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setBaseUrl($this->config->webpath . 'index.php/Calendar/index/jsonList');
         $this->request->setPathInfo('/Calendar/index/jsonList');
         $this->request->setRequestUri('/Calendar/index/jsonList');
-        $response = $this->getResponse();        
+        $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":1}') > 0);
     }
 
@@ -93,7 +93,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setBaseUrl($this->config->webpath . 'index.php/Calendar/index/jsonDelete/id/1');
         $this->request->setPathInfo('/Calendar/index/jsonDelete/id/1');
         $this->request->setRequestUri('/Calendar/index/jsonDelete/id/1');
-        $response = $this->getResponse();       
+        $response = $this->getResponse();
         $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
     }
 }

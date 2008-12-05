@@ -37,17 +37,14 @@ class Phprojekt_DispatcherTest extends PHPUnit_Framework_TestCase
     public function testFormatControllerName()
     {
         /*  Initialization */
-
         $dispatcher = new Phprojekt_Dispatcher();
 
         /* Check regular name */
         $controllerName = $dispatcher->formatControllerName('Phprojekt_Notification');
-        $this->assertEquals($controllerName,'PhprojektNotification');
+        $this->assertEquals($controllerName, 'PhprojektNotification');
 
         /* Check name with irregular chars */
         $controllerName = $dispatcher->formatControllerName('Phprojekt_Notification()');
-        $this->assertEquals($controllerName,'PhprojektNotification');
-
+        $this->assertEquals($controllerName, 'PhprojektNotification');
     }
-
 }

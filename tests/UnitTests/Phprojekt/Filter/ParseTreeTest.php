@@ -32,9 +32,7 @@ require_once 'PHPUnit/Framework.php';
 class Phprojekt_Filter_ParseTreeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     *
-     * @group core
-     * @group filter
+     * Test
      */
     public function testStringToTree()
     {
@@ -45,11 +43,15 @@ class Phprojekt_Filter_ParseTreeTest extends PHPUnit_Framework_TestCase
 
         try {
             $parsed = $tree->stringToTree('(name = = "Musterman" and id = 3) or id != 5');
-        } catch (Phprojekt_ParseException $e) { }
+        } catch (Phprojekt_ParseException $e) {
+            
+        }
 
         try {
             $parsed = $tree->stringToTree('(name" = "Musterman" and id = 3) or id != 5');
-        } catch (Phprojekt_ParseException $e) { }
+        } catch (Phprojekt_ParseException $e) {
+            
+        }
 
         try {
             $parsed = $tree->stringToTree('(name = "Muster\"man" and id = 3) or id != 5');

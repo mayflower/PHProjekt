@@ -40,7 +40,8 @@ class User_User_Test extends PHPUnit_Framework_TestCase
         $userModel->find(1);
         $this->assertEquals($userModel->saveRights(), null);
         $this->assertEquals($userModel->recordValidate(), false);
-        $this->assertEquals($userModel->getError(), array(0 => array('field' => 'Firstname', 'message' => 'Is a required field'),
-                                                          1 => array('field' => 'Lastname', 'message' => 'Is a required field')));
+        $this->assertEquals($userModel->getError(),
+            array(0 => array('field' => 'Firstname', 'message' => 'Is a required field'),
+                  1 => array('field' => 'Lastname', 'message' => 'Is a required field')));
     }
 }

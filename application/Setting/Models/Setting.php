@@ -217,11 +217,11 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                     if ($key == $data['key']) {
                         $record = $this->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
                                                   " AND keyValue = ".$this->_db->quote($key) .
-                                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));                        
+                                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
                         if (isset($record[0])) {
                             $record[0]->keyValue = $key;
                             $record[0]->value    = $value;
-                            $record[0]->save();                        
+                            $record[0]->save();
                         } else {
                             $clone             = clone $this;
                             $clone->userId     = Phprojekt_Auth::getUserId();

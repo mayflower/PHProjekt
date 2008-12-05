@@ -60,7 +60,7 @@ class Phprojekt_TabsTest extends PHPUnit_Framework_TestCase
     public function testSaveModuleTabRelation()
     {
         $tab = new Phprojekt_Tabs();
-        $tab->saveModuleTabRelation(1,1);
+        $tab->saveModuleTabRelation(1, 1);
         $result = array(array('id' => 1,
                               'label' => 'Basic Data'));
         $this->assertEquals($result, $tab->getTabsByModule(1));

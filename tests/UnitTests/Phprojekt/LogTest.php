@@ -54,7 +54,7 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
         $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
-        $log->log('TEST','NOTHING');
+        $log->log('TEST', 'NOTHING');
     }
 
     /**
@@ -67,7 +67,7 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
         $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
-        $log->log('TEST',8);
+        $log->log('TEST', 8);
     }
 
     /**
@@ -79,8 +79,8 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
         $config = Zend_Registry::get('config');
         $log = new Phprojekt_Log($config);
 
-        $log->log('TEST',Zend_Log::DEBUG);
-        $log->log('TEST',Zend_Log::CRIT);
-        $log->log('TEST',Zend_Log::INFO);
+        $log->log('TEST', Zend_Log::DEBUG);
+        $log->log('TEST', Zend_Log::CRIT);
+        $log->log('TEST', Zend_Log::INFO);
     }
 }

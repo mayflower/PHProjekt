@@ -33,8 +33,6 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test the load function
-     *
-     * @return void
      */
     public function testIsLoaded()
     {
@@ -51,13 +49,12 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test name of the class
-     *
      */
     public function testToString()
     {
         $lang   = new Phprojekt_LanguageAdapter('es');
         $string = $lang->toString();
-        $this->assertEquals('Phprojekt',$string);
+        $this->assertEquals('Phprojekt', $string);
     }
 
     /**
@@ -68,7 +65,7 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
         $reflect = new ReflectionClass('Phprojekt_LanguageAdapter');
         $constants = $reflect->getConstants();
         foreach ($constants as $key => $value) {
-            $value = ereg_replace('.inc.php','',$value);
+            $value = ereg_replace('.inc.php', '', $value);
             $lang = new Phprojekt_Language($value);
         }
     }

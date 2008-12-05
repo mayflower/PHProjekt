@@ -99,7 +99,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function saveModules($rights)
     {
-        foreach($this->modulePermissions->fetchAll() as $relation) {
+        foreach ($this->modulePermissions->fetchAll() as $relation) {
             $relation->delete();
         }
         foreach ($rights as $moduleId) {
@@ -136,7 +136,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function delete()
     {
         if ($this->id > 1) {
-            $relations = Phprojekt_Loader::getModel('Project','ProjectModulePermissions');
+            $relations = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
         
             // Delete related items
             $modules = $relations->getProjectModulePermissionsById($this->id);
@@ -157,7 +157,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             }
         
             // Delete user-role-projetc relation
-            $relations = Phprojekt_Loader::getModel('Project','ProjectRoleUserPermissions');
+            $relations = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
             $records = $relations->fetchAll('projectId = ' . $this->id);
             foreach ($records as $record) {
                 $record->delete();

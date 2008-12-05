@@ -47,16 +47,19 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
             </div>
 
             <!-- Border Container which splits page in navigation and form/list view: -->
-            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
+            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" 
+            style="margin-top: 55px;">
             <!-- navigation panel -->
 
-            <div dojoType="dijit.layout.ContentPane" duration="200"    minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
+            <div dojoType="dijit.layout.ContentPane" duration="200" minSize="20" region="leading"
+            class="column span-5 left" style="background: #294064;" id="navigation-container">
                 <div id="subheader" class="block">
                     <div id="navigation-container-titel">
                     </div>
                 </div>
              </div>
-               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%; background-color:#FFFFFF" id="centerContent" >
+               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"
+                style="width:80%; background-color:#FFFFFF" id="centerContent" >
                 <!-- Submodule navigation: -->
                 <div class="block">
 

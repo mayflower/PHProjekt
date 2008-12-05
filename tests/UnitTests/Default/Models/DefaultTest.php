@@ -37,7 +37,7 @@ class Phprojekt_DefaultModelDefault_Test extends PHPUnit_Framework_TestCase
      */
     public function testDefaultModelsDefault()
     {
-        $defaultModel = Phprojekt_Loader::getModel('Default','Default');
+        $defaultModel = Phprojekt_Loader::getModel('Default', 'Default');
         $this->assertEquals($defaultModel->valid(), false);
         $this->assertEquals($defaultModel->save(), false);
         $this->assertEquals($defaultModel->getRights(), array());

@@ -198,11 +198,11 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
                         $record = $this->fetchAll("keyValue = ".$this->_db->quote($key) .
-                                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));                        
+                                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
                         if (isset($record[0])) {
                             $record[0]->keyValue = $key;
                             $record[0]->value    = $value;
-                            $record[0]->save();                        
+                            $record[0]->save();
                         } else {
                             $clone             = clone $this;
                             $clone->moduleId   = (int) $this->_moduleId;

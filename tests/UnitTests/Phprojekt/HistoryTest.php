@@ -114,7 +114,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         foreach ($data as $key => $values) {
             /* Remove the hour */
             $values['datetime'] = substr($values['datetime'], 0, 10);
-            $result = array_diff_assoc($values,$array);
+            $result = array_diff_assoc($values, $array);
 
             if (empty($result)) {
                 $found = 1;

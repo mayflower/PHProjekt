@@ -81,8 +81,10 @@ $lang["Invalid Format"] = "Invalid Format";
 $lang["The Tags was added correctly"] = "The Tags was added correctly";
 $lang["The Tags was deleted correctly"] = "The Tags was deleted correctly";
 $lang["The Item was not found"] = "The Item was not found";
-$lang["You do not have write access into the parent project"] = "You do not have write access into the parent project";
-$lang["You do not have access for add projects on the parent project"] = "You do not have access for add projects on the parent project";
+$lang["You do not have write access into the parent project"] = "You do not have write access "
+    . "into the parent project";
+$lang["You do not have access for add projects on the parent project"] = "You do not have access "
+    . "for add projects on the parent project";
 $lang["The parent project do not have enabled this module"] = "The parent project do not have enabled this module";
 $lang["The project can not saved under itself"] = "The project can not saved under itself";
 $lang["The project can not saved under his children"] = "The project can not saved under his children";
@@ -127,7 +129,8 @@ $lang["Project bookings"] = "Project bookings";
 $lang["Add working time and drag projects into the bar"] = "Add working time and drag projects into the bar";
 
 // Settings module
-$lang["Please, logout and login again on application to apply the changes."] = "Please, logout and login again on application to apply the changes.";
+$lang["Please, logout and login again on application to apply the changes."] = "Please, "
+    . "logout and login again on application to apply the changes.";
 $lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
 $lang["The password and confirmation are different or empty"] = "The password and confirmation are different or empty";
 $lang["The old password provided is invalid"] = "The old password provided is invalid";
@@ -152,5 +155,3 @@ $lang["Changes done"] = "Changes done";
 $lang["Field"] = "Field";
 $lang["Old value"] = "Old value";
 $lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
-
-?>

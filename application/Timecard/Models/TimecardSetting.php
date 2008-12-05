@@ -96,7 +96,7 @@ class Timecard_Models_TimecardSetting
      */
     public function getFavorites($value)
     {
-        return implode(",",unserialize($value));
+        return implode(",", unserialize($value));
     }
         
     /**
@@ -119,12 +119,12 @@ class Timecard_Models_TimecardSetting
                     }                    
                     $record = $setting->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
                                                  " AND keyValue = ". $setting->_db->quote($key) .
-                                                 " AND moduleId = ". Phprojekt_Module::getId('Timecard'));                        
+                                                 " AND moduleId = ". Phprojekt_Module::getId('Timecard'));
                     if (isset($record[0])) {
                         $record[0]->keyValue = $key;
                         $record[0]->value    = $value;
-                        $record[0]->save();                        
-                    } else {                        
+                        $record[0]->save();
+                    } else {
                         $setting->userId     = Phprojekt_Auth::getUserId();
                         $setting->moduleId   = Phprojekt_Module::getId('Timecard');
                         $setting->keyValue   = $key;
@@ -135,5 +135,5 @@ class Timecard_Models_TimecardSetting
                 }
             }
         }
-    }    
+    }
 }

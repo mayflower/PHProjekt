@@ -39,7 +39,7 @@ require_once 'LoginTest.php';
  * @since      File available since Release 1.0
  * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  */
-class Selenium_AllTests 
+class Selenium_AllTests
 {
     public static function main()
     {

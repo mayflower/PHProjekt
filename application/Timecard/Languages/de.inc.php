@@ -13,5 +13,3 @@ $lang["timecardTimes"] = "Zeit";
 $lang["timecardH"] = "Std";
 $lang["timecardM"] = "M";
 $lang["timecardSavedTimes"] = "Bewahrte Zeit f&uuml;r";
-
-?>
