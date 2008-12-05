@@ -72,7 +72,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'action'   => 'add',
                        'datetime' => date("Y-m-d"));
         $found = 0;
-        foreach ($data as $key => $values) {
+        foreach ($data as $values) {
             /* Remove the hour */
             $values['datetime'] = substr($values['datetime'], 0, 10);
             $result = array_diff_assoc($values, $array);
@@ -111,7 +111,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'action'   => 'edit',
                        'datetime' => date("Y-m-d"));
         $found = 0;
-        foreach ($data as $key => $values) {
+        foreach ($data as $values) {
             /* Remove the hour */
             $values['datetime'] = substr($values['datetime'], 0, 10);
             $result = array_diff_assoc($values, $array);
@@ -140,7 +140,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'action'   => 'edit',
                        'datetime' => date("Y-m-d"));
         $found = 0;
-        foreach ($data as $key => $values) {
+        foreach ($data as $values) {
             /* Remove the hour */
             $values['datetime'] = substr($values['datetime'], 0, 10);
             $result = array_diff_assoc($values, $array);
@@ -177,7 +177,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'action'   => 'delete',
                        'datetime' => date("Y-m-d"));
         $found = 0;
-        foreach ($data as $key => $values) {
+        foreach ($data as $values) {
             /* Remove the hour */
             $values['datetime'] = substr($values['datetime'], 0, 10);
             $result = array_diff_assoc($values, $array);

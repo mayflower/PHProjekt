@@ -40,7 +40,7 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setBaseUrl($this->config->webpath . 'index.php/Default/Tags/jsonGetTags/nodeId/1/limit/2');
         $this->request->setPathInfo('/Default/Tag/jsonGetTags/nodeId/1/limit/2');
         $this->request->setRequestUri('/Default/Tag/jsonGetTags/nodeId/1/limit/2');
-        $response = $this->getResponse();        
+        $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('"metadata":[{"key":"string","label":"Tag"},'
             . '{"key":"count","label":"Count"}],"data":[{"string":"this","count":3}')) > 0);
@@ -56,7 +56,7 @@ class Phprojekt_TagController_Test extends FrontInit
             . 'index.php/Default/Tags/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
         $this->request->setPathInfo('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
         $this->request->setRequestUri('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
-        $response = $this->getResponse();
+        $this->getResponse();
     }
 
     /**
@@ -69,7 +69,7 @@ class Phprojekt_TagController_Test extends FrontInit
             . 'index.php/Default/Tags/jsonGetModulesByTag/nodeId/1/tag/test/limit/2');
         $this->request->setPathInfo('/Default/Tag/jsonGetModulesByTag/nodeId/1/tag/test/limit/2');
         $this->request->setRequestUri('/Default/Tag/jsonGetModulesByTag/nodeId/1/tag/test/limit/2');
-        $response = $this->getResponse();       
+        $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('{"id":"1","moduleId":"1","moduleName":"Project",'
             . '"moduleLabel":"Project","firstDisplay":"test","secondDisplay":null,"projectId":"1"}')) > 0);

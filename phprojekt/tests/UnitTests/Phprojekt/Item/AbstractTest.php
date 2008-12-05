@@ -503,7 +503,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testFloat()
     {
-        $locale = Zend_Locale::setLocale('es_AR');
+        Zend_Locale::setLocale('es_AR');
         $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1000,30';
         $item->budget;
@@ -515,7 +515,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testEmptyFloat()
     {
-        $locale = Zend_Locale::setLocale('es_AR');
+        Zend_Locale::setLocale('es_AR');
         $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '';
     }
@@ -536,9 +536,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRights()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-        $userId = $authNamespace->userId;
-
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
         $module->find(2);
 

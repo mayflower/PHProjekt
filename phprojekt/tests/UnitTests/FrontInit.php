@@ -37,20 +37,20 @@ class FrontInit extends PHPUnit_Framework_TestCase
     public $config   = null;
     public $content  = null;
     public $error    = null;
-    
+
     /**
      * Init the front for test it
      */
-    public function __construct() 
+    public function __construct()
     {
         $this->request  = new Zend_Controller_Request_Http();
         $this->response = new Zend_Controller_Response_Http();
         $this->config   = Zend_Registry::get('config');
-        
+
         $this->config->language = "en";
 
         $this->request->setModuleName('Default');
-        $this->request->setActionName('index');        
+        $this->request->setActionName('index');
 
         // Languages Set
         Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
@@ -100,21 +100,22 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->front->addModuleDirectory(PHPR_CORE_PATH);
         $this->front->setParam('useDefaultControllerAlways', true);
 
-        $this->front->throwExceptions(true);        
+        $this->front->throwExceptions(true);
     }
-    
+
     public function getResponse()
     {
         ob_start();
         $this->error = false;
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $e) {
+        } catch (Phprojekt_PublishedException $error) {
+            unset($error);
             $this->error = true;
         }
         $this->content = ob_get_contents();
         ob_end_clean();
-        
+
         return $this->content;
     }
 }

@@ -62,7 +62,7 @@ class Core_ModuleDesignerController extends Core_IndexController
      * If not, the return is a string with the same format than the Phprojekt_PublishedException
      * but with success type
      *
-     * @requestparam integer id 
+     * @requestparam integer id
      * @requestparam string  designerData
      *
      * @return void
@@ -116,7 +116,7 @@ class Core_ModuleDesignerController extends Core_IndexController
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-        
+
     /**
      * Get the length and type from the values
      *
@@ -132,7 +132,7 @@ class Core_ModuleDesignerController extends Core_IndexController
             $tableData[$field['tableField']]            = array();
             $tableData[$field['tableField']]['null']    = true;
             $tableData[$field['tableField']]['default'] = null;
-            foreach ($field as $key => $value) {
+            foreach ($field as $value) {
                 if ($key == 'tableType') {
                     $tableData[$field['tableField']]['type'] = $field['tableType'];
                 } else if ($key == 'tableLength') {

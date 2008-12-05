@@ -132,27 +132,27 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $keepUser = $authNamespace->userId;
 
-        try {        
+        try {
             $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
 
-            $role->name = 'deleteMe';            
+            $role->name = 'deleteMe';
             $role->save();
-            
+
             $modulePermissions = $role->modulePermissions->create();
             $modulePermissions->moduleId = 1;
-            $modulePermissions->roleId = $role->id;            
+            $modulePermissions->roleId = $role->id;
             $modulePermissions->access = 199;
-            
+
             $this->assertTrue($modulePermissions->save());
-            
+
             $this->assertNotNull($role->id);
             $this->assertEquals(5, $role->modulePermissions->count());
 
             $role->delete();
-            
+
             $this->assertEquals(4, $role->modulePermissions->count());
             $this->assertNull($role->id);
-            
+
         } catch (Exception $e) {
             $authNamespace->userId = $keepUser;
             $this->fail($e->getMessage());
@@ -190,7 +190,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $user->username  = 'gustavo';
             $user->firstname = 'Gustavo';
             $user->lastname  = 'Solt';
-            
+
             $this->assertTrue($user->save());
 
             $gustavo = new Phprojekt_User_User(array('db' => $this->sharedFixture));
@@ -363,7 +363,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('Exception');
 
         $instance = new PHprojekt_Project(array('db' => $this->sharedFixture));
-        $get      = $instance->wrongAttribute;
+        $instance->wrongAttribute;
     }
 
     /**
@@ -374,9 +374,9 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testDbNotGiven()
     {
         try {
-            $instance = new Phprojekt_Project(array());
-        } catch (Phprojekt_ActiveRecord_Exception $pare) {
-            return;
+            new Phprojekt_Project(array());
+        } catch (Phprojekt_ActiveRecord_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('Phprojekt_ActiveRecord_Exception expected');
     }

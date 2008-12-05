@@ -111,7 +111,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $data      = $this->_data;
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $translate = Zend_Registry::get('translate');
-        
+
         if (isset($data['endTime'])) {
             if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
@@ -133,7 +133,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     {
         return (array) $this->_validate->error->getError();
     }
-    
+
     /**
      * Return an array with information about the records, the fields and some convinations
      * with other tables (timecard and timeproj)
@@ -143,38 +143,39 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      * @param integer $month  Month for the request
      * @param integer $count  Count  for the request
      * @param integer $offset Offset for the request
-     * 
+     *
      * @return array
      */
     public function getRecords($view, $year, $month, $count, $offset)
     {
-        $sortRecords   = array();
-        
+        $sortRecords = array();
+        $userId      = Phprojekt_Auth::getUserId();
+
         if (strlen($month) == 1) {
             $month = '0'.$month;
-        }        
+        }
         switch ($view) {
             case 'today':
-                $where   = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), date("Y-m-d"));
+                $where   = sprintf('(ownerId = %d AND date = "%s")', $userId, date("Y-m-d"));
                 $order   = ' date ASC';
-                $records = $this->fetchAll($where, $order, $count, $offset);      
+                $records = $this->fetchAll($where, $order, $count, $offset);
                 $data= $records;
                 break;
-            case 'month':                
-                $where = sprintf('(ownerId = %d AND date LIKE "%s")', Phprojekt_Auth::getUserId(), $year.'-'.$month.'-%');
+            case 'month':
+                $where = sprintf('(ownerId = %d AND date LIKE "%s")', $userId, $year.'-'.$month.'-%');
                 $order = ' date ASC';
 
-                $records       = $this->fetchAll($where, $order, $count, $offset);      
+                $records       = $this->fetchAll($where, $order, $count, $offset);
                 $sortRecords   = array();
                 $timeproj      = new Timecard_Models_Timeproj();
-                
+
                 $information     = $this->getInformation($order);
                 $fieldDefinition = $information->getFieldDefinition($view);
-                
+
                 $datas   = array();
                 $data    = array();
                 $numRows = 0;
-                
+
                 // Get all the hours for this month
                 foreach ($records as $record) {
                     $sum = $this->getDiffTime($record->endTime, $record->startTime);
@@ -186,17 +187,17 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                         $sortRecords[$record->date]['sum'] += (int)$sum;
                     }
                 }
-                
+
                 // Get the bookings for this month
-                $bookingsResults = $timeproj->fetchAll($where);                
+                $bookingsResults = $timeproj->fetchAll($where);
                 foreach ($bookingsResults as $booking) {
                     $bookings = 0;
                     if (!isset($sortRecords[$booking->date])) {
                         $sortRecords[$booking->date] = array('sum'      => 0,
                                                              'bookings' => 0);
-                    }                    
+                    }
                     $bookings += $this->getDiffTime($booking->amount, '00:00:00');
-                    $sortRecords[$booking->date]['bookings'] += (int)$bookings;  
+                    $sortRecords[$booking->date]['bookings'] += (int)$bookings;
                 }
 
                 $endDayofTheMonth = date("t");
@@ -204,7 +205,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $day = $i;
                     if (strlen($day) == 1) {
                         $day = '0'.$i;
-                    }                    
+                    }
                     $date = $year.'-'.$month.'-'.$day;
                     if (isset($sortRecords[$date])) {
                         $data['date']     = $date;
@@ -217,7 +218,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                         $data['sum']      = 0;
                         $data['bookings'] = 0;
                         $data['rights']   = array();
-                        $datas[] = $data;                        
+                        $datas[] = $data;
                     }
                 }
 
@@ -227,16 +228,16 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                               'numRows'  => (int)$numRows);
                 break;
         }
-        
+
         return $data;
     }
-    
+
     /**
      * Get the diff of minutes between 2 times
      *
      * @param string $end   endTime
      * @param string $start startTime
-     * 
+     *
      * @return integer
      */
     public function getDiffTime($end, $start)
@@ -249,12 +250,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         return (($hoursEnd - $hoursStart)*60) + ($minutesEnd - $minutesStart);
     }
-    
+
     /**
      * Convert a number of minuts into hours:inutes
      *
      * @param integer $time
-     * 
+     *
      * @return string
      */
     public function convertTime($time)
