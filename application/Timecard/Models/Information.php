@@ -157,8 +157,11 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
      */
     public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        $result   = array();
-        $ordering = null;
+        switch ($ordering) {
+            default:
+                $result = array();
+                break;
+        }
 
         return $result;
     }
