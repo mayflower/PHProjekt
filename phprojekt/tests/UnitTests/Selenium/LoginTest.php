@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
@@ -33,58 +33,8 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
  * @since      File available since Release 1.0
  * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  */
-class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
+class Selenium_LoginTest extends Selenium_SeleniumInit
 {
-    /**
-     * Handle for the current configuration
-     *
-     * @var Zend_Config_Ini
-     */
-    private $_config;
-
-    /**
-     * List of the used Browser
-     *
-     * @var array the used test browser and selenium-rc hosts
-     */
-    public static $browsers = array(
-      array(
-        'name'    => 'Firefox on Linux',
-        'browser' => '*chrome',
-        'host'    => 'localhost',
-        'port'    => 4444,
-        'timeout' => 30000,
-      ),
-/*      array(
-        'name'    => 'Internet Explorer on Windows Vista',
-        'browser' => '*iexplore',
-        'host'    => 'vistatest.mf-muc.nop',
-        'port'    => 4444,
-        'timeout' => 30000,
-      ), */
-    );
-
-    /**
-     * Collect coverage data at this url
-     *
-     * @var string Url of the coverage php file
-     */
-    protected $_coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage_phprojekt6.php';
-
-    /**
-     * setup the unit test. Use firefox as a browser and the document
-     * root from the configuration file
-     *
-     * @return void
-     */
-    function setUp()
-    {
-        $this->setAutoStop(false);
-        $this->_config = Zend_Registry::get('config');
-        $this->verificationErrors = array();
-        $this->setBrowserUrl($this->_config->webpath);
-    }
-
     /**
      * Test the login method with wrong and correct data
      *
@@ -93,7 +43,7 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
     function testLogin()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->_config->webpath);
+        $this->open($this->config->webpath);
 
         $this->assertEquals("Login", $this->getTitle());
     }
@@ -101,7 +51,7 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
     function testEmptyUsername()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->_config->webpath);
+        $this->open($this->config->webpath);
 
         // Check for empty username
         $this->type("password", "nothing");
@@ -109,15 +59,15 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->waitForPageToLoad("30000");
         try {
             $this->assertTrue($this->isTextPresent("Invalid user or password"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
+        } catch (PHPUnit_Framework_AssertionFailedError $error) {
+            array_push($this->verificationErrors, $error->toString());
         }
     }
 
     function testEmptyPassword()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->_config->webpath);
+        $this->open($this->config->webpath);
 
         // Check for empty password
         $this->type("username", "nothing");
@@ -125,15 +75,15 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->waitForPageToLoad("30000");
         try {
             $this->assertTrue($this->isTextPresent("Invalid user or password"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
+        } catch (PHPUnit_Framework_AssertionFailedError $error) {
+            array_push($this->verificationErrors, $error->toString());
         }
     }
 
     function testWrongCombination()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->_config->webpath);
+        $this->open($this->config->webpath);
         $this->type("username", "david");
         $this->type("password", "wrong");
 
@@ -142,15 +92,15 @@ class Selenium_LoginTest extends PHPUnit_Extensions_SeleniumTestCase
         $this->waitForPageToLoad("30000");
         try {
             $this->assertTrue($this->isTextPresent("Invalid user or password"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
+        } catch (PHPUnit_Framework_AssertionFailedError $error) {
+            array_push($this->verificationErrors, $error->toString());
         }
     }
 
     function testCorrectCombination()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->_config->webpath);
+        $this->open($this->config->webpath);
         $this->type("username", "david");
 
         // Actual login with correct data
