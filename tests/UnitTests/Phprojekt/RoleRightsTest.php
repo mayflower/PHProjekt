@@ -64,7 +64,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testHasRight()
     {
-        $this->assertEquals(true, $this->_object->hasRight('write',1));
+        $this->assertEquals(true, $this->_object->hasRight('write', 1));
     }
 
     /**

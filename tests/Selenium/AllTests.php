@@ -30,7 +30,7 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'LoginTest.php';
 /**
  * Static test suite.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
@@ -41,17 +41,21 @@ require_once 'LoginTest.php';
  */
 class Selenium_AllTests
 {
+    /**
+     * Runs the test suite
+     *
+     */
     public static function main()
     {
         PHPUnit_TextUI_TestRunner::run(self::suite());
     }
- 
+
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('Selenium Test Suite');
- 
+
         $suite->addTestSuite('Selenium_LoginTest');
- 
+
         return $suite;
     }
 }

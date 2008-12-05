@@ -42,8 +42,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
 
             Phprojekt_Auth::isLoggedIn();
         }
-        catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
-            return ;
+        catch (Phprojekt_Auth_UserNotLoggedInException $error) {
+            return $error->getMessage();
         }
 
         $this->fail('The user is logued');
@@ -56,8 +56,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
         try {
             Zend_Registry::set('db', $this->sharedFixture);
             Phprojekt_Auth::login('invalidUser', 'password');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
 
         $this->fail('An invalid user is able to log in!');
@@ -69,8 +69,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testInvalidPass() {
         try {
             Phprojekt_Auth::login('david', 'iinvalidPassword');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('An user is able to log in with an invalid password!');
     }
@@ -81,8 +81,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testInvalidUserValidPass() {
         try {
             Phprojekt_Auth::login('invalidUser', 'test');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('An invalid user is able to log in using a valid password!');
     }
@@ -93,8 +93,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testEmptyuser() {
         try {
             Phprojekt_Auth::login('', 'test');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('An empty user is able to log in!');
     }
@@ -105,8 +105,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testEmptyPass() {
         try {
             Phprojekt_Auth::login('david', '');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('An user is able to log in without password!');
     }
@@ -117,8 +117,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testMd5Login() {
         try {
             Phprojekt_Auth::login('david', '156c3239dbfa5c5222b51514e9d12948');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('An user is able to log in with the crypted password string!');
     }
@@ -129,8 +129,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testInactiveUser() {
         try {
             Phprojekt_Auth::login('inactive', 'test');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            return ;
+        } catch (Phprojekt_Auth_Exception $error) {
+            return $error->getMessage();
         }
         $this->fail('An inactive user is able to log in!');
     }
@@ -142,8 +142,8 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testLogin() {
         try {
             $tmp = Phprojekt_Auth::login('david', 'test');
-        } catch (Phprojekt_Auth_Exception $ae) {
-            $this->fail($ae->getMessage()." ".$ae->getCode());
+        } catch (Phprojekt_Auth_Exception $error) {
+            $this->fail($error->getMessage()." ".$error->getCode());
         }
         $this->assertTrue($tmp);
 

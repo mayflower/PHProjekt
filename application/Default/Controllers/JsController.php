@@ -86,7 +86,7 @@ class JsController extends IndexController
         }
 
         echo 'dojo.provide("phpr.Main");';
-        
+
         echo '
         dojo.declare("phpr.Main", null, {
             constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId,/*String*/language) {
@@ -117,26 +117,27 @@ class JsController extends IndexController
     {
         $path = $this->getRequest()->getParam('path', null);
         $name = $this->getRequest()->getParam('name', null);
-        
+
         $path = split("\.", $path);
         $module = $path[1];
-        
+
         $extendPath = '';
         foreach ($path as $tmp => $folder) {
+            unset($folder);
             if ($tmp > 1) {
-                $extendPath .= $path[$tmp].'/';
+                $extendPath .= $path[$tmp] . '/';
             }
         }
         $extendPath .= $name;
-        
-        $template = file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/'.$extendPath);
-        
+
+        $template = file_get_contents(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/' . $extendPath);
+
         $template = ereg_replace("\n", "", $template);
         $template = ereg_replace("\r", "", $template);
         $template = addslashes($template);
-        echo '"'.$template.'"';
+        echo '"' . $template . '"';
     }
-    
+
     /**
      * Get all the Default scripts
      *
@@ -145,10 +146,10 @@ class JsController extends IndexController
     private function _getDefaultScripts()
     {
         $output = '';
-        $scripts = scandir(PHPR_CORE_PATH.'/Default/Views/dojo/scripts');
+        $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
-                $output .= file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/'.$script);
+                $output .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/' . $script);
             }
         }
         return $output;
@@ -161,11 +162,11 @@ class JsController extends IndexController
      */
     private function _getCoreScripts()
     {
-        $output = '';
-        $scripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts');
+        $output  = '';
+        $scripts = scandir(PHPR_CORE_PATH . '/Core/Views/dojo/scripts');
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
-                $output .= file_get_contents(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
+                $output .= file_get_contents(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/' . $script);
             }
         }
         return $output;
@@ -181,7 +182,7 @@ class JsController extends IndexController
         $output = '';
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
-                $output .= file_get_contents(PHPR_CORE_PATH.'/'.$module.'/Views/dojo/scripts/'.$script);
+                $output .= file_get_contents(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/' . $script);
             }
         }
         return $output;
@@ -199,16 +200,16 @@ class JsController extends IndexController
         $output = '';
         foreach ($scripts as $script) {
             if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.') {
-                $coreScripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
+                $coreScripts = scandir(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/' . $script);
                 if (in_array('Main.js', $coreScripts)) {
                     $output .= 'dojo.registerModulePath'
-                        . '("phpr.'.$script.'", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
+                        . '("phpr.' . $script . '", "../../../application/Core/Views/dojo/scripts/' . $script.'");';
                     $this->_modules[] = $script;
                 }
                 foreach ($coreScripts as $coreScript) {
                     if (substr($coreScript, -3) == '.js') {
-                        $output .= 
-                          file_get_contents(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script.'/'.$coreScript);
+                        $output .=
+                          file_get_contents(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/' . $script . '/' . $coreScript);
                     }
                 }
             }

@@ -12,21 +12,19 @@
  * @since      File available since Release 1.0
 */
 
-function checkServer() {
-
-    $availableEngines = array();
-
+function checkServer()
+{
     // check the PHP version
     if (substr(phpversion(), 0, 1) < 5) {
         die("Sorry, you need PHP 5 or newer to run PHProjekt 6");
     }
 
     // check pdo library
-    $tmp = phpversion('pdo_mysql');
+    $tmp  = phpversion('pdo_mysql');
     $tmp2 = phpversion('pdo_sqlite2');
     $tmp3 = phpversion('pdo_pgsql');
 
-    if (empty($tmp) && empty($tmp) && empty($tmp)) {
+    if (empty($tmp) && empty($tmp2) && empty($tmp3)) {
         die("Sorry, you need pdo_mysql, pdo_pgsql or pdo_sqlite extension to install PHProjekt 6");
     }
 
@@ -35,7 +33,6 @@ function checkServer() {
     if (file_exists($baseDir."configuration.ini")) {
         die("Configuration file found. Please, delete it before run setup again.");
     }
-
 }
 
 function displaySetupForm() {
@@ -72,12 +69,13 @@ function displaySetupForm() {
     echo $formContent;
 }
 
-function preInstallChecks() {
+function preInstallChecks()
+{
     $returnValue = true;
 
     if ($_REQUEST['server_type'] == 'pdo_mysql') {
 
-        $link = @mysql_connect($_REQUEST['server_host'], $_REQUEST['server_user'], $_REQUEST['server_pass']);
+        @mysql_connect($_REQUEST['server_host'], $_REQUEST['server_user'], $_REQUEST['server_pass']);
 
         mysql_query("CREATE DATABASE ".$_REQUEST['server_database']);
 
@@ -94,13 +92,12 @@ function preInstallChecks() {
         'password' => $_REQUEST['server_pass'],
         'dbname'   => $_REQUEST['server_database']
         ));
-    } catch (Exception $e) {
-        $_SESSION['error_message'] = "Can't connect to server at '".$_REQUEST['server_host'].
-        "' using '".$_REQUEST['server_user']."' user";
+    } catch (Exception $error) {
+        $_SESSION['error_message'] = "Can't connect to server at '".$_REQUEST['server_host']
+            . "' using '".$_REQUEST['server_user']."' user"
+            . "(". $error->getMessage() .")";
         $returnValue = false;
     }
-
-
 
     // creating log folders
     $baseDir = substr($_SERVER['SCRIPT_FILENAME'], 0, -22);
@@ -114,7 +111,6 @@ function preInstallChecks() {
             unlink($configFlie);
         }
     }
-
 
     return $returnValue;
 }
@@ -145,8 +141,8 @@ function installPhprojekt() {
         'password' => $_REQUEST['server_pass'],
         'dbname'   => $_REQUEST['server_database']
         ));
-    } catch (Exception $e) {
-        die("Error connecting to server");
+    } catch (Exception $error) {
+        die("Error connecting to server " . "(" . $error->getMessage() . ")");
     }
 
     $tableList = array("Timecard",
@@ -231,6 +227,9 @@ function installPhprojekt() {
     ),
     // primary keys
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('User',
     array('id' => array (
@@ -245,6 +244,9 @@ function installPhprojekt() {
         'type' => 'varchar', 'length' => 1, 'null' => true, 'default' => 'A'),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Module',
     array('id' => array (
@@ -259,6 +261,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 1, 'null' => false, 'default' => '1'),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Groups',
     array('id' => array (
@@ -267,6 +272,9 @@ function installPhprojekt() {
         'type' => 'varchar', 'length' => 255, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('GroupsUserRelation',
     array('id' => array (
@@ -277,6 +285,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('History',
     array('id' => array (
@@ -300,6 +311,9 @@ function installPhprojekt() {
     'default_no_quote' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Project',
     array('id' => array (
@@ -331,7 +345,9 @@ function installPhprojekt() {
 
     ),
     array('id'));
-
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('ProjectModulePermissions',
     array('id' => array (
@@ -342,6 +358,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Role',
     array('id' => array (
@@ -352,6 +371,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('ProjectRoleUserPermissions',
     array('id' => array (
@@ -364,6 +386,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('RoleModulePermissions',
     array('id' => array (
@@ -376,6 +401,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 3, 'null' => false),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Todo',
     array('id' => array (
@@ -398,6 +426,9 @@ function installPhprojekt() {
         'type' => 'varchar', 'length' => 50, 'null' => true, 'default' => 'working'),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Setting',
     array('id' => array (
@@ -414,6 +445,9 @@ function installPhprojekt() {
         'type' => 'varchar', 'length' => 50, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('SearchWords',
     array('id' => array (
@@ -424,6 +458,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('SearchWordModule',
     array('moduleId' => array(
@@ -434,6 +471,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('itemId', 'moduleId', 'wordId'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('SearchDisplay',
     array('moduleId' => array(
@@ -448,6 +488,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('itemId', 'moduleId'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Tags',
     array('id' => array (
@@ -458,6 +501,9 @@ function installPhprojekt() {
         'type' => 'bigint', 'null' => false),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('TagsUsers',
     array('id' => array (
@@ -468,6 +514,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('TagsModules',
     array('moduleId' => array(
@@ -478,6 +527,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('moduleId', 'itemId', 'tagUserId'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Tab',
     array('id' => array (
@@ -486,6 +538,9 @@ function installPhprojekt() {
         'type' => 'varchar', 'length' => 255, 'null' => false),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('ModuleTabRelation',
     array('tabId' => array(
@@ -494,6 +549,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('tabId', 'moduleId'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Note',
     array('id' => array (
@@ -510,6 +568,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Configuration',
     array('id' => array (
@@ -522,6 +583,9 @@ function installPhprojekt() {
         'type' => 'text', 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('ItemRights',
     array('moduleId' => array(
@@ -534,6 +598,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 3, 'null' => false),
     ),
     array('moduleId', 'itemId', 'userId'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Timecard',
     array('id' => array (
@@ -548,6 +615,9 @@ function installPhprojekt() {
         'type' => 'time', 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Timeproj',
     array('id' => array (
@@ -568,6 +638,9 @@ function installPhprojekt() {
         'type' => 'time', 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $result = $tableManager->createTable('Calendar',
     array('id' => array (
@@ -624,6 +697,9 @@ function installPhprojekt() {
         'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
+    if (!$result) {
+        die("Error creating the table ");
+    }
 
     $db->insert('Module', array(
     'id' => 1,

@@ -66,7 +66,7 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
         $fields = $db->getFieldDefinition(1);
 
-        foreach ($fields as $key => $field) {
+        foreach ($fields as $field) {
             $result[$field['key']] = $field['key'];
         }
         $this->assertEquals($this->_listResult, array_keys($result));
@@ -82,7 +82,7 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
         $fields = $db->getFieldDefinition(2);
 
-        foreach ($fields as $key => $field) {
+        foreach ($fields as $field) {
             $result[$field['key']] = $field['key'];
         }
         $this->assertEquals($this->_formResult, array_keys($result));

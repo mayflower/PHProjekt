@@ -67,7 +67,7 @@ class Phprojekt_LoginController_Test extends FrontInit
             $this->assertEquals(0, $e->getCode());
             return;
         }
-        
+
         $this->fail('An error occurs on login action');
     }
 
@@ -84,11 +84,11 @@ class Phprojekt_LoginController_Test extends FrontInit
 
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Zend_Controller_Response_Exception $e) {
+        } catch (Zend_Controller_Response_Exception $error) {
             try {
-                $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-            } catch (Zend_Session_Exception $e) {
-                return;
+                new Zend_Session_Namespace('PHProjekt_Auth');
+            } catch (Zend_Session_Exception $error) {
+                return $error->getMessage();
             }
         }
 
