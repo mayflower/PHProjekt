@@ -157,7 +157,7 @@ class Timecard_IndexController extends IndexController
     public function jsonBookingDetailAction()
     {
         $date  = $this->getRequest()->getParam('date');
-        $model = Phprojekt_Loader::getModel('Timecard','Timeproj');
+        $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         
         $records = $model->getRecords($date);
 
@@ -185,7 +185,7 @@ class Timecard_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $model = Phprojekt_Loader::getModel('Timecard','Timeproj')->find($id);
+        $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj')->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
@@ -281,10 +281,10 @@ class Timecard_IndexController extends IndexController
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            $model   = Phprojekt_Loader::getModel('Timecard','Timeproj');
+            $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
             $message = $translate->translate(self::ADD_TRUE_TEXT);
         } else {
-            $model   = Phprojekt_Loader::getModel('Timecard','Timeproj')->find($id);
+            $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj')->find($id);
             $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 

@@ -82,7 +82,8 @@ $lang["The Tags was added correctly"] = "Los tags fueron agregados correctamente
 $lang["The Tags was deleted correctly"] = "Los tags fueron borrados correctamente";
 $lang["The Item was not found"] = "No se encontró el item";
 $lang["You do not have write access into the parent project"] = "No tiene permisos de escritura en el proyecto padre";
-$lang["You do not have access for add projects on the parent project"] = "No tiene permiso para agregar proyectos en el proyecto padre";
+$lang["You do not have access for add projects on the parent project"] = "No tiene permiso "
+    . "para agregar proyectos en el proyecto padre";
 $lang["The parent project do not have enabled this module"] = "El proyecto padre no tiene este módulo habilitado";
 $lang["The project can not saved under itself"] = "El proyecto no puedo grabarse bajo sigo mismo";
 $lang["The project can not saved under his children"] = "El proyecto no puedo grabarse bajo uno de sus hijos";
@@ -124,10 +125,12 @@ $lang["Hours"] = "Horas";
 $lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
 $lang["Change date"] = "Cambiar día";
 $lang["Project bookings"] = "Horas de proyectos";
-$lang["Add working time and drag projects into the bar"] = "Agregar tiempo de trabajo y luego arrastrar los proyectos en la barra";
+$lang["Add working time and drag projects into the bar"] = "Agregar tiempo de trabajo "
+    . "y luego arrastrar los proyectos en la barra";
 
 // Settings module
-$lang["Please, logout and login again on application to apply the changes."] = "Por favor, salga e ingrese nuevamente a la aplicación para guardar los cambios.";
+$lang["Please, logout and login again on application to apply the changes."] = "Por favor, "
+    . "salga e ingrese nuevamente a la aplicación para guardar los cambios.";
 $lang["The value for the setting is incorrect"] = "El valor elegido para la configuración es inválido";
 $lang["The password and confirmation are different or empty"] = "La contraseña y su confirmación son diferentes";
 $lang["The old password provided is invalid"] = "La contraseña anterior no es correcta";
@@ -152,5 +155,3 @@ $lang["Changes done"] = "Cambios realizados";
 $lang["Field"] = "Campo";
 $lang["Old value"] = "Valor anterior";
 $lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
-
-?>

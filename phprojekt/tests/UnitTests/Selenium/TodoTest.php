@@ -70,7 +70,7 @@ class Selenium_TodoTest extends PHPUnit_Extensions_SeleniumTestCase
      *
      * @var string Url of the coverage php file
      */
-    protected $coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage_phprojekt6.php';
+    protected $_coverageScriptUrl = 'http://cruisecontrol.mf-muc.nop/phpunit_coverage_phprojekt6.php';
 
     /**
      * setup the unit test. Use firefox as a browser and the document

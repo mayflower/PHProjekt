@@ -32,7 +32,7 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Setting_IndexController extends IndexController
-{        
+{
     /**
      * Return all the modules that contain settings
      *

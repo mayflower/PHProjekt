@@ -436,7 +436,7 @@ class IndexController extends Zend_Controller_Action
 
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5mane  = md5(uniqid(rand(),1));
+            $md5mane  = md5(uniqid(rand(), 1));
             $value    = $md5mane . '|' . $_FILES['uploadedFile']['name'];
             $fileName = $_FILES['uploadedFile']['name'];
             $_FILES['uploadedFile']['name'] = $md5mane;
@@ -475,8 +475,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function downloadFileAction()
     {
-        $file = (string) $this->getRequest()->getParam('file', null);
-
+        $file     = (string) $this->getRequest()->getParam('file', null);
         $fileName = strstr($file, '|');
         if (!empty($fileName)) {
             list($md5Name, $fileName) = explode("|", $file);
@@ -490,7 +489,7 @@ class IndexController extends Zend_Controller_Action
                 header('Content-Length: ' . filesize($md5Name));
                 header("Content-Disposition: attachment; filename=\"" . (string)$fileName . "\"");
                 header('Content-Type: download');
-                $fh = fopen($md5Name,'r');
+                $fh = fopen($md5Name, 'r');
                 fpassthru($fh);
             }
         }

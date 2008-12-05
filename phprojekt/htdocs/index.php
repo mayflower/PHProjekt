@@ -80,7 +80,7 @@ Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
 
 /* Languages Set */
 Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
-$translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language",$config->language));
+$translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language", $config->language));
 
 /* Front controller stuff */
 $front = Zend_Controller_Front::getInstance();

@@ -110,12 +110,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     {
         $data      = $this->_data;
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
+        $translate = Zend_Registry::get('translate');
+        
         if (isset($data['endTime'])) {
-            if ($this->getDiffTime($data['endTime'],$data['startTime']) < 0) {
+            if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
-                                    'field'   => Zend_Registry::get('translate')->translate('Hours'),
-                                    'message' => Zend_Registry::get('translate')->translate('The end time must be after the start time')));
+                    'field'   => $translate->translate('Hours'),
+                    'message' => $translate->translate('The end time must be after the start time')));
                 return false;
             }
         }
@@ -199,7 +200,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
 
                 $endDayofTheMonth = date("t");
-                for($i = 1; $i <= $endDayofTheMonth; $i++) {
+                for ($i = 1; $i <= $endDayofTheMonth; $i++) {
                     $day = $i;
                     if (strlen($day) == 1) {
                         $day = '0'.$i;

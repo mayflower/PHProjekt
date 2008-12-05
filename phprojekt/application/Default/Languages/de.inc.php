@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // General
 $lang["Module"] = "Modul";
 $lang["Active"] = "Aktiv"; 
@@ -81,11 +81,14 @@ $lang["Invalid Format"] = "Ungültiges Format";
 $lang["The Tags was added correctly"] = "Die Tags wurden hinzugefügt";
 $lang["The Tags was deleted correctly"] = "The Tags wurden gelöscht";
 $lang["The Item was not found"] = "Der Datensatz wurde nicht gefunden";
-$lang["You do not have write access into the parent project"] = "Sie haben keine Schreibberechtigung auf dem Oberelement";
-$lang["You do not have access for add projects on the parent project"] = "Sie haben keine Berechtigung, auf dem Oberelement Projekte anzulegen";
+$lang["You do not have write access into the parent project"] = "Sie haben keine "
+    . "Schreibberechtigung auf dem Oberelement";
+$lang["You do not have access for add projects on the parent project"] = "Sie haben keine Berechtigung,"
+    . " auf dem Oberelement Projekte anzulegen";
 $lang["The parent project do not have enabled this module"] = "Dieses Projekt hat dieses Modul nicht verfügbar";
 $lang["The project can not saved under itself"] = "Das Projekt kann nicht unter sich selbst gespeichert werden";
-$lang["The project can not saved under his children"] = "Das Projekt kann nicht in einem Unterlement gespeichert werden";
+$lang["The project can not saved under his children"] = "Das Projekt kann nicht in einem "
+    ."Unterlement gespeichert werden";
 $lang["ID parameter required"] = "Der ID parameter ist obligatorisch";
 $lang["Invalid module or item"] = "ungültiges Modul oder Datensatz";
 $lang["Module not given"] = "Modul nicht verfügbar";
@@ -127,7 +130,8 @@ $lang["Project bookings"] = "Project bookings";
 $lang["Add working time and drag projects into the bar"] = "Add working time and drag projects into the bar";
 
 // Settings module
-$lang["Please, logout and login again on application to apply the changes."] = "Please, logout and login again on application to apply the changes.";
+$lang["Please, logout and login again on application to apply the changes."] = "Please, "
+    . "logout and login again on application to apply the changes.";
 $lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
 $lang["The password and confirmation are different or empty"] = "The password and confirmation are different or empty";
 $lang["The old password provided is invalid"] = "The old password provided is invalid";
@@ -141,4 +145,3 @@ $lang["timeZone"] = "timeZone";
 
 // Search
 $lang["View all"] = "View all";
-?>

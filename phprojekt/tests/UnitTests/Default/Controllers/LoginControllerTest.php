@@ -64,7 +64,7 @@ class Phprojekt_LoginController_Test extends FrontInit
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Zend_Controller_Response_Exception $e) {
-            $this->assertEquals(0,$e->getCode());
+            $this->assertEquals(0, $e->getCode());
             return;
         }
         

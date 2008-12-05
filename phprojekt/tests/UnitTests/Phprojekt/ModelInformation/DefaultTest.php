@@ -39,7 +39,7 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
     {
         
         // empty values
-        $default_form = array (0 => array (
+        $defaultForm = array (0 => array (
                                 'key'      => '',
                                 'label'    => '',
                                 'type'     => 'string',
@@ -53,23 +53,17 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
                                 'readOnly' => false),
                                 );
         
-        $object = new Phprojekt_ModelInformation_Default();
-        
-        $records = $object->getFormFields(); 
+        $object  = new Phprojekt_ModelInformation_Default();
+        $records = $object->getFormFields();
+        $this->assertEquals($records, $defaultForm);
 
-        $this->assertEquals($records, $default_form);
-        
-        $records = $object->getListFields(); 
-        
-        $this->assertEquals($records, $default_form);
+        $records = $object->getListFields();
+        $this->assertEquals($records, $defaultForm);
         
         $records = $object->getTitles();
-        
         $this->assertEquals($records, '');
         
         $records = $object->getTitles(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        
         $this->assertEquals($records, '');
     }
-
 }

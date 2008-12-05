@@ -59,7 +59,7 @@ class Gantt_IndexController extends IndexController
                     list($endYear, $endMonth, $endDay)       = split("-", $node->endDate);
                 
                     $start = mktime(0, 0, 0, $startMonth, $startDay, $startYear);
-                    $end   = mktime(0, 0, 0, $endMonth,   $endDay,   $endYear);
+                    $end   = mktime(0, 0, 0, $endMonth, $endDay, $endYear);
                  
                     if ($start < $min) {
                         $min = $start;

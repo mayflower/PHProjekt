@@ -145,10 +145,10 @@ class Calendar_IndexController extends IndexController
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
         } else {
-            $records = $this->getModelObject()->fetchAll('participantId = '. PHprojekt_Auth::getUserId(), null, $count, $offset);
+            $userId  = PHprojekt_Auth::getUserId();
+            $records = $this->getModelObject()->fetchAll('participantId = ' . $userId, null, $count, $offset);
         }
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
-
 }

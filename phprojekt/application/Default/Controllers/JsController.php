@@ -76,7 +76,8 @@ class JsController extends IndexController
                 }
                 $this->_modules[] = $file;
                 if ($file != 'Core') {
-                    echo 'dojo.registerModulePath("phpr.'.$file.'", "../../../application/'.$file.'/Views/dojo/scripts");';
+                    echo 'dojo.registerModulePath'
+                    . '("phpr.'.$file.'", "../../../application/'.$file.'/Views/dojo/scripts");';
                     echo $this->_getModuleScripts($scripts, $file);
                 } else {
                     echo $this->_getCoreModuleScripts($scripts);
@@ -200,7 +201,8 @@ class JsController extends IndexController
             if (substr($script, -3) != '.js' && substr($script, 0, 1) != '.') {
                 $coreScripts = scandir(PHPR_CORE_PATH.'/Core/Views/dojo/scripts/'.$script);
                 if (in_array('Main.js', $coreScripts)) {
-                    $output .= 'dojo.registerModulePath("phpr.'.$script.'", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
+                    $output .= 'dojo.registerModulePath'
+                        . '("phpr.'.$script.'", "../../../application/Core/Views/dojo/scripts/'.$script.'");';
                     $this->_modules[] = $script;
                 }
                 foreach ($coreScripts as $coreScript) {

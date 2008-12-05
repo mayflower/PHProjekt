@@ -36,7 +36,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      * @var    Phprojekt_RoleRights
      * @access protected
      */
-    protected $object;
+    protected $_object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -46,7 +46,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Phprojekt_RoleRights(1, 2, 0, 1);
+        $this->_object = new Phprojekt_RoleRights(1, 2, 0, 1);
     }
 
     /**
@@ -64,7 +64,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testHasRight()
     {
-        $this->assertEquals(true, $this->object->hasRight('write',1));
+        $this->assertEquals(true, $this->_object->hasRight('write',1));
     }
 
     /**
@@ -72,7 +72,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testGetId()
     {
-        $this->assertEquals(0, $this->object->getId());
+        $this->assertEquals(0, $this->_object->getId());
     }
 
     /**
@@ -81,7 +81,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
     public function testGetProject()
     {
         // Remove the following lines when you implement this test.
-        $this->assertEquals(1, $this->object->getProject());
+        $this->assertEquals(1, $this->_object->getProject());
     }
 
     /**
@@ -89,7 +89,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testGetModule()
     {
-        $this->assertEquals(2, $this->object->getModule());
+        $this->assertEquals(2, $this->_object->getModule());
     }
 
     /**
@@ -98,7 +98,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testGetUser()
     {
-       $this->assertEquals(1, $this->object->getUser());
+       $this->assertEquals(1, $this->_object->getUser());
     }
 
     /**
@@ -106,7 +106,7 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testGetAcl()
     {
-        $this->assertSame(Phprojekt_Acl::getInstance(), $this->object->getAcl());
+        $this->assertSame(Phprojekt_Acl::getInstance(), $this->_object->getAcl());
     }
 
     /**
@@ -114,6 +114,6 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testGetUserRole()
     {
-        $this->assertEquals(1, $this->object->getUserRole());
+        $this->assertEquals(1, $this->_object->getUserRole());
     }
 }

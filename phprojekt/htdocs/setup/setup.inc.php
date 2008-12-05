@@ -75,7 +75,7 @@ function displaySetupForm() {
 function preInstallChecks() {
     $returnValue = true;
 
-    if($_REQUEST['server_type'] == 'pdo_mysql') {
+    if ($_REQUEST['server_type'] == 'pdo_mysql') {
 
         $link = @mysql_connect($_REQUEST['server_host'], $_REQUEST['server_user'], $_REQUEST['server_pass']);
 
@@ -123,8 +123,7 @@ function displayFinished() {
 
     if (strlen($_SERVER['REQUEST_URI']) > 16) {
         $serverUrl = "http://".$_SERVER['HTTP_HOST'].substr($_SERVER['REQUEST_URI'], 0, -15);
-    }
-    else {
+    } else {
         $serverUrl = "http://".$_SERVER['HTTP_HOST']."/";
     }
     $errorMessage = (empty($_SESSION['error_message'])?"":$_SESSION['error_message']);
@@ -149,8 +148,6 @@ function installPhprojekt() {
     } catch (Exception $e) {
         die("Error connecting to server");
     }
-
-
 
     $tableList = array("Timecard",
     "Timeproj",
