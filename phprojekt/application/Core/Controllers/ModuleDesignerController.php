@@ -132,7 +132,8 @@ class Core_ModuleDesignerController extends Core_IndexController
             $tableData[$field['tableField']]            = array();
             $tableData[$field['tableField']]['null']    = true;
             $tableData[$field['tableField']]['default'] = null;
-            foreach ($field as $value) {
+            foreach ($field as $key => $value) {
+                $value = null;
                 if ($key == 'tableType') {
                     $tableData[$field['tableField']]['type'] = $field['tableType'];
                 } else if ($key == 'tableLength') {

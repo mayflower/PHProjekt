@@ -12,10 +12,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -53,6 +53,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
     {
         $converted = array();
         $translate = Zend_Registry::get('translate');
+        $ordering  = null;
 
         // date
         $data = array();
@@ -68,9 +69,9 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['required'] = true;
         $data['readOnly'] = true;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
-        
+
         // projectId
         $data = array();
         $data['key']      = 'projectId';
@@ -81,7 +82,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['position'] = 2;
         $data['fieldset'] = '';
         $data['range']    = array();
-        $data['type']     = 'selectbox';        
+        $data['type']     = 'selectbox';
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree->setup();
@@ -94,9 +95,9 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['required'] = true;
         $data['readOnly'] = true;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
-                
+
         // notes
         $data = array();
         $data['key']      = 'notes';
@@ -111,10 +112,10 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['required'] = true;
         $data['readOnly'] = true;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
 
-        // amount 
+        // amount
         $data = array();
         $data['key']      = 'amount';
         $data['label']    = $translate->translate('amount');
@@ -128,9 +129,9 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
         $data['required'] = true;
         $data['readOnly'] = true;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
-    
+
         return $converted;
     }
 
@@ -143,7 +144,9 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
      */
     public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        $result = array();
+        $ordering  = null;
+        $result    = array();
+
         return $result;
     }
 }

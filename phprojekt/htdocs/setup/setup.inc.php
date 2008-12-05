@@ -86,7 +86,7 @@ function preInstallChecks()
     }
 
     try {
-        $db = Zend_Db::factory($_REQUEST['server_type'], array(
+        Zend_Db::factory($_REQUEST['server_type'], array(
         'host'     => $_REQUEST['server_host'],
         'username' => $_REQUEST['server_user'],
         'password' => $_REQUEST['server_pass'],
@@ -178,7 +178,7 @@ function installPhprojekt() {
     "Calendar");
 
     foreach ($tableList as $oneTable) {
-        $db->getConnection()->exec("DROP TABLE IF EXISTS ".$oneTable);
+        $tableManager->dropTable($oneTable);
     }
 
     $tableManager = new Phprojekt_Table($db);

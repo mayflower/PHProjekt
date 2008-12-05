@@ -99,7 +99,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
         if (!is_object($config)) {
-            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, 
+            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION,
                                           array("allowModifications" => true));
             Zend_Registry::set('config', $config);
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
@@ -178,7 +178,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
 
         $suite                 = new PHPUnit_Framework_TestSuite('PHPUnit');
-        $suite->sharedFixture  = &$db;        
+        $suite->sharedFixture  = &$db;
         $suite->addTest(Timecard_AllTests::suite());
         $suite->addTest(User_AllTests::suite());
         //$suite->addTest(Calendar_AllTests::suite());
@@ -186,16 +186,16 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Todo_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
         $suite->addTest(History_AllTests::suite());
-        $suite->addTest(Role_AllTests::suite());        
+        $suite->addTest(Role_AllTests::suite());
         $suite->addTest(Tab_AllTests::suite());
         $suite->addTest(Project_AllTests::suite());
-        //$suite->addTest(Module_AllTests::suite());        
-        
-        // add here additional test suites 
-        
+        //$suite->addTest(Module_AllTests::suite());
+
+        // add here additional test suites
+
         $suite->addTest(Default_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());
-             
+
         return $suite;
     }
 }
@@ -258,7 +258,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
     if ($whiteListing) {
         /* enable whitelisting for unit tests, these directories are
         * covered for the code coverage even they are not part of unit testing */
-        PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDirectory . '/application');
+        PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDir . '/application');
     }
 
     AllTests::main($config);

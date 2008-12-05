@@ -53,14 +53,14 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
      * @var Object class
      */
     protected $_object = null;
-    
+
     /**
      * A list of directories that are not included in the search.
      * Usually Default and Administration
      *
      * @var array
      */
-    protected static $_excludePatterns = array('Default', 'Administration', 'Setting', 'Core', '.svn');
+    protected static $_excludePaths = array('Default', 'Administration', 'Setting', 'Core', '.svn');
 
     /**
      * Returns a set of modules available and have Configuration sections
@@ -70,10 +70,10 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getModules()
     {
         $results = array();
-        // Module Configuration        
+        // Module Configuration
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
-            if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePatterns)) {
+            if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePaths)) {
                 continue;
             }
             if (is_dir($path)) {
@@ -86,12 +86,12 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         }
         return $results;
     }
-    
+
     /**
      * Define the current module to use in the Configuration
      *
      * @param string $module The module name
-     * 
+     *
      * @return void
      */
     public function setModule($module)
@@ -99,7 +99,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         $this->_moduleId = Phprojekt_Module::getId($module);
         $this->_module   = $module;
     }
-    
+
     /**
      * Get the object class to use for manage the Configuration
      *
@@ -112,12 +112,12 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         }
         return $this->_object;
     }
-    
+
     /**
      * Return the value of one Configuration
      *
      * @param string  $configName The name of the Configuration
-     * 
+     *
      * @return mix
      */
     public function getAdministration($configName)
@@ -130,13 +130,13 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         }
         return $toReturn;
     }
-        
+
     /**
      * Collect all the values of the Configuration and return it in one row
      *
      * @param integer $moduleId The current moduleId
      * @param array   $metadata Array with all the fields
-     * 
+     *
      * @return array
      */
     public function getList($moduleId, $metadata)
@@ -147,7 +147,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
 
         $data = array();
         $data['id'] = 0;
-        foreach ($metadata as $meta) {            
+        foreach ($metadata as $meta) {
             $data[$meta['key']] = '';
             foreach ($record as $config) {
                 if ($config->keyValue == $meta['key']) {
@@ -164,12 +164,12 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         $configurations[] = $data;
         return $configurations;
     }
-    
+
     /**
      * Validation functions for all the values
      *
      * @param array $params $_POST fields
-     * 
+     *
      * @return string
      */
     public function validateConfigurations($params)
@@ -179,17 +179,17 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             $message = call_user_method('validateConfigurations', $this->getModel(), $params);
         }
         return $message;
-    }  
-       
+    }
+
     /**
      * Save the Configurations into the table
      *
      * @param array $params $_POST fields
-     * 
+     *
      * @return void
      */
     public function setConfigurations($params)
-    {       
+    {
         if (in_array('setConfigurations', get_class_methods($this->getModel()))) {
             call_user_method('setConfigurations', $this->getModel(), $params);
         } else {
@@ -215,5 +215,5 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 }
             }
         }
-    }    
+    }
 }

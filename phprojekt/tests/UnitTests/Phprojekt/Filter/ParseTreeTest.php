@@ -41,22 +41,13 @@ class Phprojekt_Filter_ParseTreeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Phprojekt_Filter_Tokenizer::T_CONNECTOR, $parsed->getNodeType());
         $this->assertEquals(Phprojekt_Filter_Tokenizer::T_OPERATOR, $parsed->getRightChild()->getNodeType());
 
-        try {
-            $parsed = $tree->stringToTree('(name = = "Musterman" and id = 3) or id != 5');
-        } catch (Phprojekt_ParseException $e) {
-            
-        }
+        $this->setExpectedException('Phprojekt_ParseException');
+        $tree->stringToTree('(name = = "Musterman" and id = 3) or id != 5');
 
-        try {
-            $parsed = $tree->stringToTree('(name" = "Musterman" and id = 3) or id != 5');
-        } catch (Phprojekt_ParseException $e) {
-            
-        }
+        $this->setExpectedException('Phprojekt_ParseException');
+        $tree->stringToTree('(name" = "Musterman" and id = 3) or id != 5');
 
-        try {
-            $parsed = $tree->stringToTree('(name = "Muster\"man" and id = 3) or id != 5');
-        } catch (Exception $e) {
-            $this->fail($e);
-        }
+        $this->setExpectedException('Phprojekt_ParseException');
+        $tree->stringToTree('(name = "Muster\"man" and id = 3) or id != 5');
     }
 }

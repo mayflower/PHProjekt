@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: Interface.php 635 2008-04-02 19:32:05Z david $
@@ -70,8 +70,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = false;
-                $data['tab']      = 1;                
-                
+                $data['tab']      = 1;
+
                 $converted[] = $data;
 
                 // Sum of hours
@@ -88,7 +88,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['required'] = false;
                 $data['readOnly'] = false;
                 $data['tab']      = 1;
-                
+
                 $converted[] = $data;
                 break;
             case 'month':
@@ -105,10 +105,10 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                   'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = true;
-                $data['tab']      = 1;                
-                
+                $data['tab']      = 1;
+
                 $converted[] = $data;
-        
+
                 // Sum of hours
                 $data = array();
                 $data['key']      = 'sum';
@@ -122,8 +122,8 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = true;
-                $data['tab']      = 1;                
-                
+                $data['tab']      = 1;
+
                 $converted[] = $data;
 
                 // Sum of Bookinks
@@ -139,9 +139,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                                           'name' => '');
                 $data['required'] = true;
                 $data['readOnly'] = true;
-                $data['tab']      = 1;                
-                
-                $converted[] = $data;                
+                $data['tab']      = 1;
+
+                $converted[] = $data;
                 break;
         }
 
@@ -157,7 +157,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
      */
     public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        $result = array();
+        $result   = array();
+        $ordering = null;
+
         return $result;
     }
 }

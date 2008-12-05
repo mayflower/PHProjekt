@@ -36,103 +36,69 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
      */
     public function testLoginWithoutSession()
     {
-        try {
-            $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-            $authNamespace->unsetAll();
-
-            Phprojekt_Auth::isLoggedIn();
-        }
-        catch (Phprojekt_Auth_UserNotLoggedInException $error) {
-            return $error->getMessage();
-        }
-
-        $this->fail('The user is logued');
+        $this->setExpectedException('Phprojekt_Auth_UserNotLoggedInException');
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace->unsetAll();
+        Phprojekt_Auth::isLoggedIn();
     }
 
     /**
      * Trying a login with an invalid user
      */
-    public function testInvalidUser() {
-        try {
-            Zend_Registry::set('db', $this->sharedFixture);
-            Phprojekt_Auth::login('invalidUser', 'password');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-
-        $this->fail('An invalid user is able to log in!');
+    public function testInvalidUser()
+    {
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('invalidUser', 'password');
     }
 
     /**
      * Trying a login with a valid user and invalid password
      */
-    public function testInvalidPass() {
-        try {
-            Phprojekt_Auth::login('david', 'iinvalidPassword');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('An user is able to log in with an invalid password!');
+    public function testInvalidPass()
+    {
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('david', 'iinvalidPassword');
     }
 
     /**
      * Trying a login with a valid password and invalid user
      */
-    public function testInvalidUserValidPass() {
-        try {
-            Phprojekt_Auth::login('invalidUser', 'test');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('An invalid user is able to log in using a valid password!');
+    public function testInvalidUserValidPass()
+    {
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('invalidUser', 'test');
     }
 
     /**
      * Trying a login with a empty user and a valid password
      */
     public function testEmptyuser() {
-        try {
-            Phprojekt_Auth::login('', 'test');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('An empty user is able to log in!');
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('', 'test');
     }
 
     /**
      * Trying a login with a valid user and a empty password
      */
     public function testEmptyPass() {
-        try {
-            Phprojekt_Auth::login('david', '');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('An user is able to log in without password!');
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('david', '');
     }
 
     /**
      * Trying a login with a valid user and the md5 value on the database
      */
     public function testMd5Login() {
-        try {
-            Phprojekt_Auth::login('david', '156c3239dbfa5c5222b51514e9d12948');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('An user is able to log in with the crypted password string!');
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('david', '156c3239dbfa5c5222b51514e9d12948');
     }
 
     /**
      * Trying a login with a valid user but inactive
      */
     public function testInactiveUser() {
-        try {
-            Phprojekt_Auth::login('inactive', 'test');
-        } catch (Phprojekt_Auth_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('An inactive user is able to log in!');
+        $this->setExpectedException('Phprojekt_Auth_Exception');
+        Phprojekt_Auth::login('inactive', 'test');
     }
 
     /**
