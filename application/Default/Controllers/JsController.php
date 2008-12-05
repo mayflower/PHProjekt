@@ -123,7 +123,7 @@ class JsController extends IndexController
 
         $extendPath = '';
         foreach ($path as $tmp => $folder) {
-            unset($folder);
+            $folder = null;
             if ($tmp > 1) {
                 $extendPath .= $path[$tmp] . '/';
             }

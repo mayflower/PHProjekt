@@ -63,8 +63,8 @@ class Phprojekt_LoginController_Test extends FrontInit
 
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Zend_Controller_Response_Exception $e) {
-            $this->assertEquals(0, $e->getCode());
+        } catch (Zend_Controller_Response_Exception $error) {
+            $this->assertEquals(0, $error->getCode());
             return;
         }
 
@@ -82,16 +82,10 @@ class Phprojekt_LoginController_Test extends FrontInit
         $this->request->setPathInfo('login/logout');
         $this->request->setRequestUri('/login/logout');
 
-        try {
-            $this->front->dispatch($this->request, $this->response);
-        } catch (Zend_Controller_Response_Exception $error) {
-            try {
-                new Zend_Session_Namespace('PHProjekt_Auth');
-            } catch (Zend_Session_Exception $error) {
-                return $error->getMessage();
-            }
-        }
+        $this->setExpectedException('Zend_Controller_Response_Exception');
+        $this->front->dispatch($this->request, $this->response);
 
-        $this->fail('An error occurs on logout action');
+        $this->setExpectedException('Zend_Session_Exception');
+        new Zend_Session_Namespace('PHProjekt_Auth');
     }
 }

@@ -53,14 +53,14 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      * @var Object class
      */
     protected $_object = null;
-    
+
     /**
      * A list of directories that are not included in the search.
      * Usually Default and Administration
      *
      * @var array
      */
-    protected static $_excludePatterns = array('Default', 'Administration', 'Setting', 'Core', '.svn');
+    protected static $_excludePaths = array('Default', 'Administration', 'Setting', 'Core', '.svn');
 
     /**
      * Returns a set of modules available and have setting sections
@@ -77,10 +77,10 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $results[] = array('name'  => 'User',
                                'label' => Zend_Registry::get('translate')->translate('User'));
         }
-        // Module settings        
+        // Module settings
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
-            if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePatterns)) {
+            if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePaths)) {
                 continue;
             }
             if (is_dir($path)) {
@@ -91,14 +91,14 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-        return $results;        
+        return $results;
     }
-    
+
     /**
      * Define the current module to use in the settings
      *
      * @param string $module The module name
-     * 
+     *
      * @return void
      */
     public function setModule($module)
@@ -106,7 +106,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         $this->_moduleId = Phprojekt_Module::getId($module);
         $this->_module   = $module;
     }
-    
+
     /**
      * Get the object class to use for manage the settings
      *
@@ -121,16 +121,16 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             } else {
                 $this->_object = Phprojekt_Loader::getModel($this->_module, sprintf('%sSetting', $this->_module));
             }
-        }        
+        }
         return $this->_object;
     }
-    
+
     /**
      * Return the value of one setting
      *
      * @param string  $settingName The name of the setting
      * @param integer $userId      The user id, if is not setted, the current user is used.
-     * 
+     *
      * @return mix
      */
     public function getSetting($settingName, $userId = 0)
@@ -147,13 +147,13 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         }
         return $toReturn;
     }
-        
+
     /**
      * Collect all the values of the settings and return it in one row
      *
      * @param integer $moduleId The current moduleId
      * @param array   $metadata Array with all the fields
-     * 
+     *
      * @return array
      */
     public function getList($moduleId, $metadata)
@@ -165,9 +165,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
 
         $data = array();
         $data['id'] = 0;
-        foreach ($metadata as $meta) {            
+        foreach ($metadata as $meta) {
             $data[$meta['key']] = '';
-            foreach ($record as $oneSetting) {           
+            foreach ($record as $oneSetting) {
                 if ($oneSetting->keyValue == $meta['key']) {
                     $getter = 'get'.ucfirst($oneSetting->keyValue);
                     if (in_array($getter, $functions)) {
@@ -182,12 +182,12 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         $settings[] = $data;
         return $settings;
     }
-    
+
     /**
      * Validation functions for all the values
      *
      * @param array $params $_POST fields
-     * 
+     *
      * @return string
      */
     public function validateSettings($params)
@@ -197,17 +197,17 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $message = call_user_method('validateSettings', $this->getModel(), $params);
         }
         return $message;
-    }  
-       
+    }
+
     /**
      * Save the settings into the table
      *
      * @param array $params $_POST fields
-     * 
+     *
      * @return void
      */
     public function setSettings($params)
-    {       
+    {
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
             call_user_method('setSettings', $this->getModel(), $params);
         } else {
@@ -236,5 +236,5 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-    }    
+    }
 }

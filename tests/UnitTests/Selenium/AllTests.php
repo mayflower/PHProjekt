@@ -33,7 +33,7 @@ require_once 'TodoTest.php';
 
 /**
  * Static test suite.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
@@ -42,21 +42,24 @@ require_once 'TodoTest.php';
  * @since      File available since Release 1.0
  * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  */
-class Selenium_AllTests 
+class Selenium_AllTests
 {
+    /**
+     * Runs the test suite
+     */
     public static function main()
     {
         PHPUnit_TextUI_TestRunner::run(self::suite());
     }
- 
+
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('Selenium Test Suite');
- 
+
         $suite->addTestSuite('Selenium_LoginTest');
         $suite->addTestSuite('Selenium_ProjectTest');
         $suite->addTestSuite('Selenium_TodoTest');
- 
+
         return $suite;
     }
 }
