@@ -76,7 +76,6 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_model = $model;
         $this->_bodyMode = self::MODE_HTML;
         $this->_sendNotification();
-        Zend_Registry::get('log')->warn("String to be logged2");
     }
 
     /**
