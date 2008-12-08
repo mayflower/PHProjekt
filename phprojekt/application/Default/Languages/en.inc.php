@@ -112,6 +112,7 @@ $lang["Tab"] = "Tab";
 $lang["User"] = "User";
 $lang["History"] = "History";
 $lang["Basic Data"] = "Basic Data";
+$lang["Notification"] = "Notification";
 
 // Titles
 $lang["Search results"] = "Search results";
@@ -155,3 +156,4 @@ $lang["Changes done"] = "Changes done";
 $lang["Field"] = "Field";
 $lang["Old value"] = "Old value";
 $lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
+$lang["Send Notification"] = "Send Notification";

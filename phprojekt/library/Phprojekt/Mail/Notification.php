@@ -76,6 +76,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_model = $model;
         $this->_bodyMode = self::MODE_HTML;
         $this->_sendNotification();
+        Zend_Registry::get('log')->warn("String to be logged2");
     }
 
     /**
@@ -246,7 +247,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_view     = Zend_Registry::get('view');
         $translate       = Zend_Registry::get('translate');
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
+        
         foreach ($fieldDefinition as $key => $field) {
             switch ($field['type']) {
                 case 'selectbox':
@@ -278,15 +279,17 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         $history = new Phprojekt_History();
 
-        // The following algorithm looks into $this->_changes, searching Integer values
-        // that should be converted into Strings. It depends on the type of the field
+        // The following algorithm loops inside $this->_changes and does the following:
+        // * Translates the name of the field
+        // * Searches Integer values that should be converted into Strings and converts them
 
         //Loop in every change done
         for ($i = 0; $i < count($this->_changes); $i++) {
             foreach ($fieldDefinition as $field) {
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $this->_changes[$i]['field']) {
-
+                    
+                    $this->_changes[$i]['field'] = $field['label'];
                     // Is the field of a type that should be converted into a string?
                     if ($field['type'] == 'selectbox') {
                         // Yes, so translate it into the appropriate meaning
@@ -382,6 +385,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         
         // Creates the Zend_Mail_Transport_Smtp object
         $smtpTransport= $this->_setTransport();
+        
         $this->send($smtpTransport);
     }
     
