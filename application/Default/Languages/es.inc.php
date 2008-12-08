@@ -11,8 +11,8 @@ $lang["No"] = "No";
 $lang["Yes"] = "Si";
 $lang["Count"] = "Cantidad";
 
-// General Fiels
-$lang["project"] = "Projecto";
+// General Fields
+$lang["project"] = "Proyecto";
 $lang["notes"] = "Notas";
 $lang["date"] = "Fecha";
 $lang["name"] = "Nombre";
@@ -111,6 +111,7 @@ $lang["Tab"] = "Tab";
 $lang["User"] = "Usuario";
 $lang["History"] = "Historial";
 $lang["Basic Data"] = "Datos Básicos";
+$lang["Notification"] = "Notificación";
 
 // Titles
 $lang["Search results"] = "Resultados de la búsqueda";
@@ -155,3 +156,4 @@ $lang["Changes done"] = "Cambios realizados";
 $lang["Field"] = "Campo";
 $lang["Old value"] = "Valor anterior";
 $lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
+$lang["Send Notification"] = "Enviar notificación";
