@@ -567,15 +567,15 @@ INSERT INTO `Timecard` (`id`, `ownerId`, `date`, `startTime`, `endTime`) VALUES
 (5, 1, '2008-05-02', '0800', '1300'),
 (6, 1, '2008-05-02', '1400', '1800');
 
-INSERT INTO Tags (`id`, `word`, `crc32`) VALUES
+INSERT INTO `Tags` (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),
 (2,'todo',1510913696);
 
-INSERT INTO TagsUsers (`id`, `userId`, `tagId`) VALUES
+INSERT INTO `TagsUsers` (`id`, `userId`, `tagId`) VALUES
 (1, 1, 1),
 (2, 1, 2);
 
-INSERT INTO TagsModules (`moduleId`, `itemId`, `tagUserId`) VALUES
+INSERT INTO `TagsModules` (`moduleId`, `itemId`, `tagUserId`) VALUES
 (1, 1, 1);
 
 INSERT INTO `ModuleInstance` VALUES
@@ -619,13 +619,13 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (4,7),
 (5,7);
 
-INSERT INTO SearchWords (`id`, `word`, `count`) VALUES
+INSERT INTO `SearchWords` (`id`, `word`, `count`) VALUES
 (1, 'NOTE', 1);
 
-INSERT INTO searchwordmodule (`ModuleId`, `ItemId`, `WordId`) VALUES
+INSERT INTO `SearchWordModule` (`ModuleId`, `ItemId`, `WordId`) VALUES
 (1, 1, 1);
 
-INSERT INTO searchdisplay (`ModuleId`, `ItemId`, `firstDisplay`, `projectId`) VALUES
+INSERT INTO `SearchDisplay` (`ModuleId`, `ItemId`, `firstDisplay`, `projectId`) VALUES
 (1, 1, 'test', 1);
 
 INSERT INTO `Tab` (`id`, `label` ) VALUES
