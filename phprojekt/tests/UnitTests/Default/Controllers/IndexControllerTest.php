@@ -54,7 +54,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Project/index/jsonList/nodeId/');
         $this->request->setRequestUri('/Project/index/jsonList/nodeId/');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
+        $this->assertTrue(strpos($response, '"numRows":5}') > 0);
     }
 
     /**
@@ -80,7 +80,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Project/index/jsonDetail/id/1');
         $this->request->setRequestUri('/Project/index/jsonDetail/id/1');
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response), 
+        $this->assertTrue(strpos(strtolower($response),
             strtolower('{"key":"title","label":"Title","type":"text","hint":"title","order":0,"position":1')) > 0);
         $this->assertTrue(strpos($response, '"numRows":1}') > 0);
     }
@@ -109,7 +109,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Project/index/jsonTree');
         $this->request->setRequestUri('/Project/index/jsonTree');
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response), 
+        $this->assertTrue(strpos(strtolower($response),
             strtolower('"identifier":"id","label":"name","items":[{"name":"Invisible Root"')) > 0);
         $this->assertTrue(strpos($response, '"parent":"1","path":"/1/","children":[]}]}') > 0);
     }
@@ -126,11 +126,11 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Project/index/jsonGetModulesPermission/nodeId/1');
         $this->request->setRequestUri('/Project/index/jsonGetModulesPermission/nodeId/1');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 
+        $this->assertTrue(strpos($response,
             '"name":"Note","label":"Note","inProject":true,"rights":{"none":false,') > 0);
-        $this->assertTrue(strpos($response, 
+        $this->assertTrue(strpos($response,
             '"name":"Project","label":"Project","inProject":true,"rights":{"none":false,') > 0);
-        $this->assertTrue(strpos($response, 
+        $this->assertTrue(strpos($response,
             '"name":"Todo","label":"Todo","inProject":true,"rights":{"none":false,') > 0);
     }
 

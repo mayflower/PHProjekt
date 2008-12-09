@@ -154,7 +154,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteNode()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_model, 5);
+        $tree = new Phprojekt_Tree_Node_Database($this->_model, 4);
         $tree->setup();
         $this->assertEquals(2, count($tree->getChildren()));
         $tree->delete();
