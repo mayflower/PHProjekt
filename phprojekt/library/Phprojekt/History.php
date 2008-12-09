@@ -141,7 +141,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array
      */
-    public function getHistoryData($object, $itemId, $moduleId = null, 
+    public function getHistoryData($object, $itemId, $moduleId = null,
                                    $startDate = null, $endDate = null, $userId = null)
     {
         if (!isset($moduleId)) {
@@ -160,56 +160,71 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             $where .= $this->getAdapter()->quoteInto(' AND userId = ?', $userId);
         }
 
-
         $result = array();
 
         foreach ($this->fetchAll($where, 'datetime DESC') as $row) {
-            $result[] = array('userId'       => $row->userId,
-                              'moduleId'     => $row->moduleId,
-                              'itemId'       => $row->itemId,
-                              'field'        => $row->field,
-                              'oldValue'     => $row->oldValue,
-                              'newValue'     => $row->newValue,
-                              'action'       => $row->action,
-                              'datetime'     => $row->datetime);
+            $result[] = array('userId'   => $row->userId,
+                              'moduleId' => $row->moduleId,
+                              'itemId'   => $row->itemId,
+                              'field'    => $row->field,
+                              'oldValue' => $row->oldValue,
+                              'newValue' => $row->newValue,
+                              'action'   => $row->action,
+                              'datetime' => $row->datetime);
         }
+
         return $result;
     }
-
 
     /**
-    * Returns the last changes, if there are any, for a specific module and item id.
-    * The result data is used by Mail_Notification class, when telling the users related
-    * to an item that it has been modified.
-    *
-    * @param Phprojekt_Item_Abstract $object    The item object
-    *
-    * @return array
-    */
-
+     * Returns the last changes, if there are any, for a specific module and item id.
+     * The result data is used by Mail_Notification class, when telling the users related
+     * to an item that it has been modified.
+     *
+     * @param Phprojekt_Item_Abstract $object    The item object
+     *
+     * @return array
+     */
     public function getLastHistoryData($object)
     {
+        $result   = array();
         $moduleId = Phprojekt_Module::getId($object->getTableName());
-        $itemId = $object->id;
+        $itemId   = $object->id;
+        $where    = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
+        $where   .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
 
-        $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
-        $where .= $this->getAdapter()->quoteInto(' AND itemId = ? AND date_sub(now(), interval 5 second) <= datetime',
-                                                 $itemId);
-        $result = array();
-
-        foreach ($this->fetchAll($where) as $row) {
-            $result[] = array('userId'       => $row->userId,
-                              'moduleId'     => $row->moduleId,
-                              'itemId'       => $row->itemId,
-                              'field'        => $row->field,
-                              'oldValue'     => $row->oldValue,
-                              'newValue'     => $row->newValue,
-                              'action'       => $row->action,
-                              'datetime'     => $row->datetime);
+        $datetime = null;
+        $action   = null;
+        $results  = $this->fetchAll($where, 'id DESC');
+        $stop     = false;
+        foreach ($results as $row) {
+            if (!$stop) {
+                if (null == $datetime) {
+                    $datetime = $row->datetime;
+                    $action   = $row->action;
+                }
+                if ($action == $row->action) {
+                    $diff = abs(strtotime($datetime) - strtotime($row->datetime));
+                    if ($diff < 1) {
+                        $result[] = array('userId'   => $row->userId,
+                                          'moduleId' => $row->moduleId,
+                                          'itemId'   => $row->itemId,
+                                          'field'    => $row->field,
+                                          'oldValue' => $row->oldValue,
+                                          'newValue' => $row->newValue,
+                                          'action'   => $row->action,
+                                          'datetime' => $row->datetime);
+                    } else {
+                        $stop = true;
+                        break;
+                    }
+                } else {
+                    $stop = true;
+                    break;
+                }
+            }
         }
 
         return $result;
-
     }
-
 }

@@ -32,7 +32,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _formNode:          null,
     _writePermissions:  true,
     _deletePermissions: false,
-    _accessPermissions: true,    
+    _accessPermissions: true,
     _initData:          new Array(),
     _tagUrl:            null,
     _historyUrl:        null,
@@ -55,7 +55,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Store.Tab();
-        this._initData.push({'store': this.tabStore});        
+        this._initData.push({'store': this.tabStore});
         this.initData();
         this.getInitData();
     },
@@ -82,11 +82,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Process all the POST in cascade for get all the data from the server
         params = this._initData.pop();
-        
+
         if (params.url || params.store) {
             if (!params.noCache) {
                 params.noCache = false;
-            }       
+            }
             if (!params.processData) {
                 params.processData = dojo.hitch(this, "getInitData");
             }
@@ -99,7 +99,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             params.store.fetch(params.processData);
         }
     },
-    
+
     initData: function() {
         // summary:
         //    Init all the data before draw the form
@@ -107,7 +107,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function call all the needed data before the form is drawed
         //    The form will wait for all the data are loaded.
         //    Each module can overwrite this function for load the own data
-        
+
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
@@ -120,7 +120,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (this.id > 0) {
             this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
             this._initData.push({'url': this._historyUrl, 'noCache': true});
-        }        
+        }
     },
 
     addAccessTab:function(data) {
@@ -179,7 +179,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     iconClass: 'cross',
                     alt:       'Delete'
                 };
-                
+
                 var tmp = new dijit.form.Button(params);
                 dojo.byId(buttonName).appendChild(tmp.domNode);
                 dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteAccess", userId));
@@ -237,7 +237,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
         return result;
     },
-    
+
     getFormData: function(items, request) {
         // summary:
         //    This function renders the form data according to the database manager settings
@@ -274,8 +274,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // Init formdata
             if (!this.formdata[itemtab]) {
                 this.formdata[itemtab] = '';
-            }            
-            
+            }
+
             // Render the fields according to their type
             switch (itemtype) {
                 case 'checkbox':
@@ -353,10 +353,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
 
         this.addModuleTabs(data);
-        
+
         // Delete the data if is not used the cache
         if (!this.useCache()) {
-            phpr.DataStore.deleteData({url: this._url});            
+            phpr.DataStore.deleteData({url: this._url});
         }
     },
 
@@ -364,10 +364,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // summary:
         //    Return true or false if the cache is used
         // description:
-        //    Return true or false if the cache is used        
-        return true;    
+        //    Return true or false if the cache is used
+        return true;
     },
-    
+
     setFormContent:function() {
         // summary:
         //    Set the Container
@@ -384,10 +384,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Add all the tabs that are not the basic data
         this.addAccessTab(data);
+        this.addNotificationTab(data);
         if (this.id > 0) {
             this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }
-        this.addNotificationTab(data);
     },
 
     addBasicFields:function() {
@@ -405,7 +405,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Add a the row of one user-accees
         //    with the values selected on the first row
         var userId = dijit.byId("dataAccessAdd").attr('value');
-        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {        
+        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
             phpr.destroyWidget("dataAccess[" + userId + "]");
             phpr.destroyWidget("checkReadAccess[" + userId + "]");
             phpr.destroyWidget("checkWriteAccess[" + userId + "]");
@@ -417,7 +417,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             phpr.destroyWidget("checkAdminAccess[" + userId + "]");
             phpr.destroyWidget("checkNoneAccess[" + userId + "]");
             phpr.destroyWidget("accessDeleteButton" + userId);
-            
+
             var userName = dijit.byId("dataAccessAdd").attr('displayedValue');
             var table    = dojo.byId("accessTable");
             var row      = table.insertRow(table.rows.length);
@@ -448,7 +448,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             cell.innerHTML = '<div id="accessDeleteButton' + userId + '"></div>';
 
             dojo.parser.parse(row);
-                    
+
             var buttonName = "accessDeleteButton" + userId;
             var params = {
                 label:     '',
@@ -478,7 +478,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         phpr.destroyWidget("checkDeleteAccess[" + userId + "]");
         phpr.destroyWidget("checkDownloadAccess[" + userId + "]");
         phpr.destroyWidget("checkAdminAccess[" + userId + "]");
-        phpr.destroyWidget("checkNoneAccess[" + userId + "]");       
+        phpr.destroyWidget("checkNoneAccess[" + userId + "]");
         phpr.destroyWidget("accessDeleteButton" + userId);
 
         var e = dojo.byId("trAccessFor" + userId);
@@ -519,7 +519,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             dijit.byId("checkAdminAccess"+str).attr('checked',false);
         }
     },
-    
+
     prepareSubmission:function() {
         // summary:
         //    This function prepares the data for submission
@@ -536,7 +536,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
-        return true;   
+        return true;
     },
 
     submitForm: function() {
@@ -633,7 +633,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    renders the actual form according to the received data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
         var historyData = '<tr><td colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
-                
+
         if (history.length > 0) {
             historyData += "<tr><td><label>" + phpr.nls.get('Date');
             historyData += "</label></td><td><label>" + phpr.nls.get('User');
@@ -657,7 +657,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             historyData += "</td><td>" + historyOldValue;
         }
         historyData += "</table></td></tr>";
-        
+
         return historyData;
     },
 
@@ -676,11 +676,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //	  or modified. It has a "Send Notification" checkbox.
-
         // Add field
         var notificationTab = this.fieldTemplate.checkRender('Send Notification', 'sendNotification', '');
-
-        // Add the tab to the form	
+        // Add the tab to the form
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
     }
 });

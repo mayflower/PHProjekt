@@ -24,19 +24,19 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
-                
+
         // Get modules
         this.roleStore = new phpr.Store.Role(this.id);
         this._initData.push({'store': this.roleStore});
-                
+
         // Get modules
         this.moduleStore = new phpr.Store.Module(this.id);
         this._initData.push({'store': this.moduleStore});
-        
+
         // Get the tags
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
-        
+
         // History data
         if (this.id > 0) {
             this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
@@ -70,7 +70,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             if (this.id > 0) {
                 currentUser = data[0]["rights"]["currentUser"]["userId"];
             }
-                    
+
             var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
                 accessUserText:   phpr.nls.get('User'),
@@ -114,10 +114,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.addAccessTab(data);
         this.addModuleTab(data);
         this.addRoleTab(data);
+        this.addNotificationTab(data);
         if (this.id > 0) {
             this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }
-        this.addNotificationTab(data);
     },
 
     newRoleUser: function () {
@@ -130,9 +130,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var userId = dijit.byId("relationUserAdd").attr('value');
         if (!dojo.byId("trRelationFor" + userId) && userId > 0) {
             phpr.destroyWidget("roleRelation[" + userId + "]");
-            phpr.destroyWidget("userRelation[" + userId + "]");            
+            phpr.destroyWidget("userRelation[" + userId + "]");
             phpr.destroyWidget("relationDeleteButton" + userId);
-            
+
             var roleName = dijit.byId("relationRoleAdd").attr('displayedValue');
             var userName = dijit.byId("relationUserAdd").attr('displayedValue');
             var table    = dojo.byId("relationTable");
@@ -167,7 +167,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
         phpr.destroyWidget("roleRelation[" + userId + "]");
-        phpr.destroyWidget("userRelation[" + userId + "]");         
+        phpr.destroyWidget("userRelation[" + userId + "]");
         phpr.destroyWidget("relationDeleteButton" + userId);
 
         var e = dojo.byId("trRelationFor" + userId);
@@ -209,7 +209,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             })
         });
     },
-    
+
     updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;

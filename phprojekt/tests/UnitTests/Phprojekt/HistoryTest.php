@@ -33,7 +33,6 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test empty call
-     *
      */
     public function testEmptyObject()
     {
@@ -45,7 +44,6 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test add history
-     *
      */
     public function testAddCall()
     {
@@ -88,7 +86,6 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test edit history
-     *
      */
     public function testEditCall()
     {
@@ -125,6 +122,9 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Test get data
+     */
     public function testGetHistoryData()
     {
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
@@ -155,8 +155,23 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test get last data
+     */
+    public function testGetLastHistoryData()
+    {
+        $project = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $project->find(Zend_Registry::get('insertedId'));
+        $history = new Phprojekt_History(array('db' => $this->sharedFixture));
+
+        $data     = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
+        $lastData = $history->getLastHistoryData($project);
+
+        $this->assertEquals(10, count($data));
+        $this->assertEquals(1, count($lastData));
+    }
+
+    /**
      * Test delete history
-     *
      */
     public function testDeleteCall()
     {
