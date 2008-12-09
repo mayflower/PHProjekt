@@ -65,7 +65,7 @@ CREATE TABLE `DatabaseManager` (
   `isRequired` int(4) default NULL,
   `isUnique` int(11) default NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `User` (
   `status` varchar(1) default 'A',
   PRIMARY KEY(`id`),
   UNIQUE(`username`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -94,7 +94,7 @@ CREATE TABLE `Module` (
   `saveType` int(1) NOT NULL default 0,
   `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -104,7 +104,7 @@ CREATE TABLE `Groups` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255),
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -115,7 +115,7 @@ CREATE TABLE `GroupsUserRelation` (
   `groupsId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `History` (
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `Project` (
   `hourlyWageRate` varchar(10) default NULL,
   `budget` varchar(10) default NULL,
   PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -164,7 +164,7 @@ CREATE TABLE `ProjectModulePermissions` (
     `moduleId` int(11) NOT NULL,
     `projectId` int(11) NOT NULL,
     PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -175,7 +175,7 @@ CREATE TABLE `Role` (
   `name` varchar(255) NOT NULL,
   `parent` int(11) default NULL,
   PRIMARY KEY(`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -187,7 +187,7 @@ CREATE TABLE `ProjectRoleUserPermissions` (
   `userId` int(11) NOT NULL,
   `roleId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -199,7 +199,7 @@ CREATE TABLE `RoleModulePermissions` (
   `moduleId` int(11) NOT NULL,
   `access` int(3) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -216,7 +216,7 @@ CREATE TABLE `Todo` (
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -230,7 +230,7 @@ CREATE TABLE `Setting` (
   `value` text default NULL,
   `identifier`  varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -241,7 +241,7 @@ CREATE TABLE `SearchWords` (
   `word` varchar(255) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -252,7 +252,7 @@ CREATE TABLE `SearchWordModule` (
   `itemId` int(11) NOT NULL,
   `wordId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`,`wordId`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -265,7 +265,7 @@ CREATE TABLE `SearchDisplay` (
   `secondDisplay` text,
   `projectId` int(11) NOT NULL,
   PRIMARY KEY  (`itemId`,`moduleId`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -276,7 +276,7 @@ CREATE TABLE `Tags` (
   `word` varchar(255) NOT NULL,
   `crc32` bigint NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -287,7 +287,7 @@ CREATE TABLE `TagsUsers` (
   `userId` int(11) NOT NULL,
   `tagId` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -298,7 +298,7 @@ CREATE TABLE `TagsModules` (
   `itemId` int(11) NOT NULL,
   `tagUserId` int(11) NOT NULL,
   PRIMARY KEY  (`moduleId`, `itemId`, `tagUserId`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -308,7 +308,7 @@ CREATE TABLE `Tab` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -318,7 +318,7 @@ CREATE TABLE `ModuleTabRelation` (
   `tabId` int(11) NOT NULL,
   `moduleId` int(11) NOT NULL,
   PRIMARY KEY (`tabId`, `moduleId`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -332,7 +332,7 @@ CREATE TABLE `Note` (
   `category` varchar(50) default NULL,
   `ownerId` int(11) default NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -344,7 +344,7 @@ CREATE TABLE `Configuration` (
   `keyValue` varchar(255) NOT NULL,
   `value` text default NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -356,7 +356,7 @@ CREATE TABLE `ItemRights` (
   `userId` int(11) NOT NULL,
   `access` int(3) NOT NULL,
   PRIMARY KEY  (`moduleId`,`itemId`,`userId`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -369,7 +369,7 @@ CREATE TABLE `Timecard` (
   `startTime` time default NULL,
   `endTime` time default NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -383,7 +383,7 @@ CREATE TABLE `Timeproj` (
   `date` date default NULL,
   `amount` time default NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -421,7 +421,7 @@ CREATE TABLE `Calendar` (
   KEY `startDate` (`startDate`,`startTime`),
   KEY `endDate` (`endDate`,`endTime`),
   KEY `parentId` (`parentId`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 --
