@@ -156,8 +156,6 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     {
         $tree = new Phprojekt_Tree_Node_Database($this->_model, 5);
         $tree->setup();
-        var_dump("1");
-        var_dump(count($tree->getChildren()));
         $this->assertEquals(2, count($tree->getChildren()));
         $tree->delete();
         $this->assertNull($tree->id);
