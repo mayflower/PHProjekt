@@ -365,8 +365,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     public function isLoaded($locale)
     {
         $locale = $this->_convertToZendLocale($locale);
-        var_dump($locale);
-        var_dump($this->_langLoaded);
         if (false === isset($this->_langLoaded[$locale])) {
             return false;
         } else {
