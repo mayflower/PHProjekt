@@ -83,7 +83,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * @var array
      */
     protected $_langLoaded = array();
-    
+
     /**
      * Generates the adapter
      *
@@ -99,7 +99,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         $locale = $this->_convertToZendLocale($locale);
         parent::__construct($data, $locale, array());
     }
-    
+
     /**
      * This protected function is for collect the data and create the array translation set.
      *
@@ -131,17 +131,17 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         if (true === $options['clear'] || false === isset ($this->_translate[$locale])) {
             $this->_translate[$locale] = array ();
         }
-        
+
         /* Get the translated string from the session if exists */
         $session = new Zend_Session_Namespace('Language_'.$locale);
         if (true === isset($session->translatedStrings)) {
             $this->_translate = $session->translatedStrings;
         } else {
             $session->translatedStrings = array();
-        }        
+        }
 
         /* Collect a new translation set */
-        if (true === empty($this->_translate[$locale]) && empty($session->translatedStrings)) {            
+        if (true === empty($this->_translate[$locale]) && empty($session->translatedStrings)) {
             // Default
             $langFile    = $this->_getLangFile($locale);
             $languageDir = PHPR_CORE_PATH . '/Default/Languages/';
@@ -157,7 +157,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                     $this->_langLoaded[$locale] = 1;
                 }
             }
-                    
+
             // Modules
             $files = scandir (PHPR_CORE_PATH);
             foreach($files as $file) {
@@ -172,8 +172,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                         if (isset($lang)) {
                             if (!isset($this->_translate[$locale])) {
                                 $this->_translate[$locale] = array();
-                            }                            
-                            $this->_translate[$locale]  = array_merge ($this->_translate[$locale], $lang);                        
+                            }
+                            $this->_translate[$locale]  = array_merge ($this->_translate[$locale], $lang);
                             $this->_langLoaded[$locale] = 1;
                         }
                     }
@@ -182,139 +182,140 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $session->translatedStrings = $this->_translate;
         }
     }
-    
+
     /**
      * Return the correct file for the current locale
      *
      * @param string|Zend_Locale $locale Locale/Language to set,
      *                                   identical with Locale identifiers
      *                                   see Zend_Locale for more information
-     * 
+     *
      * @return string
      */
     private function _getLangFile($locale)
     {
         switch ($locale) {
-            case 'sq_AL' :
+            case 'sq_AL':
                 $langFile = self::LANG_AL;
                 break;
-            case 'bg' :
+            case 'bg':
                 $langFile = self::LANG_BG;
                 break;
-            case 'pt_BR' :
+            case 'pt_BR':
                 $langFile = self::LANG_BR;
                 break;
-            case 'cs_CZ' :
+            case 'cs_CZ':
                 $langFile = self::LANG_CZ;
                 break;
-            case 'da' :
+            case 'da':
                 $langFile = self::LANG_DA;
                 break;
-            case 'de' :
+            case 'de':
                 $langFile = self::LANG_DE;
                 break;
-            case 'et_EE' :
+            case 'et_EE':
                 $langFile = self::LANG_EE;
                 break;
-            case 'es' :
+            case 'es':
                 $langFile = self::LANG_ES;
                 break;
-            case 'fi' :
+            case 'fi':
                 $langFile = self::LANG_FI;
                 break;
-            case 'fr' :
+            case 'fr':
                 $langFile = self::LANG_FR;
                 break;
-            case 'ka_GE' :
+            case 'ka_GE':
                 $langFile = self::LANG_GE;
                 break;
-            case 'el_GR' :
+            case 'el_GR':
                 $langFile = self::LANG_GR;
                 break;
-            case 'he' :
+            case 'he':
                 $langFile = self::LANG_HE;
                 break;
-            case 'hu' :
+            case 'hu':
                 $langFile = self::LANG_HU;
                 break;
-            case 'is' :
+            case 'is':
                 $langFile = self::LANG_IS;
                 break;
-            case 'it' :
+            case 'it':
                 $langFile = self::LANG_IT;
                 break;
-            case 'ja_JP' :
+            case 'ja_JP':
                 $langFile = self::LANG_JP;
                 break;
-            case 'ko' :
+            case 'ko':
                 $langFile = self::LANG_KO;
                 break;
-            case 'lt' :
+            case 'lt':
                 $langFile = self::LANG_LT;
                 break;
-            case 'lv' :
+            case 'lv':
                 $langFile = self::LANG_LV;
                 break;
-            case 'nl' :
+            case 'nl':
                 $langFile = self::LANG_NL;
                 break;
-            case 'no' :
+            case 'no':
+            case 'nn_NO':
                 $langFile = self::LANG_NO;
                 break;
-            case 'pl' :
+            case 'pl':
                 $langFile = self::LANG_PL;
                 break;
-            case 'pt' :
+            case 'pt':
                 $langFile = self::LANG_PT;
                 break;
-            case 'ro' :
+            case 'ro':
                 $langFile = self::LANG_RO;
                 break;
-            case 'ru' :
+            case 'ru':
                 $langFile = self::LANG_RU;
                 break;
-            case 'sv_SE' :
+            case 'sv_SE':
                 $langFile = self::LANG_SE;
                 break;
-            case 'sl_SI' :
+            case 'sl_SI':
                 $langFile = self::LANG_SI;
                 break;
-            case 'sk' :
+            case 'sk':
                 $langFile = self::LANG_SK;
                 break;
-            case 'sv' :
+            case 'sv':
                 $langFile = self::LANG_SV;
                 break;
-            case 'th_TH' :
+            case 'th_TH':
                 $langFile = self::LANG_TH;
                 break;
-            case 'tr' :
+            case 'tr':
                 $langFile = self::LANG_TR;
                 break;
-            case 'zh_TW' :
+            case 'zh_TW':
                 $langFile = self::LANG_TW;
                 break;
-            case 'uk' :
+            case 'uk':
                 $langFile = self::LANG_UK;
                 break;
-            case 'zh' :
+            case 'zh':
                 $langFile = self::LANG_ZH;
                 break;
-            default :
-            case 'en' :
+            default:
+            case 'en':
                 $langFile = self::LANG_EN;
                 break;
         }
         return $langFile;
     }
-    
+
     /**
      * Return all the trasnlated strings for the $locale
      *
      * @param string|Zend_Locale $locale Locale/Language to set,
      *                                   identical with Locale identifiers
      *                                   see Zend_Locale for more information
-     * 
+     *
      * @return array
      */
     public function getTranslatedStrings($locale)
@@ -327,7 +328,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         }
         return $toReturn;
     }
-    
+
     public function translate($messageId, $locale = null)
     {
         $locale = $this->_convertToZendLocale($locale);
@@ -338,7 +339,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         }
         return $toReturn;
     }
-    
+
     /**
      * Returns the adapters name
      *
@@ -350,7 +351,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     {
         return "Phprojekt";
     }
-    
+
     /**
      * Return if is loaded the lang file or not.
      * This is for do not read the same file two times.
@@ -364,13 +365,15 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     public function isLoaded($locale)
     {
         $locale = $this->_convertToZendLocale($locale);
+        var_dump($locale);
+        var_dump($this->_langLoaded);
         if (false === isset($this->_langLoaded[$locale])) {
             return false;
         } else {
             return true;
         }
     }
-    
+
     /**
      * Transform the PHProjekt locale shortname to Zend locale shortname.
      *
@@ -381,40 +384,42 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     protected function _convertToZendLocale($locale)
     {
         switch ($locale) {
-            case 'al' :
+            case 'al':
                 return 'sq_AL';
                 break;
-            case 'br' :
+            case 'br':
                 return 'pt_BR';
                 break;
-            case 'cz' :
+            case 'cz':
                 return 'cs_CZ';
                 break;
-            case 'ee' :
+            case 'ee':
                 return 'et_EE';
                 break;
-            case 'ge' :
+            case 'ge':
                 return 'ka_GE';
                 break;
-            case 'gr' :
+            case 'gr':
                 return 'el_GR';
                 break;
-            case 'jp' :
+            case 'no':
+                return 'nn_NO';
+            case 'jp':
                 return 'ja_JP';
                 break;
-            case 'se' :
+            case 'se':
                 return 'sv_SE';
                 break;
-            case 'si' :
+            case 'si':
                 return 'sl_SI';
                 break;
-            case 'th' :
+            case 'th':
                 return 'th_TH';
                 break;
-            case 'tw' :
+            case 'tw':
                 return 'zh_TW';
                 break;
-            default :
+            default:
                 return $locale;
                 break;
         }

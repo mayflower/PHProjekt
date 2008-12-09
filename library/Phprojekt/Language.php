@@ -39,7 +39,7 @@
 class Phprojekt_Language extends Zend_Translate
 {
     private $_locale = null;
-    
+
     /**
      * Constructor function
      *
@@ -57,9 +57,8 @@ class Phprojekt_Language extends Zend_Translate
      */
     public function __construct($locale)
     {
-        $data = PHPR_CORE_PATH . '/Default/Languages/';
         $this->_loacale = $locale;
-        $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
+        $this->_adapter = new Phprojekt_LanguageAdapter(null, $locale);
     }
 
     /**
@@ -105,19 +104,17 @@ class Phprojekt_Language extends Zend_Translate
     private function _loadLangFile($locale)
     {
         if (false === $this->_adapter->isLoaded($locale)) {
-            $data = PHPR_CORE_PATH . '/Default/Languages/';
-
-            $this->_adapter = new Phprojekt_LanguageAdapter($data, $locale);
+            $this->_adapter = new Phprojekt_LanguageAdapter(null, $locale);
         }
     }
-    
+
     /**
      * Return all the trasnlated strings for the $locale
      *
      * @param string|Zend_Locale $locale Locale/Language to set,
      *                                   identical with Locale identifiers
      *                                   see Zend_Locale for more information
-     * 
+     *
      * @return array
      */
     public function getTranslatedStrings($locale)

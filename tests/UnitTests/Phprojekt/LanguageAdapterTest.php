@@ -65,8 +65,10 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
         $reflect = new ReflectionClass('Phprojekt_LanguageAdapter');
         $constants = $reflect->getConstants();
         foreach ($constants as $value) {
-            $value = ereg_replace('.inc.php', '', $value);
-            new Phprojekt_Language($value);
+            if (strstr($value, 'inc.php')) {
+                $value = ereg_replace('.inc.php', '', $value);
+                new Phprojekt_Language($value);
+            }
         }
     }
 }
