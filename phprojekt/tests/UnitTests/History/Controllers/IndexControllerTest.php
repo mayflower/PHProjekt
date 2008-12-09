@@ -36,11 +36,10 @@ class History_IndexController_Test extends FrontInit
      */
     public function testJsonListAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'History'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/history/jsonList/moduleId/1/itemId/5');
-        $this->request->setPathInfo('/Core/history/jsonList/moduleId/1/itemId/5');
-        $this->request->setRequestUri('/Core/history/jsonList/moduleId/1/itemId/5');
-        $response = $this->getResponse();       
+        $this->setRequestUrl('Core/history/jsonList/');
+        $this->request->setParam('moduleId', 1);
+        $this->request->setParam('itemId', 5);
+        $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('{"userId":"1","moduleId":"1","itemId":"5","field":"title","oldValue"')) > 0);
     }
@@ -50,12 +49,10 @@ class History_IndexController_Test extends FrontInit
      */
     public function testJsonLisWithModuleNametAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'History'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Core/history/jsonList/moduleName/Project/itemId/5');
-        $this->request->setPathInfo('/Core/history/jsonList/moduleName/Project/itemId/5');
-        $this->request->setRequestUri('/Core/history/jsonList/moduleName/Project/itemId/5');
-        $response = $this->getResponse();        
+        $this->setRequestUrl('Core/history/jsonList/');
+        $this->request->setParam('moduleName', 'Project');
+        $this->request->setParam('itemId', 5);
+        $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('{"userId":"1","moduleId":"1","itemId":"5","field":"title","oldValue":')) > 0);
     }
@@ -65,11 +62,10 @@ class History_IndexController_Test extends FrontInit
      */
     public function testJsonListNoIdAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'History'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/history/jsonList/moduleId/2/itemId/');
-        $this->request->setPathInfo('/Core/history/jsonList/moduleId/2/itemId/');
-        $this->request->setRequestUri('/Core/history/jsonList/moduleId/2/itemId/');
-        $this->getResponse();        
+        $this->setRequestUrl('Core/history/jsonList/');
+        $this->request->setParam('moduleId', 2);
+        $this->request->setParam('itemId', null);
+        $this->getResponse();
         $this->assertTrue($this->error);
     }
 }

@@ -36,12 +36,10 @@ class Phprojekt_SearchController_Test extends FrontInit
      */
     public function testJsonSeacrchAction()
     {
-        $this->request->setParams(array('action' => 'jsonGetTags', 'controller' => 'Search', 'module' => 'Default'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Default/Search/jsonSearch/words/note');
-        $this->request->setPathInfo('/Default/Search/jsonSearch/words/note');
-        $this->request->setRequestUri('/Default/Search/jsonSearch/words/note');
-        $response = $this->getResponse();        
-        $this->assertTrue(strpos($response, 
+        $this->setRequestUrl('Default/Search/jsonSearch/');
+        $this->request->setParam('words', 'note');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response,
             '"id":"1","moduleId":"1","moduleName":"Project","moduleLabel":"Project","firstDisplay":"test"') > 0);
     }
 }

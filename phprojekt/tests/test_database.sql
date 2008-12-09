@@ -478,7 +478,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'startTime', 1, 'startTime', 'startTime', 'time', 4, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endDate', 1, 'endDate', 'endDate', 'date', 0, 1, NULL, NULL, '', 0, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endTime', 1, 'endTime', 'endTime', 'time', 6, 1, NULL, NULL, '', 6, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'participantId', 1, 'participantId', 'participantId', 'multipleSelectValues', 0, 1, NULL, 'User#id#username', '', 2, 'left', 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'participantId', 1, 'participantId', 'participantId', 'multipleSelectValues', 7, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'rrule', 1, 'rrule', 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0);
 
 INSERT INTO `User` (`id`, `username`, `firstname`, `lastname`, `status`) VALUES

@@ -36,10 +36,7 @@ class User_IndexController_Test extends FrontInit
      */
     public function testGetUsersAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'user'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/user/jsonGetUsers');
-        $this->request->setPathInfo('/Core/user/jsonGetUsers');
-        $this->request->setRequestUri('/Core/user/jsonGetUsers');
+        $this->setRequestUrl('Core/user/jsonGetUsers');
         $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response), strtolower('"numRows":1')) > 0);
     }

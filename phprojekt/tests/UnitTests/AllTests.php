@@ -259,6 +259,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
         /* enable whitelisting for unit tests, these directories are
         * covered for the code coverage even they are not part of unit testing */
         PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDir . '/application');
+        PHPUnit_Util_Filter::addDirectoryToWhitelist(PHPR_LIBRARY_PATH . '/Phprojekt');
     }
 
     AllTests::main($config);

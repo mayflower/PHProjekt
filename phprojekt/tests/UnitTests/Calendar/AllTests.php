@@ -59,7 +59,7 @@ class Calendar_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Calendar Controller');
 
         $suite->addTestSuite('Calendar_IndexController_Test');
-        
+
         return $suite;
     }
 }

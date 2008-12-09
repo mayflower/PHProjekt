@@ -103,8 +103,22 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->front->throwExceptions(true);
     }
 
+    /**
+     * Set the Url
+     */
+    public function setRequestUrl($url)
+    {
+        $this->request->setBaseUrl($this->config->webpath . 'index.php/'. $url);
+        $this->request->setPathInfo('/' . $url);
+        $this->request->setRequestUri('/' . $url);
+    }
+
+    /**
+     * Get the responde and delte all the params later
+     */
     public function getResponse()
     {
+        $this->request->setDispatched(false);
         ob_start();
         $this->error = false;
         try {
@@ -115,6 +129,12 @@ class FrontInit extends PHPUnit_Framework_TestCase
         }
         $this->content = ob_get_contents();
         ob_end_clean();
+
+        $params = $this->request->getParams();
+        foreach ($params as $key => $value) {
+            $value = null;
+            $this->request->setParam($key, $value);
+        }
 
         return $this->content;
     }

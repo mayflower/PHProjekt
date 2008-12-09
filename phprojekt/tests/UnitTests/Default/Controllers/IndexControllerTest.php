@@ -36,9 +36,7 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testIndexIndexAction()
     {
-        $this->request->setBaseUrl($this->config->webpath . 'index.php');
-        $this->request->setPathInfo('index/index');
-        $this->request->setRequestUri('/index/index');
+        $this->setRequestUrl('index/index');
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, "PHProjekt") > 0);
         $this->assertTrue(strpos($response, "<!-- template: index.phml -->") > 0);
@@ -49,10 +47,8 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonListAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonList/nodeId/');
-        $this->request->setPathInfo('/Project/index/jsonList/nodeId/');
-        $this->request->setRequestUri('/Project/index/jsonList/nodeId/');
+        $this->setRequestUrl('Project/index/jsonList/');
+        $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":5}') > 0);
     }
@@ -62,10 +58,8 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonListActionWithNodeId()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonList/nodeId/1');
-        $this->request->setPathInfo('/Project/index/jsonList/nodeId/1');
-        $this->request->setRequestUri('/Project/index/jsonList/nodeId/1');
+        $this->setRequestUrl('Project/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":3}') > 0);
     }
@@ -75,10 +69,8 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonDetailAction()
     {
-        $this->request->setParams(array('action' => 'jsonDetail', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonDetail/id/1');
-        $this->request->setPathInfo('/Project/index/jsonDetail/id/1');
-        $this->request->setRequestUri('/Project/index/jsonDetail/id/1');
+        $this->setRequestUrl('Project/index/jsonDetail/');
+        $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('{"key":"title","label":"Title","type":"text","hint":"title","order":0,"position":1')) > 0);
@@ -90,10 +82,7 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonDetailActionWithoutId()
     {
-        $this->request->setParams(array('action' => 'jsonDetail', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonDetail');
-        $this->request->setPathInfo('/Project/index/jsonDetail');
-        $this->request->setRequestUri('/Project/index/jsonDetail');
+        $this->setRequestUrl('Project/index/jsonDetail');
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '[{"id":"1","name":"Invisible Root"}') > 0);
         $this->assertTrue(strpos($response, '{"id":"2","name":"....Project 1"}') > 0);
@@ -104,10 +93,7 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonTreeAction()
     {
-        $this->request->setParams(array('action' => 'jsonTree', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonTree');
-        $this->request->setPathInfo('/Project/index/jsonTree');
-        $this->request->setRequestUri('/Project/index/jsonTree');
+        $this->setRequestUrl('Project/index/jsonTree');
         $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('"identifier":"id","label":"name","items":[{"name":"Invisible Root"')) > 0);
@@ -119,12 +105,8 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonGetModulesPermission()
     {
-        $this->request->setParams(array('action' => 'jsonGetModulesPermission',
-            'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Project/index/jsonGetModulesPermission/nodeId/1');
-        $this->request->setPathInfo('/Project/index/jsonGetModulesPermission/nodeId/1');
-        $this->request->setRequestUri('/Project/index/jsonGetModulesPermission/nodeId/1');
+        $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response,
             '"name":"Note","label":"Note","inProject":true,"rights":{"none":false,') > 0);
@@ -139,11 +121,8 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonGetModulesPermissionNoId()
     {
-        $this->request->setParams(array('action' => 'jsonGetModulesPermission',
-            'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonGetModulesPermission/nodeId/');
-        $this->request->setPathInfo('/Project/index/jsonGetModulesPermission/nodeId/');
-        $this->request->setRequestUri('/Project/index/jsonGetModulesPermission/nodeId/');
+        $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
+        $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '&&({"metadata":[]})') > 0);
     }
@@ -153,10 +132,7 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonDeleteNoId()
     {
-        $this->request->setParams(array('action' => 'jsonDelete', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Project/index/jsonDelete');
-        $this->request->setPathInfo('/Project/index/jsonDelete');
-        $this->request->setRequestUri('/Project/index/jsonDelete');
+        $this->setRequestUrl('Project/index/jsonDelete');
         $this->getResponse();
         $this->assertTrue($this->error);
     }

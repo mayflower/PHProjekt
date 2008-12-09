@@ -52,10 +52,7 @@ class Phprojekt_LoginController_Test extends FrontInit
      */
     public function testLoginLoginAction()
     {
-        $this->request->setActionName('login');
-        $this->request->setBaseUrl($this->config->webpath . 'index.php');
-        $this->request->setPathInfo('login/login');
-        $this->request->setRequestUri('/login/login');
+        $this->setRequestUrl('Login/login');
 
         // This is the only way I found to set POST values on request
         $_POST['username'] = 'david';
@@ -77,10 +74,7 @@ class Phprojekt_LoginController_Test extends FrontInit
      */
     public function testLoginLogoutAction()
     {
-        $this->request->setActionName('logout');
-        $this->request->setBaseUrl($this->config->webpath . 'index.php');
-        $this->request->setPathInfo('login/logout');
-        $this->request->setRequestUri('/login/logout');
+        $this->setRequestUrl('Login/logout');
 
         $this->setExpectedException('Zend_Controller_Response_Exception');
         $this->front->dispatch($this->request, $this->response);

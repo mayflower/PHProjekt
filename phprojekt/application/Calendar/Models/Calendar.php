@@ -136,7 +136,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             foreach ($participants as $oneParticipant) {
                 $request->setParam('participantId', $oneParticipant);
                 $clone = clone($model);
-                $clone->uid = md5(time());
+                $clone->uid = md5($date . $oneParticipant . time());
                 if (isset($relatedEvents[$date][$oneParticipant])) {
                     if ($relatedEvents[$date][$oneParticipant] != $rootEventId) {
                         $request->setParam('parentId', $rootEventId);

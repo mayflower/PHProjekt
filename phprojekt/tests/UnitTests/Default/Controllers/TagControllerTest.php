@@ -36,10 +36,9 @@ class Phprojekt_TagController_Test extends FrontInit
      */
     public function testJsonGetTagsAction()
     {
-        $this->request->setParams(array('action' => 'jsonGetTags', 'controller' => 'Tag', 'module' => 'Default'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Default/Tags/jsonGetTags/nodeId/1/limit/2');
-        $this->request->setPathInfo('/Default/Tag/jsonGetTags/nodeId/1/limit/2');
-        $this->request->setRequestUri('/Default/Tag/jsonGetTags/nodeId/1/limit/2');
+        $this->setRequestUrl('Default/Tag/jsonGetTags/');
+        $this->request->setParam('nodeId', 1);
+        $this->request->setParam('limit', 2);
         $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('"metadata":[{"key":"string","label":"Tag"},'
@@ -51,11 +50,11 @@ class Phprojekt_TagController_Test extends FrontInit
      */
     public function testJsonSaveTagsAction()
     {
-        $this->request->setParams(array('action' => 'jsonGetTags', 'controller' => 'Tag', 'module' => 'Default'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Default/Tags/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
-        $this->request->setPathInfo('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
-        $this->request->setRequestUri('/Default/Tag/jsonSaveTags/moduleName/Project/string/test/id/1/projectId/1');
+        $this->setRequestUrl('Default/Tag/jsonSaveTags/');
+        $this->request->setParam('moduleName', 'Project');
+        $this->request->setParam('string', 'test');
+        $this->request->setParam('id', 1);
+        $this->request->setParam('projectId', 1);
         $this->getResponse();
     }
 
@@ -64,11 +63,10 @@ class Phprojekt_TagController_Test extends FrontInit
      */
     public function testJsonGetModulesByTagAction()
     {
-        $this->request->setParams(array('action' => 'jsonGetTags', 'controller' => 'Tag', 'module' => 'Default'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Default/Tags/jsonGetModulesByTag/nodeId/1/tag/test/limit/2');
-        $this->request->setPathInfo('/Default/Tag/jsonGetModulesByTag/nodeId/1/tag/test/limit/2');
-        $this->request->setRequestUri('/Default/Tag/jsonGetModulesByTag/nodeId/1/tag/test/limit/2');
+        $this->setRequestUrl('Default/Tag/jsonGetModulesByTag/');
+        $this->request->setParam('nodeId', 1);
+        $this->request->setParam('tag', 'test');
+        $this->request->setParam('limit', 2);
         $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
             strtolower('{"id":"1","moduleId":"1","moduleName":"Project",'

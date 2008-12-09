@@ -36,13 +36,13 @@ class Note_IndexController_Test extends FrontInit
      */
     public function testJsonSave()
     {
-        $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Note'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Note/index/jsonSave/id/null/comments/test/projectId/1/title/test');
-        $this->request->setPathInfo('/Note/index/jsonSave/id/null/comments/test/projectId/1/title/test');
-        $this->request->setRequestUri('/Note/index/jsonSave/id/null/comments/test/projectId/1/title/test');
-        $response = $this->getResponse();       
-        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
+        $this->setRequestUrl('Note/index/jsonSave/');
+        $this->request->setParam('id', null);
+        $this->request->setParam('comments', 'test');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('title', 'test');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Note_IndexController::ADD_TRUE_TEXT) > 0);
     }
 
     /**
@@ -50,13 +50,11 @@ class Note_IndexController_Test extends FrontInit
      */
     public function testJsonSaveMultiple()
     {
-        $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Note'));
-        $this->request->setBaseUrl($this->config->webpath
-            .'index.php/Note/index/jsonSaveMultiple/nodeId/1/data[1][comments]/test save multiple');
-        $this->request->setPathInfo('/Note/index/jsonSaveMultiple/nodeId/1/data[1][comments]/test save multiple');
-        $this->request->setRequestUri('/Note/index/jsonSaveMultiple/nodeId/1/data[1][comments]/test save multiple');
-        $response = $this->getResponse();       
-        $this->assertTrue(strpos($response, 'The Items was edited correctly') > 0);
+        $this->setRequestUrl('Note/index/jsonSaveMultiple/');
+        $this->request->setParam('nodeId', 1);
+        $this->request->setParam('data[1][comments]', 'test save multiple');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Note_IndexController::EDIT_MULTIPLE_TRUE_TEXT) > 0);
     }
 
     /**
@@ -64,11 +62,9 @@ class Note_IndexController_Test extends FrontInit
      */
     public function testJsonDeleteAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Note'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Note/index/jsonDelete/id/1');
-        $this->request->setPathInfo('/Note/index/jsonDelete/id/1');
-        $this->request->setRequestUri('/Note/index/jsonDelete/id/1');
-        $response = $this->getResponse();        
-        $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
+        $this->setRequestUrl('Note/index/jsonDelete/');
+        $this->request->setParam('id', 1);
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Note_IndexController::DELETE_TRUE_TEXT) > 0);
     }
 }

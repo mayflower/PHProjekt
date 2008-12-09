@@ -36,19 +36,15 @@ class Project_IndexController_Test extends FrontInit
      */
     public function testJsonSave()
     {
-        $this->request->setParams(array('action' => 'jsonSave',
-            'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Project/index/jsonSave/id/null/title/test/startDate/2008-08-07/'
-            . 'endDate/2020-08-31/priority/2/projectId/1');
-        $this->request->setPathInfo('/Project/index/jsonSave/id/null/title/test/startDate/2008-08-07/'
-            . 'endDate/2020-08-31/priority/2/projectId/1');
-        $this->request->setRequestUri('/Project/index/jsonSave/id/null/title/test/startDate/2008-08-07/'
-            . 'endDate/2020-08-31/priority/2/projectId/1');
-
+        $this->setRequestUrl('Project/index/jsonSave/');
+        $this->request->setParam('id', null);
+        $this->request->setParam('title', 'test');
+        $this->request->setParam('startDate', '2008-08-07');
+        $this->request->setParam('endDate', '2020-08-31');
+        $this->request->setParam('priority', 2);
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
-        
-        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
+        $this->assertTrue(strpos($response, Project_IndexController::ADD_TRUE_TEXT) > 0);
     }
 
     /**
@@ -56,16 +52,10 @@ class Project_IndexController_Test extends FrontInit
      */
     public function testJsonSaveMultiple()
     {
-        $this->request->setParams(array('action' => 'jsonSave',
-            'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Project/index/jsonSaveMultiple/nodeId/1/data[1][notes]/test');
-        $this->request->setPathInfo('/Project/index/jsonSaveMultiple/nodeId/1/data[1][notes]/test');
-        $this->request->setRequestUri('/Project/index/jsonSaveMultiple/nodeId/1/data[1][notes]/test');
-
+        $this->setRequestUrl('Project/index/jsonSaveMultiple/');
+        $this->request->setParam('data[1][notes]', 'test');
         $response = $this->getResponse();
-        
-        $this->assertTrue(strpos($response, 'The Items was edited correctly') > 0);
+        $this->assertTrue(strpos($response, Project_IndexController::EDIT_MULTIPLE_TRUE_TEXT) > 0);
     }
 
     /**
@@ -73,15 +63,9 @@ class Project_IndexController_Test extends FrontInit
      */
     public function testJsonGetModulesProjectRelation()
     {
-        $this->request->setParams(array('action' => 'jsonList',
-            'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Project/index/jsonGetModulesProjectRelation/id/2');
-        $this->request->setPathInfo('/Project/index/jsonGetModulesProjectRelation/id/2');
-        $this->request->setRequestUri('/Project/index/jsonGetModulesProjectRelation/id/2');
-
+        $this->setRequestUrl('Project/index/jsonGetModulesProjectRelation/');
+        $this->request->setParam('id', 2);
         $response = $this->getResponse();
-
         $this->assertTrue(strpos($response, '"2":{"id":"2","name":"Todo","label":"Todo","inProject":true}') > 0);
     }
 
@@ -90,15 +74,9 @@ class Project_IndexController_Test extends FrontInit
      */
     public function testJsonGetProjectRoleUserRelation()
     {
-        $this->request->setParams(array('action' => 'jsonList',
-            'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Project/index/jsonGetProjectRoleUserRelation/id/1');
-        $this->request->setPathInfo('/Project/index/jsonGetProjectRoleUserRelation/id/1');
-        $this->request->setRequestUri('/Project/index/jsonGetProjectRoleUserRelation/id/1');
-
+        $this->setRequestUrl('Project/index/jsonGetProjectRoleUserRelation/');
+        $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        
         $this->assertTrue(strpos($response, '{"1":{"id":"1","name":"admin",') > 0);
     }
 }
