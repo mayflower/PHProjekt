@@ -73,11 +73,6 @@ dojo.require("dojox.widget.Toaster");
 dojo.require("dojox.layout.ScrollPane");
 dojo.require('dojox.form.RangeSlider');
 
-dojo.addOnLoad(function(){
-    dijit.byId('completeContent').resize();
-});
-
-
 // global vars
 var module = null;
 var webpath = null;
@@ -240,7 +235,7 @@ dojo.declare("phpr.DataStore", null, {
             this._internalCache[params.url] = {
                 data:  new Array(),
                 store: store
-            };            
+            };
         }
     },
 
@@ -278,7 +273,7 @@ dojo.declare("phpr.DataStore", null, {
             params.processData.call();
         }
     },
-    
+
     getData:function(params) {
         // summary:
         //    Return the "data" tag from the server
@@ -304,7 +299,7 @@ dojo.declare("phpr.DataStore", null, {
            this._internalCache[params.url]['data'] = new Array();
         }
     },
-    
+
     getStore:function(params) {
         // summary:
         //    Return the current data.store
@@ -312,7 +307,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Return the current data.store
         return this._internalCache[params.url]['store'];
     },
-    
+
     deleteAllCache:function() {
         // summary:
         //    Delete all the cache
@@ -326,7 +321,7 @@ dojo.declare("phpr.DataStore", null, {
         }
     }
 });
-            
+
 phpr.DataStore = new phpr.DataStore();
 
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
@@ -337,18 +332,18 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     //    data and metadata values
     requestMethod:"post",
     doClientPaging:false,
-    
+
     _assertIsItem: function(item) {
 	},
-		    
+
     _filterResponse: function(data) {
-        
+
         // 500 is the error code for logut
         if (data.code && data.code == 500) {
             location = phpr.webpath + "index.php/Login/logout";
             return;
         }
-        
+
         if (typeof data.data == 'undefined') {
             data.data = new Array();
         }
@@ -386,12 +381,12 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
     //     This class receives the Server Feedback and displays it to the User
     messages:[],
     displayedMessages:[],
-    
+
     addMessage: function(message){
         this.messages.push(message);
         this.displayMessage(message);
     },
-        
+
     deleteLastMessage: function(message){
         this.messages.pop();
     },
@@ -401,7 +396,7 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
         for (i in this.displayedMessages) {
             out = this.displayedMessages[i];
             dojo.publish("ServerFeedback", [{
-                message: out.output, 
+                message: out.output,
                 type:    out.cssClass
                 }]
             );
@@ -413,13 +408,13 @@ dojo.declare("phpr.loading", null, {
     // summary:
     //     Simple class for show or hide the loading icon
     // description:
-    //     Simple class for show or hide the loading icon    
+    //     Simple class for show or hide the loading icon
     hide:function() {
         if (dojo.byId('loadingIcon')) {
             dojo.byId('loadingIcon').style.display = 'none';
         }
     },
-    
+
     show:function() {
         if (dojo.byId('loadingIcon')) {
             dojo.byId('loadingIcon').style.display = 'inline';
@@ -433,13 +428,13 @@ dojo.declare("phpr.translator", null, {
     //     Trasnlation class
     // description:
     //     Collect all the trasnlated strings into an array
-    //     and return the request string translateds        
+    //     and return the request string translateds
     _strings: {},
-    
+
     constructor:function(translatedStrings) {
        this._strings = translatedStrings;
     },
-    
+
     get:function(string) {
         if (this._strings[string]) {
             return this._strings[string];
