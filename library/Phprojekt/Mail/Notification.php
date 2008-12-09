@@ -34,7 +34,7 @@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 class Phprojekt_Mail_Notification extends Zend_Mail
-{ 
+{
     const MODE_HTML         = 'Html';
     const MODE_TEXT         = 'Text';
     const MAIL_LINEEND_RN   = 0; //External use (configuration.ini)
@@ -61,7 +61,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * on the module received in the $model parameter.
      * To send a notification in Text mode, use function sendNotificationText()
      *
-     * @param Phprojekt_Model_Interface    $model E.g.: A object of the type 
+     * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
      *                                            Todo_Models_Todo
      *
      * @uses    $mailNotif = new Phprojekt_Mail_Notification();
@@ -73,7 +73,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      */
     public function sendNotificationHtml(Phprojekt_Model_Interface $model)
     {
-        $this->_model = $model;
+        $this->_model    = $model;
         $this->_bodyMode = self::MODE_HTML;
         $this->_sendNotification();
     }
@@ -86,7 +86,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * on the module received in the $model parameter.
      * To send a notification in Html mode, use function sendNotificationHtml()
      *
-     * @param Phprojekt_Model_Interface    $model E.g.: A object of the type 
+     * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
      *                                            Todo_Models_Todo
      *
      * @uses    $mailNotif = new Phprojekt_Mail_Notification();
@@ -132,7 +132,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_setCustomSubject();
         $this->_setCustomBody();
         $this->_mailNotifSend();
-    }    
+    }
 
     /**
      * Sets the sender name and address. If not called, then, when sending the email
@@ -183,8 +183,8 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         } else {
             $this->_customFrom[1] = $phpUser->username;
         }
-    }    
-    
+    }
+
     /**
      * Fills the variable $_customTo with the recipients obtained from $this->_model
      * through class Phprojekt_Item_Rights()
@@ -197,7 +197,6 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $i       = 0;
         $phpUser = new Phprojekt_User_User();
         foreach ($rights as $userId => $userRights) {
-
             if ($userRights['read']) {
                 $i++;
                 if ((int)$userId) {
@@ -233,7 +232,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
         $this->_customSubject = trim('[' . $this->_tableName . ' #' . $this->_model->id . '] ' . $mailTitle);
     }
-    
+
     /**
      * Sets the body of the email according to the current module and the event
      * we are informing to the users.
@@ -296,7 +295,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                             // Try to replace oldValue Integer with the String
                             if ($range['id'] == $this->_changes[$i]['oldValue']) {
                                 $this->_changes[$i]['oldValue'] = trim($range['name']);
-                            }    
+                            }
                             // Try to replace newValue Integer with the String
                             if ($range['id'] == $this->_changes[$i]['newValue']) {
                                 $this->_changes[$i]['newValue'] = trim($range['name']);
@@ -306,7 +305,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 }
             }
         }
-        
+
         // Is it an ADD or EDIT action?
         switch ($this->_changes[0]['action']) {
             case self::LAST_ACTION_ADD:
@@ -322,7 +321,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         $this->_view->title = $translate->translate('A ') . $this->_tableName . $translate->translate(' item has been ')
                               . $translate->translate($actionLabel);
-        
+
         $this->_view->translate = $translate;
 
         if ($this->_bodyMode == self::MODE_TEXT) {
@@ -336,7 +335,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                     break;
             }
         }
-        
+
         $this->_customBody = $this->_view->render('mail' . $this->_bodyMode . '.phtml');
     }
 
@@ -348,9 +347,9 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * _customFrom, _customTo, _customSubject, _bodyMode and _customBody.
      *
      * @return void
-     */    
+     */
     private function _mailNotifSend()
-    {        
+    {
         // Has the name been set?
         if (sizeof($this->_customFrom) == 2) {
             $this->setFrom($this->_customFrom[0],     // Address
@@ -358,7 +357,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         } else {
             $this->setFrom($this->_customFrom[0]);    // Address
         }
-                
+
         // Iterates on the array to fill every recipient
         foreach ($this->_customTo as $recipient) {
             // Has the name been set?
@@ -369,9 +368,9 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 $this->addTo($recipient[0]);          // Address
             }
         }
-         
+
         $this->setSubject($this->_customSubject);
-        
+
         switch ($this->_bodyMode) {
             case self::MODE_TEXT:
                 $this->setBodyText($this->_customBody);
@@ -381,20 +380,20 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 $this->setBodyHtml($this->_customBody);
                 break;
         }
-        
+
         // Creates the Zend_Mail_Transport_Smtp object
         $smtpTransport= $this->_setTransport();
         
         $this->send($smtpTransport);
     }
-    
+
     /**
      * Sets the SMTP server. The data is obtained from the configuration.ini file.
      *
      * @return Zend_Mail_Transport_Smtp object
-     */    
+     */
     private function _setTransport()
-    {        
+    {
         $smtpServer   = Zend_Registry::get('config')->smtpServer;
         $smtpUser     = Zend_Registry::get('config')->smtpUser;
         $smtpPassword = Zend_Registry::get('config')->smtpPassword;
@@ -413,5 +412,5 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
 
         return $smtpTransport;
-    }    
+    }
 }
