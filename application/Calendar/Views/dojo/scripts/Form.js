@@ -135,12 +135,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         );
 
         // Add fields
-        reoccurenceTab += this.fieldTemplate.selectRender(rangeFreq ,'Repeats', 'rruleFreq', values.FREQ, false, false);
-        reoccurenceTab += this.fieldTemplate.textFieldRender('Interval', 'rruleInterval', values.INTERVAL, false, false);
-        reoccurenceTab += this.fieldTemplate.dateRender('Until', 'rruleUntil', values.UNTIL, false, false);
-        reoccurenceTab += this.fieldTemplate.multipleSelectRender(rangeByday ,'Weekdays', 'rruleByDay', values.BYDAY, false, false, 7, true);
+        reoccurenceTab += this.fieldTemplate.selectRender(rangeFreq ,phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ, false, false);
+        reoccurenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval', values.INTERVAL, false, false);
+        reoccurenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false, false);
+        reoccurenceTab += this.fieldTemplate.multipleSelectRender(rangeByday ,phpr.nls.get('Weekdays'), 'rruleByDay', values.BYDAY, false, false, 7, true);
 
         // Add the tab to the form
-        this.addTab(reoccurenceTab, 'tabReoccurence', 'Reoccurence', 'accessReoccurenceTab');
+        this.addTab(reoccurenceTab, 'tabReoccurence', 'Recurrence', 'accessReoccurenceTab');
     }
 });
