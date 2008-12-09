@@ -57,7 +57,8 @@ class Calendar_IndexController extends IndexController
             $message = $translate->translate(self::EDIT_TRUE_TEXT);
         }
 
-        $id = (int)Calendar_Models_Calendar::saveEvent($this->getRequest());
+        $record = $this->getModelObject();
+        $id     = $record->saveEvent($this->getRequest());
 
         $return = array('type'    => 'success',
                         'message' => $message,
@@ -121,7 +122,7 @@ class Calendar_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
-    
+
     /**
      * Returns the list for a model in JSON.
      *

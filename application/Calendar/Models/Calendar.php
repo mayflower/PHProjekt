@@ -33,7 +33,6 @@
  */
 class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 {
-
     /**
      * Type of event once (single date event)
      *
@@ -65,18 +64,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     const EVENT_TYPE_ANUAL = 5;
 
     /**
-     * Integer with the value of the root event Id
-     *
-     * @var integer
-     */
-    protected $_rootEventId = 0;
-
-    /**
      * Gets the metadata information from database
      *
      * @return array with the info of the calendar database modified
      */
-    public function info() {
+    public function info()
+    {
         $tmp = parent::info();
 
         // participant id is provided as the list of participants of the event,
@@ -92,7 +85,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return integer the id of the root event
      */
-    public static function saveEvent($request) {
+    public static function saveEvent($request)
+    {
         $userId        = Phprojekt_Auth::getUserId();
         $id            = (int) $request->getParam('id');
         $participantId = $request->getParam('participantId');
@@ -101,18 +95,16 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rootEventId   = self::getRootEventId($id);
         $relatedEvents = self::getRelatedEvents($rootEventId);
         $startDate     = $request->getParam('startDate');
-        $endDate       = $request->getParam('endDate', $startDate);
-        $serialType    = (int)$request->getParam('serialType', Calendar_Models_Calendar::EVENT_TYPE_ONCE);
-        $serialDates   = $request->getParam('serialDates', array());
-        if (!is_array($serialDates)) {
-            $serialDates[] = array(1 => (int)$serialDates);
-        }
-        
-        //TODO: create a better GLOBALLY unique uid
-        $request->setParam('uid', md5(time()));
-        
+        $rrule         = $request->getParam('rrule', null);
+
         // getting reqesuted dates for the serial meeting (if it is serial)
-        $eventDates = self::getSerialDates($startDate, $endDate, $serialType, $serialDates);
+        if (!empty($rrule)) {
+            $dateCollection = new Phprojekt_Date_Collection($startDate);
+            $dateCollection->applyRrule($rrule);
+            $eventDates = $dateCollection->getValues();
+        } else {
+            $eventDates = array(new Zend_Date(strtotime($startDate)));
+        }
 
         // getting the participant list from request
         if (is_array($participantId)) {
@@ -127,53 +119,52 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             }
         } elseif ((is_numeric($participantId) && ($userId <> (int)$participantId))) {
             $participants[] = (int)$participantId;
-            // $participants[] = (int)$userId;
 
         } else {
             $participants[] = $userId;
         }
-        
+
         // first, we will do the selection by date
+        $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
         foreach ($eventDates as $oneDate) {
-            $request->setParam('startDate', $oneDate);
-                
+
+            $date = date("Y-m-d", $oneDate->get());
+            $request->setParam('startDate', $date);
+            $request->setParam('endDate', $date);
+
             // now the insertion or edition for each invited user
             foreach ($participants as $oneParticipant) {
                 $request->setParam('participantId', $oneParticipant);
-                
-                $model  = Phprojekt_Loader::getModel($moduleName, $moduleName);
-                if (isset($relatedEvents[$oneDate][$oneParticipant])) {
-                    if ($relatedEvents[$oneDate][$oneParticipant] <> $rootEventId) {
+                $clone = clone($model);
+                $clone->uid = md5(time());
+                if (isset($relatedEvents[$date][$oneParticipant])) {
+                    if ($relatedEvents[$date][$oneParticipant] != $rootEventId) {
                         $request->setParam('parentId', $rootEventId);
                     } else {
                         $request->setParam('parentId', 0);
                     }
-                    $model->find($relatedEvents[$oneDate][$oneParticipant]);
-                    unset($relatedEvents[$oneDate][$oneParticipant]);
-                    
+                    $clone->find($relatedEvents[$date][$oneParticipant]);
+                    unset($relatedEvents[$date][$oneParticipant]);
                 }
-                
-
-                Default_Helpers_Save::save($model, $request->getParams());
-
+                Default_Helpers_Save::save($clone, $request->getParams());
                 if ($rootEventId == 0) {
-                    $rootEventId = $model->id;
+                    $rootEventId = $clone->id;
                     $request->setParam('parentId', $rootEventId);
                 }
-                
-                unset($model);
+                unset($clone);
             }
         }
 
-        // removing not included dates 
-        foreach ($relatedEvents as $oneDate) {
+        // removing not included dates
+        $startDate = date("Y-m-d", strtotime($startDate));
+        foreach ($relatedEvents as $checkDate => $oneDate) {
             // now, I'll delete the other participants (uninvited?)
-            if (is_array($oneDate) && count($oneDate) > 0) {
+            if (is_array($oneDate) && count($oneDate) > 0 && $checkDate >= $startDate) {
                 foreach ($oneDate as $oneId) {
-                    $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
-                    $model->find($oneId);
-                    $model->delete();
-                    unset($model);
+                    $clone = clone($model);
+                    $clone->find($oneId);
+                    $clone->delete();
+                    unset($clone);
                 }
             }
         }
@@ -188,14 +179,17 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return integer id of the root event
      */
-    public static function getRootEventId ($id) {
+    public static function getRootEventId($id)
+    {
         $rootEventId = 0;
         $rootEvent = Phprojekt_Loader::getModel('Calendar', 'Calendar');
         $rootEvent->find($id);
-        while (!empty($rootEvent->parentId)) {
-            $rootEvent->find($rootEvent->parentId);
+
+        if (null !== $rootEvent->parentId || $rootEvent->parentId > 0) {
+            $rootEventId = (int)$rootEvent->parentId;
+        } else {
+            $rootEventId = (int)$rootEvent->id;
         }
-        $rootEventId = (int)$rootEvent->id;
 
         return $rootEventId;
     }
@@ -205,10 +199,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @param integer $rootEventId id of one root event
      * @param boolean $onlyUsers indicates if only the user list is necessary
-     * 
+     *
      * @return array with startDate => participantId => event id or only participantId => event id if it is indicated
      */
-    public function getRelatedEvents ($rootEventId, $onlyUsers = false) {
+    public function getRelatedEvents($rootEventId, $onlyUsers = false)
+    {
         $relatedEvents = array();
 
         // the main event is related to himself
@@ -222,7 +217,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $relatedEvents[$rootEvent->startDate][$rootEvent->participantId] = $rootEventId;
             }
             // getting the event list -all related events-
-            $eventList = $rootEvent->fetchAll("parentId = ".$rootEventId);
+            $eventList = $rootEvent->fetchAll(" parentId = " . (int)$rootEventId);
             if (is_array($eventList)) {
                 foreach ($eventList as $oneEvent) {
                     $tmpUserId = (int)$oneEvent->participantId;
@@ -244,8 +239,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return boolean
      */
-    public function recordValidate() {
-        
+    public function recordValidate()
+    {
         // one is the unique value available because calendar is a global module
         if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_name)) >= 1) {
             $this->projectId = 1;
@@ -259,13 +254,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * @return void
      *
      */
-    public function getAllParticipants() {
+    public function getAllParticipants()
+    {
         $relatedEvents = array();
 
         if (!empty($this->id)) {
             $rootEventId   = $this->getRootEventId($this->id);
             $relatedEvents = $this->getRelatedEvents($rootEventId, true);
-                        
             $this->participantId = implode(",", array_keys($relatedEvents));
         }
     }
@@ -275,94 +270,25 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function deleteRelatedEvents() {
+    public function deleteRelatedEvents()
+    {
         $rootEventId   = $this->getRootEventId($this->id);
         $relatedEvents = $this->getRelatedEvents($rootEventId);
-
         // deleting all related event entries except this item
         if (is_array($relatedEvents) && count($relatedEvents) > 0) {
+            $model = Phprojekt_Loader::getModel('Calendar', 'Calendar');
             foreach ($relatedEvents as $oneDate) {
                 if (is_array($oneDate)) {
                     foreach ($oneDate as $oneId) {
                         if ($oneId <> $this->id) {
-                            $model  = Phprojekt_Loader::getModel('Calendar', 'Calendar');
-                            $model->find($oneId);
-                            $model->delete();
-                            unset($model);
+                            $clone = clone($model);
+                            $clone->find($oneId);
+                            $clone->delete();
+                            unset($clone);
                         }
                     }
                 }
             }
         }
     }
-
-    /**
-     * Gsts an array with the selected dates based on serial information
-     *
-     * @param date $startDate Date when the serie starts
-     * @param date $endDate Date when the serie ends
-     * @param integer $serialType Type of seria (check Calendar_Models_Calendar constants for further information)
-     * @param array $weekDays with the days of the week included on serial selection (ISO-8601 numeric representation)
-     * @return array of dates
-     */
-    public static function getSerialDates($startDate, 
-                                          $endDate, 
-                                          $serialType = Calendar_Models_Calendar::EVENT_TYPE_ONCE, 
-                                          $weekDays = array()) {
-
-        $dates = array();
-        $startDate = strtotime($startDate);
-        $endDate = strtotime($endDate);
-
-
-        switch ($serialType) {
-            case Calendar_Models_Calendar::EVENT_TYPE_ONCE :
-                $dates[] = date("Y-m-d", $startDate);
-                break;
-            case Calendar_Models_Calendar::EVENT_TYPE_DAILY :
-
-                while ($startDate <= $endDate) {
-                    $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0, date("m", $startDate), 
-                                 date("d", $startDate) + 1, date("Y", $startDate));
-
-                }
-                break;
-
-            case Calendar_Models_Calendar::EVENT_TYPE_WEEKLY :
-
-                while ($startDate <= $endDate) {
-                    if (in_array(date("N", $startDate), $weekDays)) {
-                        $dates[] = date("Y-m-d", $startDate);
-                    }
-                    $startDate = mktime(0, 0, 0, date("m", $startDate), 
-                                 date("d", $startDate) + 1, date("Y", $startDate));
-
-                }
-                break;
-            case Calendar_Models_Calendar::EVENT_TYPE_MONTLY  :
-
-                while ($startDate <= $endDate) {
-                    $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0, date("m", $startDate) + 1, 
-                                 date("d", $startDate), date("Y", $startDate));
-
-                }
-                break;
-            case Calendar_Models_Calendar::EVENT_TYPE_ANUAL :
-
-                while ($startDate <= $endDate) {
-                    $dates[] = date("Y-m-d", $startDate);
-                    $startDate = mktime(0, 0, 0, date("m", $startDate), 
-                                 date("d", $startDate), date("Y", $startDate) + 1);
-
-                }
-                break;
-        }
-        
-        return $dates;
-
-
-    }
-
 }

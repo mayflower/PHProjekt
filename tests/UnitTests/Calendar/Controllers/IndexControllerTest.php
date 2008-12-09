@@ -38,17 +38,15 @@ class Calendar_IndexController_Test extends FrontInit
     {
         $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Project'));
         $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Calendar/index/jsonSave/endDate/Mon Jun 09 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
+            . 'index.php/Calendar/index/jsonSave/'
             . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
             . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
             . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
         $this->request->setPathInfo('/Calendar/index/jsonSave/'
-            . 'endDate/Mon Jun 09 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
             . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
             . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
             . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
         $this->request->setRequestUri('/Calendar/index/jsonSave/'
-            . 'endDate/Mon Jun 09 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
             . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
             . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
             . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
