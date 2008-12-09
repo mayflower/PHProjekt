@@ -18,7 +18,7 @@
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
     <script type="text/javascript" src="<?php echo $this->url(array('controller' => 'js', 'action' => 'index')); ?>"></script>
     <script type="text/javascript">
-        function init() {   
+        function init() {
             if (document.layers) {
                 availHeight = window.innerHeight + window.pageYOffset;
             } else if (document.all) {
@@ -33,7 +33,10 @@
             dijit.byId('completeCenterContent').resize();
         }
         dojo.addOnLoad(init);
-    </script>    
+        window.onresize = function(){
+            init();
+        };
+    </script>
 </head>
 <body class="phprojekt">
     <script type="text/javascript">
