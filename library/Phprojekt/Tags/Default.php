@@ -180,7 +180,7 @@ class Phprojekt_Tags_Default
         $results      = array();
         $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
-        
+
         if (!empty($tag)) {
             // Find the tag
             $tagId = $this->_tags->getTagId($tag);
@@ -373,6 +373,7 @@ class Phprojekt_Tags_Default
     private function _cleanupString($string)
     {
         // Clean up HTML
+        $string = utf8_decode($string);
         $string = preg_replace('#\W+#msiU', ' ', strtolower(strtr(strip_tags($string),
                                array_flip(get_html_translation_table(HTML_ENTITIES)))));
         // Translate bad
@@ -380,13 +381,22 @@ class Phprojekt_Tags_Default
                          "'&(gt|#62);'i", "'&(nbsp|#160);'i",
                          "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i",
                          "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
-                         "'&auml;'", "'&ouml;'", "'&uuml;'", "'&Auml;'", "'&Ouml;'",
-                         "'&Uuml;'", "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
+                         "'&auml;'", "'&Auml;'",
+                         "'&euml;'", "'&Euml;'",
+                         "'&iuml;'", "'&Iuml;'",
+                         "'&ouml;'", "'&Ouml;'",
+                         "'&uuml;'", "'&Uuml;'",
+                         "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
         $replace = array (" ", " ", " ", " ", " ",
                           " ", " ", " ", " ", " ",
-                          "�", "�", "�", "�", "�",
-                          "�", "�",  " ", " ", " ", " ");
+                          chr(228), chr(196),
+                          chr(235), chr(203),
+                          chr(239), chr(207),
+                          chr(246), chr(214),
+                          chr(252), chr(220),
+                          chr(223), " ", " ", " ", " ");
         $string = preg_replace($search, $replace, strip_tags($string));
+        $string = utf8_encode($string);
         return $string;
     }
 
