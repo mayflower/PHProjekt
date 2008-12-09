@@ -48,9 +48,9 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate  = Zend_Registry::get('translate');
-        $message    = $translate->translate(self::ADD_TRUE_TEXT);
-        $id         = (int)$this->getRequest()->getParam('id');
+        $translate = Zend_Registry::get('translate');
+        $message   = $translate->translate(self::ADD_TRUE_TEXT);
+        $id        = (int)$this->getRequest()->getParam('id');
 
         // getting the main row if the group if an id is provided
         if (!empty($id)) {
@@ -139,9 +139,9 @@ class Calendar_IndexController extends IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count     = (int) $this->getRequest()->getParam('count', null);
-        $offset    = (int) $this->getRequest()->getParam('start', null);
-        $itemId    = (int) $this->getRequest()->getParam('id', null);
+        $count   = (int) $this->getRequest()->getParam('count', null);
+        $offset  = (int) $this->getRequest()->getParam('start', null);
+        $itemId  = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);

@@ -36,10 +36,7 @@ class Todo_IndexController_Test extends FrontInit
      */
     public function testJsonList()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Todo'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Todo/index/jsonList');
-        $this->request->setPathInfo('/Todo/index/jsonList');
-        $this->request->setRequestUri('/Todo/index/jsonList');
+        $this->setRequestUrl('Todo/index/jsonList');
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":1') > 0);
     }

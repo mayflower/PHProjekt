@@ -36,34 +36,65 @@ class Calendar_IndexController_Test extends FrontInit
      */
     public function testJsonSave()
     {
-        $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Project'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Calendar/index/jsonSave/'
-            . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
-            . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
-            . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
-        $this->request->setPathInfo('/Calendar/index/jsonSave/'
-            . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
-            . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
-            . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
-        $this->request->setRequestUri('/Calendar/index/jsonSave/'
-            . 'endTime/Thu Jan 01 1970 10:00:00 GMT-0300 (SA Eastern Standard Time)/notes/test note/projectId/1/'
-            . 'startDate/Mon Jun 02 2008 00:00:00 GMT-0300 (SA Eastern Standard Time)/'
-            . 'startTime/Thu Jan 01 1970 09:00:00 GMT-0300 (SA Eastern Standard Time)/title/test/participantId/1');
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('title', 'test');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2008-06-02');
+        $this->request->setParam('startTime', strtotime('09:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('participantId', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
+        $this->assertTrue(strpos($response, Calendar_IndexController::ADD_TRUE_TEXT) > 0);
+
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('id', 1);
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('title', 'test');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2008-06-02');
+        $this->request->setParam('startTime', strtotime('09:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('participantId', 1);
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Calendar_IndexController::EDIT_TRUE_TEXT) > 0);
+
+        // Multiple Events
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1');
+        $this->request->setParam('startDate', '2008-12-01');
+        $this->request->setParam('startTime', strtotime('02:00'));
+        $this->request->setParam('endTime', strtotime('03:00'));
+        $this->request->setParam('title', 'Multiple');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('participantId', array(1,2));
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Calendar_IndexController::ADD_TRUE_TEXT) > 0);
+
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('id', 4);
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1');
+        $this->request->setParam('startDate', '2008-12-01');
+        $this->request->setParam('startTime', strtotime('02:00'));
+        $this->request->setParam('endTime', strtotime('03:00'));
+        $this->request->setParam('title', 'Multiple');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('participantId', array(1,2));
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Calendar_IndexController::EDIT_TRUE_TEXT) > 0);
     }
 
     /**
      * Test the calendar event detail
      */
-
     public function testJsonDetailAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Calendar'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Calendar/index/jsonDetail/id/1');
-        $this->request->setPathInfo('/Calendar/index/jsonDetail/id/1');
-        $this->request->setRequestUri('/Calendar/index/jsonDetail/id/1');
+        $this->setRequestUrl('Calendar/index/jsonDetail/');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":1') > 0);
+
+        $this->setRequestUrl('Calendar/index/jsonDetail/');
+        $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":1') > 0);
     }
@@ -71,13 +102,14 @@ class Calendar_IndexController_Test extends FrontInit
     /**
      * Test the calendar list
      */
-
     public function testJsonListAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Calendar'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Calendar/index/jsonList');
-        $this->request->setPathInfo('/Calendar/index/jsonList');
-        $this->request->setRequestUri('/Calendar/index/jsonList');
+        $this->setRequestUrl('Calendar/index/jsonList/');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
+
+        $this->setRequestUrl('Calendar/index/jsonList/');
+        $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":1}') > 0);
     }
@@ -87,11 +119,26 @@ class Calendar_IndexController_Test extends FrontInit
      */
     public function testJsonDeleteAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Calendar'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Calendar/index/jsonDelete/id/1');
-        $this->request->setPathInfo('/Calendar/index/jsonDelete/id/1');
-        $this->request->setRequestUri('/Calendar/index/jsonDelete/id/1');
+        $this->setExpectedException('Phprojekt_PublishedException');
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        $this->front->dispatch($this->request, $this->response);
+
+        $this->setExpectedException('Phprojekt_PublishedException');
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        $this->request->setParam('id', 111);
+        $this->front->dispatch($this->request, $this->response);
+
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
+        $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
+
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        $this->request->setParam('id', 2);
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
+        $this->setRequestUrl('Calendar/index/jsonList/');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":0}') > 0);
     }
 }

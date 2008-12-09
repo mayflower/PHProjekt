@@ -36,42 +36,32 @@ class Timecard_IndexController_Test extends FrontInit
      */
     public function testJsonListAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Timecard'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Timecard/index/jsonList/year/2008/month/04/view/month');
-        $this->request->setPathInfo('/Timecard/index/jsonList/year/2008/month/04/view/month');
-        $this->request->setRequestUri('/Timecard/index/jsonList/year/2008/month/04/view/month');
+        $this->setRequestUrl('Timecard/index/jsonList/');
+        $this->request->setParam('year', 2008);
+        $this->request->setParam('month', '04');
+        $this->request->setParam('view', 'month');
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":'.date("t").'}') > 0);
     }
 
     public function testJsonStartAction()
     {
-        $this->request->setParams(array('action' => 'jsonStart', 'controller' => 'index', 'module' => 'Timecard'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Timecard/index/jsonStart');
-        $this->request->setPathInfo('/Timecard/index/jsonStart');
-        $this->request->setRequestUri('/Timecard/index/jsonStart');
+        $this->setRequestUrl('Timecard/index/jsonStart');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
+        $this->assertTrue(strpos($response, Timecard_IndexController::ADD_TRUE_TEXT) > 0);
     }
 
     public function testJsonStopAction()
     {
-        $this->request->setParams(array('action' => 'jsonStart', 'controller' => 'index', 'module' => 'Timecard'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Timecard/index/jsonStop');
-        $this->request->setPathInfo('/Timecard/index/jsonStop');
-        $this->request->setRequestUri('/Timecard/index/jsonStop');
+        $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
+        $this->assertTrue(strpos($response, Timecard_IndexController::ADD_TRUE_TEXT) > 0);
     }
 
     public function testJsonStopActionNoRecordOpen()
     {
-        $this->request->setParams(array('action' => 'jsonStart', 'controller' => 'index', 'module' => 'Timecard'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Timecard/index/jsonStop');
-        $this->request->setPathInfo('/Timecard/index/jsonStop');
-        $this->request->setRequestUri('/Timecard/index/jsonStop');
+        $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was not found') > 0);
+        $this->assertTrue(strpos($response, Timecard_IndexController::NOT_FOUND) > 0);
     }
 }

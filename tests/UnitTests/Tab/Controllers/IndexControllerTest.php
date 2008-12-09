@@ -36,10 +36,7 @@ class Tab_IndexController_Test extends FrontInit
      */
     public function testJsonList()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Tab'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/tab/jsonList');
-        $this->request->setPathInfo('/Core/tab/jsonList');
-        $this->request->setRequestUri('/Core/tab/jsonList');
+        $this->setRequestUrl('Core/tab/jsonList');
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":3}') > 0);
     }

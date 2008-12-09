@@ -36,12 +36,9 @@ class Role_IndexController_Test extends FrontInit
      */
     public function testGetRolesAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Role'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/role/jsonList');
-        $this->request->setPathInfo('/Core/role/jsonList');
-        $this->request->setRequestUri('/Core/role/jsonList');
+        $this->setRequestUrl('Core/role/jsonList');
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response), 
+        $this->assertTrue(strpos(strtolower($response),
             strtolower('{"id":"1","name":"admin","rights":[]}],"numRows":1}')) > 0);
     }
 
@@ -50,11 +47,9 @@ class Role_IndexController_Test extends FrontInit
      */
     public function testSaveAction()
     {
-        $this->request->setParams(array('action' => 'jsonList', 'controller' => 'index', 'module' => 'Role'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/role/jsonSave/name/test');
-        $this->request->setPathInfo('/Core/role/jsonSave/name/test');
-        $this->request->setRequestUri('/Core/role/jsonSave/name/test');
-        $response = $this->getResponse();       
-        $this->assertTrue(strpos(strtolower($response), strtolower('The Item was added correctly')) > 0);
+        $this->setRequestUrl('Core/role/jsonSave/');
+        $this->request->setParam('name', 'test');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Core_RoleController::ADD_TRUE_TEXT) > 0);
     }
 }
