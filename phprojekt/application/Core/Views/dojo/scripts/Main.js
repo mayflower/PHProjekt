@@ -28,7 +28,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.formWidget = phpr.Core.Form;
         this.treeWidget = phpr.Core.Tree;
     },
-    
+
     reload:function() {
         phpr.module    = this.module;
         phpr.submodule = this.module;
@@ -49,15 +49,15 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         phpr.DataStore.requestData({
             url: subModuleUrl,
             processData: dojo.hitch(this,function() {
-                var modules = new Array();              
+                var modules = new Array();
+                modules.push({"name":"Module", "label": phpr.nls.get("Module"), "moduleFunction": "reload", "module": "Module"});
+                modules.push({"name":"Tab", "label": phpr.nls.get("Tab"), "moduleFunction": "reload", "module": "Tab"});
                 modules.push({"name":"User", "label": phpr.nls.get("User"), "moduleFunction": "reload", "module": "User"});
                 modules.push({"name":"Role", "label": phpr.nls.get("Role"), "moduleFunction": "reload", "module": "Role"});
-                modules.push({"name":"Tab", "label": phpr.nls.get("Tab"), "moduleFunction": "reload", "module": "Tab"});
-                modules.push({"name":"Module", "label": phpr.nls.get("Module"), "moduleFunction": "reload", "module": "Module"});
                 tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
                     modules.push({"name": tmp[i].name, "label": tmp[i].label, "moduleFunction": "loadSubModule", "module": "Administration"});
-                }                       
+                }
                 var navigation ='<ul id="nav_main">';
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';

@@ -40,8 +40,17 @@ phpr.grid.formatTime = function(value) {
         return value;
     }
 },
+
 phpr.grid.formatPercentage = function(value) {
     value = dojo.number.round(value, 2);
+    return value;
+},
+
+phpr.grid.formatText = function(value) {
+    value = value.toString();
+    if (value.length > 25) {
+        value = value.substr(0, 25) + '...';
+    }
     return value;
 },
 
@@ -93,25 +102,25 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     // summary:
     //    Redefine the function for work with iso format
     // description:
-    //    Redefine the function for work with iso format    
+    //    Redefine the function for work with iso format
     widgetClass: "dijit.form.DateTextBox",
-        
+
     getValue: function(inRowIndex){
         var date = this.widget.attr('value');
-        var day = date.getDate();       
+        var day = date.getDate();
         if (day < 10) {
-            day = '0'+day; 
+            day = '0'+day;
         }
-        var month = (date.getMonth()+1);       
+        var month = (date.getMonth()+1);
         if (month < 10) {
-            month = '0'+month 
+            month = '0'+month
         }
         return date.getFullYear() + '-' + month + '-' + day;
     },
-            
+
     setValue:function(inRowIndex, inValue) {
         if (this.widget) {
-            var parts = inValue.split("-"); 
+            var parts = inValue.split("-");
             var year  = parts[0];
             var month = parts[1]-1;
             var day   = parts[2];
@@ -120,13 +129,13 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
             this.inherited(arguments);
         }
     },
-        
+
     getWidgetProps: function(inDatum){
-        var parts = inDatum.split("-"); 
+        var parts = inDatum.split("-");
         var year  = parts[0];
         var month = parts[1]-1;
         var day   = parts[2];
-        return dojo.mixin(this.inherited(arguments), {          
+        return dojo.mixin(this.inherited(arguments), {
             value: new Date(year, month, day)
         });
     }

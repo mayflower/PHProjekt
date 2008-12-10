@@ -52,7 +52,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module+".setLanguage", this, "setLanguage");
         dojo.subscribe(module+"._isGlobalModule", this, "_isGlobalModule");
     },
-    
+
     openForm:function(/*int*/id, /*String*/module) {
         //summary: this function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
@@ -113,9 +113,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                             }
                         }
                     }
-                    
+
                     if (currentModule) {
-                        dojo.publish(currentModule + ".reload");                        
+                        dojo.publish(currentModule + ".reload");
                     } else if (firstModule && usefirstModule) {
                         dojo.publish(firstModule + ".reload");
                     } else {
@@ -155,9 +155,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.setSearchForm();
                 var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
                 this.tree     = new this.treeWidget(this);
-                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);        
+                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
           })
-        });            
+        });
     },
 
     reload:function() {
@@ -184,34 +184,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     setGlobalModulesNavigation:function() {
-        var toolbar  = dijit.byId('mainNavigation');
-
-        // Administration
-        var button = new dijit.form.Button({
-            id:        "globalModuleAdmin",
-            label:     phpr.nls.get('Administration'),
-            showLabel: true,
-            onClick:   dojo.hitch(this, function() {
-                dojo.publish("Administration.reload");
-            })
-        });
-        toolbar.addChild(button);
-        var separator = new dijit.ToolbarSeparator();
-        toolbar.addChild(separator);
-
-        // Setting
-        var button = new dijit.form.Button({
-            id:        "globalModuleSettings",
-            label:     phpr.nls.get('Settings'),
-            showLabel: true,
-            onClick:   dojo.hitch(this, function() {
-                dojo.publish("Setting.reload");
-            })
-        });
-        toolbar.addChild(button);
-        var separator = new dijit.ToolbarSeparator();
-        toolbar.addChild(separator);
-
+        var toolbar   = dijit.byId('mainNavigation');
         var globalUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
         phpr.DataStore.addStore({url: globalUrl});
         phpr.DataStore.requestData({url: globalUrl, processData: dojo.hitch(this, function() {
@@ -232,7 +205,34 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     toolbar.addChild(separator);
                 }
 
+                // Setting
+                var button = new dijit.form.Button({
+                    id:        "globalModuleSettings",
+                    label:     phpr.nls.get('Settings'),
+                    showLabel: true,
+                    onClick:   dojo.hitch(this, function() {
+                        dojo.publish("Setting.reload");
+                    })
+                });
+                toolbar.addChild(button);
+                var separator = new dijit.ToolbarSeparator();
+                toolbar.addChild(separator);
+
+                // Administration
+                var button = new dijit.form.Button({
+                    id:        "globalModuleAdmin",
+                    label:     phpr.nls.get('Administration'),
+                    showLabel: true,
+                    onClick:   dojo.hitch(this, function() {
+                        dojo.publish("Administration.reload");
+                    })
+                });
+                toolbar.addChild(button);
+                var separator = new dijit.ToolbarSeparator();
+                toolbar.addChild(separator);
+
                 // Help
+                /*
                 var button = new dijit.form.Button({
                     id:        "globalModuleHelp",
                     label:     phpr.nls.get('Help'),
@@ -241,6 +241,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 toolbar.addChild(button);
                 var separator = new dijit.ToolbarSeparator();
                 toolbar.addChild(separator);
+                */
 
                 // Logout
                 var button = new dijit.form.Button({
@@ -323,7 +324,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction || "reload";
-                    if (modules[i].rights.read) {                    
+                    if (modules[i].rights.read) {
                        if (moduleFunction == "basicData" && currentModule == 'BasicData' && !activeTab) {
                             liclass = 'class = active';
                             activeTab = true;
@@ -363,7 +364,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.byId("buttonRow").appendChild(newEntry.domNode);
         dojo.connect(newEntry, "onClick", dojo.hitch(this, "newEntry"));
     },
-    
+
     setSubGlobalModulesNavigation:function(currentModule) {
         // summary:
         //    This function is responsible for displaying the Navigation of the current Global Module
@@ -383,9 +384,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //     Clean the submodule div and destroy all the buttons
         phpr.destroySubWidgets('buttonRow');
         phpr.destroySubWidgets('formButtons');
-        dojo.byId("subModuleNavigation").innerHTML = '';    
+        dojo.byId("subModuleNavigation").innerHTML = '';
     },
-    
+
     newEntry:function() {
         // summary:
         //     This function is responsible for displaying the form for a new entry in the
@@ -636,7 +637,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Clean the navigation and forms buttons
         this.cleanPage();
-                       
+
         this.hideSuggest();
 
         phpr.send({
@@ -683,7 +684,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // summary:
         //    This function reload the grid place with the result of a search or a tagt
         // description:
-        //    The server return the found records and the function display it        
+        //    The server return the found records and the function display it
         if (this.grid) {
             this.grid.updateData();
         }
@@ -691,13 +692,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             this.form.updateData();
         }
     },
-    
+
     setLanguage:function(language) {
         // summary:
         //    Request to the server the languagues strings and change the current lang
         // description:
         //    Request to the server the languagues strings and change the current lang
-        //    Call the reload function then        
+        //    Call the reload function then
         phpr.language = language;
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
