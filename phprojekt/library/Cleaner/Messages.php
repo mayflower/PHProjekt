@@ -1,15 +1,15 @@
 <?php
 /**
  * Messages class
- * 
+ *
  * @author     Peter Voringer <peter.voringer@mayflower.de>
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
- * @license    
+ * @license
  * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/Cleaner
  * @since      File available since Release 1.0
- * 
+ *
  */
 
 /**
@@ -17,7 +17,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
- * @license    
+ * @license
  * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
@@ -31,14 +31,14 @@ class Cleaner_Messages
      * @var array
      */
     protected static $_translations = array();
-    
+
     /**
      * Keys of messages
      *
      * @var array
      */
     protected $_messages;
-    
+
     /**
      * Constructor of Cleaner_Messages
      *
@@ -47,7 +47,7 @@ class Cleaner_Messages
     {
         $this->_messages = array();
     }
-    
+
     /**
      * Get flag, if messages does not contain any message
      *
@@ -57,12 +57,12 @@ class Cleaner_Messages
     {
         return (empty($this->_messages));
     }
-    
+
     /**
      * Get an associative array with keys and localized messages
      *
      * @param string $locale Name of locale to use
-     * 
+     *
      * @return array Array with MessageKey => Localized Messagetext
      */
     public function get($locale)
@@ -70,33 +70,33 @@ class Cleaner_Messages
         if (!isset(self::$_translations[$locale])) {
             self::$_translations[$locale] = self::_load($locale);
         }
-        
+
         $result = array();
-        
+
         foreach ($this->_messages as $message) {
             $result[$message] = self::$_translations[$locale][$message];
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Add an additional message key
      *
      * @param string $message Key of message
-     * 
+     *
      * @return void
      */
     public function add($message)
     {
         $this->_messages[] = $message;
-    }    
-    
+    }
+
     /**
      * Check, if a certain messagekey was added
      *
      * @param string $message MessageKey
-     * 
+     *
      * @return bool
      */
     public function has($message)
@@ -109,26 +109,26 @@ class Cleaner_Messages
      *
      * @return string
      */
-    public function __toString() 
+    public function __toString()
     {
-        return implode(", ", $this->_messages);    
+        return implode(", ", $this->_messages);
     }
 
     /**
      * Load messages for a certain locale
      *
      * @param string $locale Name oflocale (for example de_DE, en_US)
-     * 
+     *
      * @return array
      */
     protected static function _load($locale)
-    {        
+    {
         $filename = 'Locale/' . $locale . '.php';
-        
+
         if (!file_exists($filename)) {
             throw new Cleaner_SystemException('Locale not available');
         }
-        
+
         return (include $filename);
-    }    
+    }
 }
