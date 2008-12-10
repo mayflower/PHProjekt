@@ -112,14 +112,51 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $translate = Zend_Registry::get('translate');
 
-        if (isset($data['endTime'])) {
+        if (isset($data['startTime'])) {
+            $startTime = ereg_replace(":", "", $data['startTime']);
+            if (strlen($startTime) == 6) {
+                $startTime = substr($startTime, 0, 4);
+            }
+            $startTime = intval($startTime);
+            if (($startTime > 2359) || ($startTime < 0)) {
+                $this->_validate->error->addError(array(
+                    'field'   => $translate->translate('Hours'),
+                    'message' => $translate->translate('The start time is invalid')));
+                return false;
+            }
+        }
+
+        if (isset($data['endTime']) && !empty($data['endTime'])) {
             if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
                     'field'   => $translate->translate('Hours'),
                     'message' => $translate->translate('The end time must be after the start time')));
                 return false;
             }
+
+            $endTime = ereg_replace(":", "", $data['endTime']);
+            if (strlen($endTime) == 6) {
+                $endTime = substr($endTime, 0, 4);
+            }
+            $endTime = intval($endTime);
+            if (($endTime > 2359) || ($endTime < 0)) {
+                $this->_validate->error->addError(array(
+                    'field'   => $translate->translate('Hours'),
+                    'message' => $translate->translate('The end time is invalid')));
+                return false;
+            }
+
+            if (empty($data['startTime']) || $data['startTime'] == ':') {
+                if (strlen($startTime) == 6) {
+                    $startTime = substr($startTime, 0, 4);
+                }
+                $this->_validate->error->addError(array(
+                    'field'   => $translate->translate('Hours'),
+                    'message' => $translate->translate('The start time is invalid')));
+                return false;
+            }
         }
+
         $this->_validate = new Phprojekt_Model_Validate();
         return $this->_validate->recordValidate($this, $data, $fields);
     }

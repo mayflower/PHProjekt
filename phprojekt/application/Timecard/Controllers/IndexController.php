@@ -88,7 +88,6 @@ class Timecard_IndexController extends IndexController
         }
 
         if (null == $this->getRequest()->getParam('startTime', null)) {
-
             // Date filter to find the open register
             $dateFilter = array();
 
@@ -100,6 +99,7 @@ class Timecard_IndexController extends IndexController
 
             if (isset($records[0])) {
                 $model = $records[0];
+                $this->getRequest()->setParam('startTime', $model->startTime);
                 Default_Helpers_Save::save($model, $this->getRequest()->getParams());
                 $type    = 'success';
                 $message = $translate->translate(self::ADD_TRUE_TEXT);
@@ -109,9 +109,15 @@ class Timecard_IndexController extends IndexController
                 $message = $translate->translate(self::NOT_FOUND);
                 $showId  = null;
             }
+        } else if (null == $this->getRequest()->getParam('endTime', null)) {
+            $params = $this->getRequest()->getParams();
+            unset($params['endTime']);
+            Default_Helpers_Save::save($model, $params);
+            $type   = 'success';
+            $showId = $model->id;
         } else {
             Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-            $type    = 'success';
+            $type   = 'success';
             $showId = $model->id;
         }
 

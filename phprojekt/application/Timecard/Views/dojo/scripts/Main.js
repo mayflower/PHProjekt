@@ -33,8 +33,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.treeWidget = phpr.Timecard.Tree;
         this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
 
-        dojo.subscribe("Workingtimes.start", this, "workingtimesStart");
-        dojo.subscribe("Workingtimes.stop", this, "workingtimesStop");
+        dojo.subscribe("Timecard.Workingtimes.start", this, "workingtimesStart");
+        dojo.subscribe("Timecard.Workingtimes.stop", this, "workingtimesStop");
         dojo.subscribe("Timecard.changeListView", this, "changeListView");
         dojo.subscribe("Timecard.changeDate", this, "changeDate");
     },
@@ -107,7 +107,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         //    Convert a js time into ISO time
         // description:
         //    Convert a js time into ISO time
-       time        = time.replace(":", "");
+       time        = time.replace(/\D/g, "");
        var minutes = time.substr(time.length - 2);
        var hour    = time.substr(0,time.length-2);
        return hour + ':' + minutes;
@@ -141,6 +141,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
+                    phpr.DataStore.deleteData({url: this.form._hourUrl});
                     this.changeDate(new Date());
                 }
             })
