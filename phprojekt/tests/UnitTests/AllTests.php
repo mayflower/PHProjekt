@@ -100,9 +100,12 @@ class AllTests extends PHPUnit_Framework_TestSuite
         // in that case use defaults
         if (!is_object($config)) {
             $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION,
-                                          array("allowModifications" => true));
+                array("allowModifications" => true));
             Zend_Registry::set('config', $config);
-            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))).'/application');
+            // These directories are
+            // covered for the code coverage even they are not part of unit testing
+            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
+            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(__FILE__)) . '/library/Phprojekt');
         }
 
         $log = new Phprojekt_Log($config);
@@ -114,10 +117,10 @@ class AllTests extends PHPUnit_Framework_TestSuite
         Zend_Registry::set('translate', $translate);
 
         $db = Zend_Db::factory($config->database->type, array(
-        'username' => $config->database->username,
-        'password' => $config->database->password,
-        'dbname'   => $config->database->name,
-        'host'     => $config->database->host));
+            'username' => $config->database->username,
+            'password' => $config->database->password,
+            'dbname'   => $config->database->name,
+            'host'     => $config->database->host));
         Zend_Registry::set('db', $db);
         // There are some issues with session handling and unit testing
         // that haven't been implemented here yet, do at least some
@@ -232,7 +235,6 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
             $whiteListing = false;
         }
 
-
         if (!is_readable($configFile)) {
             fprintf(STDERR, "Cannot read %s\nAborted\n", $configFile);
             exit;
@@ -256,8 +258,8 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
     Zend_Registry::set('config', $config);
 
     if ($whiteListing) {
-        /* enable whitelisting for unit tests, these directories are
-        * covered for the code coverage even they are not part of unit testing */
+         // Enable whitelisting for unit tests, these directories are
+         // covered for the code coverage even they are not part of unit testing
         PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDir . '/application');
         PHPUnit_Util_Filter::addDirectoryToWhitelist(PHPR_LIBRARY_PATH . '/Phprojekt');
     }
