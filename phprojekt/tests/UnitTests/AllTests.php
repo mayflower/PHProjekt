@@ -105,7 +105,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
             // These directories are
             // covered for the code coverage even they are not part of unit testing
             PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
-            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(__FILE__)) . '/library/Phprojekt');
+            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/library/Phprojekt');
         }
 
         $log = new Phprojekt_Log($config);
