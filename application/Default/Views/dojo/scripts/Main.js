@@ -512,9 +512,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         });
                     }
 
-                    search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                    search += "<a class=\"searchsuggesttitle\" href='javascript:dojo.publish(\""+this.module+".clickResult\",[\"search\"]); dojo.publish(\""+this.module+".showSearchResults\",[\"" + words + "\"])'>View all</a>";
-                    search += "</div>";
+                    if (search == '') {
+                        search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
+                        search += phpr.drawEmptyMessage('There are no Results');
+                        search += "</div>";
+                    } else {
+                        search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
+                        search += "<a class=\"searchsuggesttitle\" href='javascript:dojo.publish(\""+this.module+".clickResult\",[\"search\"]); dojo.publish(\""+this.module+".showSearchResults\",[\"" + words + "\"])'>View all</a>";
+                        search += "</div>";
+                    }
 
                     this.setSuggest(search);
                     this.showSuggest();
@@ -615,6 +621,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 tag: data[i]['string']
             });
         }
+        if (value == '') {
+            value += phpr.drawEmptyMessage('There are no Tags');
+        }
         dijit.byId("tagsbox").attr('content', value);
     },
 
@@ -674,6 +683,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         moduleLabel:   moduleLabel,
                         results:       html
                     });
+                }
+                if (search == '') {
+                    search += phpr.drawEmptyMessage('There are no Results');
                 }
                 dijit.byId("gridBox").attr('content', search);
             })

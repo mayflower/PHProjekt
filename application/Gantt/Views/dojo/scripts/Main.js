@@ -88,10 +88,14 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Render the projects information
         dojo.byId('projectList').innerHTML = '';
         for (var j in this.gantt.projectDataBuffer) {
+            var caption = this.gantt.projectDataBuffer[j].caption;
+            if (caption.length > 25) {
+                caption = caption.substr(0, 25) + '...';
+            }
             dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
                 name:     this.gantt.projectDataBuffer[j].name,
                 level:    this.gantt.projectDataBuffer[j].level,
-                caption:  this.gantt.projectDataBuffer[j].caption,
+                caption:  caption,
                 STEPPING: this.gantt.STEPPING - 1,
                 width:    (this.gantt.STEPPING *2) + 4,
                 webpath:  phpr.webpath
