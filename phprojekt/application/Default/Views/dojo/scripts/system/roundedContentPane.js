@@ -102,4 +102,3 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
                 }
 
             });
-            

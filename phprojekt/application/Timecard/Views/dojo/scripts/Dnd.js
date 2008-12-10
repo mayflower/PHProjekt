@@ -49,7 +49,7 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
         params._skipStartup = true;
         return new phpr.Timecard.Booking(node, params);
     },
-    
+
     // mouse events
     onMouseDown:function(e) {
         var position = Math.abs(e.target.style.top.replace(/px/, "")) + e.layerY;
@@ -64,9 +64,9 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
         var node = dojo.byId('projectBookingForm_0');
         if (node) {
             dojo.style(node, "display", "none");
-        }        
+        }
         for (var i in timecardProjectPositions) {
-            if (start && position >= timecardProjectPositions[i].start && position <= timecardProjectPositions[i].end ) {                
+            if (start && position >= timecardProjectPositions[i].start && position <= timecardProjectPositions[i].end ) {
                 id    = timecardProjectPositions[i].id;
                 start = 0;
                 dojo.fadeIn({
@@ -79,7 +79,7 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
                             dojo.style(node, "display", "block");
                         }
                     }
-                }).play();  
+                }).play();
             }
         }
         dojo.stopEvent(e);
@@ -91,22 +91,22 @@ dojo.declare("phpr.Timecard.ContentBar", null, {
     node:     null,
     start:    8,
     end:      20,
-    
+
     constructor:function(id) {
         this.dojoNode = dojo.byId(id);
-        this.node     = dijit.byId(id);         
+        this.node     = dijit.byId(id);
     },
-    
+
     getHeight:function() {
         return Math.abs(this.dojoNode.style.height.replace(/px/, ""));
     },
-    
+
     convertHourToPixels:function(hourHeight, time) {
         var hours   = ((time.substr(0,2) - this.start) * hourHeight);
         var minutes = Math.floor((((time.substr(3,2) / 60)) * hourHeight));
         return hours + minutes;
     },
-    
+
     convertAmountToPixels:function(hourHeight, time) {
         var hours   = (time.substr(0,2) * hourHeight);
         var minutes = Math.floor((time.substr(3,2)/60) * hourHeight);
@@ -123,7 +123,7 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
                 var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
                 dojo.byId('selectedProjectFavorites').value += id + ",";
                 dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" style="cursor: move;" id="' + id + '">' + nodes[0].innerHTML + '</div>';
-                projectBookingSource.sync();                
+                projectBookingSource.sync();
             } else if (source.node.id == 'projectFavoritesTarget') {
                 // Delete a items
                 var tmp = '';

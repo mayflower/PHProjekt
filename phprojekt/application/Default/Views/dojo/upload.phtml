@@ -13,18 +13,18 @@
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"
      djConfig="isDebug: false, parseOnLoad: true, useCommentedJson: true"></script>
      <script type="text/javascript">
-        function updateInput() {        
+        function updateInput() {
             var par     = window.parent.document;
             var input   = par.getElementById("<?php echo $this->field; ?>");
             input.value = "<?php echo $this->value; ?>";
-        } 
+        }
     </script>
 </head>
 <body class="phprojekt">
     <?php
     if (null !== $this->fileName) {
         echo '<div style="display:inline;"><a href="'. $this->downloadLink .'" target=_blank>'. $this->fileName . '</a></div>&nbsp;';
-    }   
+    }
     ?>
     <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
         <div style="display:inline;">
@@ -35,9 +35,9 @@
         </div>
     </form>
     <?php
-    if ($this->upload) {        
+    if ($this->upload) {
         echo '<script type="text/javascript">updateInput();</script>';
-    }    
+    }
     ?>
 </body>
 </html>

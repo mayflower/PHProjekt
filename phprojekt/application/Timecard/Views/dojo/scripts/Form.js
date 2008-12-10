@@ -30,7 +30,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     _dateObject:   null,
     contentBar:    null,
     timecardProjectPositions: new Array(),
-    
+
     constructor:function(main, id, module, date) {
         // summary:
         //    render the form on construction
@@ -44,32 +44,32 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
         this.setDate(date);
         this.loadView();
-        this.reloadDateView(); 
+        this.reloadDateView();
     },
 
     setDate:function(date) {
         // summary:
         //    Set the date for use in the form
         // description:
-        //    Set the date for use in the form        
+        //    Set the date for use in the form
         if (undefined == date) {
             this._dateObject = new Date();
         } else {
-            this._dateObject = date; 
+            this._dateObject = date;
         }
-        this._date = this.main.getIsoDate(this._dateObject);        
+        this._date = this.main.getIsoDate(this._dateObject);
     },
-    
+
     loadView:function() {
         // summary:
         //    Load all the views
         // description:
-        //    Load all the views          
+        //    Load all the views
         this.setHourUrl();
-        this.setBookUrl();        
+        this.setBookUrl();
         this.getFormData(1,1,1);
     },
-    
+
     setHourUrl:function() {
         // summary:
         //    Set the url for get the data
@@ -91,47 +91,47 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // summary:
         //    Reload only the views that are needed
         // description:
-        //    Reload only the views that are needed        
+        //    Reload only the views that are needed
         if (date) {
             this.reloadDateView();
         }
-        
-        if (books) {            
+
+        if (books) {
             phpr.DataStore.addStore({url: this._favoritesUrl});
             phpr.DataStore.requestData({url: this._favoritesUrl, processData: dojo.hitch(this, function() {
                     phpr.DataStore.addStore({url: this._bookUrl});
-                    phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, "reloadBookingView")});                
+                    phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, "reloadBookingView")});
                 })
-            });            
+            });
         }
-        
+
         if (hours) {
             // Render the form element on the right bottom
             phpr.DataStore.addStore({url: this._hourUrl});
             phpr.DataStore.requestData({url: this._hourUrl, processData: dojo.hitch(this, "reloadHoursView")});
         }
     },
-    
+
     reloadHoursView:function() {
         // summary:
         //    Reload the Hours view
         // description:
-        //    Reload the Hours view with the form and all the hours saved for the current day     
+        //    Reload the Hours view with the form and all the hours saved for the current day
         var hoursdata  = "";
         var totalHours = 0;
         var meta       = phpr.DataStore.getMetaData({url: this._hourUrl});
-        var data       = phpr.DataStore.getData({url: this._hourUrl});        
-        
+        var data       = phpr.DataStore.getData({url: this._hourUrl});
+
         for (var i = 0; i < data.length; i++) {
             totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {
                 hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
                 start:     data[i].startTime.substr(0, 5),
                 end:       data[i].endTime.substr(0, 5),
-                id:        data[i].id            
+                id:        data[i].id
             });
-        }       
-        
+        }
+
         this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
             date: this._date,
             timecardWorkingTimesText: phpr.nls.get("Working Times"),
@@ -140,19 +140,19 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             hoursdata:                hoursdata,
             totalHours:               this.convertTime(totalHours)
         });
-        
+
         for (var i = 0; i < data.length; i++) {
             dojo.connect(dijit.byId("deleteHourButton_"+data[i].id), "onClick", dojo.hitch(this, "deleteForm", [data[i].id]));
-        }   
+        }
         dojo.connect(dijit.byId("hoursSaveButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
-    
+
     reloadDateView:function() {
         // summary:
         //    Reload the Date view
         // description:
         //    Reload the HDate picker div with the current date
-        var month   = this._dateObject.getMonth();       
+        var month   = this._dateObject.getMonth();
         var year    = this._dateObject.getFullYear();
         var dd      = new Date(year, month, 0);
         var lastDay = dd.getDate() + 1;
@@ -163,7 +163,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
         var weeks = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         var monthString = phpr.nls.get(months[month-1]);
-        
+
         for (var i = 1; i < lastDay; i++) {
             var weekString = phpr.nls.get(weeks[week]);
             days.push({'day': i, 'month': monthString, 'week': weekString});
@@ -171,25 +171,25 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             if (week > 6) {
                 week = 0;
             }
-        }   
+        }
     },
-    
+
     reloadBookingView: function() {
         // summary:
         //    Reload the Booking view
         // description:
-        //    Reload the Booking view with the form and all the Bookings saved for the current day                
-        var bookingdata  = '';        
+        //    Reload the Booking view with the form and all the Bookings saved for the current day
+        var bookingdata  = '';
         var meta         = phpr.DataStore.getMetaData({url: this._bookUrl});
         var data         = phpr.DataStore.getData({url: this._bookUrl});
-        var favorites    = phpr.DataStore.getData({url: this._favoritesUrl});                
-        var range        = meta[1]['range'];        
+        var favorites    = phpr.DataStore.getData({url: this._favoritesUrl});
+        var range        = meta[1]['range'];
         var timeprojData = data['timeproj'];
         var timecardData = data['timecard'];
         timecardProjectPositions = new Array();
-        
+
         // Fixed hours 8-20 and 700 px for the bar
-        var hours = new Array();        
+        var hours = new Array();
         var pair  = 0;
         var show  = '';
         for (var i = 8; i < 21; i++) {
@@ -207,7 +207,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         }
         var hourHeight = 20;
 
-        // Bookings forms         
+        // Bookings forms
         for (var i = 0; i < timeprojData.length; i++) {
             var projectName = '';
             for (var j in range) {
@@ -228,7 +228,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 deleteText:     phpr.nls.get('Delete'),
                 id:             timeprojData[i].id
             });
-        }  
+        }
         // New one
         bookingdata += this.render(["phpr.Timecard.template", "bookings.html"], null, {
             projectName:    '',
@@ -240,12 +240,12 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             amount:         '',
             amountLabel:    'Amount',
             saveText:       phpr.nls.get('Save'),
-            deleteText:     phpr.nls.get('Cancel'),            
+            deleteText:     phpr.nls.get('Cancel'),
             id:             0
         });
 
         // Favorites
-        var favoritesList = new Array();        
+        var favoritesList = new Array();
         for (var k in favorites) {
              for (var j in range) {
                 if (range[j]['id'] == favorites[k]) {
@@ -261,14 +261,14 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     found = true;
                 }
             }
-            if (!found) {   
+            if (!found) {
                 allProjects.push(range[j]);
             }
-        }        
+        }
         // Complete view
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
             hours:                    hours,
-            hourHeight:                hourHeight, 
+            hourHeight:                hourHeight,
             date:                     this._date,
             timecardProjectTimesText: phpr.nls.get("Project bookings"),
             values:                   favoritesList,
@@ -277,7 +277,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             bookingdata:              bookingdata
         });
         dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
-    
+
         this.contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
         var surface     = dojox.gfx.createSurface('projectBookingContainer', 400, 260);
         var lastHour    = 0;
@@ -286,8 +286,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             timeprojData[j].displayed = 0;
             timeprojData[j].remaind   = 0;
         }
-                               
-        // Draw hours block                               
+
+        // Draw hours block
         for (var i = 0; i < timecardData.length; i++) {
             var start = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].startTime);
             var end   = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].endTime);
@@ -296,7 +296,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var totalbookingHeight = 0;
             var finish = 0;
             totalHeight += (end - start);
-                        
+
             var tmp = dojo.doc.createElement ("div");
             tmp.id = 'targetBooking' + timecardData[i].id;
             tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -308,14 +308,14 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
             // Draw Bookings
             for (var j = 0; j < timeprojData.length; j++) {
-                if (timeprojData[j].displayed == 0) {                    
+                if (timeprojData[j].displayed == 0) {
                     if (timeprojData[j].remaind > 0) {
                         var bookingHeight = timeprojData[j].remaind;
                     }
                     else {
                         var bookingHeight = this.contentBar.convertAmountToPixels(hourHeight, timeprojData[j].amount);
                     }
-                    
+
                     if (totalbookingHeight <= (end - start)) {
                         if (lastHour == 0) {
                             lastHour = start;
@@ -331,7 +331,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                         tmpDraw.setFill([68,74,82,1]);
                         tmpDraw.setStroke({color:[68,74,82,1], width: 2});
                         timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
-                        
+
                         if (finish) {
                             totalbookingHeight += bookingHeight + end;
                             lastHour = 0;
@@ -358,20 +358,20 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         });
         dojo.connect(dijit.byId("saveBookingButton_0"), "onClick", dojo.hitch(this, "submitBookingForm", [0]));
     },
-    
+
     prepareSubmission:function() {
         if (this.sendData.endTime) {
             this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
         }
         if (this.sendData.startTime) {
             this.sendData.startTime = this.main.getIsoTime(this.sendData.startTime);
-        }        
+        }
         if (this.sendData.amount) {
             this.sendData.amount = this.main.getIsoTime(this.sendData.amount);
         }
-        return true;       
+        return true;
     },
-    
+
     submitForm:function() {
         // summary:
         //    Save the hours form
@@ -396,20 +396,20 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
                }
             })
-        });       
+        });
     },
-    
+
     submitBookingForm:function(id) {
         // summary:
         //    Save the booking form
         // description:
-        //    Save the booking form and reload only the grid and the booking form        
+        //    Save the booking form and reload only the grid and the booking form
         this.sendData = new Array();
         this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));
         if (!this.prepareSubmission()) {
             return false;
         }
-        
+
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonBookingSave/id/' + id,
             content:   this.sendData,
@@ -417,22 +417,22 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
-                    phpr.DataStore.deleteData({url: this._bookUrl}); 
+                    phpr.DataStore.deleteData({url: this._bookUrl});
                     this.getFormData(1,0,1);
                     this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
                }
             })
-        });        
+        });
     },
-    
+
     submitFavoritesForm:function() {
         // summary:
         //    Save the favorites projects
         // description:
-        //    Save the favorites projects       
+        //    Save the favorites projects
         this.sendData = new Array();
-        this.sendData['favorites[]'] = dojo.byId('selectedProjectFavorites').value.split(","); 
-        
+        this.sendData['favorites[]'] = dojo.byId('selectedProjectFavorites').value.split(",");
+
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonFavortiesSave',
             content:   this.sendData,
@@ -442,14 +442,14 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     phpr.DataStore.deleteData({url: this._favoritesUrl});
                }
             })
-        });       
+        });
     },
-    
+
     deleteForm:function(id) {
         // summary:
         //    Delete an hour saved
         // description:
-        //    Delete an hour saved and reload only the grid and the hours form       
+        //    Delete an hour saved and reload only the grid and the hours form
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + id,
             onSuccess: dojo.hitch(this, function(data) {
@@ -469,33 +469,33 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // summary:
         //    Delete an booking saved
         // description:
-        //    Delete an booking saved and reload only the grid and the booking form     
+        //    Delete an booking saved and reload only the grid and the booking form
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonBookingDelete/id/' + id,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
-                    phpr.DataStore.deleteData({url: this._bookUrl});  
+                    phpr.DataStore.deleteData({url: this._bookUrl});
                     this.getFormData(0,0,1);
                     this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
                }
             })
         });
     },
-    
+
     updateData:function() {
         // summary:
         //    Delete the cache for this form
         // description:
         //    Delete the cache for this form
     },
-    
+
     getDiffTime:function(end, start) {
         // summary:
         //    Ger the diff in minutes between two times
         // description:
-        //    Ger the diff in minutes between two times        
+        //    Ger the diff in minutes between two times
         var hoursEnd     = end.substr(0, 2);
         var minutesEnd   = end.substr(3, 2);
         var hoursStart   = start.substr(0, 2);
@@ -503,15 +503,15 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
         return ((hoursEnd - hoursStart)*60) + (minutesEnd - minutesStart);
     },
-    
+
     convertTime:function(time) {
         // summary:
         //    Convert a number of minutes into HH:mm
         // description:
-        //    Convert a number of minutes into HH:mm        
+        //    Convert a number of minutes into HH:mm
         hoursDiff   = Math.floor(time / 60);
         minutesDiff = time - (hoursDiff * 60);
-        
+
         if (hoursDiff == 0 || hoursDiff < 10) {
             hoursDiff = '0' + hoursDiff;
         }

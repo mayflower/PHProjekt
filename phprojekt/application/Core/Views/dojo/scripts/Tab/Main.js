@@ -28,7 +28,7 @@ dojo.declare("phpr.Tab.Main", phpr.Core.Main, {
         this.formWidget = phpr.Tab.Form;
         this.treeWidget = phpr.Tab.Tree;
      },
-     
+
      customSetSubmoduleNavigation:function() {
         this.setNewEntry();
      }

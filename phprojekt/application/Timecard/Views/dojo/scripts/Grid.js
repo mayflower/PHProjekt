@@ -20,7 +20,7 @@
 dojo.provide("phpr.Timecard.Grid");
 
 dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
-    
+
     reloadView:function(/*String*/ view, /*int*/ year, /*int*/ month) {
         this.main.setSubGlobalModulesNavigation();
         this.gridLayout = new Array();
@@ -28,7 +28,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
-        
+
     setUrl: function(year, month, view) {
         if (typeof year == "undefined") {
             date = new Date();
@@ -50,18 +50,18 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     canEdit: function(inRowIndex) {
         return false;
     },
-    
+
     useIdInGrid: function () {
         return false;
     },
-    
+
     customGridLayout:function(meta) {
-       this.gridLayout[0].styles = "cursor:pointer;"    
+       this.gridLayout[0].styles = "cursor:pointer;"
     },
-    
+
     setSaveChangesButton:function(meta) {
     },
-    
+
     showForm:function(e) {
         if (e.cellIndex == 0) {
             var item  = this.grid.getItem(e.rowIndex);

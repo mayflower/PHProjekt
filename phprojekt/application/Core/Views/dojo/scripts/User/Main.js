@@ -28,7 +28,7 @@ dojo.declare("phpr.User.Main", phpr.Core.Main, {
         this.formWidget = phpr.User.Form;
         this.treeWidget = phpr.User.Tree;
     },
-     
+
     customSetSubmoduleNavigation:function() {
         this.setNewEntry();
     }

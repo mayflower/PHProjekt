@@ -42,10 +42,10 @@ class Setting_IndexController extends IndexController
     {
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $data    = $setting->getModules();
-        
+
         echo Phprojekt_Converter_Json::convert($data);
-    }        
-        
+    }
+
     /**
      * Return the setting fields for one module
      *
@@ -55,19 +55,19 @@ class Setting_IndexController extends IndexController
     {
         $module   = $this->getRequest()->getParam('moduleName', null);
         $moduleId = (int) Phprojekt_Module::getId($module);
-        
+
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule($module);
         $metadata = $setting->getModel()->getFieldDefinition();
         $records  = $setting->getList($moduleId, $metadata);
-        
+
         $data = array("metadata" => $metadata,
                       "data"     => $records,
                       "numRows"  => count($records));
-        
+
         echo Phprojekt_Converter_Json::convert($data);
     }
-        
+
     /**
      * Saves the settings
      *
@@ -78,12 +78,12 @@ class Setting_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $translate = Zend_Registry::get('translate');
-        $module    = $this->getRequest()->getParam('moduleName', null);        
+        $module    = $this->getRequest()->getParam('moduleName', null);
         $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule($module);
 
         $message = $setting->validateSettings($this->getRequest()->getParams());
-        
+
         if (!empty($message)) {
             $message = $translate->translate($message);
             $type = "error";

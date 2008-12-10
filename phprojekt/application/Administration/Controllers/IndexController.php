@@ -42,10 +42,10 @@ class Administration_IndexController extends IndexController
     {
         $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
         $data          = $configuration->getModules();
-        
+
         echo Phprojekt_Converter_Json::convert($data);
     }
-    
+
     /**
      * Return the admin configurations fields for one module
      *
@@ -55,19 +55,19 @@ class Administration_IndexController extends IndexController
     {
         $module   = $this->getRequest()->getParam('moduleName', null);
         $moduleId = (int) Phprojekt_Module::getId($module);
-        
+
         $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
         $configuration->setModule($module);
         $metadata = $configuration->getModel()->getFieldDefinition();
         $records  = $configuration->getList($moduleId, $metadata);
-        
+
         $data     = array("metadata" => $metadata,
                           "data"     => $records,
                           "numRows"  => count($records));
-        
+
         echo Phprojekt_Converter_Json::convert($data);
     }
-        
+
     /**
      * Saves the admin configurations
      *
@@ -78,12 +78,12 @@ class Administration_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $translate     = Zend_Registry::get('translate');
-        $module        = $this->getRequest()->getParam('moduleName', null);        
+        $module        = $this->getRequest()->getParam('moduleName', null);
         $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
         $configuration->setModule($module);
 
         $message = $configuration->validateConfigurations($this->getRequest()->getParams());
-        
+
         if (!empty($message)) {
             $message = $translate->translate($message);
             $type    = "error";

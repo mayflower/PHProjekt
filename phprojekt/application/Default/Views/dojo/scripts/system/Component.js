@@ -39,10 +39,10 @@ dojo.declare("phpr.Component", null, {
                 }
             });
         }
-        
-        var tpl = new dojox.dtl.Template(tplContent);        
+
+        var tpl = new dojox.dtl.Template(tplContent);
         var content = tpl.render(context);
-        
+
         // [a-zA-Z1-9[]:|]
         var eregId = /id=\\?["'][\w\x5b\x5d\x3a\x7c]*\\?["']/gi;
         var result = content.match(eregId);
@@ -54,7 +54,7 @@ dojo.declare("phpr.Component", null, {
                 }
             }
         }
-        
+
         if(node) {
             var dojoType = node.getAttribute('dojoType');
             if ((dojoType == 'dijit.layout.ContentPane') ||

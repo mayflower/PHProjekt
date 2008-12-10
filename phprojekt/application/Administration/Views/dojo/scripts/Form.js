@@ -24,29 +24,29 @@ dojo.declare("phpr.Administration.Form", phpr.Default.Form, {
     setUrl:function() {
         this._url = phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/moduleName/" + phpr.submodule;
     },
-    
+
     initData:function() {
     },
-    
+
     setPermissions:function (data) {
         this._writePermissions  = true;
         this._deletePermissions = false;
         this._accessPermissions = true;
     },
-    
+
     addBasicFields:function() {
     },
-    
+
     addAccessTab:function(data) {
     },
-    
+
     addModuleTabs:function(data) {
     },
-    
+
     useCache:function() {
         return false;
     },
-        
+
     submitForm: function() {
         // summary:
         //    This function is responsible for submitting the formdata
@@ -71,5 +71,5 @@ dojo.declare("phpr.Administration.Form", phpr.Default.Form, {
                 }
             })
         });
-    }   
+    }
 });

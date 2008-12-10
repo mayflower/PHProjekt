@@ -11,10 +11,10 @@ style="width:100%; height:100%; background-color:#294064;">
             </div>
             <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorForm" title="Form"
             style="width:100%; height:95%;">
-            </div>        
+            </div>
             <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorList" title="List"
             style="width:100%; height:95%;">
-            </div>   
+            </div>
             <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorGeneral" title="General"
             style="width:100%; height:95%;">
             </div>
@@ -24,7 +24,7 @@ style="width:100%; height:100%; background-color:#294064;">
         style="width:100%; margin:4px; display:inline">
             <button dojoType="dijit.form.Button" onclick="dijit.byId('moduleManagerDialog').hide();" baseClass="positive" iconClass="tick">{{saveText}}</button>
         </div>
-    </div>        
+    </div>
     <div dojoType="dijit.layout.TabContainer"
     style="background-color:#fff; height:98%; width:49%; float:right; margin:4px;">
         {% for tab in tabs %}
@@ -32,6 +32,6 @@ style="width:100%; height:100%; background-color:#294064;">
             <div dojoType="phpr.Module.Designer" id="moduleDesignerTarget{{tab.nameId}}" jsId="moduleDesignerTarget{{tab.nameId}}" skipForm="true" selfAccept="true" style="background-color: #fff; width:100%; height:95%; margin: 0px; padding-top: 0px;">
             </div>
         </div>
-        {% endfor %} 
-    </div>           
+        {% endfor %}
+    </div>
 </div>
