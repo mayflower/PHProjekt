@@ -280,7 +280,7 @@ final class Default_Helpers_Save
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
                     $mail = new Phprojekt_Mail_Notification('UTF-8');
-                    $mail->sendNotificationHtml($model->getActiveRecord());
+                    $mail->sendNotificationText($model->getActiveRecord());
                 }
             }
 
@@ -294,7 +294,7 @@ final class Default_Helpers_Save
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
                     $mail = new Phprojekt_Mail_Notification('UTF-8');
-                    $mail->sendNotificationHtml($model);
+                    $mail->sendNotificationText($model);
                 }
             }
 
