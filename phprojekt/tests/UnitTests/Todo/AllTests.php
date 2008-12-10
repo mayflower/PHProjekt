@@ -60,7 +60,7 @@ class Todo_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Todo Controller');
 
         $suite->addTestSuite('Todo_IndexController_Test');
-        
+
         return $suite;
     }
 }

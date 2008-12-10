@@ -60,7 +60,7 @@ class Project_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Project Controller');
 
         $suite->addTestSuite('Project_IndexController_Test');
-        
+
         return $suite;
     }
 }

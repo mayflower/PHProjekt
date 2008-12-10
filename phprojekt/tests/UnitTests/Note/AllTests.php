@@ -60,7 +60,7 @@ class Note_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Note Controller');
 
         $suite->addTestSuite('Note_IndexController_Test');
-        
+
         return $suite;
     }
 }

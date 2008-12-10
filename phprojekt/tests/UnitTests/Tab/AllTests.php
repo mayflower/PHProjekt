@@ -64,7 +64,7 @@ class Tab_AllTests
         $suite->addTestSuite('Tab_IndexController_Test');
         $suite->addTestSuite('Phprojekt_TabModelTab_Test');
         $suite->addTestSuite('Phprojekt_TabModelInformation_Test');
-        
+
         return $suite;
     }
 }
