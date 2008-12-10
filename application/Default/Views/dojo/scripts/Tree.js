@@ -45,14 +45,14 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             this.tree = this.getTree();
 
             this._treeNode.attr('content', this.tree.domNode);
-            this.tree.startup();            
+            this.tree.startup();
             dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
         } else {
             this.tree = dijit.byId(this._idName);
         }
         this.initTree(1);
         this.selecteCurrent(phpr.currentProjectId);
-        this.closeTree(phpr.currentProjectId);    
+        this.closeTree(phpr.currentProjectId);
     },
 
     getStore:function() {
@@ -110,17 +110,17 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         }
         this.publish("changeProject", [item.id]);
     },
-    
+
     selecteCurrent:function(id) {
         // summary:
         //    Select the current projects and all the parents
         // description:
-        //    Select the current projects and all the parents        
+        //    Select the current projects and all the parents
         if (id > 1) {
             var _tree = this.tree;
             var _this = this;
             this.tree.model.store.fetchItemByIdentity({identity: id,
-                onItem:function(item){
+                onItem:function(item) {
                     var paths = item.path.toString().split("\/");
                     for (i in paths) {
                         if (Math.abs(paths[i]) > 1) {
@@ -136,33 +136,38 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             }});
         }
     },
-    
+
     initTree:function(id) {
         // summary:
         //    Add the path of every project into an array
         // description:
-        //    Add the path of every project into an array        
-        var _tree = this.tree;
-        var _this = this;
+        //    Add the path of every project into an array
+        var _tree  = this.tree;
+        var _this  = this;
         var _paths = this._paths;
         this.tree.model.store.fetch({
             query: {parent: id.toString()},
-            onItem: function(item){
-                _paths[item.id] = item.path;                
+            onItem: function(item) {
+                var name = item.name.toString();
+                if (name.length > 20) {
+                    var shortName = name.substr(0, 20) + '...';
+                    _tree.model.store.setValue(item, "name", shortName);
+                }
+                _paths[item.id] = item.path;
                 _this.initTree(item.id);
                 node = _tree._itemNodeMap[item.id];
                 if (node) {
                     node.labelNode.style.fontWeight = "normal";
                 }
             }
-        });        
+        });
     },
-    
+
     closeTree:function(id) {
         // summary:
         //    Close all the projects exept the current branch
         // description:
-        //    Close all the projects exept the current branch               
+        //    Close all the projects exept the current branch
         if (id > 1) {
             var _tree = this.tree;
             var _this = this;
@@ -184,7 +189,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             }
         }
     },
-    
+
     getParentId: function(id) {
         // summary:
         //    Return the parent id of one project
@@ -199,5 +204,5 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             }
         }
         return 1;
-    }  
+    }
 });

@@ -86,7 +86,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
             this.publish("drawTagsBox",[phpr.DataStore.getData({url: this._tagUrl})]);
           })
-        }); 
+        });
     },
 
     useIdInGrid: function() {
@@ -187,15 +187,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         editable:    meta[i]['readOnly'] ? false : true
                     });
                     break;
-                    
+
                 default:
                     this.gridLayout.push({
-                        width:    porcent,
-                        name:     meta[i]["label"],
-                        field:    meta[i]["key"],
-                        type:     dojox.grid.cells.Input,
-                        styles:   "",
-                        editable: meta[i]['readOnly'] ? false : true
+                        width:     porcent,
+                        name:      meta[i]["label"],
+                        field:     meta[i]["key"],
+                        type:      dojox.grid.cells.Input,
+                        styles:    "",
+                        formatter: phpr.grid.formatText,
+                        editable:  meta[i]['readOnly'] ? false : true
                     });
                     break;
             }
@@ -204,13 +205,13 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
 
-    customGridLayout:function(meta) {    
+    customGridLayout:function(meta) {
         // summary:
         //    Custom functions for the layout
         // description:
         //    Custom functions for the layout
     },
-    
+
     setClickEdit:function() {
         // summary:
         //    Set the edit type
@@ -254,7 +255,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             dojo.connect(this._saveChanges, "onClick", dojo.hitch(this, "saveChanges"));
         }
     },
-    
+
     onLoaded:function(dataContent) {
         // summary:
         //    This function is called when the grid is loaded
@@ -276,7 +277,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         // Render save Button
         this.setSaveChangesButton(meta);
-        
+
         // Render export Button
         this.setExportButton(meta);
 

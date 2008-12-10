@@ -119,26 +119,49 @@ class Calendar_IndexController_Test extends FrontInit
      */
     public function testJsonDeleteAction()
     {
-        $this->setExpectedException('Phprojekt_PublishedException');
-        $this->setRequestUrl('Calendar/index/jsonDelete/');
-        $this->front->dispatch($this->request, $this->response);
-
-        $this->setExpectedException('Phprojekt_PublishedException');
-        $this->setRequestUrl('Calendar/index/jsonDelete/');
-        $this->request->setParam('id', 111);
-        $this->front->dispatch($this->request, $this->response);
-
+        // Single Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
 
+        // Multiple Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
-        $this->request->setParam('id', 2);
+        $this->request->setParam('id', 6);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
-        $this->setRequestUrl('Calendar/index/jsonList/');
-        $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":0}') > 0);
+    }
+
+    /**
+     * Test the calendar deletion with errors
+     */
+    public function testJsonDeleteActionWrongId()
+    {
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        $this->request->setParam('id', 111);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals(0, $error->getCode());
+            return;
+        }
+
+        $this->fail('Error on Delete with Wrong Id');
+    }
+
+    /**
+     * Test the calendar deletion with errors
+     */
+    public function testJsonDeleteActionNoId()
+    {
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals(0, $error->getCode());
+            return;
+        }
+
+        $this->fail('Error on Delete without Id');
     }
 }
