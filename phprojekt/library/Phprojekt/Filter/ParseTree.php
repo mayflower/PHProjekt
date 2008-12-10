@@ -156,7 +156,7 @@ class Phprojekt_Filter_ParseTree
                     break;
                 default:
                     echo "default";
-                    
+
             }
 
             // remember the parsed string to call it recursivly
@@ -202,17 +202,17 @@ class Phprojekt_Filter_ParseTree
     }
 
     /**
-     * Check the given string 
-     * 
+     * Check the given string
+     *
      * Checking for braces are implemented. If surrounding braces exist remove them,
-     * for example: 
+     * for example:
      *  ( string ) => string
      *  ( string ) string => ( string ) string
-     * 
+     *
      * But this function may be upgraded for further validations.
      *
      * @param string $string the string that should be checked
-     * 
+     *
      * @return string
      */
     protected function _checkString($string)

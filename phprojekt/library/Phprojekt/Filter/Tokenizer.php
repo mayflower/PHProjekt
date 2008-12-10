@@ -44,7 +44,7 @@ class Phprojekt_Filter_Tokenizer
 
     /**
      * regex for tokens
-     * 
+     *
      * @var array
      */
     private $_token = array(
@@ -55,7 +55,7 @@ class Phprojekt_Filter_Tokenizer
         self::T_COLUMN      => '/^(((\'|\")(\w| )+(\"|\'))|(\w)+)( )*?(=|!=|\<=|\<|\>=|\>)(.)*?$/i',
         self::T_VALUE       => '/^((\'|\")(\w| )+(\'|\")|(([0-9]+)(\.)([0-9]+))|(\d){1,})( )*?(((and|or)(.)*)|(\)(.)*?|( )*?))/i',
         );
-    
+
     /**
      * string to tokenize
      *
@@ -122,7 +122,7 @@ class Phprojekt_Filter_Tokenizer
         $next->value = $token[1];
         return $next;
     }
-    
+
     /**
      * Returns last token
      *
@@ -134,14 +134,14 @@ class Phprojekt_Filter_Tokenizer
             return false;
         }
         $tok = substr($this->_data, -1);
-        
+
         // we only need type information T_CLOSE_BRACE, else UNDEFINED is working as well
         if (')' === $tok) {
             $tok = array(self::T_CLOSE_BRACE, $tok);
         } else {
             $tok = array(self::T_UNDEFINED, $tok);
         }
-        
+
         $last        = new Phprojekt_Filter_Tokenizer();
         $last->type  = $tok[0];
         $last->value = $tok[1];

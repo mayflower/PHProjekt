@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: User.php,v 1.6 2007/08/30 18:02:36 gustavo Exp $
@@ -101,7 +101,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
         } else {
              $groupNamespace->isInGroup = false;
         }
-        
+
         return $groupNamespace->isInGroup;
     }
 

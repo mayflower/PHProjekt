@@ -88,7 +88,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
         $this->roleId   = 1;
         $this->moduleId = $moduleId;
         $this->access   = 139;
-        $this->save();        
+        $this->save();
     }
 
     /**

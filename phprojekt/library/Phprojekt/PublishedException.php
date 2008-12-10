@@ -24,13 +24,13 @@
 /**
  * A exception that can be and will be forwarded to the frontend
  * when thrown.
- * 
+ *
  * This exception only returns a message and a code and hides
  * trace informations to avoid an information disclosure.
  * The informations are converted to the appropriate format in the
- * error controller. Usually only the public attributes are convereted and 
+ * error controller. Usually only the public attributes are convereted and
  * forwarded.
- * 
+ *
  * We cannot make getTrace, etc private to avoid getting the trace at all
  * as we want to log the backtrace.
  *
@@ -51,13 +51,13 @@ class Phprojekt_PublishedException extends Exception
      * @var string
      */
     public $message;
-    
+
     /**
      * Special error codes
      *
      * 0   Normal meesage
      * 500 Expired login -> must Logout
-     * 
+     *
      * @var integer
      */
     public $code = 0;
@@ -65,7 +65,7 @@ class Phprojekt_PublishedException extends Exception
     /**
      * Initialize
      *
-     * @param string  $message  A short description what's wrong 
+     * @param string  $message  A short description what's wrong
      * @param integer $code     An optional error code
      */
     public function __construct($message, $code = 0) {

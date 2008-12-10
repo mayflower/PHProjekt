@@ -1,7 +1,7 @@
 <?php
 /**
  * Role class for PHProjekt 6.0
- * 
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1 as published by the Free Software Foundation
@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id:
@@ -36,7 +36,7 @@
 class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     public $hasMany = array('modulePermissions' => array('classname' => 'Phprojekt_Role_RoleModulePermissions'));
-    
+
     /**
      * Id of user
      * @var int $user
@@ -118,7 +118,7 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
             $modulePermissions->roleId   = $this->id;
             $modulePermissions->access   = $access;
             $modulePermissions->save();
-        }    
+        }
     }
 
     /**
@@ -153,7 +153,7 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function delete()
     {
-        if ($this->id > 1) {     
+        if ($this->id > 1) {
             parent::delete();
         }
     }

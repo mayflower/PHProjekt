@@ -53,7 +53,7 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
         $controller = parent::formatControllerName($unformatted);
         return $controller;
     }
-    
+
     /**
      * Formats a string from a URI into a PHP-friendly name.
      *
@@ -82,5 +82,5 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
         }
 
         return implode('_', $segments);
-    }    
+    }
 }

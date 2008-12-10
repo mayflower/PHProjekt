@@ -1010,7 +1010,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             $result[] = $instance;
         }
-        
+
         return $result;
     }
 

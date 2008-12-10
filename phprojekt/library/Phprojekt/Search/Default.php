@@ -196,7 +196,7 @@ class Phprojekt_Search_Default
         } else {
             $limitedFoundResults = $tmpFoundResults;
         }
-        
+
         foreach ($limitedFoundResults as $moduleData) {
             if ($rights->getItemRight($moduleData['moduleId'], $moduleData['itemId'], $userId) > 0) {
                 $foundResults[] = $this->_display->getDisplay($moduleData['moduleId'], $moduleData['itemId']);

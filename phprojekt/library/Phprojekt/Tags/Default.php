@@ -1,4 +1,4 @@
-    <?php
+<?php
 /**
  * Tags class
  *

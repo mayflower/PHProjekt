@@ -3,7 +3,7 @@
  * Convert a model into a json structure.
  * This is usually done by a controller to send data to the
  * client
- * 
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1 as published by the Free Software Foundation
@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: Interface.php 635 2008-04-02 19:32:05Z david $
@@ -68,9 +68,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
-        
+
         if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
             // password
             $data = array();
@@ -86,7 +86,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['required'] = true;
             $data['readOnly'] = false;
             $data['tab']      = 1;
-            
+
             $converted[] = $data;
         }
 
@@ -104,7 +104,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
-        
+
         $converted[] = $data;
 
         // lastname
@@ -121,7 +121,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
 
         // email
@@ -138,10 +138,10 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                       'name' => '');
             $data['required'] = true;
             $data['readOnly'] = false;
-            $data['tab']      = 1;            
-            
+            $data['tab']      = 1;
+
             $converted[] = $data;
-    
+
             // language
             $data = array();
             $data['key']      = 'language';
@@ -159,10 +159,10 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                             'name' => 'German'));
             $data['required'] = true;
             $data['readOnly'] = false;
-            $data['tab']      = 1;            
-            
+            $data['tab']      = 1;
+
             $converted[] = $data;
-            
+
             // timeZone
             $data = array();
             $data['key']      = 'timeZone';
@@ -181,8 +181,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             }
             $data['required'] = true;
             $data['readOnly'] = false;
-            $data['tab']      = 1;            
-            
+            $data['tab']      = 1;
+
             $converted[] = $data;
         }
 
@@ -201,8 +201,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                         'name' => 'Inactive'));
         $data['required'] = true;
         $data['readOnly'] = false;
-        $data['tab']      = 1;        
-        
+        $data['tab']      = 1;
+
         $converted[] = $data;
 
         return $converted;

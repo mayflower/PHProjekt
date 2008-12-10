@@ -99,7 +99,7 @@ class Phprojekt_Loader extends Zend_Loader
             parent::loadClass($class, $dirs);
         }
     }
-        
+
     /**
      * The autoload method used to load classes on demand
      * Returns either the name of the class or false, if
@@ -280,12 +280,12 @@ class Phprojekt_Loader extends Zend_Loader
 
         return self::_newInstance($name, $args);
     }
-    
+
     /**
      * Try to include a file by the class name
      *
      * @param strung $class The name of the class
-     * 
+     *
      * @return boolean
      */
     public function tryToLoadClass($class)
