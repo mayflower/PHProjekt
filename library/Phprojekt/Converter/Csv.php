@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
@@ -63,13 +63,13 @@ class Phprojekt_Converter_Csv
      *
      * @return string
      */
-    private static function _convertModel($models, 
-                                          $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT, 
+    private static function _convertModel($models,
+                                          $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT,
                                           $exportHeader = true)
     {
         $datas = array();
         $data = array();
-        
+
         if (null === $models) {
             return self::_writeFile(array('metadata' => array()));
         }
@@ -85,9 +85,9 @@ class Phprojekt_Converter_Csv
         if (!$model instanceof Phprojekt_Model_Interface) {
             throw new InvalidArgumentException();
         }
-        
+
         $information = $model->getInformation($order);
-        
+
         // Csv file header
         if ($exportHeader) {
             $metadata = $information->getFieldDefinition($order);
@@ -96,24 +96,24 @@ class Phprojekt_Converter_Csv
                     $data[] = $oneCol['label'];
                 }
             }
-            
+
             $datas[] = $data;
         }
 
-        
+
         foreach ($models as $cmodel) {
-            
+
             $data   = array();
-            
+
             foreach ($information->getFieldDefinition($order) as $field) {
                 $key   = $field['key'];
                 $value = $cmodel->$key;
                 $data[] = $value;
-                
+
             }
             $datas[] = $data;
         }
-        
+
         return self::_writeFile($datas);
     }
 
@@ -126,9 +126,9 @@ class Phprojekt_Converter_Csv
      */
     private static function _writeFile($data)
     {
-        
+
         $outputString = "";
-        
+
         if (is_array($data)) {
             foreach ($data as $rowNbr => $oneRow) {
                 if ($rowNbr > 0) {

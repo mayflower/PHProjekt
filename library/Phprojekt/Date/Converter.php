@@ -32,7 +32,7 @@
  * @author     Michel Hartmann <michel.hartmann@mayflower.de>
  */
 class Phprojekt_Date_Converter
-{    
+{
     /**
      * Converts a String in one of the following formats:
      *     - yyyyMMdd'T'HHmmss'Z'

@@ -245,7 +245,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_view     = Zend_Registry::get('view');
         $translate       = Zend_Registry::get('translate');
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        
+
         foreach ($fieldDefinition as $key => $field) {
             switch ($field['type']) {
                 case 'selectbox':
@@ -286,7 +286,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
             foreach ($fieldDefinition as $field) {
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $this->_changes[$i]['field']) {
-                    
+
                     $this->_changes[$i]['field'] = $field['label'];
                     // Is the field of a type that should be converted into a string?
                     if ($field['type'] == 'selectbox') {
@@ -383,7 +383,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         // Creates the Zend_Mail_Transport_Smtp object
         $smtpTransport= $this->_setTransport();
-        
+
         $this->send($smtpTransport);
     }
 

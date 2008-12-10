@@ -142,7 +142,7 @@ class Phprojekt_Module
 
         return null;
     }
-        
+
     /**
      * Returns the saveType for a given module
      *

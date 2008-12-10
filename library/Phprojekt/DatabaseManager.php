@@ -90,7 +90,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * @var Phprojekt_Error
      */
     protected $_error = null;
-        
+
     const COLUMN_NAME  = 'tableField';
     const COLUMN_TITLE = 'formLabel';
 
@@ -305,7 +305,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
         return $result;
     }
-    
+
     /**
      * Return an array with form types to simplify things
      *
@@ -324,7 +324,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * Return the type of one field
      *
      * @param string $fieldName The name of the field to chekc
-     * 
+     *
      * @return string
      */
     public function getType($fieldName)
@@ -333,9 +333,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (isset($this->_fieldTypes[$fieldName])) {
             $return = $this->_fieldTypes[$fieldName];
         }
-        return $return;    
+        return $return;
     }
-    
+
     /**
      * Gets the data range for a select using a model
      *
@@ -369,7 +369,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $options[] = array('id'   => $oneUser->$key,
                                        'name' => $oneUser->$value);
                 }
-                break; 
+                break;
         }
         return $options;
     }
@@ -408,7 +408,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     'message' => $translate->translate('The module name must start with a letter')));
             }
         }
-        
+
         $foundFields    = array();
         $foundProjectId = false;
         foreach ($data as $field) {
@@ -424,7 +424,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $this->_error->addError(array(
                         'field'   => $translate->translate('Module Designer'),
                         'message' => $translate->translate('There are two fields with the same Field Name')));
-                    break;                    
+                    break;
                 } else {
                     $foundFields[] = $field['tableField'];
                 }
@@ -456,19 +456,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $this->_error->addError(array('field'   => $translate->translate('Module Designer'),
                                                   'message' => $translate->translate('Invalid form Range for the select field')));
                     break;
-                } 
+                }
                 if ($field['tableField'] == 'projectId') {
                     $foundProjectId = true;
                 }
             }
-        }        
+        }
 
         if (!$foundProjectId) {
             $validated = false;
             $this->_error->addError(array('field'   => $translate->translate('Module Designer'),
                                           'message' => $translate->translate('The module must have a project selector called projectId')));
         }
-        
+
         return $validated;
     }
 
@@ -496,7 +496,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $result = $this->fetchAll($where);
         foreach ($result as $row) {
             $row->delete();
-        }       
+        }
         foreach ($data as $values) {
             $databaseManager = clone($this);
             foreach ($values as $key => $value) {
@@ -603,10 +603,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
             }
         }
-        
+
         return $return;
     }
-    
+
     /**
      * Delete all the entries for the current Module
      * And drop the table

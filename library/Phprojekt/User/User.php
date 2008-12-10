@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id:
@@ -234,25 +234,25 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         return (array) $this->_validate->error->getError();
     }
-    
+
     /**
      * Return the user setting
-     * 
+     *
      * @param string $settingName The key of the setting to get
      * @param object $defaultValue Default value if setting is empty
      *
-     * @return int 
+     * @return int
      */
     static public function getSetting($settingName, $defaultValue = null)
     {
         $setting = new Setting_Models_Setting();
         $setting->setModule('User');
-        
+
         $value = $setting->getSetting($settingName);
         if (empty($value)) {
             $value = $defaultValue;
         }
-        
+
         return $value;
     }
 }

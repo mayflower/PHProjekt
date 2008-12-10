@@ -75,7 +75,7 @@ class Phprojekt_Table
      * @param $fields    Array with fieldnames as key
      *                   Options: 'type', 'length', 'null', 'default')
      * @param $keys      Array with primary keys
-     * 
+     *
      * @return boolean
      */
     public function createTable($tableName, $fields, $keys = array())
@@ -96,7 +96,7 @@ class Phprojekt_Table
                 }
                 if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
                     $fieldDefinition['default_no_quote'] = false;
-                }                
+                }
                 $sqlString .= $fieldName;
                 $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                                                         $fieldDefinition['null'], $fieldDefinition['default'],
@@ -134,7 +134,7 @@ class Phprojekt_Table
      * @param $fieldDefinition Array with field definition
      *                         Options: 'name', 'type', 'length', 'null', 'default')
      * @param $position        After position
-     * 
+     *
      * @return boolean
      */
     public function addField($tableName, $fieldDefinition, $position = null)
@@ -154,7 +154,7 @@ class Phprojekt_Table
             }
             if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
-            }                
+            }
             $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                                                     $fieldDefinition['null'], $fieldDefinition['default'],
@@ -182,7 +182,7 @@ class Phprojekt_Table
      * @param $tableName       String table name
      * @param $fieldDefinition Array with field definition
      *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default')
-     * 
+     *
      * @return boolean
      */
     public function changeField($tableName, $fieldDefinition, $position = null)
@@ -196,7 +196,7 @@ class Phprojekt_Table
      * @param $tableName       String table name
      * @param $fieldDefinition Array with field definition
      *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default')
-     * 
+     *
      * @return boolean
      */
     public function modifyField($tableName, $fieldDefinition, $position = null)
@@ -216,7 +216,7 @@ class Phprojekt_Table
             }
             if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
-            }                
+            }
             if (isset($fieldDefinition['oldName'])) {
                 $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['oldName']) . ' ';
             }
@@ -243,7 +243,7 @@ class Phprojekt_Table
      * @param $tableName       String table name
      * @param $fieldDefinition Array with field definition
      *                         Options: 'name', 'type', 'length', 'null', 'default')
-     * 
+     *
      * @return boolean
      */
     public function deleteField($tableName, $fieldDefinition)
@@ -270,8 +270,8 @@ class Phprojekt_Table
      * Return an string with the field definition for each table type.
      *
      * @param string  $fieldType   Regular field type names
-     * @param int     $fieldLength Field length 
-     * @param boolean $allowNull 
+     * @param int     $fieldLength Field length
+     * @param boolean $allowNull
      * @param string  $default     Default value
      *
      * @return string
@@ -335,7 +335,7 @@ class Phprojekt_Table
      * @param array  $keys      The PRIMARY KEY values
      *
      * @return array
-     */ 
+     */
     public function getTableFields($tableName, $fields, $keys = array('id'))
     {
         try {
@@ -348,19 +348,19 @@ class Phprojekt_Table
             return $tableFields;
         }
     }
-    
+
     /**
      * Delete the table
      *
      * @param string $tableName The name of the table
-     * 
+     *
      * @return boolean
      */
     public function dropTable($tableName)
     {
         $tableName = ucfirst($tableName);
         $sqlString = "DROP TABLE " . $this->_db->quoteIdentifier((string)$tableName);
-        
+
         try {
             $this->_db->getConnection()->exec($sqlString);
             return true;

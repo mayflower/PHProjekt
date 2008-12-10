@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
@@ -75,10 +75,10 @@ class Phprojekt_Auth extends Zend_Auth
             throw new Phprojekt_Auth_Exception('User Inactive', 5);
         }
 
-        try {           
+        try {
             $setting = new Setting_Models_Setting();
             $setting->setModule('User');
-            
+
             // The password does not match with password provided
             if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$setting->getSetting("password", $userId))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
@@ -122,7 +122,7 @@ class Phprojekt_Auth extends Zend_Auth
     {
         Zend_Session::destroy();
         return true;
-    }   
+    }
 
     /**
      * Compare a string with a user password
@@ -158,7 +158,7 @@ class Phprojekt_Auth extends Zend_Auth
     {
         return md5($password);
     }
-    
+
     public static function cryptString($string) {
         $cryptedString = 'phprojektmd5'.$string;
         return Phprojekt_Auth::_cryptPassword($cryptedString);

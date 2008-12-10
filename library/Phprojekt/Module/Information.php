@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: Interface.php 635 2008-04-02 19:32:05Z david $
@@ -70,7 +70,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['tab']      = 1;
 
         $converted[] = $data;
-        
+
 
         // label
         $data = array();
@@ -88,7 +88,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['tab']      = 1;
 
         $converted[] = $data;
-                
+
         // active
         $data = array();
         $data['key']      = 'active';
@@ -105,7 +105,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
-        
+
         $converted[] = $data;
 
         return $converted;

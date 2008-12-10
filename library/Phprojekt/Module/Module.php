@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id:
@@ -113,7 +113,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 $saveNewModule = true;
             }
             $this->save();
-            
+
             // Reset cache for root project
             $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-1');
             if (isset($projectModulePermissionsNamespace->modules)
@@ -173,20 +173,20 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
         // Delete the items and tags
         $tag     = Phprojekt_Tags_Default::getInstance();
-        $model   = Phprojekt_Loader::getModel($this->name, $this->name);        
+        $model   = Phprojekt_Loader::getModel($this->name, $this->name);
         $results = $model->fetchAll();
         foreach ($results as $record) {
             $tag->deleteTagsByItem($this->id, $record->id);
             $record->delete();
         }
-                
+
         // Delete Files
         $this->_deleteFolder(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $this->name);
 
         // Delete module entry
         parent::delete();
     }
-        
+
     /**
      * Return the error data
      *
@@ -237,7 +237,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         } else {
             Zend_Registry::get('log')->debug('Error on create folder ' . $folderPath);
         }
-    }    
+    }
 
     /**
      * Read the Template folder and try to reproduce it
@@ -292,12 +292,12 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             }
         }
     }
-    
+
     /**
      * Delete a folder with subfolders and files
      *
      * @param srting $path The full path of the folder
-     * 
+     *
      * @return boolean
      */
     private function _deleteFolder($path)
