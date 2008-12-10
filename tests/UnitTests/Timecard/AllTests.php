@@ -59,7 +59,7 @@ class Timecard_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Timecard Controller');
 
         $suite->addTestSuite('Timecard_IndexController_Test');
-        
+
         return $suite;
     }
 }

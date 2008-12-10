@@ -67,7 +67,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/module/jsonDetail/id/1');
         $this->request->setPathInfo('/Core/module/jsonDetail/id/1');
         $this->request->setRequestUri('/Core/module/jsonDetail/id/1');
-        $response = $this->getResponse();       
+        $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"name":"Project"') > 0);
     }
 }

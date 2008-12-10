@@ -37,7 +37,7 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
      */
     public function testGetFieldDefinition()
     {
-        
+
         // empty values
         $defaultForm = array (0 => array (
                                 'key'      => '',
@@ -52,17 +52,17 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
                                 'right'    => 'write',
                                 'readOnly' => false),
                                 );
-        
+
         $object  = new Phprojekt_ModelInformation_Default();
         $records = $object->getFormFields();
         $this->assertEquals($records, $defaultForm);
 
         $records = $object->getListFields();
         $this->assertEquals($records, $defaultForm);
-        
+
         $records = $object->getTitles();
         $this->assertEquals($records, '');
-        
+
         $records = $object->getTitles(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $this->assertEquals($records, '');
     }
