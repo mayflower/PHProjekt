@@ -130,12 +130,12 @@ class Core_UserController extends Core_IndexController
         // Saving the settings
         $setting = new Setting_Models_Setting();
         $setting->setModule('User');
-        $setting->setSettings($this->getRequest()->getParams());
+        $setting->setSettings($this->getRequest()->getParams(), $id);
 
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }

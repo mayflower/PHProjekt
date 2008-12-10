@@ -202,20 +202,25 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     /**
      * Save the settings into the table
      *
-     * @param array $params $_POST fields
+     * @param array   $params $_POST fields
+     * @param integer $userId The user id, if is not setted, the current user is used.
      *
      * @return void
      */
-    public function setSettings($params)
+    public function setSettings($params, $userId = 0)
     {
+        if (!$userId) {
+            $userId = Phprojekt_Auth::getUserId();
+        }
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
-            call_user_method('setSettings', $this->getModel(), $params);
+            call_user_method('setSettings', $this->getModel(), $params, $userId);
         } else {
+            echo 'a';
             $fields = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
-                        $record = $this->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
+                        $record = $this->fetchAll("userId = ". $userId .
                                                   " AND keyValue = ".$this->_db->quote($key) .
                                                   " AND moduleId = ".$this->_db->quote($this->_moduleId));
                         if (isset($record[0])) {
@@ -224,7 +229,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                             $record[0]->save();
                         } else {
                             $clone             = clone $this;
-                            $clone->userId     = Phprojekt_Auth::getUserId();
+                            $clone->userId     = $userId;
                             $clone->moduleId   = (int) $this->_moduleId;
                             $clone->keyValue   = $key;
                             $clone->value      = $value;

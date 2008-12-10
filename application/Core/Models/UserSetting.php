@@ -207,12 +207,23 @@ class Core_Models_UserSetting
         return $message;
     }
 
-    public function setSettings($params)
+    /**
+     * Save the settings into the table
+     *
+     * @param array   $params $_POST fields
+     * @param integer $userId The user id, if is not setted, the current user is used.
+     *
+     * @return void
+     */
+    public function setSettings($params, $userId = 0)
     {
+        if (!$userId) {
+            $userId = Phprojekt_Auth::getUserId();
+        }
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
         if (empty($params['password'])) {
-            $password = $setting->getSetting('password');
+            $password = $setting->getSetting('password', $userId);
         } else {
             $password = Phprojekt_Auth::cryptString($params['password']);
         }
@@ -225,7 +236,7 @@ class Core_Models_UserSetting
                     if (($key == 'password')) {
                         $value = $password;
                     }
-                    $record = $setting->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
+                    $record = $setting->fetchAll("userId = ". (int)$userId .
                                                  " AND keyValue = ". $setting->_db->quote($key) .
                                                  " AND moduleId = 0");
                     if (isset($record[0])) {
@@ -233,7 +244,7 @@ class Core_Models_UserSetting
                         $record[0]->value    = $value;
                         $record[0]->save();
                     } else {
-                        $setting->userId     = Phprojekt_Auth::getUserId();
+                        $setting->userId     = $userId;
                         $setting->moduleId   = 0;
                         $setting->keyValue   = $key;
                         $setting->value      = $value;
