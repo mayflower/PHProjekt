@@ -282,7 +282,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.setExportButton(meta);
 
         if (meta.length == 0) {
-            this._node.attr('content', phpr.nls.get('There are no entries on this level'));
+            this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
         } else {
             this.setGridLayout(meta);
             this.grid = new dojox.grid.DataGrid({

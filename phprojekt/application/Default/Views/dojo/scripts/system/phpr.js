@@ -211,6 +211,19 @@ phpr.getCurrent = function(data, identifier, value){
     return current;
 };
 
+
+phpr.drawEmptyMessage = function(message) {
+    // summary:
+    //    Center and make bold an error message
+    // description:
+    //    Center and make bold an error message
+    var output = '';
+    output += '<div style="text-align: center; margin: 10px 10px 10px 10px; font-weight: bold;">';
+    output += phpr.nls.get(message);
+    output += '</div>';
+    return output;
+};
+
 dojo.declare("phpr.DataStore", null, {
     // summary:
     //    Get and return data from the server
