@@ -37,7 +37,7 @@
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
     public $hasMany = array('modulePermissions' => array('classname' => 'Project_Models_ProjectModulePermissions'));
-        
+
     /**
      * Validate function for the projectId field
      *
@@ -88,7 +88,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         }
         return $allow;
     }
-    
+
     /**
      * Save the allow modules for one projectId
      * First delete all the older relations
@@ -108,8 +108,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $modulePermissions->projectId = $this->id;
             $modulePermissions->save();
         }
-    }    
-      
+    }
+
     /**
      * Add a new relation module-project without delete any entry
      * Used for add modules to the root project
@@ -123,13 +123,13 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $modulePermissions = $this->modulePermissions->create();
         $modulePermissions->moduleId = $moduleId;
         $modulePermissions->projectId = $this->id;
-        $modulePermissions->save();        
+        $modulePermissions->save();
     }
-        
+
     /**
      * Extencion of the Phprojekt_Item_Abstract
      * for delete all the project relations
-     * Prevents deletion of root project 
+     * Prevents deletion of root project
      *
      * @return void
      */
@@ -137,7 +137,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     {
         if ($this->id > 1) {
             $relations = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-        
+
             // Delete related items
             $modules = $relations->getProjectModulePermissionsById($this->id);
             foreach ($modules['data'] as $moduleData) {
@@ -149,22 +149,22 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
                    }
                 }
             }
-        
+
             // Delete module-project relaton
             $records = $relations->fetchAll('projectId = ' . $this->id);
             foreach ($records as $record) {
                 $record->delete();
             }
-        
+
             // Delete user-role-projetc relation
             $relations = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
             $records = $relations->fetchAll('projectId = ' . $this->id);
             foreach ($records as $record) {
                 $record->delete();
-            }        
+            }
 
             // Delete the project itself
             parent::delete();
-        }    
+        }
     }
 }

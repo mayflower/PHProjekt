@@ -6,7 +6,7 @@
         <div style="display:inline; padding:0px; cursor:pointer;" onclick="dojo.publish('Timecard.changeDate', [new Date({{yearNumber}},{{monthNumber}},{{day.day}})]); dojo.byId('hoursSaveButton').focus();">
         {% ifequal day.day today %}
         <table style="padding:0px; background-color: #F1CE47; color: #294064;">
-        {% else %} 
+        {% else %}
         <table style="padding:0px; background-color: #294064; color: #fff;">
         {% endifequal %}
         <tr>
@@ -19,7 +19,7 @@
         </table>
         </div>
     </td>
-    {% endfor %}    
+    {% endfor %}
 </tr>
 </table>
 </div>

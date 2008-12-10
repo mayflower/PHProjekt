@@ -38,7 +38,7 @@
         style="float:right; padding-right:10px; padding-left:10px;"></button>
     </div>
     <br />
-    {{bookingdata|safe}}    
+    {{bookingdata|safe}}
 </div>
 
 <div id="rightTimecardPanel"
@@ -47,14 +47,14 @@ style="position:absolute; top:10%; left:55%; width:40%; height:260px; float:righ
         {% ifequal hour.pair 0 %}
     <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane"
         style="background-color:white; float:left; width:100%; margin-left:0px; z-index:-10; height:20px;">
-        {% else %}        
+        {% else %}
     <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane"
         style="background-color:#e9f3ff; float:left; width:100%; margin-left:0px; z-index:-10; height:20px;">
         {% endifequal %}
         {{hour.hour}}
     </div>
     {% endfor %}
-    
+
     <div id="projectBookingContainer" dojoType="dijit.layout.ContentPane"
     style="position:absolute; top:0%; left:15%; margin:0px; height:260px; padding-top:0px; overflow:hidden;
     float:right; filter:alpha(opacity=50); opacity:.5">

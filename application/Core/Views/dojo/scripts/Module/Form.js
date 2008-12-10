@@ -20,7 +20,7 @@
 dojo.provide("phpr.Module.Form");
 
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
-    
+
     initData: function() {
         // Get all the active users
         this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/id/' + this.id;
@@ -63,11 +63,11 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         }
         var jsonDesignerData = dojo.toJson(designerData);
         this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
-        
+
         // Add onBlur to the label field for update the tableName
         dojo.connect(dijit.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));
     },
-    
+
     openDialog: function() {
         // create the dialog
         phpr.destroyWidget('moduleManagerDialog');
@@ -87,10 +87,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         phpr.makeModuleDesignerSource();
         phpr.makeModuleDesignerTarget(dijit.byId('designerData').attr('value'), this.tabStore.getList());
         dialog.show();
-        
+
         dojo.connect(dijit.byId('moduleManagerDialog'), "hide",  dojo.hitch(this, "processDialogData"));
     },
-     
+
     processDialogData: function() {
         var tabs         = this.tabStore.getList();
         var data         = new Object();
@@ -137,7 +137,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                         case 'formLabel':
                             data[i]['formLabel']   = ele.value;
                             data[i]['formTooltip'] = ele.value;
-                            break;                        
+                            break;
                         case 'formType':
                             data[i]['formType'] = ele.value;
                             break;
@@ -184,14 +184,14 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         event.preventDefault();
         dojo.stopEvent(event);
     },
-    
+
     convertLabelIntoTableName: function(value) {
         value     = value.replace(/\s+/g, '');
         var first = value.charAt(0).toUpperCase();
-        
+
         return first + value.substr(1, value.length-1);
     },
-    
+
     submitForm: function() {
         if (!this.prepareSubmission()) {
             return false;
@@ -214,10 +214,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                     response.type    = 'notice';
                                     response.message = phpr.nls.get('YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE');
                                     new phpr.handleResponse('serverFeedback', response);
-                                }   
+                                }
                                 this.publish("updateCacheData");
                                 this.publish("reload");
-                            }         
+                            }
                         })
                     });
                }
@@ -237,8 +237,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             })
         });
     },
-        
+
     updateData:function() {
-        phpr.DataStore.deleteAllCache();        
+        phpr.DataStore.deleteAllCache();
     }
 });

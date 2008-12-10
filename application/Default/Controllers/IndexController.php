@@ -74,7 +74,7 @@ class IndexController extends Zend_Controller_Action
                 $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
                 exit;
             } else {
-                throw new Phprojekt_PublishedException($ae->message, 500);            
+                throw new Phprojekt_PublishedException($ae->message, 500);
             }
         }
 
@@ -382,7 +382,7 @@ class IndexController extends Zend_Controller_Action
      * Return all the words translated in each modules for the $language
      *
      * @requestparam string $language The current language
-     * 
+     *
      * @return void
      */
     public function getTranslatedStringsAction()
@@ -392,21 +392,21 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Shows the template page form 
+     * Shows the template page form
      *
      * @return void
      */
     public function uploadFormAction()
-    {                    
+    {
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
-        
+
         $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
         $value  = $this->getRequest()->getParam('value', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = $this->getRequest()->getParam('field', null);
-        
-        $this->view->webpath      = Zend_Registry::get('config')->webpath;        
+
+        $this->view->webpath      = Zend_Registry::get('config')->webpath;
         $this->view->formPath     = $link . '/index/uploadFile/';
         $this->view->downloadLink = '';
         $this->view->fileName     = null;
@@ -414,7 +414,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->field        = $field;
         $this->view->value        = $value;
         $this->view->upload       = false;
-        
+
         $fileName = strstr($value, '|');
         if (!empty($fileName)) {
             $this->view->downloadLink = $link . '/index/downloadFile/file/' . $value;
@@ -441,21 +441,21 @@ class IndexController extends Zend_Controller_Action
             $fileName = $_FILES['uploadedFile']['name'];
             $_FILES['uploadedFile']['name'] = $md5mane;
         }
-        
+
         $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setDestination(Zend_Registry::get('config')->uploadpath);        
-        
+        $adapter->setDestination(Zend_Registry::get('config')->uploadpath);
+
         $adapter->receive();
-            
+
         $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();        
+        $this->getResponse()->clearBody();
 
         $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
         $itemId = (int) $this->getRequest()->getParam('itemId', null);
         $field  = $this->getRequest()->getParam('field', null);
-        
-        $this->view->webpath      = Zend_Registry::get('config')->webpath;  
-        $this->view->downloadLink = '';      
+
+        $this->view->webpath      = Zend_Registry::get('config')->webpath;
+        $this->view->downloadLink = '';
         $this->view->formPath     = $link . '/index/uploadFile/';
         $this->view->itemId       = $itemId;
         $this->view->field        = $field;

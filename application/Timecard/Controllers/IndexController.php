@@ -60,7 +60,7 @@ class Timecard_IndexController extends IndexController
         $year   = (int) $this->getRequest()->getParam('year', date("Y"));
         $month  = (int) $this->getRequest()->getParam('month', date("m"));
         $view   = $this->getRequest()->getParam('view', 'month');
-                
+
         $records = $this->getModelObject()->getRecords($view, $year, $month, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -69,7 +69,7 @@ class Timecard_IndexController extends IndexController
     /**
      * Save the timecard hours
      * IF the start is empty, looking for an open time and close it.
-     * 
+     *
      * @requestparam integer id ...
      *
      * @return void
@@ -88,7 +88,7 @@ class Timecard_IndexController extends IndexController
         }
 
         if (null == $this->getRequest()->getParam('startTime', null)) {
-            
+
             // Date filter to find the open register
             $dateFilter = array();
 
@@ -108,12 +108,12 @@ class Timecard_IndexController extends IndexController
                 $type    = 'error';
                 $message = $translate->translate(self::NOT_FOUND);
                 $showId  = null;
-            }            
+            }
         } else {
             Default_Helpers_Save::save($model, $this->getRequest()->getParams());
             $type    = 'success';
             $showId = $model->id;
-        }        
+        }
 
         $return    = array('type'    => $type,
                            'message' => $message,
@@ -122,7 +122,7 @@ class Timecard_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-        
+
     /**
      * Returns the detail for a model in JSON.
      *
@@ -136,7 +136,7 @@ class Timecard_IndexController extends IndexController
     public function jsonDetailAction()
     {
         $date = $this->getRequest()->getParam('date');
-        
+
         $where = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
 
         $records = $this->getModelObject()->fetchAll($where);
@@ -158,12 +158,12 @@ class Timecard_IndexController extends IndexController
     {
         $date  = $this->getRequest()->getParam('date');
         $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-        
+
         $records = $model->getRecords($date);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
-        
+
    /**
      * Deletes a certain item
      *
@@ -204,7 +204,7 @@ class Timecard_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
-        
+
     /**
      * Creates a new timecard record with the current date and time.
      *
@@ -269,7 +269,7 @@ class Timecard_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-    
+
     /**
      * Save a booking project
      *
@@ -297,7 +297,7 @@ class Timecard_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($return);
     }
-    
+
     /**
      * Return a list of Project Ids saved as "favorites" for th
      *
@@ -316,7 +316,7 @@ class Timecard_IndexController extends IndexController
         }
         echo Phprojekt_Converter_Json::convert($favorites);
     }
-    
+
     /**
      * Save the favorties projects for the current user
      *
@@ -326,7 +326,7 @@ class Timecard_IndexController extends IndexController
     {
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('Timecard');
-        
+
         $setting->setSettings($this->getRequest()->getParams());
 
         $translate = Zend_Registry::get('translate');

@@ -24,7 +24,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     //    class for rendering form fields
     // description:
     //    this class renders the different form types which are available in a PHProjekt Detail View
-    
+
     checkRender: function(itemlabel, itemid, itemvalue) {
         phpr.destroyWidget(itemid);
         var itemchecked = null;
@@ -38,7 +38,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             checked: (itemchecked) ? "checked" : ''
                 });
     },
-    
+
     textFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtext.html"], null, {
@@ -51,7 +51,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
-    
+
     hiddenFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formhidden.html"], null, {
@@ -63,8 +63,8 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             type:     'hidden',
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
-    },    
-    
+    },
+
     passwordFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtext.html"], null, {
@@ -77,7 +77,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
-            
+
     uploadFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formupload.html"], null, {
@@ -89,8 +89,8 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled:   (itemdisabled) ? "disabled" : '',
                             iFramePath: iFramePath
                 });
-    },   
-    
+    },
+
     percentageFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formpercentage.html"], null, {
@@ -102,7 +102,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
-    
+
     textAreaRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtextarea.html"], null, {
@@ -114,7 +114,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
-    
+
     dateRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formdate.html"], null, {
@@ -126,7 +126,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
-    
+
     timeRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtime.html"], null, {
@@ -138,7 +138,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             disabled: (itemdisabled) ? "disabled" : ''
                 });
     },
-    
+
     selectRender: function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         var options = new Array();
@@ -167,7 +167,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 range[j].selected = '';
                 if (tmp[k] == range[j].id) {
                     range[j].selected = 'selected';
-                    break;    
+                    break;
                 }
             }
             options.push(range[j]);

@@ -63,7 +63,7 @@ class Core_UserController extends Core_IndexController
 
         $user->find($id);
         $data = array();
-        
+
         $data['id']        = $user->id;
         $data['username']  = (empty($user->username))?"":$user->username;
         $data['firstname'] = (empty($user->firstname))?"":$user->firstname;

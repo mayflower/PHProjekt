@@ -103,7 +103,7 @@
         </td>
         <td><div id="accessAddButton"></div></td>
     </tr>
-    {% for item in accessContent %}       
+    {% for item in accessContent %}
     <tr id="trAccessFor{{item.userId}}"
     {% ifequal currentUser item.userId %}
         style="display: none;"

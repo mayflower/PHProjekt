@@ -13,7 +13,7 @@
  *
  * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id: 
+ * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
@@ -124,20 +124,20 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
     {
         return (array) $this->_validate->error->getError();
     }
-    
+
     /**
      * Return an array with information about the records and the fields
      *
      * @param string  $date Date for the request
-     * 
+     *
      * @return array
-     */    
+     */
     public function getRecords($date)
-    {       
-        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);  
-        $order  = ' id ASC ';    
+    {
+        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $order  = ' id ASC ';
         $models = $this->fetchAll($where, $order);
-        
+
         $information     = $this->getInformation($order);
         $fieldDefinition = $information->getFieldDefinition($order);
 
@@ -162,10 +162,10 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
-        $order  = 'startTime ASC';  
+        $order  = 'startTime ASC';
         $timecard = new Timecard_Models_Timecard();
         $timecardRecords = $timecard->fetchall($where, $order);
-        
+
         $information     = $timecard->getInformation($order);
         $timeCardfieldDefinition = $information->getFieldDefinition($order);
 
@@ -183,10 +183,10 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             }
             $datas['timecard'][] = $data;
         }
-        
+
         $numRows = count($datas);
         $data = array('metadata' => $fieldDefinition,
-                      'data'     => $datas,                      
+                      'data'     => $datas,
                       'numRows'  => (int)$numRows);
 
         return $data;

@@ -27,10 +27,10 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Setting.Grid;
         this.formWidget = phpr.Setting.Form;
         this.treeWidget = phpr.Setting.Tree;
-        
+
         dojo.subscribe("Setting.loadSubModule", this, "loadSubModule");
     },
- 
+
     reload:function() {
         phpr.module    = this.module;
         phpr.submodule = '';
@@ -41,7 +41,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
     },
-     
+
     loadSubModule:function(/*String*/module) {
         //summary: this function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
@@ -51,7 +51,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         this.setSubGlobalModulesNavigation();
         this.form = new this.formWidget(this,0,this.module);
     },
-    
+
     setSubGlobalModulesNavigation:function(currentModule) {
         var subModuleUrl = phpr.webpath + 'index.php/Setting/index/jsonGetModules';
         var self = this;
@@ -83,7 +83,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
             })
         })
     },
-    
+
     updateCacheData:function() {
         if (this.form) {
             this.form.updateData();

@@ -59,9 +59,9 @@ class Timecard_Models_TimecardSetting
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
-    
+
         // Favorites
         $data = array();
         $data['key']      = 'favorites';
@@ -81,42 +81,42 @@ class Timecard_Models_TimecardSetting
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
-                
+
         $converted[] = $data;
-             
+
         return $converted;
-    }     
+    }
 
     /**
      * getter for the "favorites" field
      *
      * @param string $value Serialized array of Ids
-     * 
+     *
      * @return array
      */
     public function getFavorites($value)
     {
         return implode(",", unserialize($value));
     }
-        
+
     /**
      * Save the settings for the timecard
      *
      * @param array $params $_POST values
-     * 
+     *
      * @return void
      */
     public function setSettings($params)
-    {            
-        $fields = $this->getFieldDefinition();          
+    {
+        $fields = $this->getFieldDefinition();
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key']) {
                     $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-                    $setting->setModule('Timecard');                    
+                    $setting->setModule('Timecard');
                     if (($key == 'favorites')) {
                         $value = serialize($value);
-                    }                    
+                    }
                     $record = $setting->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
                                                  " AND keyValue = ". $setting->_db->quote($key) .
                                                  " AND moduleId = ". Phprojekt_Module::getId('Timecard'));

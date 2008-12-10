@@ -27,23 +27,23 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
         this.gridWidget = phpr.Module.Grid;
         this.formWidget = phpr.Module.Form;
         this.treeWidget = phpr.Module.Tree;
-        
+
         dojo.subscribe("Module.openDialog", this, "openDialog");
         dojo.subscribe("Module.submitForm", this, "submitForm");
     },
-     
+
     customSetSubmoduleNavigation:function() {
         this.setNewEntry();
     },
-     
+
     openDialog: function() {
         this.form.openDialog();
     },
-     
+
     submitForm: function() {
         this.form.submitForm();
     },
-     
+
     updateCacheData:function() {
         if (this.tree) {
             this.tree.updateData();
@@ -54,5 +54,5 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
         if (this.form) {
             this.form.updateData();
         }
-    }     
+    }
 });

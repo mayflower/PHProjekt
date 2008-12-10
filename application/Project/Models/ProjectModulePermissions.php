@@ -64,7 +64,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
         }
         return $modules;
     }
-    
+
 
     /**
      * Delete a project-module relation
@@ -79,5 +79,5 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }
-    }    
+    }
 }

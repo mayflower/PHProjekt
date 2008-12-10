@@ -73,7 +73,7 @@ class Core_ModuleController extends Core_IndexController
     {
         $translate = Zend_Registry::get('translate');
         $id        = (int) $this->getRequest()->getParam('id');
-        
+
         if (empty($id)) {
             $model   = $this->getModelObject();
             $message = $translate->translate('The module was added correctly');
@@ -118,7 +118,7 @@ class Core_ModuleController extends Core_IndexController
         }
         echo Phprojekt_Converter_Json::convert($modules);
     }
-    
+
    /**
      * Deletes the module entries, the module itself
      * the databasemanager entry and the table itself
@@ -139,17 +139,17 @@ class Core_ModuleController extends Core_IndexController
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $databaseModel   = Phprojekt_Loader::getModel($model->name, $model->name);            
+            $databaseModel   = Phprojekt_Loader::getModel($model->name, $model->name);
             $databaseManager = new Phprojekt_DatabaseManager($databaseModel);
             $tmpModule       = $model->delete();
             $tmpDatabase     = $databaseManager->deleteModule();
-            
+
             if ($tmpModule === false || $tmpDatabase === false) {
                 $message = $translate->translate('The module can not be deleted');
             } else {
                 $message = $translate->translate('The module was deleted correctly');
             }
-            
+
             $return = array('type'    => 'success',
                             'message' => $message,
                             'code'    => 0,
