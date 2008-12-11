@@ -38,10 +38,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
     {
         $project = new Project_Models_Project();
         $project->title = 'CCCC DDDD TTTT';
-        $project->startDate = '1981-05-12';
-        $project->endDate = '1981-05-12';
-        $project->priority = 1;
-        $project->path = '/';
+        $project->path = '/1/';
         $project->ownerId = 1;
         $project->projectId = 1;
         $project->save();
