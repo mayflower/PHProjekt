@@ -32,28 +32,6 @@ require_once 'PHPUnit/Framework.php';
 class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Test the load function
-     */
-    public function testIsLoaded()
-    {
-        /* The adapter do not load the file for it self */
-        Zend_Registry::get('log')->debug('testIsLoaded 1 1');
-        $adapter = new Phprojekt_LanguageAdapter('es');
-        Zend_Registry::get('log')->debug('testIsLoaded 1 2');
-        $this->assertFalse($adapter->isLoaded('es'));
-        Zend_Registry::get('log')->debug('testIsLoaded 1 3');
-        $this->assertFalse($adapter->isLoaded('de'));
-
-        /* The language class must load the files needed */
-        Zend_Registry::get('log')->debug('testIsLoaded 2 1');
-        $lang = new Phprojekt_Language('es');
-        Zend_Registry::get('log')->debug('testIsLoaded 2 1');
-        $this->assertTrue($lang->_adapter->isLoaded('es'));
-        Zend_Registry::get('log')->debug('testIsLoaded 2 3');
-        $this->assertFalse($lang->_adapter->isLoaded('de'));
-    }
-
-    /**
      * Test name of the class
      */
     public function testToString()

@@ -50,7 +50,6 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonList/');
         $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
-        Zend_Registry::get('log')->debug($response);
         $this->assertTrue(strpos($response, '"numRows":4}') > 0);
     }
 
@@ -62,7 +61,6 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonList/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        Zend_Registry::get('log')->debug($response);
         $this->assertTrue(strpos($response, '"numRows":2}') > 0);
     }
 

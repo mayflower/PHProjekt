@@ -47,23 +47,9 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
 
         $search = new Phprojekt_Search_Default();
         $result = $search->search('CCCC');
-        Zend_Registry::get('log')->debug('testIndex 1');
-        foreach ($result as $k => $v) {
-            Zend_Registry::get('log')->debug($k .'=>'. $v);
-            foreach ($v as $v1 => $v2) {
-                Zend_Registry::get('log')->debug($v1 .'=>'. $v2);
-            }
-        }
         $this->assertEquals(1, count($result));
 
         $result = $search->search('CCCC DDDD');
-        Zend_Registry::get('log')->debug('testIndex 2');
-        foreach ($result as $k => $v) {
-            Zend_Registry::get('log')->debug($k .'=>'. $v);
-            foreach ($v as $v1 => $v2) {
-                Zend_Registry::get('log')->debug($v1 .'=>'. $v2);
-            }
-        }
         $this->assertEquals(1, count($result));
     }
 
@@ -74,33 +60,12 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
     {
         $search = new Phprojekt_Search_Default();
         $result = (array)$search->search('CCCC DDDD');
-        Zend_Registry::get('log')->debug('testSearch 1');
-        foreach ($result as $k => $v) {
-            Zend_Registry::get('log')->debug($k .'=>'. $v);
-            foreach ($v as $v1 => $v2) {
-                Zend_Registry::get('log')->debug($v1 .'=>'. $v2);
-            }
-        }
         $this->assertEquals(1, count($result));
 
-        $result = (array)$search->search('HELLO CCCC');
-        Zend_Registry::get('log')->debug('testSearch 2');
-        foreach ($result as $k => $v) {
-            Zend_Registry::get('log')->debug($k .'=>'. $v);
-            foreach ($v as $v1 => $v2) {
-                Zend_Registry::get('log')->debug($v1 .'=>'. $v2);
-            }
-        }
+        $result = (array)$search->search('test CCCC');
         $this->assertEquals(2, count($result));
 
-        $result = (array)$search->search('HEL CCC');
-        Zend_Registry::get('log')->debug('testSearch 3');
-        foreach ($result as $k => $v) {
-            Zend_Registry::get('log')->debug($k .'=>'. $v);
-            foreach ($v as $v1 => $v2) {
-                Zend_Registry::get('log')->debug($v1 .'=>'. $v2);
-            }
-        }
+        $result = (array)$search->search('tes CCC');
         $this->assertEquals(2, count($result));
     }
 
