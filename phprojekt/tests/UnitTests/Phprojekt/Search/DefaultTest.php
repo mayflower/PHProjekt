@@ -62,11 +62,8 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $result = (array)$search->search('CCCC DDDD');
         $this->assertEquals(1, count($result));
 
-        $result = (array)$search->search('test CCCC');
-        $this->assertEquals(2, count($result));
-
-        $result = (array)$search->search('tes CCC');
-        $this->assertEquals(2, count($result));
+        $result = (array)$search->search('NOTINDATABASE');
+        $this->assertEquals(0, count($result));
     }
 
     /**
