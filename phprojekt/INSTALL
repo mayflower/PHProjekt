@@ -1,92 +1,108 @@
-PHProjekt 6 - Installation
---------------------------
+                                                PHProjekt 6 Installation
+                                       -----------------------------------------
+    1. Requirements
+    2. Installation
+    3. Configuration
+    4. Permissions
+    6. Finalize
+    A. Notes
+    B. License
+                                       -----------------------------------------
 
-  * Requirements
-  * Installation
-  * Configuration
-  * Notes
+1. Requirements
 
-
-
-Requirements
-
-  * HTTP server
-  * MySql (The system has been tested with MySql, but you can try with another
-    SQL server, or even make the appropriate fixes and send them to us, so that
-    the next version of PHProjekt supports that server :) )
-  * PHP
-     + It is needed the appropriate extensions for the server. e.g.: if using
-       MySql, need to have installed the PDO_MYSQL extension.
+  * HTTP Server
+  * MySql version 5.x
+  * PHP 5.2.x with pdo_mysql drivers installed
 
   Note: Phprojekt 6 has been tested with:
-  
+
     * Apache HTTP Server 2.2
     * PHP 5.2.6
     * MySQL Server 5.0
 
-
-Installation
+2. Installation
 
  1. Download the compressed package file and decompress it into an appropriate
-    folder outside the ones accessed by your HTTP server. For example:
-    
-    UNIX        /var/phprojekt/
-    WINDOWS     C:\phprojekt\
+    folder outside the ones accessed by your HTTP server.
 
- 2. Point your server host to the 'htdocs' folder. In the example given, would
+     $ cd /var/www/
+     $ tar xzvf phprojekt.tar.gz
+
+    Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
+
+ 2. Phprojekt separates both the document root from the rest application, so you want to point
+    your server host to the 'htdocs' folder. In the example given, would
     be:
- 
-    UNIX        /var/phprojekt/htdocs/
+
+    UNIX        /var/www/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
 
- 3. Concerning SQL: create a database, could be "phprojekt6".
+ 3. Create a database on your MySQL server (e.g. phprojekt6). Make sure that the
+    database user that you want to use has the rights to load files.
+    An example:
 
- 4. Locate the following file:
-    
-    UNIX        /var/phprojekt/docs/blank_database.sql
+      $ mysql -u root
+      > CREATE DATABASE `phprojekt6`;
+      > GRANT ALL PRIVILEGES ON `phprojekt6`.* TO phprojekt@localhost IDENTIFIED BY `phprojekt6`;
+      > FLUSH ALL PRIVILEGES
+
+ 4. Database:
+
+    UNIX        /var/www/docs/blank_database.sql
     WINDOWS     c:\phprojekt\docs\blank_database.sql
-    
-    It has the SQL queries to create all the tables and to insert the basic data
-    into them. Execute it inside the database you created in your server of SQL.
-    Note: the script has been created for MySql, if you are trying with another
-    SQL server check that the syntax of the script is compatible.
 
+    and load it into the database. You might want to use MySQL Administration tools
+    or PHPMyAdmin. You can also use the command line to do so:
 
-Configuration
+      $ mysql -u phprojekt6 -p < /var/www/docs/blank_database.sql
+
+3. Configuration
 
  1. Make a copy of configuration.ini-dist in the same folder, name it
     configuration.ini and set its parameters according to the explanations and
     examples inside it.
-    
-    UNIX        /var/phprojekt/htdocs/configuration.ini-dist    
-             to /var/phprojekt/htdocs/configuration.ini
+
+    UNIX     /var/www/htdocs/configuration.ini-dist    
+             to /var/www/htdocs/configuration.ini
     WINDOWS     C:\phprojekt\htdocs\configuration.ini-dist
              to C:\phprojekt\htdocs\configuration.ini
 
- 2. Enter the site from your browser (see Browser notes in the Notes section of
+4. Permission
+
+    Make sure that the webserver or the webserver group can write to the
+    tmp/ and to the log directory. You can set these permission using the chmod(1) command.
+    Assuming your webserver runs on the group "www-data":
+
+      $ chgrp www-data tmp/
+      $ chmod g+w tmp/
+
+5. Finalize
+
+    Enter the site from your browser (see Browser notes in the Notes section of
     this document).
     Log in using the admin user (See Users notes in the Notes section of this
     document). It is suggested to change the password, entering to 'Setting'
     option on the top menu -> Tab 'User' -> Password fields.
-    
- All done! :)
-    
+
+DONE
 
 Notes
 
   * BROWSER
-    The site has been tested with Firefox (suggested browser) and Internet
-    Explorer. You could try it with any other web browser of your choice at your
-    own risk (we would appreciate it if you send us fixes, so the site could
-    work OK for that browser of your choice :) ).
-  
+    The site has been tested with Firefox and Internet Explorer.
+
   * USERS
-    
+
     The database script generates the following users:
 
     User: admin
     Password: test
-    
-    User: test
-    Password:test
 
+    User: test
+    Password: test
+
+License
+
+    PHProjekt 6 is licensed under the terms and conditions of the Lesser GNU Public License version 2.1.
+    Please refer to the LICENSE file distributed with this file.
