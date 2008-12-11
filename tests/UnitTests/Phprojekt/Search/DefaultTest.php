@@ -36,7 +36,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
      */
     public function testIndex()
     {
-        $project = new Project_Models_Project();
+        $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $project->title = 'CCCC DDDD TTTT';
         $project->path = '/1/';
         $project->ownerId = 1;
