@@ -469,9 +469,9 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'rrule', 1, 'rrule', 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0);
 
 INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`) VALUES
-(1,'test',NULL,NULL,'A'),
-(2,'test1',NULL,NULL,'A'),
-(3,'test2',NULL,NULL,'A');
+(1,'admin','MyName1','MyLastName1','A'),
+(2,'test','MyName2','MyLastName2','A');
+
 
 INSERT INTO `Setting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identifier`) VALUES
 (1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
@@ -481,51 +481,37 @@ INSERT INTO `Setting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identif
 (5, 2, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
 (6, 2, 0, 'email','test@example.com', 'Core'),
 (7, 2, 0, 'language','en', 'Core'),
-(8, 2, 0, 'timeZone','2', 'Core'),
-(9, 3, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
-(10, 3, 0, 'email','test@example.com', 'Core'),
-(11, 3, 0, 'language','en', 'Core'),
-(12, 3, 0, 'timeZone','2', 'Core');
+(8, 2, 0, 'timeZone','2', 'Core');
 
 INSERT INTO `Project` (`id`, `projectId`, `path`, `title`, `notes`, `ownerId`, `startDate`, `endDate`, `priority`, `currentStatus`, `completePercent`, `hourlyWageRate`, `budget`) VALUES
 (1, NULL, '/', 'PHProjekt', 'Test', 1, '2008-05-02', '2008-07-02', 1, 'working', 0, NULL, NULL),
 (2, 1, '/1/', 'Project 1', 'Test', 1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL),
-(3, 1, '/1/', 'Project 2', 'Test', 1, '2008-05-02', '2008-07-02', 2, 'working' ,0, NULL, NULL),
-(4, 2, '/1/2/', 'Sub Project', 'Test',1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL);
+(3, 2, '/1/2/', 'Sub Project', 'Test',1, '2008-05-02', '2008-07-02', 2, 'working', 0, NULL, NULL);
 
 INSERT INTO `Groups` (`id`, `name`) VALUES
 (1, 'default'),
-(2, 'ninatest'),
-(3, 'ninasgruppe'),
-(4, 'testgruppe');
+(2, 'ninatest');
 
 INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
 (1, 'admin in all', null), #Necessary
-(2, 'can Read TODOs only', null),
-(3, 'admin in CALENDAR and PROJECTS', null),
+(2, 'can Read TODOs and CALENDARsonly', null),
+(3, 'admin in CALENDARs and PROJECTs', null),
 (4, 'read only in All', null);
 
 INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
 (1, 1, 1),
-(2, 2, 2),
-(3, 3, 1);
+(2, 2, 2);
+
 
 INSERT INTO `ProjectRoleUserPermissions` (`projectId`, `userId`, `roleId`) VALUES
 (1, 1, 1),
 (1, 2, 1),
-(1, 3, 1),
 
 (2, 1, 1),
 (2, 2, 2),
-(2, 3, 4),
 
-(3, 1, 1),
-(3, 2, 3),
-(3, 3, 4),
-
-(4, 1, 4),
-(4, 2, 4),
-(4, 3, 4);
+(3, 1, 4),
+(3, 2, 4);
 
 INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 1, 139),
@@ -559,19 +545,12 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
 (1, 1, 2, 255),
-(1, 1, 3, 255),
 
 (1, 2, 1, 255),
 (1, 2, 2, 1),
-(1, 2, 3, 0),
 
 (1, 3, 1, 255),
-(1, 3, 2, 3),
-(1, 3, 3, 3),
-
-(1, 4, 1, 255),
-(1, 4, 2, 255),
-(1, 4, 3, 255);
+(1, 3, 2, 255);
 
 INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (1, 1),
@@ -585,10 +564,6 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (2, 2),
 (3, 2),
 (6, 2),
-
-(1, 3),
-(2, 3),
-(6, 3),
 
 (1, 4),
 (6, 4);
