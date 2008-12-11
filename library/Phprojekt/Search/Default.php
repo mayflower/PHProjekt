@@ -197,6 +197,13 @@ class Phprojekt_Search_Default
             $limitedFoundResults = $tmpFoundResults;
         }
 
+        Zend_Registry::get('log')->debug($userId);
+        foreach ($limitedFoundResults as $k => $v) {
+            Zend_Registry::get('log')->debug($k .'=>'. $v);
+            foreach ($v as $v1 => $v2) {
+                Zend_Registry::get('log')->debug($v1 .'=>'. $v2);
+            }
+        }
         foreach ($limitedFoundResults as $moduleData) {
             if ($rights->getItemRight($moduleData['moduleId'], $moduleData['itemId'], $userId) > 0) {
                 $foundResults[] = $this->_display->getDisplay($moduleData['moduleId'], $moduleData['itemId']);
