@@ -28,14 +28,6 @@
                 availHeight = window.innerHeight + window.pageYOffset;
             }
             dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
-            dijit.byId('completeContent').resize();
-            dojo.connect(dojo.byId("loginButton"), 'onkeypress', function(e) {
-                if (e.keyCode == dojo.keys.ENTER) {
-                    dojo.byId("loginForm").submit();
-                } else {
-                    return true;
-                }
-            });
         }
         dojo.addOnLoad(init);
         window.onresize = function(){
