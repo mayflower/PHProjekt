@@ -76,6 +76,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    Add all the tabs that are not the basic data
         this.addReoccurenceTab(data);
         this.addAccessTab(data);
+        this.addNotificationTab(data);
         if (this.id > 0) {
             this.addTab(this.getHistoryData(), 'tabHistory', 'History');
         }

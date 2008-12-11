@@ -109,7 +109,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         // getting the participant list from request
         if (is_array($participantId)) {
             // we will put the owner id first, just to make it clear
-            if (in_array($userId, $participantId)) {
+            if (!in_array($userId, $participantId)) {
                 $participants[] = $userId;
             }
             foreach ($participantId as $oneParticipant) {
@@ -118,8 +118,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 }
             }
         } elseif ((is_numeric($participantId) && ($userId <> (int)$participantId))) {
+            $participants[] = $userId;
             $participants[] = (int)$participantId;
-
         } else {
             $participants[] = $userId;
         }
