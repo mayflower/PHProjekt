@@ -51,7 +51,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
         Zend_Registry::get('log')->debug($response);
-        $this->assertTrue(strpos($response, '"numRows":5}') > 0);
+        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
     }
 
     /**
@@ -63,7 +63,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         Zend_Registry::get('log')->debug($response);
-        $this->assertTrue(strpos($response, '"numRows":3}') > 0);
+        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
     }
 
     /**

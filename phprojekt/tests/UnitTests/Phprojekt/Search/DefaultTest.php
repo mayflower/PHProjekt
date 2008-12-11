@@ -42,6 +42,8 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $project->ownerId = 1;
         $project->projectId = 1;
         $project->save();
+        $project->saveRights(array(1 => 255, 2 => 255));
+        Zend_Registry::set('searchInsertedId', $project->id);
 
         $search = new Phprojekt_Search_Default();
         $result = $search->search('CCCC');
@@ -108,11 +110,10 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $project = new Project_Models_Project();
-        $project->find(11);
+        $project->find(Zend_Registry::get('searchInsertedId'));
+        $project->delete();
 
         $search = new Phprojekt_Search_Default();
-        $search->deleteObjectItem($project);
-
         $result = (array)$search->search('CCCC DDDD TTTT');
         $this->assertEquals(0, count($result));
     }
