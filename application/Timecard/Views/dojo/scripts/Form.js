@@ -272,7 +272,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Complete view
         this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
             hours:                    hours,
-            hourHeight:                hourHeight,
+            hourHeight:               hourHeight,
             date:                     this._date,
             timecardProjectTimesText: phpr.nls.get("Project bookings"),
             values:                   favoritesList,
@@ -286,13 +286,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var surface     = dojox.gfx.createSurface('projectBookingContainer', 400, 260);
         var lastHour    = 0;
         var totalHeight = 0;
-        for (var j = 0; j < timeprojData.length; j++) {
+        for (j in timeprojData) {
             timeprojData[j].displayed = 0;
             timeprojData[j].remaind   = 0;
         }
 
         // Draw hours block
-        for (var i = 0; i < timecardData.length; i++) {
+        for (i in timecardData) {
             var start = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].startTime);
             var end   = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].endTime);
             var top  = start + 'px';
@@ -301,7 +301,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var finish = 0;
             totalHeight += (end - start);
 
-            var tmp = dojo.doc.createElement ("div");
+            var tmp = dojo.doc.createElement("div");
             tmp.id = 'targetBooking' + timecardData[i].id;
             tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
             dojo.addClass(tmp, "dndTarget");
@@ -311,32 +311,34 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var target = new phpr.Timecard.Booking(tmp.id);
 
             // Draw Bookings
-            for (var j = 0; j < timeprojData.length; j++) {
+            for (j in timeprojData) {
                 if (timeprojData[j].displayed == 0) {
                     if (timeprojData[j].remaind > 0) {
                         var bookingHeight = timeprojData[j].remaind;
                     } else {
                         var bookingHeight = this.contentBar.convertAmountToPixels(hourHeight, timeprojData[j].amount);
                     }
-
                     if (totalbookingHeight <= (end - start)) {
                         if (lastHour == 0) {
                             lastHour = start;
                         }
-                        if (bookingHeight > (end - lastHour)) {
-                            timeprojData[j].remaind = bookingHeight - (end - lastHour);
+                        var check = end - lastHour;
+                        if (bookingHeight > check) {
+                            timeprojData[j].remaind = bookingHeight - check;
                             if (timeprojData[j].remaind > 0) {
                                 finish = 1;
-                                bookingHeight = end - lastHour;
+                                bookingHeight = check;
                             }
                         }
-                        var tmpDraw = surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3, width: 197, r: 13});
-                        tmpDraw.setFill([68,74,82,1]);
-                        tmpDraw.setStroke({color:[68,74,82,1], width: 2});
-                        timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
+                        if (bookingHeight > 0) {
+                            var tmpDraw = surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3, width: 197, r: 13});
+                            tmpDraw.setFill([68,74,82,1]);
+                            tmpDraw.setStroke({color:[68,74,82,1], width: 2});
+                            timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
 
-                        this.makeText(surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
-                            {family: "Verdana", size: "8pt"}, "white", "white");
+                            this.makeText(surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
+                                {family: "Verdana", size: "8pt"}, "white", "white");
+                        }
 
                         if (finish) {
                             totalbookingHeight += bookingHeight + end;
@@ -352,9 +354,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         }
 
         // Event buttons
-        for (var j = 0; j < timeprojData.length; j++) {
-            dojo.connect(dijit.byId("deleteBookingButton_"+timeprojData[j].id), "onClick", dojo.hitch(this, "deleteBookingForm", [timeprojData[i].id]));
-            dojo.connect(dijit.byId("saveBookingButton_"+timeprojData[j].id), "onClick", dojo.hitch(this, "submitBookingForm", [timeprojData[i].id]));
+        for (var j in timeprojData) {
+            dojo.connect(dijit.byId("deleteBookingButton_"+timeprojData[j].id), "onClick", dojo.hitch(this, "deleteBookingForm", [timeprojData[j].id]));
+            dojo.connect(dijit.byId("saveBookingButton_"+timeprojData[j].id), "onClick", dojo.hitch(this, "submitBookingForm", [timeprojData[j].id]));
         }
 
         dojo.connect(dijit.byId("deleteBookingButton_0"), "onClick", function(){
