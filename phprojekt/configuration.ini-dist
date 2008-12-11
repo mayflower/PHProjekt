@@ -1,33 +1,73 @@
+; In the process of the initial configuration of PHProjekt 6, this file must be renamed to configuration.ini (without 
+; the sufix '-dist') and the parameters have to be set as explained.
+; The semicolons ';' are used preceding a comment line, or a line which has data that is not being used.
+; This file is divided into 3 sections: [production], [testing-mysql] y [testing], every one has the
+; same options. Each one of them corresponds to one environment, it is used only one at a time, depending
+; on what is speficied in index.php, inside folder 'htdocs' in the line that has:
+; define('PHPR_CONFIG_SECTION', 'production');
+; You could leave that line as it is, and in configuration.ini just modify the parameters inside [production] section.
+; You can also add your own sections.
+
 [production]
 
-; Language configuration
+; LANGUAGE
+; Here it is specified the default language for the system, could be "de" for German, "en" for English or "es" for 
+; Spanish. Actually, the language for each user is specified individually from Administration -> User
 language             = "de"
 
-; Path options
+
+; PATHS
+; Where the site and the main file (index.php) are located
 webpath              = "http://localhost/phprojekt/htdocs"
 
-; Database options
-database.type        = "pdo_mysql"
-database.host        = "localhost"
-database.username    = "root"
-database.password    = ""
-database.name        = "phprojekt6"
-
-; Log options
-log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
-log.crit.filename    = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
-
-; Modules
-itemsPerPage         = 3
-
-; Upload Files
+; Path where will be placed files uploaded by the user
 uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
-; Mail Notification
+
+; DATABASE
+; For this Developer Release, it just has been tested with pdo_mysql.
+database.type        = "pdo_mysql"
+
+; The assigned name or IP address for the database server.
+database.host        = "localhost"
+
+; Username and password with the appropriate rights for Phprojekt to access to the database
+database.username    = "root"
+database.password    = ""
+
+; Name of the database, inside the server
+database.name        = "phprojekt6"
+
+
+; LOG
+; Here will be logged things explicitly declared. E.G.: (PHP) Zend_Registry::get('log')->debug("String to be logged");
+log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
+
+; This is another type of logging. E.G.: (PHP) Zend_Registry::get('log')->crit("Critical advice");
+; Note for developers: there are many different type of logs defined that can be added here, see the complete list
+; in phprojekt\library\Phprojekt\Log.php
+log.crit.filename    = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
+
+; MODULES
+; Not used at the moment, leave it as it is.
+itemsPerPage         = 3
+
+
+; MAIL NOTIFICATION
+; Inside many modules, when adding or editing an item, there is a tab "Notification" that allows the user to send an
+; email notification to the people involved in that item, telling them about the creation or modification of it.
+
 mailEndOfLine        = 0    ;(0 = \r\n  1 = \n)
+; If the email is configured to be sent in Text mode, whether to use \r\n or \n for the end of line.
+
+; Name or IP address of the SMTP server to be used to send that notifications.
 smtpServer           = "localhost"
+
+; If the SMTP server requires authentication, remove the semicolons ';' and write inside the inverted commas "" the
+; appropriate username and password.
 ;smtpUser            = ""
 ;smtpPassword        = ""
+
 
 
 [testing-mysql]
@@ -37,6 +77,7 @@ language             = "de"
 
 ; Path options
 webpath              = "http://localhost/phprojekt/htdocs"
+uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
 ; Database options
 database.type        = "pdo_mysql"
@@ -66,6 +107,7 @@ language             = "de"
 
 ; Path options
 webpath              = "http://localhost/phprojekt/htdocs"
+uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
 ; Database options
 database.type        = "pdo_mysql"
