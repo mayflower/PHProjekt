@@ -11,13 +11,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: IndexController.php 635 2008-04-02 19:32:05Z david $
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 /**
@@ -25,13 +25,13 @@
  *
  * The controller will get all the actions for manage tags
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
  * @subpackage Default
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class TagController extends IndexController
