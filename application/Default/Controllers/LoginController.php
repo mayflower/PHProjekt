@@ -41,13 +41,12 @@ class LoginController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $logger = Zend_Registry::get('log');
-
-        $logger->debug('Login handler called');
-
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
-        $this->view->webpath = Zend_Registry::get('config')->webpath;
+
+        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+
         $this->render('login');
     }
 
@@ -63,7 +62,9 @@ class LoginController extends Zend_Controller_Action
     {
         $username = $this->getRequest()->getParam('username');
         $password = $this->getRequest()->getParam('password');
-        $this->view->webpath = Zend_Registry::get('config')->webpath;
+
+        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
 
         try {
             $success = Phprojekt_Auth::login($username, $password);

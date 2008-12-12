@@ -16,6 +16,13 @@
                         locale: '<?php echo $this->language; ?>', useCommentedJson: true};
     </script>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
+    <?php
+    if ($this->compressedDojo) {
+    ?>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
+    <?php
+    }
+    ?>
     <script type="text/javascript" src="<?php echo $this->url(array('controller' => 'js', 'action' => 'index')); ?>"></script>
     <script type="text/javascript">
         function init() {
