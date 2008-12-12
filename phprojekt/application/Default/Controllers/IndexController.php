@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
  * @author     David Soria Parra <soria_parra@mayflower.de>
@@ -29,7 +29,7 @@
  * The class contain the model var for get the module model object
  * that return all the data for process
  *
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
