@@ -13,6 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: Abstract.php 809 2008-06-16 15:49:23Z polidor $
  * @link       http://www.phprojekt.com
@@ -26,6 +27,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com

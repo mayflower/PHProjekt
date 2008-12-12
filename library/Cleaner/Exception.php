@@ -16,7 +16,7 @@
  * Framework Exception
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: <package_version>
+ * @version    Release: @package_version@
  * @license
  * @package    Inspector
  * @link       http://www.thinkforge.org/projects/inspector
