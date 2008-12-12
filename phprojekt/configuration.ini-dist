@@ -81,6 +81,9 @@ smtpServer           = "localhost"
 ;smtpUser            = ""
 ;smtpPassword        = ""
 
+; MISC
+; Use compressed dojo for improve the speed of the load
+compressedDojo       = true;
 
 
 [testing-mysql]

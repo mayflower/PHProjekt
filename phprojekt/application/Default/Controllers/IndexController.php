@@ -92,8 +92,12 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->webpath  = Zend_Registry::get('config')->webpath;
-        $this->view->language = Phprojekt_User_User::getSetting("language", Zend_Registry::get('config')->language);
+        $language = Phprojekt_User_User::getSetting("language", Zend_Registry::get('config')->language);
+
+        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->language       = $language;
+        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+
         $this->render('index');
     }
 
@@ -406,14 +410,15 @@ class IndexController extends Zend_Controller_Action
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = $this->getRequest()->getParam('field', null);
 
-        $this->view->webpath      = Zend_Registry::get('config')->webpath;
-        $this->view->formPath     = $link . '/index/uploadFile/';
-        $this->view->downloadLink = '';
-        $this->view->fileName     = null;
-        $this->view->itemId       = $itemId;
-        $this->view->field        = $field;
-        $this->view->value        = $value;
-        $this->view->upload       = false;
+        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->formPath       = $link . '/index/uploadFile/';
+        $this->view->downloadLink   = '';
+        $this->view->fileName       = null;
+        $this->view->itemId         = $itemId;
+        $this->view->field          = $field;
+        $this->view->value          = $value;
+        $this->view->upload         = false;
 
         $fileName = strstr($value, '|');
         if (!empty($fileName)) {
@@ -454,12 +459,13 @@ class IndexController extends Zend_Controller_Action
         $itemId = (int) $this->getRequest()->getParam('itemId', null);
         $field  = $this->getRequest()->getParam('field', null);
 
-        $this->view->webpath      = Zend_Registry::get('config')->webpath;
-        $this->view->downloadLink = '';
-        $this->view->formPath     = $link . '/index/uploadFile/';
-        $this->view->itemId       = $itemId;
-        $this->view->field        = $field;
-        $this->view->upload       = true;
+        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->downloadLink   = '';
+        $this->view->formPath       = $link . '/index/uploadFile/';
+        $this->view->itemId         = $itemId;
+        $this->view->field          = $field;
+        $this->view->upload         = true;
         if (!empty($fileName)) {
             $this->view->downloadLink = $link . '/index/downloadFile/file/' . $value;
             $this->view->fileName     = $fileName;

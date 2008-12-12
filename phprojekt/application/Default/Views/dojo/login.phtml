@@ -12,6 +12,13 @@
     </style>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"
      djConfig="isDebug: false, parseOnLoad: true, useCommentedJson: true"></script>
+    <?php
+    if ($this->compressedDojo) {
+    ?>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
+    <?php
+    } else {
+    ?>
     <script type="text/javascript">
         dojo.require("dojo.parser");
         dojo.require("dijit.form.Form");
@@ -19,6 +26,11 @@
         dojo.require("dijit.form.TextBox");
         dojo.require("dijit.layout.BorderContainer");
         dojo.require("dijit.layout.ContentPane");
+    </script>
+    <?php
+    }
+    ?>
+    <script type="text/javascript">
         function init() {
             if (document.layers) {
                 availHeight = window.innerHeight + window.pageYOffset;
