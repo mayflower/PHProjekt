@@ -82,7 +82,7 @@ smtpServer           = "localhost"
 ;smtpPassword        = ""
 
 ; MISC
-; Use compressed dojo for improve the speed of the load
+; Use compressed dojo to improve the speed of loading.
 compressedDojo       = true;
 
 
@@ -115,6 +115,10 @@ smtpServer           = "localhost"
 ;smtpUser            = ""
 ;smtpPassword        = ""
 
+; Misc
+; Use compressed dojo to improve the speed of loading.
+compressedDojo       = true;
+
 
 [testing]
 
@@ -144,3 +148,7 @@ mailEndOfLine        = 0    ;(0 = \r\n  1 = \n)
 smtpServer           = "localhost"
 ;smtpUser            = ""
 ;smtpPassword        = ""
+
+; Misc
+; Use compressed dojo to improve the speed of loading.
+compressedDojo       = true;
