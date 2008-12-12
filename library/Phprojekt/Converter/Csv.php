@@ -11,26 +11,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: Csv.php 828 2008-07-07 02:05:54Z gustavo $
  * @link       http://www.phprojekt.com
  * @author     Eduardo Polidor <polidor@mayflower.de>
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 /**
  * Convert a model into a CSV structure.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Converter_Csv

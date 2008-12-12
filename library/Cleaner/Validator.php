@@ -3,12 +3,12 @@
  * Validation class
  *
  * @author     Peter Voringer <peter.voringer@mayflower.de>
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license
  * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/Cleaner
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  *
  */
 
@@ -17,13 +17,13 @@
  *
  * Contains validation methods
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: <package_version>
  * @license
  * @package    Cleaner
  * @link       http://www.thinkforge.org/projects/Cleaner
  * @author     Peter Voringer <peter.voringer@mayflower.de>
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 class Cleaner_Validator
 {

@@ -11,13 +11,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
  * @author     David Soria Parra <soria_parra@mayflower.de>
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 /**
@@ -25,13 +25,13 @@
  * /application directory or from the Zend library directory depending
  * on the name of the class.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_Loader extends Zend_Loader
