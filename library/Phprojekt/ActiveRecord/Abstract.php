@@ -437,9 +437,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $foreignKeyName = $this->_translateKeyFormat(get_class($this));
         $myKeyName      = $this->_translateKeyFormat($className);
 
-        $foreignTable = $this->getTableName(); // $this->_translateClassNameToTable(get_class($this));
+        $foreignTable = $this->getTableName();
         $im           = new $className($this->getAdapter());
-        $myTable      = $im->getTableName(); // $className::getClassName();
+        $myTable      = $im->getTableName();
 
         $tableName = $this->_translateIntoRelationTableName($im, $this);
 
@@ -759,7 +759,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected static function _translateClassNameToTable($className)
     {
-        $preg = sprintf('(?:%s_)?(%s)$', Phprojekt_Loader::CLASS_PATTERN, Phprojekt_Loader::CLASS_PATTERN);
+        $preg = sprintf('(?:%s_)?(%s)$', Phprojekt_Loader::CLASS_PATTERN,
+							Phprojekt_Loader::CLASS_PATTERN);
 
         $match = array();
         if (preg_match('@' . $preg . '@', $className, $match)) {
@@ -767,7 +768,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         throw new Phprojekt_ActiveRecord_Exception("Classname contains "
-        ."illegal characters");
+                                                  ."illegal characters");
 
     }
 
