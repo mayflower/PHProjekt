@@ -11,13 +11,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
@@ -26,12 +26,12 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 /**
  * Selenium Test for PHProjekt
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     Eduardo Polidor <epolidor@mayflower.de>
  */
 class Selenium_TodoTest extends Selenium_SeleniumInit
@@ -208,7 +208,7 @@ class Selenium_TodoTest extends Selenium_SeleniumInit
         $this->waitForPageToLoad("30000");
         $this->type("title", "Todo to be deleted");
         $this->type("notes", "This todo was created by Selenium tests");
-        $this->type("startDate", "2007-10-10");
+        $this->type("startDate", "2008-10-10");
         $this->type("endDate", "2010-10-10");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
