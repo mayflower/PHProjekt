@@ -67,7 +67,7 @@ class Timecard_Models_TimecardSetting
         $data['key']      = 'favorites';
         $data['label']    = $translate->translate('Favorite projects');
         $data['type']     = 'multipleselectbox';
-        $data['hint']     = $translate->translate('Favorite projectst');
+        $data['hint']     = $translate->translate('Favorite projects');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
