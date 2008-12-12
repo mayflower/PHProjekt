@@ -12,14 +12,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version   CVS: $Id$
- * @author    David Soria Parra <soria_parra@mayflower.de>
- * @package   PHProjekt
+ * @version    CVS: $Id$
+ * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @package    PHProjekt
  * @subpackage Core
- * @link      http://www.phprojekt.com
- * @since     File available since Release 6.0
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.0
  */
 
 /**

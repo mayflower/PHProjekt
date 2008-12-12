@@ -13,6 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
+ * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com

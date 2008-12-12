@@ -17,6 +17,7 @@
  * @version    CVS: $Id:
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
