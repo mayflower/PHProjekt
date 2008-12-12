@@ -11,13 +11,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
  * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
@@ -26,12 +26,12 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 /**
  * Selenium Test for PHProjekt
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  */
 class Selenium_ProjectTest extends Selenium_SeleniumInit
@@ -97,7 +97,7 @@ class Selenium_ProjectTest extends Selenium_SeleniumInit
         $this->waitForPageToLoad("30000");
         $this->type("title", "Test Project 2");
 
-        $this->type("startDate", "10.10.2007");
+        $this->type("startDate", "10.10.2008");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
         try {
@@ -115,12 +115,12 @@ class Selenium_ProjectTest extends Selenium_SeleniumInit
         $this->waitForPageToLoad("30000");
         $this->type("title", "Test Project 2");
 
-        $this->type("startDate", "2007-10-10");
-        $this->type("endDate", "2007-12-31");
+        $this->type("startDate", "2008-10-10");
+        $this->type("endDate", "2008-12-31");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
         try {
-            $this->assertTrue($this->isTextPresent("Oct 10, 2007"));
+            $this->assertTrue($this->isTextPresent("Oct 10, 2008"));
         } catch (PHPUnit_Framework_AssertionFailedError $error) {
             array_push($this->verificationErrors, $error->toString());
         }
@@ -152,8 +152,8 @@ class Selenium_ProjectTest extends Selenium_SeleniumInit
         $this->type("title", "New Entry to delete");
         $this->type("notes", "Notes for new entry");
         $this->type("priority", "1");
-        $this->type("startDate", "2007-10-10");
-        $this->type("endDate", "2007-12-31");
+        $this->type("startDate", "2008-10-10");
+        $this->type("endDate", "2008-12-31");
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
         try {
