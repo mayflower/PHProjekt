@@ -30,7 +30,7 @@
             dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
         }
         dojo.addOnLoad(init);
-        window.onresize = function(){
+        window.onresize = function() {
             init();
         };
     </script>
@@ -109,7 +109,8 @@
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
-                            <td><button dojoType="dijit.form.Button" baseClass="positive" id="loginButton" type="submit" iconClass="tick">
+                            <td><button dojoType="dijit.form.Button" baseClass="positive" id="loginButton" type="submit" iconClass="tick"
+                            onfocus="dojo.byId('loginForm').submit();">
                                     Login
                                 </button>
                             </td>

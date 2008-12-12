@@ -139,15 +139,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case'date':
                     this.gridLayout.push({
-                        width:      porcent,
-                        name:       meta[i]["label"],
-                        field:      meta[i]["key"],
-                        styles:     "text-align:center;",
-                        type:       phpr.grid.cells.DateTextBox,
-                        //formatter:  phpr.grid.formatDate,
+                        width:         porcent,
+                        name:          meta[i]["label"],
+                        field:         meta[i]["key"],
+                        styles:        "text-align:center;",
+                        type:          phpr.grid.cells.DateTextBox,
                         promptMessage: 'yyyy-MM-dd',
-                        constraint: {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
-                        editable:   meta[i]['readOnly'] ? false : true
+                        constraint:    {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
+                        editable:      meta[i]['readOnly'] ? false : true
                     });
                     break;
 

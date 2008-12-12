@@ -77,11 +77,17 @@ dojo.require("dijit._base.window");
 dojo.require("dijit._base");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
-dojo.require("dijit.Menu");
 dojo.require("dijit._Container");
 dojo.require("dijit._TimePicker");
-dojo.require("dijit.Tooltip");
 dojo.require("dijit._Calendar");
+
+// Dijit Misc
+dojo.require("dijit.Tree");
+dojo.require("dijit.Dialog");
+dojo.require("dijit.TitlePane");
+dojo.require("dijit.Toolbar");
+dojo.require("dijit.Tooltip");
+dojo.require("dijit.Menu");
 
 // Dijit Layout
 dojo.require("dijit.layout._LayoutWidget");
@@ -110,21 +116,14 @@ dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.NumberSpinner");
 dojo.require("dijit.form.CurrencyTextBox");
 
-// Editor
+// Dijit Editor
 dojo.require("dijit._editor.selection");
 dojo.require("dijit._editor.range");
 dojo.require("dijit._editor.html");
 dojo.require("dijit._editor.RichText");
-dojo.require("dijit.Toolbar");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit._editor.plugins.EnterKeyHandling");
 dojo.require("dijit.Editor");
-
-// Tree
-dojo.require("dijit.Tree");
-
-// Dialog
-dojo.require("dijit.Dialog");
 
 // Dojox base
 dojo.require("dojox.data.QueryReadStore");
@@ -159,6 +158,9 @@ dojo.require("dojox.dtl._Templated");
 
 // Dojox fx
 dojo.require("dojox.fx._base");
+dojo.require("dojox.gfx.svg");
+dojo.require("dojox.gfx.shape");
+dojo.require("dojox.gfx.path");
 dojo.require("dojox.gfx");
 
 // Dojox layout
