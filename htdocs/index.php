@@ -1,7 +1,7 @@
 <?php
 /**
  * Bootstrap file.
- * 
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1 as published by the Free Software Foundation
@@ -10,13 +10,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @category   Htdocs
  * @package    Htdocs
- * @copyright  2007 Mayflower GmbH
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    CVS: $Id$
  * @license    LGPL 2.1 (See LICENSE file)
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
+ * @since      File available since Release 6.0
  */
 define('PHPR_CONFIG_SECTION', 'production');
 

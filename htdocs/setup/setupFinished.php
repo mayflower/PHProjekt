@@ -5,12 +5,12 @@
  *
  * LICENSE: Licensed under the terms of the GNU Publice License
  *
- * @copyright  Copyright (c) 2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *             GNU Public License 2.0
  * @version    CVS: $Id: setupFinished.php 828 2008-07-07 02:05:54Z gustavo $
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
 */
 
 if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine');
@@ -47,7 +47,7 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
             </div>
 
             <!-- Border Container which splits page in navigation and form/list view: -->
-            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" 
+            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"
             style="margin-top: 55px;">
             <!-- navigation panel -->
 
@@ -87,7 +87,7 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
                                 Installation done!. Please login at <a href="<%SERVER_URL%>"><%SERVER_URL%></a>
                             </td>
                         </tr>
-                        
+
 
                     </table>
 
