@@ -12,24 +12,24 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
  * @subpackage Core
  * @version    CVS: $Id:
  * @link       http://www.phprojekt.com
  * @author     Michel Hartmann <michel.hartmann@mayflower.de>
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 /**
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     Michel Hartmann <michel.hartmann@mayflower.de>
  */
 class Phprojekt_Date_Collection

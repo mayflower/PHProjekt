@@ -11,27 +11,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id:
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 /**
  * The class provide the functions for manage all the tags
  * All the words are converted to crc32 for search it
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract

@@ -11,24 +11,24 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id$
  * @link       http://www.phprojekt.com
  * @author     Gustavao Solt <solt@mayflower.de>
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  */
 
 /**
  * An item, with database manager support
  *
- * @copyright  2007 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
- * @since      File available since Release 1.0
+ * @since      File available since Release 6.0
  * @author     Gustavao Solt <solt@mayflower.de>
  */
 abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
