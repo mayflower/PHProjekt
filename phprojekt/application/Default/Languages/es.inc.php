@@ -155,5 +155,5 @@ $lang["Current data"] = "Datos actuales";
 $lang["Changes done"] = "Cambios realizados";
 $lang["Field"] = "Campo";
 $lang["Old value"] = "Valor anterior";
-$lang["PHProjekt 6.0 - Copyright  2007 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2007 Mayflower GmbH";
+$lang["PHProjekt 6.0 - Copyright  2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright  2008 Mayflower GmbH";
 $lang["Send Notification"] = "Enviar notificación";
