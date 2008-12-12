@@ -805,8 +805,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    protected static function _translateIntoRelationTableName(Phprojekt_ActiveRecord_Abstract $myObject,
-    Phprojekt_ActiveRecord_Abstract $foreignObject)
+    protected static function _translateIntoRelationTableName(
+                                        Phprojekt_ActiveRecord_Abstract $myObject,
+                                        Phprojekt_ActiveRecord_Abstract $foreignObject)
     {
         $tableNames   = array();
         $myTable      = $myObject->getTableName();
