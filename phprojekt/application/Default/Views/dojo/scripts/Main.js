@@ -88,7 +88,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.module == 'Module') {
                 dojo.publish("Project.changeProject", [phpr.currentProjectId]);
             } else {
-                dojo.publish(this.module + ".reload");
+                if (this.module == 'Calendar') {
+                    dojo.publish(this.module + ".reload");
+                } else {
+                    dojo.publish("Project.changeProject", [phpr.currentProjectId]);
+                }
             }
         } else {
             var subModuleUrl   = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
