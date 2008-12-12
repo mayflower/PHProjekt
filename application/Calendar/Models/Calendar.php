@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details
  *
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    CVS: $Id: Calendar.php 635 2008-04-02 19:32:05Z david $
@@ -23,7 +23,7 @@
 /**
  * Calendar model class
  *
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
