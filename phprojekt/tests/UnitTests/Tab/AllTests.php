@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id: AllTests.php 853 2008-08-11 06:34:28Z polidor $
+ * @version    $Id:$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
