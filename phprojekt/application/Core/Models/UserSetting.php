@@ -47,8 +47,11 @@ class Core_Models_UserSetting
      *
      * @var array
      */
-    private $_timeZoneRange = array(-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0,
-                                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+    private $_timeZoneRange = array("0" => 0, "1" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5,
+                                    "6" => 6, "7" => 7, "8" => 8, "9" => 9, "10" =>10, "11" => 11,
+                                    "12" => 12, "-12" => -12, "-11" => -11, "-10" => -10, "-9" => -9,
+                                    "-8" => -8, "-7" => -7, "-6" => -6, "-5" => -5, "-4" => -4,
+                                    "-3" => -3, "-2" => -2, "-1" => -1);
 
     /**
      * Return an array of field information.
@@ -137,8 +140,7 @@ class Core_Models_UserSetting
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
-        $values = $this->_languageRange;
-        foreach ($values as $key => $value) {
+        foreach ($this->_languageRange as $key => $value) {
             $data['range'][] = array('id'   => $key,
                                      'name' => $value);
         }
@@ -157,8 +159,7 @@ class Core_Models_UserSetting
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
-        $values = $this->_timeZoneRange;
-        foreach ($values as $key => $value) {
+        foreach ($this->_timeZoneRange as $key => $value) {
             $data['range'][] = array('id'   => $key,
                                      'name' => $value);
         }
