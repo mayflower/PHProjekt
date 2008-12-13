@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id: User.php,v 1.6 2007/08/30 18:02:36 gustavo Exp $
+ * @version    $Id:$
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core

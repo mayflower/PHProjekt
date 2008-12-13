@@ -15,7 +15,7 @@
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id: Csv.php 828 2008-07-07 02:05:54Z gustavo $
+ * @version    $Id:$
  * @link       http://www.phprojekt.com
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @since      File available since Release 6.0

@@ -15,7 +15,7 @@
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id: Exception.php 635 2008-04-02 19:32:05Z david $
+ * @version    $Id:$
  * @link       http://www.phprojekt.com
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @since      File available since Release 6.0
