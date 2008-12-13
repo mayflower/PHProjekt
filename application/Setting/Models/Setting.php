@@ -215,7 +215,6 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
             call_user_method('setSettings', $this->getModel(), $params, $userId);
         } else {
-            echo 'a';
             $fields = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
