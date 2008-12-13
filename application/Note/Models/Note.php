@@ -14,7 +14,7 @@
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id$
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @author     Gustavo Solt <solt@mayflower.de>
  * @since      File available since Release 6.0
