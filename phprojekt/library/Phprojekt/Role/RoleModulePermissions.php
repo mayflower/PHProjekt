@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    CVS: $Id:
+ * @version    $Id:$
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core

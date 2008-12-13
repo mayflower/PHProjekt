@@ -15,7 +15,7 @@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
  * @subpackage Core
- * @version    CVS: $Id$
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @since      File available since Release 6.0
