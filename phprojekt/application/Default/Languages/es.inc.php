@@ -14,12 +14,15 @@ $lang["Count"] = "Cantidad";
 // General Fields
 $lang["project"] = "Proyecto";
 $lang["notes"] = "Notas";
+$lang["Notes"] = "Notas";
 $lang["date"] = "Fecha";
+$lang["Date"] = "Fecha";
 $lang["name"] = "Nombre";
 $lang["label"] = "Etiqueta";
 $lang["active"] = "Activo";
 $lang["username"] = "Nombre de usuario";
 $lang["password"] = "Contraseña";
+$lang["Password"] = "Contraseña";
 $lang["firstname"] = "Nombre";
 $lang["lastname"] = "Apellido";
 $lang["email"] = "Email";
@@ -38,6 +41,7 @@ $lang["UserId"] = "Usuario";
 $lang["ItemId"] = "Item";
 $lang["Field"] = "Campo";
 $lang["OldValue"] = "Valor anterior";
+$lang["Old value"] = "Valor anterior";
 $lang["NewValue"] = "Valor nuevo";
 $lang["Datetime"] = "Fecha";
 $lang["comments"] = "Comentarios";
@@ -48,6 +52,7 @@ $lang["endTime"] = "Tiempo final";
 $lang["sum"] = "Suma";
 $lang["bookings"] = "Registro";
 $lang["amount"] = "Cantidad";
+$lang["Amount"] = "Cantidad";
 $lang["serialType"] = "Tipo de Serie";
 $lang["serialDays"] = "Serie de días";
 
@@ -64,17 +69,20 @@ $lang["None"] = "Ninguno";
 $lang["Action"] = "Acción";
 
 // Buttons
-$lang["Save"] = "Grabar";
+$lang["Save"]   = "Grabar";
 $lang["Delete"] = "Borrar";
+$lang["Cancel"] = "Cancelar";
+$lang["Close"]  = "Cerrar";
 
 // Messages
 $lang["The are no results"] = "No se encontraron resultados";
+$lang["There are no entries on this level"] = "No hay elementos en este nivel";
 $lang["You do not have access for edit this item"] = "No tiene permisos para editar este item";
-$lang["The Item was added correctly"] = "El item fué agregado correctamente";
-$lang["The Item was edited correctly"] = "El item fué editado correctamente";
+$lang["The Item was added correctly"] = "El item fue agregado correctamente";
+$lang["The Item was edited correctly"] = "El item fue editado correctamente";
 $lang["The Items was edited correctly"] = "Los items fueron agregados correctamente";
 $lang["The Item can't be deleted"] = "El item no puede ser borrado";
-$lang["The Item was deleted correctly"] = "El item fué borrado correctamente";
+$lang["The Item was deleted correctly"] = "El item fue borrado correctamente";
 $lang["Is a required field"] = "Es un campo requerido";
 $lang["Invalid format for date"] = "Formato de fecha inválida";
 $lang["Invalid Format"] = "Formato inválido";
@@ -94,7 +102,6 @@ $lang["Module not found"] = "No se encontró el módulo";
 $lang["Expect two arguments"] = "Se esperan dos argumentos";
 $lang["Second parameter needs to be an array"] = "El segundo parámetro tiene que ser un array";
 $lang["No parent id found in parameters or passed"] = "No se encontró el projecto padre en los parámetros";
-$lang["There are no entries on this level"] = "No hay elementos en este nivel";
 
 // System Modules
 $lang["Administration"] = "Administración";
@@ -128,6 +135,9 @@ $lang["Change date"] = "Cambiar día";
 $lang["Project bookings"] = "Horas de proyectos";
 $lang["Add working time and drag projects into the bar"] = "Agregar tiempo de trabajo "
     . "y luego arrastrar los proyectos en la barra";
+$lang["Manage project list"] = "Admin. lista de proyectos";
+$lang["Amount [hhmm]"] = "Cantidad [hhmm]";
+$lang["Total"] = "Total";
 
 // Settings module
 $lang["Please, logout and login again on application to apply the changes."] = "Por favor, "
@@ -137,16 +147,43 @@ $lang["The password and confirmation are different or empty"] = "La contraseña 
 $lang["The old password provided is invalid"] = "La contraseña anterior no es correcta";
 $lang["keyValue"] = "Configuración";
 $lang["value"] = "Valor";
-$lang["confirm password"] = "Confirmar contraseña";
+$lang["Confirm Password"] = "Confirmar contraseña";
 $lang["Old Password"] = "Contraseña anterior";
-$lang["language"] = "Idioma";
-$lang["email"] = "Dirección de correo";
-$lang["timeZone"] = "Huso horario";
+$lang["Language"] = "Idioma";
+$lang["Email"] = "Dirección de correo";
+$lang["Time Zone"] = "Huso Horario";
+$lang["Favorite projects"] = "Proyectos favoritos";
+$lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos";
+
+//Administration module
+//Visual Module Editor
+$lang["Open Dialog"]    = "Abrir Diseñador";
+$lang["Designer"]       = "Diseñador";
+$lang["Status"]         = "Estatus";
+$lang["Table"]          = "Tabla";
+$lang["Field Name"]     = "Nombre";
+$lang["Field Type"]     = "Tipo"; //
+$lang["Table Lenght"]   = "Largo";
+$lang["Form"]           = "Formulario";
+$lang["Project List"]   = "Lista de Proyectos";
+$lang["User List"]      = "Lista de Usuarios";
+$lang["Custom Values"]  = "Valores Específicos";
+$lang["Select Type"]    = "Tipo de Select";
+$lang["Label"]          = "Etiqueta";
+$lang["Range"]          = "Rango";
+$lang["Default Value"]  = "Valor predeterminado";
+$lang["List"]           = "Lista";
+$lang["List Position"]  = "Posición";
+$lang["General"]        = "General";
+$lang["Inactive"]       = "Inactivo";
+$lang["Required Field"] = "Campo requerido";
 
 // Search
 $lang["View all"] = "Ver todos";
 
-// Notifications
+// Notification tab
+$lang["Send Notification"] = "Enviar notificación";
+//Email
 $lang["A "] = "Un ";
 $lang[" item has been "] = " item ha sido ";
 $lang["modified"] = "modificado";
@@ -156,4 +193,6 @@ $lang["Changes done"] = "Cambios realizados";
 $lang["Field"] = "Campo";
 $lang["Old value"] = "Valor anterior";
 $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
-$lang["Send Notification"] = "Enviar notificación";
+
+//Tags
+$lang["There are no Tags"] = "No hay Tags";
