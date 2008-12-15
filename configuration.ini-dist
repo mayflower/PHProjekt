@@ -24,8 +24,8 @@ language             = "de"
 
 
 ; PATHS
-; Where the site and the main file (index.php) are located.
-webpath              = "http://localhost/phprojekt"
+; Where the site and the main file (index.php) are located (htdocs folder).
+webpath              = "http://localhost/phprojekt/htdocs/"
 
 ; Path where will be placed files uploaded by the user.
 uploadpath           = "/var/www/phprojekt/tmp"
