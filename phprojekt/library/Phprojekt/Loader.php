@@ -115,8 +115,8 @@ class Phprojekt_Loader extends Zend_Loader
         try {
             self::loadClass($class, self::$_directories);
             return $class;
-        } catch (Exception $e) {
-            $e->getMessage();
+        } catch (Exception $error) {
+            $error->getMessage();
             return false;
         }
 

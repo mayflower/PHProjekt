@@ -64,17 +64,15 @@ class IndexController extends Zend_Controller_Action
     {
         try {
             Phprojekt_Auth::isLoggedIn();
-        } catch (Phprojekt_Auth_UserNotLoggedInException $ae) {
+        } catch (Phprojekt_Auth_UserNotLoggedInException $error) {
             // User not logged in, display login page
             // If is a GET, show the loguin page
             // If is a POST, send message in json format
             if ($this->getFrontController()->getRequest()->isGet()) {
-                $logger = Zend_Registry::get('log');
-                $logger->debug((string) $ae);
                 $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
                 exit;
             } else {
-                throw new Phprojekt_PublishedException($ae->message, 500);
+                throw new Phprojekt_PublishedException($error->message, 500);
             }
         }
 

@@ -122,9 +122,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
             }
 
             return $users[0]->id;
-        }
-        catch (Phprojekt_ActiveRecord_Exception $are) {
-            Zend_Registry::get('log')->warn($are->getMessage());
+        } catch (Phprojekt_ActiveRecord_Exception $error) {
+            Zend_Registry::get('log')->warn($error->getMessage());
         }
 
         return false;

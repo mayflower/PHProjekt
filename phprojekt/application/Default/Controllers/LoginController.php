@@ -73,13 +73,8 @@ class LoginController extends Zend_Controller_Action
                 $this->_redirect($config->webpath.'index.php');
                 die();
             }
-        }
-        catch (Phprojekt_Auth_UserNotLoggedInException $e) {
-            $this->view->message  = $e->getMessage();
-            $this->view->username = $username;
-        }
-        catch (Phprojekt_Auth_Exception $e) {
-            $this->view->message  = $e->getMessage();
+        } catch (Phprojekt_Auth_Exception $error) {
+            $this->view->message  = $error->getMessage();
             $this->view->username = $username;
         }
     }

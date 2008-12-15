@@ -105,15 +105,16 @@ class Phprojekt_RoleRights
 
         $role = $this->getUserRole();
         $acl  = $this->getAcl();
+
         if (null === $moduleId) {
             $moduleId = $this->getModule();
         }
+
         try {
             return $acl->isAllowed($role, $moduleId, $right);
-        }
-        catch(Zend_Acl_Exception $e) {
+        } catch(Zend_Acl_Exception $error) {
             $logger = Zend_Registry::get('log');
-            $logger->debug((string) $e);
+            $logger->debug((string) $error);
             return false;
         }
     }

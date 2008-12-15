@@ -83,8 +83,8 @@ class Phprojekt_Auth extends Zend_Auth
             if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$setting->getSetting("password", $userId))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
-        } catch (Exception $e) {
-            $e->getMessage();;
+        } catch (Exception $error) {
+            $error->getMessage();
             throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
 
