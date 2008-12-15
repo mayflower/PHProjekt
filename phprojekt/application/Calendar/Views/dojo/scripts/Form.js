@@ -118,21 +118,21 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         // create ranges
         rangeFreq = new Array(
-            {'id': '', 'name': 'Once'},
-            {'id': 'DAILY', 'name': 'Daily'},
-            {'id': 'WEEKLY', 'name': 'Weekly'},
-            {'id': 'MONTHLY', 'name': 'Monthly'},
-            {'id': 'YEARLY', 'name': 'Yearly'}
+            {'id': '', 'name': phpr.nls.get('Once')},
+            {'id': 'DAILY', 'name': phpr.nls.get('Daily')},
+            {'id': 'WEEKLY', 'name': phpr.nls.get('Weekly')},
+            {'id': 'MONTHLY', 'name': phpr.nls.get('Monthly')},
+            {'id': 'YEARLY', 'name': phpr.nls.get('Yearly')}
         );
 
         rangeByday = new Array(
-            {'id': 'MO', 'name': 'Monday'},
-            {'id': 'TU', 'name': 'Tuesday'},
-            {'id': 'WE', 'name': 'Wendsday'},
-            {'id': 'TH', 'name': 'Thursday'},
-            {'id': 'FR', 'name': 'Friday'},
-            {'id': 'SA', 'name': 'Saturday'},
-            {'id': 'SU', 'name': 'Sunday'}
+            {'id': 'MO', 'name': phpr.nls.get('Monday')},
+            {'id': 'TU', 'name': phpr.nls.get('Tuesday')},
+            {'id': 'WE', 'name': phpr.nls.get('Wendsday')},
+            {'id': 'TH', 'name': phpr.nls.get('Thursday')},
+            {'id': 'FR', 'name': phpr.nls.get('Friday')},
+            {'id': 'SA', 'name': phpr.nls.get('Saturday')},
+            {'id': 'SU', 'name': phpr.nls.get('Sunday')}
         );
 
         // Add fields
