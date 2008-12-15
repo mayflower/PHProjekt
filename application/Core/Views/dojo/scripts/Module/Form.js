@@ -29,7 +29,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
     addBasicFields:function() {
         // Button for open the dialog
-        this.formdata[1] += this.fieldTemplate.buttonActionRender('Designer', 'designerButton', 'Open Dialog', '', 'dojo.publish(\'Module.openDialog\');');
+        this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton', phpr.nls.get('Open Dialog'), '', 'dojo.publish(\'Module.openDialog\');');
 
         // Hidden field for the MD data
         var designerData = new Object();
@@ -78,10 +78,20 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         });
         dojo.body().appendChild(dialog.domNode);
         dialog.startup();
+
+        // Add translations
+        var tabs = this.tabStore.getList();
+        for (t in tabs) {
+            tabs[t].name = phpr.nls.get(tabs[t].name);
+        }
         this.render(["phpr.Core.Module.template", "moduleDesigner.html"], dialog.domNode, {
-            webpath:  phpr.webpath,
-            saveText: phpr.nls.get('Close'),
-            tabs:     this.tabStore.getList()
+            webpath:     phpr.webpath,
+            tableText:   phpr.nls.get('Table'),
+            formText:    phpr.nls.get('Form'),
+            listText:    phpr.nls.get('List'),
+            generalText: phpr.nls.get('General'),
+            saveText:    phpr.nls.get('Close'),
+            tabs:        tabs
         });
         dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
         phpr.makeModuleDesignerSource();

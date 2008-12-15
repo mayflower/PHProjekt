@@ -522,7 +522,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         search += "</div>";
                     } else {
                         search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += "<a class=\"searchsuggesttitle\" href='javascript:dojo.publish(\""+this.module+".clickResult\",[\"search\"]); dojo.publish(\""+this.module+".showSearchResults\",[\"" + words + "\"])'>View all</a>";
+                        search += "<a class=\"searchsuggesttitle\" href='javascript:dojo.publish(\""+this.module+".clickResult\",[\"search\"]); dojo.publish(\""+this.module+".showSearchResults\",[\"" + words + "\"])'>" + phpr.nls.get('View all') + "</a>";
                         search += "</div>";
                     }
 

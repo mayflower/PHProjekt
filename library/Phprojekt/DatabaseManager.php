@@ -223,6 +223,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
     {
+        $translate          = Zend_Registry::get('translate');
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
@@ -230,7 +231,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             foreach (explode('|', $field->formRange) as $range) {
                 list($key, $value) = explode('#', $range);
                 $converted['range'][] = array('id'   => $key,
-                                              'name' => $value);
+                                              'name' => $translate->translate($value));
             }
         } else {
             $converted['range'] = $this->getRangeFromModel($field);

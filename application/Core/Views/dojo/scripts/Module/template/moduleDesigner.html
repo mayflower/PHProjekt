@@ -1,21 +1,22 @@
 <div id="moduleDesignerContent"
 style="width:100%; height:100%; background-color:#294064;">
     <div style="background-color:#294064; height:98%; width:49%; float:left; margin:4px;">
-        <div dojoType="phpr.Module.Designer" id="moduleDesignerSource" jsId="moduleDesignerSource" copyOnly="false" skipForm="true" selfAccept="false" style="background-color: #fff; height:60%; width: 100%; marging: 4px;">
+        <div dojoType="phpr.Module.Designer" id="moduleDesignerSource" jsId="moduleDesignerSource" copyOnly="false" skipForm="true" selfAccept="false"
+        style="background-color: #fff; height:60%; width: 100%; margin: 4px;">
         </div>
         <br />
         <div dojoType="dijit.layout.TabContainer" id="moduleDesignerEditor"
         style="display: block; background-color:#fff; height:30%; width:100%; margin:0px;">
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorTable" title="Table"
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorTable" title="{{tableText}}"
             style="width:100%; height:95%;">
             </div>
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorForm" title="Form"
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorForm" title="{{formText}}"
             style="width:100%; height:95%;">
             </div>
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorList" title="List"
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorList" title="{{listText}}"
             style="width:100%; height:95%;">
             </div>
-            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorGeneral" title="General"
+            <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorGeneral" title="{{generalText}}"
             style="width:100%; height:95%;">
             </div>
         </div>

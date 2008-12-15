@@ -174,7 +174,7 @@ phpr.editModuleDesignerField = function(object, target) {
     var render        = new phpr.Component();
 
     // Table
-    fieldsTable += template.textFieldRender('Field Name', 'tableField', tableField, true, false);
+    fieldsTable += template.textFieldRender(phpr.nls.get('Field Name'), 'tableField', tableField, true, false);
     var tableTypeRange = new Array();
     switch (formType) {
         case 'text':
@@ -182,38 +182,38 @@ phpr.editModuleDesignerField = function(object, target) {
         case 'selectValues':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', tableType, true, false);
-            fieldsTable += template.textFieldRender('Table Lenght', 'tableLength', tableLength, true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType, true, false);
+            fieldsTable += template.textFieldRender(phpr.nls.get('Table Lenght'), 'tableLength', tableLength, true, false);
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'date', true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'date', true, false);
             break;
         case 'time':
             tableTypeRange.push({'id': 'time', 'name': 'TIME'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'time', true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'time', true, false);
             break;
         case 'percentage':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'varchar', true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'varchar', true, false);
             break;
         case 'textarea':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'text', true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'text', true, false);
             break;
         case 'upload':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
-            fieldsTable += template.selectRender(tableTypeRange, 'Field Type', 'tableType', 'varchar', true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'varchar', true, false);
             break;
     }
 
     switch (formType) {
         case 'selectValues':
             var selectTypeRange = new Array();
-            selectTypeRange.push({'id': 'project', 'name': 'Project List'});
-            selectTypeRange.push({'id': 'user', 'name': 'User List'});
-            selectTypeRange.push({'id': 'custom', 'name': 'Custom Values'});
-            fieldsTable += template.selectRender(selectTypeRange, 'Select Type', 'selectType', selectType, true, false);
+            selectTypeRange.push({'id': 'project', 'name': phpr.nls.get('Project List')});
+            selectTypeRange.push({'id': 'user', 'name': phpr.nls.get('User List')});
+            selectTypeRange.push({'id': 'custom', 'name': phpr.nls.get('Custom Values')});
+            fieldsTable += template.selectRender(selectTypeRange, phpr.nls.get('Select Type'), 'selectType', selectType, true, false);
             break;
     }
 
@@ -226,17 +226,17 @@ phpr.editModuleDesignerField = function(object, target) {
     fieldsTable += '</td></tr>';
 
     // Form
-    fieldsForm += template.textFieldRender('Label', 'formLabel', formLabel, true, false);
+    fieldsForm += template.textFieldRender(phpr.nls.get('Label'), 'formLabel', formLabel, true, false);
 
     switch (formType) {
         case 'selectValues':
             if (!formRange) {
                 formRange = 'id1 # value1 | id2 # value2';
             }
-            fieldsForm += template.textAreaRender('Range', 'formRange', formRange, true, false);
+            fieldsForm += template.textAreaRender(phpr.nls.get('Range'), 'formRange', formRange, true, false);
             break;
     }
-    fieldsForm += template.textFieldRender('Default Value', 'defaultValue', defaultValue, true, false);
+    fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, true, false);
 
     fieldsForm += '<tr><td class="label">';
     fieldsForm += '<label for="moduleDesignerSubmitButtonForm">&nbsp;</label>';
@@ -245,7 +245,7 @@ phpr.editModuleDesignerField = function(object, target) {
     fieldsForm += '</td></tr>';
 
     // List
-    fieldsList += template.textFieldRender('List Position', 'listPosition', listPosition, true, false);
+    fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, true, false);
 
     fieldsList += '<tr><td class="label">';
     fieldsList += '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>';
@@ -255,14 +255,14 @@ phpr.editModuleDesignerField = function(object, target) {
 
     // General
     var statusRange = new Array();
-    statusRange.push({'id': '0', 'name': 'Inactive'});
-    statusRange.push({'id': '1', 'name': 'Active'});
-    fieldsGeneral += template.selectRender(statusRange, 'Status', 'status', status, true, false);
+    statusRange.push({'id': '0', 'name': phpr.nls.get('Inactive')});
+    statusRange.push({'id': '1', 'name': phpr.nls.get('Active')});
+    fieldsGeneral += template.selectRender(statusRange, phpr.nls.get('Status'), 'status', status, true, false);
 
     var isRequiredRange = new Array();
-    isRequiredRange.push({'id': '0', 'name': 'No'});
-    isRequiredRange.push({'id': '1', 'name': 'Yes'});
-    fieldsGeneral += template.selectRender(isRequiredRange, 'Required Field', 'isRequired', isRequired, true, false);
+    isRequiredRange.push({'id': '0', 'name': phpr.nls.get('No')});
+    isRequiredRange.push({'id': '1', 'name': phpr.nls.get('Yes')});
+    fieldsGeneral += template.selectRender(isRequiredRange, phpr.nls.get('Required Field'), 'isRequired', isRequired, true, false);
 
     fieldsGeneral += '<tr><td class="label">';
     fieldsGeneral += '<label for="moduleDesignerSubmitButtonGeneral">&nbsp;</label>';
