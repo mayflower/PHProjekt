@@ -25,7 +25,7 @@ language             = "de"
 
 ; PATHS
 ; Where the site and the main file (index.php) are located.
-webpath              = "http://localhost/phprojekt/htdocs"
+webpath              = "http://localhost/phprojekt"
 
 ; Path where will be placed files uploaded by the user.
 uploadpath           = "/var/www/phprojekt/tmp"
@@ -40,8 +40,8 @@ database.host        = "localhost"
 
 ; Username and password with the appropriate rights for Phprojekt to access to
 ; the database.
-database.username    = "root"
-database.password    = ""
+database.username    = "p6-user"
+database.password    = "phprojekt6"
 
 ; Name of the database, inside the server
 database.name        = "phprojekt6"
@@ -92,15 +92,15 @@ compressedDojo       = true;
 language             = "de"
 
 ; Path options
-webpath              = "http://localhost/phprojekt/htdocs"
+webpath              = "http://localhost/phprojekt"
 uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
 ; Database options
 database.type        = "pdo_mysql"
 database.host        = "localhost"
-database.username    = ""
-database.password    = ""
-database.name        = "phprojekt6"
+database.username    = "p6-user"
+database.password    = "phprojek6"
+database.name        = "phprojekt6-testing"
 
 ; Log options
 log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
@@ -126,14 +126,14 @@ compressedDojo       = true;
 language             = "de"
 
 ; Path options
-webpath              = "http://localhost/phprojekt/htdocs"
+webpath              = "http://localhost/phprojekt"
 uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
 ; Database options
 database.type        = "pdo_mysql"
 database.host        = "localhost"
-database.username    = "root"
-database.password    = ""
+database.username    = "p6-user"
+database.password    = "phprojekt6"
 database.name        = "unittest"
 
 ; Log options

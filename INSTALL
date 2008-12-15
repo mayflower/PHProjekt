@@ -12,10 +12,10 @@
 1. Requirements
 
   * HTTP Server
-  * MySql version 5.x
+  * MySQL version 5.x
   * PHP 5.2.x with pdo_mysql drivers installed
 
-  Note: Phprojekt 6 has been tested with:
+  Note: PHProjekt 6 has been tested with:
 
     * Apache HTTP Server 2.2
     * PHP 5.2.6
@@ -31,31 +31,30 @@
 
     Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
 
- 2. Phprojekt separates both the document root from the rest application, so you want to point
-    your server host to the 'htdocs' folder. In the example given, would
-    be:
+ 2. PHProjekt separates both the document root from the rest application, so you want to point
+    your server host to the 'htdocs' folder. In the example given, this would be:
 
-    UNIX        /var/www/htdocs/
+    UNIX        /var/www/phprojekt/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
 
  3. Create a database on your MySQL server (e.g. phprojekt6). Make sure that the
     database user that you want to use has the rights to load files.
     An example:
 
-      $ mysql -u root
+      $ mysql -u root -p
       > CREATE DATABASE `phprojekt6`;
-      > GRANT ALL PRIVILEGES ON `phprojekt6`.* TO phprojekt@localhost IDENTIFIED BY `phprojekt6`;
-      > FLUSH ALL PRIVILEGES
+      > GRANT ALL PRIVILEGES ON `phprojekt6`.* TO p6-user@localhost IDENTIFIED BY "phprojekt6";
+      > FLUSH PRIVILEGES;
 
  4. Database:
 
-    UNIX        /var/www/docs/blank_database.sql
+    UNIX        /var/www/phprojekt/docs/blank_database.sql
     WINDOWS     c:\phprojekt\docs\blank_database.sql
 
     and load it into the database. You might want to use MySQL Administration tools
     or PHPMyAdmin. You can also use the command line to do so:
 
-      $ mysql -u phprojekt6 -p < /var/www/docs/blank_database.sql
+      $ mysql phprojekt6 -u p6-user -p < /var/www/phprojekt6/docs/blank_database.sql
 
 3. Configuration
 
@@ -63,10 +62,10 @@
     configuration.ini and set its parameters according to the explanations and
     examples inside it.
 
-    UNIX     /var/www/htdocs/configuration.ini-dist    
-             to /var/www/htdocs/configuration.ini
-    WINDOWS     C:\phprojekt\htdocs\configuration.ini-dist
-             to C:\phprojekt\htdocs\configuration.ini
+    UNIX     /var/www/phprojekt/configuration.ini-dist
+             to /var/www/phprojekt/configuration.ini
+    WINDOWS     C:\phprojekt\configuration.ini-dist
+             to C:\phprojekt\configuration.ini
 
 4. Permission
 
@@ -74,8 +73,10 @@
     tmp/ and to the log directory. You can set these permission using the chmod(1) command.
     Assuming your webserver runs on the group "www-data":
 
-      $ chgrp www-data tmp/
-      $ chmod g+w tmp/
+      $ chgrp www-data /var/www/phprojekt/tmp/
+      $ chmod g+w /var/www/phprojekt/tmp/
+      $ chgrp www-data /var/www/phprojekt/logs/
+      $ chmod g+w /var/www/phprojekt/logs/
 
 5. Finalize
 
