@@ -41,10 +41,10 @@ database.host        = "localhost"
 ; Username and password with the appropriate rights for Phprojekt to access to
 ; the database.
 database.username    = "p6-user"
-database.password    = "phprojekt6"
+database.password    = "phprojekt"
 
 ; Name of the database, inside the server
-database.name        = "phprojekt6"
+database.name        = "phprojekt"
 
 
 ; LOG
@@ -99,8 +99,8 @@ uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 database.type        = "pdo_mysql"
 database.host        = "localhost"
 database.username    = "p6-user"
-database.password    = "phprojek6"
-database.name        = "phprojekt6-testing"
+database.password    = "phprojekt"
+database.name        = "phprojekt-testing"
 
 ; Log options
 log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
@@ -133,12 +133,12 @@ uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 database.type        = "pdo_mysql"
 database.host        = "localhost"
 database.username    = "p6-user"
-database.password    = "phprojekt6"
+database.password    = "phprojekt"
 database.name        = "unittest"
 
 ; Log options
-;log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojektlogs\debug_test.log"
-;log.crit.filename    = "C:\Programme\Zend\Apache2\htdocs\phprojektlogs\crit_test.log"
+;log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug_test.log"
+;log.crit.filename    = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit_test.log"
 
 ; Modules
 itemsPerPage         = 3
