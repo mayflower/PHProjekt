@@ -41,7 +41,7 @@ $lang["UserId"] = "User";
 $lang["ItemId"] = "Item";
 $lang["Field"] = "Field";
 $lang["OldValue"] = "Old Value";
-$lang["Old Value"] = "Old Value";
+$lang["Old value"] = "Old Value";
 $lang["NewValue"] = "New Value";
 $lang["Datetime"] = "Datetime";
 $lang["comments"] = "Comments";
@@ -75,7 +75,6 @@ $lang["Cancel"] = "Cancel";
 $lang["Close"]  = "Close";
 
 // Messages
-$lang["The are no results"] = "The are no results";
 $lang["There are no entries on this level"] = "There are no entries on this level";
 $lang["You do not have access for edit this item"] = "You do not have access for edit this item";
 $lang["The Item was added correctly"] = "The Item was added correctly";
@@ -96,6 +95,7 @@ $lang["You do not have access for add projects on the parent project"] = "You do
 $lang["The parent project do not have enabled this module"] = "The parent project do not have enabled this module";
 $lang["The project can not saved under itself"] = "The project can not saved under itself";
 $lang["The project can not saved under his children"] = "The project can not saved under his children";
+
 $lang["ID parameter required"] = "ID parameter required";
 $lang["Invalid module or item"] = "Invalid module or item";
 $lang["Module not given"] = "Module not given";
@@ -159,30 +159,32 @@ $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 //Visual Module Editor
 $lang["Open Dialog"]    = "Open Dialog";
 $lang["Designer"]       = "Designer";
-$lang["Status"]         = "Status";
 $lang["Table"]          = "Table";
 $lang["Field Name"]     = "Field Name";
 $lang["Field Type"]     = "Field Type";
 $lang["Table Lenght"]   = "Table Lenght";
 $lang["Form"]           = "Form";
+$lang["Label"]          = "Label";
 $lang["Project List"]   = "Project List";
 $lang["User List"]      = "User List";
 $lang["Custom Values"]  = "Custom Values";
 $lang["Select Type"]    = "Select Type";
-$lang["Label"]          = "Label";
 $lang["Range"]          = "Range";
 $lang["Default Value"]  = "Default Value";
 $lang["List"]           = "List";
 $lang["List Position"]  = "List Position";
 $lang["General"]        = "General";
+$lang["Status"]         = "Status";
 $lang["Inactive"]       = "Inactive";
 $lang["Required Field"] = "Required Field";
 
 // Search
 $lang["View all"] = "View all";
+$lang["There are no Results"] = "There are no Results";
 
 // Notification tab
-$lang["Send Notification"]  = "Send Notification";
+$lang["Send Notification"] = "Send Notification";
+
 // Email
 $lang["A "] = "A ";
 $lang[" item has been "] = " item has been ";
@@ -197,3 +199,26 @@ $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Co
 //Tags
 $lang["There are no Tags"] = "There are no Tags";
 
+// Calendar
+$lang["Once"] = "Once";
+$lang["Daily"] = "Daily";
+$lang["Weekly"] = "Weekly";
+$lang["Monthly"] = "Monthly";
+$lang["Yearly"] = "Yearly";
+$lang["Monday"] = "Monday";
+$lang["Tuesday"] = "Tuesday";
+$lang["Wendsday"] = "Wendsday";
+$lang["Thursday"] = "Thursday";
+$lang["Friday"] = "Friday";
+$lang["Saturday"] = "Saturday";
+$lang["Sunday"] = "Sunday";
+
+// Common status
+$lang["Offered"] = "Offered";
+$lang["Ordered"] = "Ordered";
+$lang["Working"] = "Working";
+$lang["Ended"] = "Ended";
+$lang["Stopped"] = "Stopped";
+$lang["Re-Opened"] = "Re-Opened";
+$lang["Waiting"] = "Waiting";
+$lang["Accepted"] = "Accepted";

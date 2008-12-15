@@ -1,13 +1,13 @@
 <?php
 // General
 $lang["Module"] = "Modul";
-$lang["Active"] = "Aktiv"; 
+$lang["Active"] = "Aktiv";
 $lang["Role"] = "Rolle";
 $lang["Start"] = "Start";
 $lang["End"] = "Ende";
 $lang["Project"] = "Projekt";
 $lang["Tag"] = "Tag";
-$lang["No"] = "Nein"; 
+$lang["No"] = "Nein";
 $lang["Yes"] = "Ja";
 $lang["Count"] = "Nummer";
 
@@ -69,18 +69,17 @@ $lang["None"] = "Kein";
 $lang["Action"] = "Aktion";
 
 // Buttons
-$lang["Save"]   = "Speichern";
+$lang["Save"] = "Speichern";
 $lang["Delete"] = "Löschen";
 $lang["Cancel"] = "Abbrechen";
-$lang["Close"]  = "Schließen";
+$lang["Close"] = "Schließen";
 
 // Messages
-$lang["The are no results"] = "The are no results";
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines hinzufügen";
 $lang["You do not have access for edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
 $lang["The Item was added correctly"] = "Der Datensatz wurde angelegt";
 $lang["The Item was edited correctly"] = "Der Datensatz wurde geändert";
-$lang["The Items was edited correctly"] = "Die Datensatz wurden geändert";
+$lang["The Items was edited correctly"] = "Die Datensätze wurden geändert";
 $lang["The Item can't be deleted"] = "Der Datensatz kann nicht gelöscht werden";
 $lang["The Item was deleted correctly"] = "Der Datensatz wurde gelöscht";
 $lang["Is a required field"] = "Pflichtfeld";
@@ -158,32 +157,34 @@ $lang["Max Number of favorites projects"] = "Max. Nummer von angezeigten Projekt
 
 //Administration module
 //Visual Module Editor
-$lang["Open Dialog"]    = "Maske öffnen";
-$lang["Designer"]       = "Desinger";
-$lang["Status"]         = "Status";
-$lang["Table"]          = "Table";
-$lang["Field Name"]     = "Field Name";
-$lang["Field Type"]     = "Field Type";
-$lang["Table Lenght"]   = "Table Lenght";
-$lang["Form"]           = "Form";
-$lang["Project List"]   = "Project List";
-$lang["User List"]      = "User List";
-$lang["Custom Values"]  = "Custom Values";
-$lang["Select Type"]    = "Select Type";
-$lang["Label"]          = "Label";
-$lang["Range"]          = "Range";
-$lang["Default Value"]  = "Default Value";
-$lang["List"]           = "List";
-$lang["List Position"]  = "List Position";
-$lang["General"]        = "General";
-$lang["Inactive"]       = "Inactive";
-$lang["Required Field"] = "Required Field";
+$lang["Open Dialog"] =   "Maske öffnen";
+$lang["Designer"]    = "Desinger";
+$lang["Table"] = "Tisch";
+$lang["Field Name"] = "Feldname";
+$lang["Field Type"] = "Feld Typ";
+$lang["Table Lenght"] = "Tabelle Länge";
+$lang["Form"] = "Form";
+$lang["Label"] = "Label";
+$lang["Project List"] = "Project List";
+$lang["User List"] = "Benutzer-Liste";
+$lang["Custom Values"] = "Benutzerdefinierte Werte";
+$lang["Select Type"] = "Wählen Sie Typ";
+$lang["Range"] = "Bereich";
+$lang["Default Value"] = "Standardeinstellung";
+$lang["List"] = "List";
+$lang["List Position"] = "List Position";
+$lang["General"] = "Allgemeine";
+$lang["Status"] = "Status";
+$lang["Inactive"] = "Inaktive";
+$lang["Required Field"] = "Pflichtfeld";
 
 // Search
 $lang["View all"] = "Zeige Alle";
+$lang["There are no Results"] = "Es sind keine Results vorhanden";
 
 // Notification tab
-$lang["Send Notification"]  = "Benachrichtigung senden";
+$lang["Send Notification"] = "Benachrichtigung senden";
+
 // Email
 $lang["A "] = "A ";
 $lang[" item has been "] = " item has been ";
@@ -198,3 +199,26 @@ $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Co
 //Tags
 $lang["There are no Tags"] = "Es sind keine Tags vorhanden";
 
+// Calendar
+$lang["Once"] = "Einmal";
+$lang["Daily"] = "Tglich";
+$lang["Weekly"] = "Weekly";
+$lang["Monthly"] = "Monatliche";
+$lang["Yearly"] = "Jahres";
+$lang["Monday"] = "Montag";
+$lang["Tuesday"] = "Dienstag";
+$lang["Wendsday"] = "Mittwoch";
+$lang["Thursday"] = "Donnerstag";
+$lang["Friday"] = "Freitag";
+$lang["Saturday"] = "Samstag";
+$lang["Sunday"] = "Sonntag";
+
+// Common status
+$lang["Offered"] = "Angebotene";
+$lang["Ordered"] = "Bestellt";
+$lang["Working"] = "Arbeitsgruppe";
+$lang["Ended"] = "Beendet";
+$lang["Stopped"] = "Stopped";
+$lang["Re-Opened"] = "Wieder geöffnet";
+$lang["Waiting"] = "Warten";
+$lang["Accepted"] = "Akzeptiert";
