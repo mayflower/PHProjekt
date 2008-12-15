@@ -341,7 +341,8 @@ class Phprojekt_Table
         try {
             $tableFields = $this->_db->describeTable($tableName);
             return $tableFields;
-        } catch (Exception $e) {
+        } catch (Exception $error) {
+            $error->getMessage();
             $tableName = ucfirst($tableName);
             $this->createTable($tableName, $fields, $keys);
             $tableFields = $this->_db->describeTable($tableName);

@@ -41,8 +41,14 @@ Zend_Loader::registerAutoload('Phprojekt_Loader');
 Zend_Session::start();
 
 /* Read the config file, but only the production setting */
-$config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
-Zend_Registry::set('config', $config);
+try {
+    $config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
+    Zend_Registry::set('config', $config);
+} catch (Zend_Config_Exception $error) {
+    $error->getMessage();
+    echo 'You need the configuration.ini file for go on';
+    die();
+}
 
 if (substr($config->webpath, -1) != '/') {
     $config->webpath.= '/';
