@@ -137,6 +137,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             timecardWorkingTimesText: phpr.nls.get("Working Times"),
             timecardStartText:        phpr.nls.get("Start"),
             timecardEndText:          phpr.nls.get("End"),
+            timecardTotalText:        phpr.nls.get("Total"),
             hoursdata:                hoursdata,
             totalHours:               this.convertTime(totalHours)
         });
