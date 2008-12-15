@@ -15,7 +15,7 @@
   * MySQL version 5.x
   * PHP 5.2.x with pdo_mysql drivers installed
 
-  Note: PHProjekt 6 has been tested with:
+  Note: Phprojekt 6 has been tested with:
 
     * Apache HTTP Server 2.2
     * PHP 5.2.6
@@ -26,15 +26,16 @@
  1. Download the compressed package file and decompress it into an appropriate
     folder outside the ones accessed by your HTTP server.
 
-     $ cd /var/www/
      $ tar xzvf phprojekt.tar.gz
+     $ cp -R phprojekt6/* /srv/www/
 
     Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
 
- 2. PHProjekt separates both the document root from the rest application, so you want to point
-    your server host to the 'htdocs' folder. In the example given, this would be:
+ 2. Phprojekt separates both the document root from the rest application, so you want to point
+    your server host to the 'htdocs' folder. In the example given, would
+    be:
 
-    UNIX        /var/www/phprojekt/htdocs/
+    UNIX        /srv/www/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
 
  3. Create a database on your MySQL server (e.g. phprojekt6). Make sure that the
@@ -42,19 +43,21 @@
     An example:
 
       $ mysql -u root -p
-      > CREATE DATABASE `phprojekt6`;
-      > GRANT ALL PRIVILEGES ON `phprojekt6`.* TO p6-user@localhost IDENTIFIED BY "phprojekt6";
-      > FLUSH PRIVILEGES;
+      mysql> CREATE DATABASE 'phprojekt6';
+      mysql> CREATE USER 'phprojekt6'@'localhost' IDENTIFIED BY 'phprojekt6_secret';
+      mysql> GRANT ALL PRIVILEGES ON 'phprojekt6'.* TO 'phprojekt6'@'localhost';
 
  4. Database:
 
-    UNIX        /var/www/phprojekt/docs/blank_database.sql
+    UNIX        /srv/www/docs/blank_database.sql
     WINDOWS     c:\phprojekt\docs\blank_database.sql
 
     and load it into the database. You might want to use MySQL Administration tools
     or PHPMyAdmin. You can also use the command line to do so:
 
-      $ mysql phprojekt6 -u p6-user -p < /var/www/phprojekt6/docs/blank_database.sql
+      $ mysql -u phprojekt6 -p
+      mysql> use phprojekt6;
+      mysql> \. /srv/www/docs/blank_database.sql
 
 3. Configuration
 
@@ -62,8 +65,8 @@
     configuration.ini and set its parameters according to the explanations and
     examples inside it.
 
-    UNIX     /var/www/phprojekt/configuration.ini-dist
-             to /var/www/phprojekt/configuration.ini
+    UNIX     /srv/www/configuration.ini-dist
+             to /srv/www/configuration.ini
     WINDOWS     C:\phprojekt\configuration.ini-dist
              to C:\phprojekt\configuration.ini
 
@@ -73,10 +76,10 @@
     tmp/ and to the log directory. You can set these permission using the chmod(1) command.
     Assuming your webserver runs on the group "www-data":
 
-      $ chgrp www-data /var/www/phprojekt/tmp/
-      $ chmod g+w /var/www/phprojekt/tmp/
-      $ chgrp www-data /var/www/phprojekt/logs/
-      $ chmod g+w /var/www/phprojekt/logs/
+      $ chmod -R 0750 /srv/www
+      $ find /srv/www -type f -exec chmod -x '{}' ';'
+      $ chmod -R g+w /srv/www/{tmp,application,logs}
+      $ chgrp -R www /srv/www
 
 5. Finalize
 
