@@ -46,7 +46,7 @@ try {
     Zend_Registry::set('config', $config);
 } catch (Zend_Config_Exception $error) {
     $error->getMessage();
-    echo 'You need to continue the file configuration.ini';
+    echo 'You need the file configuration.ini to continue';
     die();
 }
 
