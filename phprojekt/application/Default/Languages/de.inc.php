@@ -40,7 +40,6 @@ $lang["budget"] = "Budget";
 $lang["UserId"] = "User";
 $lang["ItemId"] = "Datensatz";
 $lang["Field"] = "Feld";
-$lang["OldValue"] = "Alter Wert";
 $lang["Old value"] = "Alter Wert";
 $lang["NewValue"] = "Neuer Wert";
 $lang["Datetime"] = "Datum";
@@ -185,7 +184,7 @@ $lang["There are no Results"] = "Es sind keine Results vorhanden";
 // Notification tab
 $lang["Send Notification"] = "Benachrichtigung senden";
 
-// Email
+// Notification email
 $lang["A "] = "A ";
 $lang[" item has been "] = " item has been ";
 $lang["modified"] = "modified";
@@ -193,7 +192,6 @@ $lang["created"] = "created";
 $lang["Current data"] = "Current data";
 $lang["Changes done"] = "Changes done";
 $lang["Field"] = "Field";
-$lang["Old value"] = "Old value";
 $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
 
 //Tags
