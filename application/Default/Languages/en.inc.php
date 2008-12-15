@@ -75,8 +75,8 @@ $lang["Cancel"] = "Cancel";
 $lang["Close"]  = "Close";
 
 // Messages
-$lang["There are no entries on this level"] = "There are no entries on this level";
 $lang["The are no results"] = "The are no results";
+$lang["There are no entries on this level"] = "There are no entries on this level";
 $lang["You do not have access for edit this item"] = "You do not have access for edit this item";
 $lang["The Item was added correctly"] = "The Item was added correctly";
 $lang["The Item was edited correctly"] = "The Item was edited correctly";
@@ -157,14 +157,31 @@ $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 
 //Administration module
 //Visual Module Editor
-$lang["Open Dialog"] =  "Open Dialog";
-$lang["Designer"]    = "Designer";
-$lang["Status"]      = "Status";
+$lang["Open Dialog"]    = "Open Dialog";
+$lang["Designer"]       = "Designer";
+$lang["Status"]         = "Status";
+$lang["Table"]          = "Table";
+$lang["Field Name"]     = "Field Name";
+$lang["Field Type"]     = "Field Type";
+$lang["Table Lenght"]   = "Table Lenght";
+$lang["Form"]           = "Form";
+$lang["Project List"]   = "Project List";
+$lang["User List"]      = "User List";
+$lang["Custom Values"]  = "Custom Values";
+$lang["Select Type"]    = "Select Type";
+$lang["Label"]          = "Label";
+$lang["Range"]          = "Range";
+$lang["Default Value"]  = "Default Value";
+$lang["List"]           = "List";
+$lang["List Position"]  = "List Position";
+$lang["General"]        = "General";
+$lang["Inactive"]       = "Inactive";
+$lang["Required Field"] = "Required Field";
 
 // Search
 $lang["View all"] = "View all";
 
-//Notification tab
+// Notification tab
 $lang["Send Notification"]  = "Send Notification";
 // Email
 $lang["A "] = "A ";
@@ -179,3 +196,4 @@ $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Co
 
 //Tags
 $lang["There are no Tags"] = "There are no Tags";
+

@@ -75,6 +75,7 @@ $lang["Cancel"] = "Abbrechen";
 $lang["Close"]  = "Schließen";
 
 // Messages
+$lang["The are no results"] = "The are no results";
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines hinzufügen";
 $lang["You do not have access for edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
 $lang["The Item was added correctly"] = "Der Datensatz wurde angelegt";
@@ -103,7 +104,6 @@ $lang["Module not found"] = "Modul nicht gefunden";
 $lang["Expect two arguments"] = "Zwei Parameter werden erwartet";
 $lang["Second parameter needs to be an array"] = "Der zweite Parameter muss ein Array sein";
 $lang["No parent id found in parameters or passed"] = "Kein Oberelement gefunden";
-
 
 // System Modules
 $lang["Administration"] = "Administration";
@@ -158,15 +158,43 @@ $lang["Max Number of favorites projects"] = "Max. Nummer von angezeigten Projekt
 
 //Administration module
 //Visual Module Editor
-$lang["Open Dialog"] =   "Maske öffnen";
-$lang["Designer"]    = "Desinger";
-$lang["Status"]      = "Status";
+$lang["Open Dialog"]    = "Maske öffnen";
+$lang["Designer"]       = "Desinger";
+$lang["Status"]         = "Status";
+$lang["Table"]          = "Table";
+$lang["Field Name"]     = "Field Name";
+$lang["Field Type"]     = "Field Type";
+$lang["Table Lenght"]   = "Table Lenght";
+$lang["Form"]           = "Form";
+$lang["Project List"]   = "Project List";
+$lang["User List"]      = "User List";
+$lang["Custom Values"]  = "Custom Values";
+$lang["Select Type"]    = "Select Type";
+$lang["Label"]          = "Label";
+$lang["Range"]          = "Range";
+$lang["Default Value"]  = "Default Value";
+$lang["List"]           = "List";
+$lang["List Position"]  = "List Position";
+$lang["General"]        = "General";
+$lang["Inactive"]       = "Inactive";
+$lang["Required Field"] = "Required Field";
 
 // Search
 $lang["View all"] = "Zeige Alle";
 
-//Notification tab
+// Notification tab
 $lang["Send Notification"]  = "Benachrichtigung senden";
+// Email
+$lang["A "] = "A ";
+$lang[" item has been "] = " item has been ";
+$lang["modified"] = "modified";
+$lang["created"] = "created";
+$lang["Current data"] = "Current data";
+$lang["Changes done"] = "Changes done";
+$lang["Field"] = "Field";
+$lang["Old value"] = "Old value";
+$lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
 
 //Tags
 $lang["There are no Tags"] = "Es sind keine Tags vorhanden";
+
