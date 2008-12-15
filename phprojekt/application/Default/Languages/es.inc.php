@@ -162,7 +162,7 @@ $lang["Designer"]       = "Diseñador";
 $lang["Status"]         = "Estatus";
 $lang["Table"]          = "Tabla";
 $lang["Field Name"]     = "Nombre";
-$lang["Field Type"]     = "Tipo"; //
+$lang["Field Type"]     = "Tipo";
 $lang["Table Lenght"]   = "Largo";
 $lang["Form"]           = "Formulario";
 $lang["Project List"]   = "Lista de Proyectos";
@@ -183,7 +183,7 @@ $lang["View all"] = "Ver todos";
 
 // Notification tab
 $lang["Send Notification"] = "Enviar notificación";
-//Email
+// Email
 $lang["A "] = "Un ";
 $lang[" item has been "] = " item ha sido ";
 $lang["modified"] = "modificado";
@@ -196,3 +196,4 @@ $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Co
 
 //Tags
 $lang["There are no Tags"] = "No hay Tags";
+
