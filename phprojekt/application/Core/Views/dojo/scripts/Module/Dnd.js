@@ -458,7 +458,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
             inputTxt += '</select>';
             break;
         case 'percentage':
-            formLabel = params['formLabel'] || 'Percentaje';
+            formLabel = params['formLabel'] || 'Percentage';
             labelFor = 'percentage';
             inputTxt = '<div dojoType="dijit.form.HorizontalSlider" maximum="100" minimum="0" pageIncrement="100" showButtons="false"';
             inputTxt += ' intermediateChanges="true" style="height: 20px;">';
