@@ -185,13 +185,12 @@ $lang["There are no Results"] = "Es sind keine Results vorhanden";
 $lang["Send Notification"] = "Benachrichtigung senden";
 
 // Notification email
-$lang["A "] = "A ";
-$lang[" item has been "] = " item has been ";
-$lang["modified"] = "modified";
-$lang["created"] = "created";
-$lang["Current data"] = "Current data";
-$lang["Changes done"] = "Changes done";
-$lang["Field"] = "Field";
+$lang["A "] = "Das ";
+$lang[" item has been "] = "Element wurde ";
+$lang["modified"] = "geändert";
+$lang["created"] = "erstellt";
+$lang["Current data"] = "Aktuelle Daten";
+$lang["Changes done"] = "Änderungen durchgeführt";
 $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
 
 //Tags
