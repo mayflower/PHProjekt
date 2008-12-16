@@ -192,7 +192,6 @@ $lang["modified"] = "modificado";
 $lang["created"] = "creado";
 $lang["Current data"] = "Datos actuales";
 $lang["Changes done"] = "Cambios realizados";
-$lang["Field"] = "Campo";
 $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
 
 //Tags
