@@ -112,7 +112,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $translate = Zend_Registry::get('translate');
 
-        $amount = ereg_replace(":", "", $data['amount']);
+        $amount = str_repace(":", "", $data['amount']);
         if (strlen($amount) == 6) {
             $amount = substr($amount, 0, 4);
         }
