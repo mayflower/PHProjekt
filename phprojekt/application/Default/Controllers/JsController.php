@@ -133,8 +133,8 @@ class JsController extends IndexController
 
         $template = file_get_contents(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/' . $extendPath);
 
-        $template = ereg_replace("\n", "", $template);
-        $template = ereg_replace("\r", "", $template);
+        $template = str_repace("\n", "", $template);
+        $template = str_repace("\r", "", $template);
         $template = addslashes($template);
         echo '"' . $template . '"';
     }

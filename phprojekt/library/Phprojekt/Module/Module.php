@@ -268,7 +268,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                     array_pop($paths);
                 } else {
                     $templateContent = file_get_contents($templatePath . DIRECTORY_SEPARATOR .$file);
-                    $templateContent = ereg_replace("##TEMPLATE##", $this->name, $templateContent);
+                    $templateContent = str_repace("##TEMPLATE##", $this->name, $templateContent);
                     if ($file == 'Template.php') {
                         $file = $this->name . '.php';
                     }
