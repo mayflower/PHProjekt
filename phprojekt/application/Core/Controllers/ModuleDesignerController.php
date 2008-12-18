@@ -77,7 +77,7 @@ class Core_ModuleDesignerController extends Core_IndexController
         if (empty($module)) {
             $module = $this->getRequest()->getParam('label');
         }
-        $module = ucfirst(str_repace(" ", "", $module));
+        $module = ucfirst(str_replace(" ", "", $module));
         if ($id > 0) {
             $model = Phprojekt_Loader::getModel($module, $module);
         }

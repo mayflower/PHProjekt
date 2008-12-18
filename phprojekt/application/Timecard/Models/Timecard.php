@@ -113,7 +113,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $translate = Zend_Registry::get('translate');
 
         if (isset($data['startTime'])) {
-            $startTime = str_repace(":", "", $data['startTime']);
+            $startTime = str_replace(":", "", $data['startTime']);
             if (strlen($startTime) == 6) {
                 $startTime = substr($startTime, 0, 4);
             }
@@ -134,7 +134,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 return false;
             }
 
-            $endTime = str_repace(":", "", $data['endTime']);
+            $endTime = str_replace(":", "", $data['endTime']);
             if (strlen($endTime) == 6) {
                 $endTime = substr($endTime, 0, 4);
             }
