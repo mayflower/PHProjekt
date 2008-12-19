@@ -141,7 +141,9 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $date = $this->getRequest()->getParam('date');
+        $date     = $this->getRequest()->getParam('date');
+        $messages = null;
+        $date     = Cleaner::sanitize('date', $date, $messages, false);
 
         $where = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
 
@@ -162,7 +164,10 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingDetailAction()
     {
-        $date  = $this->getRequest()->getParam('date');
+        $date     = $this->getRequest()->getParam('date');
+        $messages = null;
+        $date     = Cleaner::sanitize('date', $date, $messages, false);
+
         $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
 
         $records = $model->getRecords($date);
