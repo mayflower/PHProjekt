@@ -33,6 +33,44 @@
  */
 class Core_IndexController extends IndexController
 {
+
+    /**
+     * Add Check for see if the current user is an admin
+     * If not, go to the login page
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+
+        if (!Phprojekt_Auth::isAdminUser()) {
+            $valid = false;
+            // Add exceptions for public calls into the Core
+            if ($this->getRequest()->getControllerName() == 'history' &&
+                $this->getRequest()->getActionName() == 'jsonList') {
+                $valid = true;
+            } else if ($this->getRequest()->getControllerName() == 'module' &&
+                $this->getRequest()->getActionName() == 'jsonGetGlobalModules') {
+                $valid = true;
+            } else if ($this->getRequest()->getControllerName() == 'role' &&
+                $this->getRequest()->getActionName() == 'jsonGetModulesAccess') {
+                $valid = true;
+            } else if ($this->getRequest()->getControllerName() == 'user' &&
+                $this->getRequest()->getActionName() == 'jsonGetUsers') {
+                $valid = true;
+            } else if ($this->getRequest()->getControllerName() == 'tab' &&
+                $this->getRequest()->getActionName() == 'jsonList') {
+                $valid = true;
+            }
+
+            if (!$valid) {
+                $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
+                exit;
+            }
+        }
+    }
+
     /**
      * Get the model object
      * This function must be redefined in each module

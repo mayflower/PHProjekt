@@ -193,6 +193,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.DataStore.addStore({url: globalUrl});
         phpr.DataStore.requestData({url: globalUrl, processData: dojo.hitch(this, function() {
                 var globalModules = phpr.DataStore.getData({url: globalUrl});
+                var isAdmin       = phpr.DataStore.getMetaData({url: globalUrl});
                 for (i in globalModules) {
                     var button = new dijit.form.Button({
                         id:        "globalModule"+globalModules[i].id,
@@ -222,18 +223,20 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 var separator = new dijit.ToolbarSeparator();
                 toolbar.addChild(separator);
 
-                // Administration
-                var button = new dijit.form.Button({
-                    id:        "globalModuleAdmin",
-                    label:     phpr.nls.get('Administration'),
-                    showLabel: true,
-                    onClick:   dojo.hitch(this, function() {
-                        dojo.publish("Administration.reload");
-                    })
-                });
-                toolbar.addChild(button);
-                var separator = new dijit.ToolbarSeparator();
-                toolbar.addChild(separator);
+                if (isAdmin > 0) {
+                    // Administration
+                    var button = new dijit.form.Button({
+                        id:        "globalModuleAdmin",
+                        label:     phpr.nls.get('Administration'),
+                        showLabel: true,
+                        onClick:   dojo.hitch(this, function() {
+                            dojo.publish("Administration.reload");
+                        })
+                    });
+                    toolbar.addChild(button);
+                    var separator = new dijit.ToolbarSeparator();
+                    toolbar.addChild(separator);
+                }
 
                 // Help
                 /*

@@ -130,6 +130,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         $authNamespace         = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
+        $authNamespace->admin  = 1;
 
         // Loading view stuff for controller tests
 

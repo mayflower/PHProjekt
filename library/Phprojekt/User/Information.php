@@ -124,8 +124,8 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
 
         $converted[] = $data;
 
-        // email
         if ($ordering == Phprojekt_ModelInformation_Default::ORDERING_FORM) {
+            // email
             $data = array();
             $data['key']      = 'email';
             $data['label']    = $translate->translate('email');
@@ -155,7 +155,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                             'name' => 'Spanish'),
                                       array('id'   => 'en',
                                             'name' => 'English'),
-                                            array('id'   => 'de',
+                                      array('id'   => 'de',
                                             'name' => 'German'));
             $data['required'] = true;
             $data['readOnly'] = false;
@@ -196,9 +196,28 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['position'] = 8;
         $data['fieldset'] = '';
         $data['range']    = array(array('id'   => 'A',
-                                        'name' => 'Active'),
+                                        'name' => $translate->translate('Active')),
                                   array('id'   => 'I',
-                                        'name' => 'Inactive'));
+                                        'name' => $translate->translate('Inactive')));
+        $data['required'] = true;
+        $data['readOnly'] = false;
+        $data['tab']      = 1;
+
+        $converted[] = $data;
+
+        // admin
+        $data = array();
+        $data['key']      = 'admin';
+        $data['label']    = $translate->translate('admin');
+        $data['type']     = 'selectbox';
+        $data['hint']     = $translate->translate('admin');
+        $data['order']    = 0;
+        $data['position'] = 9;
+        $data['fieldset'] = '';
+        $data['range']    = array(array('id'   => 0,
+                                        'name' => $translate->translate('No')),
+                                  array('id'   => 1,
+                                        'name' => $translate->translate('Yes')));
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;

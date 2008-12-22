@@ -91,6 +91,7 @@ class Phprojekt_Auth extends Zend_Auth
         // If the user was found we will save the user information on the session
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = $user->id;
+        $authNamespace->admin  = $user->admin;
 
         // Please, put any extra info of user to be saved on session here
         return true;
@@ -108,6 +109,23 @@ class Phprojekt_Auth extends Zend_Auth
 
         if (isset($authNamespace->userId)) {
             $returnValue = $authNamespace->userId;
+        }
+
+        return $returnValue;
+    }
+
+    /**
+     * Gets from auth namespace if the user is admin or not
+     *
+     * @return 1 or 0
+     */
+    public function isAdminUser()
+    {
+        $returnValue   = 0;
+        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+
+        if (isset($authNamespace->admin)) {
+            $returnValue = $authNamespace->admin;
         }
 
         return $returnValue;

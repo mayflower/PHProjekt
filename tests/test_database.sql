@@ -77,6 +77,7 @@ CREATE TABLE `User` (
   `firstname` varchar(255) default NULL,
   `lastname` varchar(255) default NULL,
   `status` varchar(1) default 'A',
+  `admin` int(1) NOT NULL default 0,
   PRIMARY KEY(`id`),
   UNIQUE(`username`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -481,10 +482,10 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'participantId', 1, 'participantId', 'participantId', 'multipleSelectValues', 7, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'rrule', 1, 'rrule', 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0);
 
-INSERT INTO `User` (`id`, `username`, `firstname`, `lastname`, `status`) VALUES
-(1,'david', NULL, NULL, 'A'),
-(2,'gus', NULL, NULL, 'A'),
-(3,'inactive', NULL, NULL, 'I');
+INSERT INTO `User` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES
+(1,'david', NULL, NULL, 'A', 1),
+(2,'gus', NULL, NULL, 'A', 0),
+(3,'inactive', NULL, NULL, 'I', 0);
 
 INSERT INTO `Setting` (`id`, `userId`, `moduleId`, `keyvalue`, `value`, `identifier`) VALUES
 (1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
