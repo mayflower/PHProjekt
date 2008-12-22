@@ -116,6 +116,7 @@ class Core_ModuleController extends Core_IndexController
             $modules['data'][$module->id]['name']      = $module->name;
             $modules['data'][$module->id]['label']     = $module->name;
         }
+        $modules['metadata'] = Phprojekt_Auth::isAdminUser();
         echo Phprojekt_Converter_Json::convert($modules);
     }
 

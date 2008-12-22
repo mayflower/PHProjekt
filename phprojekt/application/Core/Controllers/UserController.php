@@ -69,6 +69,7 @@ class Core_UserController extends Core_IndexController
         $data['firstname'] = (empty($user->firstname))?"":$user->firstname;
         $data['lastname']  = (empty($user->lastname))?"":$user->lastname;
         $data['status']    = (empty($user->status))?"":$user->status;
+        $data['admin']     = (empty($user->admin))?"":$user->admin;
 
         $setting = new Setting_Models_Setting();
         $setting->setModule('User');

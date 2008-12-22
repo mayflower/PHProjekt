@@ -166,7 +166,7 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
 
 dojo.declare("phpr.Store.Tab", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath+"index.php/Core/Tab/jsonList";
+        this._url = phpr.webpath+"index.php/Core/tab/jsonList";
     },
 
     makeSelect: function() {
