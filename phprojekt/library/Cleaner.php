@@ -38,7 +38,6 @@ require_once 'Cleaner/Util.php';
  */
 class Cleaner
 {
-
     const INPUT_SCOPE_GET     = 'get';
     const INPUT_SCOPE_POST    = 'post';
     const INPUT_SCOPE_REQUEST = 'request';
@@ -71,7 +70,6 @@ class Cleaner
      */
     private $_cages;
 
-
     /**
      * Getter for Singleton instance of Cleaner
      *
@@ -86,7 +84,6 @@ class Cleaner
         return self::$_instance;
     }
 
-
     /**
      * Set a individual Implementation of Cleaner_Messages
      *
@@ -99,7 +96,6 @@ class Cleaner
         Cleaner_Engine::_getInstance()->setMessagesClass($className);
     }
 
-
     /**
      * Set a individual Implementation of Cleaner_Sanitizer
      *
@@ -111,7 +107,6 @@ class Cleaner
     {
         Cleaner_Engine::_getInstance()->setSanitizerClass($className);
     }
-
 
     /**
      * Set a individual Implementation of Cleaner_Validator
@@ -137,7 +132,6 @@ class Cleaner
         Cleaner_Engine::_getInstance()->setEscaperClass($className);
     }
 
-
     /**
      * Get the scope abstraction object
      *
@@ -153,10 +147,8 @@ class Cleaner
             return $instance->_cages[$scope];
         }
 
-        throw new Cleaner_Exception("Can't return Cage because
-        given Scope is not defined");
+        throw new Cleaner_Exception("Can't return Cage because given Scope is not defined");
     }
-
 
     /**
      * Escape a value
@@ -181,14 +173,14 @@ class Cleaner
     /**
      * Validates a value against a certain type
      *
-     * @param string $type      Type against parameter/item should be validated
-     * @param mixed  $value     Value to validate
-     * @param object &$messages Messages generated while validation
-     * @param bool   $empty     Must parameter/item be not null or empty
+     * @param string $type     Type against parameter/item should be validated
+     * @param mixed  $value    Value to validate
+     * @param bool   $empty    Must parameter/item be not null or empty
+     * @param object $messages Messages generated while validation
      *
      * @return bool true=>valid, false=>invalid
      */
-    public static function validate($type, $value, &$messages, $empty = false)
+    public static function validate($type, $value, $empty = false, $messages = null)
     {
         if (!isset($messages)) {
             $messages = Cleaner_Engine::getMessages();
@@ -204,25 +196,21 @@ class Cleaner
         }
 
         return Cleaner_Engine::getInstance()->validate($type, $value, $messages);
-
     }
 
     /**
      * Sanitizes a value to a certain type
      *
-     * @param string $type      Type of parameter/item to sanitize
-     * @param mixed  $value     Value to sanitize
-     * @param object &$messages Messages generated while sanitizing
-     * @param mixed  $default   Return value, if parameter/item
-     *                          is null/empty/notset/..
-     * @param bool   $empty     Must parameter/item be not null or empty
+     * @param string $type     Type of parameter/item to sanitize
+     * @param mixed  $value    Value to sanitize
+     * @param mixed  $default  Return value, if parameter/item is null/empty/notset/..
+     * @param bool   $empty    Must parameter/item be not null or empty
+     * @param object $messages Messages generated while validation
      *
      * @return mixed
      */
-    public static function sanitize($type, $value, &$messages,
-    $default = null, $empty = false)
+    public static function sanitize($type, $value, $default = null, $empty = false, $messages = null)
     {
-
         if (!isset($messages)) {
             $messages = Cleaner_Engine::getMessages();
         }
@@ -239,14 +227,12 @@ class Cleaner
         }
 
         $instance = Cleaner_Engine::getInstance();
-        $result   = $instance->sanitize($type, $value, $messages);
+        $result   = $instance->sanitize($type, $value);
 
         if (is_null($result)) {
-
             if (!$empty) {
                 $messages->add('SANITIZE_DEFAULT');
             }
-
             return $default;
         }
 
@@ -261,22 +247,16 @@ class Cleaner
      * @param string $scope    Name of scope to use (GET, POST, ...)
      * @param string $name     Name of parameter / Name of item in scope
      * @param bool   $empty    Must parameter/item be not null or empty
-     * @param mixed  $default  Return value, if parameter/item and/or sanitizes
-     *                         parameter/item is null/empty/notset/..
-     * @param bool   $sanitize Wheather sanitize value of parameter/item, when
-     *                         value is invalid
+     * @param mixed  $default  Return value, if parameter/item and/or sanitizes parameter/item is null/empty/notset/..
+     * @param bool   $sanitize Wheather sanitize value of parameter/item, when value is invalid
      *
-     * @return Cleaner_Parameter Instance, representing selected
-     *         parameter/item in Scope
+     * @return Cleaner_Parameter Instance, representing selected parameter/item in Scope
      */
-    public static function getParameter($type, $scope, $name,
-    $empty = false, $default = null, $sanitize = true)
+    public static function getParameter($type, $scope, $name, $empty = false, $default = null, $sanitize = true)
     {
         $cage = self::getCage($scope);
         return $cage->getParameter($type, $name, $empty, $default, $sanitize);
     }
-
-
 
     /**
      * Creates a new Instance (Singleton) of Cleaner
@@ -284,7 +264,6 @@ class Cleaner
      */
     protected function __construct()
     {
-
         $this->_configuration = Cleaner_Engine::_getInstance();
 
         $this->_cages = array(
@@ -329,8 +308,5 @@ class Cleaner
         if (isset($GLOBALS['HTTP_FILES_VARS'])) {
             $GLOBALS['HTTP_FILES_VARS'] = null;
         }
-
-
     }
-
 }

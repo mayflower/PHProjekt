@@ -58,12 +58,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Word'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeWord($value, &$messages)
+    public function sanitizeWord($value)
     {
         return preg_replace('/\W/', '', $value);
     }
@@ -71,12 +70,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Word'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeString($value, &$messages)
+    public function sanitizeString($value)
     {
         return (string) $value;
     }
@@ -84,28 +82,26 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Numeric'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeNumeric($value, &$messages)
+    public function sanitizeNumeric($value)
     {
         $instance       = Cleaner_Engine::getInstance();
         $floatSanitizer = $instance->getSanitizer('float');
 
-        return (string) $floatSanitizer->sanitize($value, $messages);
+        return (string) $floatSanitizer->sanitize($value);
     }
 
     /**
      * Sanitize value to 'IsoTimestamp'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeIsoTimestamp($value, &$messages)
+    public function sanitizeIsoTimestamp($value)
     {
         $format = 'Y-m-d H:i:s';
         if (is_int($value)) {
@@ -122,12 +118,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'IsoTime'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeIsoTime($value, &$messages)
+    public function sanitizeIsoTime($value)
     {
         $format = 'H:i:s';
         if (is_int($value)) {
@@ -144,12 +139,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'IsoDate'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeIsoDate($value, &$messages)
+    public function sanitizeIsoDate($value)
     {
         $format = 'Y-m-d';
 
@@ -167,12 +161,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Ipv4'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeIpv4($value, &$messages)
+    public function sanitizeIpv4($value)
     {
         $long = ip2long($value);
 
@@ -186,12 +179,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Int'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeInt($value, &$messages)
+    public function sanitizeInt($value)
     {
         // sanitize numerics and non-strings
         if ((! is_string($value)) || (is_numeric($value))) {
@@ -231,12 +223,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'HTML' (Purifier)
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeHtml($value, &$messages)
+    public function sanitizeHtml($value)
     {
          return HTMLPurifier::getInstance()->purify($value);
     }
@@ -244,12 +235,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Float'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeFloat($value, &$messages)
+    public function sanitizeFloat($value)
     {
         // normal sanitize.  non-string, or already numeric, get converted in
         // place.
@@ -305,12 +295,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Boolean'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeBool($value, &$messages)
+    public function sanitizeBool($value)
     {
         // PHP booleans
         if ($value === true || $value === false) {
@@ -335,12 +324,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Alpha'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeAlpha($value, &$messages)
+    public function sanitizeAlpha($value)
     {
         $result = preg_replace('/[^a-z]/i', '', $value);
 
@@ -354,12 +342,11 @@ class Cleaner_Sanitizer
     /**
      * Sanitize value to 'Alnum'
      *
-     * @param mixed $value     Value to sanitizes
-     * @param mixed &$messages Messages generated while sanitizing
+     * @param mixed $value Value to sanitizes
      *
      * @return mixed sanitized value
      */
-    public function sanitizeAlnum($value, &$messages)
+    public function sanitizeAlnum($value)
     {
         $result = preg_replace('/[^a-z0-9]/i', '', $value);
 
