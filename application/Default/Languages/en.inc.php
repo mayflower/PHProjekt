@@ -102,6 +102,15 @@ $lang["Module not found"] = "Module not found";
 $lang["Expect two arguments"] = "Expect two arguments";
 $lang["Second parameter needs to be an array"] = "Second parameter needs to be an array";
 $lang["No parent id found in parameters or passed"] = "No parent id found in parameters or passed";
+$lang["There was an error writing the table"] = "There was an error writing the table";
+$lang["The table module was created correctly"] = "The table module was created correctly";
+$lang["The table module was edited correctly"] = "The table module was edited correctly";
+$lang["The module was added correctly"] = "The module was added correctly";
+$lang["The module was edited correctly"] = "The module was edited correctly";
+$lang["The module can not be deleted"] = "The module can not be deleted";
+$lang["The module was deleted correctly"] = "The module was deleted correctly";
+$lang["YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "YOU MUST TO REFRESH THE PAGE TO WORK WITH "
+    . "THE NEW MODULE";
 
 // System Modules
 $lang["Administration"] = "Administration";
