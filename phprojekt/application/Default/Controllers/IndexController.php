@@ -226,7 +226,7 @@ class IndexController extends Zend_Controller_Action
         $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId    = array();
         foreach ($data as $id => $fields) {
-            $model = $this->getModelObject()->find($id);
+            $model = $this->getModelObject()->find((int) $id);
             Default_Helpers_Save::save($model, $fields);
             $showId[] = $id;
         }
@@ -389,7 +389,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function getTranslatedStringsAction()
     {
-        $language = $this->getRequest()->getParam('language', 'en');
+        $language = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
         echo Phprojekt_Converter_Json::convert(Zend_Registry::get('translate')->getTranslatedStrings($language));
     }
 
@@ -404,9 +404,9 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearBody();
 
         $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $value  = $this->getRequest()->getParam('value', null);
+        $value  = (string) $this->getRequest()->getParam('value', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
-        $field  = $this->getRequest()->getParam('field', null);
+        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
@@ -433,7 +433,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function uploadFileAction()
     {
-        $field    = $this->getRequest()->getParam('field', null);
+        $field    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
         $value    = null;
         $fileName = null;
 
@@ -455,7 +455,7 @@ class IndexController extends Zend_Controller_Action
 
         $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
         $itemId = (int) $this->getRequest()->getParam('itemId', null);
-        $field  = $this->getRequest()->getParam('field', null);
+        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
@@ -491,7 +491,7 @@ class IndexController extends Zend_Controller_Action
                 header("Cache-Control: post-check=0, pre-check=0", false);
                 header("Pragma: no-cache");
                 header('Content-Length: ' . filesize($md5Name));
-                header("Content-Disposition: attachment; filename=\"" . (string)$fileName . "\"");
+                header("Content-Disposition: attachment; filename=\"" . (string) $fileName . "\"");
                 header('Content-Type: download');
                 $fh = fopen($md5Name, 'r');
                 fpassthru($fh);

@@ -199,13 +199,13 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         foreach ($rights as $userId => $userRights) {
             if ($userRights['read']) {
                 $i++;
-                if ((int)$userId) {
+                if ((int) $userId) {
                     $phpUser->find($userId);
                 } else {
                     $phpUser->find(Phprojekt_Auth::getUserId());
                 }
                 $setting = new Setting_Models_Setting();
-                $email   = $setting->getSetting('email', (int)$userId);
+                $email   = $setting->getSetting('email', (int) $userId);
                 $this->_customTo[$i] = array();
                 $this->_customTo[$i][0] = $email;
 

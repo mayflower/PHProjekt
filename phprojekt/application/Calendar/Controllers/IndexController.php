@@ -50,7 +50,7 @@ class Calendar_IndexController extends IndexController
     {
         $translate = Zend_Registry::get('translate');
         $message   = $translate->translate(self::ADD_TRUE_TEXT);
-        $id        = (int)$this->getRequest()->getParam('id');
+        $id        = (int) $this->getRequest()->getParam('id');
 
         // getting the main row if the group if an id is provided
         if (!empty($id)) {

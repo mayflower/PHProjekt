@@ -155,7 +155,7 @@ class Phprojekt_Converter_Json
         $numRows = count($datas);
         $data = array('metadata' => $fieldDefinition,
                       'data'     => $datas,
-                      'numRows'  => (int)$numRows);
+                      'numRows'  => (int) $numRows);
 
         return self::_makeJsonString($data);
     }
@@ -219,7 +219,7 @@ class Phprojekt_Converter_Json
         $numRows = count($data);
         $data = array('metadata' => $fieldDefinition,
                       'data'     => $data,
-                      'numRows'  => (int)$numRows);
+                      'numRows'  => (int) $numRows);
 
         return self::_makeJsonString($data);
     }

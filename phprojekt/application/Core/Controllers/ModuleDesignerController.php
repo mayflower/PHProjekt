@@ -73,9 +73,9 @@ class Core_ModuleDesignerController extends Core_IndexController
         $id         = (int) $this->getRequest()->getParam('id');
         $data       = $this->getRequest()->getParam('designerData');
         $model      = null;
-        $module     = $this->getRequest()->getParam('name');
+        $module     = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
         if (empty($module)) {
-            $module = $this->getRequest()->getParam('label');
+            $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label'));
         }
         $module = ucfirst(str_replace(" ", "", $module));
         if ($id > 0) {

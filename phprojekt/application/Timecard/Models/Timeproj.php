@@ -200,7 +200,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         $numRows = count($datas);
         $data = array('metadata' => $fieldDefinition,
                       'data'     => $datas,
-                      'numRows'  => (int)$numRows);
+                      'numRows'  => (int) $numRows);
 
         return $data;
     }

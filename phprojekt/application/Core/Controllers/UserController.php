@@ -59,7 +59,7 @@ class Core_UserController extends Core_IndexController
     public function jsonDetailAction()
     {
         $user = new Phprojekt_User_User();
-        $id       = $this->getRequest()->getParam("id");
+        $id       = (int) $this->getRequest()->getParam("id");
 
         $user->find($id);
         $data = array();

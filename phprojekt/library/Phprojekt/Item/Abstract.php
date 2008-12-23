@@ -150,7 +150,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function __set($varname, $value)
     {
-        $messages = null;
         $info = $this->info();
 
         if (isset($info['metadata'][$varname])) {
@@ -159,10 +158,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
             switch ($type) {
                 case 'int':
-                    $value = Cleaner::sanitize('integer', $value, $messages, false);
+                    $value = Cleaner::sanitize('integer', $value, 0);
                     break;
                 case 'float':
-                    $value = Cleaner::sanitize('float', $value, $messages, false);
+                    $value = Cleaner::sanitize('float', $value, 0);
                     if ($value !== false) {
                         $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
                     } else {
@@ -170,13 +169,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     }
                     break;
                 case 'date':
-                    $value = Cleaner::sanitize('date', $value, $messages, false);
+                    $value = Cleaner::sanitize('date', $value);
                     break;
                 case 'time':
-                    $value = Cleaner::sanitize('time', $value, $messages, false);
+                    $value = Cleaner::sanitize('time', $value);
 
                     // moving the value to UTC
-                    $timeZomeComplement = (int)$this->_timezone * -1;
+                    $timeZomeComplement = (int) $this->_timezone * -1;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
@@ -186,24 +185,24 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'datetime':
                 case 'timestamp':
-                    $value = Cleaner::sanitize('timestamp', $value, $messages, false);
+                    $value = Cleaner::sanitize('timestamp', $value);
 
                     // moving the value to UTC
-                    $timeZomeComplement = (int)$this->_timezone * -1;
+                    $timeZomeComplement = (int) $this->_timezone * -1;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
                              date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
 
                     // running again the sanitizer to normalize the format
-                    $value = Cleaner::sanitize('timestamp', $value, $messages, false);
+                    $value = Cleaner::sanitize('timestamp', $value);
                     break;
                 default:
-                    $value = Cleaner::sanitize('string', $value, $messages, false);
+                    $value = Cleaner::sanitize('string', $value);
                     break;
             }
         } else {
-            $value = Cleaner::sanitize('string', $value, $messages, false);
+            $value = Cleaner::sanitize('string', $value);
         }
 
         if ($value === false) {
@@ -248,7 +247,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
                     break;
                 case 'time':
-                    $timeZone = (int)$this->_timezone;
+                    $timeZone = (int) $this->_timezone;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
@@ -258,7 +257,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'datetime':
                 case 'timestamp':
-                    $timeZone = (int)$this->_timezone * -1;
+                    $timeZone = (int) $this->_timezone * -1;
                     $u = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),

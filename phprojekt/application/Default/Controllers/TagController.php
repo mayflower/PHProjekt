@@ -70,7 +70,7 @@ class TagController extends IndexController
 
         $id        = (int) $this->getRequest()->getParam('id', 0);
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
-        $module    = $this->getRequest()->getParam('moduleName', 'Project');
+        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $moduleId  = (int) Phprojekt_Module::getId($module);
 
         if (!empty($id)) {
@@ -94,7 +94,7 @@ class TagController extends IndexController
     public function jsonGetModulesByTagAction()
     {
         $tagObj = Phprojekt_Tags_Default::getInstance();
-        $tag    = $this->getRequest()->getParam('tag', '');
+        $tag    = (string) $this->getRequest()->getParam('tag', '');
         $limit  = (int) $this->getRequest()->getParam('limit', 0);
         $tags   = $tagObj->getModulesByTag($tag, $limit);
 
@@ -115,13 +115,13 @@ class TagController extends IndexController
         $tagObj = Phprojekt_Tags_Default::getInstance();
 
         $id        = (int) $this->getRequest()->getParam('id');
-        $string    = $this->getRequest()->getParam('string', '');
+        $string    = (string) $this->getRequest()->getParam('string', '');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $module    = $this->getRequest()->getParam('moduleName', 'Project');
+        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $moduleId  = (int) Phprojekt_Module::getId($module);
 
         $tagObj->saveTags($moduleId, $id, $string);
@@ -155,7 +155,7 @@ class TagController extends IndexController
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $module    = $this->getRequest()->getParam('moduleName', 'Project');
+        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $moduleId  = (int) Phprojekt_Module::getId($module);
 
         $tagObj->deleteTagsByItem($moduleId, $id);

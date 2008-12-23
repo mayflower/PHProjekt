@@ -89,10 +89,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     private function _saveRight($moduleId, $itemId, $userId, $access)
     {
-        $data['moduleId']     = (int)$moduleId;
-        $data['itemId']       = (int)$itemId;
-        $data['userId']       = (int)$userId;
-        $data['access']       = (int)$access;
+        $data['moduleId']     = (int) $moduleId;
+        $data['itemId']       = (int) $itemId;
+        $data['userId']       = (int) $userId;
+        $data['access']       = (int) $access;
         $this->insert($data);
     }
 
@@ -162,8 +162,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $where  = array();
             $values = array();
 
-            $where[] = 'moduleId = '. (int)$moduleId;
-            $where[] = 'itemId = '. (int)$itemId;
+            $where[] = 'moduleId = '. (int) $moduleId;
+            $where[] = 'itemId = '. (int) $itemId;
             $where   = implode(' AND ', $where);
             $rows    = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
@@ -192,8 +192,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $data = array();
         $data['moduleId']     = Phprojekt_Module::getId('Project');
         $data['itemId']       = 1;
-        $data['userId']       = (int)$userId;
-        $data['access']       = (int)Phprojekt_Acl::WRITE;
+        $data['userId']       = (int) $userId;
+        $data['access']       = (int) Phprojekt_Acl::WRITE;
         $this->insert($data);
     }
 }

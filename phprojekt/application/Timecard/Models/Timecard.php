@@ -221,7 +221,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                                                             'bookings' => 0);
                     }
                     if ($sum > 0) {
-                        $sortRecords[$record->date]['sum'] += (int)$sum;
+                        $sortRecords[$record->date]['sum'] += (int) $sum;
                     }
                 }
 
@@ -234,7 +234,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                                                              'bookings' => 0);
                     }
                     $bookings += $this->getDiffTime($booking->amount, '00:00:00');
-                    $sortRecords[$booking->date]['bookings'] += (int)$bookings;
+                    $sortRecords[$booking->date]['bookings'] += (int) $bookings;
                 }
 
                 $endDayofTheMonth = date("t");
@@ -262,7 +262,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $numRows = count($datas);
                 $data = array('metadata' => $fieldDefinition,
                               'data'     => $datas,
-                              'numRows'  => (int)$numRows);
+                              'numRows'  => (int) $numRows);
                 break;
         }
 

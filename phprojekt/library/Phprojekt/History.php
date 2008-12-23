@@ -149,7 +149,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         if (!isset($moduleId)) {
             $moduleId = Phprojekt_Module::getId($object->getTableName());
         }
-        $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
+        $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int) $moduleId);
         $where .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
 
         if (!empty($startDate)) {
@@ -192,7 +192,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $result   = array();
         $moduleId = Phprojekt_Module::getId($object->getTableName());
         $itemId   = $object->id;
-        $where    = $this->getAdapter()->quoteInto('moduleId = ?', (int)$moduleId);
+        $where    = $this->getAdapter()->quoteInto('moduleId = ?', (int) $moduleId);
         $where   .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
 
         $datetime = null;
