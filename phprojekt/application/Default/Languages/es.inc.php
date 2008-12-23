@@ -102,6 +102,15 @@ $lang["Module not found"] = "No se encontró el módulo";
 $lang["Expect two arguments"] = "Se esperan dos argumentos";
 $lang["Second parameter needs to be an array"] = "El segundo parámetro tiene que ser un array";
 $lang["No parent id found in parameters or passed"] = "No se encontró el projecto padre en los parámetros";
+$lang["There was an error writing the table"] = "Hubo un error al escribir la tabla";
+$lang["The table module was created correctly"] = "La tabla del módulo se agregó correctamente";
+$lang["The table module was edited correctly"] = "La tabla del módulo se editó correctamente";
+$lang["The module was added correctly"] = "El módulo se agregó correctamente";
+$lang["The module was edited correctly"] = "El módulo se editó correctamente";
+$lang["The module can not be deleted"] = "El módulo no pudo ser borrado";
+$lang["The module was deleted correctly"] = "El módulo fue borrado correctamente";
+$lang["YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "USTED DEBE ACTUALIZAR LA WEB PARA TRABAJAR "
+    . "CON EL MÓDULO NUEVO";
 
 // System Modules
 $lang["Administration"] = "Administración";
