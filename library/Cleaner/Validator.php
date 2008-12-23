@@ -57,12 +57,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Alnum'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateAlnum($value, &$messages)
+    public function validateAlnum($value, $messages)
     {
         $valid = ctype_alnum((string)$value);
 
@@ -76,12 +76,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Alpha'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateAlpha($value, &$messages)
+    public function validateAlpha($value, $messages)
     {
         $valid = ctype_alpha($value);
 
@@ -95,12 +95,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Bool'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateBool($value, &$messages)
+    public function validateBool($value, $messages)
     {
         // PHP booleans
         if ($value === true || $value === false) {
@@ -125,12 +125,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Float'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateFloat($value, &$messages)
+    public function validateFloat($value, $messages)
     {
         if (is_float($value)) {
             return true;
@@ -149,12 +149,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Int'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateInt($value, &$messages)
+    public function validateInt($value, $messages)
     {
         if (is_int($value)) {
             return true;
@@ -173,12 +173,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Ipv4'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateIpv4($value, &$messages)
+    public function validateIpv4($value, $messages)
     {
         $result = ip2long($value);
 
@@ -193,12 +193,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'IsoDate'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateIsoDate($value, &$messages)
+    public function validateIsoDate($value, $messages)
     {
         // basic date format
         // yyyy-mm-dd
@@ -217,12 +217,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'IsoTime'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateIsoTime($value, &$messages)
+    public function validateIsoTime($value, $messages)
     {
         $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/D';
 
@@ -240,12 +240,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'IsoTimestamp'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateIsoTimestamp($value, &$messages)
+    public function validateIsoTimestamp($value, $messages)
     {
 
         // correct length?
@@ -282,12 +282,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Numeric'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateNumeric($value, &$messages)
+    public function validateNumeric($value, $messages)
     {
         $valid = is_numeric($value);
 
@@ -301,12 +301,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'String'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateString($value, &$messages)
+    public function validateString($value, $messages)
     {
         $valid = is_scalar($value);
 
@@ -320,12 +320,12 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Word'
      *
-     * @param mixed $value     Value to validate
-     * @param mixed &$messages Messages generated while validation
+     * @param mixed $value    Value to validate
+     * @param mixed $messages Messages generated while validation
      *
      * @return bool sanitized value
      */
-    public function validateWord($value, &$messages)
+    public function validateWord($value, $messages)
     {
         $expr = '/^\w+$/D';
         $valid = $this->_filter->validatePregMatch($value, $expr);
