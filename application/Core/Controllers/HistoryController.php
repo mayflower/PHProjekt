@@ -48,16 +48,12 @@ class Core_HistoryController extends Core_IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $messages   = null;
         $moduleId   = (int) $this->getRequest()->getParam('moduleId', null);
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $userId     = (int) $this->getRequest()->getParam('userId', null);
-        $moduleName = (string) $this->getRequest()->getParam('moduleName', 'Default');
-        $startDate  = $this->getRequest()->getParam('startDate', null);
-        $endDate    = $this->getRequest()->getParam('endDate', null);
-
-        $startDate  = Cleaner::sanitize('date', $startDate, $messages, false);
-        $endDate    = Cleaner::sanitize('date', $endDate, $messages, false);
+        $moduleName = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Default'));
+        $startDate  = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', null));
+        $endDate    = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', null));
 
         if (empty($moduleId)) {
             $moduleId = Phprojekt_Module::getId($moduleName);

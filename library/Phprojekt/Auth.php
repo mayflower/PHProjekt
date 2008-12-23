@@ -80,7 +80,7 @@ class Phprojekt_Auth extends Zend_Auth
             $setting->setModule('User');
 
             // The password does not match with password provided
-            if (!Phprojekt_Auth::_compareStringWithPassword((string)$password, (string)$setting->getSetting("password", $userId))) {
+            if (!Phprojekt_Auth::_compareStringWithPassword((string) $password, (string) $setting->getSetting("password", $userId))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
         } catch (Exception $error) {

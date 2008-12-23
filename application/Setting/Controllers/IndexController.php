@@ -53,7 +53,7 @@ class Setting_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $module   = $this->getRequest()->getParam('moduleName', null);
+        $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $moduleId = (int) Phprojekt_Module::getId($module);
 
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
@@ -78,7 +78,7 @@ class Setting_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $translate = Zend_Registry::get('translate');
-        $module    = $this->getRequest()->getParam('moduleName', null);
+        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule($module);
 

@@ -115,8 +115,8 @@ class JsController extends IndexController
 
     public function jsonGetTemplateAction()
     {
-        $path = $this->getRequest()->getParam('path', null);
-        $name = $this->getRequest()->getParam('name', null);
+        $path = (string) $this->getRequest()->getParam('path', null);
+        $name = (string) $this->getRequest()->getParam('name', null);
 
         $path = split("\.", $path);
         $module = $path[1];

@@ -184,7 +184,7 @@ class Phprojekt_Date_Collection
                     $value = explode(',', $value);
                     break;
                 case 'INTERVAL':
-                    $value = (int)$value;
+                    $value = (int) $value;
                     break;
             }
             $rules[$name] = $value;

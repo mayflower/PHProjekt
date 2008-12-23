@@ -94,8 +94,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $participants  = array();
         $rootEventId   = self::getRootEventId($id);
         $relatedEvents = self::getRelatedEvents($rootEventId);
-        $startDate     = $request->getParam('startDate');
-        $rrule         = $request->getParam('rrule', null);
+        $startDate     = Cleaner::sanitize('date', $request->getParam('startDate', date("Y-m-d")));
+        $rrule         = (string) $request->getParam('rrule', null);
 
         // getting reqesuted dates for the serial meeting (if it is serial)
         if (!empty($rrule)) {
@@ -113,13 +113,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $participants[] = $userId;
             }
             foreach ($participantId as $oneParticipant) {
-                if (!in_array((int)$oneParticipant, $participants)) {
-                    $participants[] = (int)$oneParticipant;
+                if (!in_array((int) $oneParticipant, $participants)) {
+                    $participants[] = (int) $oneParticipant;
                 }
             }
-        } elseif ((is_numeric($participantId) && ($userId <> (int)$participantId))) {
+        } elseif ((is_numeric($participantId) && ($userId <> (int) $participantId))) {
             $participants[] = $userId;
-            $participants[] = (int)$participantId;
+            $participants[] = (int) $participantId;
         } else {
             $participants[] = $userId;
         }
@@ -169,7 +169,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             }
         }
 
-        return (int)$rootEventId;
+        return (int) $rootEventId;
     }
 
     /**
@@ -186,9 +186,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rootEvent->find($id);
 
         if (null !== $rootEvent->parentId || $rootEvent->parentId > 0) {
-            $rootEventId = (int)$rootEvent->parentId;
+            $rootEventId = (int) $rootEvent->parentId;
         } else {
-            $rootEventId = (int)$rootEvent->id;
+            $rootEventId = (int) $rootEvent->id;
         }
 
         return $rootEventId;
@@ -217,15 +217,15 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $relatedEvents[$rootEvent->startDate][$rootEvent->participantId] = $rootEventId;
             }
             // getting the event list -all related events-
-            $eventList = $rootEvent->fetchAll(" parentId = " . (int)$rootEventId);
+            $eventList = $rootEvent->fetchAll(" parentId = " . (int) $rootEventId);
             if (is_array($eventList)) {
                 foreach ($eventList as $oneEvent) {
-                    $tmpUserId = (int)$oneEvent->participantId;
+                    $tmpUserId = (int) $oneEvent->participantId;
                     if ($onlyUsers) {
-                        $relatedEvents[$tmpUserId] = (int)$oneEvent->id;
+                        $relatedEvents[$tmpUserId] = (int) $oneEvent->id;
                     } else {
                         $tmpStartDate = $oneEvent->startDate;
-                        $relatedEvents[$tmpStartDate][$tmpUserId] = (int)$oneEvent->id;
+                        $relatedEvents[$tmpStartDate][$tmpUserId] = (int) $oneEvent->id;
                     }
                 }
             }

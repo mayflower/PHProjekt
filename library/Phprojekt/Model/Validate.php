@@ -124,29 +124,28 @@ class Phprojekt_Model_Validate
     {
         $info  = $class->info();
         $valid = true;
-        $messages = null;
         if (isset($info['metadata'][$varname]) && !empty($value)) {
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];
 
             switch ($type) {
                 case 'int':
-                    $valid = Cleaner::validate('integer', $value, $messages, false);
+                    $valid = Cleaner::validate('integer', $value, false);
                     break;
                 case 'float':
-                    $valid = Cleaner::validate('float', $value, $messages, false);
+                    $valid = Cleaner::validate('float', $value, false);
                     break;
                 case 'date':
-                    $valid = Cleaner::validate('date', $value, $messages, false);
+                    $valid = Cleaner::validate('date', $value, false);
                     break;
                 case 'time':
-                    // $valid = Cleaner::validate('timestamp', $value, $messages, false);
+                    // $valid = Cleaner::validate('timestamp', $value, false);
                     break;
                 case 'timestamp':
-                    $valid = Cleaner::validate('timestamp', $value, $messages, false);
+                    $valid = Cleaner::validate('timestamp', $value, false);
                     break;
                 default:
-                    $valid = Cleaner::validate('string', $value, $messages, true);
+                    $valid = Cleaner::validate('string', $value, true);
                     break;
             }
         }

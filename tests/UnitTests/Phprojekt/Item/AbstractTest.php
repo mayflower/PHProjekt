@@ -255,9 +255,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test set
-     * Should throw an exception
-     *
-     * @return void
      */
     public function testWrongSet()
     {
@@ -268,9 +265,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test set for required fields
-     * Should throw an exception
-     *
-     * @return void
      */
     public function testRequiredFieldSet()
     {
@@ -285,35 +279,24 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test set for integer fields
-     *
-     * @expectedException InvalidArgumentException
-     *
-     * @return void
      */
     public function testIntegerFieldSet()
     {
-
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->priority = 'AA';
         $this->assertEquals(0, $item->priority);
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->priority = 7;
         $this->assertEquals(7, $item->priority);
     }
 
     /**
      * Test for get errors
-     *
-     * @expectedException InvalidArgumentException
-     *
      */
     public function testGetError()
     {
         $result= array();
-        $result[] = array('field'    => 'title',
-        'message'  => 'Is a required field');
-        $result[] = array('field'    => 'startDate',
-        'message'  => 'Invalid format for date');
+        $result[] = array('field'    => 'Title',
+                          'message'  => 'Is a required field');
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->getError();
         $this->assertEquals(array(), $item->getError());
@@ -329,7 +312,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test for validations
-     *
      */
     public function testRecordValidate()
     {
@@ -355,23 +337,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test date field
-     *
-     * @expectedException InvalidArgumentException
-     *
      */
     public function testDate()
     {
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $item->title = 'TEST';
-        $item->notes = 'TEST';
         $item->startDate = 'aaaaaaaaaa';
-        $item->endDate = '1981-05-12';
-        $item->priority = 1;
-        $result = array(array(
-        'field'   => 'startDate',
-        'message' => 'Invalid format for date'));
-        $item->recordValidate();
-        $this->assertEquals($result, $item->getError());
+        $this->assertEquals($item->startDate, null);
 
         $item->startDate = '1981-05-12';
         $this->assertEquals(array(), $item->getError());
@@ -379,35 +350,32 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test float values
-     *
      */
     public function testFloat()
     {
         Zend_Locale::setLocale('es_AR');
-        $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1000,30';
         $item->budget;
     }
 
     /**
      * Test empty float values
-     *
      */
     public function testEmptyFloat()
     {
         Zend_Locale::setLocale('es_AR');
-        $item   = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '';
     }
 
     /**
      * test filters data
-     *
      */
     public function testGetFieldsForFilter()
     {
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
-        $array = $module->getFieldsForFilter();
+        $array  = $module->getFieldsForFilter();
         $this->assertEquals(array_keys($this->_listResult), $array);
     }
 

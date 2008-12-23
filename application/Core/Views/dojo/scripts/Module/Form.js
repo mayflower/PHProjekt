@@ -196,7 +196,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
 
     convertLabelIntoTableName: function(value) {
-        value     = value.replace(/\s+/g, '');
+        value     = value.replace(/\W+/g, '');
+        value     = value.replace(/[_]/g, '');
         var first = value.charAt(0).toUpperCase();
 
         return first + value.substr(1, value.length-1);

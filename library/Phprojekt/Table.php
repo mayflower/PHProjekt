@@ -81,7 +81,7 @@ class Phprojekt_Table
     public function createTable($tableName, $fields, $keys = array())
     {
         $tableName = ucfirst($tableName);
-        $sqlString = "CREATE TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " (";
+        $sqlString = "CREATE TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " (";
 
         if (is_array($fields) && !empty($fields)) {
             foreach ($fields as $fieldName => $fieldDefinition) {
@@ -140,7 +140,7 @@ class Phprojekt_Table
     public function addField($tableName, $fieldDefinition, $position = null)
     {
         $tableName = ucfirst($tableName);
-        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " ADD ";
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " ADD ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
             if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
@@ -155,7 +155,7 @@ class Phprojekt_Table
             if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
             }
-            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
+            $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                                                     $fieldDefinition['null'], $fieldDefinition['default'],
                                                     $fieldDefinition['default_no_quote']);
@@ -164,7 +164,7 @@ class Phprojekt_Table
         }
 
         if (isset($position)) {
-            $sqlString .= " AFTER " . (string)$position;
+            $sqlString .= " AFTER " . (string) $position;
         }
 
         try {
@@ -202,7 +202,7 @@ class Phprojekt_Table
     public function modifyField($tableName, $fieldDefinition, $position = null)
     {
         $tableName = ucfirst($tableName);
-        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " MODIFY ";
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " MODIFY ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
             if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
@@ -218,9 +218,9 @@ class Phprojekt_Table
                 $fieldDefinition['default_no_quote'] = false;
             }
             if (isset($fieldDefinition['oldName'])) {
-                $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['oldName']) . ' ';
+                $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['oldName']) . ' ';
             }
-            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
+            $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                                                     $fieldDefinition['null'], $fieldDefinition['default'],
                                                     $fieldDefinition['default_no_quote']);
@@ -249,10 +249,10 @@ class Phprojekt_Table
     public function deleteField($tableName, $fieldDefinition)
     {
         $tableName = ucfirst($tableName);
-        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string)$tableName) . " DROP ";
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " DROP ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
+            $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
         } else {
             return false;
         }
@@ -305,7 +305,7 @@ class Phprojekt_Table
         if (!empty($fieldLength)) {
             if (($fieldType == 'int') ||
                 ($fieldType == 'varchar')) {
-                $fieldDefinition .= "(" . (int)$fieldLength . ") ";
+                $fieldDefinition .= "(" . (int) $fieldLength . ") ";
             }
         }
 
@@ -315,9 +315,9 @@ class Phprojekt_Table
 
         if (!empty($default)) {
             if (empty($defaultNoQuotes)) {
-                $fieldDefinition .= " DEFAULT '" . (string)$default ."'";
+                $fieldDefinition .= " DEFAULT '" . (string) $default ."'";
             } else {
-                $fieldDefinition .= " DEFAULT " . (string)$default;
+                $fieldDefinition .= " DEFAULT " . (string) $default;
             }
         } else if ($allowNull) {
             $fieldDefinition .= " DEFAULT NULL";
@@ -360,7 +360,7 @@ class Phprojekt_Table
     public function dropTable($tableName)
     {
         $tableName = ucfirst($tableName);
-        $sqlString = "DROP TABLE " . $this->_db->quoteIdentifier((string)$tableName);
+        $sqlString = "DROP TABLE " . $this->_db->quoteIdentifier((string) $tableName);
 
         try {
             $this->_db->getConnection()->exec($sqlString);

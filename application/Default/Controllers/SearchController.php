@@ -47,7 +47,7 @@ class SearchController extends IndexController
      */
     public function jsonSearchAction()
     {
-        $words    = $this->getRequest()->getParam('words');
+        $words    = (string) $this->getRequest()->getParam('words');
         $count    = (int) $this->getRequest()->getParam('count', null);
         $offset   = (int) $this->getRequest()->getParam('start', null);
 

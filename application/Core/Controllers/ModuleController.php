@@ -84,9 +84,9 @@ class Core_ModuleController extends Core_IndexController
 
         // Set the hidden name to name or label
         // use ucfirst and delete spaces
-        $module = $this->getRequest()->getParam('name');
+        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
         if (empty($module)) {
-            $module = $this->getRequest()->getParam('label');
+            $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label', null));
         }
         $module = ucfirst(str_replace(" ", "", $module));
         $this->getRequest()->setParam('name', $module);

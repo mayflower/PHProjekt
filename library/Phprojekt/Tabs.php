@@ -121,7 +121,7 @@ class Phprojekt_Tabs
         $db = Zend_Registry::get('db');
         if ($id > 0) {
             $data['label'] = $label;
-            $db->update('Tab', $data, 'id = '.(int)$id);
+            $db->update('Tab', $data, 'id = ' . (int) $id);
             return $id;
         } else {
             $data['label'] = $label;
@@ -146,8 +146,8 @@ class Phprojekt_Tabs
             $tabIds = array($tabIds);
         }
         foreach ($tabIds as $tabId) {
-            $data['tabId']    = (int)$tabId;
-            $data['moduleId'] = (int)$moduleId;
+            $data['tabId']    = (int) $tabId;
+            $data['moduleId'] = (int) $moduleId;
             $db->insert('ModuleTabRelation', $data);
         }
     }

@@ -60,8 +60,8 @@ class LoginController extends Zend_Controller_Action
      */
     public function loginAction()
     {
-        $username = $this->getRequest()->getParam('username');
-        $password = $this->getRequest()->getParam('password');
+        $username = (string) $this->getRequest()->getParam('username', null);
+        $password = (string) $this->getRequest()->getParam('password', null);
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;

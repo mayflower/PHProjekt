@@ -59,7 +59,7 @@ class Timecard_IndexController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
         $year   = (int) $this->getRequest()->getParam('year', date("Y"));
         $month  = (int) $this->getRequest()->getParam('month', date("m"));
-        $view   = $this->getRequest()->getParam('view', 'month');
+        $view   = Cleaner::sanitize('alpha', $this->getRequest()->getParam('view', 'month'));
 
         $records = $this->getModelObject()->getRecords($view, $year, $month, $count, $offset);
 
@@ -141,9 +141,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $date     = $this->getRequest()->getParam('date');
-        $messages = null;
-        $date     = Cleaner::sanitize('date', $date, $messages, false);
+        $date = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
 
         $where = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
 
@@ -164,9 +162,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingDetailAction()
     {
-        $date     = $this->getRequest()->getParam('date');
-        $messages = null;
-        $date     = Cleaner::sanitize('date', $date, $messages, false);
+        $date = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
 
         $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
 
