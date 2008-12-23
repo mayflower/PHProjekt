@@ -1,28 +1,5 @@
-/* Dnd */
-.phprojekt .dndTarget {
-    border: 3px solid #f4cc47;
-    -moz-border-radius: 8pt 8pt;
-    radius: 8pt;
-    color: #292929;
-    display: inline;    
-    position: absolute;
-    left: 0px;
-    width: 195px;
-    float: left;
-    cursor: pointer; 
-}
-
-.phprojekt .dndSource {
-    border: 1px dotted skyblue;
-    -moz-border-radius: 8pt 8pt;
-    radius:8pt;
-    cursor: move;
-    padding-left: 10px;
-    background-color: #afb8c5;
-    color: #213f64;
-}
-
 /* Gantt */
+
 .phprojekt #ganttChart ul,
 .phprojekt #ganttChart li {
     margin:0;
@@ -283,67 +260,4 @@
 
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBarV {
     display:none !important;
-}
-
-/* Module Designer */
-#moduleDesignerContent .container {
-    padding: 1em 3em; 
-    cursor: default;
-    radius: 8pt;
-    background: #fff;
-}
-
-#moduleDesignerContent .dojoDndContainerOver {   
-}
-
-#moduleDesignerContent .dojoDndTargetDisabled {
-    background: #eee;
-}
-
-#moduleDesignerContent .dojoDndItem { 
-    padding: 3px;
-}
-
-.dj_ff2 #moduleDesignerContent .dojoDndItem {
-    -moz-user-select: none; 
-}
- 
-#moduleDesignerContent .dojoDndItemOver {
-    background: #ededed;
-    cursor: pointer;
-}
-
-#moduleDesignerContent .dojoDndItemSelected {
-    background: #ededed;
-}
-
-#moduleDesignerContent .dojoDndItemAnchor {
-    background: #ededed;
-}
-
-#moduleDesignerContent .dojoDndItemOver .dojoDndItemSelected {
-    background: #ededed;
-}
-
-#moduleDesignerContent .dojoDndItemOver .dojoDndItemAnchor {
-    background: #ededed;
-}
-
-#moduleDesignerContent .dojoDndItemBefore {
-}
-
-#moduleDesignerContent .dojoDndItemAfter {
-}
-
-#moduleDesignerContent .dojoDndAvatar {
-    font-size: 75%;
-    radius: 8pt;
-}
-    
-#moduleDesignerContent .dojoDndAvatarHeader {
-    background: #aaa;
-}
-
-#moduleDesignerContent .dojoDndAvatarItem {
-    background: #fff;
 }
