@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
- * @version    $Id: phprojektCssCompiler.php 1246 2008-12-15 16:08:23Z marianolp $
+ * @version    $Id$
  * @license    LGPL 2.1 (See LICENSE file)
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @since      File available since Release 6.0
@@ -22,17 +22,6 @@
 header("Content-type: text/css");
 
 $allCss = "";
-
-//Reads a file and returns it as a string
-function readCss($file) {
-    ob_start();
-    include ($file);
-    $sContent = ob_get_contents();
-    ob_end_clean();
-	
-	return $sContent;
-}
-
 
 //For every item in the current directory
 foreach (scandir(".") as $item) {
@@ -46,14 +35,14 @@ foreach (scandir(".") as $item) {
             foreach (scandir($item) as $subItem) { //Iterate on every file
                 $subItemPath = $item . DIRECTORY_SEPARATOR . $subItem;
                 if (!is_dir($subItemPath) && substr($subItem, -4) == '.css') {
-                    $allCss .= readCss($subItemPath);
+                    $allCss .= file_get_contents($subItemPath);
                 }
             }
         }
     } else {
         //It is a file
         if (substr($item, -4) == '.css') {
-            $allCss .= readCss ($item);
+            $allCss .= file_get_contents($item);
         }
     }
 }
