@@ -10,6 +10,7 @@ $lang["Tag"] = "Tag";
 $lang["No"] = "No";
 $lang["Yes"] = "Si";
 $lang["Count"] = "Cantidad";
+$lang["Help"] = "Ayuda";
 
 // General Fields
 $lang["project"] = "Proyecto";
@@ -111,6 +112,7 @@ $lang["The module can not be deleted"] = "El módulo no pudo ser borrado";
 $lang["The module was deleted correctly"] = "El módulo fue borrado correctamente";
 $lang["YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "USTED DEBE ACTUALIZAR LA WEB PARA TRABAJAR "
     . "CON EL MÓDULO NUEVO";
+$lang["No help available"] = "No hay ayuda disponible";
 
 // System Modules
 $lang["Administration"] = "Administración";
