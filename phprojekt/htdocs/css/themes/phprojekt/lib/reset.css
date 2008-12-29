@@ -1,12 +1,10 @@
-/* --------------------------------------------------------------
+/*
+ reset.css
+ * Resets default browser CSS.
 
-   reset.css
-   * Resets default browser CSS.
-
-   Based on work by Eric Meyer:
-   * meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/
-
--------------------------------------------------------------- */
+ Based on work by Eric Meyer:
+ meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/
+ */
 
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -23,17 +21,31 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     font-family: inherit;
     vertical-align: baseline;
 }
-
-
-body { line-height: 1.5; background: #fff;}
+body {
+    line-height: 1.5;
+    background: #fff;
+}
 
 /* Tables still need 'cellspacing="0"' in the markup. */
-table { border-collapse: separate; border-spacing: 0; }
-caption, th, td { text-align: left; font-weight:400; }
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+caption, th, td {
+    text-align: left;
+    font-weight: 400;
+}
 
 /* Remove possible quote marks (") from <q>, <blockquote>. */
-blockquote:before, blockquote:after, q:before, q:after { content: ""; }
-blockquote, q { quotes: "" ""; }
+blockquote:before, blockquote:after, q:before, q:after {
+    content: "";
+}
 
-a img { border: none; }
+blockquote, q {
+    quotes: "" "";
+}
 
+a img {
+    border: none;
+}

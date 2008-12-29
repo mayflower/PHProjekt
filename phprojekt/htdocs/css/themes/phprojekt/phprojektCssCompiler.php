@@ -2,6 +2,9 @@
 /**
  * Phprojekt CSS Compiler
  *
+ * Collect all the css files from the current theme directory
+ * Include all the css files in the folder and sub-folders
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1 as published by the Free Software Foundation
@@ -18,20 +21,17 @@
  * @since      File available since Release 6.0
  */
 
-
 header("Content-type: text/css");
 
 $allCss = "";
+$allCss .= file_get_contents("../../../dojo/dojo/resources/dojo.css");
 
 //For every item in the current directory
 foreach (scandir(".") as $item) {
-
     if (is_dir($item)) {
         //Is it a subdirectory
-        
         if ($item != '.svn' && $item != '.' && $item != '..') {
             //It is a CSS folder
-            
             foreach (scandir($item) as $subItem) { //Iterate on every file
                 $subItemPath = $item . DIRECTORY_SEPARATOR . $subItem;
                 if (!is_dir($subItemPath) && substr($subItem, -4) == '.css') {
@@ -47,9 +47,9 @@ foreach (scandir(".") as $item) {
     }
 }
 
-
 $allCss = str_replace("../images", "images", $allCss);
-
 $allCss .= ":focus { -moz-outline-style: none; }";
+$allCss .= file_get_contents("../../../dojo/dijit/themes/dijit.css");
+$allCss .= file_get_contents("../../../dojo/dijit/themes/dijit_rtl.css");
 
 echo $allCss;

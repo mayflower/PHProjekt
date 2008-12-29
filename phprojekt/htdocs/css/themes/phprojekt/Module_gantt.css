@@ -2,38 +2,38 @@
 
 .phprojekt #ganttChart ul,
 .phprojekt #ganttChart li {
-    margin:0;
-    padding:0;
-    list-style:none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .phprojekt #ganttChart .ganttcontent {
-    position:absolute;
-    left:0;
-    width:100%;
-    top:100px;
-    padding-bottom:20px;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 100px;
+    padding-bottom: 20px;
 }
 
 .phprojekt #ganttChart .timeline {
-    position:absolute;
-    left:0;
-    top:0px;
-    width:100%;
+    position: absolute;
+    left: 0;
+    top: 0px;
+    width: 100%;
 }
 
 .phprojekt #ganttChart .project_list {
-    position:absolute;
-    left:0;
-    width:100%;
-    top:20px;   
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 20px;
 }
-    
+
 .phprojekt #ganttChart .sub_project .title {
-    width:25%;
-    border-left:1px solid #7d7d7d;
-    border-right:1px solid #7d7d7d;
-    border-bottom:1px solid #7d7d7d;
+    width: 25%;
+    border-left: 1px solid #7d7d7d;
+    border-right: 1px solid #7d7d7d;
+    border-bottom: 1px solid #7d7d7d;
     float: left;
 }
 
@@ -49,23 +49,23 @@
 
 .phprojekt #ganttChart .dijitSliderProgressBarH {
     border-color: #aab0bb;
-    background:  url("images/bg.gif");
+    background: url("images/bg.gif");
 }
 
 .phprojekt #ganttChart .dijitSliderProgressBarV {
     border-color: #aab0bb;
-    display:none !important;
+    display: none !important;
     background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom left;
 }
 
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderProgressBarH,
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderLeftBumper {
-    background-image:url("images/sliderFullFocus.png");
+    background-image: url("images/sliderFullFocus.png");
 }
 
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderProgressBarV,
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderBottomBumper {
-    background-image:url("images/sliderFullVerticalFocus.png");
+    background-image: url("images/sliderFullVerticalFocus.png");
 }
 
 .phprojekt #ganttChart .dijitSliderRemainingBarV {
@@ -80,32 +80,33 @@
 
 .phprojekt #ganttChart .dijitSliderBar {
     border-style: solid;
-    outline:1px;
+    outline: 1px;
 }
+
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderBar {
-    border-color:#888;    
+    border-color: #888;
 }
 
 .dijit_a11y #ganttChart .dijitSliderProgressBar {
-    background-color:#888 !important;
+    background-color: #888 !important;
 }
 
 .phprojekt #ganttChart .dijitSliderImageHandleH {
-    background:#0000ff !important;  
-    width:5px;
-    height:12px;
-    margin-top:1px;
-    cursor:e-resize; 
-    left:0 !important;
-    top:0 !important;    
+    background: #0000ff !important;
+    width: 5px;
+    height: 12px;
+    margin-top: 1px;
+    cursor: e-resize;
+    left: 0 !important;
+    top: 0 !important;
 }
 
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderImageHandleH {
-    background-image:url("images/preciseSliderThumbFocus.png");
+    background-image: url("images/preciseSliderThumbFocus.png");
 }
 
 .dj_ie6 .phprojekt #ganttChart .dijitSliderImageHandleH {
-    background-image:url("images/preciseSliderThumb.gif");
+    background-image: url("images/preciseSliderThumb.gif");
 }
 
 .phprojekt #ganttChart .dijitSliderLeftBumper {
@@ -121,19 +122,19 @@
 }
 
 .phprojekt #ganttChart .dijitSliderImageHandleV {
-    border:0px;
-    width:16px;
-    height:16px;
-    background:url("images/sliderThumb.png") no-repeat center center;
-    cursor:pointer;
+    border: 0px;
+    width: 16px;
+    height: 16px;
+    background: url("images/sliderThumb.png") no-repeat center center;
+    cursor: pointer;
 }
 
 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderImageHandleV {
-    background-image:url("images/sliderThumbFocus.png");
+    background-image: url("images/sliderThumbFocus.png");
 }
 
 .dj_ie6 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderImageHandleV {
-    background-image:url("images/sliderThumbFocus.gif");
+    background-image: url("images/sliderThumbFocus.gif");
 }
 
 .phprojekt #ganttChart .dijitSliderBottomBumper {
@@ -182,11 +183,11 @@
 }
 
 .phprojekt #ganttChart .dijitSliderButtonInner {
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .phprojekt #ganttChart .dijitSliderDisabled {
-    opacity:0.6 !important;
+    opacity: 0.6 !important;
 }
 
 .dj_ie6 .phprojekt #ganttChart .dijitSliderDisabled,
@@ -201,63 +202,56 @@
 }
 
 .phprojekt #ganttChart .dijitSliderProgressBar {
-    height:9px;
-    overflow:visible;
+    height: 9px;
+    overflow: visible;
     margin-top: -5px;
 }
 
 .phprojekt #ganttChart .dijitSliderImageHandleH {
-    background:#0000ff !important;  
-    width:5px;
-    height:12px;
-    margin-top:1px;
-    cursor:e-resize; 
+    background: #0000ff !important;
+    width: 5px;
+    height: 12px;
+    margin-top: 1px;
+    cursor: e-resize;
 }
 
 .phprojekt #ganttChart .dijitSliderImageHandle {
-    border:none;
+    border: none;
 }
-      
-
-
-
 
 .phprojekt #ganttChart .dijitSliderImageHandleH {
-    left:0 !important;
-    top:0 !important;
+    left: 0 !important;
+    top: 0 !important;
 }
-
 
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderLeftBumperH,
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderBottomBumperV {
-    display:none !important;
+    display: none !important;
 }
-
 
 .phprojekt #ganttChart .dojoxRangeSliderBarContainer {
-    position:relative;
+    position: relative;
 }
-
 
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBarV,
 .phprojekt #ganttChart .dijitSliderRemainingBar,
 .phprojekt #ganttChart dijitSliderBumper {
-    display:none !important;
+    display: none !important;
 }
 
 .phprojekt #ganttChart .dijitSliderRightBumper {
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBar {
-    overflow:hidden;
-    cursor:pointer;         
-    height:10px;  
-    border:1px solid #0000ff;         
-    width:40%;
-    margin:1px 0px;   
+    overflow: hidden;
+    cursor: pointer;
+    height: 10px;
+    border: 1px solid #0000ff;
+    width: 40%;
+    margin: 1px 0px;
 }
 
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBarV {
-    display:none !important;
+    display: none !important;
 }

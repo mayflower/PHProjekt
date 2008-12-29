@@ -1,5 +1,5 @@
 .dijitIEFixedToolbar {
-    position:absolute;
+    position: absolute;
     /* top:0; */
     top: expression(eval((document.documentElement||document.body).scrollTop));
 }
@@ -17,47 +17,175 @@
     height: 18px;
     text-align: center;
 }
-.phprojekt .dijitEditorIconSep { background-position: 0px; }
-.phprojekt .dijitEditorIconBackColor { background-position: -18px; }
-.phprojekt .dijitEditorIconBold { background-position: -36px; }
-.phprojekt .dijitEditorIconCancel { background-position: -54px; }
-.phprojekt .dijitEditorIconCopy { background-position: -72px; }
-.phprojekt .dijitEditorIconCreateLink { background-position: -90px; }
-.phprojekt .dijitEditorIconCut { background-position: -108px; }
-.phprojekt .dijitEditorIconDelete { background-position: -126px; }
-.phprojekt .dijitEditorIconForeColor { background-position: -144px; }
-.phprojekt .dijitEditorIconHiliteColor { background-position: -162px; }
-.phprojekt .dijitEditorIconIndent { background-position: -180px; }
-.phprojekt .dijitEditorIconInsertHorizontalRule { background-position: -198px; }
-.phprojekt .dijitEditorIconInsertImage { background-position: -216px; }
-.phprojekt .dijitEditorIconInsertOrderedList { background-position: -234px; }
-.phprojekt .dijitEditorIconInsertTable { background-position: -252px; }
-.phprojekt .dijitEditorIconInsertUnorderedList { background-position: -270px; }
-.phprojekt .dijitEditorIconItalic { background-position: -288px; }
-.phprojekt .dijitEditorIconJustifyCenter { background-position: -306px; }
-.phprojekt .dijitEditorIconJustifyFull { background-position: -324px; }
-.phprojekt .dijitEditorIconJustifyLeft { background-position: -342px; }
-.phprojekt .dijitEditorIconJustifyRight { background-position: -360px; }
-.phprojekt .dijitEditorIconLeftToRight { background-position: -378px; }
-.phprojekt .dijitEditorIconListBulletIndent { background-position: -396px; }
-.phprojekt .dijitEditorIconListBulletOutdent { background-position: -414px; }
-.phprojekt .dijitEditorIconListNumIndent { background-position: -432px; }
-.phprojekt .dijitEditorIconListNumOutdent { background-position: -450px; }
-.phprojekt .dijitEditorIconOutdent { background-position: -468px; }
-.phprojekt .dijitEditorIconPaste { background-position: -486px; }
-.phprojekt .dijitEditorIconRedo { background-position: -504px; }
-.phprojekt .dijitEditorIconRemoveFormat { background-position: -522px; }
-.phprojekt .dijitEditorIconRightToLeft { background-position: -540px; }
-.phprojekt .dijitEditorIconSave { background-position: -558px; }
-.phprojekt .dijitEditorIconSpace { background-position: -576px; }
-.phprojekt .dijitEditorIconStrikethrough { background-position: -594px; }
-.phprojekt .dijitEditorIconSubscript { background-position: -612px; }
-.phprojekt .dijitEditorIconSuperscript { background-position: -630px; }
-.phprojekt .dijitEditorIconUnderline { background-position: -648px; }
-.phprojekt .dijitEditorIconUndo { background-position: -666px; }
-.phprojekt .dijitEditorIconWikiword { background-position: -684px; }
-.phprojekt .dijitEditorIconToggleDir { background-position: -540px; /* padding: 0; margin: 0; color:#555555;
-                                    font-family:verdana,arial,sans-serif; font-weight: 800; font-size: 70%; */}
-.phprojekt .dijitEditorIconTabIndent { background-position: -702px; }
-.phprojekt .dijitEditorIconSelectAll { background-position: -720px; }
-.phprojekt .dijitEditorIconUnlink { background-position: -738px; }
+
+.phprojekt .dijitEditorIconSep {
+    background-position: 0px;
+}
+
+.phprojekt .dijitEditorIconBackColor {
+    background-position: -18px;
+}
+
+.phprojekt .dijitEditorIconBold {
+    background-position: -36px;
+}
+
+.phprojekt .dijitEditorIconCancel {
+    background-position: -54px;
+}
+
+.phprojekt .dijitEditorIconCopy {
+    background-position: -72px;
+}
+
+.phprojekt .dijitEditorIconCreateLink {
+    background-position: -90px;
+}
+
+.phprojekt .dijitEditorIconCut {
+    background-position: -108px;
+}
+
+.phprojekt .dijitEditorIconDelete {
+    background-position: -126px;
+}
+
+.phprojekt .dijitEditorIconForeColor {
+    background-position: -144px;
+}
+
+.phprojekt .dijitEditorIconHiliteColor {
+    background-position: -162px;
+}
+
+.phprojekt .dijitEditorIconIndent {
+    background-position: -180px;
+}
+
+.phprojekt .dijitEditorIconInsertHorizontalRule {
+    background-position: -198px;
+}
+
+.phprojekt .dijitEditorIconInsertImage {
+    background-position: -216px;
+}
+
+.phprojekt .dijitEditorIconInsertOrderedList {
+    background-position: -234px;
+}
+
+.phprojekt .dijitEditorIconInsertTable {
+    background-position: -252px;
+}
+
+.phprojekt .dijitEditorIconInsertUnorderedList {
+    background-position: -270px;
+}
+
+.phprojekt .dijitEditorIconItalic {
+    background-position: -288px;
+}
+
+.phprojekt .dijitEditorIconJustifyCenter {
+    background-position: -306px;
+}
+
+.phprojekt .dijitEditorIconJustifyFull {
+    background-position: -324px;
+}
+
+.phprojekt .dijitEditorIconJustifyLeft {
+    background-position: -342px;
+}
+
+.phprojekt .dijitEditorIconJustifyRight {
+    background-position: -360px;
+}
+
+.phprojekt .dijitEditorIconLeftToRight {
+    background-position: -378px;
+}
+
+.phprojekt .dijitEditorIconListBulletIndent {
+    background-position: -396px;
+}
+
+.phprojekt .dijitEditorIconListBulletOutdent {
+    background-position: -414px;
+}
+
+.phprojekt .dijitEditorIconListNumIndent {
+    background-position: -432px;
+}
+
+.phprojekt .dijitEditorIconListNumOutdent {
+    background-position: -450px;
+}
+
+.phprojekt .dijitEditorIconOutdent {
+    background-position: -468px;
+}
+
+.phprojekt .dijitEditorIconPaste {
+    background-position: -486px;
+}
+
+.phprojekt .dijitEditorIconRedo {
+    background-position: -504px;
+}
+
+.phprojekt .dijitEditorIconRemoveFormat {
+    background-position: -522px;
+}
+
+.phprojekt .dijitEditorIconRightToLeft {
+    background-position: -540px;
+}
+
+.phprojekt .dijitEditorIconSave {
+    background-position: -558px;
+}
+
+.phprojekt .dijitEditorIconSpace {
+    background-position: -576px;
+}
+
+.phprojekt .dijitEditorIconStrikethrough {
+    background-position: -594px;
+}
+
+.phprojekt .dijitEditorIconSubscript {
+    background-position: -612px;
+}
+
+.phprojekt .dijitEditorIconSuperscript {
+    background-position: -630px;
+}
+
+.phprojekt .dijitEditorIconUnderline {
+    background-position: -648px;
+}
+
+.phprojekt .dijitEditorIconUndo {
+    background-position: -666px;
+}
+
+.phprojekt .dijitEditorIconWikiword {
+    background-position: -684px;
+}
+
+.phprojekt .dijitEditorIconToggleDir {
+    background-position: -540px;
+}
+
+.phprojekt .dijitEditorIconTabIndent {
+    background-position: -702px;
+}
+
+.phprojekt .dijitEditorIconSelectAll {
+    background-position: -720px;
+}
+
+.phprojekt .dijitEditorIconUnlink {
+    background-position: -738px;
+}

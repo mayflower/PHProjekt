@@ -62,7 +62,7 @@
 .dojoxGridHeader .dojoxGridCell {
     border: 1px solid;
     border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
-    background: url(images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
+    background: url("images/grid_dx_gradient.gif") #E8E1CF top repeat-x;
     padding-bottom: 2px;
 }
 
@@ -79,7 +79,7 @@
     border: 1px dashed blue;
 }
 
-.dojoxGridHeader.dojoxGridCellFocus.dojoxGridCellOver {
+.dojoxGridHeader .dojoxGridCellFocus .dojoxGridCellOver {
     background-image: none;
     background-color: white;
     border-bottom-color: #FEBE47;
@@ -89,21 +89,24 @@
 }
 
 .dojoxGridArrowButtonChar {
-    display:none !important;
+    display: none !important;
 }
+
 .dojoxGridArrowButtonNode {
     display: inline !important;
     padding-left: 16px;
 }
+
 .dojoxGridSortDown .dojoxGridArrowButtonNode {
-    background: url(images/grid_sort_down.gif) center no-repeat;
+    background: url("images/grid_sort_down.gif") center no-repeat;
 }
+
 .dojoxGridSortUp .dojoxGridArrowButtonNode {
-    background: url(images/grid_sort_up.gif) center no-repeat;
+    background: url("images/grid_sort_up.gif") center no-repeat;
 }
 
 .dijit_a11y .dojoxGridArrowButtonChar {
-    display:inline !important;
+    display: inline !important;
 }
 .dijit_a11y .dojoxGridArrowButtonNode {
     display: none !important;
@@ -121,7 +124,7 @@
 .dojoxGridContent {
     position: relative;
     overflow: hidden;
-     -moz-outline-style: none;
+    -moz-outline-style: none;
     outline: none;
 }
 
@@ -131,7 +134,7 @@
     border: 1px solid;
     border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
     border-top: none;
-    background: url(images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
+    background: url("images/grid_dx_gradient.gif") #E8E1CF top repeat-x;
 }
 
 .dojoxGridRowbarInner {
@@ -157,10 +160,8 @@
 }
 
 .dojoxGridRow {
-    /*border: 1px solid #E8E4D8;*/
     border: 1px solid #E8E4D8;
     border-color: #F8F7F1;
-    /*padding: 0 0 1px 0;*/
     border-left: none;
     border-right: none;
     background-color: white;
@@ -170,15 +171,10 @@
 .dojoxGridRowOver {
     border-top-color: #FEBE47;
     border-bottom-color: #FEBE47;
-    /*border-bottom-width: 2px;
-    padding-bottom: 0;*/
-    /*background-color: #FFDD9D;*/
-    /*background-color: #FDFDFD;*/
 }
 
 .dojoxGridRowOdd {
     background-color: #FFFDF3;
-    /*background-color: #F9F7E8;*/
 }
 
 .dojoxGridRowSelected {
@@ -190,6 +186,7 @@
     width: 0;
     empty-cells: show;
 }
+
 .dj_ie .dojoxGridRowTable {
     border-collapse: collapse;
 }
@@ -243,9 +240,11 @@
 .dojoxGridRow-inserting td {
     background-color: #F4FFF4;
 }
+
 .dojoxGridRow-inflight td {
     background-color: #F2F7B7;
 }
+
 .dojoxGridRow-error td {
     background-color: #F8B8B6;
 }
@@ -287,20 +286,24 @@
 .dojoxGridDndAvatar {
     font-size: 100%;
 }
+
 .dojoxGrid .dojoDndItemBefore {
     border-left-color: red;
 }
+
 .dojoxGrid .dojoDndItemAfter {
     border-right-color: red;
 }
-.dojoxGridDndAvatarItem    td {
+
+.dojoxGridDndAvatarItem td {
     border: 1px solid;
     border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
-    background: url(images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
+    background: url("images/grid_dx_gradient.gif") #E8E1CF top repeat-x;
     padding: 0pt;
     margin: 0pt;
 }
-.dojoxGridDndAvatarItem    td.dojoxGridDndAvatarItemImage {
+
+.dojoxGridDndAvatarItem td .dojoxGridDndAvatarItemImage {
     border: 0;
     border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
     background-color: transparent;
@@ -308,23 +311,27 @@
     padding-bottom: 2px;
     margin: 0pt;
 }
+
 .dojoDndMove .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-    background-image: url(images/dndNoMove.png);
+    background-image: url("images/dndNoMove.png");
     background-repeat: no-repeat;
     background-position: center center;
 }
+
 .dojoDndCopy .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-    background-image: url(images/dndNoCopy.png);
+    background-image: url("images/dndNoCopy.png");
     background-repeat: no-repeat;
     background-position: center center;
 }
+
 .dojoDndMove .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-    background-image: url(images/dndMove.png);
+    background-image: url("images/dndMove.png");
     background-repeat: no-repeat;
     background-position: center center;
 }
+
 .dojoDndCopy .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-    background-image: url(images/dndCopy.png);
+    background-image: url("images/dndCopy.png");
     background-repeat: no-repeat;
     background-position: center center;
 }

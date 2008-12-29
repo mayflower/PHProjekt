@@ -1,0 +1,5 @@
+/* Dialog */
+.dijitRtl .phprojekt .dijitDialogTitleBar .dijitDialogCloseIcon {
+    right: auto;
+    left: 5px;
+}

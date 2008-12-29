@@ -1,16 +1,17 @@
 /* Time Picker */
+
 .phprojekt .dijitTimePickerTick,
 .phprojekt .dijitTimePickerMarker {
     border-color: #b1badf;
 }
 
 .phprojekt .dijitTimePickerTick {
-    color:white;
+    color: white;
 }
 
 .phprojekt .dijitTimePickerMarker {
-    background:#bed7f0 url("images/titleBar.png") repeat-x top;
-    color:#293a4b;
+    background: #bed7f0 url("images/titleBar.png") repeat-x top;
+    color: #293a4b;
     font-weight: bold;
 }
 
@@ -21,7 +22,7 @@
 
 .phprojekt .dijitTimePickerItemHover {
     background: #60a1ea none;
-    color:white;
+    color: white;
 }
 
 .phprojekt .dijitTimePickerItemHover,
@@ -31,12 +32,12 @@
 }
 
 .phprojekt .dijitTimePickerTick .dijitTimePickerItemInner {
-    font-size:0.4em;
+    font-size: 0.4em;
 }
 
 .phprojekt .dijitTimePickerItemHover .dijitTimePickerItemInner,
 .phprojekt .dijitTimePickerItemSelected .dijitTimePickerItemInner {
-    font-size:1em;
+    font-size: 1em;
 }
 
 .phprojekt .dijitTimePickerMarkerHover {
@@ -45,8 +46,8 @@
 
 .phprojekt .dijitTimePickerTickHover,
 .phprojekt .dijitTimePickerTickSelected {
-    margin-top:-0.3em;
-    margin-bottom:-0.3em;
+    margin-top: -0.3em;
+    margin-bottom: -0.3em;
     border-bottom: none;
 }
 

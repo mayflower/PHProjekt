@@ -1,10 +1,7 @@
-/** 
- * dijit.layout.Accordioncontainer 
- *
- */ 
- 
+/* dijit.layout.Accordioncontainer */
+
 .phprojekt .dijitAccordionContainer {
-    border-color: #b1badf;    
+    border-color: #b1badf;
 }
 
 /* nested classes */
@@ -34,10 +31,10 @@
 }
 
 .phprojekt .dijitAccordionTitle {
-    background:#fafafa url("../images/titleBar.png") repeat-x top left;
+    background: #fafafa url("../images/titleBar.png") repeat-x top left;
     border-top: 1px solid #b9bbdd;
     padding: 5px 4px 6px 8px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .phprojekt .dijitAccordionTitle-selected  {
@@ -46,20 +43,20 @@
     border-top: 1px solid #b9bbdd;
     border-bottom: 1px solid #b9bbdd;
     padding: 5px 4px 5px 8px;
-    cursor: default;    
+    cursor: default;
     color: #243C5F;
 }
 
 .phprojekt .dijitAccordionArrow {
-    background:url("../images/spriteRoundedIconsSmallBl.gif") no-repeat -30px top;
-    width:15px;
-    height:15px;
-    margin-top:-1px;
+    background: url("../images/spriteRoundedIconsSmallBl.gif") no-repeat -30px top;
+    width: 15px;
+    height: 15px;
+    margin-top: -1px;
 }
 
 .phprojekt .dijitAccordionTitle-selected .dijitAccordionArrow {
-    background:url("../images/spriteRoundedIconsSmallBl.gif") no-repeat -15px top;
-    margin-top:-1px;
+    background: url("../images/spriteRoundedIconsSmallBl.gif") no-repeat -15px top;
+    margin-top: -1px;
 }
 
 .phprojekt .dijitAccordionText {
