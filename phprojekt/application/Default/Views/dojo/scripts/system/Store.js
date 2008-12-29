@@ -177,7 +177,8 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
         var tabs = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in tabs) {
-            this._list.push({"id":tabs[i]['id'],"name":tabs[i]['label'],"nameId":tabs[i]['label'].split(' ').join('')})
+            var nameId = tabs[i]['label'].toString().split(' ').join('');
+            this._list.push({"id":tabs[i]['id'],"name":tabs[i]['label'],"nameId":nameId})
         }
     }
 });
