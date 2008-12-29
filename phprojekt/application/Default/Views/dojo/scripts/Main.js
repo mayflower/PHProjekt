@@ -36,21 +36,22 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    Add the all the functions for the current module
         //    So is possible use Module.Function
-        dojo.subscribe(module+".load", this, "load");
-        dojo.subscribe(module+".changeProject",this, "loadSubElements");
-        dojo.subscribe(module+".reload", this, "reload");
-        dojo.subscribe(module+".openForm", this, "openForm");
-        dojo.subscribe(module+".showSuggest", this, "showSuggest");
-        dojo.subscribe(module+".hideSuggest", this, "hideSuggest");
-        dojo.subscribe(module+".setSuggest", this, "setSuggest");
-        dojo.subscribe(module+".showSearchResults", this, "showSearchResults");
-        dojo.subscribe(module+".drawTagsBox", this, "drawTagsBox");
-        dojo.subscribe(module+".showTagsResults", this, "showTagsResults");
-        dojo.subscribe(module+".clickResult", this, "clickResult");
-        dojo.subscribe(module+".updateCacheData", this, "updateCacheData");
-        dojo.subscribe(module+".loadResult", this, "loadResult");
-        dojo.subscribe(module+".setLanguage", this, "setLanguage");
-        dojo.subscribe(module+"._isGlobalModule", this, "_isGlobalModule");
+        dojo.subscribe(module + ".load", this, "load");
+        dojo.subscribe(module + ".changeProject",this, "loadSubElements");
+        dojo.subscribe(module + ".reload", this, "reload");
+        dojo.subscribe(module + ".openForm", this, "openForm");
+        dojo.subscribe(module + ".showSuggest", this, "showSuggest");
+        dojo.subscribe(module + ".hideSuggest", this, "hideSuggest");
+        dojo.subscribe(module + ".setSuggest", this, "setSuggest");
+        dojo.subscribe(module + ".showSearchResults", this, "showSearchResults");
+        dojo.subscribe(module + ".drawTagsBox", this, "drawTagsBox");
+        dojo.subscribe(module + ".showTagsResults", this, "showTagsResults");
+        dojo.subscribe(module + ".clickResult", this, "clickResult");
+        dojo.subscribe(module + ".updateCacheData", this, "updateCacheData");
+        dojo.subscribe(module + ".loadResult", this, "loadResult");
+        dojo.subscribe(module + ".setLanguage", this, "setLanguage");
+        dojo.subscribe(module + ".showHelp", this, "showHelp");
+        dojo.subscribe(module + "._isGlobalModule", this, "_isGlobalModule");
     },
 
     openForm:function(/*int*/id, /*String*/module) {
@@ -219,7 +220,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         showLabel: true,
                         onClick:   dojo.hitch(this, function(e) {
                             phpr.currentProjectId = phpr.rootProjectId;
-                            dojo.publish(e.target.name+".reload");
+                            dojo.publish(e.target.name + ".reload");
                         })
                     });
                     toolbar.addChild(button);
@@ -256,16 +257,17 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 }
 
                 // Help
-                /*
                 var button = new dijit.form.Button({
                     id:        "globalModuleHelp",
                     label:     phpr.nls.get('Help'),
-                    showLabel: true
+                    showLabel: true,
+                    onClick:   dojo.hitch(this, function() {
+                        dojo.publish(this.module + ".showHelp");
+                    })
                 });
                 toolbar.addChild(button);
                 var separator = new dijit.ToolbarSeparator();
                 toolbar.addChild(separator);
-                */
 
                 // Logout
                 var button = new dijit.form.Button({
@@ -743,5 +745,38 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             this.reload();
             })
         });
+    },
+
+    showHelp:function() {
+        // summary:
+        //    Display the Help for one module
+        // description:
+        //    The function will show the help under the string "Content Help for -module-"
+        //    The translation must be an array and each index is a different tab
+        phpr.destroyWidget('helpContent');
+
+        dijit.byId('helpDialog').attr('title', phpr.nls.get('Help'));
+        dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.module);
+
+        var helpData  = phpr.nls.get('Content Help for ' + phpr.module);
+        if (typeof(helpData) == 'object') {
+            var container = new dijit.layout.TabContainer({
+                style: 'height:100%;',
+                id:    'helpContent'
+            }, document.createElement('div'));
+
+            for (i in helpData) {
+                container.addChild(new dijit.layout.ContentPane({
+                    title:   i,
+                    content: helpData[i]
+                }));
+            }
+
+            dijit.byId('helpContainer').attr("content", container);
+            container.startup();
+        } else {
+            dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available'));
+        }
+		dijit.byId('helpDialog').show();
     }
 });
