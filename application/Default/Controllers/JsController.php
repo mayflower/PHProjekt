@@ -140,28 +140,11 @@ class JsController extends IndexController
     }
 
     /**
-     * Get all the Default scripts
-     *
-     * @return string
-     */
-    private function _getDefaultScripts()
-    {
-        $output = '';
-        $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
-        foreach ($scripts as $script) {
-            if (substr($script, -3) == '.js') {
-                $output .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/' . $script);
-            }
-        }
-        return $output;
-    }
-
-    /**
-     * Get dynamically all the templates
+     * Gets dynamically all the templates and echoes them in Json format
      *
      * @return void
      */
-    public function jsonGetDefaultTemplatesAction()
+    public function jsonGetAllTemplatesAction()
     {
         $output = array();
         $modules = array();
@@ -239,6 +222,24 @@ class JsController extends IndexController
         $json = Zend_Json::encode($output2);
         echo $json;
     }
+
+    /**
+     * Get all the Default scripts
+     *
+     * @return string
+     */
+    private function _getDefaultScripts()
+    {
+        $output = '';
+        $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
+        foreach ($scripts as $script) {
+            if (substr($script, -3) == '.js') {
+                $output .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/' . $script);
+            }
+        }
+        return $output;
+    }
+
 
     /**
      * Get all the Core scripts
