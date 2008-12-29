@@ -171,7 +171,9 @@ class JsController extends IndexController
                 $templatesPaths = array();
                 $folders        = scandir($module['path'] . '/Views/dojo/scripts');
                 foreach ($folders as $folder) {
-                    if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder) && $folder != '.svn') {
+                    if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder)
+                        && $folder != '.svn' && $folder != '.' && $folder != '..') {
+
                         if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder . '/template/')) {
                             $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/' . $folder . '/template/';
                         }
