@@ -146,13 +146,15 @@ class JsController extends IndexController
      */
     public function jsonGetAllTemplatesAction()
     {
-        $output = array();
+        $output  = array();
         $modules = array();
 
-        //Create an array with all the modules
+        // Create an array with all the modules
         foreach (scandir(PHPR_CORE_PATH) as $item) {
             $itemPath = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $item;
-            if (!is_dir($itemPath)) continue;
+            if (!is_dir($itemPath)) {
+                continue;
+            }
 
             if ($item != '.svn' && $item != '.' && $item != '..') {
                 $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $item;
@@ -163,25 +165,28 @@ class JsController extends IndexController
             }
         }
 
-        //Read the templates of every module
+        // Read the templates of every module
         foreach ($modules as $module) {
             if ($module['name'] == 'Core') {
-                $templatesPaths   = array();
-                $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/Module/template/';
-                $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/Role/template/';
+                $templatesPaths = array();
+                $folders        = scandir($module['path'] . '/Views/dojo/scripts');
+                foreach ($folders as $folder) {
+                    if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder) && $folder != '.svn') {
+                        if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder . '/template/')) {
+                            $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/' . $folder . '/template/';
+                        }
+                    }
+                }
             } else {
                 $templatesPaths   = array();
                 $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/template/';
             }
 
             foreach ($templatesPaths as $templatesPath) {
-
                 if (is_dir($templatesPath)) {
                     foreach (scandir($templatesPath) as $item) {
-
                         if (!is_dir($templatesPath . $item) && (substr($item, -5) == '.html')) {
-                            //The item is a valid file
-
+                            // The item is a valid file
                             $fileContents = file_get_contents($templatesPath . $item);
                             $fileContents = str_replace("\n", "", $fileContents);
                             $fileContents = str_replace("\r", "", $fileContents);
@@ -189,17 +194,13 @@ class JsController extends IndexController
                             $output[] = array('module'   => $module['name'],
                                               'name'     => $item,
                                               'contents' => $fileContents);
-
                         } else {
-                            //The item is a subdirectory
+                            // The item is a subdirectory
                             if ($item != '.svn' && $item != '.' && $item != '..') {
-
                                 $subItemPath = $templatesPath . $item . DIRECTORY_SEPARATOR;
                                 foreach (scandir($templatesPath . $item) as $subItem) {
-
                                     if (!is_dir($subItemPath . $subItem) && substr($subItem, -5) == '.html') {
-                                        //The subitem is a valid file
-
+                                        // The subitem is a valid file
                                         $fileContents = file_get_contents($subItemPath . $subItem);
                                         $fileContents = str_replace("\n", "", $fileContents);
                                         $fileContents = str_replace("\r", "", $fileContents);
@@ -207,7 +208,6 @@ class JsController extends IndexController
                                         $output[] = array('module'   => $module['name'],
                                                           'name'     => $item . "." . $subItem,
                                                           'contents' => $fileContents);
-
                                     }
                                 }
                             }
@@ -217,10 +217,9 @@ class JsController extends IndexController
             }
         }
 
-        $output2 = array();
-        $output2['files'] = $output;
-        $json = Zend_Json::encode($output2);
-        echo $json;
+        $data          = array();
+        $data['files'] = $output;
+        echo Zend_Json::encode($data);
     }
 
     /**
@@ -230,7 +229,7 @@ class JsController extends IndexController
      */
     private function _getDefaultScripts()
     {
-        $output = '';
+        $output  = '';
         $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
