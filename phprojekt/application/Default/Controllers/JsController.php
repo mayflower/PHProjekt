@@ -157,6 +157,90 @@ class JsController extends IndexController
     }
 
     /**
+     * Get dynamically all the templates
+     *
+     * @return void
+     */
+    public function jsonGetDefaultTemplatesAction()
+    {
+        $output = array();
+        $modules = array();
+
+        //Create an array with all the modules
+        foreach (scandir(PHPR_CORE_PATH) as $item) {
+            $itemPath = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $item;
+            if (!is_dir($itemPath)) continue;
+
+            if ($item != '.svn' && $item != '.' && $item != '..') {
+                $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $item;
+                if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
+                    $modules[] = array('name' => $item,
+                                       'path' => $dir);
+                }
+            }
+        }
+
+        //Read the templates of every module
+        foreach ($modules as $module) {
+            if ($module['name'] == 'Core') {
+                $templatesPaths   = array();
+                $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/Module/template/';
+                $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/Role/template/';
+            } else {
+                $templatesPaths   = array();
+                $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/template/';
+            }
+
+            foreach ($templatesPaths as $templatesPath) {
+
+                if (is_dir($templatesPath)) {
+                    foreach (scandir($templatesPath) as $item) {
+
+                        if (!is_dir($templatesPath . $item) && (substr($item, -5) == '.html')) {
+                            //The item is a valid file
+
+                            $fileContents = file_get_contents($templatesPath . $item);
+                            $fileContents = str_replace("\n", "", $fileContents);
+                            $fileContents = str_replace("\r", "", $fileContents);
+
+                            $output[] = array('module'   => $module['name'],
+                                              'name'     => $item,
+                                              'contents' => $fileContents);
+
+                        } else {
+                            //The item is a subdirectory
+                            if ($item != '.svn' && $item != '.' && $item != '..') {
+
+                                $subItemPath = $templatesPath . $item . DIRECTORY_SEPARATOR;
+                                foreach (scandir($templatesPath . $item) as $subItem) {
+
+                                    if (!is_dir($subItemPath . $subItem) && substr($subItem, -5) == '.html') {
+                                        //The subitem is a valid file
+
+                                        $fileContents = file_get_contents($subItemPath . $subItem);
+                                        $fileContents = str_replace("\n", "", $fileContents);
+                                        $fileContents = str_replace("\r", "", $fileContents);
+
+                                        $output[] = array('module'   => $module['name'],
+                                                          'name'     => $item . "." . $subItem,
+                                                          'contents' => $fileContents);
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $output2 = array();
+        $output2['files'] = $output;
+        $json = Zend_Json::encode($output2);
+        echo $json;
+    }
+
+    /**
      * Get all the Core scripts
      *
      * @return string
