@@ -18,6 +18,21 @@
  */
 
 dojo.provide("phpr.Default.Main");
+function stripslashes( str ) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Ates Goral (http://magnetiq.com)
+    // +      fixed by: Mick@el
+    // +   improved by: marrtins
+    // +   bugfixed by: Onno Marsman
+    // +   improved by: rezna
+    // *     example 1: stripslashes('Kevin\'s code');
+    // *     returns 1: "Kevin's code"
+    // *     example 2: stripslashes('Kevin\\\'s code');
+    // *     returns 2: "Kevin\'s code"
+ 
+    return (str+'').replace(/\0/g, '0').replace(/\\([\\'"])/g, '$1');
+}
 
 dojo.declare("phpr.Default.Main", phpr.Component, {
     // summary: class for initialilzing a default module
@@ -139,7 +154,24 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-
+        
+        //Preload all the templates and save them into __phpr_templateCache
+        var params = {
+            url:phpr.webpath + 'index.php/Default/Js/jsonGetDefaultTemplates',
+            sync:      true,
+            onSuccess:function(data) {
+                    for (i=0; i < data.files.length; i++) {
+                        //For every template received
+                        tplModule  = data.files[i].module;
+                        tplName    = data.files[i].name;
+                        tplContent = data.files[i].contents;
+                        __phpr_templateCache["phpr." + tplModule + ".template." + tplName] = tplContent;
+                    }
+                }
+        }
+        
+        phpr.send(params);
+        
         this.render(["phpr.Default.template", "main.html"], dojo.body(),{
             webpath:phpr.webpath,
             currentModule:phpr.module
