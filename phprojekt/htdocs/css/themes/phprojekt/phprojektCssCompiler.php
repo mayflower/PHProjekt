@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
- * @version    $Id$
+ * @version    $Id
  * @license    LGPL 2.1 (See LICENSE file)
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @since      File available since Release 6.0
