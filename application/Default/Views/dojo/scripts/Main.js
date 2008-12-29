@@ -139,27 +139,27 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
-        
-        //Preload all the templates and save them into __phpr_templateCache
+
+        // Preload all the templates and save them into __phpr_templateCache
         var params = {
-            url:phpr.webpath + 'index.php/Default/Js/jsonGetAllTemplates',
-            sync:      true,
+            url:  phpr.webpath + 'index.php/Default/Js/jsonGetAllTemplates',
+            sync: true,
             onSuccess:function(data) {
-                    for (i=0; i < data.files.length; i++) {
-                        //For every template received
-                        tplModule  = data.files[i].module;
-                        tplName    = data.files[i].name;
-                        tplContent = data.files[i].contents;
-                        __phpr_templateCache["phpr." + tplModule + ".template." + tplName] = tplContent;
-                    }
+                for (i = 0; i < data.files.length; i++) {
+                    // For every template received
+                    tplModule  = data.files[i].module;
+                    tplName    = data.files[i].name;
+                    tplContent = data.files[i].contents;
+
+                    __phpr_templateCache["phpr." + tplModule + ".template." + tplName] = tplContent;
                 }
+            }
         }
-        
         phpr.send(params);
-        
-        this.render(["phpr.Default.template", "main.html"], dojo.body(),{
-            webpath:phpr.webpath,
-            currentModule:phpr.module
+
+        this.render(["phpr.Default.template", "main.html"], dojo.body(), {
+            webpath:       phpr.webpath,
+            currentModule: phpr.module
         });
 
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
