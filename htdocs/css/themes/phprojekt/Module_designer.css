@@ -1,27 +1,27 @@
 /* Module Designer */
 
 #moduleDesignerContent .container {
-    padding: 1em 3em; 
+    padding: 1em 3em;
     cursor: default;
     radius: 8pt;
     background: #fff;
 }
 
-#moduleDesignerContent .dojoDndContainerOver {   
+#moduleDesignerContent .dojoDndContainerOver {
 }
 
 #moduleDesignerContent .dojoDndTargetDisabled {
     background: #eee;
 }
 
-#moduleDesignerContent .dojoDndItem { 
+#moduleDesignerContent .dojoDndItem {
     padding: 3px;
 }
 
 .dj_ff2 #moduleDesignerContent .dojoDndItem {
-    -moz-user-select: none; 
+    -moz-user-select: none;
 }
- 
+
 #moduleDesignerContent .dojoDndItemOver {
     background: #ededed;
     cursor: pointer;
@@ -53,7 +53,7 @@
     font-size: 75%;
     radius: 8pt;
 }
-    
+
 #moduleDesignerContent .dojoDndAvatarHeader {
     background: #aaa;
 }

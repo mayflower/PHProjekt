@@ -1,61 +1,68 @@
-
 .dijitToasterContent {
- background: #E6EFC2;
- color: #529214;
- border-color: #C6D880;
- width: 500px;
+    background: #E6EFC2;
+    color: #529214;
+    border-color: #C6D880;
+    width: 500px;
 }
-.dijitToasterMessage, 
+
+.dijitToasterMessage,
 .dijitToasterWarning,
 .dijitToasterError,
-.dijitToasterFatal{
+.dijitToasterFatal {
     padding: .1em;
-    margin-top: 0em; 
-    margin-bottom: 1em; 
+    margin-top: 0em;
+    margin-bottom: 1em;
 }
-.dijitToasterMessage hr{
+
+.dijitToasterMessage hr {
      background: #529214;
 }
-.dijitToasterMessage{
+
+.dijitToasterMessage {
      border-color: #C6D880;
 }
-.dijitToasterMessage .dijitToasterContent{
+
+.dijitToasterMessage .dijitToasterContent {
     background: #E6EFC2;
     color: #529214;
 }
-.dijitToasterWarning .hr{
+
+.dijitToasterWarning .hr {
     background: #817134;
 }
-.dijitToasterWarning{
+
+.dijitToasterWarning {
     border-color: #FFD324;
 }
-.dijitToasterWarning .dijitToasterContent{
+
+.dijitToasterWarning .dijitToasterContent {
     background: #FFF6BF;
     color: #817134;
 }
+
 .dijitToasterError,
-.dijitToasterFatal{
+.dijitToasterFatal {
     border-color: #FBC2C4;
 }
 
 .dijitToasterFatal hr,
-.dijitToasterError hr{
-    background: #D12F19; 
+.dijitToasterError hr {
+    background: #D12F19;
 }
 
 .dijitToasterFatal .dijitToasterContent,
-.dijitToasterError .dijitToasterContent{
+.dijitToasterError .dijitToasterContent {
     background: #FBE3E4;
-    color: #D12F19; 
+    color: #D12F19;
 }
- 
+
 .dijitToasterClip {
     position: absolute;
     z-index: 5000;
     overflow: hidden;
 }
+
 .dijitToasterContainer {
     display: block;
     position: absolute;
 }
- 

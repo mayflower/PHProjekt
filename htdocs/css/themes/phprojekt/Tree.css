@@ -1,13 +1,12 @@
-
 /* Tree */
 
 .phprojekt .dijitTreeNode {
     background-color: #F8F8F8;
 }
 
-
 /* left vertical line (grid) for all nodes */
-.phprojekt .dijitTreeIsLast {}
+.phprojekt .dijitTreeIsLast {
+}
 
 .phprojekt .dijitTreeLabel {
     margin-left: 0px;
@@ -35,7 +34,7 @@
 }
 
 /**** Level 1 ****/
-.phprojekt .dijitTreeNode .dijitTreeExpando  {
+.phprojekt .dijitTreeNode .dijitTreeExpando {
     margin-left: 0px;
     background-color: #F1CE47;
 }
@@ -90,7 +89,7 @@
 }
 
 /**** Level 3 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
     margin-left: 12px;
     background-color: #F8F8F8;
 }
@@ -115,9 +114,8 @@
     margin-left: 0px;
 }
 
-
 /**** Level 4 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
     margin-left: 24px;
     background-color: #F8F8F8;
 }
@@ -143,7 +141,7 @@
 }
 
 /**** Level 5 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
     margin-left: 36px;
     background-color: #F8F8F8;
 }
@@ -177,14 +175,14 @@
 /* don't use :focus due to opera and IE's lack of support on div's */
 .phprojekt .dijitTreeNode .dijitTreeLabelFocused {
     outline: 1px invert dotted;
-    background:#dde7f2;
+    background: #dde7f2;
     color: #fff;
 }
 
 /* don't use :focus due to opera and IE's lack of support on div's */
 .phprojekt .dijitTreeNode .dijitTreeContentFocused {
     outline: 1px dotted;
-    background-color:#8392AB;
+    background-color: #8392AB;
     color: #fff;
 }
 
@@ -213,11 +211,11 @@
 .phprojekt .dijitTreeExpand {
     width: 18px;
     height: 18px;
-    background-repeat : no-repeat;
+    background-repeat: no-repeat;
 }
 
 .phprojekt .dijitTreeExpandoOpened {
-    background:url('images/group-list.png') no-repeat center;
+    background: url('images/group-list.png') no-repeat center;
     background-position: 7px center;
 }
 
@@ -226,4 +224,5 @@
     background-position: 7px center;
 }
 
-.phprojekt .dijitLeaf {}
+.phprojekt .dijitLeaf {
+}

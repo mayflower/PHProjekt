@@ -1,9 +1,9 @@
-/**
- * dijit.layout.TabContainer
- *
- * To style TabContainer with rounded corners
- * you can use these classes: .dijitTab (left), .dijitTabContent (center), dijitTabInnerDiv (right)
- * For tabs aligned to top you can style a stripe div right underneath the tabs using .dijitTabStripe
+/*
+ dijit.layout.TabContainer
+
+ To style TabContainer with rounded corners
+ you can use these classes: .dijitTab (left), .dijitTabContent (center), dijitTabInnerDiv (right)
+ For tabs aligned to top you can style a stripe div right underneath the tabs using .dijitTabStripe
  */
 
 /* Classes for all types of tabs (top/bottom/left/right) */
@@ -11,8 +11,8 @@
 /* Tabs, shared classes */
 .phprojekt .dijitTabPaneWrapper {
     overflow: auto;
-    background:#fff;
-    border:1px solid #B1BADF;
+    background: #fff;
+    border: 1px solid #B1BADF;
     margin: 0;
     padding-left: 0px;
 }
@@ -27,18 +27,15 @@
 }
 
 .phprojekt .dijitTab {
-    line-height:normal;
-    margin:0 2px 0 0;    /* space between one tab and the next in top/bottom mode */
+    line-height: normal;
+    margin:0 2px 0 0; /* space between one tab and the next in top/bottom mode */
     padding-left: 0px;
-    /* background: url("../images/tabContainerSprite.gif") no-repeat 0 -300px; */
     color: #243C5F;
-    /* border-bottom: 1px #B1BADF solid;*/
 }
 
 .phprojekt .dijitTabInnerDiv .dijitTabContent {
     color: #CBCBCB;
-    padding:5px 3px 4px 4px;
-    /* background: url("../images/tabContainerSprite.gif") repeat-x 0 -350px; */
+    padding: 5px 3px 4px 4px;
     position: relative;
     padding-right: 7px;
 }
@@ -49,7 +46,7 @@
 
 /* hovered tab */
 .phprojekt .dijitTabHover,
-.phprojekt .dijitTabCloseButtonHover {    
+.phprojekt .dijitTabCloseButtonHover {
     color: white;
     text-decoration: none;
 }
@@ -92,7 +89,6 @@
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
-    /* background: url("../images/tabContainerSprite.gif") repeat-x 0 -50px; */
     color: white;
     background: url("../images/nav_main/tab-right-hover.gif") right bottom no-repeat;
     padding-right: 7px;
@@ -100,11 +96,11 @@
 
 .phprojekt .dijitTab .dijitClosable .closeImage {
     /* Inline-block */
-    display:-moz-inline-box;        /* FF2 */
-    display:inline-block;            /* webkit and FF3 */
+    display: -moz-inline-box; /* FF2 */
+    display: inline-block; /* webkit and FF3 */
     #zoom: 1; /* set hasLayout:true to mimic inline-block */
-    #display:inline; /* don't use .dj_ie since that increases the priority */
-    vertical-align:top;
+    #display: inline; /* don't use .dj_ie since that increases the priority */
+    vertical-align: top;
     width: 15px;
     height: 15px;
     padding: 0;
@@ -119,6 +115,7 @@
 .phprojekt .dijitTabCloseButton .dijitClosable .closeImage {
     background: url("../images/spriteRoundedIconsSmall.png") no-repeat -60px top;
 }
+
 .dj_ie6 .phprojekt .dijitTabCloseButton .dijitClosable .closeImage {
     background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px top;
 }
@@ -126,6 +123,7 @@
 .phprojekt .dijitTabCloseButtonHover .dijitClosable .closeImage {
     background: url("../images/spriteRoundedIconsSmall.png") no-repeat -60px top;
 }
+
 .dj_ie6 .phprojekt .dijitTabCloseButtonHover .dijitClosable .closeImage {
     background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px top;
 }
@@ -135,7 +133,6 @@
     width: 1px;
 }
 
-/* ================================ */
 /* top tabs */
 .phprojekt .dijitTabContainerTop-tabs {
     margin-bottom: -1px;
@@ -165,7 +162,6 @@
     background: #F0F4FC;
 }
 
-/* ================================ */
 /* bottom tabs */
 .phprojekt .dijitTabContainerBottom-tabs {
     margin-top: -1px;
@@ -186,9 +182,8 @@
 
 /* checked tabs */
 .phprojekt .dijitTabContainerBottom-tabs .dijitTabChecked {
-    border-top-color:#ffffff;
+    border-top-color: #ffffff;
 }
-
 
 .phprojekt .dijitTabContainerBottom-tabs .dijitTabInnerDiv .dijitTabContent {
     padding-top: 4px;
@@ -217,8 +212,7 @@
 }
 
 .phprojekt .dijitTabContainerBottom-tabs .dijitTabChecked,
-.phprojekt .dijitTabContainerBottom-tabs .dijitTabCloseButtonChecked
-{
+.phprojekt .dijitTabContainerBottom-tabs .dijitTabCloseButtonChecked {
     /* the selected tab (with or without hover) */
     background: url("../images/tabBottomActiveSpriteLR.gif") no-repeat bottom left;
 }
@@ -250,8 +244,6 @@
     background: #ffffff;
 }
 
-
-/* ================================ */
 /* right tabs */
 .phprojekt .dijitTabContainerRight-tabs {
     margin-left: -1px;
@@ -269,7 +261,6 @@
     border-left: 1px solid #B1BADF;
     border-bottom: 1px solid #B1BADF !important;
 }
-
 
 /* some odd ie bug when borders dissapear when setting a bottom margin, this sortof helps */
 .dj_ie .phprojekt .dijitTabContainerRight-tabs .dijitTabInnerDiv {
@@ -309,7 +300,6 @@
     background: #F0F4FC;
 }
 
-/* ================================ */
 /* left tabs */
 .phprojekt .dijitTabContainerLeft-tabs {
     margin-right: -1px;
@@ -335,9 +325,11 @@
 .phprojekt .dijitTabContainerLeft-tabs .dijitTabInnerDiv {
     background: url("../images/tabContainerSprite.gif") no-repeat right -350px;
 }
+
 .phprojekt .dijitTabContainerLeft-tabs .dijitTabHover .dijitTabInnerDiv {
     background: url("../images/tabContainerSprite.gif") no-repeat right -200px;
 }
+
 .phprojekt .dijitTabContainerLeft-tabs .dijitTabChecked .dijitTabInnerDiv,
 .phprojekt .dijitTabContainerLeft-tabs .dijitTabCheckedHover .dijitTabInnerDiv {
     background: url("../images/tabLeftChecked.gif") no-repeat right top;
@@ -363,12 +355,11 @@
     background: #F0F4FC;
 }
 
-/* ================================ */
 /* left/right tabs */
 .phprojekt .dijitTabContainerLeft-tabs .dijitTab,
 .phprojekt .dijitTabContainerRight-tabs .dijitTab {
-    margin-right:auto;
-    margin-bottom:2px;    /* space between one tab and the next in left/right mode */
+    margin-right: auto;
+    margin-bottom: 2px; /* space between one tab and the next in left/right mode */
 }
 
 /* left/right tabstrip */
@@ -378,9 +369,6 @@
     border: 1px solid #8ba0bd;
     background: #94b4e6;
 }
-
-
-/* ================================ */
 
 /* this resets the tabcontainer stripe when within a contentpane */
 .phprojekt .dijitTabContainerTop-dijitContentPane .dijitTabContainerTop-tabs {
@@ -393,6 +381,6 @@
 
 /* add padding to each contentpane inside the tab container, and scrollbar if necessary */
 .phprojekt .dojoTabPane {
-    padding : 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
     overflow: auto;
 }

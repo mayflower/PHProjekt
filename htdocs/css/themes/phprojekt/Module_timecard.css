@@ -5,21 +5,20 @@
     -moz-border-radius: 8pt 8pt;
     radius: 8pt;
     color: #292929;
-    display: inline;    
+    display: inline;
     position: absolute;
     left: 0px;
     width: 195px;
     float: left;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .phprojekt .dndSource {
     border: 1px dotted skyblue;
     -moz-border-radius: 8pt 8pt;
-    radius:8pt;
+    radius: 8pt;
     cursor: move;
     padding-left: 10px;
     background-color: #afb8c5;
     color: #213f64;
 }
-

@@ -1,0 +1,9 @@
+/* Calendar */
+
+.dijitRtl .phprojekt .dijitCalendarDecrease {
+    background-position: -30px top;
+}
+
+.dijitRtl .phprojekt .dijitCalendarIncrease {
+    background-position: 0px top;
+}

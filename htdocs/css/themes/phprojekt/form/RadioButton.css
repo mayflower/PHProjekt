@@ -1,22 +1,21 @@
 /*
- *  CheckBox and Radio Widgets,
- *    and the CSS to embed a checkbox or radio icon inside a ToggleButton.
- *
- *    Order of images in the default sprite (from L to R, checkbox and radio in same image):
- *        checkbox    normal      - checked
- *                             - unchecked
- *                    disabled - checked
- *                             - unchecked
- *                    hover      - checked
- *                             - unchecked
- *
- *        radio        normal      - checked
- *                             - unchecked
- *                    disabled - checked
- *                             - unchecked
- *                    hover      - checked
- *                             - unchecked
-*/
+ CheckBox and Radio Widgets,
+ and the CSS to embed a checkbox or radio icon inside a ToggleButton.
+
+ Order of images in the default sprite (from L to R, checkbox and radio in same image):
+         checkbox    normal   - checked
+                              - unchecked
+                     disabled - checked
+                              - unchecked
+                     hover    - checked
+                              - unchecked
+         radio       normal   - checked
+                              - unchecked
+                     disabled - checked
+                              - unchecked
+                     hover    - checked
+                              - unchecked
+ */
 
 .phprojekt .dijitToggleButton .dijitRadio,
 .phprojekt .dijitToggleButton .dijitRadioIcon {
@@ -24,7 +23,8 @@
 }
 
 .phprojekt .dijitRadio,
-.phprojekt .dijitRadioIcon    {        /* inside a toggle button */
+.phprojekt .dijitRadioIcon {
+    /* inside a toggle button */
     background-image: url('../images/spriteRadio.gif'); /* checkbox sprite image */
     background-repeat: no-repeat;
     width: 16px;

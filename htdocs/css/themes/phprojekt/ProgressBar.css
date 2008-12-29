@@ -1,33 +1,30 @@
-
-/****
-        dijit.ProgressBar
- ****/
+/* dijit.ProgressBar */
 
 .phprojekt .dijitProgressBar {
-    margin:2px 0px 2px 0px;
+    margin: 2px 0px 2px 0px;
 }
 
 .phprojekt .dijitProgressBarEmpty{
     /* outer container and background of the bar that's not finished yet*/
-    background:#fff url("images/progressBarEmpty.png") repeat-x center center;
+    background: #fff url("images/progressBarEmpty.png") repeat-x center center;
     border-color: #8ba0bd;
 }
 
 .phprojekt .dijitProgressBarTile{
     /* inner container for finished portion when in 'tile' (image) mode */
-    background:#f0f0f0 url("images/progressBarFull.png") repeat-x center center;
+    background: #f0f0f0 url("images/progressBarFull.png") repeat-x center center;
 }
 
 .phprojekt .dijitProgressBarFull {
-    border-right:1px solid #8ba0bd;
+    border-right: 1px solid #8ba0bd;
 }
 
 .phprojekt .dijitProgressBarLabel {
     /* Set to a color that contrasts with both the "Empty" and "Full" parts. */
-    color:#293a4b;
+    color: #293a4b;
 }
 
 .phprojekt .dijitProgressBarIndeterminate .dijitProgressBarTile {
     /* use an animated gif for the progress bar in 'indeterminate' mode */
-    background:#cad2de url("images/progressBarAnim.gif") repeat-x center center;
+    background: #cad2de url("images/progressBarAnim.gif") repeat-x center center;
 }

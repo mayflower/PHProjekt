@@ -1,0 +1,10 @@
+/* Menu */
+
+.dijitRtl .phprojekt .dijitMenuItem .dijitMenuItemIcon {
+    padding-left: 3px;
+    padding-right: 0px;
+}
+
+.dijitRtl .phprojekt .dijitMenuItem .dijitMenuExpand {
+    background-position: left top;
+}

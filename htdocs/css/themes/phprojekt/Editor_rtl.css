@@ -1,0 +1,9 @@
+/* Editor */
+.dijitRtl .phprojekt .dijitEditorIcon {
+    background-image: url('images/editor_rtl.gif'); /* editor icons sprite image */
+}
+
+/* Toolbar */
+.dijitRtl .phprojekt .dijitToolbar .dijitToolbarSeparator {
+    background-image: url('images/editor_rtl.gif');
+}

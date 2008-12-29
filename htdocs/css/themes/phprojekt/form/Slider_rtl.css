@@ -1,0 +1,31 @@
+.dijitRtl .phprojekt .dijitSliderProgressBarH,
+.dijitRtl .phprojekt .dijitSliderRemainingBarH,
+.dijitRtl .phprojekt .dijitSliderLeftBumper,
+.dijitRtl .phprojekt .dijitSliderRightBumper,
+.dijitRtl .phprojekt .dijitSliderTopBumper {
+    background-position: top right;
+}
+
+.dijitRtl .phprojekt .dijitSliderProgressBarV,
+.dijitRtl .phprojekt .dijitSliderRemainingBarV,
+.dijitRtl .phprojekt .dijitSliderBottomBumper {
+    background-position: bottom right;
+}
+
+.dijitRtl .phprojekt .dijitSliderLeftBumper {
+    border-left-width: 0px;
+    border-right-width: 1px;
+}
+
+.dijitRtl .phprojekt .dijitSliderRightBumper {
+    border-left-width: 1px;
+    border-right-width: 0px;
+}
+
+.dijitRtl .phprojekt .dijitSliderIncrementIconH {
+    background-position: -7px 0px;
+}
+
+.dijitRtl .phprojekt .dijitSliderDecrementIconH {
+    background-position: -14px 0px;
+}

@@ -1,14 +1,13 @@
-
-/****
-        dijit.form.TextBox
-        dijit.form.ValidationTextBox
-        dijit.form.SerializableTextBox
-        dijit.form.RangeBoundTextBox
-        dijit.form.NumberTextBox
-        dijit.form.CurrencyTextBox
-        dijit.form.NumberSpinner
-        dijit.form.ComboBox (partial)
- ****/
+/*
+ dijit.form.TextBox
+ dijit.form.ValidationTextBox
+ dijit.form.SerializableTextBox
+ dijit.form.RangeBoundTextBox
+ dijit.form.NumberTextBox
+ dijit.form.CurrencyTextBox
+ dijit.form.NumberSpinner
+ dijit.form.ComboBox (partial)
+ */
 
 .phprojekt .dijitInputField INPUT,
 .phprojekt .dijitTextBox {
@@ -32,12 +31,13 @@
 .phprojekt .dijitSpinner,
 .phprojekt .dijitInlineEditor input,
 .phprojekt .dijitTextArea {
-    /*     For all except dijit.form.NumberSpinner:  the actual input element.
-        For TextBox, ComboBox, Spinner: the table that contains the input.
-        Otherwise the actual input element.
-    */
-    background:#fff url("../images/validationInputBg.png") repeat-x top left;
-    border:1px solid #8ba0bd;
+    /*
+     For all except dijit.form.NumberSpinner:  the actual input element.
+     For TextBox, ComboBox, Spinner: the table that contains the input.
+     Otherwise the actual input element.
+     */
+    background: #fff url("../images/validationInputBg.png") repeat-x top left;
+    border: 1px solid #8ba0bd;
     line-height: normal;
 }
 
@@ -74,32 +74,36 @@
 .phprojekt .dijitSpinnerFocused,
 .phprojekt .dijitTextAreaFocused {
     /* input field when focused (ie: typing affects it) */
-    border-color:#406b9b;
+    border-color: #406b9b;
 }
+
 .phprojekt .dijitComboBoxFocused .dijitButtonNode, .phprojekt .dijitSpinnerFocused .dijitButtonNode {
-    border-left-color:#8ba0bd;
+    border-left-color: #8ba0bd;
 }
+
 .phprojekt .dijitSpinnerFocused .dijitDownArrowButton {
-    border-top-color:#8ba0bd;
+    border-top-color: #8ba0bd;
 }
 
 .phprojekt .dijitError {
-    border-color:#f3d118;
-    background-color:#f9f7ba;
-    background-image:none;
+    border-color: #f3d118;
+    background-color: #f9f7ba;
+    background-image: none;
 }
+
 .dj_ie6 .phprojekt .dijitError INPUT {
     /* background-color: transparent on an <input> doesn't work on IE6 */
-    background-color:#f9f7ba !important;
+    background-color: #f9f7ba !important;
 }
 
 .phprojekt .dijitErrorFocused {
-    background-color:#ff6;
-    background-image:none;
+    background-color: #ff6;
+    background-image: none;
 }
+
 .dj_ie6 .phprojekt .dijitErrorFocused INPUT {
     /* background-color: transparent on an <input> doesn't work on IE6 */
-    background-color:#ff6 !important;
+    background-color: #ff6 !important;
 }
 
 /* Validation errors  */
@@ -111,5 +115,5 @@
 
 /* The highlight is shown in the ComboBox menu. */
 .phprojekt .dijitComboBoxHighlightMatch {
-    background-color:#f9f7ba;
+    background-color: #f9f7ba;
 }
