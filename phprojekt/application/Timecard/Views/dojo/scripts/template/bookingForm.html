@@ -1,9 +1,16 @@
 <div>
-    <h4 style="color:#294064; font-weight:bold;">{{timecardProjectTimesText}}</h4>
+    <h4 style="color: #294064; font-weight: bold; float: left;">{{timecardProjectTimesText}}</h4>
+    <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+        <div dojoType="dijit.TooltipDialog">
+            <div style="white-space:nowrap;">
+                {{projectTimesHelpText}}
+            </div>
+        </div>
+    </button>
 </div>
-<div style="position:absolute; top:10%; width:50%; left:0%; float:left;">
+<div style="position: absolute; top: 10%; width: 50%; left: 0%; float: left;">
     <div dojoType="dojo.dnd.Source" id="projectBookingSource" jsId="projectBookingSource" copyOnly="true" selfAccept="false"
-    style="margin:4px; padding:4px;">
+    style="margin: 4px; padding: 4px;">
     {% for item in values %}
         <div class="dojoDndItem dndSource" id="{{item.id}}">
             {{item.name}}
@@ -12,51 +19,51 @@
     {% endfor %}
     </div>
     <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').show()"
-    style="margin:6px;">{{manageFavoritesText}}</button>
+    style="margin: 6px;">{{manageFavoritesText}}</button>
     <div dojoType="dijit.Dialog" id="manageFavorites" title="{{manageFavoritesText}}" draggable="false"
-        style="background-color:white; width:500px; height:auto;">
+        style="background-color: white; width: 500px; height: auto;">
         <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesSource" selfAccept="false"
-            style="background-color:white; border:2px solid black; width:200px; margin:4px; padding-top:4px; float:left;">
+            style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: left;">
             {% for item in allProjects %}
             <div class="dojoDndItem" id="favoritesTarget-{{item.id}}"
-            style="cursor:move;">
+            style="cursor: move;">
                 {{item.name}}
             </div>
             {% endfor %}
         </div>
         <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesTarget" jsId="projectFavoritesTarget" selfAccept="false"
-            style="background-color:white; border:2px solid black; width:200px; margin:4px; padding-top:4px; float:right;">
+            style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: right;">
             {% for item in values %}
             <div class="dojoDndItem" id="favoritesSoruce-{{item.id}}"
-            style="cursor:move;">
+            style="cursor: move;">
                 {{item.name}}
             </div>
             {% endfor %}
         </div>
         <input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden" value="{% for item in values %}{{item.id}},{% endfor %}" />
         <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').hide();" baseClass="positive" iconClass="tick"
-        style="float:right; padding-right:10px; padding-left:10px;"></button>
+        style="float: right; padding-right: 10px; padding-left: 10px;"></button>
     </div>
     <br />
     {{bookingdata|safe}}
 </div>
 
 <div id="rightTimecardPanel"
-style="position:absolute; top:10%; left:55%; width:40%; height:260px; float:right; overflow:hidden;">
+style="position: absolute; top: 10%; left: 55%; width: 40%; height: 260px; float: right; overflow: hidden;">
     {% for hour in hours %}
         {% ifequal hour.pair 0 %}
     <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane"
-        style="background-color:white; float:left; width:100%; margin-left:0px; z-index:-10; height:20px;">
+        style="background-color: white; float: left; width: 100%; margin-left: 0px; z-index: -10; height: 20px;">
         {% else %}
     <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane"
-        style="background-color:#e9f3ff; float:left; width:100%; margin-left:0px; z-index:-10; height:20px;">
+        style="background-color: #e9f3ff; float: left; width: 100%; margin-left: 0px; z-index: -10; height: 20px;">
         {% endifequal %}
         {{hour.hour}}
     </div>
     {% endfor %}
 
     <div id="projectBookingContainer" dojoType="dijit.layout.ContentPane"
-    style="position:absolute; top:0%; left:15%; margin:0px; height:260px; padding-top:0px; overflow:hidden;
-    float:right; filter:alpha(opacity=50); opacity:.5">
+    style="position: absolute; top: 0%; left: 15%; margin: 0px; height: 260px; padding-top: 0px; overflow: hidden;
+    float: right; filter: alpha(opacity=50); opacity: .5">
     </div>
 </div>

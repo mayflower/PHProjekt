@@ -193,10 +193,11 @@ tt {
 .phprojekt .form td.label {
     border: none;
     text-align: right;
+    vertical-align: middle;
 }
 
 .phprojekt .form th,td {
-    padding: 4px 10px 4px 0;
+    padding: 4px 0px 4px 5px;
 }
 
 .phprojekt .form tfoot {

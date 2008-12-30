@@ -255,7 +255,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['key']      = $field->tableField;
         $converted['label']    = $translate->translate($field->formLabel);
         $converted['type']     = $field->formType;
-        $converted['hint']     = $field->formTooltip;
+        $converted['hint']     = $translate->translate($field->formTooltip);
         $converted['order']    = 0;
         $converted['position'] = (int) $field->formPosition;
         $converted['fieldset'] = '';

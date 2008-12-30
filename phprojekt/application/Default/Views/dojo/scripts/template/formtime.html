@@ -10,6 +10,16 @@
         dojoType="dijit.form.TimeTextBox"
         required="{{required}}"
         {{disabled}}
-        constraints="{formatLength:'short', timePattern:'HH:mm'}" />
+        constraints="{formatLength:'short', timePattern:'HH:mm'}"
+        style="float: left;" />
+        {% if hint notequal '' %}
+	    <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+        	<div dojoType="dijit.TooltipDialog">
+                <div style="white-space:nowrap;">
+                {{hint}}
+                </div>
+            </div>
+        </button>
+        {% endif %}
     </td>
 </tr>
