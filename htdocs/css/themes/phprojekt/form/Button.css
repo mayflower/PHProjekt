@@ -63,6 +63,13 @@
     height: 16px;
 }
 
+.phprojekt .help {
+    background-image: url("../images/help.png");
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
 .phprojekt .dijitButtonNode {
     /* enabled state - inner */
     border: 1px solid #8ba0bd;
@@ -166,4 +173,18 @@
     color: #ffffff;
     font-size: 12px;
     font-weight: bold;
+}
+
+.phprojekt #detailsBox .tooltip .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: middle;
+}
+
+.phprojekt .tooltip {
+    float: left;
+    margin: 0px 0px 0px 5px;
 }

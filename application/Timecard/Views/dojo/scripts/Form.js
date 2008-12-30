@@ -276,6 +276,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             hourHeight:               hourHeight,
             date:                     this._date,
             timecardProjectTimesText: phpr.nls.get("Project bookings"),
+            projectTimesHelpText:     phpr.nls.get("Project Times Help"),
             values:                   favoritesList,
             allProjects:              allProjects,
             manageFavoritesText:      phpr.nls.get('Manage project list'),

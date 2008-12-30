@@ -3,7 +3,17 @@
         <label for="{{labelfor}}">{{label}}</label>
     </td>
     <td>
-      <input type="hidden" dojoType="dijit.form.TextBox" name="{{id}}" id="{{id}}" value="{{value}}" />
-      <iframe src="{{iFramePath}}" height="25px" width="100%" frameborder="0" style="overflow:hidden; border:0px;"></iframe>
+        <input type="hidden" dojoType="dijit.form.TextBox" name="{{id}}" id="{{id}}" value="{{value}}" />
+        <iframe src="{{iFramePath}}" height="25px" width="311px" frameborder="0"
+        style="overflow:hidden; border:0px; float: left;"></iframe>
+        {% if hint notequal '' %}
+	    <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+        	<div dojoType="dijit.TooltipDialog">
+                <div style="white-space:nowrap;">
+                {{hint}}
+                </div>
+            </div>
+        </button>
+        {% endif %}
     </td>
 </tr>

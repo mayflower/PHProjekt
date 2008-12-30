@@ -265,6 +265,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             itemvalue    = data[0][itemid];
             itemrange    = meta[i]["range"];
             itemtab      = meta[i]["tab"] || 1;
+            itemhint     = meta[i]["hint"];
 
             // Special workaround for new projects - set parent to current ProjectId
             if(itemid == 'projectId' && !itemvalue){
@@ -279,49 +280,49 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // Render the fields according to their type
             switch (itemtype) {
                 case 'checkbox':
-                    this.formdata[itemtab] += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue);
+                    this.formdata[itemtab] += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue, itemhint);
                     break;
 
                 case'selectbox':
-                    this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled);
+                    this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue,
+                                                itemrequired, itemdisabled, itemhint);
                     break;
                 case'multipleselectbox':
-                    this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled, 5, "multiple");
+                    this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid,
+                                                itemvalue, itemrequired, itemdisabled, 5, "multiple", itemhint);
                     break;
                 case'date':
                     this.formdata[itemtab] += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                   itemdisabled);
+                                                itemdisabled, itemhint);
                     break;
                 case 'time':
                     this.formdata[itemtab] += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                   itemdisabled);
+                                                itemdisabled, itemhint);
                     break;
                 case 'textarea':
-                    this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                       itemdisabled);
+                    this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue,
+                                                itemrequired, itemdisabled, itemhint);
                     break;
                 case 'password':
-                    this.formdata[itemtab] += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                        itemdisabled);
+                    this.formdata[itemtab] += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue,
+                                                itemrequired, itemdisabled, itemhint);
                     break;
                 case 'percentage':
-                    this.formdata[itemtab] += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                        itemdisabled);
+                    this.formdata[itemtab] += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue,
+                                                itemrequired, itemdisabled, itemhint);
                     break;
                 case 'upload':
                     iFramePath   = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
-                    this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                        itemdisabled, iFramePath);
+                    this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue,
+                                                itemrequired, itemdisabled, iFramePath, itemhint);
                     break;
                 case 'hidden':
                     this.formdata[itemtab] += this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue, itemrequired,
-                                                                        itemdisabled);
+                                                itemdisabled, itemhint);
                     break;
                 default:
-                    this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue, itemrequired,
-                                                                        itemdisabled);
+                    this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,
+                                                itemrequired, itemdisabled, itemhint);
                     break;
             }
         }
