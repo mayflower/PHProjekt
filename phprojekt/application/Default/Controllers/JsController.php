@@ -187,15 +187,17 @@ class JsController extends IndexController
             foreach ($templatesPaths as $templatesPath) {
                 if (is_dir($templatesPath)) {
                     foreach (scandir($templatesPath) as $item) {
-                        if (!is_dir($templatesPath . $item) && (substr($item, -5) == '.html')) {
-                            // The item is a valid file
-                            $fileContents = file_get_contents($templatesPath . $item);
-                            $fileContents = str_replace("\n", "", $fileContents);
-                            $fileContents = str_replace("\r", "", $fileContents);
-
-                            $output[] = array('module'   => $module['name'],
-                                              'name'     => $item,
-                                              'contents' => $fileContents);
+                        if (!is_dir($templatesPath . $item)) {
+                            if (substr($item, -5) == '.html') {
+                                // The item is a valid file
+                                $fileContents = file_get_contents($templatesPath . $item);
+                                $fileContents = str_replace("\n", "", $fileContents);
+                                $fileContents = str_replace("\r", "", $fileContents);
+    
+                                $output[] = array('module'   => $module['name'],
+                                                  'name'     => $item,
+                                                  'contents' => $fileContents);
+                            }
                         } else {
                             // The item is a subdirectory
                             if ($item != '.svn' && $item != '.' && $item != '..') {
