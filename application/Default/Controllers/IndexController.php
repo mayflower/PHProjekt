@@ -403,10 +403,12 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $value  = (string) $this->getRequest()->getParam('value', null);
-        $itemId = (int) $this->getRequest()->getParam('id', null);
-        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $link       = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $value      = (string) $this->getRequest()->getParam('value', null);
+        $itemId     = (int) $this->getRequest()->getParam('id', null);
+        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $closeImg   = Zend_Registry::get('config')->webpath.'img/close.png';
+        $closeImgOn = Zend_Registry::get('config')->webpath.'img/close_on.png';
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
@@ -416,13 +418,31 @@ class IndexController extends Zend_Controller_Action
         $this->view->itemId         = $itemId;
         $this->view->field          = $field;
         $this->view->value          = $value;
-        $this->view->upload         = false;
+        $this->view->filesChanged   = false;
+        $this->view->closeImg       = $closeImg;
+        $this->view->closeImgOn     = $closeImgOn;
 
-        $fileName = strstr($value, '|');
-        if (!empty($fileName)) {
-            $this->view->downloadLink = $link . '/index/downloadFile/file/' . $value;
-            $this->view->fileName     = substr($fileName, 1);
+        //Is there any file?
+        if (!empty($value)) {
+            $files = split('\|\|', $value);
+            $filesForView = array();
+            foreach ($files as $file) {
+                $fileName = strstr($file, '|');
+                $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
+                                        'fileName'     => substr($fileName, 1),
+                                        'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
+                                                          . $value . '/id/' . $itemId . '/field/' . $field);
+            }
+            $this->view->files = $filesForView;
         }
+
+        //Allow more uploads?
+        if (count($files) > 2) {
+            $this->view->allowMoreUploads = false;
+        } else {
+            $this->view->allowMoreUploads = true;
+        }
+
         $this->render('upload');
     }
 
@@ -439,9 +459,9 @@ class IndexController extends Zend_Controller_Action
 
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5mane  = md5(uniqid(rand(), 1));
-            $value    = $md5mane . '|' . $_FILES['uploadedFile']['name'];
-            $fileName = $_FILES['uploadedFile']['name'];
+            $md5mane     = md5(uniqid(rand(), 1));
+            $addedValue = $md5mane . '|' . $_FILES['uploadedFile']['name'];
+            $fileName    = $_FILES['uploadedFile']['name'];
             $_FILES['uploadedFile']['name'] = $md5mane;
         }
 
@@ -453,9 +473,16 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link   = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $itemId = (int) $this->getRequest()->getParam('itemId', null);
-        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $link       = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $value      = (string) $this->getRequest()->getParam('value', null);
+        if (!empty($value)) {
+            $value .= '||';
+        }
+        $value .= $addedValue;
+        $itemId     = (int) $this->getRequest()->getParam('itemId', null);
+        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $closeImg   = Zend_Registry::get('config')->webpath.'img/close.png';
+        $closeImgOn = Zend_Registry::get('config')->webpath.'img/close_on.png';
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
@@ -463,12 +490,32 @@ class IndexController extends Zend_Controller_Action
         $this->view->formPath       = $link . '/index/uploadFile/';
         $this->view->itemId         = $itemId;
         $this->view->field          = $field;
-        $this->view->upload         = true;
-        if (!empty($fileName)) {
-            $this->view->downloadLink = $link . '/index/downloadFile/file/' . $value;
-            $this->view->fileName     = $fileName;
-            $this->view->value        = $value;
+        $this->view->value          = $value;
+        $this->view->filesChanged   = true;
+        $this->view->closeImg       = $closeImg;
+        $this->view->closeImgOn     = $closeImgOn;
+
+        //Is there any file?
+        if (!empty($value)) {
+            $files = split('\|\|', $value);
+            $filesForView = array();
+            foreach ($files as $file) {
+                $fileName = strstr($file, '|');
+                $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
+                                        'fileName'     => substr($fileName, 1),
+                                        'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
+                                                          . $value . '/id/' . $itemId . '/field/' . $field);
+            }
+            $this->view->files = $filesForView;
         }
+
+        //Allow more uploads?
+        if (count($files) > 2) {
+            $this->view->allowMoreUploads = false;
+        } else {
+            $this->view->allowMoreUploads = true;
+        }
+
         $this->render('upload');
     }
 
@@ -497,5 +544,72 @@ class IndexController extends Zend_Controller_Action
                 fpassthru($fh);
             }
         }
+    }
+
+    /**
+     * Delete a file from the Upload field
+     *
+     * @return void
+     */
+    public function deleteFileAction()
+    {
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->clearBody();
+
+        $link        = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $value       = (string) $this->getRequest()->getParam('value', null);
+        $itemId      = (int) $this->getRequest()->getParam('id', null);
+        $field       = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $deleteFile  = (string) $this->getRequest()->getParam('file', null);
+        $closeImg    = Zend_Registry::get('config')->webpath.'img/close.png';
+        $closeImgOn  = Zend_Registry::get('config')->webpath.'img/close_on.png';
+
+        //Delete the file from the $value string
+        $filesIn = split('\|\|', $value);
+        $filesOut = '';
+        foreach ($filesIn as $file) {
+            if ($file != $deleteFile) {
+                if ($filesOut != '') {
+                    $filesOut .= '||';
+                    }
+                $filesOut .= $file;
+            }
+        }
+        $value = $filesOut;
+
+        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->formPath       = $link . '/index/uploadFile/';
+        $this->view->downloadLink   = '';
+        $this->view->fileName       = null;
+        $this->view->itemId         = $itemId;
+        $this->view->field          = $field;
+        $this->view->value          = $value;
+        $this->view->filesChanged   = true;
+        $this->view->closeImg       = $closeImg;
+        $this->view->closeImgOn     = $closeImgOn;
+
+        //Is there any file?
+        if (!empty($value)) {
+            $files = split('\|\|', $value);
+            $filesForView = array();
+            foreach ($files as $file) {
+                $fileName = strstr($file, '|');
+                $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
+                                        'fileName'     => substr($fileName, 1),
+                                        'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
+                                                          . $value . '/id/' . $itemId . '/field/' . $field);
+            }
+            $this->view->files = $filesForView;
+        }
+
+        //Allow more uploads?
+        if (count($files) > 9) {
+            $this->view->allowMoreUploads = false;
+        } else {
+            $this->view->allowMoreUploads = true;
+        }
+
+        $this->render('upload');
     }
 }

@@ -56,7 +56,14 @@ phpr.grid.formatText = function(value) {
 
 phpr.grid.formatUpload = function(value) {
     if (value.indexOf('|') > 0) {
-        value = value.substring(value.indexOf('|') + 1, value.length);
+        files = value.split('||');
+        value = '';
+        for (p in files) {
+            if (p > 0) {
+                value += ', ';
+            }
+            value += files[p].substring(files[p].indexOf('|') + 1, files[p].length);
+        }
     }
     return value;
 },
