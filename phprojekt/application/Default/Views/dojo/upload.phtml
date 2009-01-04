@@ -24,26 +24,70 @@
             var input   = par.getElementById("<?php echo $this->field; ?>");
             input.value = "<?php echo $this->value; ?>";
         }
+
+        function closeImgOver(field) {
+            dojo.byId(field).src = buttonCloseOn.src;
+        }
+
+        function closeImgOut(field) {
+            dojo.byId(field).src = buttonClose.src;
+        }
+
+        //Preload images
+        var buttonClose   = new Image();
+        var buttonCloseOn = new Image();
+        buttonClose.src   = "<?php echo $this->closeImg; ?>";
+        buttonCloseOn.src = "<?php echo $this->closeImgOn; ?>";
     </script>
 </head>
 <body class="phprojekt">
     <?php
-    if (null !== $this->fileName) {
-        echo '<div style="display:inline;"><a href="'. $this->downloadLink .'" target=_blank>'. $this->fileName . '</a></div>&nbsp;';
-    }
-    ?>
-    <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
-        <div style="display:inline;">
-            <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
-            <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
-            <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
-            <input type="file" name="uploadedFile"  id="uploadedFile" onChange="dojo.byId('upload').submit();" />
-        </div>
-    </form>
-    <?php
-    if ($this->upload) {
+    if ($this->filesChanged) {
         echo '<script type="text/javascript">updateInput();</script>';
+        }
+    
+    if ($this->allowMoreUploads) {
+        ?>
+        <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
+            <div style="display:inline;">
+                <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
+                <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
+                <input type="hidden" name="value" id="value" value="<?php echo $this->value; ?>" />
+                <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
+                <input type="file" name="uploadedFile"  id="uploadedFile" onChange="dojo.byId('upload').submit();" />
+            </div>
+        </form>
+        <br>
+        <?php
+    }
+    
+    if (is_array($this->files)) {
+        echo '<div style="display:inline;"><table border=0 cellspacing=0 cellpadding=0>';
+        $i = 0;
+        
+        //Determine and set the parent Iframe size
+        $iframeSize = 0;
+        if ($this->allowMoreUploads) {
+            $iframeSize += 25;
+        }
+        $iframeSize += count($this->files)*25;
+        ?>
+        <script type="text/javascript">
+            window.parent.document.getElementById('filesIframe').height='<?php echo $iframeSize ?>px';
+        </script>
+        
+        <?php
+        foreach ($this->files as $file) {
+            $i++;
+            echo '<tr><td>'
+                 . '<a href="'. $file['downloadLink'] .'" target=_blank>' . $file['fileName'] 
+                 . '</a></td><td width=5></td><td><a href="' . $file['deleteLink'] . '"><img id="imgClose'
+                 . $i . '" src="' . $this->closeImg . '" border=0 onmouseover="javascript:closeImgOver(\'imgClose' . $i
+                 . '\');" onmouseout="javascript:closeImgOut(\'imgClose' . $i . '\');"></a></td></tr>';
+        }
+        echo '</table></div>&nbsp;';
     }
     ?>
+
 </body>
 </html>

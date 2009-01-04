@@ -38,6 +38,7 @@ DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
 DROP TABLE IF EXISTS `Calendar`;
+DROP TABLE IF EXISTS `Filemanager`;
 
 --
 -- Table structure for table `DatabaseManager`
@@ -425,6 +426,21 @@ CREATE TABLE `Calendar` (
 
 
 --
+-- Table structure for table `Filemanager`
+--
+CREATE TABLE `Filemanager` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) default NULL,
+  `title` varchar(50) NOT NULL,
+  `comments` text default NULL,
+  `projectId` int(11) NOT NULL,
+  `category` varchar(50) default NULL,
+  `files` varchar(750) NOT NULL,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+--
 -- INSERT DATA
 --
 
@@ -434,7 +450,8 @@ INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
 (3, 'Note', 'Note', 0, 1),
 (4, 'Timecard', 'Timecard', 1, 1),
 (5, 'Calendar', 'Calendar', 1, 1),
-(6, 'Gantt', 'Gantt', 0, 1);
+(6, 'Gantt', 'Gantt', 0, 1),
+(7, 'Filemanager', 'Filemanager', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formTooltip`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
@@ -467,7 +484,14 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'endDate', 1, 'endDate', 'endDate', 'date', 0, 1, NULL, NULL, '', 0, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endTime', 1, 'endTime', 'endTime', 'time', 6, 1, NULL, NULL, '', 6, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'participantId', 1, 'participantId', 'participantId', 'multipleSelectValues', 7, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
-(0, 'Calendar', 'rrule', 1, 'rrule', 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0);
+(0, 'Calendar', 'rrule', 1, 'rrule', 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0),
+
+(0, 'Filemanager', 'title', 1, 'Title', 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'comments', 1, 'Comments', 'Comments', 'textarea', 2, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Filemanager', 'projectId', 1, 'Project', 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'category', 1, 'Category', 'Category', 'text', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Filemanager', 'files', 1, 'Upload', 'Upload', 'upload', 5, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0);
+
 
 INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES
 (1,'admin','MyName1','MyLastName1','A', 1),
@@ -521,6 +545,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 4, 139),
 (1, 5, 139),
 (1, 6, 139),
+(1, 7, 139),
 
 (2, 1, 0),
 (2, 2, 1),
@@ -528,6 +553,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (2, 4, 0),
 (2, 5, 1),
 (2, 6, 0),
+(2, 7, 0),
 
 (3, 1, 139),
 (3, 2, 0),
@@ -535,13 +561,15 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (3, 4, 0),
 (3, 5, 139),
 (3, 6, 0),
+(3, 7, 0),
 
 (4, 1, 1),
 (4, 2, 1),
 (4, 3, 1),
 (4, 4, 1),
 (4, 5, 1),
-(4, 6, 1);
+(4, 6, 1),
+(4, 7, 1);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
@@ -560,11 +588,13 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (4, 1),
 (5, 1),
 (6, 1),
+(7, 1),
 
 (1, 2),
 (2, 2),
 (3, 2),
 (6, 2),
+(7, 2),
 
 (1, 4),
 (6, 4);
