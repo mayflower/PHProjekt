@@ -103,24 +103,42 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             foreach ($fields as $value) {
                 $fieldName = $value['key'];
                 if ($object->$fieldName != $clone->$fieldName) {
-                    $differences[$fieldName] = array(
+                    if ($value['type'] == 'upload') {
+                        $differences[$fieldName] = array(
+                            'oldValue' => $this->_uploadContentToDesc($clone->$fieldName),
+                            'newValue' => $this->_uploadContentToDesc($object->$fieldName));
+                    } else {
+                        $differences[$fieldName] = array(
                             'oldValue' => $clone->$fieldName,
                             'newValue' => $object->$fieldName);
+                    }
                 }
             }
         } else if ($action == 'add') {
             foreach ($fields as $value) {
                 $fieldName = $value['key'];
-                $differences[$fieldName] = array(
-                    'oldValue' => '',
-                    'newValue' => $object->$fieldName);
+                if ($value['type'] == 'upload') {
+                    $differences[$fieldName] = array(
+                        'oldValue' => '',
+                        'newValue' => $this->_uploadContentToDesc($object->$fieldName));
+                } else {
+                    $differences[$fieldName] = array(
+                        'oldValue' => '',
+                        'newValue' => $object->$fieldName);
+                }
             }
         } else if ($action == 'delete') {
             foreach ($fields as $value) {
                 $fieldName = $value['key'];
-                $differences[$fieldName] = array(
-                    'oldValue' => $object->$fieldName,
-                    'newValue' => '');
+                if ($value['type'] == 'upload') {
+                    $differences[$fieldName] = array(
+                        'oldValue' => $this->_uploadContentToDesc($clone->$fieldName),
+                        'newValue' => '');
+                } else {
+                    $differences[$fieldName] = array(
+                        'oldValue' => $clone->$fieldName,
+                        'newValue' => '');
+                }
             }
         } else {
             ;
@@ -227,6 +245,35 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             }
         }
 
+        return $result;
+    }
+
+    /**
+     * Receives the string with the contents of a 'upload' field and parses it returning a descriptive string
+     *
+     * @param string $contents    The value of the upload field
+     *
+     * @return string
+     */
+    private function _uploadContentToDesc($contents)
+    {
+        //Is there any file?
+        if (!empty($contents)) {
+            $result = '';
+            $i = 0;
+            $files = split('\|\|', $contents);
+            foreach ($files as $file) {
+                $i++;
+                if ($i > 1) {
+                    $result .= ', ';
+                    }
+                $fileValues = split('\|', $file);
+                $fileMd5  = $fileValues[0];
+                $fileName = $fileValues[1];
+
+                $result .= $fileName . ' (' . $fileMd5 . ')';
+            }
+        }
         return $result;
     }
 }

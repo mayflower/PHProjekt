@@ -206,6 +206,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $entry['readOnly'] = true;
                     $converted[]       = $entry;
                     break;
+                case 'upload':
+                    $entry         = $this->_convertStandard($field);
+                    $entry['type'] = 'upload';
+                    $converted[]   = $entry;
+                    break;
                 default:
                     $converted[] = $this->_convertStandard($field);
                     break;
