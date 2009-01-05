@@ -437,7 +437,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         //Allow more uploads?
-        if (count($files) > 2) {
+        if (count($files) > 9) {
             $this->view->allowMoreUploads = false;
         } else {
             $this->view->allowMoreUploads = true;
@@ -510,7 +510,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         //Allow more uploads?
-        if (count($files) > 2) {
+        if (count($files) > 9) {
             $this->view->allowMoreUploads = false;
         } else {
             $this->view->allowMoreUploads = true;
