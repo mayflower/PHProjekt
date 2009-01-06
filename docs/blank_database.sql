@@ -488,7 +488,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 
 (0, 'Filemanager', 'title', 1, 'Title', 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Filemanager', 'comments', 1, 'Comments', 'Comments', 'textarea', 2, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Filemanager', 'projectId', 1, 'Project', 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'projectId', 1, 'Project', 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 0, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Filemanager', 'category', 1, 'Category', 'Category', 'text', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Filemanager', 'files', 1, 'Upload', 'Upload', 'upload', 5, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0);
 
