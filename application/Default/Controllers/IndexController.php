@@ -434,11 +434,13 @@ class IndexController extends Zend_Controller_Action
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
             $this->view->files = $filesForView;
-        }
 
-        //Allow more uploads?
-        if (count($files) > 9) {
-            $this->view->allowMoreUploads = false;
+            //Allow more uploads?
+            if (count($files) > 9) {
+                $this->view->allowMoreUploads = false;
+            } else {
+                $this->view->allowMoreUploads = true;
+            }
         } else {
             $this->view->allowMoreUploads = true;
         }
@@ -507,11 +509,13 @@ class IndexController extends Zend_Controller_Action
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
             $this->view->files = $filesForView;
-        }
 
-        //Allow more uploads?
-        if (count($files) > 9) {
-            $this->view->allowMoreUploads = false;
+            //Allow more uploads?
+            if (count($files) > 9) {
+                $this->view->allowMoreUploads = false;
+            } else {
+                $this->view->allowMoreUploads = true;
+            }
         } else {
             $this->view->allowMoreUploads = true;
         }
@@ -601,11 +605,13 @@ class IndexController extends Zend_Controller_Action
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
             $this->view->files = $filesForView;
-        }
-
-        //Allow more uploads?
-        if (count($files) > 9) {
-            $this->view->allowMoreUploads = false;
+            
+            //Allow more uploads?
+            if (count($files) > 9) {
+                $this->view->allowMoreUploads = false;
+            } else {
+                $this->view->allowMoreUploads = true;
+            }
         } else {
             $this->view->allowMoreUploads = true;
         }
