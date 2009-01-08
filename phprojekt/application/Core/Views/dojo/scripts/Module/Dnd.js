@@ -380,7 +380,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         var tableLength  = params['tableLength'] || 11;
     } else {
         if (formType=='upload') {
-            var tableLength  = 750;
+            tableType        = 'text';
         } else{
             var tableLength  = params['tableLength'] || 255;
         }
