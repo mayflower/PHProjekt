@@ -109,10 +109,6 @@ foreach (scandir(PHPR_CORE_PATH) as $module) {
         continue;
     }
 
-    if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
-        $front->addModuleDirectory($dir);
-    }
-
     $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
 
     if (is_dir($helperPath)) {
