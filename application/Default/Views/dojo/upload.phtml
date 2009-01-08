@@ -6,6 +6,16 @@
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
     <style type="text/css">
         @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
+
+    .deleteButton { background: url("<?php echo $this->webpath; ?>/img/close.png") no-repeat left top;
+            width:13px;
+            height:13px;
+            
+            
+            }
+     .deleteButton:hover { background: url("<?php echo $this->webpath; ?>/img/close_on.png"); 
+        cursor: hand;
+        }
     </style>
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
@@ -19,75 +29,66 @@
     }
     ?>
     <script type="text/javascript">
-        function updateInput() {
+       <?php
+        if ($this->filesChanged) {
+            ?>
             var par     = window.parent.document;
             var input   = par.getElementById("<?php echo $this->field; ?>");
             input.value = "<?php echo $this->value; ?>";
+            <?php
         }
+        ?>
 
-        function closeImgOver(field) {
-            dojo.byId(field).src = buttonCloseOn.src;
+        //onMouseOver and onMouseOut function
+        function closeMouse(which, mode) {
+            if (mode == 'over') {
+                var from = 'close';
+                var to   = 'closeOn';
+            } else if (mode == 'out' ) {
+                var from = 'closeOn';
+                var to   = 'close';
+            }
+            var btnClose = dojo.byId(which.id);
+            dojo.removeClass(btnClose.firstChild, from);
+            dojo.addClass(btnClose.firstChild, to);
         }
-
-        function closeImgOut(field) {
-            dojo.byId(field).src = buttonClose.src;
-        }
-
-        //Preload images
-        var buttonClose   = new Image();
-        var buttonCloseOn = new Image();
-        buttonClose.src   = "<?php echo $this->closeImg; ?>";
-        buttonCloseOn.src = "<?php echo $this->closeImgOn; ?>";
     </script>
 </head>
 <body class="phprojekt">
+    <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
+        <div style="display:inline;">
+            <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
+            <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
+            <input type="hidden" name="value" id="value" value="<?php echo $this->value; ?>" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
+            <input type="file" name="uploadedFile"  id="uploadedFile" onChange="dojo.byId('upload').submit();" />
+        </div>
+    </form>
+    <br>
     <?php
-    if ($this->filesChanged) {
-        echo '<script type="text/javascript">updateInput();</script>';
-        }
-    
-    if ($this->allowMoreUploads) {
-        ?>
-        <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
-            <div style="display:inline;">
-                <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
-                <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
-                <input type="hidden" name="value" id="value" value="<?php echo $this->value; ?>" />
-                <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
-                <input type="file" name="uploadedFile"  id="uploadedFile" onChange="dojo.byId('upload').submit();" />
-            </div>
-        </form>
-        <br>
-        <?php
-    }
-    
+    $iframeSize = 25;
     if (is_array($this->files)) {
-        echo '<div style="display:inline;"><table border=0 cellspacing=0 cellpadding=0>';
+        echo '<div id="filesList" style="display:inline;"><table border="0" cellspacing="0" cellpadding="0">';
         $i = 0;
-        
-        //Determine and set the parent Iframe size
-        $iframeSize = 0;
-        if ($this->allowMoreUploads) {
-            $iframeSize += 25;
-        }
-        $iframeSize += count($this->files)*25;
-        ?>
-        <script type="text/javascript">
-            window.parent.document.getElementById('filesIframe').height='<?php echo $iframeSize ?>px';
-        </script>
-        
-        <?php
+        $iframeSize += count($this->files)*31;
+
         foreach ($this->files as $file) {
             $i++;
             echo '<tr><td>'
                  . '<a href="'. $file['downloadLink'] .'" target=_blank>' . $file['fileName'] 
-                 . '</a></td><td width=5></td><td><a href="' . $file['deleteLink'] . '"><img id="imgClose'
-                 . $i . '" src="' . $this->closeImg . '" border=0 onmouseover="javascript:closeImgOver(\'imgClose' . $i
-                 . '\');" onmouseout="javascript:closeImgOut(\'imgClose' . $i . '\');"></a></td></tr>';
+                 . '</a></td><td width=5></td><td>'
+                 . '<button id="btnClose' . $i . '" dojoType="dijit.form.Button" showLabel="false" '
+                 . 'iconClass="close" class="closeButton" onMouseOver="closeMouse(this, \'over\');" '
+                 . 'onMouseOut="closeMouse(this, \'out\');" onClick="window.location.href=\''
+                 . $file['deleteLink'] . '\';"></button>'
+                 . '</td></tr>';
         }
         echo '</table></div>&nbsp;';
     }
     ?>
-
+    <!-- Set the parent Iframe size -->
+    <script type="text/javascript">
+        window.parent.document.getElementById('filesIframe').height='<?php echo $iframeSize ?>px';
+    </script>
 </body>
 </html>

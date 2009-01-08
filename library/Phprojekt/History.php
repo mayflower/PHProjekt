@@ -267,11 +267,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 if ($i > 1) {
                     $result .= ', ';
                     }
-                $fileValues = split('\|', $file);
-                $fileMd5  = $fileValues[0];
-                $fileName = $fileValues[1];
-
-                $result .= $fileName . ' (' . $fileMd5 . ')';
+                $fileName = substr(strstr($file, '|'), 1);
+                $result .= $fileName;
             }
         }
         return $result;

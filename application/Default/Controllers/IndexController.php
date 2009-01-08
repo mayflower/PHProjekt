@@ -407,8 +407,6 @@ class IndexController extends Zend_Controller_Action
         $value      = (string) $this->getRequest()->getParam('value', null);
         $itemId     = (int) $this->getRequest()->getParam('id', null);
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $closeImg   = Zend_Registry::get('config')->webpath.'img/close.png';
-        $closeImgOn = Zend_Registry::get('config')->webpath.'img/close_on.png';
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
@@ -419,8 +417,6 @@ class IndexController extends Zend_Controller_Action
         $this->view->field          = $field;
         $this->view->value          = $value;
         $this->view->filesChanged   = false;
-        $this->view->closeImg       = $closeImg;
-        $this->view->closeImgOn     = $closeImgOn;
 
         //Is there any file?
         if (!empty($value)) {
@@ -434,15 +430,6 @@ class IndexController extends Zend_Controller_Action
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
             $this->view->files = $filesForView;
-
-            //Allow more uploads?
-            if (count($files) > 9) {
-                $this->view->allowMoreUploads = false;
-            } else {
-                $this->view->allowMoreUploads = true;
-            }
-        } else {
-            $this->view->allowMoreUploads = true;
         }
 
         $this->render('upload');
@@ -483,8 +470,6 @@ class IndexController extends Zend_Controller_Action
         $value .= $addedValue;
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $closeImg   = Zend_Registry::get('config')->webpath.'img/close.png';
-        $closeImgOn = Zend_Registry::get('config')->webpath.'img/close_on.png';
 
         $this->view->webpath        = Zend_Registry::get('config')->webpath;
         $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
@@ -494,8 +479,6 @@ class IndexController extends Zend_Controller_Action
         $this->view->field          = $field;
         $this->view->value          = $value;
         $this->view->filesChanged   = true;
-        $this->view->closeImg       = $closeImg;
-        $this->view->closeImgOn     = $closeImgOn;
 
         //Is there any file?
         if (!empty($value)) {
@@ -509,15 +492,6 @@ class IndexController extends Zend_Controller_Action
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
             $this->view->files = $filesForView;
-
-            //Allow more uploads?
-            if (count($files) > 9) {
-                $this->view->allowMoreUploads = false;
-            } else {
-                $this->view->allowMoreUploads = true;
-            }
-        } else {
-            $this->view->allowMoreUploads = true;
         }
 
         $this->render('upload');
@@ -565,8 +539,6 @@ class IndexController extends Zend_Controller_Action
         $itemId      = (int) $this->getRequest()->getParam('id', null);
         $field       = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
         $deleteFile  = (string) $this->getRequest()->getParam('file', null);
-        $closeImg    = Zend_Registry::get('config')->webpath.'img/close.png';
-        $closeImgOn  = Zend_Registry::get('config')->webpath.'img/close_on.png';
 
         //Delete the file from the $value string
         $filesIn = split('\|\|', $value);
@@ -577,6 +549,13 @@ class IndexController extends Zend_Controller_Action
                     $filesOut .= '||';
                     }
                 $filesOut .= $file;
+            } else {
+                //Delete the file from the server
+                $md5Name = substr($file, 0, strpos($file, '|'));
+                $fileAbsolutePath = Zend_Registry::get('config')->uploadpath . $md5Name;
+                if (file_exists($fileAbsolutePath)) {
+                    unlink($fileAbsolutePath);
+                }
             }
         }
         $value = $filesOut;
@@ -590,8 +569,6 @@ class IndexController extends Zend_Controller_Action
         $this->view->field          = $field;
         $this->view->value          = $value;
         $this->view->filesChanged   = true;
-        $this->view->closeImg       = $closeImg;
-        $this->view->closeImgOn     = $closeImgOn;
 
         //Is there any file?
         if (!empty($value)) {
@@ -605,15 +582,6 @@ class IndexController extends Zend_Controller_Action
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
             $this->view->files = $filesForView;
-            
-            //Allow more uploads?
-            if (count($files) > 9) {
-                $this->view->allowMoreUploads = false;
-            } else {
-                $this->view->allowMoreUploads = true;
-            }
-        } else {
-            $this->view->allowMoreUploads = true;
         }
 
         $this->render('upload');

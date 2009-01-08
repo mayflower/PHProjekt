@@ -284,7 +284,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Extencion of the Abstarct Record for save the history
+     * Extension of the Abstract Record to save the history
      *
      * @return void
      */
@@ -305,13 +305,26 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Extencion of the Abstarct Record for save the history
+     * Extension of the Abstract Record to delete an item
      *
      * @return void
      */
     public function delete()
     {
         $moduleId = (!empty($this->moduleId))? $this->moduleId: 1;
+
+        //Is it Filemanager module? If yes -> delete the files from the server
+        if (strtolower($this->getTableName()) == strtolower('Filemanager')) {
+            $filesField = $this->files;
+            $files = split('\|\|', $filesField);
+            foreach ($files as $file) {
+                $md5Name = substr($file, 0, strpos($file, '|'));
+                $fileAbsolutePath = Zend_Registry::get('config')->uploadpath . $md5Name;
+                if (file_exists($fileAbsolutePath)) {
+                    unlink($fileAbsolutePath);
+                }
+            }
+        }
 
         $this->_history->saveFields($this, 'delete');
         $this->_search->deleteObjectItem($this);

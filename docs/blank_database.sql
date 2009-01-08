@@ -435,7 +435,7 @@ CREATE TABLE `Filemanager` (
   `comments` text default NULL,
   `projectId` int(11) NOT NULL,
   `category` varchar(50) default NULL,
-  `files` varchar(750) NOT NULL,
+  `files` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
