@@ -157,10 +157,6 @@ class AllTests extends PHPUnit_Framework_TestSuite
                 continue;
             }
 
-            if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
-                $front->addModuleDirectory($dir);
-            }
-
             $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
 
             if (is_dir($helperPath)) {

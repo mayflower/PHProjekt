@@ -80,10 +80,6 @@ class FrontInit extends PHPUnit_Framework_TestCase
                 continue;
             }
 
-            if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
-                $this->front->addModuleDirectory($dir);
-            }
-
             $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
 
             if (is_dir($helperPath)) {
