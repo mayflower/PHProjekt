@@ -484,7 +484,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
             formLabel = params['formLabel'] || 'Upload';
             labelFor = 'upload';
             inputTxt = '<input type="hidden" id="' + widgetId + '" dojoType="dijit.form.TextBox" />';
-            inputTxt += '<iframe src="' + phpr.webpath + 'index.php/Project/index/uploadForm/field/' + widgetId + '" height="25px" width="100%" frameborder="0" style="overflow:hidden; border:0px;">></iframe>';
+            inputTxt += '<' + 'iframe src="' + phpr.webpath + 'index.php/Project/index/uploadForm/field/' + widgetId + '" height="25px" width="100%" frameborder="0" style="overflow:hidden; border:0px;">></iframe>';
             break;
     }
     labelTxt = '<label for="' + labelFor + '">' + formLabel + '</label>';
