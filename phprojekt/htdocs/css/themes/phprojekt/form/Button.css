@@ -77,13 +77,6 @@
     height: 13px;
 }
 
-.phprojekt .closeOn {
-    background-image: url("../images/close_on.png");
-    background-repeat: no-repeat;
-    width: 13px;
-    height: 13px;
-}
-
 .phprojekt .dijitButtonNode {
     /* enabled state - inner */
     border: 1px solid #8ba0bd;
@@ -213,6 +206,5 @@
 }
 
 .phprojekt .closeButton {
-    float: left;
     margin: 0px 0px 0px 0px;
 }

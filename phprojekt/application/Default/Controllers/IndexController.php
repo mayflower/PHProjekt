@@ -403,10 +403,10 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link       = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $value      = (string) $this->getRequest()->getParam('value', null);
-        $itemId     = (int) $this->getRequest()->getParam('id', null);
-        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $link   = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $value  = (string) $this->getRequest()->getParam('value', null);
+        $itemId = (int) $this->getRequest()->getParam('id', null);
+        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
@@ -418,7 +418,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->value          = $value;
         $this->view->filesChanged   = false;
 
-        //Is there any file?
+        // Is there any file?
         if (!empty($value)) {
             $files = split('\|\|', $value);
             $filesForView = array();
@@ -443,34 +443,36 @@ class IndexController extends Zend_Controller_Action
     public function uploadFileAction()
     {
         $field    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $value    = null;
+        $value    = (string) $this->getRequest()->getParam('value', null);
         $fileName = null;
 
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5mane     = md5(uniqid(rand(), 1));
+            $md5mane    = md5(uniqid(rand(), 1));
             $addedValue = $md5mane . '|' . $_FILES['uploadedFile']['name'];
-            $fileName    = $_FILES['uploadedFile']['name'];
+            $fileName   = $_FILES['uploadedFile']['name'];
             $_FILES['uploadedFile']['name'] = $md5mane;
         }
 
         $adapter = new Zend_File_Transfer_Adapter_Http();
         $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadpath);
 
-        $adapter->receive();
+        if (!$adapter->receive()) {
+            $messages = $adapter->getMessages();
+            $this->view->errorMessage = implode("\n", $messages);
+        } else {
+            $this->getResponse()->clearHeaders();
+            $this->getResponse()->clearBody();
 
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
-        $link       = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $value      = (string) $this->getRequest()->getParam('value', null);
-        if (!empty($value)) {
-            $value .= '||';
+            if (!empty($value)) {
+                $value .= '||';
+            }
+            $value .= $addedValue;
         }
-        $value .= $addedValue;
-        $itemId     = (int) $this->getRequest()->getParam('itemId', null);
-        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $link   = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $itemId = (int) $this->getRequest()->getParam('itemId', null);
 
+        $this->view->filesChanged   = true;
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->downloadLink   = '';
@@ -478,12 +480,11 @@ class IndexController extends Zend_Controller_Action
         $this->view->itemId         = $itemId;
         $this->view->field          = $field;
         $this->view->value          = $value;
-        $this->view->filesChanged   = true;
 
-        //Is there any file?
+        // Is there any file?
+        $filesForView = array();
         if (!empty($value)) {
             $files = split('\|\|', $value);
-            $filesForView = array();
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');
                 $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
@@ -491,8 +492,11 @@ class IndexController extends Zend_Controller_Action
                                         'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
                                                           . $value . '/id/' . $itemId . '/field/' . $field);
             }
-            $this->view->files = $filesForView;
         }
+        if (isset($this->view->errorMessage) && !empty($this->view->errorMessage)) {
+            $filesForView[] = array();
+        }
+        $this->view->files = $filesForView;
 
         $this->render('upload');
     }
