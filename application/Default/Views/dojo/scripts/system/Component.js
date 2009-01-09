@@ -19,29 +19,15 @@
 
 dojo.provide("phpr.Component");
 
-// A global cache
-var __phpr_templateCache = {};
-
 dojo.declare("phpr.Component", null, {
     main:null,
     module:"",
     render: function(template, node, content) {
         var context = new dojox.dtl.Context(content);
-        // Cache the templates if loaded once.
-        var tplContent = __phpr_templateCache[template[0]+"."+template[1]];
-        if (!tplContent) {
-            phpr.send({
-                url:       phpr.webpath + 'index.php/Default/Js/jsonGetTemplate/path/'+template[0]+'/name/'+template[1],
-                sync:      true,
-                onSuccess:function(data) {
-                    tplContent = data;
-                    __phpr_templateCache[template[0]+"."+template[1]] = tplContent;
-                }
-            });
-        }
-
-        var tpl = new dojox.dtl.Template(tplContent);
-        var content = tpl.render(context);
+        // Use the cached template
+        var tplContent = __phpr_templateCache[template[0] + "." + template[1]];
+        var tpl        = new dojox.dtl.Template(tplContent);
+        var content    = tpl.render(context);
 
         // [a-zA-Z1-9[]:|]
         var eregId = /id=\\?["'][\w\x5b\x5d\x3a\x7c]*\\?["']/gi;

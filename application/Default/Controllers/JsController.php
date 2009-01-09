@@ -36,7 +36,19 @@
  */
 class JsController extends IndexController
 {
+    /**
+     * Array with all the modules found
+     *
+     * @var array
+     */
     private $_modules = array();
+
+    /**
+     * Array with all the templates by module
+     *
+     * @var array
+     */
+    private $_templates = array();
 
     /**
      * Collect all the js files and return it as one
@@ -62,6 +74,9 @@ class JsController extends IndexController
         // Core Folder
         echo $this->_getCoreScripts();
 
+        // Add Default templates
+        $this->_getTemplates(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/template/', 'Default');
+
         // Load all modules and make and array of it
         $files   = scandir(PHPR_CORE_PATH);
         foreach ($files as $file) {
@@ -83,6 +98,17 @@ class JsController extends IndexController
                     echo $this->_getCoreModuleScripts($scripts);
                 }
             }
+        }
+
+        // Preload all the templates and save them into __phpr_templateCache
+        echo 'var __phpr_templateCache = {};';
+
+        foreach ($this->_templates as $templateData) {
+            $content = str_replace("'", "\'", $templateData['contents']);
+            $content = str_replace("<", "<' + '", $content);
+            echo '
+                __phpr_templateCache["phpr.' . $templateData['module'] . '.template.' . $templateData['name']
+                . '"] = \'' . $content . '\';';
         }
 
         echo 'dojo.provide("phpr.Main");';
@@ -111,119 +137,6 @@ class JsController extends IndexController
             }
         });
         ';
-    }
-
-    public function jsonGetTemplateAction()
-    {
-        $path = (string) $this->getRequest()->getParam('path', null);
-        $name = (string) $this->getRequest()->getParam('name', null);
-
-        $path = split("\.", $path);
-        $module = $path[1];
-
-        $extendPath = '';
-        $count      = 0;
-        foreach ($path as $folder) {
-            if ($count > 1) {
-                $extendPath .= $folder . '/';
-            }
-            $count++;
-        }
-        $extendPath .= $name;
-
-        $template = file_get_contents(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/' . $extendPath);
-
-        $template = str_replace("\n", "", $template);
-        $template = str_replace("\r", "", $template);
-        $template = addslashes($template);
-        echo '"' . $template . '"';
-    }
-
-    /**
-     * Gets dynamically all the templates and echoes them in Json format
-     *
-     * @return void
-     */
-    public function jsonGetAllTemplatesAction()
-    {
-        $output  = array();
-        $modules = array();
-
-        // Create an array with all the modules
-        foreach (scandir(PHPR_CORE_PATH) as $item) {
-            $itemPath = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $item;
-            if (!is_dir($itemPath)) {
-                continue;
-            }
-
-            if ($item != '.svn' && $item != '.' && $item != '..') {
-                $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $item;
-                if (is_dir($dir . DIRECTORY_SEPARATOR . 'Controllers')) {
-                    $modules[] = array('name' => $item,
-                                       'path' => $dir);
-                }
-            }
-        }
-
-        // Read the templates of every module
-        foreach ($modules as $module) {
-            if ($module['name'] == 'Core') {
-                $templatesPaths = array();
-                $folders        = scandir($module['path'] . '/Views/dojo/scripts');
-                foreach ($folders as $folder) {
-                    if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder)
-                        && $folder != '.svn' && $folder != '.' && $folder != '..') {
-
-                        if (is_dir($module['path'] . '/Views/dojo/scripts/' . $folder . '/template/')) {
-                            $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/' . $folder . '/template/';
-                        }
-                    }
-                }
-            } else {
-                $templatesPaths   = array();
-                $templatesPaths[] = $module['path'] . '/Views/dojo/scripts/template/';
-            }
-
-            foreach ($templatesPaths as $templatesPath) {
-                if (is_dir($templatesPath)) {
-                    foreach (scandir($templatesPath) as $item) {
-                        if (!is_dir($templatesPath . $item)) {
-                            if (substr($item, -5) == '.html') {
-                                // The item is a valid file
-                                $fileContents = file_get_contents($templatesPath . $item);
-                                $fileContents = str_replace("\n", "", $fileContents);
-                                $fileContents = str_replace("\r", "", $fileContents);
-    
-                                $output[] = array('module'   => $module['name'],
-                                                  'name'     => $item,
-                                                  'contents' => $fileContents);
-                            }
-                        } else {
-                            // The item is a subdirectory
-                            if ($item != '.svn' && $item != '.' && $item != '..') {
-                                $subItemPath = $templatesPath . $item . DIRECTORY_SEPARATOR;
-                                foreach (scandir($templatesPath . $item) as $subItem) {
-                                    if (!is_dir($subItemPath . $subItem) && substr($subItem, -5) == '.html') {
-                                        // The subitem is a valid file
-                                        $fileContents = file_get_contents($subItemPath . $subItem);
-                                        $fileContents = str_replace("\n", "", $fileContents);
-                                        $fileContents = str_replace("\r", "", $fileContents);
-
-                                        $output[] = array('module'   => $module['name'],
-                                                          'name'     => $item . "." . $subItem,
-                                                          'contents' => $fileContents);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $data          = array();
-        $data['files'] = $output;
-        echo Zend_Json::encode($data);
     }
 
     /**
@@ -263,6 +176,10 @@ class JsController extends IndexController
 
     /**
      * Get all the Modules scripts
+     * In the process also collect the templates
+     *
+     * @param array  $scripts All the modules into the Module folder
+     * @param string $module  The module name
      *
      * @return string
      */
@@ -272,6 +189,8 @@ class JsController extends IndexController
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
                 $output .= file_get_contents(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/' . $script);
+            } else if ('template' == $script) {
+                $this->_getTemplates(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/template/', $module);
             }
         }
         return $output;
@@ -279,6 +198,7 @@ class JsController extends IndexController
 
     /**
      * Get the Core module scripts
+     * In the process also collect the templates
      *
      * @param array $scripts All the modules into the Core folder
      *
@@ -299,10 +219,58 @@ class JsController extends IndexController
                     if (substr($coreScript, -3) == '.js') {
                         $output .=
                           file_get_contents(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/' . $script . '/' . $coreScript);
+                    } else if ('template' == $coreScript) {
+                        $path = PHPR_CORE_PATH . '/Core/Views/dojo/scripts/' . $script . '/' . $coreScript . '/';
+                        $this->_getTemplates($path, 'Core.' . $script);
                     }
                 }
             }
         }
         return $output;
+    }
+
+    /**
+     * Collect all the templates found in the $path directory
+     * Also scan the sub directories
+     *
+     * @param string $path   Path for scan
+     * @param string $module Module Name
+     *
+     * @return void
+     */
+    private function _getTemplates($path, $module)
+    {
+        $templates = scandir($path);
+        foreach ($templates as $item) {
+            if (!is_dir($path . $item)) {
+                if (substr($item, -5) == '.html') {
+                    // The item is a valid file
+                    $fileContents = file_get_contents($path . $item);
+                    $fileContents = str_replace("\n", "", $fileContents);
+                    $fileContents = str_replace("\r", "", $fileContents);
+
+                    $this->_templates[] = array('module'   => $module,
+                                                'name'     => $item,
+                                                'contents' => $fileContents);
+                }
+            } else {
+                // The item is a subdirectory
+                if ($item != '.svn' && $item != '.' && $item != '..') {
+                    $subItemPath = $path . $item . DIRECTORY_SEPARATOR;
+                    foreach (scandir($subItemPath) as $subItem) {
+                        if (!is_dir($subItemPath . $subItem) && substr($subItem, -5) == '.html') {
+                            // The subitem is a valid file
+                            $fileContents = file_get_contents($subItemPath . $subItem);
+                            $fileContents = str_replace("\n", "", $fileContents);
+                            $fileContents = str_replace("\r", "", $fileContents);
+
+                            $this->_templates[] = array('module'   => $module,
+                                                        'name'     => $item . "." . $subItem,
+                                                        'contents' => $fileContents);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
