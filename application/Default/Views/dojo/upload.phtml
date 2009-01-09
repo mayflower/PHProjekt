@@ -19,7 +19,7 @@
     }
     ?>
     <script type="text/javascript">
-       <?php
+        <?php
         if ($this->filesChanged) {
             ?>
             var par     = window.parent.document;
@@ -28,57 +28,62 @@
             <?php
         }
         ?>
-
-        //onMouseOver and onMouseOut function
-        function closeMouse(which, mode) {
-            if (mode == 'over') {
-                var from = 'close';
-                var to   = 'closeOn';
-            } else if (mode == 'out' ) {
-                var from = 'closeOn';
-                var to   = 'close';
-            }
-            var btnClose = dojo.byId(which.id);
-            dojo.removeClass(btnClose.firstChild, from);
-            dojo.addClass(btnClose.firstChild, to);
-        }
     </script>
 </head>
-<body class="phprojekt">
+<body class="phprojekt" onload="resizeIframe('filesIframe');">
     <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
         <div style="display:inline;">
             <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
             <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
             <input type="hidden" name="value" id="value" value="<?php echo $this->value; ?>" />
-            <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="500000" />
             <input type="file" name="uploadedFile"  id="uploadedFile" onChange="dojo.byId('upload').submit();" />
         </div>
     </form>
     <br>
     <?php
-    $iframeSize = 25;
+    $iframeSize = 22;
+    if (isset($this->errorMessage) && !empty($this->errorMessage)) {
+        echo '
+        <div style="padding: 1px 0 1px 5px; font-weight: bold;">
+            '. $this->errorMessage .'
+        </div>
+        ';
+    }
     if (is_array($this->files)) {
-        echo '<div id="filesList" style="display:inline;"><table border="0" cellspacing="0" cellpadding="0">';
-        $i = 0;
-        $iframeSize += count($this->files)*31;
-
+        echo '
+        <div id="filesList" style="display:inline;">
+            <table cellspacing="0" cellpadding="0">
+        ';
+        $iframeSize += count($this->files)*20;
         foreach ($this->files as $file) {
-            $i++;
-            echo '<tr><td>'
-                 . '<a href="'. $file['downloadLink'] .'" target=_blank>' . $file['fileName'] 
-                 . '</a></td><td width=5></td><td>'
-                 . '<button id="btnClose' . $i . '" dojoType="dijit.form.Button" showLabel="false" '
-                 . 'iconClass="close" class="closeButton" onMouseOver="closeMouse(this, \'over\');" '
-                 . 'onMouseOut="closeMouse(this, \'out\');" onClick="window.location.href=\''
-                 . $file['deleteLink'] . '\';"></button>'
-                 . '</td></tr>';
+            if (isset($file['fileName'])) {
+                echo '
+            <tr>
+                <td style="padding: 0 0 0 5px; vertical-align: middle;">
+                    <a href="'. $file['downloadLink'] .'" target=_blank>' . $file['fileName'] .'</a>
+                </td>
+                <td style="padding: 0 0 0 5px; width:5px">
+                    &nbsp;
+                </td>
+                <td style="padding: 0 0 0 5px;">
+                    <button dojoType="dijit.form.Button" showLabel="false" iconClass="close" class="closeButton"
+                    onClick="window.location.href=\''. $file['deleteLink'] . '\';">
+                    </button>
+                </td>
+            </tr>
+                ';
+            }
         }
-        echo '</table></div>&nbsp;';
+        echo '
+            </table>
+        </div>
+        ';
     }
     ?>
     <!-- Set the parent Iframe size -->
     <script type="text/javascript">
-        window.parent.document.getElementById('filesIframe').height='<?php echo $iframeSize ?>px';
+        window.parent.document.getElementById('filesIframe').height = <?php echo $iframeSize; ?>;
     </script>
 </body>
 </html>
