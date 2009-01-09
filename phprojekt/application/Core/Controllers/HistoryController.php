@@ -62,7 +62,7 @@ class Core_HistoryController extends Core_IndexController
         if (empty($itemId) || empty($moduleId)) {
             throw new Phprojekt_PublishedException("Invalid module or item");
         } else {
-            $db      = Zend_Registry::get('db');
+            $db      = Phprojekt::getInstance()->getDb();
             $history = new Phprojekt_History(array('db' => $db));
             $data    = $history->getHistoryData(null, $itemId, $moduleId, $startDate, $endDate, $userId);
             $data    = array('data' => $data);

@@ -61,7 +61,7 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function login($username, $password)
     {
-        $db     = Zend_Registry::get('db');
+        $db     = Phprojekt::getInstance()->getDb();
         $user   = new Phprojekt_User_User($db);
         $userId = $user->findIdByUsername($username);
 

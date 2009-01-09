@@ -44,8 +44,8 @@ class LoginController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $this->view->webpath        = Zend_Registry::get('config')->webpath;
-        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         $this->render('login');
     }
@@ -63,13 +63,13 @@ class LoginController extends Zend_Controller_Action
         $username = (string) $this->getRequest()->getParam('username', null);
         $password = (string) $this->getRequest()->getParam('password', null);
 
-        $this->view->webpath        = Zend_Registry::get('config')->webpath;
-        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {
             $success = Phprojekt_Auth::login($username, $password);
             if ($success === true) {
-                $config = Zend_Registry::get('config');
+                $config = Phprojekt::getInstance()->getConfig();
                 $this->_redirect($config->webpath.'index.php');
                 die();
             }
@@ -87,7 +87,7 @@ class LoginController extends Zend_Controller_Action
     public function logoutAction()
     {
         Phprojekt_Auth::logout();
-        $config = Zend_Registry::get('config');
+        $config = Phprojekt::getInstance()->getConfig();
         $this->_redirect($config->webpath.'index.php/login/index');
         Zend_Session_Namespace::unsetAll();
         die();

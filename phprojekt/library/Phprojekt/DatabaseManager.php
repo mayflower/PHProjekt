@@ -559,7 +559,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function syncTable($newFields, $tableName, $tableData)
     {
-        $tableManager = new Phprojekt_Table(Zend_Registry::get('db'));
+        $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
         $oldFields    = $this->getDataDefinition();
         $tableDataForCreate['id'] = array('type'   => 'auto_increment',
                                           'length' => 11);
@@ -627,7 +627,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($result as $record) {
             $record->delete();
         }
-        $tableManager = new Phprojekt_Table(Zend_Registry::get('db'));
+        $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
         return $tableManager->dropTable($table);
     }
 }

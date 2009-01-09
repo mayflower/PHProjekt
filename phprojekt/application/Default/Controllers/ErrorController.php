@@ -61,7 +61,7 @@ class ErrorController extends Zend_Controller_Action
             default:
                 $exception = $errors->exception;
 
-                $logger = Zend_Registry::get('log');
+                $logger = Phprojekt::getInstance()->getLog();
                 $logger->err($exception->getMessage() . "\n"
                            . $exception->getTraceAsString());
 

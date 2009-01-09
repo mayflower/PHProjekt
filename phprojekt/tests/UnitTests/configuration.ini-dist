@@ -1,15 +1,17 @@
 [testing-mysql : general]
-database.name     = "phprojekt-mvc-test"
-database.type     = "pdo_mysql"
-database.username = "phprojekt"
-database.password = "phprojekt"
+database.adapter            = "Pdo_Mysql"
+database.params.host        = "localhost"
+database.params.dbname      = "phprojekt-mvc-test"
+database.params.username    = "phprojekt"
+database.params.password    = "phprojekt"
 
 [testing-pgsql: general]
-database.name     = "phprojekt-mvc-testing"
-database.type     = "pdo_pgsql"
-database.username = "phprojekt"
-database.password = "phprojekt"
-database.host     = "localhost"
+database.adapter            = "Pdo_Pgsql"
+database.params.host        = "localhost"
+database.params.dbname      = "phprojekt-mvc-testing"
+database.params.username    = "phprojekt"
+database.params.password    = "phprojekt"
+
 
 [general]
 applicationDir       = "/home/dsp/public_html/phprojekt-mvc"

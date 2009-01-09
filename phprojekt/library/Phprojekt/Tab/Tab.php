@@ -60,7 +60,7 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     public function __construct($db = null)
     {
         if (null === $db) {
-            $db = Zend_Registry::get('db');
+            $db = Phprojekt::getInstance()->getDb();
         }
         parent::__construct($db);
 

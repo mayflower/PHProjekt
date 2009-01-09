@@ -325,7 +325,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $this->_view->translate = $translate;
 
         if ($this->_bodyMode == self::MODE_TEXT) {
-            switch (Zend_Registry::get('config')->mailEndOfLine) {
+            switch (Phprojekt::getInstance()->getConfig()->mailEndOfLine) {
                 case self::MAIL_LINEEND_N:
                     $this->_view->endOfLine = "\n";
                     break;
@@ -394,9 +394,9 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      */
     private function _setTransport()
     {
-        $smtpServer   = Zend_Registry::get('config')->smtpServer;
-        $smtpUser     = Zend_Registry::get('config')->smtpUser;
-        $smtpPassword = Zend_Registry::get('config')->smtpPassword;
+        $smtpServer   = Phprojekt::getInstance()->getConfig()->smtpServer;
+        $smtpUser     = Phprojekt::getInstance()->getConfig()->smtpUser;
+        $smtpPassword = Phprojekt::getInstance()->getConfig()->smtpPassword;
 
         if (empty($smtpServer)) {
             $smtpServer = 'localhost';

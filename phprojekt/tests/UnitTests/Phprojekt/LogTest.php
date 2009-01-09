@@ -37,7 +37,7 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
      */
     public function testWrongLog()
     {
-        $config = Zend_Registry::get('config');
+        $config = Phprojekt::getInstance()->getConfig();
         $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
@@ -50,7 +50,7 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
      */
     public function testWrongPriority()
     {
-        $config = Zend_Registry::get('config');
+        $config = Phprojekt::getInstance()->getConfig();
         $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
@@ -63,7 +63,7 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
      */
     public function testBiggestPriority()
     {
-        $config = Zend_Registry::get('config');
+        $config = Phprojekt::getInstance()->getConfig();
         $log = new Phprojekt_Log($config);
 
         $this->setExpectedException('Zend_Log_Exception');
@@ -76,7 +76,7 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
      */
     public function testLog()
     {
-        $config = Zend_Registry::get('config');
+        $config = Phprojekt::getInstance()->getConfig();
         $log = new Phprojekt_Log($config);
 
         $log->log('TEST', Zend_Log::DEBUG);

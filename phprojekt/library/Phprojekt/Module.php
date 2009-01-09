@@ -67,7 +67,7 @@ class Phprojekt_Module
             return self::$_cache;
         }
 
-        $db     = Zend_Registry::get('db');
+        $db     = Phprojekt::getInstance()->getDb();
         $select = $db->select()
                      ->from('Module');
         $stmt = $db->query($select);

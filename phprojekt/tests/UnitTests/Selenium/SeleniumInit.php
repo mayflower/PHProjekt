@@ -79,7 +79,7 @@ class Selenium_SeleniumInit extends PHPUnit_Extensions_SeleniumTestCase
     function setUp()
     {
         $this->setAutoStop(false);
-        $this->config = Zend_Registry::get('config');
+        $this->config = Phprojekt::getInstance()->getConfig();
         $this->verificationErrors = array();
         $this->setBrowserUrl($this->config->webpath);
     }

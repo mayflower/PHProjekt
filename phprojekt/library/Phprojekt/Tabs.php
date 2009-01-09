@@ -60,7 +60,7 @@ class Phprojekt_Tabs
             return self::$_cache[$moduleId];
         }
 
-        $db     = Zend_Registry::get('db');
+        $db     = Phprojekt::getInstance()->getDb();
         $select = $db->select()
                      ->from(array('t' => 'Tab'))
                      ->joinInner(array('rel' => 'ModuleTabRelation'),
@@ -101,7 +101,7 @@ class Phprojekt_Tabs
      */
     public static function getTabs()
     {
-        $db     = Zend_Registry::get('db');
+        $db     = Phprojekt::getInstance()->getDb();
         $select = $db->select()
                      ->from('Tab');
         $stmt = $db->query($select);
@@ -118,7 +118,7 @@ class Phprojekt_Tabs
      */
     public function saveTab($label, $id = 0)
     {
-        $db = Zend_Registry::get('db');
+        $db = Phprojekt::getInstance()->getDb();
         if ($id > 0) {
             $data['label'] = $label;
             $db->update('Tab', $data, 'id = ' . (int) $id);
@@ -140,7 +140,7 @@ class Phprojekt_Tabs
      */
     public function saveModuleTabRelation($tabIds, $moduleId)
     {
-        $db = Zend_Registry::get('db');
+        $db = Phprojekt::getInstance()->getDb();
         $db->delete('ModuleTabRelation', $db->quoteInto('moduleId = ?', $moduleId));
         if (!is_array($tabIds)) {
             $tabIds = array($tabIds);

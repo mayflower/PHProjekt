@@ -45,7 +45,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public function __construct()
     {
-        $config = array('db' => Zend_Registry::get('db'));
+        $config = array('db' => Phprojekt::getInstance()->getDb());
 
         parent::__construct($config);
     }
@@ -157,7 +157,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
             $values = $rightNamespace->right;
         } else {
-            $db     = Zend_Registry::get('db');
+            $db     = Phprojekt::getInstance()->getDb();
             $user   = new Phprojekt_User_User($db);
             $where  = array();
             $values = array();

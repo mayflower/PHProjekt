@@ -52,7 +52,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function __construct()
     {
-        $config = array('db' => Zend_Registry::get('db'));
+        $config = array('db' => Phprojekt::getInstance()->getDb());
 
         parent::__construct($config);
     }

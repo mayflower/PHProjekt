@@ -33,18 +33,18 @@ uploadpath           = "/var/www/phprojekt/tmp/"
 
 ; DATABASE
 ; For this Developer Release, it just has been tested with pdo_mysql.
-database.type        = "pdo_mysql"
+database.adapter            = "Pdo_Mysql"
 
 ; The assigned name or IP address for the database server.
-database.host        = "localhost"
+database.params.host        = "localhost"
 
 ; Username and password with the appropriate rights for Phprojekt to access to
 ; the database.
-database.username    = "p6-user"
-database.password    = "phprojekt"
+database.params.username    = "p6-user"
+database.params.password    = "phprojekt"
 
 ; Name of the database, inside the server
-database.name        = "phprojekt"
+database.params.dbname      = "phprojekt"
 
 
 ; LOG
@@ -96,11 +96,11 @@ webpath              = "http://localhost/phprojekt"
 uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
 ; Database options
-database.type        = "pdo_mysql"
-database.host        = "localhost"
-database.username    = "p6-user"
-database.password    = "phprojekt"
-database.name        = "phprojekt-testing"
+database.adapter            = "Pdo_Mysql"
+database.params.host        = "localhost"
+database.params.username    = "p6-user"
+database.params.password    = "phprojekt"
+database.params.dbname      = "phprojekt-testing"
 
 ; Log options
 log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
@@ -130,11 +130,11 @@ webpath              = "http://localhost/phprojekt"
 uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
 
 ; Database options
-database.type        = "pdo_mysql"
-database.host        = "localhost"
-database.username    = "p6-user"
-database.password    = "phprojekt"
-database.name        = "unittest"
+database.adapter            = "Pdo_Mysql"
+database.params.host        = "localhost"
+database.params.username    = "p6-user"
+database.params.password    = "phprojekt"
+database.params.dbname      = "unittest"
 
 ; Log options
 ;log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug_test.log"

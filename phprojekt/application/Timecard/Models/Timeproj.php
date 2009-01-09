@@ -62,7 +62,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
     public function __construct($db = null)
     {
         if (null === $db) {
-            $db = Zend_Registry::get('db');
+            $db = Phprojekt::getInstance()->getDb();
         }
         parent::__construct($db);
 
