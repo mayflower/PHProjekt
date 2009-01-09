@@ -45,7 +45,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
     {
         $this->request  = new Zend_Controller_Request_Http();
         $this->response = new Zend_Controller_Response_Http();
-        $this->config   = Zend_Registry::get('config');
+        $this->config   = Phprojekt::getInstance()->getConfig();
 
         $this->config->language = "en";
 
@@ -90,7 +90,6 @@ class FrontInit extends PHPUnit_Framework_TestCase
 
         Zend_Registry::set('view', $view);
         $view->webPath  = $this->config->webpath;
-        Zend_Registry::set('translate', $translate);
 
         $this->front->setModuleControllerDirectoryName('Controllers');
         $this->front->addModuleDirectory(PHPR_CORE_PATH);

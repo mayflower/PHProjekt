@@ -80,7 +80,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     public function __construct($db = null)
     {
         if (null === $db) {
-            $db = Zend_Registry::get('db');
+            $db = Phprojekt::getInstance()->getDb();
         }
         parent::__construct($db);
 
@@ -111,7 +111,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function findIdByUsername($username)
     {
-        $db = Zend_Registry::get('db');
+        $db = Phprojekt::getInstance()->getDb();
         /* @var $db Zend_Db_Adapter_Abstract */
 
         try {
@@ -123,7 +123,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
             return $users[0]->id;
         } catch (Phprojekt_ActiveRecord_Exception $error) {
-            Zend_Registry::get('log')->warn($error->getMessage());
+            Phprojekt::getInstance()->getLog()->warn($error->getMessage());
         }
 
         return false;

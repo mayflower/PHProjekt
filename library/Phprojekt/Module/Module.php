@@ -60,7 +60,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     public function __construct($db = null)
     {
         if (null === $db) {
-            $db = Zend_Registry::get('db');
+            $db = Phprojekt::getInstance()->getDb();
         }
         parent::__construct($db);
 
@@ -223,7 +223,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             if (mkdir($folderPath, 0770)) {
                 chmod($folderPath, 0775);
             } else {
-                Zend_Registry::get('log')->debug('Error on create folder ' . $path);
+                Phprojekt::getInstance()->getLog()->debug('Error on create folder ' . $path);
             }
         }
 
@@ -235,7 +235,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         if (mkdir($folderPath, 0770)) {
             chmod($folderPath, 0775);
         } else {
-            Zend_Registry::get('log')->debug('Error on create folder ' . $folderPath);
+            Phprojekt::getInstance()->getLog()->debug('Error on create folder ' . $folderPath);
         }
     }
 
@@ -281,10 +281,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                     }
                     if ($newFile = fopen($modulePath . DIRECTORY_SEPARATOR .$file, 'w')) {
                         if (false === fwrite($newFile, $templateContent)) {
-                            Zend_Registry::get('log')->debug('Error on copy file ' .
-                                                             $modulePath .
-                                                             DIRECTORY_SEPARATOR .
-                                                             $file);
+                            Phprojekt::getInstance()->getLog()->debug('Error on copy file ' .
+                                $modulePath . DIRECTORY_SEPARATOR . $file);
                         }
                         fclose($newFile);
                     }
@@ -309,7 +307,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                         continue;
                     }
                     if (!$this->_deleteFolder($path . DIRECTORY_SEPARATOR . $file)) {
-                        Zend_Registry::get('log')->debug($path . DIRECTORY_SEPARATOR . $file .' could not be deleted');
+                        Phprojekt::getInstance()->getLog()->debug($path . DIRECTORY_SEPARATOR
+                            . $file .' could not be deleted');
                     }
                 }
                 closedir($directory);

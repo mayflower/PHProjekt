@@ -25,14 +25,6 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
-set_include_path('.' . PATH_SEPARATOR
-               . PHPR_LIBRARY_PATH . PATH_SEPARATOR
-               . PHPR_CORE_PATH . PATH_SEPARATOR
-               . get_include_path());
-
-require_once 'Zend/Loader.php';
-Zend_Loader::registerAutoload();
-
 require_once 'ActiveRecord/AbstractTest.php';
 require_once 'Tree/Node/DatabaseTest.php';
 require_once 'LoaderTest.php';

@@ -111,7 +111,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_validate  = new Phprojekt_Model_Validate();
         $this->_history   = new Phprojekt_History($db);
         $this->_search    = new Phprojekt_Search_Default();
-        $this->_config    = Zend_Registry::get('config');
+        $this->_config    = Phprojekt::getInstance()->getConfig();
         $this->_rights    = new Phprojekt_Item_Rights();
         $this->_timezone  = (int)Phprojekt_User_User::getSetting("timeZone", $this->_config->timeZone);
     }
@@ -319,7 +319,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $files = split('\|\|', $filesField);
             foreach ($files as $file) {
                 $md5Name = substr($file, 0, strpos($file, '|'));
-                $fileAbsolutePath = Zend_Registry::get('config')->uploadpath . $md5Name;
+                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
                 if (file_exists($fileAbsolutePath)) {
                     unlink($fileAbsolutePath);
                 }

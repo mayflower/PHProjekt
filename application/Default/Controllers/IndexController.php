@@ -69,7 +69,7 @@ class IndexController extends Zend_Controller_Action
             // If is a GET, show the loguin page
             // If is a POST, send message in json format
             if ($this->getFrontController()->getRequest()->isGet()) {
-                $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
+                $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/index');
                 exit;
             } else {
                 throw new Phprojekt_PublishedException($error->message, 500);
@@ -90,11 +90,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $language = Phprojekt_User_User::getSetting("language", Zend_Registry::get('config')->language);
+        $language = Phprojekt_User_User::getSetting("language", Phprojekt::getInstance()->getConfig()->language);
 
-        $this->view->webpath        = Zend_Registry::get('config')->webpath;
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->language       = $language;
-        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         $this->render('index');
     }
@@ -403,13 +403,13 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link       = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $link       = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
         $value      = (string) $this->getRequest()->getParam('value', null);
         $itemId     = (int) $this->getRequest()->getParam('id', null);
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
-        $this->view->webpath        = Zend_Registry::get('config')->webpath;
-        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->formPath       = $link . '/index/uploadFile/';
         $this->view->downloadLink   = '';
         $this->view->fileName       = null;
@@ -455,14 +455,14 @@ class IndexController extends Zend_Controller_Action
         }
 
         $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setDestination(Zend_Registry::get('config')->uploadpath);
+        $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadpath);
 
         $adapter->receive();
 
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link       = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $link       = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
         $value      = (string) $this->getRequest()->getParam('value', null);
         if (!empty($value)) {
             $value .= '||';
@@ -471,8 +471,8 @@ class IndexController extends Zend_Controller_Action
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
-        $this->view->webpath        = Zend_Registry::get('config')->webpath;
-        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->downloadLink   = '';
         $this->view->formPath       = $link . '/index/uploadFile/';
         $this->view->itemId         = $itemId;
@@ -508,7 +508,7 @@ class IndexController extends Zend_Controller_Action
         $fileName = strstr($file, '|');
         if (!empty($fileName)) {
             list($md5Name, $fileName) = explode("|", $file);
-            $md5Name = Zend_Registry::get('config')->uploadpath . $md5Name;
+            $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
             if (file_exists($md5Name)) {
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
                 header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
@@ -534,7 +534,7 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link        = Zend_Registry::get('config')->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $link        = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
         $value       = (string) $this->getRequest()->getParam('value', null);
         $itemId      = (int) $this->getRequest()->getParam('id', null);
         $field       = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
@@ -552,7 +552,7 @@ class IndexController extends Zend_Controller_Action
             } else {
                 //Delete the file from the server
                 $md5Name = substr($file, 0, strpos($file, '|'));
-                $fileAbsolutePath = Zend_Registry::get('config')->uploadpath . $md5Name;
+                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
                 if (file_exists($fileAbsolutePath)) {
                     unlink($fileAbsolutePath);
                 }
@@ -560,8 +560,8 @@ class IndexController extends Zend_Controller_Action
         }
         $value = $filesOut;
 
-        $this->view->webpath        = Zend_Registry::get('config')->webpath;
-        $this->view->compressedDojo = (bool) Zend_Registry::get('config')->compressedDojo;
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->formPath       = $link . '/index/uploadFile/';
         $this->view->downloadLink   = '';
         $this->view->fileName       = null;

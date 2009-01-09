@@ -113,7 +113,7 @@ class Phprojekt_RoleRights
         try {
             return $acl->isAllowed($role, $moduleId, $right);
         } catch(Zend_Acl_Exception $error) {
-            $logger = Zend_Registry::get('log');
+            $logger = Phprojekt::getInstance()->getLog();
             $logger->debug((string) $error);
             return false;
         }

@@ -56,7 +56,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     public function __construct()
     {
         $this->_user = Phprojekt_Auth::getUserId();
-        parent::__construct(array('db' => Zend_Registry::get('db')));
+        parent::__construct(array('db' => Phprojekt::getInstance()->getDb()));
     }
 
     /**

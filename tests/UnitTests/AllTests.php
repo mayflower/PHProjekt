@@ -24,23 +24,14 @@
 
 /* use command line switches to overwrite this */
 define("DEFAULT_CONFIG_FILE", "configuration.ini");
+define("PHPR_CONFIG_FILE", "configuration.ini");
 define("DEFAULT_CONFIG_SECTION", "testing-mysql");
+define("PHPR_CONFIG_SECTION", "testing-mysql");
 
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
-define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
-define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
-define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
-define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
 
-set_include_path('.' . PATH_SEPARATOR
-. PHPR_LIBRARY_PATH . PATH_SEPARATOR
-. PHPR_CORE_PATH . PATH_SEPARATOR
-. get_include_path());
-
-require_once 'Zend/Loader.php';
-require_once 'Phprojekt/Loader.php';
-
-Zend_Loader::registerAutoload('Phprojekt_Loader');
+require_once PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'Phprojekt.php';
+Phprojekt::getInstance();
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'AllTests::main');
@@ -94,91 +85,21 @@ class AllTests extends PHPUnit_Framework_TestSuite
      *
      * @return PHPUnit_Framework_TestSuite
      */
-    public static function suite( $config = null)
+    public static function suite($config = null)
     {
-        // for compability with phpunit offer suite() without any parameter.
-        // in that case use defaults
-        if (!is_object($config)) {
-            $config = new Zend_Config_Ini(DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION,
-                array("allowModifications" => true));
-            Zend_Registry::set('config', $config);
-            // These directories are
-            // covered for the code coverage even they are not part of unit testing
-            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
-            PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/library/Phprojekt');
-        }
-
-        $log = new Phprojekt_Log($config);
-        Zend_Registry::set('log', $log);
-
-        // Languages Set
-        Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
-        $translate = new Phprojekt_Language('en');
-        Zend_Registry::set('translate', $translate);
-
-        $db = Zend_Db::factory($config->database->type, array(
-            'username' => $config->database->username,
-            'password' => $config->database->password,
-            'dbname'   => $config->database->name,
-            'host'     => $config->database->host));
-        Zend_Registry::set('db', $db);
-        // There are some issues with session handling and unit testing
-        // that haven't been implemented here yet, do at least some
-        // exception handling
-
-        Zend_Session::start();
+        // These directories are
+        // covered for the code coverage even they are not part of unit testing
+        PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
+        PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/library/Phprojekt');
 
         $authNamespace         = new Zend_Session_Namespace('PHProjekt_Auth');
         $authNamespace->userId = 1;
         $authNamespace->admin  = 1;
 
-        // Loading view stuff for controller tests
+        $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
 
-        $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
+        $suite->sharedFixture = Phprojekt::getInstance()->getDb();
 
-        $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
-        $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
-        $viewRenderer->setViewScriptPathSpec(':action.:suffix');
-
-        Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
-
-        /* Front controller stuff */
-        $front = Zend_Controller_Front::getInstance();
-        $front->setDispatcher(new Phprojekt_Dispatcher());
-
-        $front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
-        $front->setDefaultModule('Default');
-
-        foreach (scandir(PHPR_CORE_PATH) as $module) {
-            $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
-
-            if (is_dir(!$dir)) {
-                continue;
-            }
-
-            $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
-
-            if (is_dir($helperPath)) {
-                $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
-                Zend_Controller_Action_HelperBroker::addPath($helperPath);
-            }
-        }
-
-        Zend_Registry::set('view', $view);
-        $view->webPath  = $config->webpath;
-        Zend_Registry::set('translate', $translate);
-
-        $front->setModuleControllerDirectoryName('Controllers');
-        $front->addModuleDirectory(PHPR_CORE_PATH);
-
-        $front->setParam('useDefaultControllerAlways', true);
-
-        $front->throwExceptions(true);
-
-
-        $suite                 = new PHPUnit_Framework_TestSuite('PHPUnit');
-        $suite->sharedFixture  = &$db;
         $suite->addTest(Timecard_AllTests::suite());
         $suite->addTest(User_AllTests::suite());
         $suite->addTest(Calendar_AllTests::suite());
@@ -200,13 +121,13 @@ class AllTests extends PHPUnit_Framework_TestSuite
     }
 }
 
-/*
-* This is actually our entry point. If we run from the commandline
-* we support several switches to the AllTest file.
-*
-* To see the switches try
-*   php AllTests.php -h
-*/
+/**
+ * This is actually our entry point. If we run from the commandline
+ * we support several switches to the AllTest file.
+ *
+ * To see the switches try
+ *   php AllTests.php -h
+ */
 if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
 
     /* default settings */

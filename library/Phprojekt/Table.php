@@ -122,7 +122,7 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Zend_Registry::get('log')->debug($error->getMessage());
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }
@@ -171,7 +171,7 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Zend_Registry::get('log')->debug($error->getMessage());
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }
@@ -232,7 +232,7 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Zend_Registry::get('log')->debug($error->getMessage());
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }
@@ -261,7 +261,7 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Zend_Registry::get('log')->debug($error->getMessage());
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }
@@ -366,7 +366,7 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Zend_Registry::get('log')->debug($error->getMessage());
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }

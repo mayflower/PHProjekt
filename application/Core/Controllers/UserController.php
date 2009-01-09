@@ -40,7 +40,7 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonGetUsersAction()
     {
-        $db      = Zend_Registry::get('db');
+        $db      = Phprojekt::getInstance()->getDb();
         $where   = array();
         $where   = "status = 'A' AND id != ". (int)Phprojekt_Auth::getUserId();
         $user    = new Phprojekt_User_User($db);

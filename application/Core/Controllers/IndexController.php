@@ -65,7 +65,7 @@ class Core_IndexController extends IndexController
             }
 
             if (!$valid) {
-                $this->_redirect(Zend_Registry::get('config')->webpath . 'index.php/Login/index');
+                $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/index');
                 exit;
             }
         }
@@ -83,7 +83,7 @@ class Core_IndexController extends IndexController
         if (null === $object) {
             $moduleName = ucfirst($this->getRequest()->getControllerName());
             $moduleName = "Phprojekt_".$moduleName."_".$moduleName;
-            $db         = Zend_Registry::get('db');
+            $db         = Phprojekt::getInstance()->getDb();
             $object     = new $moduleName($db);
             if (null === $object) {
                 $object = Phprojekt_Loader::getModel('Default', 'Default');

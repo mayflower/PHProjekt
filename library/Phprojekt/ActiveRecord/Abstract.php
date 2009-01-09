@@ -177,11 +177,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function __construct($config = null)
     {
         //if (Zend_Registry::isRegistered('log')) {
-        //    $this->_log = Zend_Registry::get('log');
+        //    $this->_log = Phprojekt::getInstance()->getLog();
         //}
 
         if (null === $config) {
-            $config = array('db' => Zend_Registry::get('db'));
+            $config = array('db' => Phprojekt::getInstance()->getDb());
         }
 
         if (!is_array($config)) {

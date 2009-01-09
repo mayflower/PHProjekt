@@ -141,7 +141,7 @@ class Phprojekt_Search_Default
      * @param integer $offset   Query offset
      *
      * @uses:
-     *      $db = Zend_Registry::get('db');
+     *      $db = Phprojekt::getInstance()->getDb();
      *      $search = new Phprojekt_Search_Default(array('db' => $db));
      *      $search->search('text1 text2 text3','OR');
      *
