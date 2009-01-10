@@ -30,7 +30,7 @@
         ?>
     </script>
 </head>
-<body class="phprojekt" onload="resizeIframe('filesIframe');">
+<body class="phprojekt">
     <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
         <div style="display:inline;">
             <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
@@ -42,7 +42,7 @@
     </form>
     <br>
     <?php
-    $iframeSize = 22;
+    $iframeSize = 23;
     if (isset($this->errorMessage) && !empty($this->errorMessage)) {
         echo '
         <div style="padding: 1px 0 1px 5px; font-weight: bold;">
@@ -83,7 +83,10 @@
     ?>
     <!-- Set the parent Iframe size -->
     <script type="text/javascript">
-        window.parent.document.getElementById('filesIframe').height = <?php echo $iframeSize; ?>;
+        // Just resize the iframe if we are inside a form (not in the module designer)
+        if (window.parent.document.getElementById('filesIframe')) {
+            window.parent.document.getElementById('filesIframe').height = <?php echo $iframeSize; ?>;
+        }
     </script>
 </body>
 </html>
