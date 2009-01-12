@@ -52,7 +52,7 @@ class Phprojekt_Tab_Information extends EmptyIterator implements Phprojekt_Model
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         // name
         $data = array();

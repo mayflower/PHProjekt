@@ -53,7 +53,7 @@ class Phprojekt_Model_Validate
     public function __construct()
     {
         $this->error      = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
-        $this->_translate = Zend_Registry::get('translate');
+        $this->_translate = Phprojekt::getInstance()->getTranslate();
     }
 
     /**

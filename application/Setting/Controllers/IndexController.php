@@ -77,7 +77,7 @@ class Setting_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule($module);

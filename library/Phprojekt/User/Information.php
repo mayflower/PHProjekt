@@ -52,7 +52,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         // username
         $data = array();

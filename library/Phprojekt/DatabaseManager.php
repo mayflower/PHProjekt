@@ -228,7 +228,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
     {
-        $translate          = Zend_Registry::get('translate');
+        $translate          = Phprojekt::getInstance()->getTranslate();
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
@@ -255,7 +255,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         $converted['key']      = $field->tableField;
         $converted['label']    = $translate->translate($field->formLabel);
@@ -392,7 +392,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $validated    = true;
         $this->_error = new Phprojekt_Error();
-        $translate    = Zend_Registry::get('translate');
+        $translate    = Phprojekt::getInstance()->getTranslate();
 
         if (empty($data)) {
             $validated = false;

@@ -126,7 +126,7 @@ class TagController extends IndexController
 
         $tagObj->saveTags($moduleId, $id, $string);
 
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         $message = $translate->translate('The Tags was added correctly');
 
@@ -160,7 +160,7 @@ class TagController extends IndexController
 
         $tagObj->deleteTagsByItem($moduleId, $id);
 
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $message   = $translate->translate('The Tags was deleted correctly');
 
         $return    = array('type'    => 'success',

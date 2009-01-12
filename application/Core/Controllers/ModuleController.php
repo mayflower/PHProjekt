@@ -71,7 +71,7 @@ class Core_ModuleController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -130,7 +130,7 @@ class Core_ModuleController extends Core_IndexController
      */
     public function jsonDeleteAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {

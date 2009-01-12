@@ -43,7 +43,7 @@ class Timecard_Models_TimecardSetting
     public function getFieldDefinition()
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         // Amount
         $data = array();

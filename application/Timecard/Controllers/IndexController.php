@@ -76,7 +76,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -185,7 +185,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingDeleteAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -219,7 +219,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonStartAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $model     = $this->getModelObject();
         $message   = $translate->translate(self::ADD_TRUE_TEXT);
 
@@ -243,7 +243,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonStopAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $offset    = (int) $this->getRequest()->getParam('start', null);
 
         // Date filter to find the open register
@@ -284,7 +284,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -336,7 +336,7 @@ class Timecard_IndexController extends IndexController
 
         $setting->setSettings($this->getRequest()->getParams());
 
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $message = $translate->translate(self::EDIT_TRUE_TEXT);
         $return    = array('type'    => 'success',
                            'message' => $message,

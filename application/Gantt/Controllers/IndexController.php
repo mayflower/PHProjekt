@@ -104,7 +104,7 @@ class Gantt_IndexController extends IndexController
             }
         }
 
-        $message = Zend_Registry::get('translate')->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+        $message = Phprojekt::getInstance()->getTranslate()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
 
         $return  = array('type'    => 'success',
                          'message' => $message,

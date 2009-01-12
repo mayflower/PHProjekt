@@ -48,7 +48,7 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $message   = $translate->translate(self::ADD_TRUE_TEXT);
         $id        = (int) $this->getRequest()->getParam('id');
 
@@ -99,7 +99,7 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonDeleteAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {

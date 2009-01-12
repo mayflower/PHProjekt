@@ -63,7 +63,7 @@ class Core_Models_UserSetting
     public function getFieldDefinition()
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         // password
         $data = array();
@@ -179,7 +179,7 @@ class Core_Models_UserSetting
 
     public function validateSettings($params)
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $message   = null;
         $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
