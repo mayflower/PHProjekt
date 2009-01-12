@@ -127,9 +127,9 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
         for (i in roles) {
             this._list.push({"id":roles[i]['id'], "name":roles[i]['name']});
             for (j in roles[i]['users']) {
-                this._relationList.push({"roleId": roles[i]['id'],
+                this._relationList.push({"roleId":   roles[i]['id'],
                                          "roleName": roles[i]['name'],
-                                         "userId": roles[i]['users'][j]['id'],
+                                         "userId":   roles[i]['users'][j]['id'],
                                          "userName": roles[i]['users'][j]['name']});
             }
         }
