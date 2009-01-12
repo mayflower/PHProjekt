@@ -79,6 +79,18 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Information');
+    }
+
+    /**
      * Get the information manager
      *
      * @see Phprojekt_Model_Interface::getInformation()
@@ -128,10 +140,9 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function recordValidate()
     {
-        $data      = $this->_data;
-        $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $data   = $this->_data;
+        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 

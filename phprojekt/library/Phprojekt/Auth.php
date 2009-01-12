@@ -40,7 +40,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return boolean true if user is logued in
      */
-    public function isLoggedIn()
+    static public function isLoggedIn()
     {
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
 
@@ -101,7 +101,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return integet user ID or false if there isn't user logged
      */
-    public function getUserId()
+    static public function getUserId()
     {
         $returnValue   = 0;
         $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');

@@ -57,6 +57,16 @@ class Phprojekt_Model_Validate
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
+    }
+
+    /**
      * Return if the values are valid or not
      *
      * @return boolean

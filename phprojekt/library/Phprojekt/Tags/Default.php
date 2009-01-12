@@ -99,6 +99,18 @@ class Phprojekt_Tags_Default
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->_tags        = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Tags');
+        $this->_tagsModules = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Modules');
+        $this->_tagsUsers   = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Users');
+    }
+
+    /**
      * Index a string
      *
      * Index all the strings.

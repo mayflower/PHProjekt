@@ -169,8 +169,10 @@ class Phprojekt {
 
         $helperPaths  = $this->_getHelperPaths();
         $view         = $this->_setView($helperPaths);
-        $viewRenderer = $this->_setViewRenderer($view);
 
+        $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
+        $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
+        $viewRenderer->setViewScriptPathSpec(':action.:suffix');
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
         foreach ($helperPaths as $helperPath) {
             Zend_Controller_Action_HelperBroker::addPath($helperPath['path']);
@@ -212,6 +214,7 @@ class Phprojekt {
                     $view->addHelperPath($helperPath['path'], $helperPath['module'] . '_' . 'Helpers');
                 }
             }
+            $viewNamespace->view = $view;
         } else {
             $view = $viewNamespace->view;
         }
@@ -219,28 +222,6 @@ class Phprojekt {
         Zend_Registry::set('view', $view);
 
         return $view;
-	}
-
-	/**
-	 * Cache the ViewRenderer Class
-	 *
-	 * @param Zend_View $view Zend_View Class
-	 *
-	 * @return Zend_Controller_Action_Helper_ViewRenderer
-	 */
-	private function _setViewRenderer($view)
-	{
-	    $viewRenderNamespace = new Zend_Session_Namespace('index_ViewRenderer');
-        if (!isset($viewRenderNamespace->viewRenderer)) {
-            $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
-            $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
-            $viewRenderer->setViewScriptPathSpec(':action.:suffix');
-            $viewRenderNamespace->viewRenderer = $viewRenderer;
-        } else {
-            $viewRenderer = $viewRenderNamespace->viewRenderer;
-        }
-
-        return $viewRenderer;
 	}
 
 	/**

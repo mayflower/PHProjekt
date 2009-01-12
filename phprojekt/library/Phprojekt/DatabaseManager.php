@@ -391,7 +391,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function recordValidate($module, $data)
     {
         $validated    = true;
-        $this->_error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
+        $this->_error = new Phprojekt_Error();
         $translate    = Zend_Registry::get('translate');
 
         if (empty($data)) {
