@@ -25,7 +25,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
 
-        // Get modules
+        // Get roles
         this.roleStore = new phpr.Store.Role(this.id);
         this._initData.push({'store': this.roleStore});
 
@@ -215,6 +215,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
         phpr.DataStore.deleteData({url: subModuleUrl});
         this.moduleStore.update();
+        this.roleStore.update();
         phpr.DataStore.deleteData({url: this._tagUrl});
     }
 });
