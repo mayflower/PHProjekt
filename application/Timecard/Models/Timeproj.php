@@ -67,7 +67,19 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         parent::__construct($db);
 
         $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = new Timecard_Models_TimeprojInformation();
+        $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'TimeprojInformation');
+    }
+
+    /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'TimeprojInformation');
     }
 
     /**
@@ -124,7 +136,6 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
                 return false;
         }
 
-        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 
@@ -176,7 +187,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
 
         $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
         $order  = 'startTime ASC';
-        $timecard = new Timecard_Models_Timecard();
+        $timecard = Phprojekt_Loader::getModel('Timecard', 'Timecard');
         $timecardRecords = $timecard->fetchall($where, $order);
 
         $information     = $timecard->getInformation($order);

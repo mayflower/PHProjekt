@@ -37,7 +37,6 @@
  */
 class Phprojekt_Loader extends Zend_Loader
 {
-
     /**
      * Identifier for views
      * It's normaly only needed by the internals

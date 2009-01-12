@@ -1122,7 +1122,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $sqlStr  = "SELECT ";
             $columns = array();
             foreach ($this->_cols as $column) {
-                $columns[] = $this->_db->quoteIdentifier($column);
+                $columns[] = $this->getAdapter()->quoteIdentifier($this->getTableName().'.'.$column);
             }
             $sqlStr .= implode(",", $columns);
             $sqlStr .= " FROM " . $statement[1];

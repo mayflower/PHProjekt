@@ -69,6 +69,18 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Information');
+    }
+
+    /**
      * Get the information manager
      *
      * @see Phprojekt_Model_Interface::getInformation()
@@ -154,8 +166,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     {
         $data   = $this->_data;
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
-        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }

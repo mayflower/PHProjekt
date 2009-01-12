@@ -70,6 +70,17 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Groups_Information');
+    }
+
+    /**
      * Returns the user id thats checked
      *
      * @return integer

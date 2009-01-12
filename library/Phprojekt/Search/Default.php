@@ -79,6 +79,19 @@ class Phprojekt_Search_Default
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->_words      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Words');
+        $this->_wordModule = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_WordModule');
+        $this->_files      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Files');
+        $this->_display    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+    }
+
+    /**
      * Index a object
      *
      * First delete all the entries for this object

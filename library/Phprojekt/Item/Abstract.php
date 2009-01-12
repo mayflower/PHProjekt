@@ -117,6 +117,20 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
+     * Define the clone function for prevent the same point to same object.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Default');
+        $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+    }
+
+    /**
      * Returns the database manager instance used by this phprojekt item
      *
      * @return Phprojekt_DatabaseManager
@@ -319,7 +333,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function delete()
     {
-        $moduleId = (!empty($this->moduleId))? $this->moduleId: 1;
+        $moduleId = Phprojekt_Module::getId($this->getTableName());
 
         //Is it Filemanager module? If yes -> delete the files from the server
         if (strtolower($this->getTableName()) == strtolower('Filemanager')) {
