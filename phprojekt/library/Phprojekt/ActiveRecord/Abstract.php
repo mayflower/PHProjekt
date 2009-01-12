@@ -188,14 +188,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $config = array('db' => $config);
         }
 
-        if (!array_key_exists('db', $config)
-        || !($config['db'] instanceof Zend_Db_Adapter_Abstract)) {
-            throw new
-            Phprojekt_ActiveRecord_Exception("ActiveRecord class must "
-                                           . "be initialized using a valid "
-                                           . "Zend_Db_Adapter_Abstract");
-
+        if (!array_key_exists('db', $config) || !($config['db'] instanceof Zend_Db_Adapter_Abstract)) {
+            throw new Phprojekt_ActiveRecord_Exception("ActiveRecord class must be initialized using a valid "
+                . "Zend_Db_Adapter_Abstract");
         }
+
+        // Set a metadata cache
+        $frontendOptions = array('automatic_serialization' => true);
+        $cache           = Zend_Cache::factory('Core', 'File', $frontendOptions);
+        Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
         parent::__construct($config);
 
@@ -221,7 +222,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return mixed
      */
-    public function current ()
+    public function current()
     {
         return $this->_data[$this->key()];
     }
@@ -246,7 +247,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    public function next ()
+    public function next()
     {
         next($this->_colInfo);
     }
@@ -381,8 +382,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         } elseif (array_key_exists($varname, $this->_data)) {
             $this->_data[$varname] = $value;
         } else {
-            throw
-            new Phprojekt_ActiveRecord_Exception("{$varname} doesnot exist");
+            throw new Phprojekt_ActiveRecord_Exception("{$varname} doesnot exist");
         }
     }
 
@@ -402,10 +402,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             $instance = new $className(array('db' => $this->getAdapter()));
 
-            $instance->_relations['hasManyAndBelongsToMany'] =
-            array('id'       => $this->id,
-            'classname' => get_class($this),
-            'refclass'  => $className); // needed for __get
+            $instance->_relations['hasManyAndBelongsToMany'] = array('id'        => $this->id,
+                                                                     'classname' => get_class($this),
+                                                                     'refclass'  => $className); // needed for __get
 
             $this->_data[$key] = $instance;
         }
@@ -446,18 +445,17 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $select = $adapter->select()->from(array('rel' => $tableName));
 
         $select->joinInner(array('my' => $myTable),
-        sprintf("%s = %s",
-        $adapter->quoteIdentifier("my.id"),
-        $adapter->quoteIdentifier("rel." . $myKeyName)));
+            sprintf("%s = %s",
+            $adapter->quoteIdentifier("my.id"),
+            $adapter->quoteIdentifier("rel." . $myKeyName)));
 
         $select->joinInner(array('foreign' => $foreignTable),
-        sprintf("%s = %s",
-        $adapter->quoteIdentifier("foreign.id"),
-        $adapter->quoteIdentifier("rel." . $foreignKeyName)));
+            sprintf("%s = %s",
+            $adapter->quoteIdentifier("foreign.id"),
+            $adapter->quoteIdentifier("rel." . $foreignKeyName)));
         if (isset($classId)) {
             $select->where(sprintf("%s = ?",
-            $adapter->quoteIdentifier("rel." . $myKeyName)),
-            $classId);
+                $adapter->quoteIdentifier("rel." . $myKeyName)), $classId);
         }
         /*
         * somewhat special, we might have a better solution here once.
@@ -466,7 +464,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         */
         if (null !== $where) {
             $select->where(str_replace($adapter->quoteIdentifier($foreignTable),
-            $adapter->quoteIdentifier("foreign"), $where));
+                $adapter->quoteIdentifier("foreign"), $where));
         }
 
         if (null !== $this->_log) {
@@ -503,7 +501,18 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         && is_array($this->_relations['hasManyAndBelongsToMany'])) {
             return $this->_fetchHasManyAndBelongsToMany($where);
         } else {
-            return parent::fetchAll($where, $order, $count, $offset);
+            // Collect all the fields for prevent select *
+            $select = $this->select()->from($this->_name, $this->_cols);
+            if (null !== $where) {
+                $select->where($where);
+            }
+            if (null !== $order) {
+                $select->order($order);
+            }
+            if ($count !== null || $offset !== null) {
+                $select->limit($count, $offset);
+            }
+            return parent::fetchAll($select);
         }
     }
 
@@ -517,8 +526,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _belongsTo($key)
     {
         if (!array_key_exists($key, $this->belongsTo)) {
-            throw new
-            Phprojekt_ActiveRecord_Exception("BelongsTo {$key} doesnot exist");
+            throw new Phprojekt_ActiveRecord_Exception("BelongsTo {$key} doesnot exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
@@ -553,8 +561,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _hasMany($key)
     {
         if (!array_key_exists($key, $this->hasMany)) {
-            throw new
-            Phprojekt_ActiveRecord_Exception("HasMany {$key} doesnot exist");
+            throw new Phprojekt_ActiveRecord_Exception("HasMany {$key} doesnot exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
@@ -575,10 +582,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             /*
             * $instance->_relations['simple'] = );
             */
-            $instance->_relations['hasMany'] =
-            array('id'       => $this->id,
-            'classname' => get_class($this),
-            'refclass'  => $className);
+            $instance->_relations['hasMany'] = array('id'        => $this->id,
+                                                     'classname' => get_class($this),
+                                                     'refclass'  => $className);
 
             $instance->_storedId = $instance->_data['id'];
 
@@ -587,7 +593,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         return $this->_data[$key];
     }
-
 
     /**
      * Insert a n:m relation into the relation table
@@ -637,9 +642,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $columnName = $this->_translateKeyFormat(get_class($this));
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-            $this->getAdapter()->quoteIdentifier($tableName),
-            $this->getAdapter()->quoteIdentifier($columnName),
-            $this->getAdapter()->quoteIdentifier($columnName));
+                $this->getAdapter()->quoteIdentifier($tableName),
+                $this->getAdapter()->quoteIdentifier($columnName),
+                $this->getAdapter()->quoteIdentifier($columnName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -662,7 +667,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         return $result;
     }
 
-
     /**
      * Update an has many and belongs to many relation
      *
@@ -682,9 +686,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $tableName = $this->_translateIntoRelationTableName($this, $im);
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-            $this->getAdapter()->quoteIdentifier($tableName),
-            $this->getAdapter()->quoteIdentifier($myKeyName),
-            $this->getAdapter()->quoteIdentifier($myKeyName));
+                $this->getAdapter()->quoteIdentifier($tableName),
+                $this->getAdapter()->quoteIdentifier($myKeyName),
+                $this->getAdapter()->quoteIdentifier($myKeyName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -718,17 +722,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected static function _getClassNameForRelationship($key, $array)
     {
         if (!is_array($array) || !is_array($array[$key])) {
-            throw new
-            Phprojekt_ActiveRecord_Exception("The second parameter"
-            . "must be an array");
+            throw new Phprojekt_ActiveRecord_Exception("The second parameter must be an array");
         }
 
         $definition = $array[$key];
 
         if (array_key_exists('classname', $definition)) {
             $className = $array[$key]['classname'];
-        } elseif (array_key_exists('model', $definition)
-        && array_key_exists('module', $definition)) {
+        } elseif (array_key_exists('model', $definition) && array_key_exists('module', $definition)) {
             $className = Phprojekt_Loader::getModelClassName($definition['module'],
             $definition['model']);
         } else {
@@ -736,9 +737,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         if (!class_exists($className, true)) {
-            throw new
-            Phprojekt_ActiveRecord_Exception("Cannot instantiate"
-            . "{$className}");
+            throw new Phprojekt_ActiveRecord_Exception("Cannot instantiate {$className}");
         }
 
         return $className;
@@ -759,17 +758,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected static function _translateClassNameToTable($className)
     {
-        $preg = sprintf('(?:%s_)?(%s)$', Phprojekt_Loader::CLASS_PATTERN,
-							Phprojekt_Loader::CLASS_PATTERN);
+        $preg = sprintf('(?:%s_)?(%s)$', Phprojekt_Loader::CLASS_PATTERN, Phprojekt_Loader::CLASS_PATTERN);
 
         $match = array();
         if (preg_match('@' . $preg . '@', $className, $match)) {
             return $match[1];
         }
 
-        throw new Phprojekt_ActiveRecord_Exception("Classname contains "
-                                                  ."illegal characters");
-
+        throw new Phprojekt_ActiveRecord_Exception("Classname contains illegal characters");
     }
 
     /**
@@ -805,9 +801,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    protected static function _translateIntoRelationTableName(
-                                        Phprojekt_ActiveRecord_Abstract $myObject,
-                                        Phprojekt_ActiveRecord_Abstract $foreignObject)
+    protected static function _translateIntoRelationTableName(Phprojekt_ActiveRecord_Abstract $myObject,
+        Phprojekt_ActiveRecord_Abstract $foreignObject)
     {
         $tableNames   = array();
         $myTable      = $myObject->getTableName();
@@ -821,7 +816,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $tableName = sprintf('%sRelation', implode('', $tableNames));
 
         return $tableName;
-
     }
 
     /**
@@ -873,13 +867,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         if (null !== $this->_storedId) {
             $result = ($this->update($data, $this->getAdapter()->quoteInto('id = ?', $this->_storedId)) > 0);
 
-            if ($this->id !== $this->_storedId
-            && count($this->hasMany) > 0) {
+            if ($this->id !== $this->_storedId && count($this->hasMany) > 0) {
                 $result = $this->_updateHasMany($this->_storedId, $this->id) && $result;
             }
 
-            if ($this->id !== $this->_storedId
-            && count($this->hasManyAndBelongsToMany) > 0) {
+            if ($this->id !== $this->_storedId && count($this->hasManyAndBelongsToMany) > 0) {
                 $result = $this->_updateHasManyAndBelongsToMany($this->_storedId, $this->id) && $result;
             }
         } else {
@@ -914,12 +906,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function delete()
     {
         if (array_key_exists('id', $this->_data)) {
-            if (array_key_exists('hasMany', $this->_relations)
-            || count($this->hasMany) > 0) {
+            if (array_key_exists('hasMany', $this->_relations) || count($this->hasMany) > 0) {
                 foreach (array_keys($this->hasMany) as $key) {
                     $className = $this->_getClassNameForRelationship($key,
                     $this->hasMany);
-                    $im        = new $className($this->getAdapter());
+                    $im         = new $className($this->getAdapter());
                     $tableName  = $im->getTableName();
                     $columnName = $this->_translateKeyFormat(get_class($this));
                     $this->getAdapter()->delete($tableName,
@@ -992,7 +983,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         if (null !== $join) {
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
         } else {
-            $rows = $this->_fetchWithOutJoin($where, $order, $count, $offset, $select);
+            $rows = $this->_fetchWithOutJoin($where, $order, $count, $offset);
         }
 
         $result = array();
@@ -1090,8 +1081,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return Zend_Db_Table_Rowset
      */
-    protected function _fetchWithJoin($where = null, $order = null, $count = null,
-                                      $offset = null, $select = null, $join = null)
+    protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null, $select = null,
+        $join = null)
     {
         // selection tool
         $selectObj = $this->_db->select();
@@ -1128,8 +1119,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $statement = explode("FROM", $sqlStr);
 
         if (null == $select) {
-            $sqlStr = "SELECT * FROM " . $statement[1];
-
+            $sqlStr  = "SELECT ";
+            $columns = array();
+            foreach ($this->_cols as $column) {
+                $columns[] = $this->_db->quoteIdentifier($column);
+            }
+            $sqlStr .= implode(",", $columns);
+            $sqlStr .= " FROM " . $statement[1];
         } else {
             $selectStmt = $statement[0] . ", ";
             $columns    = explode(",", trim($select));

@@ -103,11 +103,14 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
         if ($userId == 0) {
             $userId = $this->_user;
         }
-        $where[]   = 'userId = '. $this->getAdapter()->quote($userId);
+        $where = 'userId = '. $this->getAdapter()->quote($userId);
         if ($tagId > 0) {
-            $where[]   = 'tagId = '. $this->getAdapter()->quote($tagId);
+            $where .= ' AND tagId = '. $this->getAdapter()->quote($tagId);
         }
-        $tmpResult = $this->fetchAll($where)->toArray();
+        $select = $this->select();
+        $select->from($this->_name, array('id', 'tagId'))
+               ->where($where);
+        $tmpResult = $this->fetchAll($select)->toArray();
 
         // Convert result to array
         $foundResults = array();
