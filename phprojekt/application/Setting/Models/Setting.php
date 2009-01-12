@@ -139,12 +139,20 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         if (!$userId) {
             $userId = Phprojekt_Auth::getUserId();
         }
-        $record = $this->fetchAll("userId = ". (int) $userId .
-                                  " AND keyValue = ".$this->_db->quote($settingName) .
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
-        if (!empty($record)) {
-            $toReturn = $record[0]->value;
+
+        $settingNamespace = new Zend_Session_Namespace('getSetting_' . $userId);
+        if (!isset($settingNamespace->$settingName)) {
+            $record = $this->fetchAll("userId = ". (int) $userId .
+                                      " AND keyValue = ".$this->_db->quote($settingName) .
+                                      " AND moduleId = ".$this->_db->quote($this->_moduleId));
+            if (!empty($record)) {
+                $toReturn = $record[0]->value;
+            }
+            $settingNamespace->$settingName = $toReturn;
+        } else {
+            $toReturn = $settingNamespace->$settingName;
         }
+
         return $toReturn;
     }
 
@@ -212,6 +220,10 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         if (!$userId) {
             $userId = Phprojekt_Auth::getUserId();
         }
+
+        $settingNamespace = new Zend_Session_Namespace('getSetting_' . $userId);
+        $settingNamespace->unsetAll();
+
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
             call_user_method('setSettings', $this->getModel(), $params, $userId);
         } else {
