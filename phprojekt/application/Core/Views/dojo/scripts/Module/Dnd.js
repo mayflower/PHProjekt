@@ -202,8 +202,8 @@ phpr.editModuleDesignerField = function(object, target) {
             fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'text', true, false);
             break;
         case 'upload':
-            tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'varchar', true, false);
+            tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'text', true, false);
             break;
     }
 
@@ -379,11 +379,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
     if (tableType == 'int') {
         var tableLength  = params['tableLength'] || 11;
     } else {
-        if (formType=='upload') {
-            tableType        = 'text';
-        } else{
-            var tableLength  = params['tableLength'] || 255;
-        }
+        var tableLength  = params['tableLength'] || 255;
     }
     var tableField   = params['tableField'] || '';
     var formRange    = params['formRange'] || '';

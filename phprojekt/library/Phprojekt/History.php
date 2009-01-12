@@ -257,7 +257,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      */
     private function _uploadContentToDesc($contents)
     {
-        //Is there any file?
+        $result = '';
+        // Is there any file?
         if (!empty($contents)) {
             $result = '';
             $i = 0;
@@ -266,7 +267,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 $i++;
                 if ($i > 1) {
                     $result .= ', ';
-                    }
+                }
                 $fileName = substr(strstr($file, '|'), 1);
                 $result .= $fileName;
             }

@@ -78,6 +78,7 @@ class IndexController extends Zend_Controller_Action
 
         // This is a work around as we cannot set this in the front
         $this->_helper->viewRenderer->setNoRender();
+        $this->view->clearVars();
     }
 
     /**
@@ -540,24 +541,24 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link        = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $value       = (string) $this->getRequest()->getParam('value', null);
-        $itemId      = (int) $this->getRequest()->getParam('id', null);
-        $field       = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $deleteFile  = (string) $this->getRequest()->getParam('file', null);
+        $link       = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $value      = (string) $this->getRequest()->getParam('value', null);
+        $itemId     = (int) $this->getRequest()->getParam('id', null);
+        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $deleteFile = (string) $this->getRequest()->getParam('file', null);
 
-        //Delete the file from the $value string
+        // Delete the file from the $value string
         $filesIn = split('\|\|', $value);
         $filesOut = '';
         foreach ($filesIn as $file) {
             if ($file != $deleteFile) {
                 if ($filesOut != '') {
                     $filesOut .= '||';
-                    }
+                }
                 $filesOut .= $file;
             } else {
-                //Delete the file from the server
-                $md5Name = substr($file, 0, strpos($file, '|'));
+                // Delete the file from the server
+                $md5Name          = substr($file, 0, strpos($file, '|'));
                 $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
                 if (file_exists($fileAbsolutePath)) {
                     unlink($fileAbsolutePath);
@@ -576,7 +577,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->value          = $value;
         $this->view->filesChanged   = true;
 
-        //Is there any file?
+        // Is there any file?
         if (!empty($value)) {
             $files = split('\|\|', $value);
             $filesForView = array();

@@ -559,8 +559,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function syncTable($newFields, $tableName, $tableData)
     {
-        $tableManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Table');
-        $oldFields    = $this->getDataDefinition();
+        $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
+
+        // Clean the metadata cache
+        $this->_model->getDefaultMetadataCache()->clean();
+
+        $oldFields = $this->getDataDefinition();
         $tableDataForCreate['id'] = array('type'   => 'auto_increment',
                                           'length' => 11);
         $tableDataForCreate['ownerId'] = array('type'   => 'int',
@@ -627,7 +631,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($result as $record) {
             $record->delete();
         }
-        $tableManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Table');
+        $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
         return $tableManager->dropTable($table);
     }
 }
