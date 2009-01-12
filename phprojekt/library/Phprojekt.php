@@ -149,7 +149,6 @@ class Phprojekt {
 
         Zend_Loader::registerAutoload('Phprojekt_Loader');
 
-
         /* Read the config file, but only the production setting */
         try {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
@@ -168,52 +167,107 @@ class Phprojekt {
         /* Start zend session to handle all session stuff */
         Zend_Session::start();
 
-        $view = new Zend_View();
-        $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
-
-        $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
-        $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
-        $viewRenderer->setViewScriptPathSpec(':action.:suffix');
+        $helperPaths  = $this->_getHelperPaths();
+        $view         = $this->_setView($helperPaths);
+        $viewRenderer = $this->_setViewRenderer($view);
 
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
+        foreach ($helperPaths as $helperPath) {
+            Zend_Controller_Action_HelperBroker::addPath($helperPath['path']);
+        }
 
         /* Languages Set */
         $translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language", $this->_config->language));
-
-        /* Front controller stuff */
-        $front = Zend_Controller_Front::getInstance();
-        $front->setDispatcher(new Phprojekt_Dispatcher());
+        Zend_Registry::set('translate', $translate);
 
         $plugin = new Zend_Controller_Plugin_ErrorHandler();
         $plugin->setErrorHandlerModule('Default');
         $plugin->setErrorHandlerController('Error');
         $plugin->setErrorHandlerAction('error');
 
+        $front = Zend_Controller_Front::getInstance();
+        $front->setDispatcher(new Phprojekt_Dispatcher());
         $front->registerPlugin($plugin);
-
         $front->setDefaultModule('Default');
+        $front->setModuleControllerDirectoryName('Controllers');
+        $front->addModuleDirectory(PHPR_CORE_PATH);
+        $front->setParam('useDefaultControllerAlways', true);
+	}
 
-        foreach (scandir(PHPR_CORE_PATH) as $module) {
-            $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
-            if (is_dir(!$dir)) {
-                continue;
+	/**
+	 * Cache the View Class
+	 *
+	 * @param array $helperPaths Array with all the folders with helpers
+	 *
+	 * @return Zend_View
+	 */
+	private function _setView($helperPaths)
+	{
+	    $viewNamespace = new Zend_Session_Namespace('index_View');
+        if (!isset($viewNamespace->view)) {
+            $view = new Zend_View();
+            $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
+            foreach ($helperPaths as $helperPath) {
+                if (is_dir($helperPath['path'])) {
+                    $view->addHelperPath($helperPath['path'], $helperPath['module'] . '_' . 'Helpers');
+                }
             }
-
-            $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
-
-            if (is_dir($helperPath)) {
-                $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
-                Zend_Controller_Action_HelperBroker::addPath($helperPath);
-            }
+        } else {
+            $view = $viewNamespace->view;
         }
 
         Zend_Registry::set('view', $view);
-        Zend_Registry::set('translate', $translate);
 
-        $front->setModuleControllerDirectoryName('Controllers');
-        $front->addModuleDirectory(PHPR_CORE_PATH);
+        return $view;
+	}
 
-        $front->setParam('useDefaultControllerAlways', true);
+	/**
+	 * Cache the ViewRenderer Class
+	 *
+	 * @param Zend_View $view Zend_View Class
+	 *
+	 * @return Zend_Controller_Action_Helper_ViewRenderer
+	 */
+	private function _setViewRenderer($view)
+	{
+	    $viewRenderNamespace = new Zend_Session_Namespace('index_ViewRenderer');
+        if (!isset($viewRenderNamespace->viewRenderer)) {
+            $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
+            $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
+            $viewRenderer->setViewScriptPathSpec(':action.:suffix');
+            $viewRenderNamespace->viewRenderer = $viewRenderer;
+        } else {
+            $viewRenderer = $viewRenderNamespace->viewRenderer;
+        }
+
+        return $viewRenderer;
+	}
+
+	/**
+	 * Cache the folders with helpers files
+	 *
+	 * @return array
+	 */
+	private function _getHelperPaths()
+	{
+	    $helperPathNamespace = new Zend_Session_Namespace('index_HelperPath');
+        if (!isset($helperPathNamespace->helperPaths)) {
+            $helperPaths = array();
+            foreach (scandir(PHPR_CORE_PATH) as $module) {
+                $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
+                if (is_dir(!$dir)) {
+                    continue;
+                }
+
+                $helperPaths = array('module' => $module,
+                                     'path'   => $dir . DIRECTORY_SEPARATOR . 'Helpers');
+            }
+            $helperPathNamespace->helperPaths = $helperPaths;
+        } else {
+            $helperPaths = $helperPathNamespace->helperPaths;
+        }
+
+        return $helperPaths;
 	}
 
 	/**
