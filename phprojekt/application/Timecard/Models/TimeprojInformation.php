@@ -52,7 +52,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         switch ($ordering) {
             default:

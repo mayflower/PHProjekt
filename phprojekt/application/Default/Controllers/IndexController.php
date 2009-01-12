@@ -185,7 +185,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -221,7 +221,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonSaveMultipleAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $data      = (array) $this->getRequest()->getParam('data');
         $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId    = array();
@@ -253,7 +253,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDeleteAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -389,8 +389,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function getTranslatedStringsAction()
     {
-        $language = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
-        echo Phprojekt_Converter_Json::convert(Zend_Registry::get('translate')->getTranslatedStrings($language));
+        $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
+        $translate = Phprojekt::getInstance()->getTranslate();
+
+        echo Phprojekt_Converter_Json::convert($translate->getTranslatedStrings($language));
     }
 
     /**

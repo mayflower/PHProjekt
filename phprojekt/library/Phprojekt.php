@@ -63,6 +63,20 @@ class Phprojekt {
 	protected $_log;
 
     /**
+     * Translate class
+     *
+     * @var Phprojekt_Language
+     */
+	protected $_translate;
+
+    /**
+     * View class
+     *
+     * @var Zend_View
+     */
+	protected $_view;
+
+    /**
      * Return this class only one time
      *
      * @return Phprojekt
@@ -124,6 +138,31 @@ class Phprojekt {
 		return $this->_log;
 	}
 
+    /**
+     * Return the Translate class
+     * If don't exists, try to create it
+     *
+     * @return Phprojekt_Language
+     */
+	public function getTranslate()
+	{
+		if (null === $this->_translate) {
+            $this->_translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language",
+                $this->_config->language));
+		}
+		return $this->_translate;
+	}
+
+    /**
+     * Return the View class
+     *
+     * @return Zend_View
+     */
+	public function getView()
+	{
+		return $this->_view;
+	}
+
 	/**
 	 * Initialize the paths,
 	 * the config values and all the render stuff
@@ -178,10 +217,6 @@ class Phprojekt {
             Zend_Controller_Action_HelperBroker::addPath($helperPath['path']);
         }
 
-        /* Languages Set */
-        $translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language", $this->_config->language));
-        Zend_Registry::set('translate', $translate);
-
         $plugin = new Zend_Controller_Plugin_ErrorHandler();
         $plugin->setErrorHandlerModule('Default');
         $plugin->setErrorHandlerController('Error');
@@ -219,7 +254,7 @@ class Phprojekt {
             $view = $viewNamespace->view;
         }
 
-        Zend_Registry::set('view', $view);
+        $this->_view = $view;
 
         return $view;
 	}

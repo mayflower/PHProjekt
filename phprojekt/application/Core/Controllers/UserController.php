@@ -113,7 +113,7 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {

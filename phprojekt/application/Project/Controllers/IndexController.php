@@ -47,7 +47,7 @@ class Project_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $id        = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
@@ -88,7 +88,7 @@ class Project_IndexController extends IndexController
      */
     public function jsonSaveMultipleAction()
     {
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
         $data      = (array) $this->getRequest()->getParam('data');
         $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId    = array();

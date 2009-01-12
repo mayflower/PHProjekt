@@ -77,7 +77,7 @@ class Administration_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate     = Zend_Registry::get('translate');
+        $translate     = Phprojekt::getInstance()->getTranslate();
         $module        = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
         $configuration->setModule($module);

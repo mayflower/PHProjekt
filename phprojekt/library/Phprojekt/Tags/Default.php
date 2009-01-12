@@ -431,8 +431,9 @@ class Phprojekt_Tags_Default
      */
     public function getFieldDefinition()
     {
-        $translate = Zend_Registry::get('translate');
-        $fields = array();
+        $translate = Phprojekt::getInstance()->getTranslate();
+        $fields    = array();
+
         $fields[] = array('key'   => 'string',
                           'label' => $translate->translate('Tag'));
         $fields[] = array('key'   => 'count',

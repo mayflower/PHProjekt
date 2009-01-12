@@ -64,7 +64,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
      *                                            Todo_Models_Todo
      *
-     * @uses    $mailNotif = Phprojekt_Loader::getLibraryClass('Phprojekt_Mail_Notification')
+     * @uses    $mailNotif = new Phprojekt_Mail_Notification()
      *          $mailNotif->sendNotificationHtml($model);
      *
      * @see _sendNotification()
@@ -89,7 +89,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
      *                                            Todo_Models_Todo
      *
-     * @uses    $mailNotif = Phprojekt_Loader::getLibraryClass('Phprojekt_Mail_Notification');
+     * @uses    $mailNotif = new Phprojekt_Mail_Notification();
      *          $mailNotif->sendNotificationText($model);
      *
      * @see _sendNotification()
@@ -142,7 +142,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * @param array      $from   An array with two positions: the first value contains
      *                           the email and the second one, the name (optional).
      *
-     * @uses     $mailNotif = Phprojekt_Loader::getLibraryClass('Phprojekt_Mail_Notification');
+     * @uses     $mailNotif = new Phprojekt_Mail_Notification();
      *           $mailNotif->setCustomFrom(array("mariano.lapenna@mayflower.de",
      *                                           "Mariano"));
      *           $mailNotif->sendNotificationHtml($model);
@@ -242,8 +242,8 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      */
     private function _setCustomBody()
     {
-        $this->_view     = Zend_Registry::get('view');
-        $translate       = Zend_Registry::get('translate');
+        $this->_view     = Phprojekt::getInstance()->getView();
+        $translate       = Phprojekt::getInstance()->getTranslate();
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($fieldDefinition as $key => $field) {
@@ -405,10 +405,9 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         if (empty($smtpUser)) {
             $smtpTransport = new Zend_Mail_Transport_Smtp($smtpServer);
         } else {
-            $smtpTransport  = new Zend_Mail_Transport_Smtp($smtpServer,
-                                                           array('auth'     => 'login',
-                                                                 'username' => $smtpUser,
-                                                                 'password' => $smtpPassword));
+            $smtpTransport = new Zend_Mail_Transport_Smtp($smtpServer, array('auth'     => 'login',
+                                                                             'username' => $smtpUser,
+                                                                             'password' => $smtpPassword));
         }
 
         return $smtpTransport;

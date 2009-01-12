@@ -52,7 +52,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
     public function getFieldDefinition($ordering = 'month')
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         switch ($ordering) {
             case 'today':

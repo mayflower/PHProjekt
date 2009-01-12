@@ -52,7 +52,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         // name
         $data = array();

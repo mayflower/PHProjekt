@@ -39,7 +39,7 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
     {
         $tabModel  = new Phprojekt_Tab_Information();
         $expected  = array();
-        $translate = Zend_Registry::get('translate');
+        $translate = Phprojekt::getInstance()->getTranslate();
 
         // name
         $data = array();
