@@ -133,9 +133,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function current()
     {
-        return new Phprojekt_DatabaseManager_Field($this->getInformation(),
-        $this->key(),
-        parent::current());
+        return new Phprojekt_DatabaseManager_Field($this->getInformation(), $this->key(), parent::current());
     }
 
     /**
@@ -305,6 +303,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
+     * Use direclty the the Abstract Record to don't save the history or search words
+     *
+     * @return void
+     */
+    public function parentSave()
+    {
+        return parent::save();
+    }
+
+    /**
      * Extension of the Abstract Record to delete an item
      *
      * @return void
@@ -371,21 +379,18 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         // only fetch records with read access
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
-
         $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
                          AND ItemRights.moduleId = %d AND ItemRights.userId = %d) ',
                          $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
                          Phprojekt_Module::getId($this->getTableName()),
-                         $authNamespace->userId);
+                         Phprojekt_Auth::getUserId());
 
         // Set where
         if (null !== $where) {
             $where .= ' AND ';
         }
         $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(),
-                  $authNamespace->userId, $this->getTableName());
-
+            Phprojekt_Auth::getUserId(), $this->getTableName());
         $where .= ' OR (ItemRights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
@@ -458,5 +463,4 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $rights);
     }
-
 }

@@ -143,9 +143,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         /* @todo: fix this, must be possible with requestid === null */
         if (null === $this->_requestedId) {
-            throw new Phprojekt_Tree_Node_Exception(
-            'You have to set a requested '
-            . 'treeid in the constructor');
+            throw new Phprojekt_Tree_Node_Exception('You have to set a requested treeid in the constructor');
         }
 
         $database = $this->getActiveRecord()->getAdapter();
@@ -163,8 +161,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $rootPath = $database->fetchOne($select);
 
         if (null === $rootPath) {
-            throw
-            new Phprojekt_Tree_Node_Exception('Requested node not found');
+            throw new Phprojekt_Tree_Node_Exception('Requested node not found');
         }
 
         $where = sprintf("%s OR %s", $database->quoteInto("path LIKE ?", $rootPath . '%'),
@@ -332,7 +329,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $node->_children[$id] = $this->_rebuildPaths($child, $basePath . $node->id . self::NODE_SEPARATOR);
 
             $this->getRootNode()->_index[$child->id] = $node->_children[$id];
-            $node->_children[$id]->getActiveRecord()->save();
+            $node->_children[$id]->getActiveRecord()->parentSave();
         }
         return $node;
     }
