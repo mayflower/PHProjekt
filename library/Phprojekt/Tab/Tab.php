@@ -64,8 +64,8 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
         }
         parent::__construct($db);
 
-        $this->_validate           = new Phprojekt_Model_Validate();
-        $this->_informationManager = new Phprojekt_Tab_Information();
+        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Tab_Information');
     }
 
     /**
@@ -109,7 +109,7 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
         $data      = $this->_data;
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        $this->_validate = new Phprojekt_Model_Validate();
+        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 

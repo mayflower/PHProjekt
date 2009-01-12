@@ -72,10 +72,10 @@ class Phprojekt_Search_Default
      */
     public function __construct()
     {
-        $this->_words      = new Phprojekt_Search_Words();
-        $this->_wordModule = new Phprojekt_Search_WordModule();
-        $this->_files      = new Phprojekt_Search_Files();
-        $this->_display    = new Phprojekt_Search_Display();
+        $this->_words      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Words');
+        $this->_wordModule = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_WordModule');
+        $this->_files      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Files');
+        $this->_display    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
     }
 
     /**
@@ -142,14 +142,14 @@ class Phprojekt_Search_Default
      *
      * @uses:
      *      $db = Phprojekt::getInstance()->getDb();
-     *      $search = new Phprojekt_Search_Default(array('db' => $db));
+     *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Default');
      *      $search->search('text1 text2 text3','OR');
      *
      * @return array
      */
     public function search($words, $count = null, $offset = null)
     {
-        $rights = new Phprojekt_Item_Rights();
+        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $result = $this->_words->searchWords($words, $count, $offset);
         // Convert result to array and add the display data
         // only fetch records with read access

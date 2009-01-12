@@ -45,7 +45,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     function getProjectRoleUserPermissions($projectId)
     {
         $roles = array();
-        $model = new Phprojekt_Role_Role();
+        $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Role');
 
         foreach ($model->fetchAll(null, ' name ASC ') as $role) {
             $roles['data'][$role->id] = array();

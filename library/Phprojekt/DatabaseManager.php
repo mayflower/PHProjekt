@@ -369,7 +369,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
             case 'User':
-                $activeRecord = new Phprojekt_User_User();
+                $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
                 $result       = $activeRecord->fetchAll("status = 'A'");
                 foreach ($result as $oneUser) {
                     $options[] = array('id'   => $oneUser->$key,
@@ -391,7 +391,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function recordValidate($module, $data)
     {
         $validated    = true;
-        $this->_error = new Phprojekt_Error();
+        $this->_error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
         $translate    = Zend_Registry::get('translate');
 
         if (empty($data)) {
@@ -559,7 +559,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function syncTable($newFields, $tableName, $tableData)
     {
-        $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
+        $tableManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Table');
         $oldFields    = $this->getDataDefinition();
         $tableDataForCreate['id'] = array('type'   => 'auto_increment',
                                           'length' => 11);
@@ -627,7 +627,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($result as $record) {
             $record->delete();
         }
-        $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
+        $tableManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Table');
         return $tableManager->dropTable($table);
     }
 }

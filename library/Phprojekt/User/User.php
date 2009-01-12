@@ -84,8 +84,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         }
         parent::__construct($db);
 
-        $this->_validate           = new Phprojekt_Model_Validate();
-        $this->_informationManager = new Phprojekt_User_Information();
+        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
     }
 
     /**
@@ -158,7 +158,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         if ($this->id == 0) {
             if (parent::save()) {
                 // adding default values
-                $rights = new Phprojekt_Item_Rights();
+                $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
                 $rights->saveDefaultRights($this->id);
                 return true;
             }
@@ -220,7 +220,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         $data      = $this->_data;
         $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        $this->_validate = new Phprojekt_Model_Validate();
+        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 
@@ -244,7 +244,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     static public function getSetting($settingName, $defaultValue = null)
     {
-        $setting = new Setting_Models_Setting();
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
 
         $value = $setting->getSetting($settingName);

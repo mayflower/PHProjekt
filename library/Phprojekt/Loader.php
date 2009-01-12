@@ -215,6 +215,9 @@ class Phprojekt_Loader extends Zend_Loader
      * This method can take more than the two arguments. Every other argument
      * is passed to the constructor.
      *
+     * The class is temporally cached in the Registry for the next calls
+     * Only is cached if don't have any arguments
+     *
      * @param string $module Name of the module
      * @param string $model  Name of the model
      *
@@ -225,7 +228,50 @@ class Phprojekt_Loader extends Zend_Loader
         $name = self::getModelClassname($module, $model);
         $args = array_slice(func_get_args(), 2);
 
-        return self::_newInstance($name, $args);
+        if (empty($args)) {
+            $registryName = 'getModel_'.$module.'_'.$model;
+            if (!Zend_Registry::isRegistered($registryName)) {
+                $object = self::_newInstance($name, $args);
+                Zend_Registry::set($registryName, $object);
+            } else {
+                $object = clone(Zend_Registry::get($registryName));
+            }
+        } else {
+            $object = self::_newInstance($name, $args);
+        }
+
+        return $object;
+    }
+
+    /**
+     * Load a class from the library and return an new instance of the class.
+     * This method can take more than the two arguments. Every other argument
+     * is passed to the constructor.
+     *
+     * The class is temporally cached in the Registry for the next calls
+     * Only is cached if don't have any arguments
+     *
+     * @param string $name Name of the class
+     *
+     * @return Object
+     */
+    public static function getLibraryClass($name)
+    {
+        $args = array_slice(func_get_args(), 2);
+
+        if (empty($args)) {
+            $registryName = 'getLibraryClass_'.$name;
+            if (!Zend_Registry::isRegistered($registryName)) {
+                $object = self::_newInstance($name, $args);
+                Zend_Registry::set($registryName, $object);
+            } else {
+                $object = clone(Zend_Registry::get($registryName));
+            }
+        } else {
+            $object = self::_newInstance($name, $args);
+        }
+
+        return $object;
     }
 
     /**

@@ -40,10 +40,8 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonGetUsersAction()
     {
-        $db      = Phprojekt::getInstance()->getDb();
-        $where   = array();
         $where   = "status = 'A' AND id != ". (int)Phprojekt_Auth::getUserId();
-        $user    = new Phprojekt_User_User($db);
+        $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -58,8 +56,8 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonDetailAction()
     {
-        $user = new Phprojekt_User_User();
-        $id       = (int) $this->getRequest()->getParam("id");
+        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $id   = (int) $this->getRequest()->getParam("id");
 
         $user->find($id);
         $data = array();
@@ -71,7 +69,7 @@ class Core_UserController extends Core_IndexController
         $data['status']    = (empty($user->status))?"":$user->status;
         $data['admin']     = (empty($user->admin))?"":$user->admin;
 
-        $setting = new Setting_Models_Setting();
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
 
         $tmp = $setting->getList(0, $setting->getModel()->getFieldDefinition());
@@ -129,7 +127,7 @@ class Core_UserController extends Core_IndexController
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
         // Saving the settings
-        $setting = new Setting_Models_Setting();
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
         $setting->setSettings($this->getRequest()->getParams(), $id);
 

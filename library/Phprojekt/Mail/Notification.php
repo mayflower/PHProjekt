@@ -64,7 +64,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
      *                                            Todo_Models_Todo
      *
-     * @uses    $mailNotif = new Phprojekt_Mail_Notification();
+     * @uses    $mailNotif = Phprojekt_Loader::getLibraryClass('Phprojekt_Mail_Notification')
      *          $mailNotif->sendNotificationHtml($model);
      *
      * @see _sendNotification()
@@ -89,7 +89,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
      *                                            Todo_Models_Todo
      *
-     * @uses    $mailNotif = new Phprojekt_Mail_Notification();
+     * @uses    $mailNotif = Phprojekt_Loader::getLibraryClass('Phprojekt_Mail_Notification');
      *          $mailNotif->sendNotificationText($model);
      *
      * @see _sendNotification()
@@ -119,7 +119,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     {
         // Sometimes, the user may try to modify an existing item and presses Save without having modified even one
         // field. In that case, no mail should be sent.
-        $history = new Phprojekt_History();
+        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
         $this->_changes = $history->getLastHistoryData($this->_model);
         if (empty($this->_changes)) {
             return;
@@ -142,7 +142,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * @param array      $from   An array with two positions: the first value contains
      *                           the email and the second one, the name (optional).
      *
-     * @uses     $mailNotif = new Phprojekt_Mail_Notification();
+     * @uses     $mailNotif = Phprojekt_Loader::getLibraryClass('Phprojekt_Mail_Notification');
      *           $mailNotif->setCustomFrom(array("mariano.lapenna@mayflower.de",
      *                                           "Mariano"));
      *           $mailNotif->sendNotificationHtml($model);
@@ -170,7 +170,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      */
     private function _setFromUserLogued()
     {
-        $phpUser = new Phprojekt_User_User();
+        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $phpUser->find(Phprojekt_Auth::getUserId());
 
         // Email assignment
@@ -195,7 +195,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     {
         $rights  = $this->_model->getRights();
         $i       = 0;
-        $phpUser = new Phprojekt_User_User();
+        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         foreach ($rights as $userId => $userRights) {
             if ($userRights['read']) {
                 $i++;
@@ -204,7 +204,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 } else {
                     $phpUser->find(Phprojekt_Auth::getUserId());
                 }
-                $setting = new Setting_Models_Setting();
+                $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
                 $email   = $setting->getSetting('email', (int) $userId);
                 $this->_customTo[$i] = array();
                 $this->_customTo[$i][0] = $email;
@@ -275,7 +275,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         $this->_view->mainFields = $fieldsView;
 
-        $history = new Phprojekt_History();
+        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
 
         // The following algorithm loops inside $this->_changes and does the following:
         // * Translates the name of the field

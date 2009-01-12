@@ -88,7 +88,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     {
         $where        = array();
         $foundResults = array();
-        $rights       = new Phprojekt_Item_Rights();
+        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
 
         $where[] = 'tagUserId  = '. $this->getAdapter()->quote($tagUserId);
