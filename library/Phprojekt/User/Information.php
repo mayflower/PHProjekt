@@ -218,7 +218,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                         'name' => $translate->translate('No')),
                                   array('id'   => 1,
                                         'name' => $translate->translate('Yes')));
-        $data['required'] = true;
+        $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
 
