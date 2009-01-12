@@ -133,6 +133,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 // Copy Templates files
                 $this->_copyTemplates(array('Template'));
             }
+
+            // Reset cache for modules
+            $moduleNamespace = new Zend_Session_Namespace('getCachedIds');
+            $moduleNamespace->unsetAll();
+
             return $this->id;
         } else {
             $error = array_pop($this->getError());
