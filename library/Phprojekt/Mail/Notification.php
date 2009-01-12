@@ -260,6 +260,18 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 case 'percentage':
                     $value = number_format($this->_model->$field['key'], 2);
                     break;
+                case 'upload':
+                    $i = 0;
+                    $files = split('\|\|', $this->_model->$field['key']);
+                    foreach ($files as $file) {
+                        $i++;
+                        if ($i > 1) {
+                            $value .= ', ';
+                        }
+                        $fileName = substr(strstr($file, '|'), 1);
+                        $value .= $fileName;
+                    }
+                    break;
                 case 'text':
                 case 'textarea':
                 case 'date':
