@@ -87,7 +87,7 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function _registerRoles()
     {
-        $roles = new Phprojekt_Role_Role();
+        $roles = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Role');
         foreach ($roles->fetchAll() as $role) {
             if ($role->parent < 1) {
                 $role->parent = null;
@@ -103,7 +103,7 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function _registerRights()
     {
-        $role   = new Phprojekt_Role_RoleModulePermissions();
+        $role   = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
         $rights = array();
         foreach ($role->fetchAll(null, 'roleId ASC') as $right) {
             $access = Phprojekt_Acl::convertBitmaskToArray($right->access);

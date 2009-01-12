@@ -66,7 +66,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
         parent::__construct();
 
         $this->_userId             = Phprojekt_Auth::getUserId();
-        $this->_informationManager = new Phprojekt_Groups_Information();
+        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Groups_Information');
     }
 
     /**
@@ -118,7 +118,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
             $groups = $groupNamespace->groups;
         } else {
             $groups = array();
-            $user = new Phprojekt_User_User();
+            $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $user->find($this->_userId);
             $tmp = $user->groups->fetchAll();
             foreach ($tmp as $row) {
@@ -136,7 +136,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
      *
      * @return Phprojekt_ModelInformation_Interface
      */
-    public function getInformation ()
+    public function getInformation()
     {
         return $this->_informationManager;
     }

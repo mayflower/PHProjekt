@@ -93,9 +93,9 @@ class Phprojekt_Tags_Default
      */
     private function __construct()
     {
-        $this->_tags        = new Phprojekt_Tags_Tags();
-        $this->_tagsModules = new Phprojekt_Tags_Modules();
-        $this->_tagsUsers   = new Phprojekt_Tags_Users();
+        $this->_tags        = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Tags');
+        $this->_tagsModules = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Modules');
+        $this->_tagsUsers   = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Users');
     }
 
     /**
@@ -178,7 +178,7 @@ class Phprojekt_Tags_Default
     {
         $foundResults = array();
         $results      = array();
-        $rights       = new Phprojekt_Item_Rights();
+        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
 
         if (!empty($tag)) {
@@ -197,7 +197,7 @@ class Phprojekt_Tags_Default
                     $foundResults = array_slice($foundResults, 0, $limit);
                 }
 
-                $display = new Phprojekt_Search_Display();
+                $display = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
                 foreach ($foundResults as $result) {
                     if ($rights->getItemRight($result['moduleId'], $result['itemId'], $userId) > 0) {
                         $results[] = $display->getDisplay($result['moduleId'], $result['itemId']);

@@ -60,7 +60,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
                                                              Phprojekt_Acl::convertBitmaskToArray($right->access));
         }
         if (empty($modules)) {
-            $model = new Phprojekt_Module_Module();
+            $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
             foreach ($model->fetchAll(null, ' name ASC ') as $module) {
                 $modules['data'][$module->id] = array();
 

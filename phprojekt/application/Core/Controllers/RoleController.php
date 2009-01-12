@@ -42,7 +42,7 @@ class Core_RoleController extends Core_IndexController
      */
     public function jsonGetModulesAccessAction()
     {
-        $role    = new Phprojekt_Role_RoleModulePermissions();
+        $role    = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
         $roleId  = (int) $this->getRequest()->getParam('id', null);
         $modules = $role->getRoleModulePermissionsById($roleId);
 

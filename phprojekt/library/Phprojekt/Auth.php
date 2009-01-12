@@ -61,8 +61,7 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public function login($username, $password)
     {
-        $db     = Phprojekt::getInstance()->getDb();
-        $user   = new Phprojekt_User_User($db);
+        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $userId = $user->findIdByUsername($username);
 
         if ($userId > 0) {
@@ -76,7 +75,7 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         try {
-            $setting = new Setting_Models_Setting();
+            $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
             $setting->setModule('User');
 
             // The password does not match with password provided

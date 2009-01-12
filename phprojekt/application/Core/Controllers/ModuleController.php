@@ -109,7 +109,7 @@ class Core_ModuleController extends Core_IndexController
     function jsonGetGlobalModulesAction()
     {
         $modules = array();
-        $model   = new Phprojekt_Module_Module();
+        $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
         foreach ($model->fetchAll(' active = 1 AND (saveType = 1 OR saveType = 2) ', ' name ASC ') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']        = $module->id;

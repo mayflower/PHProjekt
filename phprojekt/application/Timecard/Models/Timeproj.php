@@ -66,7 +66,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         }
         parent::__construct($db);
 
-        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         $this->_informationManager = new Timecard_Models_TimeprojInformation();
     }
 
@@ -124,7 +124,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
                 return false;
         }
 
-        $this->_validate = new Phprojekt_Model_Validate();
+        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 

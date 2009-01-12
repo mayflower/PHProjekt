@@ -157,8 +157,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
             $values = $rightNamespace->right;
         } else {
-            $db     = Phprojekt::getInstance()->getDb();
-            $user   = new Phprojekt_User_User($db);
+            $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $where  = array();
             $values = array();
 
