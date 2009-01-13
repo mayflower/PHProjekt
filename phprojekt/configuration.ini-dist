@@ -49,11 +49,11 @@ database.params.dbname      = "phprojekt"
 
 ; LOG
 ; Here will be logged things explicitly declared.
-; E.G.: (PHP) Zend_Registry::get('log')->debug("String to be logged");
+; E.G.: (PHP) Phprojekt::getInstance()->getLog()->debug("String to be logged");
 log.debug.filename   = "/var/www/phprojekt/logs/debug.log"
 
 ; This is another type of logging.
-; E.G.: (PHP) Zend_Registry::get('log')->crit("Critical advice");
+; E.G.: (PHP) Phprojekt::getInstance()->getLog()->crit("String to be logged");
 ; Note for developers: there are many different type of logs defined that can be
 ; added here, see the complete list in phprojekt\library\Phprojekt\Log.php
 log.crit.filename    = "/var/www/phprojekt/logs/crit.log"
