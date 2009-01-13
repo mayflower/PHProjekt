@@ -66,7 +66,6 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
         return $modules;
     }
 
-
     /**
      * Delete a project-module relation
      *

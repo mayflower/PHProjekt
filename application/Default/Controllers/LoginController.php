@@ -89,7 +89,6 @@ class LoginController extends Zend_Controller_Action
         Phprojekt_Auth::logout();
         $config = Phprojekt::getInstance()->getConfig();
         $this->_redirect($config->webpath.'index.php/login/index');
-        Zend_Session_Namespace::unsetAll();
         die();
     }
 }

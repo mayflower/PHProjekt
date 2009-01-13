@@ -133,7 +133,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         }
 
         /* Get the translated string from the session if exists */
-        $session = new Zend_Session_Namespace('Language_'.$locale);
+        $session = new Zend_Session_Namespace('Phprojekt_LanguageAdapter-_loadTranslationData-' . $locale);
         if (true === isset($session->translatedStrings)) {
             $this->_translate = $session->translatedStrings;
         } else {

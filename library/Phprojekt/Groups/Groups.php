@@ -100,19 +100,16 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     public function isUserInGroup($group)
     {
         // Keep the user-group relation in the session for optimize the query
-        $groupNamespace = new Zend_Session_Namespace('UserInGroup_'.$this->_userId.'_'.$group);
-        if (isset($groupNamespace->isInGroup)) {
-            return $groupNamespace->isInGroup;
+        $sessionName    = 'Phprojekt_Groups_Groups-isUserInGroup-' . $this->_userId . '-' . $group;
+        $groupNamespace = new Zend_Session_Namespace($sessionName);
+        if (!isset($groupNamespace->isInGroup)) {
+            $currentGroup = $this->find($group);
+            if (count($currentGroup->users->find($this->getUserId())) > 0) {
+                $groupNamespace->isInGroup = true;
+            } else {
+                $groupNamespace->isInGroup = false;
+            }
         }
-
-        $currentGroup = $this->find($group);
-
-        if (count($currentGroup->users->find($this->getUserId())) > 0) {
-             $groupNamespace->isInGroup = true;
-        } else {
-             $groupNamespace->isInGroup = false;
-        }
-
         return $groupNamespace->isInGroup;
     }
 
@@ -124,10 +121,9 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     public function getUserGroups()
     {
         // Keep the user-group relation in the session for optimize the query
-        $groupNamespace = new Zend_Session_Namespace('UserGroups_'.$this->_userId);
-        if (isset($groupNamespace->groups)) {
-            $groups = $groupNamespace->groups;
-        } else {
+        $sessionName    = 'Phprojekt_Groups_Groups-getUserGroups-' . $this->_userId;
+        $groupNamespace = new Zend_Session_Namespace($sessionName);
+        if (!isset($groupNamespace->groups)) {
             $groups = array();
             $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $user->find($this->_userId);
@@ -137,7 +133,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
             }
             $groupNamespace->groups = $groups;
         }
-        return $groups;
+        return $groupNamespace->groups;
     }
 
     /**

@@ -42,7 +42,7 @@ class Phprojekt_Auth extends Zend_Auth
      */
     static public function isLoggedIn()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
 
         if (!isset($authNamespace->userId) || empty($authNamespace->userId)) {
             throw new Phprojekt_Auth_UserNotLoggedInException('User not logged in', 1);
@@ -88,7 +88,7 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         // If the user was found we will save the user information on the session
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = $user->id;
         $authNamespace->admin  = $user->admin;
 
@@ -104,7 +104,7 @@ class Phprojekt_Auth extends Zend_Auth
     static public function getUserId()
     {
         $returnValue   = 0;
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
 
         if (isset($authNamespace->userId)) {
             $returnValue = $authNamespace->userId;
@@ -121,7 +121,7 @@ class Phprojekt_Auth extends Zend_Auth
     public function isAdminUser()
     {
         $returnValue   = 0;
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
 
         if (isset($authNamespace->admin)) {
             $returnValue = $authNamespace->admin;

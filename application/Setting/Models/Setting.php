@@ -140,7 +140,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $userId = Phprojekt_Auth::getUserId();
         }
 
-        $settingNamespace = new Zend_Session_Namespace('getSetting_' . $userId);
+        $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
         if (!isset($settingNamespace->$settingName)) {
             $record = $this->fetchAll("userId = ". (int) $userId .
                                       " AND keyValue = ".$this->_db->quote($settingName) .
@@ -221,7 +221,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $userId = Phprojekt_Auth::getUserId();
         }
 
-        $settingNamespace = new Zend_Session_Namespace('getSetting_' . $userId);
+        $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
         $settingNamespace->unsetAll();
 
         if (in_array('setSettings', get_class_methods($this->getModel()))) {

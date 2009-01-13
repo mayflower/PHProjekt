@@ -126,13 +126,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             }
             $this->save();
 
-            // Reset cache for root project
-            $projectModulePermissionsNamespace = new Zend_Session_Namespace('ProjectModulePermissions'.'-1');
-            if (isset($projectModulePermissionsNamespace->modules)
-                && !empty($projectModulePermissionsNamespace->modules)) {
-                $projectModulePermissionsNamespace->modules = array();
-            }
-
             // Add the new module to the root project
             if ($saveNewModule) {
                 $project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
@@ -147,7 +140,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             }
 
             // Reset cache for modules
-            $moduleNamespace = new Zend_Session_Namespace('getCachedIds');
+            $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
             $moduleNamespace->unsetAll();
 
             return $this->id;
