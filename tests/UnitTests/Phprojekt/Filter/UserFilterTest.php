@@ -37,7 +37,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
      */
     public function testFilter ()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = 1;
 
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));

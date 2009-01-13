@@ -80,6 +80,6 @@ class Phprojekt_LoginController_Test extends FrontInit
         $this->front->dispatch($this->request, $this->response);
 
         $this->setExpectedException('Zend_Session_Exception');
-        new Zend_Session_Namespace('PHProjekt_Auth');
+        new Zend_Session_Namespace('Phprojekt_Auth-login');
     }
 }

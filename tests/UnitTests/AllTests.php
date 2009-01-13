@@ -92,7 +92,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
         PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/library/Phprojekt');
 
-        $authNamespace         = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace         = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = 1;
         $authNamespace->admin  = 1;
 

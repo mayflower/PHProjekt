@@ -39,7 +39,7 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
     {
         $converted = substr('{}&&({"metadata":[{"key":"title","label":"Title","type":', 0, 23);
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = 1;
 
         $object  = Phprojekt_Loader::getModel('Project', 'Project');
@@ -57,7 +57,7 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
     {
         $converted = substr('{}&&({"identifier":"id","label":"name","items":[{"name"', 0, 23);
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = 1;
 
         $object = Phprojekt_Loader::getModel('Project', 'Project');
