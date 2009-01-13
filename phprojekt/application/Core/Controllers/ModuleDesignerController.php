@@ -48,8 +48,12 @@ class Core_ModuleDesignerController extends Core_IndexController
         if (!empty($id)) {
             $module          = Phprojekt_Module::getModuleName($id);
             $model           = Phprojekt_Loader::getModel($module, $module);
-            $databaseManager = new Phprojekt_DatabaseManager($model);
-            $data['data']    = $databaseManager->getDataDefinition();
+            if ($model instanceof Phprojekt_Item_Abstract) {
+                $databaseManager = new Phprojekt_DatabaseManager($model);
+                $data['data'] = $databaseManager->getDataDefinition();
+            } else {
+                $data['data'] = 'none';
+            }
         }
 
         echo Phprojekt_Converter_Json::convert($data);
@@ -82,31 +86,36 @@ class Core_ModuleDesignerController extends Core_IndexController
             $model = Phprojekt_Loader::getModel($module, $module);
         }
 
-        $databaseManager = new Phprojekt_DatabaseManager($model);
-        $data            = Zend_Json_Decoder::decode(stripslashes($data));
+        if ($model instanceof Phprojekt_Item_Abstract) {
+            $databaseManager = new Phprojekt_DatabaseManager($model);
+            $data            = Zend_Json_Decoder::decode(stripslashes($data));
 
-        // Validate
-        if ($databaseManager->recordValidate($module, $data)) {
-            // Update Table Structure
-            $tableData = $this->_getTableData($data);
-            if (!$databaseManager->syncTable($data, $module, $tableData)) {
-                $type    = 'error';
-                $message = $translate->translate('There was an error writing the table');
-            } else {
-                // Update DatabaseManager Table
-                $databaseManager->saveData($module, $data);
-
-                if (empty($id)) {
-                    $message = $translate->translate('The table module was created correctly');
+            // Validate
+            if ($databaseManager->recordValidate($module, $data)) {
+                // Update Table Structure
+                $tableData = $this->_getTableData($data);
+                if (!$databaseManager->syncTable($data, $module, $tableData)) {
+                    $type    = 'error';
+                    $message = $translate->translate('There was an error writing the table');
                 } else {
-                    $message = $translate->translate('The table module was edited correctly');
+                    // Update DatabaseManager Table
+                    $databaseManager->saveData($module, $data);
+
+                    if (empty($id)) {
+                        $message = $translate->translate('The table module was created correctly');
+                    } else {
+                        $message = $translate->translate('The table module was edited correctly');
+                    }
+                    $type = 'success';
                 }
-                $type = 'success';
+            } else {
+                $error   = $databaseManager->getError();
+                $message = $error['field'].': '.$error['message'];
+                $type    = 'error';
             }
         } else {
-            $error   = $databaseManager->getError();
-            $message = $error['field'].': '.$error['message'];
-            $type    = 'error';
+            $type    = 'success';
+            $message = null;
         }
 
         $return = array('type'    => $type,

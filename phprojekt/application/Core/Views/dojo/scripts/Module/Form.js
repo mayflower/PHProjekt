@@ -28,12 +28,15 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
 
     addBasicFields:function() {
-        // Button for open the dialog
-        this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton', phpr.nls.get('Open Dialog'), '', 'dojo.publish(\'Module.openDialog\');');
-
-        // Hidden field for the MD data
         var designerData = new Object();
         designerData = phpr.DataStore.getData({url: this._moduleDesignerUrl});
+
+        // Button for open the dialog
+        if (designerData && (typeof designerData === 'object')) {
+            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton', phpr.nls.get('Open Dialog'), '', 'dojo.publish(\'Module.openDialog\');');
+        }
+
+        // Hidden field for the MD data
         if (!designerData.length) {
             designerData = new Object();
             designerData[0] = new Object();
