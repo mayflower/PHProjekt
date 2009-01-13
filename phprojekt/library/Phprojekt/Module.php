@@ -67,7 +67,7 @@ class Phprojekt_Module
             return self::$_cache;
         }
 
-        $moduleNamespace = new Zend_Session_Namespace('getCachedIds');
+        $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
         if (!isset($moduleNamespace->modules)) {
             $db     = Phprojekt::getInstance()->getDb();
             $select = $db->select()

@@ -87,10 +87,9 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             $clone->save();
 
             // Reset cache
-            $roleNamespace = new Zend_Session_Namespace('ProjectRoleUserPermissions_'.$projectId.'_'.$userId);
-            if (isset($roleNamespace->role) && !empty($roleNamespace->role)) {
-                $roleNamespace->role = 0;
-            }
+            $sessionName   = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-' . $projectId . '-' . $userId;
+            $roleNamespace = new Zend_Session_Namespace($sessionName);
+            $roleNamespace->unsetAll();
         }
     }
 
@@ -107,8 +106,9 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         $role = 1;
         // Keep the roles in the session for optimize the query
         if (isset($userId) && isset($projectId)) {
-            $roleNamespace = new Zend_Session_Namespace('ProjectRoleUserPermissions_'.$projectId.'_'.$userId);
-            if (isset($roleNamespace->role) && $roleNamespace->role > 0) {
+            $sessionName   = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-' . $projectId . '-' . $userId;
+            $roleNamespace = new Zend_Session_Namespace($sessionName);
+            if (isset($roleNamespace->role)) {
                 $role = $roleNamespace->role;
             } else {
                 $where = ' projectId = '. (int) $projectId;
@@ -123,9 +123,10 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                         $project = Phprojekt_Loader::getModel('Project', 'Project');
                         $parent  = $project->find($projectId);
                         if (!is_null($parent) && $parent->projectId > 0) {
-                            $roleParentNamespace = new Zend_Session_Namespace(
-                                                     'ProjectRoleUserPermissions_'.$parent->projectId.'_'.$userId);
-                            if (isset($roleParentNamespace->role) && $roleParentNamespace->role > 0) {
+                            $sessionName = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-'
+                                         . $parent->projectId . '-' . $userId;
+                            $roleParentNamespace = new Zend_Session_Namespace($sessionName);
+                            if (isset($roleParentNamespace->role)) {
                                 $role = $roleParentNamespace->role;
                             } else {
                                 $role = $this->fetchUserRole($userId, $parent->projectId);

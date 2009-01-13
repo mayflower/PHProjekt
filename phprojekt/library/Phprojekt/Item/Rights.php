@@ -67,12 +67,15 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 
         foreach ($rights as $userId => $access) {
             $this->_saveRight($moduleId, $itemId, $userId, $access);
+            // Reset cache
+            $sessionName = 'Phprojekt_Item_Rights-getItemRight' . '-' . $moduleId . '-' . $itemId . '-' . $userId;
+            $rightPerUserNamespace = new Zend_Session_Namespace($sessionName);
+            $rightPerUserNamespace->unsetAll();
         }
         // Reset cache
-        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId);
-        if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
-            $rightNamespace->right = array();
-        }
+        $sessionName    = 'Phprojekt_Item_Rights-getRights' . '-' . $moduleId . '-' . $itemId;
+        $rightNamespace = new Zend_Session_Namespace($sessionName);
+        $rightNamespace->unsetAll();
     }
 
     /**
@@ -126,20 +129,18 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getItemRight($moduleId, $itemId, $userId)
     {
         // Cache the query
-        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId.'-'.$userId);
-        if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
-            $value = $rightNamespace->right;
-        } else {
-            $row   = $this->find($moduleId, $itemId, $userId)->toArray();
+        $sessionName           = 'Phprojekt_Item_Rights-getItemRight' . '-' . $moduleId . '-' . $itemId . '-' . $userId;
+        $rightPerUserNamespace = new Zend_Session_Namespace($sessionName);
+        if (!isset($rightPerUserNamespace->right)) {
+            $row = $this->find($moduleId, $itemId, $userId)->toArray();
             if (isset($row[0])) {
                 $value = $row[0]['access'];
             } else {
                 $value = 0;
             }
-
-            $rightNamespace->right = $value;
+            $rightPerUserNamespace->right = $value;
         }
-        return $value;
+        return $rightPerUserNamespace->right;
     }
 
     /**
@@ -153,10 +154,9 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getRights($moduleId, $itemId)
     {
         // Cache the query
-        $rightNamespace = new Zend_Session_Namespace('ItemRights'.'-'.$moduleId.'-'.$itemId);
-        if (isset($rightNamespace->right) && !empty($rightNamespace->right)) {
-            $values = $rightNamespace->right;
-        } else {
+        $sessionName    = 'Phprojekt_Item_Rights-getRights' . '-' . $moduleId . '-' . $itemId;
+        $rightNamespace = new Zend_Session_Namespace($sessionName);
+        if (!isset($rightNamespace->right)) {
             $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $where  = array();
             $values = array();
@@ -176,7 +176,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             }
             $rightNamespace->right = $values;
         }
-        return $values;
+        return $rightNamespace->right;
     }
 
     /**
