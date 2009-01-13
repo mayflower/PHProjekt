@@ -84,6 +84,8 @@ smtpServer           = "localhost"
 ; MISC
 ; Use compressed dojo to improve the speed of loading.
 compressedDojo       = true;
+; Use Zend_Registry for cache classes in the same request
+useCacheForClasses   = true;
 
 
 [testing-mysql]
@@ -118,6 +120,8 @@ smtpServer           = "localhost"
 ; Misc
 ; Use compressed dojo to improve the speed of loading.
 compressedDojo       = true;
+; Use Zend_Registry for cache classes in the same request
+useCacheForClasses   = true;
 
 
 [testing]
@@ -152,3 +156,5 @@ smtpServer           = "localhost"
 ; Misc
 ; Use compressed dojo to improve the speed of loading.
 compressedDojo       = true;
+; Use Zend_Registry for cache classes in the same request
+useCacheForClasses   = true;
