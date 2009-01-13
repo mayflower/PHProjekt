@@ -217,6 +217,10 @@ class Phprojekt_Loader extends Zend_Loader
      * The class is temporally cached in the Registry for the next calls
      * Only is cached if don't have any arguments
      *
+     * Be sure that the class have the correct "__clone" function defined
+     * if it have some internal variables with other classes for prevent
+     * the same point to the object.
+     *
      * @param string $module Name of the module
      * @param string $model  Name of the model
      *
@@ -227,7 +231,7 @@ class Phprojekt_Loader extends Zend_Loader
         $name = self::getModelClassname($module, $model);
         $args = array_slice(func_get_args(), 2);
 
-        if (empty($args)) {
+        if (empty($args) && Phprojekt::getInstance()->getConfig()->useCacheForClasses) {
             $registryName = 'getModel_'.$module.'_'.$model;
             if (!Zend_Registry::isRegistered($registryName)) {
                 $object = self::_newInstance($name, $args);
@@ -250,6 +254,10 @@ class Phprojekt_Loader extends Zend_Loader
      * The class is temporally cached in the Registry for the next calls
      * Only is cached if don't have any arguments
      *
+     * Be sure that the class have the correct "__clone" function defined
+     * if it have some internal variables with other classes for prevent
+     * the same point to the object.
+     *
      * @param string $name Name of the class
      *
      * @return Object
@@ -258,7 +266,7 @@ class Phprojekt_Loader extends Zend_Loader
     {
         $args = array_slice(func_get_args(), 2);
 
-        if (empty($args)) {
+        if (empty($args) && Phprojekt::getInstance()->getConfig()->useCacheForClasses) {
             $registryName = 'getLibraryClass_'.$name;
             if (!Zend_Registry::isRegistered($registryName)) {
                 $object = self::_newInstance($name, $args);
