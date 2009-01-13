@@ -206,6 +206,12 @@ class Phprojekt {
         /* Start zend session to handle all session stuff */
         Zend_Session::start();
 
+        // Set a metadata cache and clean it
+        $frontendOptions = array('automatic_serialization' => true);
+        $cache           = Zend_Cache::factory('Core', 'File', $frontendOptions);
+        Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
+
         $helperPaths  = $this->_getHelperPaths();
         $view         = $this->_setView($helperPaths);
 
