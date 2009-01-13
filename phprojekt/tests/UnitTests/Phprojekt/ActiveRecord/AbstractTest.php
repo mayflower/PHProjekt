@@ -129,7 +129,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteHasManyAndBelongsToMany()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $keepUser = $authNamespace->userId;
 
         try {
@@ -182,7 +182,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateUser()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $keepUser = $authNamespace->userId;
         try {
             $authNamespace->userId = 0;

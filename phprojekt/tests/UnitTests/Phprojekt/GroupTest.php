@@ -36,7 +36,7 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
      */
     public function testSetUser()
     {
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $user = $authNamespace->userId;
 
         $group = new Phprojekt_Groups_Groups($this->sharedFixture);
@@ -62,7 +62,7 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $group = new Phprojekt_Groups_Groups($this->sharedFixture);
         $this->assertEquals(2, count($group->getUserGroups()));
 
-        $authNamespace = new Zend_Session_Namespace('PHProjekt_Auth');
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $keepUser = $authNamespace->userId;
 
         $authNamespace->userId = 3;
