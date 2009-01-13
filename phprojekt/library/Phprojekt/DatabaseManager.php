@@ -562,7 +562,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
 
         // Clean the metadata cache
-        $this->_model->getDefaultMetadataCache()->clean();
+        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
 
         $oldFields = $this->getDataDefinition();
         $tableDataForCreate['id'] = array('type'   => 'auto_increment',

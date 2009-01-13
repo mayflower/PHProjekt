@@ -193,11 +193,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 . "Zend_Db_Adapter_Abstract");
         }
 
-        // Set a metadata cache
-        $frontendOptions = array('automatic_serialization' => true);
-        $cache           = Zend_Cache::factory('Core', 'File', $frontendOptions);
-        Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
-
         parent::__construct($config);
 
         $info           = $this->info();
