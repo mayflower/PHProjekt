@@ -76,31 +76,31 @@ $lang["Close"]  = "Close";
 
 // Messages
 $lang["There are no entries on this level"] = "There are no entries on this level";
-$lang["You do not have access for edit this item"] = "You do not have access for edit this item";
+$lang["You do not have access to edit this item"] = "You do not have access to edit this item";
 $lang["The Item was added correctly"] = "The Item was added correctly";
 $lang["The Item was edited correctly"] = "The Item was edited correctly";
-$lang["The Items was edited correctly"] = "The Items was edited correctly";
+$lang["The Items were edited correctly"] = "The Items were edited correctly";
 $lang["The Item can't be deleted"] = "The Item can't be deleted";
 $lang["The Item was deleted correctly"] = "The Item was deleted correctly";
 $lang["Is a required field"] = "Is a required field";
 $lang["Invalid format for date"] = "Invalid format for date";
 $lang["Invalid Format"] = "Invalid Format";
-$lang["The Tags was added correctly"] = "The Tags was added correctly";
-$lang["The Tags was deleted correctly"] = "The Tags was deleted correctly";
+$lang["The Tags were added correctly"] = "The Tags were added correctly";
+$lang["The Tags were deleted correctly"] = "The Tags were deleted correctly";
 $lang["The Item was not found"] = "The Item was not found";
 $lang["You do not have write access into the parent project"] = "You do not have write access "
     . "into the parent project";
-$lang["You do not have access for add projects on the parent project"] = "You do not have access "
-    . "for add projects on the parent project";
+$lang["You do not have access to add projects on the parent project"] = "You do not have access "
+    . "to add projects on the parent project";
 $lang["The parent project do not have enabled this module"] = "The parent project do not have enabled this module";
-$lang["The project can not saved under itself"] = "The project can not saved under itself";
-$lang["The project can not saved under his children"] = "The project can not saved under his children";
+$lang["The project can not be saved under itself"] = "The project can not be saved under itself";
+$lang["The project can not be saved under its children"] = "The project can not be saved under its children";
 
 $lang["ID parameter required"] = "ID parameter required";
 $lang["Invalid module or item"] = "Invalid module or item";
 $lang["Module not given"] = "Module not given";
 $lang["Module not found"] = "Module not found";
-$lang["Expect two arguments"] = "Expect two arguments";
+$lang["Two arguments expected"] = "Two arguments expected";
 $lang["Second parameter needs to be an array"] = "Second parameter needs to be an array";
 $lang["No parent id found in parameters or passed"] = "No parent id found in parameters or passed";
 $lang["There was an error writing the table"] = "There was an error writing the table";
@@ -110,7 +110,7 @@ $lang["The module was added correctly"] = "The module was added correctly";
 $lang["The module was edited correctly"] = "The module was edited correctly";
 $lang["The module can not be deleted"] = "The module can not be deleted";
 $lang["The module was deleted correctly"] = "The module was deleted correctly";
-$lang["YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "YOU MUST TO REFRESH THE PAGE TO WORK WITH "
+$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "YOU MUST TO REFRESH THE PAGE TO WORK WITH "
     . "THE NEW MODULE";
 $lang["No help available"] = "No help available";
 
@@ -150,12 +150,12 @@ $lang["Amount [hhmm]"] = "Amount [hhmm]";
 $lang["Total"] = "Total";
 
 // Settings module
-$lang["Please, logout and login again on application to apply the changes."] = "Please, "
-    . "logout and login again on application to apply the changes.";
+$lang["Please, log out and log in again to the application to apply the changes."] = "Please, "
+    . "log out and log in again to the application to apply the changes.";
 $lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
 $lang["The password and confirmation are different or empty"] = "The password and confirmation are different or empty";
 $lang["The old password provided is invalid"] = "The old password provided is invalid";
-$lang["keyValue"] = "Configurration";
+$lang["keyValue"] = "Configuration";
 $lang["value"] = "value";
 $lang["Confirm Password"] = "confirm password";
 $lang["Old Password"] = "Old Password";
@@ -215,7 +215,7 @@ $lang["Monthly"] = "Monthly";
 $lang["Yearly"] = "Yearly";
 $lang["Monday"] = "Monday";
 $lang["Tuesday"] = "Tuesday";
-$lang["Wendsday"] = "Wendsday";
+$lang["Wednesday"] = "Wednesday";
 $lang["Thursday"] = "Thursday";
 $lang["Friday"] = "Friday";
 $lang["Saturday"] = "Saturday";

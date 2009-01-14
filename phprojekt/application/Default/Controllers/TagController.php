@@ -128,7 +128,7 @@ class TagController extends IndexController
 
         $translate = Phprojekt::getInstance()->getTranslate();
 
-        $message = $translate->translate('The Tags was added correctly');
+        $message = $translate->translate('The Tags were added correctly');
 
         $return    = array('type'    => 'success',
                            'message' => $message,
@@ -161,7 +161,7 @@ class TagController extends IndexController
         $tagObj->deleteTagsByItem($moduleId, $id);
 
         $translate = Phprojekt::getInstance()->getTranslate();
-        $message   = $translate->translate('The Tags was deleted correctly');
+        $message   = $translate->translate('The Tags were deleted correctly');
 
         $return    = array('type'    => 'success',
                            'message' => $message,
