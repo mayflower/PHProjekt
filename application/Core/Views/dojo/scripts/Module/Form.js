@@ -226,7 +226,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                 if (!this.id) {
                                     var response     = {};
                                     response.type    = 'notice';
-                                    response.message = phpr.nls.get('YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE');
+                                    response.message = phpr.nls.get('YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE');
                                     new phpr.handleResponse('serverFeedback', response);
                                 }
                                 this.publish("updateCacheData");

@@ -86,7 +86,7 @@ final class Default_Helpers_Save
         } else if (!self::_checkAccess($projectId)) {
             throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(1, $projectId)) {
-            throw new Phprojekt_PublishedException('You do not have access for add projects on the parent project');
+            throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
         } else {
             if (null === $node->id || $node->id == 0) {
                 $parentNode->appendNode($node);
@@ -258,7 +258,7 @@ final class Default_Helpers_Save
         $params    = $arguments[1];
 
         if (func_num_args() < 2) {
-            throw new Phprojekt_PublishedException('Expect two arguments');
+            throw new Phprojekt_PublishedException('Two arguments expected');
         }
 
         if (!is_array($params)) {

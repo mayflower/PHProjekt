@@ -128,7 +128,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         rangeByday = new Array(
             {'id': 'MO', 'name': phpr.nls.get('Monday')},
             {'id': 'TU', 'name': phpr.nls.get('Tuesday')},
-            {'id': 'WE', 'name': phpr.nls.get('Wendsday')},
+            {'id': 'WE', 'name': phpr.nls.get('Wednesday')},
             {'id': 'TH', 'name': phpr.nls.get('Thursday')},
             {'id': 'FR', 'name': phpr.nls.get('Friday')},
             {'id': 'SA', 'name': phpr.nls.get('Saturday')},

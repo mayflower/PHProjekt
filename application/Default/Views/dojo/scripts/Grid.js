@@ -362,7 +362,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this.grid.store.setValue(item, inFieldIndex, value);
             var result     = Array();
             result.type    = 'error';
-            result.message = phpr.nls.get('You do not have access for edit this item');
+            result.message = phpr.nls.get('You do not have access to edit this item');
             new phpr.handleResponse('serverFeedback', result);
         } else {
             if (!this._newRowValues[inRowIndex]) {

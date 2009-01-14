@@ -42,7 +42,7 @@ class IndexController extends Zend_Controller_Action
 {
     const ADD_TRUE_TEXT           = "The Item was added correctly";
     const EDIT_TRUE_TEXT          = "The Item was edited correctly";
-    const EDIT_MULTIPLE_TRUE_TEXT = "The Items was edited correctly";
+    const EDIT_MULTIPLE_TRUE_TEXT = "The Items were edited correctly";
     const DELETE_FALSE_TEXT       = "The Item can't be deleted";
     const DELETE_TRUE_TEXT        = "The Item was deleted correctly";
     const NOT_FOUND               = "The Item was not found";

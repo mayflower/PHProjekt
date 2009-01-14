@@ -52,9 +52,9 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $tree = new Phprojekt_Tree_Node_Database($node, $this->id);
             $tree->setup();
             if ($tree->getActiveRecord()->id == $value) {
-                return 'The project can not saved under itself';
+                return 'The project can not be saved under itself';
             } else if ($this->_isInTheProject($value, $tree)) {
-                return 'The project can not saved under his children';
+                return 'The project can not be saved under its children';
             }
         }
 

@@ -76,31 +76,31 @@ $lang["Close"] = "Schließen";
 
 // Messages
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines hinzufügen";
-$lang["You do not have access for edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
+$lang["You do not have access to edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
 $lang["The Item was added correctly"] = "Der Datensatz wurde angelegt";
 $lang["The Item was edited correctly"] = "Der Datensatz wurde geändert";
-$lang["The Items was edited correctly"] = "Die Datensätze wurden geändert";
+$lang["The Items were edited correctly"] = "Die Datensätze wurden geändert";
 $lang["The Item can't be deleted"] = "Der Datensatz kann nicht gelöscht werden";
 $lang["The Item was deleted correctly"] = "Der Datensatz wurde gelöscht";
 $lang["Is a required field"] = "Pflichtfeld";
 $lang["Invalid format for date"] = "Ungültiges Datumsformat";
 $lang["Invalid Format"] = "Ungültiges Format";
-$lang["The Tags was added correctly"] = "Die Tags wurden hinzugefügt";
-$lang["The Tags was deleted correctly"] = "Die Tags wurden gelöscht";
+$lang["The Tags were added correctly"] = "Die Tags wurden hinzugefügt";
+$lang["The Tags were deleted correctly"] = "Die Tags wurden gelöscht";
 $lang["The Item was not found"] = "Der Datensatz wurde nicht gefunden";
 $lang["You do not have write access into the parent project"] = "Sie haben keine "
     . "Schreibberechtigung auf dem Oberelement";
-$lang["You do not have access for add projects on the parent project"] = "Sie haben keine Berechtigung,"
+$lang["You do not have access to add projects on the parent project"] = "Sie haben keine Berechtigung,"
     . " auf dem Oberelement Projekte anzulegen";
 $lang["The parent project do not have enabled this module"] = "Dieses Projekt hat dieses Modul nicht verfügbar";
-$lang["The project can not saved under itself"] = "Das Projekt kann nicht unter sich selbst gespeichert werden";
-$lang["The project can not saved under his children"] = "Das Projekt kann nicht in einem "
+$lang["The project can not be saved under itself"] = "Das Projekt kann nicht unter sich selbst gespeichert werden";
+$lang["The project can not be saved under its children"] = "Das Projekt kann nicht in einem "
     ."Unterelement gespeichert werden";
 $lang["ID parameter required"] = "Der ID parameter ist obligatorisch";
 $lang["Invalid module or item"] = "ungültiges Modul oder Datensatz";
 $lang["Module not given"] = "Modul nicht verfügbar";
 $lang["Module not found"] = "Modul nicht gefunden";
-$lang["Expect two arguments"] = "Zwei Parameter werden erwartet";
+$lang["Two arguments expected"] = "Zwei Parameter werden erwartet";
 $lang["Second parameter needs to be an array"] = "Der zweite Parameter muss ein Array sein";
 $lang["No parent id found in parameters or passed"] = "Kein Oberelement gefunden";
 $lang["There was an error writing the table"] = "Beim Anlegen der Tabelle trat ein Fehler auf";
@@ -110,7 +110,7 @@ $lang["The module was added correctly"] = "Das Modul wurde erfolgreich hinzugef�
 $lang["The module was edited correctly"] = "Das Modul wurde erfolgreich geändert";
 $lang["The module can not be deleted"] = "Das Modul kann nicht gelöscht werden";
 $lang["The module was deleted correctly"] = "Das Modul wurde erfolgreich gelöscht";
-$lang["YOU MUST TO REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "SIE MÜSSEN DIE SEITE NEU LADEN, UM MIT DEM "
+$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "SIE MÜSSEN DIE SEITE NEU LADEN, UM MIT DEM "
     . "NEUEN MODUL ZU ARBEITEN";
 $lang["No help available"] = "Keine Hilfe verfügbar";
 
@@ -150,7 +150,7 @@ $lang["Amount [hhmm]"] = "Zeit [hhmm]";
 $lang["Total"] = "Gesamt";
 
 // Settings module
-$lang["Please, logout and login again on application to apply the changes."] = "Bitte aus und einloggen, "
+$lang["Please, log out and log in again to the application to apply the changes."] = "Bitte aus und einloggen, "
     . "um die Änderungen wirksam werden zu lassen.";
 $lang["The value for the setting is incorrect"] = "Der Wert für diese Einstellung ist nicht gültig";
 $lang["The password and confirmation are different or empty"] = "Das Passwort und die Wiederholung stimmen nicht überein";
@@ -215,7 +215,7 @@ $lang["Monthly"] = "Monatliche";
 $lang["Yearly"] = "Jahres";
 $lang["Monday"] = "Montag";
 $lang["Tuesday"] = "Dienstag";
-$lang["Wendsday"] = "Mittwoch";
+$lang["Wednesday"] = "Mittwoch";
 $lang["Thursday"] = "Donnerstag";
 $lang["Friday"] = "Freitag";
 $lang["Saturday"] = "Samstag";
