@@ -288,7 +288,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return integer
      */
-    public function getDiffTime($end, $start)
+    static public function getDiffTime($end, $start)
     {
         $hoursEnd   = substr($end, 0, 2);
         $minutesEnd = substr($end, 3, 2);
