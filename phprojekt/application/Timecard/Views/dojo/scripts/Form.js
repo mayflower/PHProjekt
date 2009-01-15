@@ -57,7 +57,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         } else {
             this._dateObject = date;
         }
-        this._date = this.main.getIsoDate(this._dateObject);
+        this._date = phpr.Date.getIsoDate(this._dateObject);
     },
 
     loadView:function() {
@@ -125,7 +125,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         for (var i = 0; i < data.length; i++) {
             totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {
-                hoursDiff: this.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
+                hoursDiff: phpr.Date.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
                 start:     data[i].startTime.substr(0, 5),
                 end:       data[i].endTime.substr(0, 5),
                 id:        data[i].id
@@ -139,7 +139,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             timecardEndText:          phpr.nls.get("End"),
             timecardTotalText:        phpr.nls.get("Total"),
             hoursdata:                hoursdata,
-            totalHours:               this.convertTime(totalHours)
+            totalHours:               phpr.Date.convertTime(totalHours)
         });
 
         for (var i = 0; i < data.length; i++) {
@@ -227,7 +227,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 date:           this._date,
                 notes:          timeprojData[i].notes,
                 notesLabel:     phpr.nls.get('Notes'),
-                amount:         this.convertTime(this.getDiffTime(timeprojData[i].amount, '00:00:00')),
+                amount:         phpr.Date.convertTime(this.getDiffTime(timeprojData[i].amount, '00:00:00')),
                 amountLabel:    phpr.nls.get('Amount [hhmm]'),
                 saveText:       phpr.nls.get('Save'),
                 deleteText:     phpr.nls.get('Delete'),
@@ -372,13 +372,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
     prepareSubmission:function() {
         if (this.sendData.endTime) {
-            this.sendData.endTime = this.main.getIsoTime(this.sendData.endTime);
+            this.sendData.endTime = phpr.Date.getIsoTime(this.sendData.endTime);
         }
         if (this.sendData.startTime) {
-            this.sendData.startTime = this.main.getIsoTime(this.sendData.startTime);
+            this.sendData.startTime = phpr.Date.getIsoTime(this.sendData.startTime);
         }
         if (this.sendData.amount) {
-            this.sendData.amount = this.main.getIsoTime(this.sendData.amount);
+            this.sendData.amount = phpr.Date.getIsoTime(this.sendData.amount);
         }
         return true;
     },
@@ -513,23 +513,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var minutesStart = start.substr(3, 2);
 
         return ((hoursEnd - hoursStart)*60) + (minutesEnd - minutesStart);
-    },
-
-    convertTime:function(time) {
-        // summary:
-        //    Convert a number of minutes into HH:mm
-        // description:
-        //    Convert a number of minutes into HH:mm
-        hoursDiff   = Math.floor(time / 60);
-        minutesDiff = time - (hoursDiff * 60);
-
-        if (hoursDiff == 0 || hoursDiff < 10) {
-            hoursDiff = '0' + hoursDiff;
-        }
-        if (minutesDiff == 0 || minutesDiff < 10) {
-            minutesDiff = '0' + minutesDiff;
-        }
-        return hoursDiff + ':' + minutesDiff;
     },
 
     makeText:function(surface, text, font, fill, stroke) {

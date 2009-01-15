@@ -86,33 +86,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
     },
 
-    getIsoDate:function(date) {
-        // summary:
-        //    Convert a js date into ISO date
-        // description:
-        //    Convert a js date into ISO date
-        var day = date.getDate();
-        if (day < 10) {
-            day = '0'+day;
-        }
-        var month = (date.getMonth()+1);
-        if (month < 10) {
-            month = '0'+month
-        }
-        return date.getFullYear() + '-' + month + '-' + day;
-    },
-
-    getIsoTime:function(time){
-        // summary:
-        //    Convert a js time into ISO time
-        // description:
-        //    Convert a js time into ISO time
-       time        = time.replace(/\D/g, "");
-       var minutes = time.substr(time.length - 2);
-       var hour    = time.substr(0,time.length-2);
-       return hour + ':' + minutes;
-    },
-
     workingtimesStop:function() {
         // summary:
         //    This function deactivates the Timecard stopwatch
