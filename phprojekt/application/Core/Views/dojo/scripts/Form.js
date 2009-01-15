@@ -28,7 +28,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         this._url = phpr.webpath+"index.php/Core/"+phpr.module.toLowerCase()+"/jsonDetail/id/" + this.id
     },
 
-    setPermissions:function (data) {
+    setPermissions:function(data) {
         this._writePermissions = true;
         this._deletePermissions = false;
         if (this.id > 0) {
@@ -61,7 +61,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         });
     },
 
-    deleteForm: function() {
+    deleteForm:function() {
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonDelete/id/' + this.id,
             onSuccess: dojo.hitch(this, function(data) {

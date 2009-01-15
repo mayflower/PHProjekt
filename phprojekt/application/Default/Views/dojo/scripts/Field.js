@@ -25,7 +25,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     // description:
     //    this class renders the different form types which are available in a PHProjekt Detail View
 
-    checkRender: function(itemlabel, itemid, itemvalue, itemhint) {
+    checkRender:function(itemlabel, itemid, itemvalue, itemhint) {
         phpr.destroyWidget(itemid);
         var itemchecked = null;
         if (itemvalue == "on") {
@@ -40,7 +40,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    textFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    textFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtext.html"], null, {
                             label:    itemlabel,
@@ -54,7 +54,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    hiddenFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
+    hiddenFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formhidden.html"], null, {
                             label:    itemlabel,
@@ -67,7 +67,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    passwordFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    passwordFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtext.html"], null, {
                             label:    itemlabel,
@@ -81,7 +81,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    uploadFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath, itemhint) {
+    uploadFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formupload.html"], null, {
                             label:      itemlabel,
@@ -95,7 +95,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    percentageFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    percentageFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formpercentage.html"], null, {
                             label:    itemlabel,
@@ -108,7 +108,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    textAreaRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    textAreaRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtextarea.html"], null, {
                             label:    itemlabel,
@@ -121,7 +121,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    dateRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    dateRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formdate.html"], null, {
                             label:    itemlabel,
@@ -134,7 +134,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    timeRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    timeRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtime.html"], null, {
                             label:    itemlabel,
@@ -147,7 +147,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    selectRender: function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    selectRender:function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         var options = new Array();
         var j       = 0;
@@ -167,8 +167,8 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    multipleSelectRender: function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemsize,
-                                itemmultiple, itemhint) {
+    multipleSelectRender:function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemsize,
+                                  itemmultiple, itemhint) {
         phpr.destroyWidget(itemid);
         var options = new Array();
         var tmp     = itemvalue.split(',');
@@ -197,7 +197,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    buttonActionRender: function(itemlabel, itemid, itemtext, icon, action, itemhint) {
+    buttonActionRender:function(itemlabel, itemid, itemtext, icon, action, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formactionbutton.html"], null, {
                             label:    itemlabel,

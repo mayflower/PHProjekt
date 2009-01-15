@@ -29,7 +29,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
 
-    setUrl: function(year, month, view) {
+    setUrl:function(year, month, view) {
         if (typeof year == "undefined") {
             date = new Date();
             year = date.getFullYear();
@@ -44,14 +44,14 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/year/"+year+"/month/"+month+"/view/"+view;
     },
 
-    showTags: function() {
+    showTags:function() {
     },
 
-    canEdit: function(inRowIndex) {
+    canEdit:function(inRowIndex) {
         return false;
     },
 
-    useIdInGrid: function () {
+    useIdInGrid:function() {
         return false;
     },
 

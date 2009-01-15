@@ -20,9 +20,10 @@
 dojo.provide("phpr.Component");
 
 dojo.declare("phpr.Component", null, {
-    main:null,
-    module:"",
-    render: function(template, node, content) {
+    main:   null,
+    module: "",
+
+    render:function(template, node, content) {
         var context = new dojox.dtl.Context(content);
         // Use the cached template
         var tplContent = __phpr_templateCache[template[0] + "." + template[1]];

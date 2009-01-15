@@ -89,7 +89,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         this.assertUpdate(this.callbackOpts[0],this.callbackOpts[1], this.callbackOpts[2], true);
     },
 
-    processDialog:function (dialogType, parentName, childName, posMin, posMax) {
+    processDialog:function(dialogType, parentName, childName, posMin, posMax) {
         // summary:
         //    This function delivers the error text and executes showDialog()
         // description:
@@ -189,7 +189,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         }
     },
 
-    convertStampToIndex:function (stamp) {
+    convertStampToIndex:function(stamp) {
         // summary:
         //    incoming stamp is unix time stamp in microseconds
         // description:

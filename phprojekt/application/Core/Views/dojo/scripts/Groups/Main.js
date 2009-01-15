@@ -20,7 +20,7 @@
 dojo.provide("phpr.Groups.Main");
 
 dojo.declare("phpr.Groups.Main", phpr.Core.Main, {
-    constructor: function(){
+    constructor:function() {
         this.module = "Groups";
         this.loadFunctions(this.module);
 

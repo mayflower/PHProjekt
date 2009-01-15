@@ -61,8 +61,7 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
 
                 },
 
-                _initSurface: function(){
-
+                _initSurface:function() {
                     var s = dojo.marginBox(this.domNode);
                     var stroke = 5;
 
@@ -76,7 +75,6 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
                         .setStroke({ color:this.strokeColor, width:stroke }) // solid white
                     ;
                     this.resize(s);
-
                 },
 
                 resize:function(size){

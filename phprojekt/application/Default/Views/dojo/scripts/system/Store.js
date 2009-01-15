@@ -51,7 +51,7 @@ dojo.declare("phpr.Store", phpr.Component, {
         })});
     },
 
-    makeSelect: function() {
+    makeSelect:function() {
         this._list = new Array();
     },
 
@@ -73,7 +73,7 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         this._url = phpr.webpath+"index.php/Core/user/jsonGetUsers";
     },
 
-    makeSelect: function() {
+    makeSelect:function() {
         // summary:
         //    This function get all the active users
         // description:
@@ -92,7 +92,7 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
         this._url = phpr.webpath+"index.php/Project/index/jsonGetModulesProjectRelation/id/" + id
     },
 
-    makeSelect: function() {
+    makeSelect:function() {
         // summary:
         //    This function get all the active modules
         // description:
@@ -116,7 +116,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
         this._url = phpr.webpath+"index.php/Project/index/jsonGetProjectRoleUserRelation/id/" + id
     },
 
-    makeSelect: function() {
+    makeSelect:function() {
         // summary:
         //    This function get all the roles and their assignes user for onw project
         // description:
@@ -145,7 +145,7 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
         this._url = phpr.webpath+"index.php/Core/"+phpr.module.toLowerCase()+"/jsonGetModulesAccess/id/" + id;
     },
 
-    makeSelect: function() {
+    makeSelect:function() {
         // summary:
         //    This function get all the roles and their assignes user for onw project
         // description:
@@ -169,7 +169,7 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
         this._url = phpr.webpath+"index.php/Core/tab/jsonList";
     },
 
-    makeSelect: function() {
+    makeSelect:function() {
         // summary:
         //    This function get all the roles and their assignes user for onw project
         // description:

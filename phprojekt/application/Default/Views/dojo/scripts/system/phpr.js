@@ -447,10 +447,10 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     requestMethod:"post",
     doClientPaging:false,
 
-    _assertIsItem: function(item) {
+    _assertIsItem:function(item) {
 	},
 
-    _filterResponse: function(data) {
+    _filterResponse:function(data) {
 
         // 500 is the error code for logut
         if (data.code && data.code == 500) {
@@ -478,7 +478,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 });
 
 dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
-    serialize: function(d, options) {
+    serialize:function(d, options) {
         // summary:
         //     This function overwrites the dijit.form.DateTextBox display
         //     description:
@@ -496,16 +496,16 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
     messages:[],
     displayedMessages:[],
 
-    addMessage: function(message){
+    addMessage:function(message) {
         this.messages.push(message);
         this.displayMessage(message);
     },
 
-    deleteLastMessage: function(message){
+    deleteLastMessage:function(message) {
         this.messages.pop();
     },
 
-    displayMessage: function(message){
+    displayMessage:function(message) {
         this.displayedMessages = [message];
         for (i in this.displayedMessages) {
             out = this.displayedMessages[i];

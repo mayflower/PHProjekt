@@ -20,7 +20,7 @@
 dojo.provide("phpr.Module.Main");
 
 dojo.declare("phpr.Module.Main", phpr.Core.Main, {
-    constructor: function(){
+    constructor:function() {
         this.module = "Module";
         this.loadFunctions(this.module);
 
@@ -36,11 +36,11 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
         this.setNewEntry();
     },
 
-    openDialog: function() {
+    openDialog:function() {
         this.form.openDialog();
     },
 
-    submitForm: function() {
+    submitForm:function() {
         this.form.submitForm();
     },
 

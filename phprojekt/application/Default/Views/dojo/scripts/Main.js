@@ -477,7 +477,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
     },
 
-    showSearchSuggest:function () {
+    showSearchSuggest:function() {
         // summary:
         //    This function show a box with suggest or quick result of the search
         // description:

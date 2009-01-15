@@ -89,7 +89,7 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     //    Redefine the function for return the correct value
     // description:
     //    Redefine the function for return the correct value
-    format: function(inRowIndex, inItem){
+    format:function(inRowIndex, inItem) {
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
         if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
@@ -112,7 +112,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     //    Redefine the function for work with iso format
     widgetClass: "dijit.form.DateTextBox",
 
-    getValue: function(inRowIndex){
+    getValue:function(inRowIndex) {
         var date = this.widget.attr('value');
         var day = date.getDate();
         if (day < 10) {
@@ -137,7 +137,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         }
     },
 
-    getWidgetProps: function(inDatum){
+    getWidgetProps:function(inDatum) {
         var parts = inDatum.split("-");
         var year  = parts[0];
         var month = parts[1]-1;
