@@ -334,9 +334,9 @@ phpr.editModuleDesignerField = function(object, target) {
     });
 
     dojo.fadeIn({
-        node: dojo.byId('moduleDesignerEditor'),
-        duration: 300,
-        beforeBegin: function(){
+        node:        dojo.byId('moduleDesignerEditor'),
+        duration:    300,
+        beforeBegin: function() {
             var node = dojo.byId('moduleDesignerEditor');
             dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
             dojo.style(node, "opacity", 0);

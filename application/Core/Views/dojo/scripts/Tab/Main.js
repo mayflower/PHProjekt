@@ -20,7 +20,7 @@
 dojo.provide("phpr.Tab.Main");
 
 dojo.declare("phpr.Tab.Main", phpr.Core.Main, {
-     constructor: function(){
+     constructor:function() {
         this.module = "Tab";
         this.loadFunctions(this.module);
 

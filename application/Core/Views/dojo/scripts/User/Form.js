@@ -20,7 +20,7 @@
 dojo.provide("phpr.User.Form");
 
 dojo.declare("phpr.User.Form", phpr.Core.Form, {
-    setPermissions:function (data) {
+    setPermissions:function(data) {
         this._writePermissions = true;
 
         // users can't be deleted
@@ -35,7 +35,7 @@ dojo.declare("phpr.User.Form", phpr.Core.Form, {
         return false;
     },
 
-    updateData: function(){
+    updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
 
         // Delete User Cache

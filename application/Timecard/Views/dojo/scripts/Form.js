@@ -175,7 +175,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         }
     },
 
-    reloadBookingView: function() {
+    reloadBookingView:function() {
         // summary:
         //    Reload the Booking view
         // description:

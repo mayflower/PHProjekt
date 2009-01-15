@@ -89,7 +89,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         });
     },
 
-    useIdInGrid: function() {
+    useIdInGrid:function() {
         // summary:
         //    Draw the ID on the grid
         // description:
@@ -228,8 +228,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             var params = {
                 baseClass: "positive",
                 iconClass: "export",
-                alt: "Export",
-                disabled: false
+                alt:       "Export",
+                disabled:  false
             };
             var exportButton = new dijit.form.Button(params);
             dojo.byId("buttonRow").appendChild(exportButton.domNode);
@@ -246,8 +246,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             var params = {
                 baseClass: "positive",
                 iconClass: "disk",
-                alt: "Save",
-                disabled: true
+                alt:       "Save",
+                disabled:  true
             };
             this._saveChanges = new dijit.form.Button(params);
             dojo.byId("buttonRow").appendChild(this._saveChanges.domNode);

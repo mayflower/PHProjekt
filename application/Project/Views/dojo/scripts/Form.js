@@ -20,7 +20,7 @@
 dojo.provide("phpr.Project.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
-    initData: function() {
+    initData:function() {
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
@@ -120,7 +120,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         }
     },
 
-    newRoleUser: function () {
+    newRoleUser:function() {
         // summary:
         //    Add a new row of one user-role
         // description:
@@ -160,7 +160,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         }
     },
 
-    deleteUserRoleRelation: function (userId) {
+    deleteUserRoleRelation:function(userId) {
         // summary:
         //    Remove the row of one user-accees
         // description:
@@ -175,7 +175,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         parent.removeChild(e);
     },
 
-    submitForm: function() {
+    submitForm:function() {
         // summary:
         //    This function is responsible for submitting the formdata
         // description:

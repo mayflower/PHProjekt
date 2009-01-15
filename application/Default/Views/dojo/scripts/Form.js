@@ -76,7 +76,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._formNode = dijit.byId("detailsBox");
     },
 
-    getInitData: function(params) {
+    getInitData:function(params) {
         // summary:
         //    Process all the POST in cascade for get all the data from the server
         // description:
@@ -100,7 +100,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
-    initData: function() {
+    initData:function() {
         // summary:
         //    Init all the data before draw the form
         // description:
@@ -189,7 +189,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
-    setPermissions:function (data) {
+    setPermissions:function(data) {
         // summary:
         //    Get the permission
         // description:
@@ -201,7 +201,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
-    addTab:function (innerTabs, id, title, formId) {
+    addTab:function(innerTabs, id, title, formId) {
         // summary:
         //    Add a tab
         // description:
@@ -214,8 +214,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             formId:    formId || ''
         });
         var tab = new dijit.layout.ContentPane({
-            id:        id,
-            title:     phpr.nls.get(title)
+            id:    id,
+            title: phpr.nls.get(title)
         });
         dojo.addOnLoad(function(){
             dijit.byId(id).resize();
@@ -227,7 +227,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
-    getTabs: function() {
+    getTabs:function() {
         // summary:
         //    Return the tab list for make the form
         // description:
@@ -238,7 +238,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return result;
     },
 
-    getFormData: function(items, request) {
+    getFormData:function(items, request) {
         // summary:
         //    This function renders the form data according to the database manager settings
         // description:
@@ -399,7 +399,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.formdata[1] += this.displayTagInput();
     },
 
-    newAccess: function () {
+    newAccess:function() {
         // summary:
         //    Add a new row of one user-accees
         // description:
@@ -464,7 +464,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
-    deleteAccess: function (userId) {
+    deleteAccess:function(userId) {
         // summary:
         //    Remove the row of one user-accees
         // description:
@@ -487,7 +487,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         parent.removeChild(e);
     },
 
-    checkAllAccess: function(str) {
+    checkAllAccess:function(str) {
         // summary:
         //    Select all the access
         // description:
@@ -504,7 +504,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
     },
 
-    checkNoneAccess: function(str) {
+    checkNoneAccess:function(str) {
         // summary:
         //    Un-select all the access
         // description:
@@ -540,7 +540,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return true;
     },
 
-    submitForm: function() {
+    submitForm:function() {
         // summary:
         //    This function is responsible for submitting the formdata
         // description:
@@ -575,7 +575,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         });
     },
 
-    deleteForm: function() {
+    deleteForm:function() {
         // summary:
         //    This function is responsible for deleting a dojo element
         // description:
@@ -600,7 +600,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         });
     },
 
-    displayTagInput: function() {
+    displayTagInput:function() {
         // summary:
         // This function manually receives the Tags for the current element
         // description:
@@ -626,7 +626,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, false, false);
     },
 
-    getHistoryData: function() {
+    getHistoryData:function() {
         // summary:
         //    This function renders the history data
         // description:

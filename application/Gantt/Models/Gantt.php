@@ -38,6 +38,7 @@ class Gantt_Models_Gantt
      *
      * @return void
      */
-    public function fetchAll($projectId) {
+    public function fetchAll($projectId)
+    {
     }
 }

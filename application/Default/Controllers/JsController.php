@@ -116,7 +116,7 @@ class JsController extends IndexController
 
         echo '
         dojo.declare("phpr.Main", null, {
-            constructor: function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId,/*String*/language) {
+            constructor:function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId,/*String*/language) {
                 phpr.module           = currentModule;
                 phpr.submodule        = null;
                 phpr.webpath          = webpath;

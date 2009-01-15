@@ -34,8 +34,8 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
             }
             dojo.fadeIn({
                 node: dojo.byId('projectBookingForm_0'),
-                duration: 1000,
-                beforeBegin: function(){
+                duration:    1000,
+                beforeBegin: function() {
                     var node = dojo.byId('projectBookingForm_0');
                     dojo.style(node, "opacity", 0);
                     dojo.style(node, "display", "block");
@@ -115,7 +115,7 @@ dojo.declare("phpr.Timecard.ContentBar", null, {
 });
 
 dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
-    onDrop: function(source, nodes, copy){
+    onDrop:function(source, nodes, copy) {
         if(this != source) {
             this.onDropExternal(source, nodes, copy);
             if (source.node.id == 'projectFavoritesSource') {

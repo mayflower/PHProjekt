@@ -21,7 +21,7 @@ dojo.provide("phpr.Module.Form");
 
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
-    initData: function() {
+    initData:function() {
         // Get all the active users
         this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/id/' + this.id;
         this._initData.push({'url': this._moduleDesignerUrl});
@@ -71,7 +71,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         dojo.connect(dijit.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));
     },
 
-    openDialog: function() {
+    openDialog:function() {
         // create the dialog
         phpr.destroyWidget('moduleManagerDialog');
         var dialog = new dijit.Dialog({
@@ -104,7 +104,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         dojo.connect(dijit.byId('moduleManagerDialog'), "hide",  dojo.hitch(this, "processDialogData"));
     },
 
-    processDialogData: function() {
+    processDialogData:function() {
         var tabs         = this.tabStore.getList();
         var data         = new Object();
         var i            = -1;
@@ -180,7 +180,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         dijit.byId('designerData').attr('value', json);
     },
 
-    updateDedignerData: function(event) {
+    updateDedignerData:function(event) {
         var data = dojo.fromJson(dijit.byId('designerData').attr('value'));
         if (this.id > 0) {
             var tableName = this.convertLabelIntoTableName(dijit.byId('name').attr('value'));
@@ -198,7 +198,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         dojo.stopEvent(event);
     },
 
-    convertLabelIntoTableName: function(value) {
+    convertLabelIntoTableName:function(value) {
         value     = value.replace(/\W+/g, '');
         value     = value.replace(/[_]/g, '');
         var first = value.charAt(0).toUpperCase();
@@ -206,7 +206,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         return first + value.substr(1, value.length-1);
     },
 
-    submitForm: function() {
+    submitForm:function() {
         if (!this.prepareSubmission()) {
             return false;
         }
@@ -239,7 +239,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         });
     },
 
-    deleteForm: function() {
+    deleteForm:function() {
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/module/jsonDelete/id/' + this.id,
             onSuccess: dojo.hitch(this, function(data) {

@@ -28,7 +28,7 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
     initData:function() {
     },
 
-    setPermissions:function (data) {
+    setPermissions:function(data) {
         this._writePermissions  = true;
         this._deletePermissions = false;
         this._accessPermissions = true;
@@ -47,7 +47,7 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
         return false;
     },
 
-    submitForm: function() {
+    submitForm:function() {
         // summary:
         //    This function is responsible for submitting the formdata
         // description:

@@ -146,7 +146,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         var _this  = this;
         var _paths = this._paths;
         this.tree.model.store.fetch({
-            query: {parent: id.toString()},
+            query:  {parent: id.toString()},
             onItem: function(item) {
                 var name = item.name.toString();
                 if (name.length > 20) {
@@ -190,7 +190,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         }
     },
 
-    getParentId: function(id) {
+    getParentId:function(id) {
         // summary:
         //    Return the parent id of one project
         // description:
