@@ -61,4 +61,25 @@ class Phprojekt_Date_Converter
             return $date;
         }
     }
+
+    /**
+     * Convert a number of minutes into HH:mm
+     *
+     * @param integer $minutes The number of minutes
+     *
+     * @return string
+     */
+    public static function convertMinutesToHours($minutes)
+    {
+        $hoursDiff   = floor($minutes / 60);
+        $minutesDiff = $minutes - ($hoursDiff * 60);
+
+        if ($hoursDiff == 0 || $hoursDiff < 10) {
+            $hoursDiff = '0' . $hoursDiff;
+        }
+        if ($minutesDiff == 0 || $minutesDiff < 10) {
+            $minutesDiff = '0' . $minutesDiff;
+        }
+        return $hoursDiff . ':' . $minutesDiff;
+    }
 }
