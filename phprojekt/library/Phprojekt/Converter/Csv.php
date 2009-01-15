@@ -46,11 +46,16 @@ class Phprojekt_Converter_Csv
      */
     static function convert($param1, $param2 = null)
     {
-
-        if (null == $param2) {
-            $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
+        // Convert Models
+        if (is_array($param1) && isset($param1[0]) && $param1[0] instanceof Phprojekt_Model_Interface) {
+            if (null == $param2) {
+                $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
+            }
+            return self::_convertModel($param1, $param2);
+        // Convert directly the output data
+        } else {
+            return self::_convertArray($param1);
         }
-        return self::_convertModel($param1, $param2);
     }
 
     /**
@@ -68,7 +73,7 @@ class Phprojekt_Converter_Csv
                                           $exportHeader = true)
     {
         $datas = array();
-        $data = array();
+        $data  = array();
 
         if (null === $models) {
             return self::_writeFile(array('metadata' => array()));
@@ -96,25 +101,33 @@ class Phprojekt_Converter_Csv
                     $data[] = $oneCol['label'];
                 }
             }
-
             $datas[] = $data;
         }
 
-
         foreach ($models as $cmodel) {
-
-            $data   = array();
-
+            $data = array();
             foreach ($information->getFieldDefinition($order) as $field) {
-                $key   = $field['key'];
-                $value = $cmodel->$key;
+                $key    = $field['key'];
+                $value  = $cmodel->$key;
                 $data[] = $value;
-
             }
             $datas[] = $data;
         }
 
         return self::_writeFile($datas);
+    }
+
+    /**
+     * Convert and array data into a CSV file
+     *
+     * @param array   $data Data to convert
+     * @param boolean $exportHeader Determine if the header needs to be exported
+     *
+     * @return string
+     */
+    private static function _convertArray($data)
+    {
+        return self::_writeFile($data);
     }
 
     /**
@@ -126,7 +139,6 @@ class Phprojekt_Converter_Csv
      */
     private static function _writeFile($data)
     {
-
         $outputString = "";
 
         if (is_array($data)) {
@@ -145,6 +157,7 @@ class Phprojekt_Converter_Csv
             }
             $outputString .= "\"\n";
         }
+
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
         header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -153,6 +166,7 @@ class Phprojekt_Converter_Csv
         header('Content-Length: ' . strlen($outputString));
         header("Content-Disposition: attachment; filename=\"export.csv\"");
         header('Content-Type: text/csv');
+
         echo $outputString;
     }
 }

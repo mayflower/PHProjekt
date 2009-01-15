@@ -52,4 +52,66 @@ class Statistic_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($data);
     }
+
+    /**
+     * Returns the data for export
+     *
+     * @return void
+     */
+    public function csvListAction()
+    {
+        $startDate = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
+        $endDate   = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
+        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
+
+        $data = $this->getModelObject()->getStatistics($startDate, $endDate, $projectId);
+        $data = $data['data'];
+
+        $rows       = array();
+        $sumPerUser = array();
+        $index      = 0;
+
+        $rows[$index][] = 'Project';
+        foreach ($data['users'] as $name) {
+            $rows[$index][] = $name;
+        }
+        $rows[$index][] = 'Total';
+        $index++;
+
+        $converter = Phprojekt_Loader::getLibraryClass('Phprojekt_Date_Converter');
+        foreach ($data['projects'] as $projectId => $title) {
+            $userData      = array();
+            $sumPerProject = 0;
+            $rows[$index][] = $title;
+            foreach (array_keys($data['users']) as $userId) {
+                if (!isset($data['rows'][$projectId][$userId])) {
+                    $rows[$index][] = $converter->convertMinutesToHours(0);
+                } else {
+                    $rows[$index][] = $converter->convertMinutesToHours($data['rows'][$projectId][$userId]);
+                    $sumPerProject  = $sumPerProject + $data['rows'][$projectId][$userId];
+                    if (!isset($sumPerUser[$userId])) {
+                        $sumPerUser[$userId] = 0;
+                    }
+                    $sumPerUser[$userId] = $sumPerUser[$userId] + $data['rows'][$projectId][$userId];
+                }
+            }
+            $rows[$index][] = $converter->convertMinutesToHours($sumPerProject);
+            $index++;
+        }
+
+        $rows[$index][] = 'Total';
+        $total          = 0;
+        $totalPerUser   = array();
+        foreach (array_keys($data['users']) as $userId) {
+            if (!isset($sumPerUser[$userId])) {
+                $rows[$index][] = $converter->convertMinutesToHours(0);
+            } else {
+                $rows[$index][] = $converter->convertMinutesToHours($sumPerUser[$userId]);
+                $total = $total + $sumPerUser[$userId];
+            }
+        }
+        $rows[$index][] = $converter->convertMinutesToHours($total);
+
+        Phprojekt_Converter_Csv::convert($rows);
+    }
 }

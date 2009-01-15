@@ -58,6 +58,16 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             var end = new Date(start.getFullYear(), start.getMonth(), end.getDate() - 1);
         }
         this.changeDate(start, end);
+
+        var params = {
+            baseClass: "positive",
+            iconClass: "export",
+            alt:       "Export",
+            disabled:  false
+        };
+        var exportButton = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(exportButton.domNode);
+        dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
     },
 
     changeDate:function(start, end) {
@@ -125,5 +135,19 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             users:  data.users,
             total:  totalRow
         });
-   }
+    },
+
+    setNewEntry:function() {
+    },
+
+    exportData:function() {
+        var start = dijit.byId("startDate").attr('value');
+        var end   = dijit.byId("endDate").attr('value');
+
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList"
+            + "/nodeId/" + phpr.currentProjectId
+            + "/startDate/" + phpr.Date.getIsoDate(start)
+            + "/endDate/" + phpr.Date.getIsoDate(end));
+        return false;
+    }
 });
