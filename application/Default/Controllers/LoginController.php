@@ -80,6 +80,35 @@ class LoginController extends Zend_Controller_Action
     }
 
     /**
+     * Executes the login by json using the username and password
+     * If it works fine, json returns success
+     *
+     *
+     * @return void
+     */
+    public function jsonLoginAction()
+    {
+        $username = (string) $this->getRequest()->getParam('username', null);
+        $password = (string) $this->getRequest()->getParam('password', null);
+
+        try {
+            $success = Phprojekt_Auth::login($username, $password);
+            if ($success === true) {
+                $return = array('status'  => 'success',
+                                'message' => '');
+            }
+        } catch (Phprojekt_Auth_Exception $error) {
+            $return = array('status'  => 'error',
+                            'message' => $error->getMessage());
+        }
+
+        $this->_helper->viewRenderer->setNoRender();
+        $this->view->clearVars();
+
+        echo Phprojekt_Converter_Json::convert($return);
+    }
+
+    /**
      * Logout action
      *
      * @return void
