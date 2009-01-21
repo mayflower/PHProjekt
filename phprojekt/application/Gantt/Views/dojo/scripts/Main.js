@@ -197,7 +197,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // description:
         //    This function sets the height of the vertical lines
         var count  = this.getProjectCount(phpr.currentProjectId);
-        if (count < 5) {
+        if (count < 4) {
             count = count + 1;
         }
         var height = ((count + 1) * 22) + count;
@@ -305,8 +305,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var element   =  dojo.byId('gantt_timeline');
         var startDate = new Date(this.gantt.MIN_DATE);
         var endDate   = new Date(this.gantt.MAX_DATE);
-        var months    = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var surface   = dojox.gfx.createSurface("timeLine", 1024, 44);
+        var months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var surface   = dojox.gfx.createSurface("timeLine", 1024, 100);
 	    var m         = dojox.gfx.matrix;
 
         var html = '<ul class="sub_project">';
@@ -358,9 +358,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             } else {
                 var size = 8;
             }
-            phpr.Gfx.makeText(surface, {x: x, y: 45, text: phpr.nls.get(month) + " " + year, align: "start"},
+            phpr.Gfx.makeText(surface, {x: x, y: 85, text: phpr.nls.get(month) + " " + year, align: "start"},
 		    {family: "Times", size: size + "pt"}, "black", "black")
-		    .setTransform(m.rotategAt(-75, x, 45));
+		    .setTransform(m.rotategAt(-75, x, 85));
         }
         html += '</ul></li></ul>';
 
