@@ -187,7 +187,39 @@ class Phprojekt_Table
      */
     public function changeField($tableName, $fieldDefinition, $position = null)
     {
-        return $this->modifyField($tableName, $fieldDefinition, $position);
+        $tableName = ucfirst($tableName);
+        $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " CHANGE ";
+        $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['oldName']) . ' ';
+
+        if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
+            if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
+                $fieldDefinition['length'] = "";
+            }
+            if (!isset($fieldDefinition['null']) || empty($fieldDefinition['null'])) {
+                $fieldDefinition['null'] = true;
+            }
+            if (!isset($fieldDefinition['default']) || empty($fieldDefinition['default'])) {
+                $fieldDefinition['default'] = "";
+            }
+            if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
+                $fieldDefinition['default_no_quote'] = false;
+            }
+
+            $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
+            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
+                                                    $fieldDefinition['null'], $fieldDefinition['default'],
+                                                    $fieldDefinition['default_no_quote']);
+        } else {
+            return false;
+        }
+
+        try {
+            $this->_db->getConnection()->exec($sqlString);
+            return true;
+        } catch (Exception $error) {
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            return false;
+        }
     }
 
     /**
