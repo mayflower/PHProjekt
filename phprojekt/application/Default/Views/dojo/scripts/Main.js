@@ -549,9 +549,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (undefined == words) {
             words = dojo.byId("searchfield").value;
         }
-        var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words;
-        var resultsTitle = phpr.nls.get('Search results');
-        this.showResults(getDataUrl, resultsTitle);
+        if (words.length >= 3) {
+            var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words;
+            var resultsTitle = phpr.nls.get('Search results');
+            this.showResults(getDataUrl, resultsTitle);
+        }
     },
 
     clickResult:function(/*String*/type) {
