@@ -374,9 +374,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Set the Container
         // description:
         //    Set the Container
-        return new dijit.layout.TabContainer({
+        var tabContainer = new dijit.layout.TabContainer({
             style: 'height:100%;'
         }, document.createElement('div'));
+        dojo.connect(tabContainer, 'selectChild', dojo.hitch(this, function() {
+            dojo.byId('completeContent').focus();
+        }));
+        return tabContainer;
     },
 
     addModuleTabs:function(data) {
