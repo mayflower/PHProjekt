@@ -338,7 +338,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                             tmpDraw.setStroke({color:[68,74,82,1], width: 2});
                             timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
 
-                            this.makeText(surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
+                            phpr.Gfx.makeText(surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
                                 {family: "Verdana", size: "8pt"}, "white", "white");
                         }
 
@@ -513,17 +513,5 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var minutesStart = start.substr(3, 2);
 
         return ((hoursEnd - hoursStart)*60) + (minutesEnd - minutesStart);
-    },
-
-    makeText:function(surface, text, font, fill, stroke) {
-        // summary:
-        //    Draw a text in the booked zone
-        // description:
-        //    Draw a text in the booked zone
-        var t = surface.createText(text);
-        t.setFont(font);
-        t.setFill(fill);
-        t.setStroke(stroke);
-        return t;
     }
 });

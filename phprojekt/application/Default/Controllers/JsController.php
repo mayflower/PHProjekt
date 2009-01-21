@@ -68,6 +68,7 @@ class JsController extends IndexController
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/roundedContentPane.js');
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Store.js');
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Date.js');
+        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Gfx.js');
 
         // Default Folder
         echo $this->_getDefaultScripts();
@@ -125,6 +126,9 @@ class JsController extends IndexController
                 phpr.language         = language;
                 phpr.serverFeedback   = new phpr.ServerFeedback();
                 phpr.Date             = new phpr.Date();
+                phpr.Gfx              = new phpr.Gfx();
+                phpr.loading          = new phpr.loading();
+                phpr.DataStore        = new phpr.DataStore();
         ';
 
         foreach ($this->_modules as $module) {

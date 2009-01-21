@@ -436,8 +436,6 @@ dojo.declare("phpr.DataStore", null, {
     }
 });
 
-phpr.DataStore = new phpr.DataStore();
-
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // summary:
     //    Request to the server
@@ -535,7 +533,6 @@ dojo.declare("phpr.loading", null, {
         }
     }
 });
-phpr.loading =  new phpr.loading();
 
 dojo.declare("phpr.translator", null, {
     // summary:
