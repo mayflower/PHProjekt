@@ -97,6 +97,9 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
 
     percentageFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
+        if (!itemvalue || isNaN(itemvalue)) {
+            itemvalue = 0;
+        }
         return this.render(["phpr.Default.template", "formpercentage.html"], null, {
                             label:    itemlabel,
                             labelfor: itemid,
