@@ -33,7 +33,7 @@ phpr.grid.formatTime = function(value) {
 
     var isoRegExp = /^(?:(\d{2})(\d{2})?)$/;
     var match = isoRegExp.exec(value);
-    if(match) {
+    if (match) {
         match.shift();
         return match[0] + ':' + match[1];
     } else {
@@ -91,7 +91,7 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     //    Redefine the function for return the correct value
     format:function(inRowIndex, inItem) {
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
         } else {
             var v = '';

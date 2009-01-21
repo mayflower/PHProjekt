@@ -334,7 +334,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
             var listIndex  = -1;
             var listLength = this.projectDataBuffer.length;
 
-            while(++listIndex < listLength) {
+            while (++listIndex < listLength) {
                 var pipeIndex = this.projectDataBuffer[listIndex][0].lastIndexOf('|');
                 if (this.projectDataBuffer[listIndex][0].substring(0, pipeIndex) != owner) {
                     continue;

@@ -105,7 +105,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
 
     onItemClick:function(item) {
         // summary: publishes "changeProject" as soon as a tree Node is clicked
-        if(!item) {
+        if (!item) {
           item = [];
         }
         this.publish("changeProject", [item.id]);

@@ -20,7 +20,7 @@
 dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 
     onDrop:function(source, nodes, copy) {
-        if(this != source) {
+        if (this != source) {
             this.onDropExternal(source, nodes, copy);
             phpr.makeModuleDesignerSource();
             var m = dojo.dnd.manager();
@@ -38,7 +38,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
     },
 
     onMouseDown:function(e) {
-        if(this._legalMouseDown(e) && (!this.skipForm || !dojo.dnd.isFormElement(e))){
+        if (this._legalMouseDown(e) && (!this.skipForm || !dojo.dnd.isFormElement(e))){
             this.mouseDown = true;
             this.mouseButton = e.button;
             this._lastX = e.pageX;

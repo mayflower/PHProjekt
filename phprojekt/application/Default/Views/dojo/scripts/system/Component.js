@@ -42,7 +42,7 @@ dojo.declare("phpr.Component", null, {
             }
         }
 
-        if(node) {
+        if (node) {
             var dojoType = node.getAttribute('dojoType');
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
