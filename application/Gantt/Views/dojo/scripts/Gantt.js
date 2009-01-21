@@ -30,6 +30,11 @@ dojo.declare('phpr.Project.GanttBase', null, {
         this.MAX_DATE = 1229804778000;
         this.DAY_MSEC = 86400000;
         this.main     = main;
+
+        this.RESIZE_PARENT_START     = 0;
+        this.RESIZE_PARENT_END       = 1;
+        this.RESIZE_SUBPROJECT_END   = 2;
+        this.RESIZE_SUBPROJECT_START = 3;
     },
 
     findArrayIndex:function(sliderName) {
@@ -114,28 +119,28 @@ dojo.declare('phpr.Project.GanttBase', null, {
         var current  = this.getProjectCaption(currentNode);
 
         switch(dialogType) {
-            case 0:
+            case this.RESIZE_PARENT_START:
                 var text = phpr.nls.get('Attention: parent project');
                 text += ' "' + toChange + '" ';
                 text += phpr.nls.get('starts after sub-project');
                 text += ' "' + current + '"!<br /><br />';
                 text += phpr.nls.get('Click "OK" to adjust parent project to new start date') + '<br />';
                 break;
-            case 1:
+            case this.RESIZE_PARENT_END:
                 var text = phpr.nls.get('Attention: parent project');
                 text += ' "' + toChange + '" ';
                 text += phpr.nls.get('ends before sub-project');
                 text += ' "' + current + '"!<br /><br />';
                 text += phpr.nls.get('Click "OK" to adjust parent project to new end date') + '<br />';
                 break;
-            case 2:
+            case this.RESIZE_SUBPROJECT_END:
                 var text = phpr.nls.get('Attention: sub-project');
                 text += ' "' + toChange + '" ';
                 text += phpr.nls.get('ends after parent project');
                 text += ' "' + current + '"!<br /><br />';
                 text += phpr.nls.get('Click "OK" to adjust sub-project to new end date') + '<br />';
                 break;
-            case 3:
+            case this.RESIZE_SUBPROJECT_START:
                 var text = phpr.nls.get('Attention: sub-project');
                 text += ' "' + toChange + '" ';
                 text += phpr.nls.get('starts before parent project');
@@ -312,10 +317,10 @@ dojo.declare('phpr.Project.GanttBase', null, {
             if (parent != false) {
                 var parentValues = this.normalizeValues(dijit.byId(parent).attr('value'));
                 if (posMin < parentValues[0]) {
-                    this.processDialog(0, parent, nodeName, posMin, parentValues[1]);
+                    this.processDialog(this.RESIZE_PARENT_START, parent, nodeName, posMin, parentValues[1]);
                 }
                 if (posMax > parentValues[1]) {
-                    this.processDialog(1, parent, nodeName, parentValues[0], posMax);
+                    this.processDialog(this.RESIZE_PARENT_END, parent, nodeName, parentValues[0], posMax);
                 }
             }
         }
@@ -337,10 +342,10 @@ dojo.declare('phpr.Project.GanttBase', null, {
                 var childName   = this.projectDataBuffer[listIndex][0];
                 var childValues = this.normalizeValues(dijit.byId(childName).attr('value'));
                 if (posMax < childValues[1]) {
-                    this.processDialog(2, childName, nodeName, childValues[0], posMax);
+                    this.processDialog(this.RESIZE_SUBPROJECT_END, childName, nodeName, childValues[0], posMax);
                 }
                 if (posMin > childValues[0]) {
-                    this.processDialog(3, childName, nodeName, posMin, childValues[1]);
+                    this.processDialog(this.RESIZE_SUBPROJECT_START, childName, nodeName, posMin, childValues[1]);
                 }
             }
         }
@@ -353,12 +358,12 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    Change the value of the node
         var values = this.normalizeValues(dijit.byId(nodeName).attr('value'));
         switch (dialogType) {
-            case 1:
-            case 2:
+            case this.RESIZE_PARENT_END:
+            case this.RESIZE_SUBPROJECT_END:
                 values[1] = posMax;
                 break;
-            case 0:
-            case 3:
+            case this.RESIZE_PARENT_START:
+            case this.RESIZE_SUBPROJECT_START:
                 values[0] = posMin;
                 break;
         }
