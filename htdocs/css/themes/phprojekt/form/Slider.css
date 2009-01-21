@@ -52,7 +52,6 @@
 }
 .phprojekt .dijitSliderFocused .dijitSliderImageHandleH {
     background-image: url("../images/preciseSliderThumbFocus.png");
-    #background-image: url("../images/preciseSliderThumbFocus.gif");
 }
 
 .dj_ie6 .phprojekt .dijitSliderImageHandleH {
@@ -76,13 +75,11 @@
     width: 20px;
     height: 15px;
     background: url("../images/sliderThumb.png") no-repeat center center;
-    #background: url("../images/sliderThumb.gif") no-repeat center center;
     cursor: pointer;
 }
 
 .phprojekt .dijitSliderFocused .dijitSliderImageHandleV {
     background-image: url("../images/sliderThumbFocus.png");
-    #background-image: url("../images/sliderThumbFocus.gif");
 }
 
 .phprojekt .dijitSliderBottomBumper {
