@@ -78,13 +78,15 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    Shows the dialog box to alert a conflict
         var content = this.main.render(["phpr.Gantt.template", "dialog.html"], null ,{
             text:        text,
+            ok:          phpr.nls.get('OK'),
+            reset:       phpr.nls.get('Reset'),
             currentNode: currentNode
         });
 
         var dialog = new dijit.Dialog({
-            title:     "Warning",
+            title:     phpr.nls.get('Warning'),
             draggable: false,
-            execute: function(formContents){
+            execute:   function(formContents){
                 dojo.publish('Gantt.dialogCallback', [posMin, posMax, nodeToChange, dialogType])
             }
         });
@@ -108,36 +110,43 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    This function delivers the error text and executes showDialog()
         // description:
         //    This function delivers the error text and executes showDialog()
+        var toChange = this.getProjectCaption(nodeToChange);
+        var current  = this.getProjectCaption(currentNode);
+
         switch(dialogType) {
             case 0:
-                this.showDialog('Attention: parent project "' + this.getProjectCaption(nodeToChange) + '"' +
-                                ' starts after subproject "' + this.getProjectCaption(currentNode) + '"!<br /><br />' +
-                                'Click "OK" to adjust parent project to new start date<br />' +
-                                'Click "Reset" to reset current project<br />' +
-                                'Click "x" or "ESC" to do nothing', dialogType, nodeToChange, currentNode, posMin, posMax);
-                 break;
+                var text = phpr.nls.get('Attention: parent project');
+                text += ' "' + toChange + '" ';
+                text += phpr.nls.get('starts after sub-project');
+                text += ' "' + current + '"!<br /><br />';
+                text += phpr.nls.get('Click "OK" to adjust parent project to new start date') + '<br />';
+                break;
             case 1:
-                this.showDialog('Attention: parent project "'+this.getProjectCaption(nodeToChange)+ '"' +
-                                ' ends before subproject "'+this.getProjectCaption(currentNode)+'"!<br /><br />' +
-                                'Click "OK" to adjust parent project to new end date<br />' +
-                                'Click "Reset" to reset current project<br />' +
-                                'Click "x" or "ESC" to do nothing', dialogType, nodeToChange, currentNode, posMin, posMax);
+                var text = phpr.nls.get('Attention: parent project');
+                text += ' "' + toChange + '" ';
+                text += phpr.nls.get('ends before sub-project');
+                text += ' "' + current + '"!<br /><br />';
+                text += phpr.nls.get('Click "OK" to adjust parent project to new end date') + '<br />';
                 break;
             case 2:
-                this.showDialog('Attention: subproject "' + this.getProjectCaption(nodeToChange) + '"' +
-                                ' ends after parent project "' + this.getProjectCaption(currentNode) + '"!<br /><br />' +
-                                'Click "OK" to adjust subproject to new end date<br />' +
-                                'Click "Reset" to reset current project<br />' +
-                                'Click "x" or "ESC" to do nothing', dialogType, nodeToChange, currentNode, posMin, posMax);
+                var text = phpr.nls.get('Attention: sub-project');
+                text += ' "' + toChange + '" ';
+                text += phpr.nls.get('ends after parent project');
+                text += ' "' + current + '"!<br /><br />';
+                text += phpr.nls.get('Click "OK" to adjust sub-project to new end date') + '<br />';
                 break;
             case 3:
-                this.showDialog('Attention: subproject "'+this.getProjectCaption(nodeToChange) + '"' +
-                                ' starts before parent project "'+this.getProjectCaption(currentNode)+'"!<br /><br />' +
-                                'Click "OK" to adjust subproject to new start date<br />' +
-                                'Click "Reset" to reset current project<br />' +
-                                'Click "x" or "ESC" to do nothing', dialogType, nodeToChange, currentNode, posMin, posMax);
+                var text = phpr.nls.get('Attention: sub-project');
+                text += ' "' + toChange + '" ';
+                text += phpr.nls.get('starts before parent project');
+                text += ' "' + current + '"!<br /><br />';
+                text += phpr.nls.get('Click "OK" to adjust sub-project to new start date') + '<br />';
                 break;
         }
+
+        text += phpr.nls.get('Click "Reset" to reset current project') + '<br />';
+        text += phpr.nls.get('Click "x" or "ESC" to do nothing');
+        this.showDialog(text, dialogType, nodeToChange, currentNode, posMin, posMax);
     },
 
     getParentName:function(ownName) {

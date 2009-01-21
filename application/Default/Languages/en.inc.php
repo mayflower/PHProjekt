@@ -221,6 +221,19 @@ $lang["Friday"] = "Friday";
 $lang["Saturday"] = "Saturday";
 $lang["Sunday"] = "Sunday";
 
+$lang["January"] = "January";
+$lang["February"] = "February";
+$lang["March"] = "March";
+$lang["April"] = "April";
+$lang["May"] = "May";
+$lang["June"] = "June";
+$lang["July"] = "July";
+$lang["August"] = "August";
+$lang["September"] = "September";
+$lang["October"] = "October";
+$lang["November"] = "November";
+$lang["December"] = "December";
+
 // Common status
 $lang["Offered"] = "Offered";
 $lang["Ordered"] = "Ordered";
