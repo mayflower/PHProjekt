@@ -30,7 +30,7 @@
 }
 
 .phprojekt #ganttChart .sub_project .title {
-    width: 25%;
+    width: 250px;
     border-left: 1px solid #7d7d7d;
     border-right: 1px solid #7d7d7d;
     border-bottom: 1px solid #7d7d7d;
@@ -154,7 +154,7 @@
 .phprojekt #ganttChart .dijitSliderIncrementIconH,
 .phprojekt #ganttChart .dijitSliderIncrementIconV {
     cursor: pointer;
-    background-image: url('images/spriteArrows.png');
+    background-image: url("images/spriteArrows.png");
     background-repeat: no-repeat;
     margin: 5px;
     height: 7px;
@@ -166,7 +166,7 @@
 .dj_ie6 .phprojekt #ganttChart .dijitSliderDecrementIconV,
 .dj_ie6 .phprojekt #ganttChart .dijitSliderIncrementIconH,
 .dj_ie6 .phprojekt #ganttChart .dijitSliderIncrementIconV {
-    background-image: url('images/spriteArrows.gif');
+    background-image: url("images/spriteArrows.gif");
 }
 
 .phprojekt #ganttChart .dijitSliderDecrementIconH {
@@ -231,6 +231,12 @@
 
 .phprojekt #ganttChart .dojoxRangeSliderBarContainer {
     position: relative;
+    height: 22px;
+    margin-top: 2px;
+}
+
+.phprojekt #ganttChart .slider .dojoxRangeSlider td {
+    vertical-align: middle;
 }
 
 .phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBarV,

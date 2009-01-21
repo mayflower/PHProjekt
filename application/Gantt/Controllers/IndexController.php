@@ -69,17 +69,24 @@ class Gantt_IndexController extends IndexController
                     }
                     $data['data']["projects"][] = array('id'      => $key,
                                                         'level'   => $node->getDepth() * 10,
+                                                        'parent'  => $parent,
                                                         'childs'  => count($node->getChildren()),
                                                         'caption' => $node->title,
-                                                        'name'    => "p:".$parent."|own:".$key,
                                                         'start'   => $start,
                                                         'end'     => $end);
                 }
             }
         }
-        $data['data']['min'] = mktime(0, 0, 0, 1, 1, date("Y", $min));
-        $data['data']['max'] = mktime(0, 0, 0, 12, 31, date("Y", $min));
+
+        $data['data']['min']  = mktime(0, 0, 0, 1, 1, date("Y", $min));
+        $data['data']['max']  = mktime(0, 0, 0, 12, 31, date("Y", $max));
+
         $data['data']['step'] = (date("L", $min)) ? 366 : 365;
+        while (date("Y", $min) != date("Y", $max)) {
+            $data['data']['step'] += (date("L", $max)) ? 366 : 365;
+            $max = mktime(0, 0, 0, 5, 5, date("Y", $max) - 1);
+        }
+
         echo Phprojekt_Converter_Json::convert($data);
     }
 

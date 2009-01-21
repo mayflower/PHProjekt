@@ -1,9 +1,11 @@
-<ul class="sub_project" id="lbl_{{name}}" style="height: 24px;">
+<ul class="sub_project" id="lbl_{{name}}" style="height: 24px; display: block;">
     <li class="title">
         <div style="width:100%; left:0px; top: 0px;">
-            <div style="display:inline"><img src="{{webpath}}img/spacer.gif" height="1" width="{{level}}" /></div>
-            <div style="display:inline" class="expander" style="width:15px"></div>
-            <div style="display:inline"><a href="javascript: void 0" style="text-decoration: none;"><strong>{{caption}}</strong></a></div>
+            <div style="display: inline"><img src="{{webpath}}img/spacer.gif" height="1" width="{{level}}" /></div>
+            <div class="expander" style="display: inline; width: 15px"></div>
+            <div style="display: inline;">
+                <a href="javascript: void 0" style="text-decoration: none;"><strong>{{caption}}</strong></a>
+            </div>
         </div>
     </li>
     <li class="separator">&nbsp;</li>
@@ -13,12 +15,12 @@
         name="{{name}}"
         dojotype="dojox.form.HorizontalRangeSlider"
         onchange="dijit.byId('{{name}}').container.processUpdate(arguments[0], '{{name}}');"
-        minimum="0"
+        minimum="1"
         maximum="{{STEPPING}}"
         value="0,0"
         onfocus="dijit.byId('{{name}}').container.setActiveSlider('{{name}}');"
         clickSelect="false"
-        style="margin-top:0px; width:{{width}}px"
+        style="margin-top: 0px; width: {{width}}px;"
         discreteValues="{{STEPPING}}"
         showbuttons="false"></div>
     </li>

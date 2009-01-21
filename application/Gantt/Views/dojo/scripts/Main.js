@@ -21,6 +21,7 @@ dojo.provide("phpr.Gantt.Main");
 
 dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     gantt: null,
+    scale: 1,
 
     constructor:function() {
         this.module = 'Gantt';
@@ -32,6 +33,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
 
         dojo.subscribe("Gantt.dialogCallback", this, "dialogCallback");
         dojo.subscribe("Gantt.toggle", this, "toggle");
+        dojo.subscribe("Gantt.revertSlider", this, "revertSlider");
     },
 
     reload:function() {
@@ -50,7 +52,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.setSearchForm();
         this.tree  = new this.treeWidget(this);
 
-        this.gantt = new phpr.Project.GanttBase();
+        this.gantt = new phpr.Project.GanttBase(this);
 
         this._url = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
@@ -77,6 +79,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    Get all the data and render all the views
         var data = phpr.DataStore.getData({url: this._url});
 
+        // Keep the project data
         this.gantt.projectDataBuffer = data["projects"] || Array();
 
         // assign global constants required for calculations with boundaries provided by data provider
@@ -84,6 +87,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // convert second in mseconds (JS supported format)
         this.gantt.MIN_DATE = 1000 * data["min"];
         this.gantt.MAX_DATE = 1000 * data["max"];
+
+        // set timeline
+        var width = this.setTimeline();
 
         // Render the projects information
         dojo.byId('projectList').innerHTML = '';
@@ -93,23 +99,21 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 caption = caption.substr(0, 25) + '...';
             }
             dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
-                name:     this.gantt.projectDataBuffer[j].name,
+                name:     this.buildProjectName(j),
                 level:    this.gantt.projectDataBuffer[j].level,
                 caption:  caption,
-                STEPPING: this.gantt.STEPPING - 1,
-                width:    (this.gantt.STEPPING *2) + 4,
+                STEPPING: this.gantt.STEPPING,
+                width:    width + 4,
                 webpath:  phpr.webpath
             });
         }
         dojo.parser.parse(dojo.byId('projectList'));
 
-        // set timeline
-        this.setTimeline();
-        // insert 2 date widgets dynamically
+        // Insert 2 date widgets dynamically
         this.installCalendars();
-        // insert projects dynamically
+        // Insert projects dynamically
         this.installProjects();
-        //this.setToggle();
+        this.setToggle();
         this.setHeight();
     },
 
@@ -125,7 +129,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                                                          id:            'minDate',
                                                          constraints:   {datePattern:'yyyy-MM-dd', strict:true},
                                                          promptMessage: "yyyy-MM-dd",
-                                                         onChange:      dojo.hitch(this,function() { this.gantt.setRangeSelect(arguments[0], 'min'); }),
+                                                         onChange:      dojo.hitch(this,function() {
+                                                                            this.gantt.setRangeSelect(arguments[0], 'min');
+                                                                        }),
                                                          style:         'width:150px;',
                                                          required:      true},
                                                          dojo.byId('TgtMin'));
@@ -134,12 +140,13 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                                                          id:            'maxDate',
                                                          constraints:   {datePattern:'yyyy-MM-dd', strict:true},
                                                          promptMessage: "yyyy-MM-dd",
-                                                         onChange:      dojo.hitch(this,function() { this.gantt.setRangeSelect(arguments[0], 'max'); }),
+                                                         onChange:      dojo.hitch(this,function() {
+                                                                            this.gantt.setRangeSelect(arguments[0], 'max');
+                                                                        }),
                                                          style:         'width:150px;',
                                                          required:      true},
                                                          dojo.byId('TgtMax'));
     },
-
 
     installProjects:function() {
         // summary:
@@ -155,12 +162,33 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 this.gantt.convertStampToIndex(1000 * this.gantt.projectDataBuffer[listIndex].start),
                 this.gantt.convertStampToIndex(1000 * this.gantt.projectDataBuffer[listIndex].end)
             );
-            var projectName   = new String(this.gantt.projectDataBuffer[listIndex].name);
+
+            var projectName   = new String(this.buildProjectName(listIndex));
             var ProjectChilds = new String(this.gantt.projectDataBuffer[listIndex].childs)
             dijit.byId(projectName).container = this.gantt;
             dijit.byId(projectName).attr('value', projectValues);
-            this.gantt.projectDataBuffer[listIndex] = new Array(projectName, projectValues[0], projectValues[1], ProjectChilds );
+            this.gantt.projectDataBuffer[listIndex] = new Array(projectName, projectValues[0], projectValues[1], ProjectChilds);
         }
+    },
+
+    buildProjectName:function(index) {
+        var name = "p:" + this.gantt.projectDataBuffer[index].parent + "|own:" + this.gantt.projectDataBuffer[index].id;
+        return name;
+    },
+
+    decodeName:function(element) {
+        // summary:
+        //    Decode the name and return the parent and id
+        // description:
+        //    Decode the name and return the parent and id
+        if (element.id) {
+            var parent = Number(element.id.split(':')[1].split('|')[0]);
+            var id     = Number(element.id.split(':')[2]);
+        } else {
+            var parent = 0;
+            var id     = 0;
+        }
+        return new Object({'parent': parent, 'id': id});
     },
 
     setHeight:function() {
@@ -168,10 +196,32 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    This function sets the height of the vertical lines
         // description:
         //    This function sets the height of the vertical lines
-        var height = (this.gantt.projectDataBuffer.length + 1) * 22;
+        var count  = this.getProjectCount(phpr.currentProjectId);
+        if (count < 5) {
+            count = count + 1;
+        }
+        var height = ((count + 1) * 22) + count;
         dojo.query('#gantt_timeline .slider .splitter').forEach(function(ele) {
             dojo.style(ele, 'height', (height)+'px');
         });
+    },
+
+    getProjectCount:function(parent) {
+        // summary:
+        //    Return the number of sub projects included the project itself
+        // description:
+        //    Return the number of sub projects included the project itself
+        var self  = this;
+        var count = 0;
+        dojo.query(".project_list .sub_project").forEach(function(element) {
+            var info = self.decodeName(element);
+            if (info.id > 0 && info.parent == parent) {
+                if (element.style.display == 'block') {
+                    count = count + 1 + self.getProjectCount(info.id);
+                }
+            }
+        });
+        return count;
     },
 
     setToggle:function() {
@@ -180,69 +230,70 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // description:
         //    The assignment is not flexible due to the 'ProjectChart' instance.
         this.gantt.toggleElement = new Object();
-        var i    = 0;
-        var self = this;
-        dojo.query('.project_list .sub_project').forEach(function(el){
-            var par = Number(el.id.split(':')[1].split('|')[0]);
-            var id  = Number(el.id.split(':')[2]);
-            el.getElementsByTagName('a')[0].onclick = dojo.hitch(this,function() {dojo.publish('Gantt.toggle', [this, par, id]);});
-            self.gantt.toggleElement[i] = par;
+        var self                 = this;
+        var i                    = 0;
+        dojo.query('.project_list .sub_project').forEach(function(element) {
+            var a = element.getElementsByTagName('a')[0];
+            if (self.gantt.projectDataBuffer[i][3] > 0) {
+                a.innerHTML = "[-] " + a.innerHTML;
+            }
+            var info = self.decodeName(element);
+            if (info.id > 0) {
+                a.onclick = dojo.hitch(this,function() {
+                    dojo.publish('Gantt.toggle', [a, info.parent, info.id]);
+                });
+            }
             i++;
         });
-
-        for(var i = 0; i< this.gantt.projectDataBuffer.length; i++) {
-            var value = this.gantt.toggleElement[i];
-            if ((value - 1) >= 0) {
-                var element = dojo.query(".project_list .sub_project .expander")[(value - 1)];
-                if (element.innerHTML.indexOf('[-]') == -1) {
-                    element.innerHTML = "[-] " + element.innerHTML;
-                }
-            }
-        }
     },
 
-    switchController:function(pEle, pDirect) {
+    switchController:function(element, close) {
         // summary:
         //    This function checks whether the element is expanded or not to replace the +/-
         // description:
         //    This function checks whether the element is expanded or not to replace the +/-
-        if (element.innerHTML.indexOf('+') > 0 || pDirect == false) {
+        if (element.innerHTML.indexOf('+') > 0 || close == false) {
             element.innerHTML = element.innerHTML.replace("[+]", "[-]");
             return true;
-        }
-        else {
+        } else {
             element.innerHTML = element.innerHTML.replace("[-]", "[+]");
             return false;
         }
     },
 
-    toggle:function(pEle, pPar, pId) {
+    toggle:function(element, parent, id) {
         // summary:
         //    This function is triggerd by the a-element to toggle the childs.
         // description:
         //    This function is triggerd by the a-element to toggle the childs.
-        var myEle     = dojo.query('.project_list .sub_project .expander')[(pId-1)];
-        var myHandler = this.switchController(myEle);
+        var myHandler = this.switchController(element);
 
-        var childs = this.gantt.projectDataBuffer[(pId-1)][3];
-        dojo.query(".project_list .sub_project").forEach(function(el){
-            var myPar = el.id.split(':')[1].split('|')[0];
-            var myId  = el.id.split(':')[2];
-            var myMax =  Number(pId)+Number(childs);
-
-            if (myHandler == true) {
-                var myQu = myPar >= pId;
-            }
-            if (myHandler == false) {
-                var myQu = myPar >= pId && myPar <= myMax;
-            }
-
-            if (myQu) {
-                el.style.display = (myHandler == true) ? 'block' : 'none';
-            }
-        });
+        this.toggleProject(myHandler, id);
 
         this.setHeight();
+    },
+
+    toggleProject:function(show, parentId) {
+        // summary:
+        //    Show or hide all the projects under the parentId
+        // description:
+        //    Show or hide all the projects under the parentId
+        var i     = 0;
+        var self  = this;
+        dojo.query(".project_list .sub_project").forEach(function(element) {
+            var info = self.decodeName(element);
+            if (info.id > 0 && (info.parent == parentId)) {
+                element.style.display = (show == true) ? 'block' : 'none';
+                if (self.gantt.projectDataBuffer[i][3] > 0) {
+                    element.style.display = (show == true) ? 'block' : 'none';
+                    var a = element.getElementsByTagName('a')[0];
+                    if (a.innerHTML.indexOf('-') > 0) {
+                        self.toggleProject(show, info.id);
+                    }
+                }
+            }
+            i++;
+        });
     },
 
     setTimeline:function() {
@@ -255,14 +306,34 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var startDate = new Date(this.gantt.MIN_DATE);
         var endDate   = new Date(this.gantt.MAX_DATE);
         var months    = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var surface   = dojox.gfx.createSurface("timeLine", 1024, 44);
+	    var m         = dojox.gfx.matrix;
 
         var html = '<ul class="sub_project">';
-        html += '<li style="border-left:none; border-right:none; width:25%; float: left;">&nbsp;</li>';
+        html += '<li style="border-left:none; border-right:none; width:250px; float: left;">&nbsp;</li>';
         html += '<li style="width:12px; float: left;">&nbsp;</li>';
         html += '<li class="slider" style="float:left; margin-top:0px; left:0px;">';
         html += '<ul style="margin-top:0px; width:100%; left:0px;">';
         html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
 
+        // Get how many years there are
+        var years = 1;
+        var checkStartDate = startDate;
+        for (var i = 0 ; true ; i++) {
+            checkStartDate = dojo.date.add(checkStartDate, 'month', 1);
+            var check = dojo.date.compare(checkStartDate, endDate);
+            if (check == 1) {
+                break;
+            }
+            if (i > 11) {
+                i = 0;
+                years++;
+            }
+        }
+        this.scale = (2 / years);
+
+        // Draw the timeline with the correct scale
+        var totalWidth = 0;
         for (var i = 0 ; true ; i++) {
             startDate = dojo.date.add(startDate, 'month', 1);
             var check = dojo.date.compare(startDate, endDate);
@@ -270,21 +341,49 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 break;
             }
             var year   = startDate.getFullYear();
-            var width  = (dojo.date.getDaysInMonth(startDate) * 2);
+            var width  = Math.round(dojo.date.getDaysInMonth(startDate) * this.scale);
+            totalWidth = totalWidth + width;
 
-            html += '<li style="width:'+width+'px; border-top:1px solid #7d7d7d; float:left;">' + phpr.nls.get(months[i]) + " " + year + "</li>";
+            if (i > 11) {
+                i = 0;
+            }
+            var month = months[i];
+
+            html += '<li style="width:' + width + 'px; float:left;">&nbsp;</li>';
             html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d;margin-left: -2px;"></li>';
+
+            var x = 260 + (totalWidth -(width / 2));
+            if (years > 3) {
+                var size = 8 * (this.scale * 2);
+            } else {
+                var size = 8;
+            }
+            phpr.Gfx.makeText(surface, {x: x, y: 45, text: phpr.nls.get(month) + " " + year, align: "start"},
+		    {family: "Times", size: size + "pt"}, "black", "black")
+		    .setTransform(m.rotategAt(-75, x, 45));
         }
         html += '</ul></li></ul>';
+
         element.innerHTML = html;
+        this.gantt.FIX_VALUE = this.scale;
+
+		return totalWidth;
     },
 
-    dialogCallback:function(values) {
+    dialogCallback:function(posMin, posMax, nodeToChange, currentNode, dialogType) {
         // summary:
         //    The callback function is executed by the dialog box continue the onChange event
         // description:
         //    The callback function is executed by the dialog box continue the onChange event
-        this.gantt.dialogCallback(values);
+        this.gantt.dialogCallback(posMin, posMax, nodeToChange, currentNode, dialogType);
+    },
+
+    revertSlider:function(currentNode) {
+        // summary:
+        //    Function executed on cancel
+        // description:
+        //    Function executed on cancel
+        this.gantt.revertSlider(currentNode);
     },
 
     submitForm:function() {

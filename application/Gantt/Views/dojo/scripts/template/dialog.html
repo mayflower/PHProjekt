@@ -1,0 +1,8 @@
+<div>{{text|safe}}</div>
+<br/>
+<button dojoType="dijit.form.Button" type="submit">OK</button>
+&nbsp;
+<button dojoType="dijit.form.Button" type="button" onclick="
+dijit.byId(this.domNode.parentNode.parentNode.id).hide();
+dojo.publish('Gantt.revertSlider',['{{currentNode}}']);">Reset</button>
+
