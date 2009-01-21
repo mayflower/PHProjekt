@@ -77,7 +77,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    When a new submodule is called, the new grid is displayed,
         //    the navigation changed and the Detail View is resetted
         phpr.currentProjectId = projectId;
-        if(!phpr.currentProjectId) {
+        if (!phpr.currentProjectId) {
             phpr.currentProjectId = phpr.rootProjectId;
         }
         if (this._isGlobalModule(this.module)) {
@@ -421,7 +421,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
             // hide the suggestBox and delete the time
             // for not show the suggest
-            if(window.mytimeout) {
+            if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
             }
             this.hideSuggest();
@@ -470,7 +470,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             (key != dojo.keys.NUM_LOCK) &&
             (key != dojo.keys.SCROLL_LOCK)) {
 
-            if(window.mytimeout) {
+            if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
             }
             window.mytimeout = window.setTimeout(dojo.hitch(this,"showSearchSuggest"), 500);
@@ -495,7 +495,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     var search        = '';
                     var results       = {};
                     var index         = 0;
-                    for(var i = 0; i < data.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         modulesData = data[i];
                         if (!results[modulesData.moduleLabel]) {
                             results[modulesData.moduleLabel] = '';
@@ -670,7 +670,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 var search        = '';
                 var results       = {};
                 var index         = 0;
-                for(var i = 0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     modulesData = data[i];
                     if (!results[modulesData.moduleLabel]) {
                         results[modulesData.moduleLabel] = '';

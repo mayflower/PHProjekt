@@ -268,7 +268,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             itemhint     = meta[i]["hint"];
 
             // Special workaround for new projects - set parent to current ProjectId
-            if(itemid == 'projectId' && !itemvalue){
+            if (itemid == 'projectId' && !itemvalue){
                 itemvalue = phpr.currentProjectId;
             }
 
@@ -532,7 +532,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function prepares the content of this.sendData before it is
         //    submitted to the Server.
         this.sendData = new Array();
-        for(var i = 0; i < this.formsWidget.length; i++) {
+        for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
                 this.form.selectChild(parent);

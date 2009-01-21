@@ -116,7 +116,7 @@ dojo.declare("phpr.Timecard.ContentBar", null, {
 
 dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
     onDrop:function(source, nodes, copy) {
-        if(this != source) {
+        if (this != source) {
             this.onDropExternal(source, nodes, copy);
             if (source.node.id == 'projectFavoritesSource') {
                 // Add a item

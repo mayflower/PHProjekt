@@ -23,7 +23,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
     prepareSubmission:function() {
         this.sendData = new Array();
-        for(var i = 0; i < this.formsWidget.length; i++) {
+        for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
                 this.form.selectChild(parent);

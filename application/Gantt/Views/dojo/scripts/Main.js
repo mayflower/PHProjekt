@@ -157,7 +157,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var listLength = this.gantt.projectDataBuffer.length;
         var listIndex  = -1;
 
-        while(++listIndex < listLength) {
+        while (++listIndex < listLength) {
             var projectValues = new Array(
                 this.gantt.convertStampToIndex(1000 * this.gantt.projectDataBuffer[listIndex].start),
                 this.gantt.convertStampToIndex(1000 * this.gantt.projectDataBuffer[listIndex].end)
@@ -396,7 +396,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var listIndex  = -1;
         var listLength = this.gantt.projectDataBuffer.length;
         var ids        = new Array();
-        while(++listIndex < listLength) {
+        while (++listIndex < listLength) {
             var name  = this.gantt.projectDataBuffer[listIndex][0];
             var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));
             var id    = name.split(':')[2];

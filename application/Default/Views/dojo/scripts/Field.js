@@ -176,7 +176,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         var options = new Array();
         var tmp     = itemvalue.split(',');
         for (var j in range) {
-            for(var k in tmp) {
+            for (var k in tmp) {
                 range[j].selected = '';
                 if (tmp[k] == range[j].id) {
                     range[j].selected = 'selected';

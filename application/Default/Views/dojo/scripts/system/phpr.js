@@ -303,8 +303,8 @@ phpr.handleResponse = function(resultArea,result)
 
 phpr.getCurrent = function(data, identifier, value){
     var current = null;
-    for (i=0; i < data.length; i++) {
-        if(value == data[i][identifier]){
+    for (i = 0; i < data.length; i++) {
+        if (value == data[i][identifier]) {
             current = data[i];
             break;
         }
@@ -409,7 +409,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Delete the cache
         // description:
         //    Delete the cache
-        if(this._internalCache[params.url]) {
+        if (this._internalCache[params.url]) {
            this._internalCache[params.url]['data'] = new Array();
         }
     },

@@ -52,7 +52,7 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
                         left:0
                     });
 
-                    if(this.moveable){
+                    if (this.moveable){
                         this._mover = new dojo.dnd.TimedMoveable(this.domNode,{
                             handle: dojo.query(this.handle,this.domNode)[0] ||this.containerNode,
                             timeout:69
@@ -77,9 +77,10 @@ dojo.declare("phpr.roundedContentPane",[dijit.layout.ContentPane,dijit._Template
                     this.resize(s);
                 },
 
-                resize:function(size){
-
-                    if(!this.surface){ this._initSurfce(); }
+                resize:function(size) {
+                    if (!this.surface) {
+                        this._initSurfce();
+                    }
 
                     this.surface.setDimensions(size.w,size.h);
                     this.roundedShape.setShape({
