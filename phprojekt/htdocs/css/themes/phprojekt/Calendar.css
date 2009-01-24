@@ -156,17 +156,19 @@
 }
 
 .phprojekt #calendarSchedule .hours {
+    border: 1px solid;
+    padding: 0;
+    vertical-align: middle;
     text-align: center;
     background-color: #d4dfea;
-    border: 1px solid;
-    vertical-align: middle;
+    font-size: 10px;
 }
 
 .phprojekt #calendarSchedule .events {
-    padding: 5;
-    background-color: #DDDDDD;
     border: 1px solid;
+    padding: 4;
     vertical-align: middle;
+    background-color: #DDDDDD;
 }
 
 .phprojekt #calendarSchedule .horizontalLine {
