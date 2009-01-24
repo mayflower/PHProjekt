@@ -221,6 +221,7 @@ $lang["Thursday"] = "Jueves";
 $lang["Friday"] = "Viernes";
 $lang["Saturday"] = "Sábado";
 $lang["Sunday"] = "Domingo";
+$lang["Other events"] = "Otros eventos";
 
 $lang["January"] = "Enero";
 $lang["February"] = "Febrero";

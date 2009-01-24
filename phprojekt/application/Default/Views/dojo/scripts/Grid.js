@@ -323,10 +323,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // summary:
         //    Check the access of the item for the user
         // description:
-        //    If the user can�t edit the item keep the current value for restor it later
-        //    We can�t stop the edition, but we can restore the value
+        //    If the user can't edit the item keep the current value to restore it later
+        //    We can't stop the edition, but we can restore the value
         if (!this.canEdit(inRowIndex)) {
-            // Keep the old value if the user can�t edit
+            // Keep the old value if the user can't edit
             if (!this._oldRowValues[inRowIndex]) {
                 this._oldRowValues[inRowIndex] = {};
             }
@@ -354,8 +354,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // summary:
         //    Save the changed values for store
         // description:
-        //    Save only the items that was changed, for save it later
-        //    If the user can�t edit the item, restore the last value
+        //    Save only the items that have changed, to save them later
+        //    If the user can't edit the item, restore the last value
         if (!this.canEdit(inRowIndex)) {
             var item  = this.grid.getItem(inRowIndex);
             var value = this._oldRowValues[inRowIndex][inFieldIndex];
@@ -375,9 +375,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
     toggleSaveButton:function() {
         // summary:
-        //    highlight when button gets avtivated
+        //    highlight when button gets activated
         // description:
-        //    highlight when button gets avtivated
+        //    highlight when button gets activated
         if (this._saveChanges.disabled == true) {
             dojox.fx.highlight({
                 node:     this._saveChanges.id,

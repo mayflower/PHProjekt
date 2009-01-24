@@ -1,0 +1,32 @@
+<!-- Events inside the schedule chart -->
+<table width="100%" id="calendarSchedule">
+    {%for moment in timeSquare%}
+        <tr>
+            <td width="7%" class="hours">{{moment.hour}}</td>
+            {% for column in moment.columns %}
+                {% if column.occupied %}
+                    {% ifequal column.typeEvent 1 %}
+                        <td rowspan="{{column.quartersDuration}}" width="{{column.widthColumn}}%"
+                            height="100%" class="events">
+                            <a href="javascript:dojo.publish('Calendar.showFormFromList', [{{column.id}}]);"
+                            >{{column.startTime}} - {{column.endTime}}</a> {{column.title}}<br>
+                            <div class="horizontalLine"></div>
+                            {{column.notes|safe}}
+                        </td>
+                    {% endifequal %}
+                {% else %}
+                    <td width="{{column.widthColumn}}%"></td>
+                {% endif %}
+            {% endfor %}
+         </tr>
+    {% endfor %}
+</table>
+<!-- Events outside the schedule chart -->
+{% if otherEvents.show %}
+    <br>
+    {{otherEventsMessage}}:<br>
+    {% for event in otherEvents.events %}
+        <a href="javascript:dojo.publish('Calendar.showFormFromList', [{{event.id}}]);"
+            >{{event.startTime}} - {{event.endTime}}</a> {{event.title}}<br>
+    {% endfor %}
+{% endif %}
