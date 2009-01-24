@@ -152,4 +152,51 @@ class Calendar_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
+
+    /**
+     * Returns the Day List in JSON.
+     *
+     * For further information see the chapter json exchange
+     * in the internals documentantion
+     *
+     * @requestparam integer count ...
+     * @requestparam integer start ...
+     * @requestparam string  date ...
+     *
+     * @return void
+     */
+    public function jsonDayListAction()
+    {
+        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
+        // so lets apply this to the query set.
+        $count   = (int) $this->getRequest()->getParam('count', null);
+        $offset  = (int) $this->getRequest()->getParam('start', null);
+        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
+
+        $userId  = PHprojekt_Auth::getUserId();
+        $records = $this->getModelObject()->fetchAll('participantId = ' . $userId . ' AND startDate = "'
+                   . $date . '"', null, $count, $offset);
+
+        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Returns the day list in CSV format.
+     *
+     *
+     * @return void
+     */
+    public function csvDayListAction()
+    {
+        $count   = (int) $this->getRequest()->getParam('count', null);
+        $offset  = (int) $this->getRequest()->getParam('start', null);
+        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
+
+        $userId  = PHprojekt_Auth::getUserId();
+        $records = $this->getModelObject()->fetchAll('participantId = ' . $userId . ' AND startDate = "'
+                   . $date . '"', null, $count, $offset);
+
+        Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
 }

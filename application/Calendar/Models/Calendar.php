@@ -97,7 +97,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $startDate     = Cleaner::sanitize('date', $request->getParam('startDate', date("Y-m-d")));
         $rrule         = (string) $request->getParam('rrule', null);
 
-        // getting reqesuted dates for the serial meeting (if it is serial)
+        // getting requested dates for the serial meeting (if it is serial)
         if (!empty($rrule)) {
             $dateCollection = new Phprojekt_Date_Collection($startDate);
             $dateCollection->applyRrule($rrule);

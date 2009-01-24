@@ -154,3 +154,36 @@
     color: black !important;
     font-weight: normal;
 }
+
+.phprojekt #calendarSchedule .hours {
+    text-align: center;
+    background-color: #d4dfea;
+    border: 1px solid;
+    vertical-align: middle;
+}
+
+.phprojekt #calendarSchedule .events {
+    padding: 5;
+    background-color: #DDDDDD;
+    border: 1px solid;
+    vertical-align: middle;
+}
+
+.phprojekt #calendarSchedule .horizontalLine {
+    margin:3px;
+    border-bottom:1px dashed #203040;
+}
+
+.phprojekt #calendarSchedule  a:link,
+.phprojekt #calendarSchedule  a:visited,
+.phprojekt #calendarButtonBar a:link,
+.phprojekt #calendarButtonBar a:visited {
+    text-decoration: none;
+}
+
+.phprojekt #calendarSchedule  a:hover,
+.phprojekt #calendarSchedule  a:active,
+.phprojekt #calendarButtonBar a:hover,
+.phprojekt #calendarButtonBar a:active {
+    text-decoration: underline;
+}
