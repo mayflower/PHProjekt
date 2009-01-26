@@ -57,7 +57,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
         this.hideSuggest();
         this.setSearchForm();
-        this.tree     = new this.treeWidget(this);
+        this.tree = new this.treeWidget(this);
         
         if (mode != null) {
             this._listMode = mode;
@@ -78,7 +78,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this._listMode = 'grid';
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
+        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
@@ -120,29 +120,29 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // summary:
         //    This function loads the Day List with the entered date, if any
         if (dijit.byId('selectDate').attr('value') != null) {
-                this.loadDayList(dijit.byId('selectDate').attr('value'));
-            }
-        },
+            this.loadDayList(dijit.byId('selectDate').attr('value'));
+        }
+    },
 
     setDay:function(day) {
         // summary
         //    This function is called by the buttons '<< Today >>' to load a specific day into the Day List
-        DAY_PREVIOUS = 0;
-        DAY_TODAY    = 1;
-        DAY_NEXT     = 2;
+        var DAY_PREVIOUS = 0;
+        var DAY_TODAY    = 1;
+        var DAY_NEXT     = 2;
 
         switch (day) {
             case DAY_PREVIOUS:
-                dCurrentDate = dijit.byId('selectDate').attr('value');
-                this._date    = dojo.date.add(dCurrentDate, 'day', -1);
+                var dCurrentDate = dijit.byId('selectDate').attr('value');
+                this._date       = dojo.date.add(dCurrentDate, 'day', -1);
                 break;
             case DAY_TODAY:
             default:
                 this._date = new Date();
                 break;
             case DAY_NEXT:
-                dCurrentDate = dijit.byId('selectDate').attr('value');
-                this._date   = dojo.date.add(dCurrentDate, 'day', 1);
+                var dCurrentDate = dijit.byId('selectDate').attr('value');
+                this._date       = dojo.date.add(dCurrentDate, 'day', 1);
                 break;
         }
         dijit.byId("selectDate").attr('value', this._date);
