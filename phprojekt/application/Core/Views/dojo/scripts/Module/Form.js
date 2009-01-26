@@ -182,15 +182,16 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
 
     updateDedignerData:function(event) {
+        var self = this;
         var data = dojo.fromJson(dijit.byId('designerData').attr('value'));
-        if (this.id > 0) {
-            var tableName = this.convertLabelIntoTableName(dijit.byId('name').attr('value'));
+        if (self.id > 0) {
+            var tableName = self.convertLabelIntoTableName(dijit.byId('name').attr('value'));
         } else {
-            var tableName = this.convertLabelIntoTableName(dijit.byId('label').attr('value'));
+            var tableName = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
             dijit.byId('name').attr('value', tableName);
         }
         for (var i in data) {
-            data[i]['tableName'] = this.convertLabelIntoTableName(tableName);
+            data[i]['tableName'] = self.convertLabelIntoTableName(tableName);
         }
         data = dojo.toJson(data);
         dijit.byId('designerData').attr('value', data);
