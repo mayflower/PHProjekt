@@ -139,9 +139,9 @@ class Calendar_IndexController extends IndexController
         // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
         // so lets apply this to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count   = (int) $this->getRequest()->getParam('count', null);
-        $offset  = (int) $this->getRequest()->getParam('start', null);
-        $itemId  = (int) $this->getRequest()->getParam('id', null);
+        $count  = (int) $this->getRequest()->getParam('count', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
+        $itemId = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
@@ -172,7 +172,6 @@ class Calendar_IndexController extends IndexController
         $count   = (int) $this->getRequest()->getParam('count', null);
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-
         $userId  = PHprojekt_Auth::getUserId();
         $records = $this->getModelObject()->fetchAll('participantId = ' . $userId . ' AND startDate = "'
                    . $date . '"', null, $count, $offset);
@@ -191,12 +190,10 @@ class Calendar_IndexController extends IndexController
         $count   = (int) $this->getRequest()->getParam('count', null);
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-
         $userId  = PHprojekt_Auth::getUserId();
         $records = $this->getModelObject()->fetchAll('participantId = ' . $userId . ' AND startDate = "'
                    . $date . '"', null, $count, $offset);
 
         Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
-
 }
