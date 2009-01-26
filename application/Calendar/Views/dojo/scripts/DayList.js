@@ -53,6 +53,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
+        
         // Draw the tags
         this.showTags();
     },
@@ -62,8 +63,9 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         //    Set the url to get the data from
         // Description:
         //    Set the url for get the data from
-        dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
-        this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonDayList/nodeId/" + this.id + "/date/" + dateString;
+        var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
+        this.url       = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayList/"
+                         + "nodeId/" + this.id + "/date/" + dateString;
     },
 
     setNode:function() {
@@ -79,11 +81,11 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         //    Draw the tags
         // Description:
         //    Draw the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags'; // Get the module tags
+        this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTags'; // Get the module tags
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
-            this.publish("drawTagsBox",[phpr.DataStore.getData({url: this._tagUrl})]);
-          })
+                this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
+            })      
         });
     },
 
@@ -112,10 +114,10 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         //    Returns useful data about an event, like whether it is inside or outside the 8:00 to 20:00 range,
         // in what row of the shown table should it start and end, and also, if it is set the 'time' parameter
         // whether that time matchs the start time, is just inside the period or it is outside that period.
-
-        result = new Array();
-        dScheduleStart = new Date();
-        dScheduleEnd   = new Date();
+        var result         = new Array();
+        var dScheduleStart = new Date();
+        var dScheduleEnd   = new Date();
+        
         dScheduleStart.setHours(8);
         dScheduleStart.setMinutes(0);
         dScheduleStart.setSeconds(0);
@@ -124,29 +126,30 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         dScheduleEnd.setSeconds(0);
 
         // Convert strings into Date formats
-        aStart       = start.split(':');
-        startHour    = parseInt(aStart[0], 10);
-        startMinutes = parseInt(aStart[1], 10);
-        aEnd         = end.split(':');
-        endHour      = parseInt(aEnd[0], 10);
-        endMinutes   = parseInt(aEnd[1], 10);
+        var aStart       = start.split(':');
+        var startHour    = parseInt(aStart[0], 10);
+        var startMinutes = parseInt(aStart[1], 10);
+        var aEnd         = end.split(':');
+        var endHour      = parseInt(aEnd[0], 10);
+        var endMinutes   = parseInt(aEnd[1], 10);
 
         // Round downwards the start time to the nearest quarter of hour
-        if ( (startMinutes/15) != Math.floor(startMinutes/15) ) {
+        if ((startMinutes/15) != Math.floor(startMinutes/15)) {
             startMinutes = Math.floor(startMinutes/15) * 15;
         }
 
         // Round upwards the end time to the nearest quarter of hour
-        if ( (endMinutes/15) != Math.ceil(endMinutes/15) ) {
+        if ((endMinutes/15) != Math.ceil(endMinutes/15)) {
             endMinutes = Math.ceil(endMinutes/15) * 15;
-            if (endMinutes==60) {
-                endHour    = endHour+1;
+            if (endMinutes == 60) {
+                endHour    = endHour + 1;
                 endMinutes = 0;
             }
         }
 
-        dStart = new Date();
-        dEnd   = new Date();
+        var dStart = new Date();
+        var dEnd   = new Date();
+        
         dStart.setHours(startHour);
         dStart.setMinutes(startMinutes);
         dStart.setSeconds(0);
@@ -176,21 +179,21 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
             dEnd = dScheduleEnd;
         }
 
-        quarterBeginning           = dStart.getTime() - dScheduleStart.getTime();
-        duration                   = dEnd.getTime() - dStart.getTime();
-        result['quarterBeginning'] = Math.floor ( quarterBeginning / (1000*60*15) );
-        result['quartersDuration'] = Math.floor ( duration / (1000*60*15) );
+        var quarterBeginning       = dStart.getTime() - dScheduleStart.getTime();
+        var duration               = dEnd.getTime() - dStart.getTime();
+        result['quarterBeginning'] = Math.floor(quarterBeginning / (1000*60*15));
+        result['quartersDuration'] = Math.floor(duration / (1000*60*15));
 
         if (time != null) {
-            aTime       = time.split(':');
-            timeHour    = aTime[0];
-            timeMinutes = aTime[1];
+            var aTime       = time.split(':');
+            var timeHour    = aTime[0];
+            var timeMinutes = aTime[1];
 
             // Round downwards the time to search for, to the nearest quarter of hour
-            if ( (timeMinutes/15) != Math.floor(timeMinutes/15) ) {
+            if ((timeMinutes/15) != Math.floor(timeMinutes/15)) {
                 timeMinutes = Math.floor(timeMinutes/15) * 15;
             }
-            dTime = new Date();
+            var dTime = new Date();
             dTime.setHours(timeHour);
             dTime.setMinutes(timeMinutes);
             dTime.setSeconds(0);
@@ -211,11 +214,10 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
     formatHour:function(hour) {
         // Summary:
         //    Formats a time string. E.g. receives 9:40:00 and returns 09:40
-        aHour       = hour.split(':');
-        hourPart    = aHour[0];
-        minutesPart = aHour[1];
-        result      = dojo.number.format(hourPart, {pattern: '00'}) + ':'
-                    + dojo.number.format(minutesPart, {pattern: '00'});
+        var aHour       = hour.split(':');
+        var hourPart    = aHour[0];
+        var minutesPart = aHour[1];
+        var result      = dojo.number.format(hourPart, {pattern: '00'}) + ':' + dojo.number.format(minutesPart, {pattern: '00'});
         return result;
     },
 
@@ -225,16 +227,15 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         // Description:
         //    It parses that json info and prepares an apropriate array so that the template can render
         // appropriately the TABLE html element.
-
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render export Button
         this.setExportButton(meta);
 
         // Constants used to define a calendar event time in comparison to a specific moment
-        const EVENT_NONE      = 0;
-        const EVENT_BEGIN     = 1;
-        const EVENT_CONTINUES = 2;
+        var EVENT_NONE      = 0;
+        var EVENT_BEGIN     = 1;
+        var EVENT_CONTINUES = 2;
 
         var content           = phpr.DataStore.getData({url: this.url});
         var maxSimultEvents   = 0;
@@ -247,26 +248,23 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         // Fill the main array with all the possible points in time for this day view
         // 8:00, 8:15, 8:30 and so on, until 19:45
-        i = -1;
-        for (j=8; j < 20; j++) {
-            for (k=0; k < 4; k++) {
+        var i = -1;
+        for (j = 8; j < 20; j++) {
+            for (var k = 0; k < 4; k++) {
                 l = k * 15;
                 i++;
-                timeSquare[i]           = new Array();
-                timeSquare[i]['hour']   = this.formatHour(j + ':' + l);
+                timeSquare[i]         = new Array();
+                timeSquare[i]['hour'] = this.formatHour(j + ':' + l);
             }
         }
 
         // Determine how many columns to show
         var maxSimultEvents = 1;
         for (var i in timeSquare) {
-        	currentEventNow = -1;
+        	var currentEventNow = -1;
         	for (var event in content) {
-        		eventInfo = this.getEventInfo(content[event]['startTime'], 
-        		                              content[event]['endTime'],
-        		                              timeSquare[i]['hour']);
-        		if ( eventInfo['type'] == this.EVENT_TIME_START
-        		  || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
+        		var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'], timeSquare[i]['hour']);
+        		if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
     				currentEventNow++;
                 }
             }
@@ -274,7 +272,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
            	    maxSimultEvents = currentEventNow + 1;
            	}
         }
-        widthColumns = Math.floor(93 / (maxSimultEvents) );
+        var widthColumns = Math.floor(93 / maxSimultEvents);
 
         // Create the columns arrays
         for (var nRow in timeSquare) {
@@ -289,17 +287,16 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         // For every event, put it somewhere in the arrays
         for (var event in content) {
-            eventInfo = this.getEventInfo(content[event]['startTime'], 
-   	                                      content[event]['endTime']);
+            var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
 
    	        if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
-       	        eventBegins = eventInfo['quarterBeginning'];
+       	        var eventBegins = eventInfo['quarterBeginning'];
 
                 // Find which column to use
-                useColumn = -1;
-                for (nColumn=0; nColumn < maxSimultEvents; nColumn++) {
-                    useColumn = nColumn;
-                    for (nRow=eventBegins; nRow < (eventBegins + eventInfo['quartersDuration']); nRow++) {
+                var useColumn = -1;
+                for (nColumn = 0; nColumn < maxSimultEvents; nColumn++) {
+                    var useColumn = nColumn;
+                    for (var nRow = eventBegins; nRow < (eventBegins + eventInfo['quartersDuration']); nRow++) {
                         if (timeSquare[nRow]['columns'][nColumn]['occupied']) {
                             useColumn = -1;
                             break;
@@ -315,21 +312,20 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
                 timeSquare[eventBegins]['columns'][useColumn]['quartersDuration'] = eventInfo['quartersDuration'];
                 timeSquare[eventBegins]['columns'][useColumn]['id']               = content[event]['id'];
                 timeSquare[eventBegins]['columns'][useColumn]['title']            = content[event]['title'];
-                timeSquare[eventBegins]['columns'][useColumn]['startTime']
-                                                                       = this.formatHour(content[event]['startTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['endTime'] = this.formatHour(content[event]['endTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['notes'] = content[event]['notes'].replace('\n', '<br>');
+                timeSquare[eventBegins]['columns'][useColumn]['startTime']        = this.formatHour(content[event]['startTime']);
+                timeSquare[eventBegins]['columns'][useColumn]['endTime']          = this.formatHour(content[event]['endTime']);
+                timeSquare[eventBegins]['columns'][useColumn]['notes']            = content[event]['notes'].replace('\n', '<br />');
 
                 //For every next row that this event occupies
-                nRowThisEventFinishes = eventBegins + eventInfo['quartersDuration'] -1;
-                for (nRow=eventBegins+1; nRow <= nRowThisEventFinishes; nRow++) {
+                var nRowThisEventFinishes = eventBegins + eventInfo['quartersDuration'] -1;
+                for (var nRow = eventBegins + 1; nRow <= nRowThisEventFinishes; nRow++) {
                     timeSquare[nRow]['columns'][useColumn]['occupied']  = true;
                     timeSquare[nRow]['columns'][useColumn]['typeEvent'] = EVENT_CONTINUES;
                 }
 
             } else if (eventInfo['range'] == this.EVENT_OUTSIDE_CHART) {
                 otherEvents['show'] = true;
-                nextPosition        = otherEvents['events'].length;
+                var nextPosition    = otherEvents['events'].length;
                 otherEvents['events'][nextPosition]              = new Array();
                 otherEvents['events'][nextPosition]['id']        = content[event]['id'];
                 otherEvents['events'][nextPosition]['startTime'] = this.formatHour(content[event]['startTime']);
@@ -343,7 +339,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
             timeSquare        : timeSquare,
             otherEvents       : otherEvents,
             otherEventsMessage: phpr.nls.get('Other events')
-            });
+        });
     },
 
     exportData:function() {
@@ -351,8 +347,8 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         //    Open a new window in CVS mode
         // Description:
         //    Open a new window in CVS mode
-        dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
-        window.open(phpr.webpath+"index.php/"+phpr.module+"/index/csvDayList/nodeId/" + this.id + "/date/" + dateString);
+        var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayList/nodeId/" + this.id + "/date/" + dateString);
         return false;
     },
 

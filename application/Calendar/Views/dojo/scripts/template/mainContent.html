@@ -1,7 +1,8 @@
-<div dojoType="dijit.layout.BorderContainer" design="sidebar" style="width: 100%; height: 100%;" id="calendarButtonBar">
+<div dojoType="dijit.layout.BorderContainer" design="sidebar" id="calendarButtonBar"
+    style="width: 100%; height: 100%;">
     <!-- Buttons View: -->
     <div dojoType="dijit.layout.ContentPane" id="buttonsBox" region="top" class="prepend-0 append-0"
-        style="height:6%; overflow:hidden;">
+        style="height: 6%; overflow: hidden;">
         &nbsp;&nbsp;
         <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.loadGrid');">Grid view</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -9,7 +10,8 @@
         {{selectDate}}
         &nbsp;
         <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
-            constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 85px;">
+        constraints="{datePattern:'yyyy-MM-dd', strict:true}"
+        style="width: 85px;">
         <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
             onClick="dojo.publish('Calendar.dayViewClick');"></button>
         </button>
@@ -22,6 +24,7 @@
     <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" class="prepend-0 append-0">
     </div>
     <!-- Form View: -->
-    <div dojoType="dijit.layout.ContentPane" id="detailsBox" region="bottom" style="height: 60%;" splitter="true">
+    <div dojoType="dijit.layout.ContentPane" id="detailsBox" region="bottom" splitter="true"
+    style="height: 60%;">
     </div>
 </div>
