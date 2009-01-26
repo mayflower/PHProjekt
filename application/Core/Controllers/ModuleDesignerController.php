@@ -86,7 +86,7 @@ class Core_ModuleDesignerController extends Core_IndexController
             $model = Phprojekt_Loader::getModel($module, $module);
         }
 
-        if ($model instanceof Phprojekt_Item_Abstract) {
+        if ($model instanceof Phprojekt_Item_Abstract || $id == 0) {
             $databaseManager = new Phprojekt_DatabaseManager($model);
             $data            = Zend_Json_Decoder::decode(stripslashes($data));
 

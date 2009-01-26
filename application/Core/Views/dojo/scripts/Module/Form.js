@@ -109,17 +109,18 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         var data         = new Object();
         var i            = -1;
         var formPosition = 0;
+        var self         = this;
         for (var j in tabs) {
             var tab = eval("moduleDesignerTarget" + tabs[j]['nameId']);
             tab.getAllNodes().forEach(function(node) {
                 var t = tab._normalizedCreator(node);
                 i++;
                 data[i] = new Object();
-                if (!this.id) {
+                if (!self.id) {
                     if (dijit.byId('name').attr('value') != '') {
                         data[i]['tableName'] = dijit.byId('name').attr('value');
                     } else {
-                        data[i]['tableName'] = this.convertLabelIntoTableName(dijit.byId('label').attr('value'));
+                        data[i]['tableName'] = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
                     }
                 }
                 formPosition++;
