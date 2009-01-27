@@ -101,7 +101,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // parse data to fill the form
         if (data[0].rrule && data[0].rrule.length > 0) {
             rrule = data[0].rrule.split(';');
-            for (i = 0; i < rrule.length; i++) {
+            for (var i = 0; i < rrule.length; i++) {
                 rule  = rrule[i].split('=');
                 name  = rule[0];
                 value = rule[1];
