@@ -28,8 +28,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     _formNode:     null,
     _date:         null,
     _dateObject:   null,
-    contentBar:    null,
-    timecardProjectPositions: new Array(),
+    _contentBar:   null,
+    _surface:      null,
 
     constructor:function(main, id, module, date) {
         // summary:
@@ -40,7 +40,34 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.main = main;
         this.id   = id;
 
-        this.render(["phpr.Timecard.template", "form.html"], dojo.byId('detailsBox'));
+        // Fixed hours 8-20
+        var hours = new Array();
+        var pair  = 0;
+        var show  = '';
+        for (var i = 8; i < 21; i++) {
+            show = '';
+            if ((i % 2) == 0) {
+                pair = 1;
+            } else {
+                pair = 0;
+            }
+            if (i.lenght == 1) {
+                show = '0';
+            }
+            show = show + i + ':00';
+            hours.push({"hour": show, "pair": pair});
+        }
+
+        this.render(["phpr.Timecard.template", "form.html"], dojo.byId('detailsBox'), {
+            hours:                    hours,
+            timecardProjectTimesText: phpr.nls.get("Project bookings"),
+            projectTimesHelpText:     phpr.nls.get("Project Times Help"),
+            manageFavoritesText:      phpr.nls.get('Manage project list')
+        });
+        dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
+
+        this._contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
+
 
         this.setDate(date);
         this.loadView();
@@ -75,7 +102,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Set the url for get the data
         // description:
         //    Set the url for get the data
-        this._hourUrl = phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/date/" + this._date
+        this._hourUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/date/" + this._date
     },
 
     setBookUrl:function() {
@@ -143,7 +170,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         });
 
         for (var i = 0; i < data.length; i++) {
-            dojo.connect(dijit.byId("deleteHourButton_"+data[i].id), "onClick", dojo.hitch(this, "deleteForm", [data[i].id]));
+            dojo.connect(dijit.byId("deleteHourButton_" + data[i].id), "onClick", dojo.hitch(this, "deleteForm", [data[i].id]));
         }
         dojo.connect(dijit.byId("hoursSaveButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
@@ -180,35 +207,131 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Reload the Booking view
         // description:
         //    Reload the Booking view with the form and all the Bookings saved for the current day
-        var bookingdata  = '';
         var meta         = phpr.DataStore.getMetaData({url: this._bookUrl});
         var data         = phpr.DataStore.getData({url: this._bookUrl});
         var favorites    = phpr.DataStore.getData({url: this._favoritesUrl});
         var range        = meta[1]['range'];
         var timeprojData = data['timeproj'];
         var timecardData = data['timecard'];
+        var hourHeight   = 20;
+
         timecardProjectPositions = new Array();
 
-        // Fixed hours 8-20 and 700 px for the bar
-        var hours = new Array();
-        var pair  = 0;
-        var show  = '';
-        for (var i = 8; i < 21; i++) {
-            show = '';
-            if ((i % 2) == 0) {
-                pair = 1;
-            } else {
-                pair = 0;
-            }
-            if (i.lenght == 1) {
-                show = '0';
-            }
-            show = show + i + ':00';
-            hours.push({"hour": show, "pair": pair});
-        }
-        var hourHeight = 20;
+        // Show Bookings forms
+        this.showBookingForm(timeprojData, range);
 
-        // Bookings forms
+        // Get Favorites
+        var favoritesList = new Array();
+        for (var k in favorites) {
+             for (var j in range) {
+                if (range[j]['id'] == favorites[k]) {
+                    favoritesList.push(range[j]);
+                }
+            }
+        }
+
+        // Get All Projects
+        var allProjects   = new Array();
+        for (var j in range) {
+            var found = false;
+            for (var k in favorites) {
+                if (range[j]['id'] == favorites[k]) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                allProjects.push(range[j]);
+            }
+        }
+
+        // Show Drag and Drop Projects
+        this.showProjectsSources(favoritesList);
+
+        // Make Dialog
+        this.createFavoritesDialog(allProjects,favoritesList);
+
+        // Clean "Day View"
+        dijit.byId("projectBookingContainer").destroyDescendants();
+        this._surface   = dojox.gfx.createSurface('projectBookingContainer', 400, 260);
+        var lastHour    = 0;
+        var totalHeight = 0;
+        for (j in timeprojData) {
+            timeprojData[j].displayed = 0;
+            timeprojData[j].remaind   = 0;
+        }
+
+        // Draw hours block
+        for (i in timecardData) {
+            var start  = this._contentBar.convertHourToPixels(hourHeight, timecardData[i].startTime);
+            var end    = this._contentBar.convertHourToPixels(hourHeight, timecardData[i].endTime);
+            var top    = start + 'px';
+            var height = (end - start) - 6 + 'px';
+            var finish = 0;
+            var totalbookingHeight = 0;
+
+            totalHeight += (end - start);
+
+            var tmp = dojo.doc.createElement("div");
+            tmp.id = 'targetBooking' + timecardData[i].id;
+            tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            dojo.addClass(tmp, "dndTarget");
+            dojo.style(tmp, "top", top);
+            dojo.style(tmp, "height", height);
+            dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
+            var target = new phpr.Timecard.Booking(tmp.id);
+
+            // Draw Bookings
+            for (j in timeprojData) {
+                if (timeprojData[j].displayed == 0) {
+                    if (timeprojData[j].remaind > 0) {
+                        var bookingHeight = timeprojData[j].remaind;
+                    } else {
+                        var bookingHeight = this._contentBar.convertAmountToPixels(hourHeight, timeprojData[j].amount);
+                    }
+                    if (totalbookingHeight <= (end - start)) {
+                        if (lastHour == 0) {
+                            lastHour = start;
+                        }
+                        var check = end - lastHour;
+                        if (bookingHeight > check) {
+                            timeprojData[j].remaind = bookingHeight - check;
+                            if (timeprojData[j].remaind > 0) {
+                                finish = 1;
+                                bookingHeight = check;
+                            }
+                        }
+                        if (bookingHeight > 0) {
+                            var tmpDraw = this._surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3, width: 197, r: 13});
+                            tmpDraw.setFill([68,74,82,1]);
+                            tmpDraw.setStroke({color:[68,74,82,1], width: 2});
+                            timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
+
+                            phpr.Gfx.makeText(this._surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
+                                {family: "Verdana", size: "8pt"}, "white", "white");
+                        }
+
+                        if (finish) {
+                            totalbookingHeight += bookingHeight + end;
+                            lastHour = 0;
+                        } else {
+                            totalbookingHeight += bookingHeight;
+                            lastHour           += bookingHeight;
+                            timeprojData[j].displayed = 1;
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    showBookingForm:function(timeprojData, range) {
+        // summary:
+        //    Render the booking form
+        // description:
+        //    Render the booking form for all the projects saved and a empty one for add
+        var bookingdata  = '';
+
+        // Collect all the bookings forms
         for (var i = 0; i < timeprojData.length; i++) {
             var projectName = '';
             for (var j in range) {
@@ -234,6 +357,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 id:             timeprojData[i].id
             });
         }
+
         // New one
         bookingdata += this.render(["phpr.Timecard.template", "bookings.html"], null, {
             projectName:    '',
@@ -249,116 +373,12 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             id:             0
         });
 
-        // Favorites
-        var favoritesList = new Array();
-        for (var k in favorites) {
-             for (var j in range) {
-                if (range[j]['id'] == favorites[k]) {
-                    favoritesList.push(range[j]);
-                }
-            }
-        }
-        var allProjects   = new Array();
-        for (var j in range) {
-            var found = false;
-            for (var k in favorites) {
-                if (range[j]['id'] == favorites[k]) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                allProjects.push(range[j]);
-            }
-        }
-        // Complete view
-        this.render(["phpr.Timecard.template", "bookingForm.html"], dojo.byId('TimecardBooking'), {
-            hours:                    hours,
-            hourHeight:               hourHeight,
-            date:                     this._date,
-            timecardProjectTimesText: phpr.nls.get("Project bookings"),
-            projectTimesHelpText:     phpr.nls.get("Project Times Help"),
-            values:                   favoritesList,
-            allProjects:              allProjects,
-            manageFavoritesText:      phpr.nls.get('Manage project list'),
-            bookingdata:              bookingdata
-        });
-        dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
-
-        this.contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
-        var surface     = dojox.gfx.createSurface('projectBookingContainer', 400, 260);
-        var lastHour    = 0;
-        var totalHeight = 0;
-        for (j in timeprojData) {
-            timeprojData[j].displayed = 0;
-            timeprojData[j].remaind   = 0;
-        }
-
-        // Draw hours block
-        for (i in timecardData) {
-            var start = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].startTime);
-            var end   = this.contentBar.convertHourToPixels(hourHeight, timecardData[i].endTime);
-            var top  = start + 'px';
-            var height = (end - start) - 6 + 'px';
-            var totalbookingHeight = 0;
-            var finish = 0;
-            totalHeight += (end - start);
-
-            var tmp = dojo.doc.createElement("div");
-            tmp.id = 'targetBooking' + timecardData[i].id;
-            tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            dojo.addClass(tmp, "dndTarget");
-            dojo.style(tmp, "top", top);
-            dojo.style(tmp, "height", height);
-            dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
-            var target = new phpr.Timecard.Booking(tmp.id);
-
-            // Draw Bookings
-            for (j in timeprojData) {
-                if (timeprojData[j].displayed == 0) {
-                    if (timeprojData[j].remaind > 0) {
-                        var bookingHeight = timeprojData[j].remaind;
-                    } else {
-                        var bookingHeight = this.contentBar.convertAmountToPixels(hourHeight, timeprojData[j].amount);
-                    }
-                    if (totalbookingHeight <= (end - start)) {
-                        if (lastHour == 0) {
-                            lastHour = start;
-                        }
-                        var check = end - lastHour;
-                        if (bookingHeight > check) {
-                            timeprojData[j].remaind = bookingHeight - check;
-                            if (timeprojData[j].remaind > 0) {
-                                finish = 1;
-                                bookingHeight = check;
-                            }
-                        }
-                        if (bookingHeight > 0) {
-                            var tmpDraw = surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3, width: 197, r: 13});
-                            tmpDraw.setFill([68,74,82,1]);
-                            tmpDraw.setStroke({color:[68,74,82,1], width: 2});
-                            timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
-
-                            phpr.Gfx.makeText(surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
-                                {family: "Verdana", size: "8pt"}, "white", "white");
-                        }
-
-                        if (finish) {
-                            totalbookingHeight += bookingHeight + end;
-                            lastHour = 0;
-                        } else {
-                            totalbookingHeight += bookingHeight;
-                            lastHour           += bookingHeight;
-                            timeprojData[j].displayed = 1;
-                        }
-                    }
-                }
-            }
-        }
+        dijit.byId('projectBookingData').attr('content', bookingdata);
 
         // Event buttons
-        for (var j in timeprojData) {
-            dojo.connect(dijit.byId("deleteBookingButton_"+timeprojData[j].id), "onClick", dojo.hitch(this, "deleteBookingForm", [timeprojData[j].id]));
-            dojo.connect(dijit.byId("saveBookingButton_"+timeprojData[j].id), "onClick", dojo.hitch(this, "submitBookingForm", [timeprojData[j].id]));
+        for (j in timeprojData) {
+            dojo.connect(dijit.byId("deleteBookingButton_" + timeprojData[j].id), "onClick", dojo.hitch(this, "deleteBookingForm", [timeprojData[j].id]));
+            dojo.connect(dijit.byId("saveBookingButton_" + timeprojData[j].id), "onClick", dojo.hitch(this, "submitBookingForm", [timeprojData[j].id]));
         }
 
         dojo.connect(dijit.byId("deleteBookingButton_0"), "onClick", function(){
@@ -370,7 +390,45 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         dojo.connect(dijit.byId("saveBookingButton_0"), "onClick", dojo.hitch(this, "submitBookingForm", [0]));
     },
 
+    showProjectsSources:function(values) {
+        // summary:
+        //    Render the projects for drag and drop
+        // description:
+        //    Render the projects for drag and drop
+        //    Destroy the oldest first
+        for (i in values) {
+            phpr.destroyWidget(values[i].id);
+        }
+        var html = this.render(["phpr.Timecard.template", "projectSource.html"], null, {
+            values: values
+        });
+
+        dojo.byId('projectBookingSource').innerHTML = html;
+        projectBookingSource.sync();
+    },
+
+    createFavoritesDialog:function(allProjects, favoritesList) {
+        // summary:
+        //    Render the dialog for manage favorites
+        // description:
+        //    Render the dialog for manage favorites
+        for (i in allProjects) {
+            phpr.destroyWidget('favoritesTarget-' + allProjects[i].id);
+        }
+        for (i in favoritesList) {
+            phpr.destroyWidget('favoritesSoruce-' + favoritesList[i].id);
+        }
+        var html = this.render(["phpr.Timecard.template", "favoritesDialog.html"], dojo.byId('dialogContent'), {
+            allProjects:   allProjects,
+            favoritesList: favoritesList
+        });
+    },
+
     prepareSubmission:function() {
+        // summary:
+        //    Correct some data before send it to the server
+        // description:
+        //    Correct some data before send it to the server
         if (this.sendData.endTime) {
             this.sendData.endTime = phpr.Date.getIsoTime(this.sendData.endTime);
         }
@@ -404,7 +462,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     phpr.DataStore.deleteData({url: this._hourUrl});
                     phpr.DataStore.deleteData({url: this._bookUrl});
                     this.getFormData(1,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
                }
             })
         });
@@ -416,7 +474,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // description:
         //    Save the booking form and reload only the grid and the booking form
         this.sendData = new Array();
-        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_'+id).attr('value'));
+        this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_' + id).attr('value'));
         if (!this.prepareSubmission()) {
             return false;
         }
@@ -430,7 +488,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: this._bookUrl});
                     this.getFormData(1,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
                }
             })
         });
@@ -470,7 +528,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     phpr.DataStore.deleteData({url: this._hourUrl});
                     phpr.DataStore.deleteData({url: this._bookUrl});
                     this.getFormData(1,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
                }
             })
         });
@@ -489,7 +547,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: this._bookUrl});
                     this.getFormData(0,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth()+1));
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
                }
             })
         });
