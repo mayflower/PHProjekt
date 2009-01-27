@@ -34,7 +34,7 @@ dojo.declare("phpr.Component", null, {
         var eregId = /id=\\?["'][\w\x5b\x5d\x3a\x7c]*\\?["']/gi;
         var result = content.match(eregId);
         if (result) {
-            for (i = 0; i < result.length; i++) {
+            for (var i = 0; i < result.length; i++) {
                 var id = result[i].replace(/id=\\?["']/gi, '').replace(/\\?["']/gi, '');
                 if (dijit.byId(id)) {
                     dijit.byId(id).destroy();

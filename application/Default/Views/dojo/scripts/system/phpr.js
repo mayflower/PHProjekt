@@ -303,7 +303,7 @@ phpr.handleResponse = function(resultArea,result)
 
 phpr.getCurrent = function(data, identifier, value){
     var current = null;
-    for (i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
         if (value == data[i][identifier]) {
             current = data[i];
             break;
