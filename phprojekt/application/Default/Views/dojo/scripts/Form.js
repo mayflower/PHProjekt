@@ -36,8 +36,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _initData:          new Array(),
     _tagUrl:            null,
     _historyUrl:        null,
+    _presetValues:      null,
 
-    constructor:function(main, id, module) {
+    constructor:function(main, id, module, params) {
         // summary:
         //    render the form on construction
         // description:
@@ -48,6 +49,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         if (undefined != module) {
             phpr.module = module
+        }
+        if (undefined != params) {
+            this._presetValues = params;
         }
 
         this.setUrl();
@@ -252,7 +256,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         var tabs = this.getTabs();
 
         this.setPermissions(data);
-
+        this.presetValues(data);
         this.fieldTemplate = new phpr.Default.Field();
 
         for (var i = 0; i < meta.length; i++) {
@@ -685,5 +689,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '');
         // Add the tab to the form
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
+    },
+
+    presetValues:function(data) {
+        // Summary:
+        //    Function used to preset values in the form.
+        // Description:
+        //    The form is able to receive some values when it is instanced for adding and item, and put that values
+        //    in each field.
+        for (var field in this._presetValues) {
+            data[0][field] = this._presetValues[field];
+        }
     }
 });

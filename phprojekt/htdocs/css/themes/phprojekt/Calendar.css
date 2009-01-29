@@ -162,6 +162,7 @@
     text-align: center;
     background-color: #d4dfea;
     font-size: 10px;
+    border-color: black;
 }
 
 .phprojekt #calendarSchedule .events {
@@ -169,6 +170,7 @@
     padding: 4;
     vertical-align: middle;
     background-color: #DDDDDD;
+    border-color: black;
 }
 
 .phprojekt #calendarSchedule .horizontalLine {
@@ -188,4 +190,8 @@
 .phprojekt #calendarButtonBar a:hover,
 .phprojekt #calendarButtonBar a:active {
     text-decoration: underline;
+}
+
+.phprojekt #calendarSchedule table {
+    border-collapse: collapse;
 }

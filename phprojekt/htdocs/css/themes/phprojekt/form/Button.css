@@ -208,3 +208,15 @@
 .phprojekt .closeButton {
     margin: 0px 0px 0px 0px;
 }
+
+.phprojekt #calendarSchedule .addButton .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 15px;
+    border: none;
+    background: none;
+}
+
+.phprojekt .addButton {
+    margin: 0px 0px 0px 0px;
+}
