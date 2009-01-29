@@ -61,3 +61,45 @@
 #moduleDesignerContent .dojoDndAvatarItem {
     background: #fff;
 }
+
+.phprojekt #moduleDesignerContent .dijitInputField INPUT,
+.phprojekt #moduleDesignerContent .dijitTextBox {
+    width: 209px;
+}
+
+.phprojekt #moduleDesignerContent .dijitMultiSelect,
+.phprojekt #moduleDesignerContent select,
+.phprojekt #moduleDesignerContent .dijitComboBox,
+.phprojekt #moduleDesignerContent .dijitSpinner,
+.phprojekt #moduleDesignerContent .dijitSlider {
+    width: 217px;
+}
+
+.phprojekt #moduleDesignerContent .dijitTextArea{
+    width: 211px;
+}
+
+.phprojekt #moduleDesignerContent .form {
+     margin-bottom: 0.1em;
+     width: 100%;
+}
+
+.phprojekt #moduleDesignerContent .form .col2 {
+     text-align: left;
+     width: 50%;
+}
+
+.phprojekt #moduleDesignerContent .form .col3 {
+     text-align: left;
+     width: 25%;
+}
+
+.phprojekt #moduleDesignerContent .form td {
+    vertical-align: top;
+}
+
+.phprojekt #moduleDesignerContent .dijitButton,
+.phprojekt #moduleDesignerContent .dijitDropDownButton,
+.phprojekt #moduleDesignerContent .dijitComboButton {
+    margin: 0;
+}

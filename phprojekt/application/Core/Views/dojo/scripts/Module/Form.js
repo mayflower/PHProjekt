@@ -66,9 +66,11 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         }
         var jsonDesignerData = dojo.toJson(designerData);
         this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
+    },
 
+    postRenderForm:function() {
         // Add onBlur to the label field for update the tableName
-        dojo.connect(dijit.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));
+        dojo.connect(dojo.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));
     },
 
     openDialog:function() {
@@ -77,7 +79,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         var dialog = new dijit.Dialog({
             title: "created",
             id:    "moduleManagerDialog",
-            style: "width:95%; height:95%; background: #fff;"
+            style: "width:95%; height:" + (getMaxHeight() - 10) + "px; background: #fff;"
         });
         dojo.body().appendChild(dialog.domNode);
         dialog.startup();
@@ -105,6 +107,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
 
     processDialogData:function() {
+        // summary:
+        //    Collect all the data from the fields
+        // description:
+        //    Collect all the data from the fields and make a json array for the server
         var tabs         = this.tabStore.getList();
         var data         = new Object();
         var i            = -1;
@@ -116,13 +122,13 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                 var t = tab._normalizedCreator(node);
                 i++;
                 data[i] = new Object();
-                if (!self.id) {
-                    if (dijit.byId('name').attr('value') != '') {
-                        data[i]['tableName'] = dijit.byId('name').attr('value');
-                    } else {
-                        data[i]['tableName'] = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
-                    }
+
+                if (dijit.byId('name').attr('value') != '') {
+                    data[i]['tableName'] = dijit.byId('name').attr('value');
+                } else {
+                    data[i]['tableName'] = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
                 }
+
                 formPosition++;
                 data[i]['formPosition']  = formPosition;
                 data[i]['formTab']       = tabs[j]['id'];
@@ -177,30 +183,43 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                 });
             });
         }
+
         var json = dojo.toJson(data);
         dijit.byId('designerData').attr('value', json);
     },
 
     updateDedignerData:function(event) {
+        // summary:
+        //    Update the field "name" with the value of the name or label
+        // description:
+        //    Update the field "name" with the value of the name or label
+        //    Change the value into all the data array
         var self = this;
         var data = dojo.fromJson(dijit.byId('designerData').attr('value'));
+
         if (self.id > 0) {
             var tableName = self.convertLabelIntoTableName(dijit.byId('name').attr('value'));
         } else {
             var tableName = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
             dijit.byId('name').attr('value', tableName);
         }
+
         for (var i in data) {
             data[i]['tableName'] = self.convertLabelIntoTableName(tableName);
         }
         data = dojo.toJson(data);
         dijit.byId('designerData').attr('value', data);
-        event.stopPropagation();
-        event.preventDefault();
-        dojo.stopEvent(event);
+
+        if (event) {
+            dojo.stopEvent(event);
+        }
     },
 
     convertLabelIntoTableName:function(value) {
+        // summary:
+        //    Trnasform the label into a valid DB name
+        // description:
+        //    Trnasform the label into a valid DB name
         value     = value.replace(/\W+/g, '');
         value     = value.replace(/[_]/g, '');
         var first = value.charAt(0).toUpperCase();
