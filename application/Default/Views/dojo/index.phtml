@@ -22,7 +22,7 @@
     ?>
     <script type="text/javascript" src="<?php echo $this->url(array('controller' => 'js', 'action' => 'index')); ?>"></script>
     <script type="text/javascript">
-        function init() {
+        function getMaxHeight() {
             if (document.layers) {
                 availHeight = window.innerHeight + window.pageYOffset;
             } else if (document.all) {
@@ -30,6 +30,13 @@
             } else if (document.getElementById) {
                 availHeight = window.innerHeight + window.pageYOffset;
             }
+
+            return availHeight;
+        }
+
+        function init() {
+            availHeight = getMaxHeight();
+
             dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
             dijit.byId('completeContent').resize();
 
