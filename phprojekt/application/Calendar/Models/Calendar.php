@@ -141,7 +141,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     if ($relatedEvents[$date][$oneParticipant] != $rootEventId) {
                         $request->setParam('parentId', $rootEventId);
                     } else {
-                        $request->setParam('parentId', 0);
+                        $request->setParam('parentId', null);
                     }
                     $clone->find($relatedEvents[$date][$oneParticipant]);
                     unset($relatedEvents[$date][$oneParticipant]);
