@@ -425,51 +425,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 window.clearTimeout(window.mytimeout);
             }
             this.hideSuggest();
-        } else if (
-            (key != dojo.keys.TAB) &&
-            (key != dojo.keys.CTRL) &&
-            (key != dojo.keys.SHIFT) &&
-            (key != dojo.keys.CLEAR) &&
-            (key != dojo.keys.ALT) &&
-            (key != dojo.keys.PAUSE) &&
-            (key != dojo.keys.CAPS_LOCK) &&
-            (key != dojo.keys.ESCAPE) &&
-            (key != dojo.keys.SPACE) &&
-            (key != dojo.keys.PAGE_UP) &&
-            (key != dojo.keys.PAGE_DOWN) &&
-            (key != dojo.keys.END) &&
-            (key != dojo.keys.HOME) &&
-            (key != dojo.keys.LEFT_ARROW) &&
-            (key != dojo.keys.UP_ARROW) &&
-            (key != dojo.keys.RIGHT_ARROW) &&
-            (key != dojo.keys.DOWN_ARROW) &&
-            (key != dojo.keys.INSERT) &&
-            (key != dojo.keys.DELETE) &&
-            (key != dojo.keys.HELP) &&
-            (key != dojo.keys.LEFT_WINDOW) &&
-            (key != dojo.keys.RIGHT_WINDOW) &&
-            (key != dojo.keys.SELECT) &&
-            (key != dojo.keys.NUMPAD_MULTIPLY) &&
-            (key != dojo.keys.NUMPAD_PLUS) &&
-            (key != dojo.keys.NUMPAD_DIVIDE) &&
-            (key != dojo.keys.F1) &&
-            (key != dojo.keys.F2) &&
-            (key != dojo.keys.F3) &&
-            (key != dojo.keys.F4) &&
-            (key != dojo.keys.F5) &&
-            (key != dojo.keys.F6) &&
-            (key != dojo.keys.F7) &&
-            (key != dojo.keys.F8) &&
-            (key != dojo.keys.F9) &&
-            (key != dojo.keys.F10) &&
-            (key != dojo.keys.F11) &&
-            (key != dojo.keys.F12) &&
-            (key != dojo.keys.F13) &&
-            (key != dojo.keys.F14) &&
-            (key != dojo.keys.F15) &&
-            (key != dojo.keys.NUM_LOCK) &&
-            (key != dojo.keys.SCROLL_LOCK)) {
-
+        } else if (phpr.isValidInputKey(key)) {
             if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
             }
