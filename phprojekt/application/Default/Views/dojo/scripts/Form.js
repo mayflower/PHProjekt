@@ -363,6 +363,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (!this.useCache()) {
             phpr.DataStore.deleteData({url: this._url});
         }
+
+        this.postRenderForm();
     },
 
     useCache:function() {
@@ -405,6 +407,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Add some special fields
         this.formdata[1] += this.displayTagInput();
+    },
+
+    postRenderForm:function() {
+        // summary:
+        //    User functions after render the form
+        // description:
+        //    Apply for special events on the fields
     },
 
     newAccess:function() {
