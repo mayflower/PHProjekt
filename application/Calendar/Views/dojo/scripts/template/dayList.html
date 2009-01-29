@@ -3,7 +3,7 @@
     <table width="{{widthTable}}%">
     {%for moment in timeSquare%}
         <tr>
-            <td width="8%" class="hours">{{moment.hour}} &nbsp;
+            <td width="{{widthHourColumn}}%" class="hours">{{moment.hour}} &nbsp;
                 <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
                             onClick="dojo.publish('Calendar.openForm', [null, null, '{{moment.hour}}']);">
             </td>

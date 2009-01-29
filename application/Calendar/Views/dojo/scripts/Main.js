@@ -179,9 +179,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 } else {
                     params['startTime'] = startTime;
                     // Generate the End Time, 2 hours after the Start Time
-                    var tmpTime      = startTime.split(':');
-                    var startHour    = parseInt(tmpTime[0], 10);
-                    var startMinutes = parseInt(tmpTime[1], 10);
+                    var temp         = startTime.split(':');
+                    var startHour    = parseInt(temp[0], 10);
+                    var startMinutes = parseInt(temp[1], 10);
                     startHour += 2;
                     endTime = dojo.number.format(startHour, {pattern: '00'}) + ':' + dojo.number.format(startMinutes, {pattern: '00'});
                     params['endTime'] = endTime;

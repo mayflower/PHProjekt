@@ -24,14 +24,15 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
     //    Class for displaying a Calendar Day List
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a dojo grid
-    main:          null,
-    id:            0,
-    updateUrl:     null,
-    url:           null,
-    _tagUrl:       null,
-    _saveChanges:  null,
-    _date:         null,
-    _widthTable:   0,
+    main:             null,
+    id:               0,
+    updateUrl:        null,
+    url:              null,
+    _tagUrl:          null,
+    _saveChanges:     null,
+    _date:            null,
+    _widthTable:      0,
+    _widthHourColumn: 8,
     // Constants used by the function getEventInfo
     EVENT_TIME_START:    0,
     EVENT_TIME_INSIDE:   1,
@@ -115,31 +116,31 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         }
     },
 
-    getEventInfo:function(/* string */ start, /* string */ end, /* string */ time) {
+    getEventInfo:function(/* string */ start, /* string */ end, /* string */ askedTime) {
         // Summary:
         //    Returns useful data about an event.
         // Description:
         //    Returns useful data about an event, like whether it is inside or outside the 8:00 to 20:00 range,
-        // in what row of the shown table should it start and end, and also, if it is set the 'time' parameter
-        // whether that time matchs the start time, is just inside the period or it is outside that period.
-        var result         = new Array();
-        var dScheduleStart = new Date();
-        var dScheduleEnd   = new Date();
+        // in what row of the shown table should it start and end, and also, if it is set the 'askedTime' 
+        // parameter whether that time matchs the start time, is just inside the period or it is outside that period.
+        var result            = new Array();
+        var scheduleStartDate = new Date();
+        var scheduleEndDate   = new Date();
         
-        dScheduleStart.setHours(8);
-        dScheduleStart.setMinutes(0);
-        dScheduleStart.setSeconds(0);
-        dScheduleEnd.setHours(20);
-        dScheduleEnd.setMinutes(0);
-        dScheduleEnd.setSeconds(0);
+        scheduleStartDate.setHours(8);
+        scheduleStartDate.setMinutes(0);
+        scheduleStartDate.setSeconds(0);
+        scheduleEndDate.setHours(20);
+        scheduleEndDate.setMinutes(0);
+        scheduleEndDate.setSeconds(0);
 
         // Convert strings into Date formats
-        var aStart       = start.split(':');
-        var startHour    = parseInt(aStart[0], 10);
-        var startMinutes = parseInt(aStart[1], 10);
-        var aEnd         = end.split(':');
-        var endHour      = parseInt(aEnd[0], 10);
-        var endMinutes   = parseInt(aEnd[1], 10);
+        var temp         = start.split(':');
+        var startHour    = parseInt(temp[0], 10);
+        var startMinutes = parseInt(temp[1], 10);
+        var temp         = end.split(':');
+        var endHour      = parseInt(temp[0], 10);
+        var endMinutes   = parseInt(temp[1], 10);
 
         // Round downwards the start time to the nearest quarter of hour
         if ((startMinutes/15) != Math.floor(startMinutes/15)) {
@@ -155,19 +156,19 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
             }
         }
 
-        var dStart = new Date();
-        var dEnd   = new Date();
+        var startDate = new Date();
+        var endDate   = new Date();
         
-        dStart.setHours(startHour);
-        dStart.setMinutes(startMinutes);
-        dStart.setSeconds(0);
-        dEnd.setHours(endHour);
-        dEnd.setMinutes(endMinutes);
-        dEnd.setSeconds(0);
+        startDate.setHours(startHour);
+        startDate.setMinutes(startMinutes);
+        startDate.setSeconds(0);
+        endDate.setHours(endHour);
+        endDate.setMinutes(endMinutes);
+        endDate.setSeconds(0);
 
         // Is the event completely out of range (before or after 8:00 to 20:00) ?
-        if (((dScheduleStart >= dStart) && (dScheduleStart >= dEnd))
-            || ((dScheduleEnd <= dEnd) && (dScheduleEnd <= dEnd))) {
+        if (((scheduleStartDate >= startDate) && (scheduleStartDate >= endDate))
+            || ((scheduleEndDate <= endDate) && (scheduleEndDate <= endDate))) {
             result['range'] = this.EVENT_OUTSIDE_CHART;
             result['type']  = this.EVENT_TIME_OUTSIDE;
             return result;
@@ -177,39 +178,39 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         // If start time happens before 8:00, the schedule must show it from the 8:00 row (but the text will show
         // the real info)
-        if (dStart < dScheduleStart) {
-            dStart = dScheduleStart;
+        if (startDate < scheduleStartDate) {
+            startDate = scheduleStartDate;
         }
 
         // If end time is after 20:00, the schedule must show it until the 19:45 row inclusive (but the text will 
         // show the real info)
-        if (dEnd > dScheduleEnd) {
-            dEnd = dScheduleEnd;
+        if (endDate > scheduleEndDate) {
+            endDate = scheduleEndDate;
         }
 
-        var quarterBeginning       = dStart.getTime() - dScheduleStart.getTime();
-        var duration               = dEnd.getTime() - dStart.getTime();
+        var quarterBeginning       = startDate.getTime() - scheduleStartDate.getTime();
+        var duration               = endDate.getTime() - startDate.getTime();
         result['quarterBeginning'] = Math.floor(quarterBeginning / (1000*60*15));
         result['quartersDuration'] = Math.floor(duration / (1000*60*15));
 
-        if (time != null) {
-            var aTime       = time.split(':');
-            var timeHour    = aTime[0];
-            var timeMinutes = aTime[1];
+        if (askedTime != null) {
+            var temp             = askedTime.split(':');
+            var askedTimeHour    = temp[0];
+            var askedTimeMinutes = temp[1];
 
             // Round downwards the time to search for, to the nearest quarter of hour
-            if ((timeMinutes/15) != Math.floor(timeMinutes/15)) {
-                timeMinutes = Math.floor(timeMinutes/15) * 15;
+            if ((askedTimeMinutes/15) != Math.floor(askedTimeMinutes/15)) {
+                askedTimeMinutes = Math.floor(askedTimeMinutes/15) * 15;
             }
-            var dTime = new Date();
-            dTime.setHours(timeHour);
-            dTime.setMinutes(timeMinutes);
-            dTime.setSeconds(0);
+            var askedTimeDate = new Date();
+            askedTimeDate.setHours(askedTimeHour);
+            askedTimeDate.setMinutes(askedTimeMinutes);
+            askedTimeDate.setSeconds(0);
 
             // Perform the comparison
-            if (dStart.getTime() == dTime.getTime()) {
+            if (startDate.getTime() == askedTimeDate.getTime()) {
                 result['type'] = this.EVENT_TIME_START;
-            } else if ((dStart.getTime() < dTime.getTime()) && (dTime.getTime() < dEnd.getTime())) {
+            } else if ((startDate.getTime() < askedTimeDate.getTime()) && (askedTimeDate.getTime() < endDate.getTime())) {
                 result['type'] = this.EVENT_TIME_INSIDE;
             } else {
                 result['type'] = this.EVENT_TIME_OUTSIDE;
@@ -219,13 +220,13 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         return result;
     },
 
-    formatHour:function(hour) {
+    formatHour:function(time) {
         // Summary:
         //    Formats a time string. E.g. receives 9:40:00 and returns 09:40
-        var aHour       = hour.split(':');
-        var hourPart    = aHour[0];
-        var minutesPart = aHour[1];
-        var result      = dojo.number.format(hourPart, {pattern: '00'}) + ':' + dojo.number.format(minutesPart, {pattern: '00'});
+        var temp    = time.split(':');
+        var hour    = temp[0];
+        var minutes = temp[1];
+        var result  = dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
         return result;
     },
 
@@ -280,7 +281,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
            	    maxSimultEvents = currentEventNow + 1;
            	}
         }
-        var widthColumns = Math.floor(this._widthTable / maxSimultEvents);
+        var widthColumns = Math.floor((100 - this._widthHourColumn) / maxSimultEvents);
 
         // Create the columns arrays
         for (var nRow in timeSquare) {
@@ -348,6 +349,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "dayList.html"], dojo.byId('gridBox'), {
             widthTable        : this._widthTable,
+            widthHourColumn   : this._widthHourColumn,
             timeSquare        : timeSquare,
             otherEvents       : otherEvents,
             otherEventsMessage: phpr.nls.get('Other events')
