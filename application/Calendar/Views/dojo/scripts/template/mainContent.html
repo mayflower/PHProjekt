@@ -7,18 +7,20 @@
         <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.loadGrid');">Grid view</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.dayViewClick');">Day view</button>
-        {{selectDate}}
-        &nbsp;
-        <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
-        constraints="{datePattern:'yyyy-MM-dd', strict:true}"
-        style="width: 85px;">
-        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
-            onClick="dojo.publish('Calendar.dayViewClick');"></button>
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <a href="javascript:dojo.publish('Calendar.setDay', [0]);">&lt;&lt;</a>&nbsp;
-        <a href="javascript:dojo.publish('Calendar.setDay', [1]);">Today</a>&nbsp;
-        <a href="javascript:dojo.publish('Calendar.setDay', [2]);">&gt;&gt;</a>
+        <div id="dayViewButtonBar" style="display:none;">
+            {{selectDate}}
+            &nbsp;
+            <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
+            constraints="{datePattern:'yyyy-MM-dd', strict:true}"
+            style="width: 90px;">
+            <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
+                onClick="dojo.publish('Calendar.dayViewClick');"></button>
+            </button>
+            &nbsp;&nbsp;&nbsp;
+            <a href="javascript:dojo.publish('Calendar.setDay', [0]);">&lt;&lt;</a>&nbsp;
+            <a href="javascript:dojo.publish('Calendar.setDay', [1]);">Today</a>&nbsp;
+            <a href="javascript:dojo.publish('Calendar.setDay', [2]);">&gt;&gt;</a>
+        </div>
     </div>
     <!-- List View: -->
     <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" class="prepend-0 append-0">

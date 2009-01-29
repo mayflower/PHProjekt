@@ -76,8 +76,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // summary:
         //   This function loads the Dojo Grid
         this._listMode = 'grid';
+        this.dayList = null;
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
+        dojo.byId('dayViewButtonBar').style.display='none';
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
@@ -86,8 +88,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // summary:
         //    This function loads the Day List instead of the Dojo Grid
         this._listMode = 'dayList';
+        this.grid = null;
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
+        dojo.byId('dayViewButtonBar').style.display='inline';
         if (date != null) {
             this._date = date;
         }
@@ -147,5 +151,43 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
         dijit.byId("selectDate").attr('value', this._date);
         this.loadDayList(this._date);
+    },
+
+    openForm:function(/*int*/ id, /*String*/ module, /*String*/ startTime) {
+        // Summary:
+        //    This function opens a new Detail View
+        if (!dojo.byId('detailsBox')) {
+            this.reload();
+        }
+        if (id == undefined) {
+            var params = new Array();
+
+            if (this._listMode == 'grid') {
+                params['startDate'] = '';
+                params['startTime'] = '08:00';
+                params['endTime']   = '10:00';    
+
+            } else if (this._listMode == 'dayList') {
+                var tmpDate      = dijit.byId("selectDate").attr('value');
+                var selectedDate = tmpDate.getFullYear() + '-' + tmpDate.getMonth() + 1 + '-' + tmpDate.getDate();
+                params['startDate'] = selectedDate;
+
+                if (startTime == undefined) {
+                    params['startTime'] = '08:00';
+                    params['endTime']   = '10:00';    
+
+                } else {
+                    params['startTime'] = startTime;
+                    // Generate the End Time, 2 hours after the Start Time
+                    var tmpTime      = startTime.split(':');
+                    var startHour    = parseInt(tmpTime[0], 10);
+                    var startMinutes = parseInt(tmpTime[1], 10);
+                    startHour += 2;
+                    endTime = dojo.number.format(startHour, {pattern: '00'}) + ':' + dojo.number.format(startMinutes, {pattern: '00'});
+                    params['endTime'] = endTime;
+                }
+            }
+        }
+        this.form = new this.formWidget(this, id, module, params);
     }
 });

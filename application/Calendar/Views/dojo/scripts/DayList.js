@@ -31,6 +31,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
     _tagUrl:       null,
     _saveChanges:  null,
     _date:         null,
+    _widthTable:   0,
     // Constants used by the function getEventInfo
     EVENT_TIME_START:    0,
     EVENT_TIME_INSIDE:   1,
@@ -38,7 +39,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
     EVENT_INSIDE_CHART:  0,
     EVENT_OUTSIDE_CHART: 1,
 
-    constructor:function(/*Object*/main, /*Int*/ id, /*String*/ date) {
+    constructor:function(/*Object*/ main, /*Int*/ id, /*String*/ date) {
         // Summary:
         //    Render the schedule table
         // Description:
@@ -50,6 +51,13 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         this.setUrl();
         this.setNode();
+
+        if (dojo.isIE) {
+            // This is to avoid a pair of scrollbars that suddenly appear (not when first loading)
+            this._widthTable = 97;
+        } else {
+            this._widthTable = 100;
+        }
 
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
@@ -272,7 +280,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
            	    maxSimultEvents = currentEventNow + 1;
            	}
         }
-        var widthColumns = Math.floor(93 / maxSimultEvents);
+        var widthColumns = Math.floor(this._widthTable / maxSimultEvents);
 
         // Create the columns arrays
         for (var nRow in timeSquare) {
@@ -307,14 +315,17 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
                     }
                 }
 
+                var notes = this.htmlEntities(content[event]['notes']);
+                notes     = notes.replace('\n', '<br />');
+
                 timeSquare[eventBegins]['columns'][useColumn]['occupied']         = true;
                 timeSquare[eventBegins]['columns'][useColumn]['typeEvent']        = EVENT_BEGIN;
                 timeSquare[eventBegins]['columns'][useColumn]['quartersDuration'] = eventInfo['quartersDuration'];
                 timeSquare[eventBegins]['columns'][useColumn]['id']               = content[event]['id'];
-                timeSquare[eventBegins]['columns'][useColumn]['title']            = content[event]['title'];
+                timeSquare[eventBegins]['columns'][useColumn]['title']            = this.htmlEntities(content[event]['title']);
                 timeSquare[eventBegins]['columns'][useColumn]['startTime']        = this.formatHour(content[event]['startTime']);
                 timeSquare[eventBegins]['columns'][useColumn]['endTime']          = this.formatHour(content[event]['endTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['notes']            = content[event]['notes'].replace('\n', '<br />');
+                timeSquare[eventBegins]['columns'][useColumn]['notes']            = notes;
 
                 //For every next row that this event occupies
                 var nRowThisEventFinishes = eventBegins + eventInfo['quartersDuration'] -1;
@@ -336,6 +347,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "dayList.html"], dojo.byId('gridBox'), {
+            widthTable        : this._widthTable,
             timeSquare        : timeSquare,
             otherEvents       : otherEvents,
             otherEventsMessage: phpr.nls.get('Other events')
@@ -359,5 +371,27 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         //    Delete the cache for this Day List table
         phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.deleteData({url: this._tagUrl});
+    },
+
+    htmlEntities:function(str) {
+        // Summary:
+        //    Converts HTML tags and code to readable HTML entities
+        // Description:
+        //    Converts HTML tags and code to readable HTML entities. 
+        //    Example: receives 'This is a <note>' and returns 'This is a &#60;note&#62;'
+        var i;
+        var output = '';
+        var char   = '';
+    
+        for(i=0; i < str.length; i++) {
+            char = str.charCodeAt(i);
+
+            if (char == 10 || char == 13 || (char >47 && char<58) || (char>62 && char<127)) {
+                output += str.charAt(i);
+            } else {
+                output += "&#" + str.charCodeAt(i) + ";";
+            }
+        }
+        return output;
     }
 });

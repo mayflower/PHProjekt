@@ -1,25 +1,30 @@
 <!-- Events inside the schedule chart -->
-<table width="100%" id="calendarSchedule">
-{%for moment in timeSquare%}
-<tr>
-    <td width="7%" class="hours">{{moment.hour}}</td>
-    {% for column in moment.columns %}
-        {% if column.occupied %}
-            {% ifequal column.typeEvent 1 %}
-    <td rowspan="{{column.quartersDuration}}" width="{{column.widthColumn}}%" height="100%" class="events">
-        <a href="javascript:dojo.publish('Calendar.showFormFromList', [{{column.id}}]);">{{column.startTime}} - {{column.endTime}}</a> {{column.title}}<br />
-        <div class="horizontalLine">
-        </div>
-        {{column.notes|safe}}
-    </td>
-            {% endifequal %}
-            {% else %}
-    <td width="{{column.widthColumn}}%"></td>
-            {% endif %}
+<div id="calendarSchedule">
+    <table width="{{widthTable}}%">
+    {%for moment in timeSquare%}
+        <tr>
+            <td width="8%" class="hours">{{moment.hour}} &nbsp;
+                <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
+                            onClick="dojo.publish('Calendar.openForm', [null, null, '{{moment.hour}}']);">
+            </td>
+            {% for column in moment.columns %}
+                {% if column.occupied %}
+                    {% ifequal column.typeEvent 1 %}
+            <td rowspan="{{column.quartersDuration}}" width="{{column.widthColumn}}%" class="events">
+                <a href="javascript:dojo.publish('Calendar.showFormFromList', [{{column.id}}]);">{{column.startTime}} - {{column.endTime}}</a> {{column.title|safe}}<br />
+                <div class="horizontalLine">
+                </div>
+                {{column.notes|safe}}
+            </td>
+                    {% endifequal %}
+                {% else %}
+            <td width="{{column.widthColumn}}%"></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
     {% endfor %}
-</tr>
-{% endfor %}
-</table>
+    </table>
+</div>
 <!-- Events outside the schedule chart -->
 {% if otherEvents.show %}
     <br />
