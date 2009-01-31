@@ -247,6 +247,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($fieldDefinition as $key => $field) {
+            $value = "";
             switch ($field['type']) {
                 case 'selectbox':
                 case 'multipleselectbox':
@@ -272,10 +273,13 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                         $value .= $fileName;
                     }
                     break;
+                case 'time':
+                    $temp = $this->_model->$field['key'];
+                    $value = substr($temp, 0, strrpos($temp, ":"));
+                    break;
                 case 'text':
                 case 'textarea':
                 case 'date':
-                case 'time':
                 default:
                     $value = $this->_model->$field['key'];
                     break;
@@ -375,7 +379,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
             // Has the name been set?
             if (sizeof($recipient) == 2) {
                 $this->addTo($recipient[0],           // Address
-                                $recipient[1]);       // Name
+                             $recipient[1]);          // Name
             } else {
                 $this->addTo($recipient[0]);          // Address
             }
@@ -395,7 +399,6 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         // Creates the Zend_Mail_Transport_Smtp object
         $smtpTransport= $this->_setTransport();
-
         $this->send($smtpTransport);
     }
 
