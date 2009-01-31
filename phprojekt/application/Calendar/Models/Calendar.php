@@ -87,15 +87,17 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public static function saveEvent($request)
     {
-        $userId        = Phprojekt_Auth::getUserId();
-        $id            = (int) $request->getParam('id');
-        $participantId = $request->getParam('participantId');
-        $moduleName    = $request->getModuleName();
-        $participants  = array();
-        $rootEventId   = self::getRootEventId($id);
-        $relatedEvents = self::getRelatedEvents($rootEventId);
-        $startDate     = Cleaner::sanitize('date', $request->getParam('startDate', date("Y-m-d")));
-        $rrule         = (string) $request->getParam('rrule', null);
+        $userId             = Phprojekt_Auth::getUserId();
+        $id                 = (int) $request->getParam('id');
+        $participantId      = $request->getParam('participantId');
+        $moduleName         = $request->getModuleName();
+        $participants       = array();
+        $rootEventId        = self::getRootEventId($id);
+        $relatedEvents      = self::getRelatedEvents($rootEventId);
+        $startDate          = Cleaner::sanitize('date', $request->getParam('startDate', date("Y-m-d")));
+        $rrule              = (string) $request->getParam('rrule', null);
+        $checkReadAccess    = array();
+        $dataAccess         = array();
 
         // getting requested dates for the serial meeting (if it is serial)
         if (!empty($rrule)) {
@@ -113,8 +115,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $participants[] = $userId;
             }
             foreach ($participantId as $oneParticipant) {
-                if (!in_array((int) $oneParticipant, $participants)) {
-                    $participants[] = (int) $oneParticipant;
+                $oneParticipant = (int) $oneParticipant;
+                if (!in_array($oneParticipant, $participants)) {
+                    $participants[] = $oneParticipant;
+                    if (($id != 0) || ($oneParticipant != $userId)) {
+                        $dataAccess[$oneParticipant]      = $oneParticipant;
+                        $checkReadAccess[$oneParticipant] = 1;
+                    }
                 }
             }
         } elseif ((is_numeric($participantId) && ($userId <> (int) $participantId))) {
@@ -124,6 +131,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $participants[] = $userId;
         }
 
+        // Add 'read' access to every participant, even if 'read' access has been unchecked in 'Access' tab for him/her
+        $request->setParam('checkReadAccess', $checkReadAccess);
+        $request->setParam('dataAccess', $dataAccess);
+
         // first, we will do the selection by date
         $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
         foreach ($eventDates as $oneDate) {
@@ -132,8 +143,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $request->setParam('startDate', $date);
             $request->setParam('endDate', $date);
 
+            $participantNumber = 0;
             // now the insertion or edition for each invited user
             foreach ($participants as $oneParticipant) {
+                $participantNumber++;
                 $request->setParam('participantId', $oneParticipant);
                 $clone = clone($model);
                 $clone->uid = md5($date . $oneParticipant . time());
@@ -145,6 +158,20 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     }
                     $clone->find($relatedEvents[$date][$oneParticipant]);
                     unset($relatedEvents[$date][$oneParticipant]);
+                } else {
+                    if ($rootEventId == 0) {
+                        // New event
+                        $request->setParam('parentId', null);
+                    } else {
+                        // New participant for an existing event
+                        $request->setParam('parentId', $rootEventId);
+                    }
+                }
+                // If it was requested to send notification, just send it once (one mail for all participants)
+                if ($participantNumber == 2) {
+                    if ($request->getParam('sendNotification') == 'on') {
+                        $request->setParam('sendNotification', '');
+                    }
                 }
                 Default_Helpers_Save::save($clone, $request->getParams());
                 if ($rootEventId == 0) {
