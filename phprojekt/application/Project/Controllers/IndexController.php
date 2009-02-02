@@ -47,16 +47,15 @@ class Project_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             $model     = $this->getModelObject();
             $model->id = 0;
-            $message   = $translate->translate(self::ADD_TRUE_TEXT);
+            $message   = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
         $node    = new Phprojekt_Tree_Node_Database($model, $id);
         $newNode = Default_Helpers_Save::save($node,
@@ -88,10 +87,9 @@ class Project_IndexController extends IndexController
      */
     public function jsonSaveMultipleAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $data      = (array) $this->getRequest()->getParam('data');
-        $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
-        $showId    = array();
+        $data    = (array) $this->getRequest()->getParam('data');
+        $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+        $showId  = array();
         foreach ($data as $id => $fields) {
             $model   = $this->getModelObject()->find($id);
             $node    = new Phprojekt_Tree_Node_Database($model, $id);

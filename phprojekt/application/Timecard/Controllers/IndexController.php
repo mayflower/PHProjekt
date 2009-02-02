@@ -76,15 +76,14 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate(self::ADD_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         if (null == $this->getRequest()->getParam('startTime', null)) {
@@ -102,11 +101,11 @@ class Timecard_IndexController extends IndexController
                 $this->getRequest()->setParam('startTime', $model->startTime);
                 Default_Helpers_Save::save($model, $this->getRequest()->getParams());
                 $type    = 'success';
-                $message = $translate->translate(self::ADD_TRUE_TEXT);
+                $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
                 $showId  = $model->id;
             } else {
                 $type    = 'error';
-                $message = $translate->translate(self::NOT_FOUND);
+                $message = Phprojekt::getInstance()->translate(self::NOT_FOUND);
                 $showId  = null;
             }
         } else if (null == $this->getRequest()->getParam('endTime', null)) {
@@ -185,8 +184,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingDeleteAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -197,9 +195,9 @@ class Timecard_IndexController extends IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
             if ($tmp === false) {
-                $message = $translate->translate(self::DELETE_FALSE_TEXT);
+                $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
             } else {
-                $message = $translate->translate(self::DELETE_TRUE_TEXT);
+                $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             }
             $return = array('type'    => 'success',
                             'message' => $message,
@@ -219,9 +217,8 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonStartAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $model     = $this->getModelObject();
-        $message   = $translate->translate(self::ADD_TRUE_TEXT);
+        $model   = $this->getModelObject();
+        $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
 
         $this->getRequest()->setParam('date', date("Y-m-d"));
         $this->getRequest()->setParam('startTime', date("H:i:s"));
@@ -243,8 +240,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonStopAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $offset    = (int) $this->getRequest()->getParam('start', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
 
         // Date filter to find the open register
         $dateFilter = array();
@@ -261,11 +257,11 @@ class Timecard_IndexController extends IndexController
             $model = $records[0];
             Default_Helpers_Save::save($model, $this->getRequest()->getParams());
             $type    = 'success';
-            $message = $translate->translate(self::ADD_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
             $showId  = $model->id;
         } else {
             $type    = 'error';
-            $message = $translate->translate(self::NOT_FOUND);
+            $message = Phprojekt::getInstance()->translate(self::NOT_FOUND);
             $showId  = null;
         }
 
@@ -284,15 +280,14 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-            $message = $translate->translate(self::ADD_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj')->find($id);
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
@@ -336,12 +331,11 @@ class Timecard_IndexController extends IndexController
 
         $setting->setSettings($this->getRequest()->getParams());
 
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $message   = $translate->translate(self::EDIT_TRUE_TEXT);
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => 0);
+        $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+        $return  = array('type'    => 'success',
+                         'message' => $message,
+                         'code'    => 0,
+                         'id'      => 0);
 
         echo Phprojekt_Converter_Json::convert($return);
     }

@@ -113,27 +113,25 @@ class TagController extends IndexController
     public function jsonSaveTagsAction()
     {
         $tagObj = Phprojekt_Tags_Default::getInstance();
-
-        $id        = (int) $this->getRequest()->getParam('id');
-        $string    = (string) $this->getRequest()->getParam('string', '');
+        $id     = (int) $this->getRequest()->getParam('id');
+        $string = (string) $this->getRequest()->getParam('string', '');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
-        $moduleId  = (int) Phprojekt_Module::getId($module);
+        $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
+        $moduleId = (int) Phprojekt_Module::getId($module);
 
         $tagObj->saveTags($moduleId, $id, $string);
 
-        $translate = Phprojekt::getInstance()->getTranslate();
+        $message = Phprojekt::getInstance()->translate('The Tags were added correctly');
 
-        $message = $translate->translate('The Tags were added correctly');
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => 0);
 
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => 0);
         echo Phprojekt_Converter_Json::convert($return);
     }
 
@@ -155,18 +153,18 @@ class TagController extends IndexController
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
-        $moduleId  = (int) Phprojekt_Module::getId($module);
+        $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
+        $moduleId = (int) Phprojekt_Module::getId($module);
 
         $tagObj->deleteTagsByItem($moduleId, $id);
 
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $message   = $translate->translate('The Tags were deleted correctly');
+        $message = Phprojekt::getInstance()->translate('The Tags were deleted correctly');
 
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => 0);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => 0);
+
         echo Phprojekt_Converter_Json::convert($return);
     }
 }

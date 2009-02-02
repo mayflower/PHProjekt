@@ -431,13 +431,11 @@ class Phprojekt_Tags_Default
      */
     public function getFieldDefinition()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $fields    = array();
-
+        $fields   = array();
         $fields[] = array('key'   => 'string',
-                          'label' => $translate->translate('Tag'));
+                          'label' => Phprojekt::getInstance()->translate('Tag'));
         $fields[] = array('key'   => 'count',
-                          'label' => $translate->translate('Count'));
+                          'label' => Phprojekt::getInstance()->translate('Count'));
         return $fields;
     }
 }

@@ -43,17 +43,9 @@ class Phprojekt_Model_Validate
      */
     public $error = null;
 
-    /**
-     * Translate class
-     *
-     * @var Phprojekt_Language
-     */
-    private $_translate = null;
-
     public function __construct()
     {
-        $this->error      = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
-        $this->_translate = Phprojekt::getInstance()->getTranslate();
+        $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
     }
 
     /**
@@ -87,8 +79,8 @@ class Phprojekt_Model_Validate
                             if (null !== $error) {
                                 $validated = false;
                                 $this->error->addError(array(
-                                'field'   => $this->_translate->translate($varname),
-                                'message' => $this->_translate->translate($error)));
+                                'field'   => Phprojekt::getInstance()->translate($varname),
+                                'message' => Phprojekt::getInstance()->translate($error)));
                                 break;
                             }
                         }
@@ -97,8 +89,8 @@ class Phprojekt_Model_Validate
                         if (false === $error) {
                             $validated = false;
                             $this->error->addError(array(
-                            'field'   => $this->_translate->translate($varname),
-                            'message' => $this->_translate->translate("Invalid Format")));
+                            'field'   => Phprojekt::getInstance()->translate($varname),
+                            'message' => Phprojekt::getInstance()->translate("Invalid Format")));
                         }
                         break;
                     }
@@ -112,8 +104,8 @@ class Phprojekt_Model_Validate
                         if (null !== $error) {
                             $validated = false;
                             $this->error->addError(array(
-                            'field'   => $this->_translate->translate($varname),
-                            'message' => $this->_translate->translate($error)));
+                            'field'   => Phprojekt::getInstance()->translate($varname),
+                            'message' => Phprojekt::getInstance()->translate($error)));
                         }
                     }
                 }

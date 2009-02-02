@@ -186,15 +186,14 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate(self::ADD_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
@@ -222,10 +221,9 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonSaveMultipleAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $data      = (array) $this->getRequest()->getParam('data');
-        $message   = $translate->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
-        $showId    = array();
+        $data    = (array) $this->getRequest()->getParam('data');
+        $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+        $showId  = array();
         foreach ($data as $id => $fields) {
             $model = $this->getModelObject()->find((int) $id);
             Default_Helpers_Save::save($model, $fields);
@@ -254,8 +252,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDeleteAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -266,9 +263,9 @@ class IndexController extends Zend_Controller_Action
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = $model->delete();
             if ($tmp === false) {
-                $message = $translate->translate(self::DELETE_FALSE_TEXT);
+                $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
             } else {
-                $message = $translate->translate(self::DELETE_TRUE_TEXT);
+                $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             }
             $return = array('type'    => 'success',
                             'message' => $message,

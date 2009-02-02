@@ -111,12 +111,12 @@ class Gantt_IndexController extends IndexController
             }
         }
 
-        $message = Phprojekt::getInstance()->getTranslate()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+        $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
 
-        $return  = array('type'    => 'success',
-                         'message' => $message,
-                         'code'    => 0,
-                         'id'      => 0);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => 0);
 
         echo Phprojekt_Converter_Json::convert($return);
     }

@@ -52,14 +52,13 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Phprojekt::getInstance()->getTranslate();
 
         // name
         $data = array();
         $data['key']      = 'name';
-        $data['label']    = $translate->translate('name');
+        $data['label']    = Phprojekt::getInstance()->translate('name');
         $data['type']     = 'hidden';
-        $data['hint']     = $translate->translate('name');
+        $data['hint']     = Phprojekt::getInstance()->translate('name');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -75,9 +74,9 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         // label
         $data = array();
         $data['key']      = 'label';
-        $data['label']    = $translate->translate('Label');
+        $data['label']    = Phprojekt::getInstance()->translate('Label');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('Label');
+        $data['hint']     = Phprojekt::getInstance()->translate('Label');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -92,16 +91,16 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         // active
         $data = array();
         $data['key']      = 'active';
-        $data['label']    = $translate->translate('active');
+        $data['label']    = Phprojekt::getInstance()->translate('active');
         $data['type']     = 'selectbox';
-        $data['hint']     = $translate->translate('active');
+        $data['hint']     = Phprojekt::getInstance()->translate('active');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
         $data['range'][]  = array('id'   => '0',
-                                  'name' => $translate->translate('No'));
+                                  'name' => Phprojekt::getInstance()->translate('No'));
         $data['range'][]  = array('id'   => '1',
-                                  'name' => $translate->translate('Yes'));
+                                  'name' => Phprojekt::getInstance()->translate('Yes'));
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;

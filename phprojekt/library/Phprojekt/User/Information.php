@@ -52,14 +52,13 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Phprojekt::getInstance()->getTranslate();
 
         // username
         $data = array();
         $data['key']      = 'username';
-        $data['label']    = $translate->translate('username');
+        $data['label']    = Phprojekt::getInstance()->translate('username');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('username');
+        $data['hint']     = Phprojekt::getInstance()->translate('username');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -75,9 +74,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             // password
             $data = array();
             $data['key']      = 'password';
-            $data['label']    = $translate->translate('password');
+            $data['label']    = Phprojekt::getInstance()->translate('password');
             $data['type']     = 'password';
-            $data['hint']     = $translate->translate('password');
+            $data['hint']     = Phprojekt::getInstance()->translate('password');
             $data['order']    = 0;
             $data['position'] = 2;
             $data['fieldset'] = '';
@@ -93,9 +92,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         // firstname
         $data = array();
         $data['key']      = 'firstname';
-        $data['label']    = $translate->translate('firstname');
+        $data['label']    = Phprojekt::getInstance()->translate('firstname');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('firstname');
+        $data['hint']     = Phprojekt::getInstance()->translate('firstname');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
@@ -110,9 +109,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         // lastname
         $data = array();
         $data['key']      = 'lastname';
-        $data['label']    = $translate->translate('lastname');
+        $data['label']    = Phprojekt::getInstance()->translate('lastname');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('lastname');
+        $data['hint']     = Phprojekt::getInstance()->translate('lastname');
         $data['order']    = 0;
         $data['position'] = 4;
         $data['fieldset'] = '';
@@ -128,9 +127,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             // email
             $data = array();
             $data['key']      = 'email';
-            $data['label']    = $translate->translate('email');
+            $data['label']    = Phprojekt::getInstance()->translate('email');
             $data['type']     = 'text';
-            $data['hint']     = $translate->translate('email');
+            $data['hint']     = Phprojekt::getInstance()->translate('email');
             $data['order']    = 0;
             $data['position'] = 5;
             $data['fieldset'] = '';
@@ -145,9 +144,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             // language
             $data = array();
             $data['key']      = 'language';
-            $data['label']    = $translate->translate('language');
+            $data['label']    = Phprojekt::getInstance()->translate('language');
             $data['type']     = 'selectbox';
-            $data['hint']     = $translate->translate('language');
+            $data['hint']     = Phprojekt::getInstance()->translate('language');
             $data['order']    = 0;
             $data['position'] = 6;
             $data['fieldset'] = '';
@@ -166,9 +165,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             // timeZone
             $data = array();
             $data['key']      = 'timeZone';
-            $data['label']    = $translate->translate('timeZone');
+            $data['label']    = Phprojekt::getInstance()->translate('timeZone');
             $data['type']     = 'selectbox';
-            $data['hint']     = $translate->translate('timeZone');
+            $data['hint']     = Phprojekt::getInstance()->translate('timeZone');
             $data['order']    = 0;
             $data['position'] = 7;
             $data['fieldset'] = '';
@@ -189,16 +188,16 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         // status
         $data = array();
         $data['key']      = 'status';
-        $data['label']    = $translate->translate('status');
+        $data['label']    = Phprojekt::getInstance()->translate('status');
         $data['type']     = 'selectbox';
-        $data['hint']     = $translate->translate('status');
+        $data['hint']     = Phprojekt::getInstance()->translate('status');
         $data['order']    = 0;
         $data['position'] = 8;
         $data['fieldset'] = '';
         $data['range']    = array(array('id'   => 'A',
-                                        'name' => $translate->translate('Active')),
+                                        'name' => Phprojekt::getInstance()->translate('Active')),
                                   array('id'   => 'I',
-                                        'name' => $translate->translate('Inactive')));
+                                        'name' => Phprojekt::getInstance()->translate('Inactive')));
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
@@ -208,16 +207,16 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         // admin
         $data = array();
         $data['key']      = 'admin';
-        $data['label']    = $translate->translate('admin');
+        $data['label']    = Phprojekt::getInstance()->translate('admin');
         $data['type']     = 'selectbox';
-        $data['hint']     = $translate->translate('admin');
+        $data['hint']     = Phprojekt::getInstance()->translate('admin');
         $data['order']    = 0;
         $data['position'] = 9;
         $data['fieldset'] = '';
         $data['range']    = array(array('id'   => 0,
-                                        'name' => $translate->translate('No')),
+                                        'name' => Phprojekt::getInstance()->translate('No')),
                                   array('id'   => 1,
-                                        'name' => $translate->translate('Yes')));
+                                        'name' => Phprojekt::getInstance()->translate('Yes')));
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;

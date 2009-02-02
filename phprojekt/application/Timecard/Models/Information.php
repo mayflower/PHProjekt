@@ -52,14 +52,13 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
     public function getFieldDefinition($ordering = 'month')
     {
         $converted = array();
-        $translate = Phprojekt::getInstance()->getTranslate();
 
         // date
         $dateData = array();
         $dateData['key']      = 'date';
-        $dateData['label']    = $translate->translate('date');
+        $dateData['label']    = Phprojekt::getInstance()->translate('date');
         $dateData['type']     = 'date';
-        $dateData['hint']     = $translate->translate('date');
+        $dateData['hint']     = Phprojekt::getInstance()->translate('date');
         $dateData['order']    = 0;
         $dateData['position'] = 1;
         $dateData['fieldset'] = '';
@@ -72,9 +71,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         // startDate
         $startDateData = array();
         $startDateData['key']      = 'startTime';
-        $startDateData['label']    = $translate->translate('startTime');
+        $startDateData['label']    = Phprojekt::getInstance()->translate('startTime');
         $startDateData['type']     = 'time';
-        $startDateData['hint']     = $translate->translate('startTime');
+        $startDateData['hint']     = Phprojekt::getInstance()->translate('startTime');
         $startDateData['order']    = 0;
         $startDateData['position'] = 2;
         $startDateData['fieldset'] = '';
@@ -87,9 +86,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         // endDate
         $endDateData = array();
         $endDateData['key']      = 'endTime';
-        $endDateData['label']    = $translate->translate('endTime');
+        $endDateData['label']    = Phprojekt::getInstance()->translate('endTime');
         $endDateData['type']     = 'time';
-        $endDateData['hint']     = $translate->translate('endTime');
+        $endDateData['hint']     = Phprojekt::getInstance()->translate('endTime');
         $endDateData['order']    = 0;
         $endDateDatadata['position'] = 3;
         $endDateData['fieldset'] = '';
@@ -117,9 +116,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 // Sum of hours
                 $data = array();
                 $data['key']      = 'sum';
-                $data['label']    = $translate->translate('Working Times');
+                $data['label']    = Phprojekt::getInstance()->translate('Working Times');
                 $data['type']     = 'time';
-                $data['hint']     = $translate->translate('Working Times');
+                $data['hint']     = Phprojekt::getInstance()->translate('Working Times');
                 $data['order']    = 0;
                 $data['position'] = 2;
                 $data['fieldset'] = '';
@@ -134,9 +133,9 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 // Sum of Bookinks
                 $data = array();
                 $data['key']      = 'bookings';
-                $data['label']    = $translate->translate('Project Bookings');
+                $data['label']    = Phprojekt::getInstance()->translate('Project Bookings');
                 $data['type']     = 'time';
-                $data['hint']     = $translate->translate('Project Bookings');
+                $data['hint']     = Phprojekt::getInstance()->translate('Project Bookings');
                 $data['order']    = 0;
                 $data['position'] = 3;
                 $data['fieldset'] = '';

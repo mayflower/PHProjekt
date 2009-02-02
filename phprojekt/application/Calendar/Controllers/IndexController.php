@@ -48,13 +48,12 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $message   = $translate->translate(self::ADD_TRUE_TEXT);
-        $id        = (int) $this->getRequest()->getParam('id');
+        $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+        $id      = (int) $this->getRequest()->getParam('id');
 
         // getting the main row if the group if an id is provided
         if (!empty($id)) {
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         $record = $this->getModelObject();
@@ -99,8 +98,7 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonDeleteAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -111,7 +109,7 @@ class Calendar_IndexController extends IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $model->deleteRelatedEvents();
             $model->delete();
-            $message = $translate->translate(self::DELETE_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             $return  = array('type'    => 'success',
                              'message' => $message,
                              'code'    => 0,

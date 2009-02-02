@@ -120,9 +120,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function recordValidate()
     {
-        $data      = $this->_data;
-        $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $translate = Phprojekt::getInstance()->getTranslate();
+        $data   = $this->_data;
+        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         if (isset($data['startTime'])) {
             $startTime = str_replace(":", "", $data['startTime']);
@@ -132,8 +131,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $startTime = intval($startTime);
             if (($startTime > 2359) || ($startTime < 0)) {
                 $this->_validate->error->addError(array(
-                    'field'   => $translate->translate('Hours'),
-                    'message' => $translate->translate('The start time is invalid')));
+                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
             }
         }
@@ -141,8 +140,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         if (isset($data['endTime']) && !empty($data['endTime'])) {
             if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
-                    'field'   => $translate->translate('Hours'),
-                    'message' => $translate->translate('The end time must be after the start time')));
+                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'message' => Phprojekt::getInstance()->translate('The end time must be after the start time')));
                 return false;
             }
 
@@ -153,8 +152,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $endTime = intval($endTime);
             if (($endTime > 2359) || ($endTime < 0)) {
                 $this->_validate->error->addError(array(
-                    'field'   => $translate->translate('Hours'),
-                    'message' => $translate->translate('The end time is invalid')));
+                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'message' => Phprojekt::getInstance()->translate('The end time is invalid')));
                 return false;
             }
 
@@ -163,8 +162,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $startTime = substr($startTime, 0, 4);
                 }
                 $this->_validate->error->addError(array(
-                    'field'   => $translate->translate('Hours'),
-                    'message' => $translate->translate('The start time is invalid')));
+                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
             }
         }

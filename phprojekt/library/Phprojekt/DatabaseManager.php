@@ -228,7 +228,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
     {
-        $translate          = Phprojekt::getInstance()->getTranslate();
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
@@ -236,7 +235,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             foreach (explode('|', $field->formRange) as $range) {
                 list($key, $value) = explode('#', $range);
                 $converted['range'][] = array('id'   => $key,
-                                              'name' => $translate->translate($value));
+                                              'name' => Phprojekt::getInstance()->translate($value));
             }
         } else {
             $converted['range'] = $this->getRangeFromModel($field);
@@ -255,12 +254,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-
         $converted['key']      = $field->tableField;
-        $converted['label']    = $translate->translate($field->formLabel);
+        $converted['label']    = Phprojekt::getInstance()->translate($field->formLabel);
         $converted['type']     = $field->formType;
-        $converted['hint']     = $translate->translate($field->formTooltip);
+        $converted['hint']     = Phprojekt::getInstance()->translate($field->formTooltip);
         $converted['order']    = 0;
         $converted['position'] = (int) $field->formPosition;
         $converted['fieldset'] = '';
@@ -392,26 +389,25 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $validated    = true;
         $this->_error = new Phprojekt_Error();
-        $translate    = Phprojekt::getInstance()->getTranslate();
 
         if (empty($data)) {
             $validated = false;
             $this->_error->addError(array(
-                'field'   => $translate->translate('Module Designer'),
-                'message' => $translate->translate('The module must contain fields')));
+                'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'message' => Phprojekt::getInstance()->translate('The module must contain fields')));
         }
 
         if (empty($data[0]['tableName'])) {
             $validated = false;
             $this->_error->addError(array(
-                'field'   => $translate->translate('Module Designer'),
-                'message' => $translate->translate('The module must contain a name')));
+                'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'message' => Phprojekt::getInstance()->translate('The module must contain a name')));
         } else {
             if (!preg_match("/^[a-zA-Z]/", $data[0]['tableName'])) {
                 $validated = false;
                 $this->_error->addError(array(
-                    'field'   => $translate->translate('Module Designer'),
-                    'message' => $translate->translate('The module name must start with a letter')));
+                    'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                    'message' => Phprojekt::getInstance()->translate('The module name must start with a letter')));
             }
         }
 
@@ -421,15 +417,17 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             if (empty($field['tableField'])) {
                 $validated = false;
                 $this->_error->addError(array(
-                    'field'   => $translate->translate('Module Designer'),
-                    'message' => $translate->translate('The Table Field must be completed for all the fields')));
+                    'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                    'message' => Phprojekt::getInstance()->translate('The Table Field must be completed '
+                        + 'for all the fields')));
                 break;
             } else {
                 if (in_array($field['tableField'], $foundFields)) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   => $translate->translate('Module Designer'),
-                        'message' => $translate->translate('There are two fields with the same Field Name')));
+                        'field'   =>Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('There are two fields with the same '
+                            + 'Field Name')));
                     break;
                 } else {
                     $foundFields[] = $field['tableField'];
@@ -440,8 +438,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 if ($field['tableLength'] < 1 && $field['tableLength'] > 255) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   => $translate->translate('Module Designer'),
-                        'message' => $translate->translate('The lenght of the varchar fields must be between 1 and 255')));
+                        'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('The lenght of the varchar fields must be '
+                            + 'between 1 and 255')));
                     break;
                 }
             }
@@ -450,8 +449,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 if ($field['tableLength'] < 1 && $field['tableLength'] > 11) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   => $translate->translate('Module Designer'),
-                        'message' => $translate->translate('The lenght of the int fields must be between 1 and 11')));
+                        'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('The lenght of the int fields must be between'
+                            + ' 1 and 11')));
                     break;
                 }
             }
@@ -459,8 +459,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             if ($field['formType'] == 'selectValues') {
                 if (!strstr($field['formRange'], '#')) {
                     $validated = false;
-                    $this->_error->addError(array('field'   => $translate->translate('Module Designer'),
-                                                  'message' => $translate->translate('Invalid form Range for the select field')));
+                    $this->_error->addError(array(
+                        'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('Invalid form Range for the select field')));
                     break;
                 }
                 if ($field['tableField'] == 'projectId') {
@@ -471,8 +472,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         if (!$foundProjectId) {
             $validated = false;
-            $this->_error->addError(array('field'   => $translate->translate('Module Designer'),
-                                          'message' => $translate->translate('The module must have a project selector called projectId')));
+            $this->_error->addError(array(
+                'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'message' => Phprojekt::getInstance()->translate('The module must have a project selector called '
+                    + 'projectId')));
         }
 
         return $validated;

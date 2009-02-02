@@ -67,19 +67,18 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     public function getDisplay($moduleId, $itemId)
     {
-        $where     = array();
-        $translate = Phprojekt::getInstance()->getTranslate();
-
+        $where   = array();
         $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
         $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
 
         $tmpResult = $this->fetchAll($where)->toArray();
 
+        $moduleLabel = Phprojekt::getInstance()->translate(Phprojekt_Module::getModuleLabel($moduleId));
         if (isset($tmpResult[0])) {
             $result = array('id'            => $itemId,
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                            'moduleLabel'   => $translate->translate(Phprojekt_Module::getModuleLabel($moduleId)),
+                            'moduleLabel'   => $moduleLabel,
                             'firstDisplay'  => $tmpResult[0]['firstDisplay'],
                             'secondDisplay' => $tmpResult[0]['secondDisplay'],
                             'projectId'     => $tmpResult[0]['projectId']);
@@ -87,7 +86,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
             $result = array('id'            => $itemId,
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                            'moduleLabel'   => $translate->translate(Phprojekt_Module::getModuleLabel($moduleId)),
+                            'moduleLabel'   => $moduleLabel,
                             'firstDisplay'  => '',
                             'secondDisplay' => '',
                             'projectId'     => 1);

@@ -77,18 +77,17 @@ class Setting_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $module    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
-        $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $module  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule($module);
 
         $message = $setting->validateSettings($this->getRequest()->getParams());
 
         if (!empty($message)) {
-            $message = $translate->translate($message);
+            $message = Phprojekt::getInstance()->translate($message);
             $type = "error";
         } else {
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             $setting->setSettings($this->getRequest()->getParams());
             $type = "success";
         }

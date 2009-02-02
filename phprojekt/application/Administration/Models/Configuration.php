@@ -80,7 +80,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 $configClass = Phprojekt_Loader::getModelClassname($dir, sprintf('%sConfiguration', $dir));
                 if (Phprojekt_Loader::tryToLoadClass($configClass)) {
                     $results[] = array('name'  => $dir,
-                                       'label' => Phprojekt::getInstance()->getTranslate()->translate($dir));
+                                       'label' => Phprojekt::getInstance()->translate($dir));
                 }
             }
         }

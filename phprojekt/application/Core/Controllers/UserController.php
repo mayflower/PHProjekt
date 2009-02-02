@@ -113,15 +113,14 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate(self::ADD_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());

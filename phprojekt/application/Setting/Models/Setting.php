@@ -75,7 +75,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         $model = Phprojekt_Loader::getModel('Core', $moduleClass);
         if ($model) {
             $results[] = array('name'  => 'User',
-                               'label' => Phprojekt::getInstance()->getTranslate()->translate('User'));
+                               'label' => Phprojekt::getInstance()->translate('User'));
         }
         // Module settings
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
@@ -87,7 +87,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                 $settingClass = Phprojekt_Loader::getModelClassname($dir, sprintf('%sSetting', $dir));
                 if (Phprojekt_Loader::tryToLoadClass($settingClass)) {
                     $results[] = array('name'  => $dir,
-                                       'label' => Phprojekt::getInstance()->getTranslate()->translate($dir));
+                                       'label' => Phprojekt::getInstance()->translate($dir));
                 }
             }
         }

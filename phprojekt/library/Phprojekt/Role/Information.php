@@ -52,14 +52,13 @@ class Phprojekt_Role_Information extends EmptyIterator implements Phprojekt_Mode
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $translate = Phprojekt::getInstance()->getTranslate();
 
         // name
         $data = array();
         $data['key']      = 'name';
-        $data['label']    = $translate->translate('name');
+        $data['label']    = Phprojekt::getInstance()->translate('name');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('name');
+        $data['hint']     = Phprojekt::getInstance()->translate('name');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
