@@ -147,10 +147,27 @@ class Phprojekt {
     public function getTranslate()
     {
         if (null === $this->_translate) {
-            $this->_translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language",
-                $this->_config->language));
+            $language         = Phprojekt_User_User::getSetting("language", $this->_config->language);
+            $this->_translate = new Phprojekt_Language($language);
         }
+
         return $this->_translate;
+    }
+
+    /**
+     * Translate a string using the current module
+     *
+     * @param string             $message Message to translate
+     * @param string|Zend_Locale $locale  Locale/Language to set
+     *
+     * @return string
+     */
+    public function translate($message, $locale = null)
+    {
+        $translate  = Phprojekt::getInstance()->getTranslate();
+        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+
+        return $this->_translate->translate($message, $moduleName, $locale);
     }
 
     /**

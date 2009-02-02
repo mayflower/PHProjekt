@@ -70,7 +70,7 @@ class Phprojekt_PublishedException extends Exception
      * @param integer $code     An optional error code
      */
     public function __construct($message, $code = 0) {
-        $this->message = Phprojekt::getInstance()->getTranslate()->translate($message);
+        $this->message = Phprojekt::getInstance()->translate($message);
         $this->code    = $code;
     }
 }

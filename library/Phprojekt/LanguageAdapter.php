@@ -127,8 +127,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
-        $options = array_merge ($this->_options, $options);
-        if (true === $options['clear'] || false === isset ($this->_translate[$locale])) {
+        $options = array_merge($this->_options, $options);
+        if (true === $options['clear'] || false === isset($this->_translate[$locale])) {
             $this->_translate[$locale] = array ();
         }
 
@@ -150,31 +150,32 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 include_once($languageDir . $langFile);
                 Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                 if (isset($lang)) {
-                    if (!isset($this->_translate[$locale])) {
-                        $this->_translate[$locale] = array();
+                    if (!isset($this->_translate[$locale]['Default'])) {
+                        $this->_translate[$locale]['Default'] = array();
                     }
-                    $this->_translate[$locale]  = array_merge ($this->_translate[$locale], $lang);
+                    $this->_translate[$locale]['Default'] = array_merge($this->_translate[$locale]['Default'], $lang);
                     $this->_langLoaded[$locale] = 1;
                 }
             }
 
             // Modules
             $files = scandir (PHPR_CORE_PATH);
-            foreach($files as $file) {
-                if ($file != '.' && $file != '..' && $file != 'Default' && $file != '.svn') {
+            foreach($files as $module) {
+                if ($module != '.' && $module != '..' && $module != 'Default' && $module != '.svn') {
                     /* Get the translation file */
                     $lang        = array ();
                     $langFile    = $this->_getLangFile($locale);
-                    $languageDir = PHPR_CORE_PATH . '/' . $file . '/Languages/';
+                    $languageDir = PHPR_CORE_PATH . '/' . $module . '/Languages/';
                     if (file_exists($languageDir . $langFile)) {
                         include_once($languageDir . $langFile);
                         Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                         if (isset($lang)) {
-                            if (!isset($this->_translate[$locale])) {
-                                $this->_translate[$locale] = array();
+                            if (!isset($this->_translate[$locale][$module])) {
+                                $this->_translate[$locale][$module] = array();
                             }
-                            $this->_translate[$locale]  = array_merge ($this->_translate[$locale], $lang);
-                            $this->_langLoaded[$locale] = 1;
+                            $this->_langLoaded[$locale]         = 1;
+                            $this->_translate[$locale][$module] = array_merge($this->_translate[$locale][$module],
+                                $lang);
                         }
                     }
                 }
@@ -321,20 +322,28 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     public function getTranslatedStrings($locale)
     {
         $locale = $this->_convertToZendLocale($locale);
-        if (isset ($this->_translate[$locale])) {
+        if (isset($this->_translate[$locale])) {
             $toReturn = $this->_translate[$locale];
         } else {
-            $toReturn = array ();
+            $toReturn = array();
         }
         return $toReturn;
     }
 
-    public function translate($messageId, $locale = null)
+    public function get($messageId, $moduleName, $locale = null)
     {
         $locale = $this->_convertToZendLocale($locale);
-        if (isset($this->_translate[$locale]) && isset($this->_translate[$locale][$messageId])) {
-            $toReturn = $this->_translate[$locale][$messageId];
+
+        if (isset($this->_translate[$locale][$moduleName]) &&
+            isset($this->_translate[$locale][$moduleName][$messageId])) {
+            //$toReturn = "$moduleName - " . $this->_translate[$locale][$moduleName][$messageId];
+            $toReturn = $this->_translate[$locale][$moduleName][$messageId];
+        } else if (isset($this->_translate[$locale]['Default']) &&
+            isset($this->_translate[$locale]['Default'][$messageId])) {
+            //$toReturn = "Default - " . $this->_translate[$locale]['Default'][$messageId];
+            $toReturn = $this->_translate[$locale]['Default'][$messageId];
         } else{
+            //$toReturn = "NONE - " . $messageId;
             $toReturn = $messageId;
         }
         return $toReturn;

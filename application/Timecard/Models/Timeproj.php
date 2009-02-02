@@ -120,9 +120,8 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function recordValidate()
     {
-        $data      = $this->_data;
-        $fields    = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $translate = Phprojekt::getInstance()->getTranslate();
+        $data   = $this->_data;
+        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         $amount = str_replace(":", "", $data['amount']);
         if (strlen($amount) == 6) {
@@ -131,8 +130,8 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         $amount = intval($amount);
         if (($amount > 2359) || ($amount <= 0)) {
             $this->_validate->error->addError(array(
-                'field'   => $translate->translate('Amount'),
-                'message' => $translate->translate('The amount is invalid')));
+                'field'   => Phprojekt::getInstance()->translate('Amount'),
+                'message' => Phprojekt::getInstance()->translate('The amount is invalid')));
                 return false;
         }
 

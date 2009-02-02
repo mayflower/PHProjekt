@@ -71,15 +71,14 @@ class Core_ModuleController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             $model   = $this->getModelObject();
-            $message = $translate->translate('The module was added correctly');
+            $message = Phprojekt::getInstance()->translate('The module was added correctly');
         } else {
             $model   = $this->getModelObject()->find($id);
-            $message = $translate->translate('The module was edited correctly');
+            $message = Phprojekt::getInstance()->translate('The module was edited correctly');
         }
 
         // Set the hidden name to name or label
@@ -130,8 +129,7 @@ class Core_ModuleController extends Core_IndexController
      */
     public function jsonDeleteAction()
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -146,9 +144,9 @@ class Core_ModuleController extends Core_IndexController
             $tmpDatabase     = $databaseManager->deleteModule();
 
             if ($tmpModule === false || $tmpDatabase === false) {
-                $message = $translate->translate('The module can not be deleted');
+                $message = Phprojekt::getInstance()->translate('The module can not be deleted');
             } else {
-                $message = $translate->translate('The module was deleted correctly');
+                $message = Phprojekt::getInstance()->translate('The module was deleted correctly');
             }
 
             $return = array('type'    => 'success',

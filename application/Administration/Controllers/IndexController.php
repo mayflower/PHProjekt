@@ -77,7 +77,6 @@ class Administration_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $translate     = Phprojekt::getInstance()->getTranslate();
         $module        = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
         $configuration->setModule($module);
@@ -85,10 +84,10 @@ class Administration_IndexController extends IndexController
         $message = $configuration->validateConfigurations($this->getRequest()->getParams());
 
         if (!empty($message)) {
-            $message = $translate->translate($message);
+            $message = Phprojekt::getInstance()->translate($message);
             $type    = "error";
         } else {
-            $message = $translate->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             $configuration->setConfigurations($this->getRequest()->getParams());
             $type = "success";
         }

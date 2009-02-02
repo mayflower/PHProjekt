@@ -44,14 +44,13 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
      */
     function getProjectModulePermissionsById($projectId)
     {
-        $modules   = array();
-        $model     = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        $translate = Phprojekt::getInstance()->getTranslate();
+        $modules = array();
+        $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
         foreach ($model->fetchAll(' active = 1 AND (saveType = 0 OR saveType = 2) ', ' name ASC ') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']        = $module->id;
             $modules['data'][$module->id]['name']      = $module->name;
-            $modules['data'][$module->id]['label']     = $translate->translate($module->label);
+            $modules['data'][$module->id]['label']     = Phprojekt::getInstance()->translate($module->label);
             $modules['data'][$module->id]['inProject'] = false;
         }
         $where  = ' ProjectModulePermissions.projectId = ' . $projectId;

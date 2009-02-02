@@ -63,14 +63,13 @@ class Core_Models_UserSetting
     public function getFieldDefinition()
     {
         $converted = array();
-        $translate = Phprojekt::getInstance()->getTranslate();
 
         // password
         $data = array();
         $data['key']      = 'password';
-        $data['label']    = $translate->translate('Password');
+        $data['label']    = Phprojekt::getInstance()->translate('Password');
         $data['type']     = 'password';
-        $data['hint']     = $translate->translate('Password');
+        $data['hint']     = Phprojekt::getInstance()->translate('Password');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -84,9 +83,9 @@ class Core_Models_UserSetting
 
         $data = array();
         $data['key']      = 'confirmValue';
-        $data['label']    = $translate->translate('Confirm Password');
+        $data['label']    = Phprojekt::getInstance()->translate('Confirm Password');
         $data['type']     = 'password';
-        $data['hint']     = $translate->translate('Confirm Password');
+        $data['hint']     = Phprojekt::getInstance()->translate('Confirm Password');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -100,9 +99,9 @@ class Core_Models_UserSetting
 
         $data = array();
         $data['key']      = 'oldValue';
-        $data['label']    = $translate->translate('Old Password');
+        $data['label']    = Phprojekt::getInstance()->translate('Old Password');
         $data['type']     = 'password';
-        $data['hint']     = $translate->translate('Old Password');
+        $data['hint']     = Phprojekt::getInstance()->translate('Old Password');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
@@ -117,9 +116,9 @@ class Core_Models_UserSetting
         // email
         $data = array();
         $data['key']      = 'email';
-        $data['label']    = $translate->translate('Email');
+        $data['label']    = Phprojekt::getInstance()->translate('Email');
         $data['type']     = 'text';
-        $data['hint']     = $translate->translate('Email');
+        $data['hint']     = Phprojekt::getInstance()->translate('Email');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -134,9 +133,9 @@ class Core_Models_UserSetting
         // language
         $data = array();
         $data['key']      = 'language';
-        $data['label']    = $translate->translate('Language');
+        $data['label']    = Phprojekt::getInstance()->translate('Language');
         $data['type']     = 'selectbox';
-        $data['hint']     = $translate->translate('Language');
+        $data['hint']     = Phprojekt::getInstance()->translate('Language');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
@@ -153,9 +152,9 @@ class Core_Models_UserSetting
         // timeZone
         $data = array();
         $data['key']      = 'timeZone';
-        $data['label']    = $translate->translate('Time Zone');
+        $data['label']    = Phprojekt::getInstance()->translate('Time Zone');
         $data['type']     = 'selectbox';
-        $data['hint']     = $translate->translate('Time Zone');
+        $data['hint']     = Phprojekt::getInstance()->translate('Time Zone');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -179,9 +178,8 @@ class Core_Models_UserSetting
 
     public function validateSettings($params)
     {
-        $translate = Phprojekt::getInstance()->getTranslate();
-        $message   = null;
-        $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $message = null;
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
 
         // Passwords
@@ -191,19 +189,19 @@ class Core_Models_UserSetting
         $currentPassValue = $setting->getSetting('password');
 
         if (!empty($newPassValue) && $newPassValue != $confirmPassValue) {
-            $message = $translate->translate("The password and confirmation are different or empty");
+            $message = Phprojekt::getInstance()->translate("The password and confirmation are different or empty");
         } else if (!empty($newPassValue) && $currentPassValue != Phprojekt_Auth::cryptString($oldPassValue)) {
-            $message = $translate->translate("The old password provided is invalid");
+            $message = Phprojekt::getInstance()->translate("The old password provided is invalid");
         }
 
         // TimeZone
         if (!in_array($params['timeZone'], $this->_timeZoneRange)) {
-            $message = $translate->translate("The Time Zone value is out of range");
+            $message = Phprojekt::getInstance()->translate("The Time Zone value is out of range");
         }
 
         // Language
         if (!array_key_exists($params['language'], $this->_languageRange)) {
-            $message = $translate->translate("The Language value do not exists");
+            $message = Phprojekt::getInstance()->translate("The Language value do not exists");
         }
         return $message;
     }

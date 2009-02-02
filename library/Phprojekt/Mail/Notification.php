@@ -244,7 +244,6 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     private function _setCustomBody()
     {
         $this->_view     = Phprojekt::getInstance()->getView();
-        $translate       = Phprojekt::getInstance()->getTranslate();
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($fieldDefinition as $key => $field) {
@@ -300,10 +299,12 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 $actionLabel          = "modified";
         }
 
-        $this->_view->title = $translate->translate('A ') . $this->_tableName . $translate->translate(' item has been ')
-            . $translate->translate($actionLabel);
+        $this->_view->title = Phprojekt::getInstance()->translate('A ')
+            . $this->_tableName
+            . Phprojekt::getInstance()->translate(' item has been ')
+            . Phprojekt::getInstance()->translate($actionLabel);
 
-        $this->_view->translate = $translate;
+        $this->_view->translate = Phprojekt::getInstance()->getTranslate();
 
         if ($this->_bodyMode == self::MODE_TEXT) {
             switch (Phprojekt::getInstance()->getConfig()->mailEndOfLine) {

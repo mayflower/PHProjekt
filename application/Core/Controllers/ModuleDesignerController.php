@@ -73,11 +73,10 @@ class Core_ModuleDesignerController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $translate  = Phprojekt::getInstance()->getTranslate();
-        $id         = (int) $this->getRequest()->getParam('id');
-        $data       = $this->getRequest()->getParam('designerData');
-        $model      = null;
-        $module     = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
+        $id     = (int) $this->getRequest()->getParam('id');
+        $data   = $this->getRequest()->getParam('designerData');
+        $model  = null;
+        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
         if (empty($module)) {
             $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label'));
         }
@@ -96,15 +95,15 @@ class Core_ModuleDesignerController extends Core_IndexController
                 $tableData = $this->_getTableData($data);
                 if (!$databaseManager->syncTable($data, $module, $tableData)) {
                     $type    = 'error';
-                    $message = $translate->translate('There was an error writing the table');
+                    $message = Phprojekt::getInstance()->translate('There was an error writing the table');
                 } else {
                     // Update DatabaseManager Table
                     $databaseManager->saveData($module, $data);
 
                     if (empty($id)) {
-                        $message = $translate->translate('The table module was created correctly');
+                        $message = Phprojekt::getInstance()->translate('The table module was created correctly');
                     } else {
-                        $message = $translate->translate('The table module was edited correctly');
+                        $message = Phprojekt::getInstance()->translate('The table module was edited correctly');
                     }
                     $type = 'success';
                 }

@@ -80,13 +80,13 @@ class Phprojekt_Language extends Zend_Translate
      *
      * @return string
      */
-    public function translate($message, $locale = null)
+    public function translate($message, $moduleName = 'Default', $locale = null)
     {
         if (null !== $locale) {
             $this->_loadLangFile($locale);
             $this->_loacale = $locale;
         }
-        return $this->_adapter->translate($message, $this->_loacale);
+        return $this->_adapter->get($message, $moduleName, $this->_loacale);
     }
 
     /**
