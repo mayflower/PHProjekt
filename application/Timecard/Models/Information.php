@@ -54,60 +54,65 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $converted = array();
         $translate = Phprojekt::getInstance()->getTranslate();
 
+        // date
+        $dateData = array();
+        $dateData['key']      = 'date';
+        $dateData['label']    = $translate->translate('date');
+        $dateData['type']     = 'date';
+        $dateData['hint']     = $translate->translate('date');
+        $dateData['order']    = 0;
+        $dateData['position'] = 1;
+        $dateData['fieldset'] = '';
+        $dateData['range']    = array('id'   => '',
+                                      'name' => '');
+        $dateData['required'] = true;
+        $dateData['readOnly'] = true;
+        $dateData['tab']      = 1;
+
+        // startDate
+        $startDateData = array();
+        $startDateData['key']      = 'startTime';
+        $startDateData['label']    = $translate->translate('startTime');
+        $startDateData['type']     = 'time';
+        $startDateData['hint']     = $translate->translate('startTime');
+        $startDateData['order']    = 0;
+        $startDateData['position'] = 2;
+        $startDateData['fieldset'] = '';
+        $startDateData['range']    = array('id'   => '',
+                                           'name' => '');
+        $startDateData['required'] = true;
+        $startDateData['readOnly'] = false;
+        $startDateData['tab']      = 1;
+
+        // endDate
+        $endDateData = array();
+        $endDateData['key']      = 'endTime';
+        $endDateData['label']    = $translate->translate('endTime');
+        $endDateData['type']     = 'time';
+        $endDateData['hint']     = $translate->translate('endTime');
+        $endDateData['order']    = 0;
+        $endDateDatadata['position'] = 3;
+        $endDateData['fieldset'] = '';
+        $endDateData['range']    = array('id'   => '',
+                                         'name' => '');
+        $endDateData['required'] = false;
+        $endDateData['readOnly'] = false;
+        $endDateData['tab']      = 1;
+
         switch ($ordering) {
             case 'today':
             default:
-                // Sum of hours
-                $data = array();
-                $data['key']      = 'startTime';
-                $data['label']    = $translate->translate('startTime');
-                $data['type']     = 'time';
-                $data['hint']     = $translate->translate('startTime');
-                $data['order']    = 0;
-                $data['position'] = 2;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = true;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-
-                $converted[] = $data;
-
-                // Sum of hours
-                $data = array();
-                $data['key']      = 'endTime';
-                $data['label']    = $translate->translate('endTime');
-                $data['type']     = 'time';
-                $data['hint']     = $translate->translate('endTime');
-                $data['order']    = 0;
-                $data['position'] = 3;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = false;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-
-                $converted[] = $data;
+                $converted[] = $startDateData;
+                $converted[] = $endDateData;
+                break;
+            case 'export':
+                $converted[] = $dateData;
+                $converted[] = $startDateData;
+                $converted[] = $endDateData;
                 break;
             case 'month':
                 // date
-                $data = array();
-                $data['key']      = 'date';
-                $data['label']    = $translate->translate('date');
-                $data['type']     = 'date';
-                $data['hint']     = $translate->translate('date');
-                $data['order']    = 0;
-                $data['position'] = 1;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                  'name' => '');
-                $data['required'] = true;
-                $data['readOnly'] = true;
-                $data['tab']      = 1;
-
-                $converted[] = $data;
+                $converted[] = $dateData;
 
                 // Sum of hours
                 $data = array();

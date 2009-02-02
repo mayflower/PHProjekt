@@ -62,15 +62,66 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     setSaveChangesButton:function(meta) {
     },
 
+    setExportButton:function(meta) {
+        var params = {
+            baseClass: "positive",
+            iconClass: "export",
+            alt:       "Export",
+            disabled:  false,
+            label:     phpr.nls.get("Working Times")
+
+        };
+        var exportButtonHours = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(exportButtonHours.domNode);
+        dojo.connect(exportButtonHours, "onClick", dojo.hitch(this, "exportHourData"));
+
+        var params = {
+            baseClass: "positive",
+            iconClass: "export",
+            alt:       "Export",
+            disabled:  false,
+            label:     phpr.nls.get("Project bookings")
+        };
+        var exportButtonProjects = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(exportButtonProjects.domNode);
+        dojo.connect(exportButtonProjects, "onClick", dojo.hitch(this, "exportProjectData"));
+    },
+
+    exportHourData:function() {
+        // summary:
+        //    Open a new widnows in CVS mode
+        // description:
+        //    Export hours of the month
+        var month = this.main.form.dateObject.getMonth() + 1;
+        var year  = this.main.form.dateObject.getFullYear();
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvHourList"
+            + "/month/" + month
+            + "/year/" + year);
+        return false;
+    },
+
+    exportProjectData:function() {
+        // summary:
+        //    Open a new widnows in CVS mode
+        // description:
+        //    Export projects of the month
+        var month = this.main.form.dateObject.getMonth() + 1;
+        var year  = this.main.form.dateObject.getFullYear();
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvBookingList"
+            + "/month/" + month
+            + "/year/" + year);
+        return false;
+    },
+
     showForm:function(e) {
         if (e.cellIndex == 0) {
-            var item  = this.grid.getItem(e.rowIndex);
+            var item = this.grid.getItem(e.rowIndex);
             var date = this.grid.store.getValue(item, 'date');
             if (date) {
-                var year = date.substr(0, 4);
+                var year  = date.substr(0, 4);
                 var month = date.substr(5, 2);
-                var day = date.substr(8, 2);
-                var date = new Date(year, (month - 1), day);
+                var day   = date.substr(8, 2);
+                var date  = new Date(year, (month - 1), day);
                 this.main.form.setDate(date);
                 this.main.form.reloadDateView();
                 this.publish("changeDate", [date]);
