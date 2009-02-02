@@ -149,7 +149,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.hideSuggest();
 
-        this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/"+ phpr.language;
+        this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
@@ -682,7 +682,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
-            phpr.nls    = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+            phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
             this.reload();
             })
         });
@@ -699,7 +699,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dijit.byId('helpDialog').attr('title', phpr.nls.get('Help'));
         dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.module);
 
-        var helpData  = phpr.nls.get('Content Help for ' + phpr.module);
+        var helpData  = phpr.nls.get('Content Help');
         if (typeof(helpData) == 'object') {
             var container = new dijit.layout.TabContainer({
                 style: 'height:100%;',
@@ -707,9 +707,17 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             }, document.createElement('div'));
 
             for (i in helpData) {
+                var text = helpData[i];
+                // Check if the tab have DEFAULT text
+                if (text == 'DEFAULT') {
+                    var defaultHelpData = phpr.nls.get('Content Help', 'Default');
+                    if (typeof(defaultHelpData) == 'object' && defaultHelpData[i]) {
+                        text = defaultHelpData[i];
+                    }
+                }
                 container.addChild(new dijit.layout.ContentPane({
                     title:   i,
-                    content: helpData[i]
+                    content: text
                 }));
             }
 

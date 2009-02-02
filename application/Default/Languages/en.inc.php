@@ -244,3 +244,8 @@ $lang["Stopped"] = "Stopped";
 $lang["Re-Opened"] = "Re-Opened";
 $lang["Waiting"] = "Waiting";
 $lang["Accepted"] = "Accepted";
+
+// Help
+$lang["Content Help"]["General"] = "This is the General Help";
+$lang["Content Help"]["Access"] = "The access system<br />This is the Access Help";
+$lang["Content Help"]["Roles"] = "The role system<br />This is the Role Help";
