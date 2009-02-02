@@ -41,7 +41,10 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         if (typeof view == "undefined") {
             view = 'month';
         }
-        this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/year/"+year+"/month/"+month+"/view/"+view;
+        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList"
+            + "/year/" + year
+            + "/month/" + month
+            + "/view/" + view;
     },
 
     showTags:function() {
