@@ -502,7 +502,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     doClientPaging:false,
 
     _assertIsItem:function(item) {
-	},
+    },
 
     _filterResponse:function(data) {
 

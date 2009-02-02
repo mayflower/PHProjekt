@@ -693,7 +693,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Adds a tab for sending a notification.
         // description:
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
-        //	  or modified. It has a "Send Notification" checkbox.
+        //    or modified. It has a "Send Notification" checkbox.
         // Add field
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '');
         // Add the tab to the form
@@ -706,8 +706,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    The form is able to receive some values when it is instanced for adding and item, and put that values
         //    in each field.
-        for (var field in this._presetValues) {
-            data[0][field] = this._presetValues[field];
+        if (this._presetValues && (typeof this._presetValues === 'object')) {
+            for (var field in this._presetValues) {
+                data[0][field] = this._presetValues[field];
+            }
         }
     }
 });

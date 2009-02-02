@@ -307,7 +307,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var endDate   = new Date(this.gantt.MAX_DATE);
         var months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         var surface   = dojox.gfx.createSurface("timeLine", 1024, 100);
-	    var m         = dojox.gfx.matrix;
+        var m         = dojox.gfx.matrix;
 
         var html = '<ul class="sub_project">';
         html += '<li style="border-left:none; border-right:none; width:250px; float: left;">&nbsp;</li>';
@@ -359,15 +359,15 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 var size = 8;
             }
             phpr.Gfx.makeText(surface, {x: x, y: 85, text: phpr.nls.get(month) + " " + year, align: "start"},
-		    {family: "Times", size: size + "pt"}, "black", "black")
-		    .setTransform(m.rotategAt(-75, x, 85));
+            {family: "Times", size: size + "pt"}, "black", "black")
+            .setTransform(m.rotategAt(-75, x, 85));
         }
         html += '</ul></li></ul>';
 
         element.innerHTML = html;
         this.gantt.FIX_VALUE = this.scale;
 
-		return totalWidth;
+        return totalWidth;
     },
 
     dialogCallback:function(posMin, posMax, nodeToChange, currentNode, dialogType) {

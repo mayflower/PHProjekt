@@ -21,7 +21,7 @@ dojo.provide("phpr.Calendar.Main");
 
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _date: new Date(),
-    
+
     constructor:function() {
         this.module = "Calendar";
         this.loadFunctions(this.module);
@@ -34,7 +34,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.dayListWidget = phpr.Calendar.DayList;
         this.formWidget    = phpr.Calendar.Form;
         this.treeWidget    = phpr.Calendar.Tree;
-        this._listMode = 'grid';
+        this._listMode     = 'grid';
     },
 
     reload:function(mode, date) {
@@ -58,7 +58,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
-        
+
         if (mode != null) {
             this._listMode = mode;
         }
@@ -76,10 +76,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // summary:
         //   This function loads the Dojo Grid
         this._listMode = 'grid';
-        this.dayList = null;
+        this.dayList   = null;
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        dojo.byId('dayViewButtonBar').style.display='none';
+        dojo.byId('dayViewButtonBar').style.display = 'none';
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
@@ -88,10 +88,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // summary:
         //    This function loads the Day List instead of the Dojo Grid
         this._listMode = 'dayList';
-        this.grid = null;
+        this.grid      = null;
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        dojo.byId('dayViewButtonBar').style.display='inline';
+        dojo.byId('dayViewButtonBar').style.display = 'inline';
         if (date != null) {
             this._date = date;
         }
@@ -165,7 +165,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             if (this._listMode == 'grid') {
                 params['startDate'] = '';
                 params['startTime'] = '08:00';
-                params['endTime']   = '10:00';    
+                params['endTime']   = '10:00';
 
             } else if (this._listMode == 'dayList') {
                 var tmpDate      = dijit.byId("selectDate").attr('value');
@@ -174,7 +174,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
                 if (startTime == undefined) {
                     params['startTime'] = '08:00';
-                    params['endTime']   = '10:00';    
+                    params['endTime']   = '10:00';
 
                 } else {
                     params['startTime'] = startTime;
