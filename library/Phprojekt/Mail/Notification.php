@@ -206,7 +206,8 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 }
                 $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
                 $email   = $setting->getSetting('email', (int) $userId);
-                $this->_customTo[$i] = array();
+
+                $this->_customTo[$i]    = array();
                 $this->_customTo[$i][0] = $email;
 
                 $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
@@ -274,7 +275,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                     }
                     break;
                 case 'time':
-                    $temp = $this->_model->$field['key'];
+                    $temp  = $this->_model->$field['key'];
                     $value = substr($temp, 0, strrpos($temp, ":"));
                     break;
                 case 'text':
@@ -325,18 +326,18 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         // Is it an ADD or EDIT action?
         switch ($this->_changes[0]['action']) {
             case self::LAST_ACTION_ADD:
-                $actionLabel = "created";
+                $actionLabel          = "created";
                 $this->_view->changes = "";
                 break;
             case self::LAST_ACTION_EDIT:
             default:
-                $action = self::LAST_ACTION_EDIT;
+                $action               = self::LAST_ACTION_EDIT;
                 $this->_view->changes = $this->_changes;
-                $actionLabel = "modified";
+                $actionLabel          = "modified";
         }
 
         $this->_view->title = $translate->translate('A ') . $this->_tableName . $translate->translate(' item has been ')
-                              . $translate->translate($actionLabel);
+            . $translate->translate($actionLabel);
 
         $this->_view->translate = $translate;
 
@@ -398,7 +399,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
 
         // Creates the Zend_Mail_Transport_Smtp object
-        $smtpTransport= $this->_setTransport();
+        $smtpTransport = $this->_setTransport();
         $this->send($smtpTransport);
     }
 

@@ -46,35 +46,35 @@ class Phprojekt {
      *
      * @var Zend_Config_Ini
      */
-	protected $_config;
+    protected $_config;
 
     /**
      * Db class
      *
      * @var Zend_Db
      */
-	protected $_db;
+    protected $_db;
 
     /**
      * Log class
      *
      * @var Phprojekt_Log
      */
-	protected $_log;
+    protected $_log;
 
     /**
      * Translate class
      *
      * @var Phprojekt_Language
      */
-	protected $_translate;
+    protected $_translate;
 
     /**
      * View class
      *
      * @var Zend_View
      */
-	protected $_view;
+    protected $_view;
 
     /**
      * Return this class only one time
@@ -97,8 +97,8 @@ class Phprojekt {
      */
     public function getConfig()
     {
-		return $this->_config;
-	}
+        return $this->_config;
+    }
 
     /**
      * Return the Db class
@@ -108,16 +108,16 @@ class Phprojekt {
      */
     public function getDb()
     {
-		if (null === $this->_db) {
-			try {
-				$this->_db = Zend_Db::factory($this->_config->database);
-			} catch (Zend_Db_Adapter_Exception $error) {
-				echo $error->getMessage();
-				die();
-			}
-		}
-		return $this->_db;
-	}
+        if (null === $this->_db) {
+            try {
+                $this->_db = Zend_Db::factory($this->_config->database);
+            } catch (Zend_Db_Adapter_Exception $error) {
+                echo $error->getMessage();
+                die();
+            }
+        }
+        return $this->_db;
+    }
 
     /**
      * Return the Log class
@@ -125,18 +125,18 @@ class Phprojekt {
      *
      * @return Phprojekt_Log
      */
-	public function getLog()
-	{
-		if (null === $this->_log) {
+    public function getLog()
+    {
+        if (null === $this->_log) {
             try {
                 $this->_log = new Phprojekt_Log($this->_config);
-			} catch (Zend_Log_Exception $error) {
-				echo $error->getMessage();
-				die();
-			}
-		}
-		return $this->_log;
-	}
+            } catch (Zend_Log_Exception $error) {
+                echo $error->getMessage();
+                die();
+            }
+        }
+        return $this->_log;
+    }
 
     /**
      * Return the Translate class
@@ -144,33 +144,33 @@ class Phprojekt {
      *
      * @return Phprojekt_Language
      */
-	public function getTranslate()
-	{
-		if (null === $this->_translate) {
+    public function getTranslate()
+    {
+        if (null === $this->_translate) {
             $this->_translate = new Phprojekt_Language(Phprojekt_User_User::getSetting("language",
                 $this->_config->language));
-		}
-		return $this->_translate;
-	}
+        }
+        return $this->_translate;
+    }
 
     /**
      * Return the View class
      *
      * @return Zend_View
      */
-	public function getView()
-	{
-		return $this->_view;
-	}
+    public function getView()
+    {
+        return $this->_view;
+    }
 
-	/**
-	 * Initialize the paths,
-	 * the config values and all the render stuff
-	 *
-	 * @return void
-	 */
-	public function _initialize()
-	{
+    /**
+     * Initialize the paths,
+     * the config values and all the render stuff
+     *
+     * @return void
+     */
+    public function _initialize()
+    {
         define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
         define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
         if (!defined('PHPR_CONFIG_FILE')) {
@@ -235,18 +235,18 @@ class Phprojekt {
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
         $front->setParam('useDefaultControllerAlways', true);
-	}
+    }
 
-	/**
-	 * Cache the View Class
-	 *
-	 * @param array $helperPaths Array with all the folders with helpers
-	 *
-	 * @return Zend_View
-	 */
-	private function _setView($helperPaths)
-	{
-	    $viewNamespace = new Zend_Session_Namespace('index_View');
+    /**
+     * Cache the View Class
+     *
+     * @param array $helperPaths Array with all the folders with helpers
+     *
+     * @return Zend_View
+     */
+    private function _setView($helperPaths)
+    {
+        $viewNamespace = new Zend_Session_Namespace('index_View');
         if (!isset($viewNamespace->view)) {
             $view = new Zend_View();
             $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
@@ -263,16 +263,16 @@ class Phprojekt {
         $this->_view = $view;
 
         return $view;
-	}
+    }
 
-	/**
-	 * Cache the folders with helpers files
-	 *
-	 * @return array
-	 */
-	private function _getHelperPaths()
-	{
-	    $helperPathNamespace = new Zend_Session_Namespace('index_HelperPath');
+    /**
+     * Cache the folders with helpers files
+     *
+     * @return array
+     */
+    private function _getHelperPaths()
+    {
+        $helperPathNamespace = new Zend_Session_Namespace('index_HelperPath');
         if (!isset($helperPathNamespace->helperPaths)) {
             $helperPaths = array();
             foreach (scandir(PHPR_CORE_PATH) as $module) {
@@ -290,15 +290,15 @@ class Phprojekt {
         }
 
         return $helperPaths;
-	}
+    }
 
-	/**
-	 * Run the dispatch
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
+    /**
+     * Run the dispatch
+     *
+     * @return void
+     */
+    public function run()
+    {
         try {
             Zend_Controller_Front::getInstance()->dispatch();
         } catch (Exception $error) {

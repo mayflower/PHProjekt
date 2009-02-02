@@ -62,7 +62,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
-        
+
         // Draw the tags
         this.showTags();
     },
@@ -94,7 +94,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
                 this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
-            })      
+            })
         });
     },
 
@@ -121,12 +121,12 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         //    Returns useful data about an event.
         // Description:
         //    Returns useful data about an event, like whether it is inside or outside the 8:00 to 20:00 range,
-        // in what row of the shown table should it start and end, and also, if it is set the 'askedTime' 
+        // in what row of the shown table should it start and end, and also, if it is set the 'askedTime'
         // parameter whether that time matchs the start time, is just inside the period or it is outside that period.
         var result            = new Array();
         var scheduleStartDate = new Date();
         var scheduleEndDate   = new Date();
-        
+
         scheduleStartDate.setHours(8);
         scheduleStartDate.setMinutes(0);
         scheduleStartDate.setSeconds(0);
@@ -158,7 +158,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
 
         var startDate = new Date();
         var endDate   = new Date();
-        
+
         startDate.setHours(startHour);
         startDate.setMinutes(startMinutes);
         startDate.setSeconds(0);
@@ -182,7 +182,7 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
             startDate = scheduleStartDate;
         }
 
-        // If end time is after 20:00, the schedule must show it until the 19:45 row inclusive (but the text will 
+        // If end time is after 20:00, the schedule must show it until the 19:45 row inclusive (but the text will
         // show the real info)
         if (endDate > scheduleEndDate) {
             endDate = scheduleEndDate;
@@ -270,16 +270,16 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         // Determine how many columns to show
         var maxSimultEvents = 1;
         for (var i in timeSquare) {
-        	var currentEventNow = -1;
-        	for (var event in content) {
-        		var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'], timeSquare[i]['hour']);
-        		if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
-    				currentEventNow++;
+            var currentEventNow = -1;
+            for (var event in content) {
+                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'], timeSquare[i]['hour']);
+                if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
+                    currentEventNow++;
                 }
             }
             if (currentEventNow >= maxSimultEvents) {
-           	    maxSimultEvents = currentEventNow + 1;
-           	}
+                maxSimultEvents = currentEventNow + 1;
+            }
         }
         var widthColumns = Math.floor((100 - this._widthHourColumn) / maxSimultEvents);
 
@@ -298,8 +298,8 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         for (var event in content) {
             var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
 
-   	        if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
-       	        var eventBegins = eventInfo['quarterBeginning'];
+            if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
+                var eventBegins = eventInfo['quarterBeginning'];
 
                 // Find which column to use
                 var useColumn = -1;
@@ -379,16 +379,18 @@ dojo.declare("phpr.Calendar.DayList", phpr.Component, {
         // Summary:
         //    Converts HTML tags and code to readable HTML entities
         // Description:
-        //    Converts HTML tags and code to readable HTML entities. 
+        //    Converts HTML tags and code to readable HTML entities.
         //    Example: receives 'This is a <note>' and returns 'This is a &#60;note&#62;'
-        var i;
-        var output = '';
-        var char   = '';
-    
-        for(i=0; i < str.length; i++) {
-            char = str.charCodeAt(i);
+        var output    = '';
+        var character = '';
 
-            if (char == 10 || char == 13 || (char >47 && char<58) || (char>62 && char<127)) {
+        for (var i = 0; i < str.length; i++) {
+            character = str.charCodeAt(i);
+
+            if (character == 10 ||
+                character == 13 ||
+                (character > 47 && character < 58) ||
+                (character > 62 && character < 127)) {
                 output += str.charAt(i);
             } else {
                 output += "&#" + str.charCodeAt(i) + ";";

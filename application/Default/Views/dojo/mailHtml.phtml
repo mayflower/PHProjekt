@@ -30,7 +30,7 @@ if (!empty($this->changes))
             <td style="color:#888888;" width=120><b><?php echo strtoupper($this->translate->translate('Old value')); ?></b></td>
         </tr>
     <?php
-    foreach ($this->changes as $change)	{ ?>
+    foreach ($this->changes as $change) { ?>
         <tr>
             <td><i><?php echo $change['field'] ?></i></td>
             <td><i><?php echo $change['oldValue'] ?></i></td>

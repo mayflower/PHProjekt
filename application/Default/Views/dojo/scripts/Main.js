@@ -718,6 +718,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         } else {
             dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available'));
         }
-		dijit.byId('helpDialog').show();
+        dijit.byId('helpDialog').show();
     }
 });
