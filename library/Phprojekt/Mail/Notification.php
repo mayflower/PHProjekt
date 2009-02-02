@@ -248,43 +248,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($fieldDefinition as $key => $field) {
-            $value = "";
-            switch ($field['type']) {
-                case 'selectbox':
-                case 'multipleselectbox':
-                    // Search the value
-                    foreach ($field['range'] as $range) {
-                        if ($range['id'] == $this->_model->$field['key']) {
-                            $value = $range['name'];
-                        }
-                    }
-                    break;
-                case 'percentage':
-                    $value = number_format($this->_model->$field['key'], 2);
-                    break;
-                case 'upload':
-                    $i = 0;
-                    $files = split('\|\|', $this->_model->$field['key']);
-                    foreach ($files as $file) {
-                        $i++;
-                        if ($i > 1) {
-                            $value .= ', ';
-                        }
-                        $fileName = substr(strstr($file, '|'), 1);
-                        $value .= $fileName;
-                    }
-                    break;
-                case 'time':
-                    $temp  = $this->_model->$field['key'];
-                    $value = substr($temp, 0, strrpos($temp, ":"));
-                    break;
-                case 'text':
-                case 'textarea':
-                case 'date':
-                default:
-                    $value = $this->_model->$field['key'];
-                    break;
-            }
+            $value = Phprojekt_Converter_Text::convert($this->_model, $field);
 
             $fieldsView[] = array('label' => $field['label'],
                                   'value' => $value);

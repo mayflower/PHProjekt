@@ -108,7 +108,7 @@ class Phprojekt_Converter_Csv
             $data = array();
             foreach ($information->getFieldDefinition($order) as $field) {
                 $key    = $field['key'];
-                $value  = $cmodel->$key;
+                $value  = Phprojekt_Converter_Text::convert($cmodel, $field);
                 $data[] = $value;
             }
             $datas[] = $data;
