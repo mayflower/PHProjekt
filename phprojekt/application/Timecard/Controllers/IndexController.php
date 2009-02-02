@@ -121,10 +121,10 @@ class Timecard_IndexController extends IndexController
             $showId = $model->id;
         }
 
-        $return    = array('type'    => $type,
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $showId);
+        $return = array('type'    => $type,
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $showId);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -201,10 +201,10 @@ class Timecard_IndexController extends IndexController
             } else {
                 $message = $translate->translate(self::DELETE_TRUE_TEXT);
             }
-            $return  = array('type'    => 'success',
-                             'message' => $message,
-                             'code'    => 0,
-                             'id'      => $id);
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $id);
 
             echo Phprojekt_Converter_Json::convert($return);
         } else {
@@ -228,10 +228,10 @@ class Timecard_IndexController extends IndexController
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -269,10 +269,10 @@ class Timecard_IndexController extends IndexController
             $showId  = null;
         }
 
-        $return    = array('type'    => $type,
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $showId);
+        $return = array('type'    => $type,
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $showId);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -297,10 +297,10 @@ class Timecard_IndexController extends IndexController
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $model->id);
+        $return = array('type'    => 'success',
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => $model->id);
 
         echo Phprojekt_Converter_Json::convert($return);
     }
@@ -337,12 +337,58 @@ class Timecard_IndexController extends IndexController
         $setting->setSettings($this->getRequest()->getParams());
 
         $translate = Phprojekt::getInstance()->getTranslate();
-        $message = $translate->translate(self::EDIT_TRUE_TEXT);
+        $message   = $translate->translate(self::EDIT_TRUE_TEXT);
         $return    = array('type'    => 'success',
                            'message' => $message,
                            'code'    => 0,
                            'id'      => 0);
 
         echo Phprojekt_Converter_Json::convert($return);
+    }
+
+    /**
+     * Export the list of the hours in the month
+     *
+     * @requestparam integer year  Current year
+     * @requestparam integer month Current month
+     *
+     * @return void
+     */
+    public function csvHourListAction()
+    {
+        $userId = Phprojekt_Auth::getUserId();
+        $year   = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month  = (int) $this->getRequest()->getParam('month', date("m"));
+        if (strlen($month) == 1) {
+            $month = '0' . $month;
+        }
+        $where = sprintf('(ownerId = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
+
+        $records = $this->getModelObject()->fetchAll($where);
+
+        Phprojekt_Converter_Csv::convert($records, 'export');
+    }
+
+    /**
+     * Export the list of the project bookings in the month
+     *
+     * @requestparam integer year  Current year
+     * @requestparam integer month Current month
+     *
+     * @return void
+     */
+    public function csvBookingListAction()
+    {
+        $userId = Phprojekt_Auth::getUserId();
+        $year   = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month  = (int) $this->getRequest()->getParam('month', date("m"));
+        if (strlen($month) == 1) {
+            $month = '0' . $month;
+        }
+        $where   = sprintf('(ownerId = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
+        $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
+        $records = $model->fetchAll($where);
+
+        Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_DEFAULT);
     }
 }

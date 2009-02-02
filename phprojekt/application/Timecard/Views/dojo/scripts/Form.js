@@ -22,12 +22,12 @@ dojo.provide("phpr.Timecard.Form");
 dojo.declare("phpr.Timecard.Form", phpr.Component, {
     sendData:      new Array(),
     formdata:      new Array(),
+    dateObject:    null,
     _hourUrl:      null,
     _bookUrl:      null,
     _favoritesUrl: null,
     _formNode:     null,
     _date:         null,
-    _dateObject:   null,
     _contentBar:   null,
     _surface:      null,
 
@@ -80,11 +80,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // description:
         //    Set the date for use in the form
         if (undefined == date) {
-            this._dateObject = new Date();
+            this.dateObject = new Date();
         } else {
-            this._dateObject = date;
+            this.dateObject = date;
         }
-        this._date = phpr.Date.getIsoDate(this._dateObject);
+        this._date = phpr.Date.getIsoDate(this.dateObject);
     },
 
     loadView:function() {
@@ -180,13 +180,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Reload the Date view
         // description:
         //    Reload the HDate picker div with the current date
-        var month   = this._dateObject.getMonth();
-        var year    = this._dateObject.getFullYear();
+        var month   = this.dateObject.getMonth();
+        var year    = this.dateObject.getFullYear();
         var dd      = new Date(year, month, 0);
         var lastDay = dd.getDate() + 1;
         var week    = dd.getDay();
         var days    = new Array();
-        var today   = this._dateObject.getDate();
+        var today   = this.dateObject.getDate();
 
         var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
         var weeks = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
