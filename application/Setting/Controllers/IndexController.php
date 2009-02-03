@@ -59,7 +59,7 @@ class Setting_IndexController extends IndexController
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule($module);
         $metadata = $setting->getModel()->getFieldDefinition();
-        $records  = $setting->getList($moduleId, $metadata, Phprojekt_Auth::getUserId());
+        $records  = $setting->getList($moduleId, $metadata);
 
         $data = array("metadata" => $metadata,
                       "data"     => $records,
