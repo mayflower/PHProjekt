@@ -119,18 +119,24 @@ useCacheForClasses = true;
 
 [test-other-config]
 
-language                 = "de"
-webpath                  = "http://localhost/phprojekt"
-uploadpath               = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
+language = "de"
+
+webpath     = "http://localhost/phprojekt"
+uploadpath  = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
+
 database.adapter         = "Pdo_Mysql"
 database.params.host     = "localhost"
 database.params.username = "p6-user"
 database.params.password = "phprojekt"
 database.params.dbname   = "phprojekt-testing"
-log.debug.filename       = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
-log.crit.filename        = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
-itemsPerPage             = 3
-mailEndOfLine            = 0;
-smtpServer               = "localhost"
-compressedDojo           = true;
-useCacheForClasses       = true;
+
+log.debug.filename = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
+log.crit.filename  = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
+
+itemsPerPage  = 3
+
+mailEndOfLine = 0;
+smtpServer    = "localhost"
+
+compressedDojo     = true;
+useCacheForClasses = true;
