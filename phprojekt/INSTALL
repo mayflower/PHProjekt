@@ -26,7 +26,7 @@
  1. Download the compressed package file and decompress it into an appropriate
     folder outside the ones accessed by your HTTP server.
 
-     $ tar xzvf phprojekt.tar.gz
+     $ tar xzvpf phprojekt-6.X.tar.gz
      $ cp -R phprojekt/* /srv/www/
 
     Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
@@ -42,10 +42,16 @@
     database user that you want to use has the rights to load files.
     An example:
 
+    UNIX
       $ mysql -u root -p
       mysql> CREATE DATABASE 'phprojekt';
-      mysql> CREATE USER 'phprojekt'@'localhost' IDENTIFIED BY 'phprojekt_secret';
+      mysql> CREATE USER 'phprojekt'@'localhost' IDENTIFIED BY 'phprojekt_password';
       mysql> GRANT ALL PRIVILEGES ON 'phprojekt'.* TO 'phprojekt'@'localhost';
+    WINDOWS
+      $ mysql -u root -p
+      mysql> CREATE DATABASE phprojekt;
+      mysql> CREATE USER 'phprojekt'@'localhost' IDENTIFIED BY 'phprojekt_password';
+      mysql> GRANT ALL PRIVILEGES ON phprojekt.* TO 'phprojekt'@'localhost';
 
  4. Database:
 
@@ -55,9 +61,14 @@
     and load it into the database. You might want to use MySQL Administration tools
     or PHPMyAdmin. You can also use the command line to do so:
 
+    UNIX
       $ mysql -u phprojekt -p
       mysql> use phprojekt;
       mysql> \. /srv/www/docs/blank_database.sql
+    WINDOWS
+      $ mysql -u phprojekt -p
+      mysql> use phprojekt;
+      mysql> \. C:\phprojekt\docs\blank_database.sql
 
 3. Configuration
 
@@ -76,6 +87,7 @@
     tmp/ and to the log directory. You can set these permission using the chmod(1) command.
     Assuming your webserver runs on the group "www-data":
 
+    UNIX
       $ chmod -R 0750 /srv/www
       $ find /srv/www -type f -exec chmod -x '{}' ';'
       $ chmod -R g+w /srv/www/{tmp,application,logs}
