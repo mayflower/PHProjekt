@@ -4,11 +4,13 @@
     <div dojoType="dijit.layout.ContentPane" id="buttonsBox" region="top" class="prepend-0 append-0"
         style="height: 6%; overflow: hidden;">
         &nbsp;&nbsp;
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.loadGrid');">Grid view</button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.dayViewClick');">Day view</button>
+        {{view}}: 
+        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.loadGrid');">{{list}}</button>
+        &nbsp;&nbsp;&nbsp;
+        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.dayViewClick');">{{day|safe}}</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div id="dayViewButtonBar" style="display:none;">
-            {{selectDate}}
+            {{changeDate}}
             &nbsp;
             <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
             constraints="{datePattern:'yyyy-MM-dd', strict:true}"
@@ -18,7 +20,7 @@
             </button>
             &nbsp;&nbsp;&nbsp;
             <a href="javascript:dojo.publish('Calendar.setDay', [0]);">&lt;&lt;</a>&nbsp;
-            <a href="javascript:dojo.publish('Calendar.setDay', [1]);">Today</a>&nbsp;
+            <a href="javascript:dojo.publish('Calendar.setDay', [1]);">{{today}}</a>&nbsp;
             <a href="javascript:dojo.publish('Calendar.setDay', [2]);">&gt;&gt;</a>
         </div>
     </div>
