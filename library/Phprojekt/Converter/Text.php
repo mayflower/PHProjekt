@@ -13,7 +13,7 @@
  *
  * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id: Json.php 1277 2008-12-23 14:58:06Z gsolt $
+ * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @subpackage Core

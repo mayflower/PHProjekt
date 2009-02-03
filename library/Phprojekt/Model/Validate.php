@@ -15,7 +15,7 @@
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @author     Gustavao Solt <solt@mayflower.de>
  * @since      File available since Release 6.0
