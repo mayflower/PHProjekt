@@ -46,11 +46,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         this.render(["phpr.Calendar.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-            view: phpr.nls.get('View'),
-            list: phpr.nls.get('List'),
-            day: phpr.nls.get('Day'),
+            view:       phpr.nls.get('View'),
+            list:       phpr.nls.get('List'),
+            day:        phpr.nls.get('Day'),
             changeDate: phpr.nls.get('Change date'),
-            today: phpr.nls.get('Today')
+            today:      phpr.nls.get('Today')
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.cleanPage();
