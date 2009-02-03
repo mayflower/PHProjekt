@@ -125,6 +125,10 @@ class Core_UserController extends Core_IndexController
 
         Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
+        if (empty($id)) {
+            $id = $model->id;
+        }
+
         // Saving the settings
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
