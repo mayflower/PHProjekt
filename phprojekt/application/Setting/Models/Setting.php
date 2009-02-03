@@ -164,10 +164,12 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      *
      * @return array
      */
-    public function getList($moduleId, $metadata)
+    public function getList($moduleId, $metadata, $userId)
     {
         $settings  = array();
-        $userId    = (int) Phprojekt_Auth::getUserId();
+        if ($userId == null) {
+            $userId    = (int) Phprojekt_Auth::getUserId();
+        }
         $record    = $this->fetchAll('moduleId = '.$moduleId.' AND userId = '.$userId);
         $functions = get_class_methods($this->_object);
 
