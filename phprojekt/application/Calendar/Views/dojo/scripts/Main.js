@@ -46,7 +46,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         this.render(["phpr.Calendar.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
-            selectDate: phpr.nls.get('Change date')
+            view: phpr.nls.get('View'),
+            list: phpr.nls.get('List'),
+            day: phpr.nls.get('Day'),
+            changeDate: phpr.nls.get('Change date'),
+            today: phpr.nls.get('Today')
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.cleanPage();
@@ -169,7 +173,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
             } else if (this._listMode == 'dayList') {
                 var tmpDate      = dijit.byId("selectDate").attr('value');
-                var selectedDate = tmpDate.getFullYear() + '-' + tmpDate.getMonth() + 1 + '-' + tmpDate.getDate();
+                var selectedDate = tmpDate.getFullYear()
+                    + '-'
+                    + dojo.number.format(tmpDate.getMonth() + 1, {pattern: '00'})
+                    + '-'
+                    + dojo.number.format(tmpDate.getDate(), {pattern: '00'});
                 params['startDate'] = selectedDate;
 
                 if (startTime == undefined) {
