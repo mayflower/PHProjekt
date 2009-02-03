@@ -5,8 +5,8 @@
 ; The semicolons ';' are used preceding a comment line, or a line which has data
 ; that is not being used.
 
-; This file is divided into 3 sections: [production], [testing-mysql] y
-; [testing], every one has the same options. Each one of them corresponds to one
+; This file is divided into 2 sections: [production], and [test-other-config],
+; both has the same options. Each one of them corresponds to one
 ; environment, it is used only one at a time, depending on what is speficied in
 ; index.php, inside folder 'htdocs' in the line that has:
 ; define('PHPR_CONFIG_SECTION', 'production');
@@ -16,145 +16,121 @@
 
 [production]
 
-; LANGUAGE
+;;;;;;;;;;;;
+; LANGUAGE ;
+;;;;;;;;;;;;
+
 ; Here it is specified the default language for the system, could be "de" for
 ; German, "en" for English or "es" for Spanish. Actually, the language for each
 ; user is specified individually from Administration -> User
-language             = "de"
+language = "de"
 
+;;;;;;;;;
+; PATHS ;
+;;;;;;;;;
 
-; PATHS
 ; Where the site and the main file (index.php) are located (htdocs folder).
-webpath              = "http://localhost/phprojekt/htdocs/"
+webpath = "http://localhost/phprojekt/htdocs/"
 
 ; Path where will be placed files uploaded by the user.
-uploadpath           = "/var/www/phprojekt/tmp/"
+; UNIX
+uploadpath = "/var/www/phprojekt/tmp/"
+; WINDOWS
+;uploadpath = "C:\phprojekt\tmp\"
 
+;;;;;;;;;;;;
+; DATABASE ;
+;;;;;;;;;;;;
 
-; DATABASE
 ; For this Developer Release, it just has been tested with pdo_mysql.
-database.adapter            = "Pdo_Mysql"
+database.adapter = "Pdo_Mysql"
 
 ; The assigned name or IP address for the database server.
-database.params.host        = "localhost"
+database.params.host = "localhost"
 
 ; Username and password with the appropriate rights for Phprojekt to access to
 ; the database.
-database.params.username    = "p6-user"
-database.params.password    = "phprojekt"
+database.params.username = "phprojekt"
+database.params.password = "phprojekt_password"
 
 ; Name of the database, inside the server
-database.params.dbname      = "phprojekt"
+database.params.dbname = "phprojekt"
 
+;;;;;;;
+; LOG ;
+;;;;;;;
 
-; LOG
 ; Here will be logged things explicitly declared.
 ; E.G.: (PHP) Phprojekt::getInstance()->getLog()->debug("String to be logged");
-log.debug.filename   = "/var/www/phprojekt/logs/debug.log"
+; UNIX
+log.debug.filename = "/var/www/phprojekt/logs/debug.log"
+; WINDOWS
+;log.debug.filename = "C:\phprojekt\logs\debug.log"
+
 
 ; This is another type of logging.
 ; E.G.: (PHP) Phprojekt::getInstance()->getLog()->crit("String to be logged");
 ; Note for developers: there are many different type of logs defined that can be
 ; added here, see the complete list in phprojekt\library\Phprojekt\Log.php
-log.crit.filename    = "/var/www/phprojekt/logs/crit.log"
+; UNIX
+log.crit.filename = "/var/www/phprojekt/logs/crit.log"
+; WINDOWS
+;log.crit.filename = "C:\phprojekt\logs\crit.log"
 
-; MODULES
+;;;;;;;;;;;
+; MODULES ;
+;;;;;;;;;;;
+
 ; Not used at the moment, leave it as it is.
-itemsPerPage         = 3
+itemsPerPage = 3
 
+;;;;;;;;;;;;;;;;;;;;;
+; MAIL NOTIFICATION ;
+;;;;;;;;;;;;;;;;;;;;;
 
-; MAIL NOTIFICATION
 ; Inside many modules, when adding or editing an item, there is a tab
 ; "Notification" that allows the user to send an email notification to the
 ; people involved in that item, telling them about the creation or modification
 ; of it.
 
-mailEndOfLine        = 0    ; (0 = \r\n  1 = \n)
 ; If the email is configured to be sent in Text mode, whether to use \r\n or \n
 ; for the end of line.
+; (0 = \r\n  1 = \n)
+mailEndOfLine = 0;
 
 ; Name or IP address of the SMTP server to be used to send that notifications.
-smtpServer           = "localhost"
+smtpServer = "localhost"
 
 ; If the SMTP server requires authentication, remove the semicolons ';' and
 ; write inside the inverted commas "" the appropriate username and password.
-;smtpUser            = ""
-;smtpPassword        = ""
+;smtpUser     = ""
+;smtpPassword = ""
 
-; MISC
+;;;;;;;;
+; MISC ;
+;;;;;;;;
+
 ; Use compressed dojo to improve the speed of loading.
-compressedDojo       = true;
+compressedDojo = true;
+
 ; Use Zend_Registry for cache classes in the same request
-useCacheForClasses   = true;
+useCacheForClasses = true;
 
 
-[testing-mysql]
+[test-other-config]
 
-; Language configuration
-language             = "de"
-
-; Path options
-webpath              = "http://localhost/phprojekt"
-uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
-
-; Database options
-database.adapter            = "Pdo_Mysql"
-database.params.host        = "localhost"
-database.params.username    = "p6-user"
-database.params.password    = "phprojekt"
-database.params.dbname      = "phprojekt-testing"
-
-; Log options
-log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
-log.crit.filename    = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
-
-; Modules
-itemsPerPage         = 3
-
-; Mail Notification
-mailEndOfLine        = 0    ;(0 = \r\n  1 = \n)
-smtpServer           = "localhost"
-;smtpUser            = ""
-;smtpPassword        = ""
-
-; Misc
-; Use compressed dojo to improve the speed of loading.
-compressedDojo       = true;
-; Use Zend_Registry for cache classes in the same request
-useCacheForClasses   = true;
-
-
-[testing]
-
-; Language configuration
-language             = "de"
-
-; Path options
-webpath              = "http://localhost/phprojekt"
-uploadpath           = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
-
-; Database options
-database.adapter            = "Pdo_Mysql"
-database.params.host        = "localhost"
-database.params.username    = "p6-user"
-database.params.password    = "phprojekt"
-database.params.dbname      = "unittest"
-
-; Log options
-;log.debug.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug_test.log"
-;log.crit.filename    = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit_test.log"
-
-; Modules
-itemsPerPage         = 3
-
-; Mail Notification
-mailEndOfLine        = 0    ;(0 = \r\n  1 = \n)
-smtpServer           = "localhost"
-;smtpUser            = ""
-;smtpPassword        = ""
-
-; Misc
-; Use compressed dojo to improve the speed of loading.
-compressedDojo       = true;
-; Use Zend_Registry for cache classes in the same request
-useCacheForClasses   = true;
+language                 = "de"
+webpath                  = "http://localhost/phprojekt"
+uploadpath               = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
+database.adapter         = "Pdo_Mysql"
+database.params.host     = "localhost"
+database.params.username = "p6-user"
+database.params.password = "phprojekt"
+database.params.dbname   = "phprojekt-testing"
+log.debug.filename       = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
+log.crit.filename        = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
+itemsPerPage             = 3
+mailEndOfLine            = 0;
+smtpServer               = "localhost"
+compressedDojo           = true;
+useCacheForClasses       = true;
