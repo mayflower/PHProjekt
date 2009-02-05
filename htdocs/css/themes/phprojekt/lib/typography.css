@@ -188,12 +188,13 @@ tt {
 .phprojekt .form td {
     border: none;
     text-align: left;
+    vertical-align: top;
 }
 
 .phprojekt .form td.label {
     border: none;
     text-align: right;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 .phprojekt .form th,td {
@@ -211,6 +212,16 @@ tt {
 .phprojekt .form .col1 {
      text-align: right;
      width: 25%;
+}
+
+.phprojekt .form .col2 {
+     text-align: left;
+     width: 29%;
+}
+
+.phprojekt .form .col3 {
+     text-align: left;
+     width: 46%;
 }
 
 /* Use this if you use span-x classes on th/td. */

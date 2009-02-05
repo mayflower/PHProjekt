@@ -13,21 +13,13 @@
         searchAttr="name"
         invalidMessage=""
         multiple="{{multiple}}"
-        size="{{size}}"
-        style="float: left;">
+        size="{{size}}">
         {% for item in options %}
         <option value ="{{item.id}}" {{item.selected}}>{{item.name}}</option>
         {% endfor %}
         </select>
-        {% if hint notequal '' %}
-        <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip"
-        style="margin-left: 7px;">
-            <div dojoType="dijit.TooltipDialog">
-                <div style="white-space:nowrap;">
-                {{hint}}
-                </div>
-            </div>
-        </button>
-        {% endif %}
+    </td>
+    <td>
+        {{tooltip|safe}}
     </td>
 </tr>

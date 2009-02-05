@@ -12,21 +12,13 @@
         autocomplete="true"
         value="{{value}}"
         searchAttr="name"
-        invalidMessage=""
-        style="float: left;">
+        invalidMessage="" >
         {% for item in values %}
         <option value ="{{item.id}}">{{item.name}}</option>
         {% endfor %}
         </select>
-        {% if hint notequal '' %}
-        <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip"
-        style="margin-left: 4px;">
-            <div dojoType="dijit.TooltipDialog">
-                <div style="white-space:nowrap;">
-                {{hint}}
-                </div>
-            </div>
-        </button>
-        {% endif %}
+    </td>
+    <td>
+        {{tooltip|safe}}
     </td>
 </tr>

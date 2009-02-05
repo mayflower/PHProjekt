@@ -5,15 +5,9 @@
     <td>
         <input type="hidden" dojoType="dijit.form.TextBox" name="{{id}}" id="{{id}}" value="{{value}}" />
         <iframe id="filesIframe_{{id}}" src="{{iFramePath}}" height="25" width="311px" frameborder="0" scrolling="no"
-        style="overflow:hidden; border:0px; float: left;"></iframe>
-        {% if hint notequal '' %}
-        <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
-            <div dojoType="dijit.TooltipDialog">
-                <div style="white-space:nowrap;">
-                {{hint}}
-                </div>
-            </div>
-        </button>
-        {% endif %}
+        style="overflow:hidden; border:0px;"></iframe>
+    </td>
+    <td>
+        {{tooltip|safe}}
     </td>
 </tr>
