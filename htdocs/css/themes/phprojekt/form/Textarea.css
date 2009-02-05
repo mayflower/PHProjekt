@@ -18,3 +18,7 @@
     width: 302px;
     border: 1px solid #c0c0c0;
 }
+
+.phprojekt .dijitTextArea > div {
+    overflow: hidden;
+}
