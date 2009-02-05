@@ -64,6 +64,27 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.getInitData();
     },
 
+    openHtmlEditor:function(nodeId, value) {
+        // summary:
+        //    Open a dialog for edit the HTML content
+        // description:
+        //    Open a dialog for edit the HTML content
+        phpr.destroyWidget('editorFor_' + nodeId);
+        var editor = new dijit.Editor({
+            id:      'editorFor_' + nodeId,
+            plugins: ['undo', 'redo', '|',
+                      'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', 'removeFormat','|',
+                      'indent', 'outdent', 'justifyCenter', 'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|',
+                      'insertOrderedList', 'insertUnorderedList', '|',
+                      'insertHorizontalRule', 'createLink', 'insertImage', '|',
+                      'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']
+        });
+
+        editor.setValue(value);
+        dijit.byId('dialogContentFor_' + nodeId).attr('content', editor);
+        dijit.byId('dialogFor_' + nodeId).show();
+    },
+
     setUrl:function() {
         // summary:
         //    Set the url for get the data
@@ -304,7 +325,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                 itemdisabled, itemhint);
                     break;
                 case 'textarea':
-                    this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue,
+                    //this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue,
+                    //                            itemrequired, itemdisabled, itemhint);
+                    this.formdata[itemtab] += this.fieldTemplate.htmlAreaRender(itemlabel, itemid, itemvalue,
                                                 itemrequired, itemdisabled, itemhint);
                     break;
                 case 'password':
@@ -343,7 +366,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
         }
 
-        this._formNode.attr('content',this.form.domNode);
+        this._formNode.attr('content', this.form.domNode);
         this.form.startup();
 
         this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
@@ -650,7 +673,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
-        var historyData = '<tr><td colspan="2"><table  id="historyTable" style="position: relative; left: 75px">';
+        var historyData = '<tr><td colspan="3"><table id="historyTable" style="position: relative; left: 75px">';
 
         if (history.length > 0) {
             historyData += "<tr><td><label>" + phpr.nls.get('Date');

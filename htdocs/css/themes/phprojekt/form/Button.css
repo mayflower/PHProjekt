@@ -77,6 +77,13 @@
     height: 13px;
 }
 
+.phprojekt .edit {
+    background-image: url("../images/edit.png");
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
 .phprojekt .dijitButtonNode {
     /* enabled state - inner */
     border: 1px solid #8ba0bd;
@@ -182,18 +189,16 @@
     font-weight: bold;
 }
 
+.phprojekt #detailsBox .dijitDropDownButton {
+    margin: 0;
+    height: 20px;
+}
+
 .phprojekt #detailsBox .tooltip .dijitButtonNode {
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
     width: 20px;
     border: none;
     background: none;
-    vertical-align: middle;
-}
-
-.phprojekt .tooltip {
-    float: left;
-    margin: 0px 0px 0px 5px;
+    vertical-align: top;
 }
 
 .phprojekt #filesList .closeButton .dijitButtonNode {
@@ -207,6 +212,45 @@
 
 .phprojekt .closeButton {
     margin: 0px 0px 0px 0px;
+}
+
+.phprojekt .editButton .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: middle;
+}
+
+.phprojekt .toTextButton {
+    background-image: url("../images/totext.gif");
+    background-repeat: no-repeat;
+    height: 16px;
+}
+
+.phprojekt .toTextButton .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: baseline;
+}
+
+.phprojekt .toHtmlButton {
+    background-image: url("../images/tohtml.gif");
+    background-repeat: no-repeat;
+    height: 16px;
+}
+
+.phprojekt .toHtmlButton .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: baseline;
 }
 
 .phprojekt #calendarSchedule .addButton .dijitButtonNode {

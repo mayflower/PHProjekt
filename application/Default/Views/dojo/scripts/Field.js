@@ -125,6 +125,29 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
+    htmlAreaRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+        phpr.destroyWidget(itemid);
+        var eregHtml = /([\<])([^\>]{1,})*([\>])/i;
+        var isHtml   = itemvalue.match(eregHtml);
+        return this.render(["phpr.Default.template", "formHtmlTextarea.html"], null, {
+                            label:       itemlabel,
+                            labelfor:    itemid,
+                            id:          itemid,
+                            value:       (itemvalue) ?  itemvalue : '\n\n',
+                            required:    itemrequired,
+                            disabled:    (itemdisabled) ? "disabled" : '',
+                            moduleName:  phpr.module,
+                            isHtml:      (isHtml) ? true : false,
+                            displayHtml: (isHtml) ? 'inline' : 'none',
+                            displayText: (isHtml) ? 'none' : 'inline',
+                            textModeTxt: phpr.nls.get('To Text Mode'),
+                            htmlModeTxt: phpr.nls.get('To HTML Mode'),
+                            editHtmlTxt: phpr.nls.get('Edit'),
+                            saveTxt:     phpr.nls.get('Save'),
+                            tooltip:     this.getTooltip(itemhint)
+                });
+    },
+
     dateRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formdate.html"], null, {

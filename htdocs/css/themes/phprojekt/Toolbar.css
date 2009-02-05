@@ -90,3 +90,12 @@ a:focus.dijitToolbar {
     border: 1px #777 dotted !important;
     padding: 0px;
 }
+
+/* Under dialogs */
+.phprojekt .dijitDialog .dijitToolbar .dijitComboBox {
+    width: 12em;
+}
+
+.phprojekt .dijitDialog .dijitToolbar label {
+    color: #000;
+}
