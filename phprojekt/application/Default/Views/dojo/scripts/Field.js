@@ -36,7 +36,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             labelfor: itemid,
                             id:       itemid,
                             checked: (itemchecked) ? "checked" : '',
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
@@ -50,7 +50,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             required: itemrequired,
                             type:     'text',
                             disabled: (itemdisabled) ? "disabled" : '',
-                            hint:     itemhint
+                            tooltip:   this.getTooltip(itemhint)
                 });
     },
 
@@ -77,7 +77,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             required: itemrequired,
                             type:     'password',
                             disabled: (itemdisabled) ? "disabled" : '',
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
@@ -91,7 +91,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             required:   itemrequired,
                             disabled:   (itemdisabled) ? "disabled" : '',
                             iFramePath: iFramePath,
-                            hint:       itemhint
+                            tooltip:    this.getTooltip(itemhint)
                 });
     },
 
@@ -107,20 +107,21 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
     textAreaRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         return this.render(["phpr.Default.template", "formtextarea.html"], null, {
-                            label:    itemlabel,
-                            labelfor: itemid,
-                            id:       itemid,
-                            value:    (itemvalue) ?  itemvalue : '\n\n',
-                            required: itemrequired,
-                            disabled: (itemdisabled) ? "disabled" : '',
-                            hint:     itemhint
+                            label:      itemlabel,
+                            labelfor:   itemid,
+                            id:         itemid,
+                            value:      (itemvalue) ?  itemvalue : '\n\n',
+                            required:   itemrequired,
+                            disabled:   (itemdisabled) ? "disabled" : '',
+                            moduleName: phpr.module,
+                            tooltip:    this.getTooltip(itemhint)
                 });
     },
 
@@ -133,7 +134,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
@@ -146,7 +147,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             value:    itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
@@ -166,7 +167,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
                             values:   options,
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
@@ -196,7 +197,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             multiple: itemmultiple,
                             size:     itemsize,
                             options:  options,
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
                 });
     },
 
@@ -209,7 +210,13 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             text:     itemtext,
                             icon:     icon,
                             action:   action,
-                            hint:     itemhint
+                            tooltip:  this.getTooltip(itemhint)
+                });
+    },
+
+    getTooltip:function(itemhint) {
+        return this.render(["phpr.Default.template", "formTooltip.html"], null, {
+                            hint: itemhint
                 });
     }
 });

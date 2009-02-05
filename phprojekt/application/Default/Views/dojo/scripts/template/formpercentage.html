@@ -14,7 +14,7 @@
         intermediateChanges="true"
         {{disabled}}
         id="{{id}}"
-        style="height: 20px; float: left;">
+        style="height: 20px;">
             <ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"
                 style="height:1.2em;font-size:75%;color:gray;" count="5" numericMargin="1"></ol>
             <div dojoType="dijit.form.HorizontalRule" container="topDecoration"
@@ -22,16 +22,9 @@
             <div dojoType="dijit.form.HorizontalRule" container="bottomDecoration"
                  count="11" style="height:5px;"></div>
         </div>
-        {% if hint notequal '' %}
-        <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip"
-        style="margin-left: 6px;">
-            <div dojoType="dijit.TooltipDialog">
-                <div style="white-space:nowrap;">
-                {{hint}}
-                </div>
-            </div>
-        </button>
-        {% endif %}
+    </td>
+    <td>
+        {{tooltip|safe}}
         <input type="hidden" readonly id="{{id}}Text" name="{{id}}Text" size="4" value="{{value}}" required="{{required}}">
     </td>
 </tr>

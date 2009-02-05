@@ -11,16 +11,9 @@
         {{disabled}}
         ucfirst="true"
         value="{{value}}"
-        invalidMessage=""
-        style="float: left;" />
-        {% if hint notequal '' %}
-        <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
-            <div dojoType="dijit.TooltipDialog">
-                <div style="white-space:nowrap;">
-                {{hint}}
-                </div>
-            </div>
-        </button>
-        {% endif %}
+        invalidMessage="" />
+    </td>
+    <td>
+        {{tooltip|safe}}
     </td>
 </tr>
