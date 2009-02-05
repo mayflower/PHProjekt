@@ -51,6 +51,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
         dojo.subscribe(module + ".showHelp", this, "showHelp");
+        dojo.subscribe(module + ".openHtmlEditor", this, "openHtmlEditor");
         dojo.subscribe(module + "._isGlobalModule", this, "_isGlobalModule");
     },
 
@@ -727,5 +728,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available'));
         }
         dijit.byId('helpDialog').show();
+    },
+
+    openHtmlEditor:function(nodeId, value) {
+        // summary:
+        //    Open a dialog for edit the HTML content
+        // description:
+        //    Open a dialog for edit the HTML content
+        this.form.openHtmlEditor(nodeId, value);
     }
 });

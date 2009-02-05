@@ -29,6 +29,7 @@ dojo.require("dojo._base.lang");
 dojo.require("dojo.AdapterRegistry");
 dojo.require("dojo.cldr.monetary");
 dojo.require("dojo.cldr.supplemental");
+dojo.require("dojo.colors");
 dojo.require("dojo.cookie");
 dojo.require("dojo.currency");
 dojo.require("dojo.fx");
@@ -117,12 +118,16 @@ dojo.require("dijit.form.TimeTextBox");
 dojo.require("dijit.form.ValidationTextBox");
 
 // Dijit Editor
+dojo.require("dijit.ColorPalette");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit._editor.html");
 dojo.require("dijit._editor.plugins.EnterKeyHandling");
-dojo.require("dijit._editor.selection");
+dojo.require("dijit._editor.plugins.FontChoice");
+dojo.require("dijit._editor.plugins.LinkDialog");
+dojo.require("dijit._editor.plugins.TextColor");
 dojo.require("dijit._editor.range");
 dojo.require("dijit._editor.RichText");
+dojo.require("dijit._editor.selection");
 dojo.require("dijit.Editor");
 
 // Dojox base
@@ -173,6 +178,7 @@ dojo.require("dojox.form.RangeSlider");
 dojo.require("dojox.layout.ExpandoPane");
 dojo.require("dojox.layout.ScrollPane");
 dojo.require("dojox.widget.Toaster");
+dojo.require("dojox.layout.FloatingPane");
 
 // global vars
 var module = null;
@@ -625,6 +631,60 @@ dojo.declare("phpr.translator", null, {
             }
             // Unstranslated string
             return string;
+        }
+    }
+});
+
+dojo.declare("phpr.Dialog", [dijit.Dialog], {
+    // summary:
+    //     Provide a dialog with some changes
+    // description:
+    //     Allow dialog into other dialog and fix the key input
+    _onKey: function(/*Event*/ evt) {
+    // summary: handles the keyboard events for accessibility reasons
+        if (evt.charOrCode) {
+            var dk   = dojo.keys;
+            var node = evt.target;
+            if (evt.charOrCode === dk.TAB) {
+                this._getFocusItems(this.domNode);
+            }
+            var singleFocusItem = (this._firstFocusItem == this._lastFocusItem);
+            // see if we are shift-tabbing from first focusable item on dialog
+            if (node == this._firstFocusItem && evt.shiftKey && evt.charOrCode === dk.TAB) {
+                if (!singleFocusItem) {
+                    dijit.focus(this._lastFocusItem); // send focus to last item in dialog
+                }
+                dojo.stopEvent(evt);
+            } else if (node == this._lastFocusItem && evt.charOrCode === dk.TAB && !evt.shiftKey) {
+                if (!singleFocusItem) {
+                    dijit.focus(this._firstFocusItem); // send focus to first item in dialog
+                }
+                dojo.stopEvent(evt);
+            } else {
+                // see if the key is for the dialog
+                while (node) {
+                    if (node == this.domNode || node == this.domNode.parentNode) {
+                        if (evt.charOrCode == dk.ESCAPE) {
+                            this.onCancel();
+                        } else {
+                            return; // just let it go
+                        }
+                    }
+                    node = node.parentNode;
+                }
+                // this key is for the disabled document window
+                if (evt.charOrCode !== dk.TAB) {
+                    // allow tabbing into the dialog for a11y
+                    dojo.stopEvent(evt);
+                // opera won't tab to a div
+                } else if (!dojo.isOpera) {
+                    try {
+                        this._firstFocusItem.focus();
+                    } catch(e) {
+                        /*squelch*/
+                    }
+                }
+            }
         }
     }
 });

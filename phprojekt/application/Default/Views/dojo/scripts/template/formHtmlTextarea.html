@@ -1,0 +1,58 @@
+<tr>
+    <td class="label">
+        <label for="{{labelfor}}">{{label}}</label>
+    </td>
+    <td>
+        <div id="displayText_{{id}}"
+        style="display: {{displayText}};">
+            <textarea dojoType="dijit.form.Textarea" id="{{id}}" name="{{id}}" onchange="
+            dojo.byId('displayHtml_{{id}}').innerHTML = this.value;">{{value}}</textarea>
+        </div>
+        <div id="displayHtml_{{id}}"
+        style="display: {{displayHtml}};">
+            {{value|safe}}
+        </div>
+        <div dojoType="phpr.Dialog" id="dialogFor_{{id}}" draggable="false" execute="
+            var value = dijit.byId('editorFor_{{id}}').attr('value');
+            dojo.byId('displayHtml_{{id}}').innerHTML = value;
+            dijit.byId('{{id}}').attr('value', value);
+            dojo.byId('displayText_{{id}}').style.display = 'none';
+            dojo.byId('textButtons_{{id}}').style.display = 'none';
+            dojo.byId('displayHtml_{{id}}').style.display = 'inline';
+            dojo.byId('htmlButtons_{{id}}').style.display = 'inline';"
+        style="width: 86%;">
+            <div dojoType="dijit.layout.ContentPane" id="dialogContentFor_{{id}}"
+            style="width: 99%; height: 99%; border: 1px solid;">
+            </div>
+            <button dojoType="dijit.form.Button" iconClass="tick" type="submit"">{{saveTxt}}</button>
+        </div>
+    </td>
+    <td>
+        {{tooltip|safe}}
+        <div id="textButtons_{{id}}"
+        style="display: {{displayText}};">
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="toHtmlButton" class="toHtmlButton"
+            title="{{htmlModeTxt}}" onclick="
+                dojo.byId('displayText_{{id}}').style.display = 'none';
+                dojo.byId('textButtons_{{id}}').style.display = 'none';
+                dojo.byId('displayHtml_{{id}}').style.display = 'inline';
+                dojo.byId('htmlButtons_{{id}}').style.display = 'inline';
+                dojo.publish('{{moduleName}}.openHtmlEditor',['{{id}}', dijit.byId('{{id}}').attr('value')]);">
+            </button>
+        </div>
+        <div id="htmlButtons_{{id}}"
+        style="display: {{displayHtml}};">
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="edit" class="editButton"
+            title="{{editHtmlTxt}}" onclick="
+                dojo.publish('{{moduleName}}.openHtmlEditor',['{{id}}', dijit.byId('{{id}}').attr('value')]);">
+            </button>
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="toTextButton" class="toTextButton"
+            title="{{textModeTxt}}" onclick="
+                dojo.byId('displayText_{{id}}').style.display = 'inline';
+                dojo.byId('textButtons_{{id}}').style.display = 'inline';
+                dojo.byId('displayHtml_{{id}}').style.display = 'none';
+                dojo.byId('htmlButtons_{{id}}').style.display = 'none';">
+            </button>
+        </div>
+    </td>
+</tr>
