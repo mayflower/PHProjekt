@@ -31,9 +31,8 @@
 
     Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
 
- 2. Phprojekt separates both the document root from the rest application, so you want to point
-    your server host to the 'htdocs' folder. In the example given, would
-    be:
+ 2. Phprojekt separates both the document root from the rest of the application, so you want to point
+    your server host to the 'htdocs' folder. In the example given, would be:
 
     UNIX        /srv/www/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
