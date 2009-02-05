@@ -148,9 +148,16 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         this.tree.model.store.fetch({
             query:  {parent: id.toString()},
             onItem: function(item) {
-                var name = item.name.toString();
-                if (name.length > 20) {
-                    var shortName = name.substr(0, 20) + '...';
+                var name  = item.name.toString();
+                var width = dojo.byId('navigation-container').style.width.replace(/px/, "")
+                var depth = item.path[0].match(/\//g).length;
+                if (depth > 5) {
+                    depth = 5;
+                }
+                var maxLength = Math.round((width / 11) - (depth - 1));
+                console.debug(maxLength);
+                if (name.length > maxLength) {
+                    var shortName = name.substr(0, maxLength) + '...';
                     _tree.model.store.setValue(item, "name", shortName);
                 }
                 _paths[item.id] = item.path;

@@ -1,10 +1,11 @@
 <div id="completeContent" dojoType="dijit.layout.BorderContainer"
 style="width: 100%; height: 1000px;">
     <!-- Left Content -->
-    <div dojoType="dijit.layout.ContentPane" region="left" splitter="true" minSize="20" maxSize="300"
-    style="width:15%;">
+    <div dojoType="dijit.layout.ContentPane" region="left" splitter="true" minSize="180" maxSize="300"
+    style="width:15%; overflow: hidden;">
         <div id="navigation-container" dojoType="dijit.layout.BorderContainer" region="left">
-            <div id="tagsbox" dojoType="dojox.layout.ExpandoPane" title="Tags" region="bottom" maxHeight="150">
+            <div id="tagsbox" dojoType="dojox.layout.ExpandoPane" title="Tags" region="bottom" maxHeight="150"
+            style="height: 160px;">
             <br /><br /><br /><br /><br /><br /><br /><br />
             </div>
             <div region="center" dojoType="dijit.layout.ContentPane">
@@ -14,7 +15,8 @@ style="width: 100%; height: 1000px;">
                 </div>
                 <!-- Tree menu -->
                 <div id="tree-navigation">
-                    <div dojoType="dijit.layout.ContentPane" id="treeBox">
+                    <div dojoType="dijit.layout.ContentPane" id="treeBox"
+                    style="height: 100%;">
                     </div>
                 </div>
             </div>

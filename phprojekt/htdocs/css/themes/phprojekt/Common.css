@@ -132,11 +132,13 @@
     border-bottom: 14px solid #294064;
     border-left: 10px solid #294064;
     background: #294064;
+    overflow-y: hidden;
 }
 
 .phprojekt #tree-navigation {
     margin: 0;
-    padding: 0 0 40px 0;
+    height: 93%;
+    overflow: none;
 }
 
 .phprojekt #nav_main a {
