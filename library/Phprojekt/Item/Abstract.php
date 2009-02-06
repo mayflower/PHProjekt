@@ -209,6 +209,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     // running again the sanitizer to normalize the format
                     $value = Cleaner::sanitize('timestamp', $value);
                     break;
+                case 'text':
+                    // Run html sanitize only if the text contain some html code
+                    if (preg_match("/([\<])([^\>]{1,})*([\>])/i", $value)) {
+                        $value = Cleaner::sanitize('html', $value);
+                    } else {
+                        $value = Cleaner::sanitize('string', $value);
+                    }
+                    break;
                 default:
                     $value = Cleaner::sanitize('string', $value);
                     break;

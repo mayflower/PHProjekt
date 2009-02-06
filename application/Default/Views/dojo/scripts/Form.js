@@ -74,7 +74,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             id:      'editorFor_' + nodeId,
             plugins: ['undo', 'redo', '|',
                       'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', 'removeFormat','|',
-                      'indent', 'outdent', 'justifyCenter', 'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|',
+                      'justifyCenter', 'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|',
                       'insertOrderedList', 'insertUnorderedList', '|',
                       'insertHorizontalRule', 'createLink', 'insertImage', '|',
                       'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']
