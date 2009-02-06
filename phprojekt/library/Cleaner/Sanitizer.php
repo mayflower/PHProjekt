@@ -229,7 +229,23 @@ class Cleaner_Sanitizer
      */
     public function sanitizeHtml($value)
     {
-         return HTMLPurifier::getInstance()->purify($value);
+        require_once PHPR_LIBRARY_PATH . DIRECTORY_SEPARATOR .
+            'HTMLPurifier' . DIRECTORY_SEPARATOR . 'HTMLPurifier.standalone.php';
+
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('Core', 'Encoding', 'UTF-8');
+        $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
+        $config->set('HTML', 'AllowedAttributes', '*.style, *.size, *.href, *.alt, *.src');
+        $allowedProperties = 'font-weight, font-style, text-align, text-decoration, color, font-size, '
+            . 'background-color, font-family';
+        $config->set('CSS','AllowedProperties', $allowedProperties);
+        $purifier = new HTMLPurifier($config);
+
+        if (get_magic_quotes_gpc()) {
+            $value = stripslashes($value);
+        }
+
+        return addslashes($purifier->purify($value));
     }
 
     /**

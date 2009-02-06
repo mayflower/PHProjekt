@@ -114,7 +114,7 @@ class Phprojekt_Model_Validate
         return $validated;
     }
 
-   /**
+    /**
      * Validate a value use the database type of the field
      *
      * @param string $varname Name of the field
