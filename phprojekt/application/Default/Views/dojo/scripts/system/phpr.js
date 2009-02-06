@@ -178,7 +178,6 @@ dojo.require("dojox.form.RangeSlider");
 dojo.require("dojox.layout.ExpandoPane");
 dojo.require("dojox.layout.ScrollPane");
 dojo.require("dojox.widget.Toaster");
-dojo.require("dojox.layout.FloatingPane");
 
 // global vars
 var module = null;
