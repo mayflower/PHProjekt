@@ -442,28 +442,30 @@ class IndexController extends Zend_Controller_Action
      */
     public function uploadFileAction()
     {
-        $field    = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $value    = (string) $this->getRequest()->getParam('value', null);
-        $fileName = null;
+        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $value      = (string) $this->getRequest()->getParam('value', null);
+        $fileName   = null;
+        $addedValue = '';
 
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
             $md5mane    = md5(uniqid(rand(), 1));
             $addedValue = $md5mane . '|' . $_FILES['uploadedFile']['name'];
             $fileName   = $_FILES['uploadedFile']['name'];
+
             $_FILES['uploadedFile']['name'] = $md5mane;
         }
 
         $adapter = new Zend_File_Transfer_Adapter_Http();
         $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadpath);
 
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->clearBody();
+
         if (!$adapter->receive()) {
             $messages = $adapter->getMessages();
             $this->view->errorMessage = implode("\n", $messages);
         } else {
-            $this->getResponse()->clearHeaders();
-            $this->getResponse()->clearBody();
-
             if (!empty($value)) {
                 $value .= '||';
             }

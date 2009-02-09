@@ -24,7 +24,9 @@
             ?>
             var par     = window.parent.document;
             var input   = par.getElementById("<?php echo $this->field; ?>");
-            input.value = "<?php echo $this->value; ?>";
+            if (input) {
+                input.value = "<?php echo $this->value; ?>";
+            }
             <?php
         }
         ?>
