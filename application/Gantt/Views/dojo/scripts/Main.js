@@ -358,12 +358,12 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
 
             var x = 260 + (totalWidth -(width / 2));
             if (years > 3) {
-                var size = 8 * (this.scale * 2);
+                var size = 7 * (this.scale * 2);
             } else {
-                var size = 8;
+                var size = 7;
             }
             phpr.Gfx.makeText(surface, {x: x, y: 85, text: phpr.nls.get(month) + " " + year, align: "start"},
-            {family: "Times", size: size + "pt"}, "black", "black")
+            {family: "Verdana", size: size + "pt"}, "black", "black")
             .setTransform(m.rotategAt(-75, x, 85));
         }
         html += '</ul></li></ul>';
