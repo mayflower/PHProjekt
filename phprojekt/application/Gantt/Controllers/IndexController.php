@@ -50,6 +50,8 @@ class Gantt_IndexController extends IndexController
         $min = mktime(0, 0, 0, 12, 31, 2030);
         $max = mktime(0, 0, 0, 1, 1, 1970);
 
+        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+
         $data['data']['rights']["currentUser"]["write"] = true;
         foreach ($tree as $node) {
             if ($node->id != self::INVISIBLE_ROOT) {
@@ -77,10 +79,11 @@ class Gantt_IndexController extends IndexController
                                                         'start'   => $start,
                                                         'end'     => $end);
 
-                    // Only allow write if all the projects have write access
+                    // Only allow write if all the projects have write or hight access
                     if ($data['data']['rights']["currentUser"]["write"]) {
-                        $rights = new Phprojekt_RoleRights($node->id);
-                        $data['data']['rights']["currentUser"]["write"] = $rights->hasRight('write');
+                        if ($rights->getItemRight(1, $node->id, Phprojekt_Auth::getUserId()) < Phprojekt_Acl::WRITE) {
+                            $data['data']['rights']["currentUser"]["write"] = false;
+                        }
                     }
                 }
             }
