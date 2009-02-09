@@ -309,9 +309,9 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonGetModulesPermissionAction()
     {
-        $projectId  = (int) $this->getRequest()->getParam('nodeId');
-        $relation   = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-        $modules    = $relation->getProjectModulePermissionsById($projectId);
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
+        $relation  = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $modules   = $relation->getProjectModulePermissionsById($projectId);
 
         if ($projectId == 0) {
             $data = array(); // there is no rights on invalid projects
