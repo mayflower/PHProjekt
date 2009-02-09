@@ -49,6 +49,8 @@ class Gantt_IndexController extends IndexController
         $tree->setup();
         $min = mktime(0, 0, 0, 12, 31, 2030);
         $max = mktime(0, 0, 0, 1, 1, 1970);
+
+        $data['data']['rights']["currentUser"]["write"] = true;
         foreach ($tree as $node) {
             if ($node->id != self::INVISIBLE_ROOT) {
                 $key    = $node->id;
@@ -74,6 +76,12 @@ class Gantt_IndexController extends IndexController
                                                         'caption' => $node->title,
                                                         'start'   => $start,
                                                         'end'     => $end);
+
+                    // Only allow write if all the projects have write access
+                    if ($data['data']['rights']["currentUser"]["write"]) {
+                        $rights = new Phprojekt_RoleRights($node->id);
+                        $data['data']['rights']["currentUser"]["write"] = $rights->hasRight('write');
+                    }
                 }
             }
         }
@@ -82,9 +90,12 @@ class Gantt_IndexController extends IndexController
         $data['data']['max']  = mktime(0, 0, 0, 12, 31, date("Y", $max));
 
         $data['data']['step'] = (date("L", $min)) ? 366 : 365;
-        while (date("Y", $min) != date("Y", $max)) {
-            $data['data']['step'] += (date("L", $max)) ? 366 : 365;
-            $max = mktime(0, 0, 0, 5, 5, date("Y", $max) - 1);
+
+        if (date("Y", $min) < date("Y", $max)) {
+            while (date("Y", $min) != date("Y", $max)) {
+                $data['data']['step'] += (date("L", $max)) ? 366 : 365;
+                $max = mktime(0, 0, 0, 5, 5, date("Y", $max) - 1);
+            }
         }
 
         echo Phprojekt_Converter_Json::convert($data);
