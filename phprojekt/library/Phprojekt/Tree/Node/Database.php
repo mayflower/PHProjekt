@@ -171,9 +171,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $this->_index = array();
         foreach ($rows as $record) {
             $node   = null;
-            $rights = new Phprojekt_RoleRights($record->id);
-            $right  =  $rights->hasRight('read') ? true : $rights->hasRight('write');
-            if ($right) {
+            $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            if ($rights->getItemRight(1, $record->id, Phprojekt_Auth::getUserId()) > 0) {
                 if ($record->id == $this->_requestedId) {
                     $node                = $this;
                     $this->_activeRecord = $record;
