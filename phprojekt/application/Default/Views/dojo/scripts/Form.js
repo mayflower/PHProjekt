@@ -339,7 +339,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                 itemrequired, itemdisabled, itemhint);
                     break;
                 case 'upload':
-                    iFramePath   = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
+                    iFramePath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
                     this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue,
                                                 itemrequired, itemdisabled, iFramePath, itemhint);
                     break;
