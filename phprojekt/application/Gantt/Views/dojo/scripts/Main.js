@@ -57,16 +57,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this._url = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
-
-        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
-            writePermissions:  true,
-            deletePermissions: false,
-            saveText:          phpr.nls.get('Save'),
-            deleteText:        phpr.nls.get('Delete')
-        });
-
-        // Action buttons for the form
-        dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
 
     setNewEntry:function() {
@@ -88,33 +78,47 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.gantt.MIN_DATE = 1000 * data["min"];
         this.gantt.MAX_DATE = 1000 * data["max"];
 
-        // set timeline
-        var width = this.setTimeline();
+        if (this.gantt.projectDataBuffer.length > 0) {
+            // set timeline
+            var width = this.setTimeline();
 
-        // Render the projects information
-        dojo.byId('projectList').innerHTML = '';
-        for (var j in this.gantt.projectDataBuffer) {
-            var caption = this.gantt.projectDataBuffer[j].caption;
-            if (caption.length > 25) {
-                caption = caption.substr(0, 25) + '...';
+            // Render the projects information
+            dojo.byId('projectList').innerHTML = '';
+            for (var j in this.gantt.projectDataBuffer) {
+                var caption = this.gantt.projectDataBuffer[j].caption;
+                if (caption.length > 25) {
+                    caption = caption.substr(0, 25) + '...';
+                }
+                dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
+                    name:     this.buildProjectName(j),
+                    level:    this.gantt.projectDataBuffer[j].level,
+                    caption:  caption,
+                    STEPPING: this.gantt.STEPPING,
+                    width:    width + 4,
+                    webpath:  phpr.webpath
+                });
             }
-            dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
-                name:     this.buildProjectName(j),
-                level:    this.gantt.projectDataBuffer[j].level,
-                caption:  caption,
-                STEPPING: this.gantt.STEPPING,
-                width:    width + 4,
-                webpath:  phpr.webpath
-            });
-        }
-        dojo.parser.parse(dojo.byId('projectList'));
+            dojo.parser.parse(dojo.byId('projectList'));
 
-        // Insert 2 date widgets dynamically
-        this.installCalendars();
-        // Insert projects dynamically
-        this.installProjects();
-        this.setToggle();
-        this.setHeight();
+            // Insert 2 date widgets dynamically
+            this.installCalendars();
+            // Insert projects dynamically
+            this.installProjects();
+            this.setToggle();
+            this.setHeight();
+        } else {
+            dojo.byId('projectList').innerHTML = phpr.drawEmptyMessage('There are no valid projects');
+        }
+
+        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
+            writePermissions:  data["rights"]["currentUser"]["write"],
+            deletePermissions: false,
+            saveText:          phpr.nls.get('Save'),
+            deleteText:        phpr.nls.get('Delete')
+        });
+
+        // Action buttons for the form
+        dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
 
     installCalendars:function() {
