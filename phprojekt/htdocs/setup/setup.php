@@ -16,6 +16,8 @@ define("SETUP_ROUTINE", true);
 
 session_start();
 
+ini_set('max_execution_time', 0);
+
 include_once("setup.inc.php");
 
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));

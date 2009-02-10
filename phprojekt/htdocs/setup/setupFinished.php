@@ -1,34 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<?php
-/**
- * Setup routine
- *
- * LICENSE: Licensed under the terms of the GNU Publice License
- *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
- *             GNU Public License 2.0
- * @version    $Id$
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
-*/
-
-if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine');
-
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" />
     <style type="text/css">
-        @import "../dojo/dojo/resources/dojo.css";
-        @import "../css/themes/phprojekt/phprojekt.css";
-        @import "../dojo/dijit/themes/dijit.css";
-        @import "../dojo/dijit/themes/dijit_rtl.css";
+        @import "../css/themes/phprojekt/phprojektCssCompiler.php";
     </style>
-    <script type="text/javascript" src="../dojo/dojo/dojo.js"
-     djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
+    <script type="text/javascript">
+        var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
+    </script>
+    <script type="text/javascript" src="../dojo/dojo/dojo.js"></script>
     <script type="text/javascript">
         dojo.require("dojo.parser");
         dojo.require("dijit.form.Form");
@@ -39,6 +21,22 @@ if (!defined('SETUP_ROUTINE')) die('Please use this page only with setup routine
         dojo.require("dijit.layout.ContentPane");
     </script>
 
+    <script type="text/javascript">
+        function init() {
+            if (document.layers) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            } else if (document.all) {
+                availHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
+            } else if (document.getElementById) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            }
+            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
+        }
+        dojo.addOnLoad(init);
+        window.onresize = function() {
+            init();
+        };
+    </script>
 </head>
     <body class="phprojekt">
         <div dojoType="dijit.layout.BorderContainer" id="completeContent">

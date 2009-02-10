@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>PHProjekt 6 - Setup routine</title>
+    <title>PHProjekt</title>
     <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" />
-    <style>
-        @import "../dojo/dojo/resources/dojo.css";
-        @import "../css/themes/phprojekt/phprojekt.css";
-        @import "../dojo/dijit/themes/dijit.css";
-        @import "../dojo/dijit/themes/dijit_rtl.css";
+    <style type="text/css">
+        @import "../css/themes/phprojekt/phprojektCssCompiler.php";
     </style>
-    <script type="text/javascript" src="../dojo/dojo/dojo.js"
-     djConfig="isDebug: true, parseOnLoad: true, useCommentedJson: true"></script>
+    <script type="text/javascript">
+        var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
+    </script>
+    <script type="text/javascript" src="../dojo/dojo/dojo.js"></script>
+    
     <script type="text/javascript">
         dojo.require("dojo.parser");
         dojo.require("dijit.form.Form");
@@ -21,35 +21,63 @@
         dojo.require("dijit.layout.BorderContainer");
         dojo.require("dijit.layout.ContentPane");
     </script>
-
+    <script type="text/javascript">
+        function init() {
+            if (document.layers) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            } else if (document.all) {
+                availHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
+            } else if (document.getElementById) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            }
+            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
+        }
+        dojo.addOnLoad(init);
+        window.onresize = function() {
+            init();
+        };
+    </script>
 </head>
 <body class="phprojekt">
-    <div dojoType="dijit.layout.BorderContainer" id="completeContent">
-        <div id="header" region="top" class="block" style="height:55px;" >
-            <img class="left" src="../img/logo.png" alt="PHProjekt 6" />
+<div id="completeContent" dojoType="dijit.layout.ContentPane"
+    style="width: 100%; height: 1000px; overflow: hidden;">
+    <!-- Top Bar menu -->
+    <div dojoType="dijit.layout.ContentPane" id="header" region="top" splitter="false"
+    style="height:55px;">
+        <img class="left" src="../img/logo.png" alt="PHProjekt 6" />
+        <div id="mainNavigation" class="right align-right">
         </div>
-        <!-- Border Container which splits page in navigation and form/list view: -->
-        <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"  style="margin-top: 55px;">
-            <!-- navigation panel -->
-            <div dojoType="dijit.layout.ContentPane" duration="200"    minSize="20" region="leading" class="column span-5 left" style="background: #294064;" id="navigation-container">
-                <div id="subheader" class="block">
-                    <div id="navigation-container-titel">
-                    </div>
+    </div>
+    <!-- Left Content -->
+    <div id="navigation-container"
+    style="width:15%; height: 100%">
+        <div dojoType="dijit.layout.ContentPane">
+            <div id="subheader" class="block">
+                <div id="navigation-container-titel">
                 </div>
-             </div>
-               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center" style="width:80%; background-color:#FFFFFF" id="centerContent" >
-                <!-- Submodule navigation: -->
-                <div class="block">
-                    <div class="column">
-                        <img src="../img/subheaderborder.png" alt="" />
-                    </div>
-                    <div class="column left span-17 append-1 align-left" id="subModuleNavigation">
-                    Welcome to PHProjekt 6 Setup routine!
-                    </div>
-                 </div>
-                 <!-- spaces -->
-                <hr class="space"/>
-                <hr />
+            </div>
+            <!-- Tree menu -->
+            <div id="tree-navigation" dojoType="dijit.layout.ContentPane">
+                <div dojoType="dijit.layout.ContentPane" id="treeBox">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Center Content -->
+    <div dojoType="dijit.layout.ContentPane"
+    style="position: absolute; top: 55px; left: 16%; width: 100%;">
+        <div dojoType="dijit.layout.ContentPane" design="sidebar"
+        style="width: 84%; height: 100%;">
+            <!-- Second Top Bar -->
+            <div dojoType="dijit.layout.ContentPane" region="top" class="block"
+            style="height: 7%;" splitter="false">
+                <!-- Submodule navigation -->
+                <div class="column left span-17 append-1 align-left" id="subModuleNavigation">
+                </div>
+                <!-- Add / Save Buttons -->
+                <div id="buttonRow" class="align-right append-0">
+                </div>
+                <!-- spaces -->
                 <hr class="space"/>
                 <!-- Exception Form -->
                 <div id="serverFeedback" class="prepend-24" ><%ERROR_MESSAGE%></div>
@@ -103,6 +131,32 @@
                             <td class="label"><label for="admin_pass_confirm">Admin pass confirm:</label></td>
                             <td>
                                 <input dojoType="dijit.form.TextBox" type="password" name="admin_pass_confirm" value="" />
+
+                            </td>
+                        <tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                            <h3>Migration</h3>
+                            Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<br />
+                            <u>Notes</u>:<br />
+                            <ul>
+                              <li>It could take several minutes depending on the number of projects to be migrated.</li>
+                              <li>The migration is compatible with version 5.1 or superion.</li>
+                              <li>The config.inc.php needs to be on the same server where you are installing PHProjekt 6</li>
+                              <li>User passwords will not be migrated. All migrated users will have the same username and password.</li>
+                              <li>Root user will not be migrated. Please use the admin user.</li>
+                              <li>The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Timecard and Filemanager.</li>
+                              <li>Customized module fields will not be migrated.</li>
+                              <li>If Filemanager files does not work after migration please try moving manually the uploaded files (e.g. move the files on /phprojekt5.x/uploads to /phprojekt6/uploads).</li>
+                            </ul>
+                            </td>
+                        <tr>
+                        <tr>
+                            <td class="label"><label for="migration_config">Configuration file:</label></td>
+                            <td>
+                                <input dojoType="dijit.form.TextBox" type="text" name="migration_config" value="<%MIGRATION_CONFIG%>" />
+                                <br />File path (e.g. /var/www/html/config.inc.php)
 
                             </td>
                         <tr>
