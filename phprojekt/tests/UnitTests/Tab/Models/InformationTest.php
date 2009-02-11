@@ -39,13 +39,14 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
     {
         $tabModel  = new Phprojekt_Tab_Information();
         $expected  = array();
+        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // name
         $data = array();
         $data['key']      = 'label';
-        $data['label']    = Phprojekt::getInstance()->translate('label');
+        $data['label']    = Phprojekt::getInstance()->translate('Label');
         $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->translate('label');
+        $data['hint']     = (isset($hints['label'])) ? $hints['label'] : '';
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';

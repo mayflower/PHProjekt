@@ -73,7 +73,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos(strtolower($response),
-            strtolower('{"key":"title","label":"Title","type":"text","hint":"title","order":0,"position":1')) > 0);
+            strtolower('{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1')) > 0);
         $this->assertTrue(strpos($response, '"numRows":1}') > 0);
     }
 
