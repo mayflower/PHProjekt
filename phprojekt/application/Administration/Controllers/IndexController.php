@@ -61,9 +61,9 @@ class Administration_IndexController extends IndexController
         $metadata = $configuration->getModel()->getFieldDefinition();
         $records  = $configuration->getList($moduleId, $metadata);
 
-        $data     = array("metadata" => $metadata,
-                          "data"     => $records,
-                          "numRows"  => count($records));
+        $data = array("metadata" => $metadata,
+                      "data"     => $records,
+                      "numRows"  => count($records));
 
         echo Phprojekt_Converter_Json::convert($data);
     }

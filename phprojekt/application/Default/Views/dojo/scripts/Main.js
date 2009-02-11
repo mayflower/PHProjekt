@@ -697,10 +697,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    The translation must be an array and each index is a different tab
         phpr.destroyWidget('helpContent');
 
-        dijit.byId('helpDialog').attr('title', phpr.nls.get('Help'));
-        dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.module);
+        // Get the current module or use the parent
+        var currentModule = phpr.module;
+        if (phpr.parentmodule && 'Administration' == phpr.parentmodule) {
+            currentModule = phpr.parentmodule;
+        }
+        dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
+        dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
 
-        var helpData  = phpr.nls.get('Content Help');
+        var helpData = phpr.nls.get('Content Help', currentModule);
         if (typeof(helpData) == 'object') {
             var container = new dijit.layout.TabContainer({
                 style: 'height:100%;',
@@ -725,7 +730,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             dijit.byId('helpContainer').attr("content", container);
             container.startup();
         } else {
-            dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available'));
+            dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available', currentModule));
         }
         dijit.byId('helpDialog').show();
     },
