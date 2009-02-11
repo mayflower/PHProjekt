@@ -254,10 +254,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
+        $hints = Phprojekt::getInstance()->translate('Tooltip');
+
         $converted['key']      = $field->tableField;
         $converted['label']    = Phprojekt::getInstance()->translate($field->formLabel);
         $converted['type']     = $field->formType;
-        $converted['hint']     = Phprojekt::getInstance()->translate($field->formTooltip);
+        $converted['hint']     = (isset($hints[$field->tableField])) ? $hints[$field->tableField] : '';
         $converted['order']    = 0;
         $converted['position'] = (int) $field->formPosition;
         $converted['fieldset'] = '';

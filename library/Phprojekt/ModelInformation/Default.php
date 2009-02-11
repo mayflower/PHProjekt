@@ -123,7 +123,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return array
      */
-    public function getFormFields ()
+    public function getFormFields()
     {
         return $this->_formFields;
     }
@@ -134,7 +134,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return array
      */
-    public function getListFields ()
+    public function getListFields()
     {
         return $this->_listFields;
     }
@@ -146,7 +146,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return void
      */
-    public function setFormFields (array $formFields)
+    public function setFormFields(array $formFields)
     {
         $this->_formFields = array();
 
@@ -166,7 +166,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return void
      */
-    public function setListFields (array $listFields)
+    public function setListFields(array $listFields)
     {
         $this->_listFields = array();
 
@@ -189,7 +189,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return array
      */
-    public function getFieldDefinition ($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $definition = null;
         switch ($ordering) {
@@ -213,7 +213,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return array
      */
-    public function getTitles ($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         switch ($ordering) {
             case Phprojekt_ModelInformation_Default::ORDERING_FILTER:
@@ -227,7 +227,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 
         $result = array();
         foreach ($list as $definition) {
-            $result = $definition['hint'];
+            $result[] = $definition['label'];
         }
         return $result;
     }

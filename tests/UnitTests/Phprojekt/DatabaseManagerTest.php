@@ -114,8 +114,8 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
     public function testGetTitles()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $db     = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields = $db->getTitles();
+        $db      = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
+        $fields  = $db->getTitles();
         $this->assertEquals($this->_listLabelResult, $fields);
     }
 }

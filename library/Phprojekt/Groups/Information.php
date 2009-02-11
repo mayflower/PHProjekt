@@ -52,13 +52,14 @@ class Phprojekt_Groups_Information extends EmptyIterator implements Phprojekt_Mo
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_FORM)
     {
         $converted = array();
+        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // name
         $data = array();
         $data['key']      = 'name';
         $data['label']    = Phprojekt::getInstance()->translate('Name');
         $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->translate('Name');
+        $data['hint']     = (isset($hints['name'])) ? $hints['name'] : '';
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -82,7 +83,12 @@ class Phprojekt_Groups_Information extends EmptyIterator implements Phprojekt_Mo
      */
     public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        $result = array();
+        switch ($ordering) {
+            default:
+                $result = array();
+                break;
+        }
+
         return $result;
     }
 }

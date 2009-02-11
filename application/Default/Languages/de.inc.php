@@ -245,3 +245,6 @@ $lang["Stopped"] = "Stopped";
 $lang["Re-Opened"] = "Wieder geöffnet";
 $lang["Waiting"] = "Warten";
 $lang["Accepted"] = "Akzeptiert";
+
+// Tooltip
+$lang["Tooltip"] = array();
