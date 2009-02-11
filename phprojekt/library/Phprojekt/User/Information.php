@@ -52,14 +52,13 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // username
         $data = array();
         $data['key']      = 'username';
         $data['label']    = Phprojekt::getInstance()->translate('Username');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['username'])) ? $hints['username'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('username');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -77,7 +76,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['key']      = 'password';
             $data['label']    = Phprojekt::getInstance()->translate('Password');
             $data['type']     = 'password';
-            $data['hint']     = (isset($hints['password'])) ? $hints['password'] : '';
+            $data['hint']     = Phprojekt::getInstance()->getTooltip('password');
             $data['order']    = 0;
             $data['position'] = 2;
             $data['fieldset'] = '';
@@ -95,7 +94,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['key']      = 'firstname';
         $data['label']    = Phprojekt::getInstance()->translate('First name');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['firstname'])) ? $hints['firstname'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('firstname');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
@@ -112,7 +111,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['key']      = 'lastname';
         $data['label']    = Phprojekt::getInstance()->translate('Last name');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['lastname'])) ? $hints['lastname'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('lastname');
         $data['order']    = 0;
         $data['position'] = 4;
         $data['fieldset'] = '';
@@ -130,7 +129,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['key']      = 'email';
             $data['label']    = Phprojekt::getInstance()->translate('Email');
             $data['type']     = 'text';
-            $data['hint']     = (isset($hints['email'])) ? $hints['email'] : '';
+            $data['hint']     = Phprojekt::getInstance()->getTooltip('email');
             $data['order']    = 0;
             $data['position'] = 5;
             $data['fieldset'] = '';
@@ -147,7 +146,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['key']      = 'language';
             $data['label']    = Phprojekt::getInstance()->translate('Language');
             $data['type']     = 'selectbox';
-            $data['hint']     = (isset($hints['language'])) ? $hints['language'] : '';
+            $data['hint']     = Phprojekt::getInstance()->getTooltip('language');
             $data['order']    = 0;
             $data['position'] = 6;
             $data['fieldset'] = '';
@@ -168,7 +167,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['key']      = 'timeZone';
             $data['label']    = Phprojekt::getInstance()->translate('Time Zone');
             $data['type']     = 'selectbox';
-            $data['hint']     = (isset($hints['timeZone'])) ? $hints['timeZone'] : '';
+            $data['hint']     = Phprojekt::getInstance()->getTooltip('timeZone');
             $data['order']    = 0;
             $data['position'] = 7;
             $data['fieldset'] = '';
@@ -191,7 +190,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['key']      = 'status';
         $data['label']    = Phprojekt::getInstance()->translate('Status');
         $data['type']     = 'selectbox';
-        $data['hint']     = (isset($hints['status'])) ? $hints['status'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('status');
         $data['order']    = 0;
         $data['position'] = 8;
         $data['fieldset'] = '';
@@ -210,7 +209,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['key']      = 'admin';
         $data['label']    = Phprojekt::getInstance()->translate('Admin');
         $data['type']     = 'selectbox';
-        $data['hint']     = (isset($hints['admin'])) ? $hints['admin'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('admin');
         $data['order']    = 0;
         $data['position'] = 9;
         $data['fieldset'] = '';

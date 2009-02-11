@@ -52,14 +52,13 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // name
         $data = array();
         $data['key']      = 'name';
         $data['label']    = Phprojekt::getInstance()->translate('Name');
         $data['type']     = 'hidden';
-        $data['hint']     = (isset($hints['name'])) ? $hints['name'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('name');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -77,7 +76,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['key']      = 'label';
         $data['label']    = Phprojekt::getInstance()->translate('Label');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['label'])) ? $hints['label'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('label');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -94,7 +93,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['key']      = 'active';
         $data['label']    = Phprojekt::getInstance()->translate('Active');
         $data['type']     = 'selectbox';
-        $data['hint']     = (isset($hints['active'])) ? $hints['active'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('active');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';

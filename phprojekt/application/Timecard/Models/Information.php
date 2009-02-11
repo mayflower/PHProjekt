@@ -52,14 +52,13 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
     public function getFieldDefinition($ordering = 'month')
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // date
         $dateData = array();
         $dateData['key']      = 'date';
         $dateData['label']    = Phprojekt::getInstance()->translate('Date');
         $dateData['type']     = 'date';
-        $dateData['hint']     = (isset($hints['date'])) ? $hints['date'] : '';
+        $dateData['hint']     = Phprojekt::getInstance()->getTooltip('date');
         $dateData['order']    = 0;
         $dateData['position'] = 1;
         $dateData['fieldset'] = '';
@@ -74,7 +73,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $startDateData['key']      = 'startTime';
         $startDateData['label']    = Phprojekt::getInstance()->translate('Start Time');
         $startDateData['type']     = 'time';
-        $startDateData['hint']     = (isset($hints['startTime'])) ? $hints['startTime'] : '';
+        $startDateData['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
         $startDateData['order']    = 0;
         $startDateData['position'] = 2;
         $startDateData['fieldset'] = '';
@@ -89,7 +88,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $endDateData['key']      = 'endTime';
         $endDateData['label']    = Phprojekt::getInstance()->translate('End Time');
         $endDateData['type']     = 'time';
-        $endDateData['hint']     = (isset($hints['endTime'])) ? $hints['endTime'] : '';
+        $endDateData['hint']     = Phprojekt::getInstance()->getTooltip('endTime');
         $endDateData['order']    = 0;
         $endDateDatadata['position'] = 3;
         $endDateData['fieldset'] = '';
@@ -119,7 +118,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['key']      = 'sum';
                 $data['label']    = Phprojekt::getInstance()->translate('Working Times');
                 $data['type']     = 'time';
-                $data['hint']     = (isset($hints['sum'])) ? $hints['sum'] : '';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('sum');
                 $data['order']    = 0;
                 $data['position'] = 2;
                 $data['fieldset'] = '';
@@ -136,7 +135,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['key']      = 'bookings';
                 $data['label']    = Phprojekt::getInstance()->translate('Project Bookings');
                 $data['type']     = 'time';
-                $data['hint']     = (isset($hints['bookings'])) ? $hints['bookings'] : '';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('bookings');
                 $data['order']    = 0;
                 $data['position'] = 3;
                 $data['fieldset'] = '';

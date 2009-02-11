@@ -52,14 +52,13 @@ class Phprojekt_Tab_Information extends EmptyIterator implements Phprojekt_Model
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // name
         $data = array();
         $data['key']      = 'label';
         $data['label']    = Phprojekt::getInstance()->translate('Label');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['label'])) ? $hints['label'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('label');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';

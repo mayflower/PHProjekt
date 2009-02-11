@@ -33,7 +33,6 @@
  * tablefield    = Name of the field in the table
  * formTab       = Number of the tab for show it in various tabs
  * formLabel     = Text for display in the form (english text that is translated later)
- * formTooltip   = Text for display in the title of the field in the form
  * formType      = Type of the field
  * formPosition  = Position of the field in the form
  * formColumns   = Number of columns that use the field
@@ -254,12 +253,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
-        $hints = Phprojekt::getInstance()->translate('Tooltip');
+        $converted = array();
 
         $converted['key']      = $field->tableField;
         $converted['label']    = Phprojekt::getInstance()->translate($field->formLabel);
         $converted['type']     = $field->formType;
-        $converted['hint']     = (isset($hints[$field->tableField])) ? $hints[$field->tableField] : '';
+        $converted['hint']     = Phprojekt::getInstance()->getTooltip($field->tableField);
         $converted['order']    = 0;
         $converted['position'] = (int) $field->formPosition;
         $converted['fieldset'] = '';

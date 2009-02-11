@@ -56,7 +56,6 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             designerData[0]['tableType']     = 'int';
             designerData[0]['tableLength']   = 11;
             designerData[0]['formLabel']     = 'Project';
-            designerData[0]['formTooltip']   = 'Project';
             designerData[0]['formType']      = 'selectValues';
             designerData[0]['formRange']     = 'Project # id # title';
             designerData[0]['defaultValue']  = 1;
@@ -155,8 +154,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                             data[i]['tableLength'] = ele.value;
                             break;
                         case 'formLabel':
-                            data[i]['formLabel']   = ele.value;
-                            data[i]['formTooltip'] = ele.value;
+                            data[i]['formLabel'] = ele.value;
                             break;
                         case 'formType':
                             data[i]['formType'] = ele.value;
