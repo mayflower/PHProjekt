@@ -87,13 +87,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.module == 'Setting' ||
                 this.module == 'User' ||
                 this.module == 'Role' ||
+                this.module == 'Tab' ||
                 this.module == 'Module') {
                 dojo.publish("Project.changeProject", [phpr.currentProjectId]);
             } else {
-                if (this.module == 'Calendar') {
-                    dojo.publish(this.module + ".reload");
-                } else {
+                if (this.module == 'Timecard') {
                     dojo.publish("Project.changeProject", [phpr.currentProjectId]);
+                } else {
+                    dojo.publish(this.module + ".reload");
                 }
             }
         } else {
