@@ -43,14 +43,13 @@ class Timecard_Models_TimecardSetting
     public function getFieldDefinition()
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // Amount
         $data = array();
         $data['key']      = 'amount';
         $data['label']    = Phprojekt::getInstance()->translate('Max Number of favorites projects');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['amount'])) ? $hints['amount'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('amount');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -67,7 +66,7 @@ class Timecard_Models_TimecardSetting
         $data['key']      = 'favorites';
         $data['label']    = Phprojekt::getInstance()->translate('Favorite projects');
         $data['type']     = 'multipleselectbox';
-        $data['hint']     = (isset($hints['favorites'])) ? $hints['favorites'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('favorites');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';

@@ -63,14 +63,13 @@ class Core_Models_UserSetting
     public function getFieldDefinition()
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         // password
         $data = array();
         $data['key']      = 'password';
         $data['label']    = Phprojekt::getInstance()->translate('Password');
         $data['type']     = 'password';
-        $data['hint']     = (isset($hints['password'])) ? $hints['password'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('password');
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
@@ -86,7 +85,7 @@ class Core_Models_UserSetting
         $data['key']      = 'confirmValue';
         $data['label']    = Phprojekt::getInstance()->translate('Confirm Password');
         $data['type']     = 'password';
-        $data['hint']     = (isset($hints['confirmValue'])) ? $hints['confirmValue'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('confirmValue');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -102,7 +101,7 @@ class Core_Models_UserSetting
         $data['key']      = 'oldValue';
         $data['label']    = Phprojekt::getInstance()->translate('Old Password');
         $data['type']     = 'password';
-        $data['hint']     = (isset($hints['oldValue'])) ? $hints['oldValue'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('oldValue');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
@@ -119,7 +118,7 @@ class Core_Models_UserSetting
         $data['key']      = 'email';
         $data['label']    = Phprojekt::getInstance()->translate('Email');
         $data['type']     = 'text';
-        $data['hint']     = (isset($hints['email'])) ? $hints['email'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('email');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';
@@ -136,7 +135,7 @@ class Core_Models_UserSetting
         $data['key']      = 'language';
         $data['label']    = Phprojekt::getInstance()->translate('Language');
         $data['type']     = 'selectbox';
-        $data['hint']     = (isset($hints['language'])) ? $hints['language'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('language');
         $data['order']    = 0;
         $data['position'] = 3;
         $data['fieldset'] = '';
@@ -155,7 +154,7 @@ class Core_Models_UserSetting
         $data['key']      = 'timeZone';
         $data['label']    = Phprojekt::getInstance()->translate('Time Zone');
         $data['type']     = 'selectbox';
-        $data['hint']     = (isset($hints['timeZone'])) ? $hints['timeZone'] : '';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('timeZone');
         $data['order']    = 0;
         $data['position'] = 2;
         $data['fieldset'] = '';

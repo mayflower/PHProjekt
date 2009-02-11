@@ -171,6 +171,35 @@ class Phprojekt {
     }
 
     /**
+     * Return the tooltip for a field
+     *
+     * 1. Look for the tooltip in the current module language file.
+     * 2. Look for the tooltip in the Default module language file.
+     * 3. Look for the tooltip in the current module english file.
+     * 4. Look for the tooltip in the Default module english file.
+     * 5. return nothing
+     *
+     * @param string $field The field for the tooltipo
+     *
+     * @return string
+     */
+    public function getTooltip($field)
+    {
+        $translate  = Phprojekt::getInstance()->getTranslate();
+        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+
+        $hints = $this->_translate->translate('Tooltip', $moduleName);
+        if (!is_array($hints)) {
+            $hints = $this->_translate->translate('Tooltip', $moduleName, 'en');
+            if (!is_array($hints)) {
+                $hints = array();
+            }
+        }
+
+        return (isset($hints[$field])) ? $hints[$field] : '';
+    }
+
+    /**
      * Return the View class
      *
      * @return Zend_View

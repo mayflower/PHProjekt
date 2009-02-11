@@ -52,7 +52,6 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
-        $hints     = Phprojekt::getInstance()->translate('Tooltip');
 
         switch ($ordering) {
             default:
@@ -61,7 +60,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['key']      = 'date';
                 $data['label']    = Phprojekt::getInstance()->translate('Date');
                 $data['type']     = 'date';
-                $data['hint']     = (isset($hints['date'])) ? $hints['date'] : '';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('date');
                 $data['order']    = 0;
                 $data['position'] = 1;
                 $data['fieldset'] = '';
@@ -78,7 +77,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['key']      = 'projectId';
                 $data['label']    = Phprojekt::getInstance()->translate('Project');
                 $data['type']     = 'time';
-                $data['hint']     = (isset($hints['projectId'])) ? $hints['projectId'] : '';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('projectId');
                 $data['order']    = 0;
                 $data['position'] = 2;
                 $data['fieldset'] = '';
@@ -104,7 +103,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['key']      = 'notes';
                 $data['label']    = Phprojekt::getInstance()->translate('Notes');
                 $data['type']     = 'textarea';
-                $data['hint']     = (isset($hints['notes'])) ? $hints['notes'] : '';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('notes');
                 $data['order']    = 0;
                 $data['position'] = 3;
                 $data['fieldset'] = '';
@@ -121,7 +120,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['key']      = 'amount';
                 $data['label']    = Phprojekt::getInstance()->translate('Amount');
                 $data['type']     = 'time';
-                $data['hint']     = (isset($hints['amount'])) ? $hints['amount'] : '';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('amount');
                 $data['order']    = 0;
                 $data['position'] = 4;
                 $data['fieldset'] = '';
