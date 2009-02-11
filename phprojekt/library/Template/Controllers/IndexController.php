@@ -21,7 +21,7 @@
  */
 
 /**
- * Default To##TEMPLATE##do Module Controller for PHProjekt 6.0
+ * Default ##TEMPLATE## Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
