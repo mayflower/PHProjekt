@@ -240,8 +240,9 @@ phpr.editModuleDesignerField = function(nodeId) {
     switch (formType) {
         case 'selectValues':
             var selectTypeRange = new Array();
-            selectTypeRange.push({'id': 'project', 'name': phpr.nls.get('Project List')});
-            selectTypeRange.push({'id': 'user', 'name': phpr.nls.get('User List')});
+            selectTypeRange.push({'id': 'project', 'name': phpr.nls.get('Projects')});
+            selectTypeRange.push({'id': 'user', 'name': phpr.nls.get('Users')});
+            selectTypeRange.push({'id': 'contact', 'name': phpr.nls.get('Contacts')});
             selectTypeRange.push({'id': 'custom', 'name': phpr.nls.get('Custom Values')});
             fieldsTable += template.selectRender(selectTypeRange, phpr.nls.get('Select Type'), 'selectType', selectType, true, false);
             break;
@@ -343,7 +344,12 @@ phpr.editModuleDesignerField = function(nodeId) {
                 dijit.byId("tableLength").attr('value', 11);
                 break;
             case 'user':
-                dijit.byId("formRange").attr('value', 'User # id # username');
+                dijit.byId("formRange").attr('value', 'User # id # lastname');
+                dijit.byId("tableType").attr('value', 'int');
+                dijit.byId("tableLength").attr('value', 11);
+                break;
+            case 'contact':
+                dijit.byId("formRange").attr('value', 'Contact # id # name');
                 dijit.byId("tableType").attr('value', 'int');
                 dijit.byId("tableLength").attr('value', 11);
                 break;
@@ -488,6 +494,9 @@ phpr.makeModuleDesignerField = function(formType, params) {
             } else if (selectType == 'user') {
                 inputTxt += '<option value="1">Example User 1</option>';
                 inputTxt += '<option value="2">Example User 2</option>';
+            } else if (selectType == 'contact') {
+                inputTxt += '<option value="1">Example Contact 1</option>';
+                inputTxt += '<option value="2">Example Contact 2</option>';
             } else {
                 if (!formRange) {
                     formRange = 'id1 # value1 | id2 # value2';
