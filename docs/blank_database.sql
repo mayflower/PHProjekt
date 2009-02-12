@@ -153,6 +153,7 @@ CREATE TABLE `Project` (
   `completePercent` varchar(4) default NULL,
   `hourlyWageRate` varchar(10) default NULL,
   `budget` varchar(10) default NULL,
+  `contactId` int(11) default NULL,
   PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -216,6 +217,7 @@ CREATE TABLE `Todo` (
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
+  `userId` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -487,6 +489,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Project', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
 (0, 'Project', 'completePercent', 1, 'completePercent', 'percentage', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0),
 (0, 'Project', 'budget', 1, 'budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0),
+(0, 'Project', 'contactId', 1, 'Contact', 'selectValues', 10, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
 
 (0, 'Todo', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Todo', 'notes', 1, 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
@@ -495,6 +498,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Todo', 'priority', 1, 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
 (0, 'Todo', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
 (0, 'Todo', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Todo', 'userId', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 1, '1', 1, 0, 0),
 
 (0, 'Note', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 0, 1, 0),
 (0, 'Note', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
