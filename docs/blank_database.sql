@@ -141,7 +141,7 @@ CREATE TABLE `History` (
 --
 CREATE TABLE `Project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `projectId` int(11) NOT NULL,
+  `projectId` int(11) default NULL,
   `path` varchar(25) NOT NULL default '/',
   `title` varchar(255) NOT NULL,
   `notes` text default NULL,
@@ -482,7 +482,7 @@ INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Project', 'notes', 1, 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Project', 'projectId', 1, 'parent', 'selectValues', 3, 1, NULL, 'Project#id#title', '1', 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Project', 'projectId', 1, 'parent', 'selectValues', 3, 1, NULL, 'Project#id#title', '1', 0, NULL, 1, 1, '1', 1, 0, 0),
 (0, 'Project', 'startDate', 1, 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 (0, 'Project', 'endDate', 1, 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Project', 'priority', 1, 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
