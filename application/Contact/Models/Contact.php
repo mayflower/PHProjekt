@@ -140,4 +140,26 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
             parent::delete();
         }
     }
+
+    /**
+     * Return the data range for a select
+     *
+     * @param Phprojekt_ModelInformation_Interface $field the field description
+     *
+     * @return an array with key and value to be used as datarange
+     */
+    public function getRangeFromModel($field)
+    {
+        if (!$field->isRequired) {
+            $options[] = array('id'   => 0,
+                               'name' => '');
+        }
+
+        $result = $this->fetchAll("private = 0");
+        foreach ($result as $item) {
+            $options[] = array('id'   => $item->id,
+                               'name' => $item->name);
+        }
+        return $options;
+    }
 }

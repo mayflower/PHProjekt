@@ -367,11 +367,31 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
             case 'User':
+                if (!$field->isRequired) {
+                    $options[] = array('id'   => 0,
+                                       'name' => '');
+                }
                 $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
                 $result       = $activeRecord->fetchAll("status = 'A'");
                 foreach ($result as $oneUser) {
                     $options[] = array('id'   => $oneUser->$key,
-                                       'name' => $oneUser->$value);
+                                       'name' => $oneUser->$value . ", " . $oneUser->firstname);
+                }
+                break;
+            default:
+                $activeRecord = Phprojekt_Loader::getModel($module, $module);
+                if (in_array('getRangeFromModel', get_class_methods($activeRecord))) {
+                    $options = call_user_method('getRangeFromModel', $activeRecord, $field);
+                } else {
+                    if (!$field->isRequired) {
+                        $options[] = array('id'   => 0,
+                                           'name' => '');
+                    }
+                    $result = $activeRecord->fetchAll();
+                    foreach ($result as $item) {
+                        $options[] = array('id'   => $item->$key,
+                                           'name' => $item->$value);
+                    }
                 }
                 break;
         }
