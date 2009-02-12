@@ -525,7 +525,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Contact', 'company', 1, 'Company', 'text', 3, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'firstphone', 1, 'First phone', 'text', 4, 1, NULL, '', '',  3, 'left', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'secondphone', 1, 'Second phone', 'text', 5, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'mobilephone', 1, 'Mobil phone', 'text', 6, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'mobilephone', 1, 'Mobile phone', 'text', 6, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'street', 1, 'Street', 'text', 7, 1, NULL, '', '', 4, 'left', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'city', 1, 'City', 'text', 8, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'zipcode', 1, 'Zip Code', 'text', 9, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
