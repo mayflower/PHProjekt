@@ -167,6 +167,10 @@ class Phprojekt {
         $translate  = Phprojekt::getInstance()->getTranslate();
         $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
 
+        if (null === $locale) {
+            $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
+        }
+
         return $this->_translate->translate($message, $moduleName, $locale);
     }
 
