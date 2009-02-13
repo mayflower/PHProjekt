@@ -239,7 +239,8 @@ class Phprojekt {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
             $error->getMessage();
-            echo 'You need the file configuration.ini to continue';
+            echo 'You need the file configuration.ini to continue. 
+                  Have you tried the <a href="setup/setup.php">setup</a> routine?';
             die();
         }
 
