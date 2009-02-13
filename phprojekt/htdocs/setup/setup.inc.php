@@ -80,7 +80,7 @@ function preInstallChecks()
 
         @mysql_connect($_REQUEST['server_host'], $_REQUEST['server_user'], $_REQUEST['server_pass']);
 
-        mysql_query("CREATE DATABASE ".$_REQUEST['server_database']);
+        @mysql_query("CREATE DATABASE ".$_REQUEST['server_database']);
 
         if (!mysql_select_db($_REQUEST['server_database'])) {
             $_SESSION['error_message'] = "Error selecting database ".$_REQUEST['server_database'];
@@ -114,6 +114,7 @@ function preInstallChecks()
     $baseDir = substr($_SERVER['SCRIPT_FILENAME'], 0, -22);
 
     $configFlie = $baseDir."configuration.ini";
+    
     if (!file_exists($configFlie)) {
         if (!file_put_contents($configFlie, "Test")) {
             $_SESSION['error_message'] = "Error creating the configuration file at ".$configFlie;
@@ -154,11 +155,13 @@ function displayFinished() {
 }
 
 function installPhprojekt() {
-
+    
     try {
         if ($_REQUEST['server_type'] == 'pdo_sqlite2') {
             $params = array('dbname' => $_REQUEST['server_host']);
         } else {
+            
+
             $params = array(
             'host'     => $_REQUEST['server_host'],
             'username' => $_REQUEST['server_user'],
@@ -169,6 +172,7 @@ function installPhprojekt() {
         }
 
         $db = Zend_Db::factory($_REQUEST['server_type'], $params);
+        
 
     } catch (Exception $error) {
         die("Error connecting to server " . "(" . $error->getMessage() . ")");
@@ -210,7 +214,15 @@ function installPhprojekt() {
     $tableManager = new Phprojekt_Table($db);
 
     foreach ($tableList as $oneTable) {
-        $tableManager->dropTable($oneTable);
+        if ($tableManager->tableExists($oneTable)) {
+            
+            // fix for Zend Framework 1.7.2 and Windows operating system
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $db->closeConnection();
+            }
+
+            $tableManager->dropTable($oneTable);
+        }
     }
 
     $result = $tableManager->createTable('databaseManager',
@@ -1577,6 +1589,41 @@ function installPhprojekt() {
     'keyValue' => 'timeZone',
     'value' => '2',
     'identifier' => 'Core'));
+    
+    $db->insert('User', array('id' => 2,
+    'username' => 'test',
+    'firstname' => 'Test',
+    'lastname' => 'Test',
+    'status' => 'A',
+    'admin' => 0));
+
+    $db->insert('Setting', array('id' => 5,
+    'userId' => 2,
+    'moduleId' => 0,
+    'keyValue' => 'password',
+    'value' => md5('phprojektmd5'.$_REQUEST['admin_pass']),
+    'identifier' => 'Core'));
+
+    $db->insert('Setting', array('id' => 6,
+    'userId' => 2,
+    'moduleId' => 0,
+    'keyValue' => 'email',
+    'value' => 'test@example.com',
+    'identifier' => 'Core'));
+
+    $db->insert('Setting', array('id' => 7,
+    'userId' => 2,
+    'moduleId' => 0,
+    'keyValue' => 'language',
+    'value' => 'en',
+    'identifier' => 'Core'));
+
+    $db->insert('Setting', array('id' => 8,
+    'userId' => 2,
+    'moduleId' => 0,
+    'keyValue' => 'timeZone',
+    'value' => '2',
+    'identifier' => 'Core'));
 
     $db->insert('Project', array('id' => 1,
     'projectId' => null,
@@ -1605,11 +1652,23 @@ function installPhprojekt() {
     'groupsId' => 1,
     'userId' => 1
     ));
+    
+    $db->insert('GroupsUserRelation', array(
+    'id' => 2,
+    'groupsId' => 2,
+    'userId' => 2
+    ));
 
     $db->insert('ProjectRoleUserPermissions', array(
     'projectId' => 1,
     'userId' => 1,
     'roleId' => 1
+    ));
+    
+    $db->insert('ProjectRoleUserPermissions', array(
+    'projectId' => 1,
+    'userId' => 2,
+    'roleId' => 2
     ));
 
     $db->insert('RoleModulePermissions', array(
@@ -1874,16 +1933,15 @@ useCacheForClasses   = true;
 
     // migration
 
-    $statusConversion = array(1 => "offered",
-    2 => "ordered",
-    3 => "Working",
-    4 => "ended",
-    5 => "stopped",
-    6 => "Re-Opened",
-    7 => "waiting");
-
-
     if (isset($_REQUEST['migration_config']) && file_exists($_REQUEST['migration_config'])) {
+
+        $statusConversion = array(1 => "offered",
+        2 => "ordered",
+        3 => "Working",
+        4 => "ended",
+        5 => "stopped",
+        6 => "Re-Opened",
+        7 => "waiting");
 
         include_once($_REQUEST['migration_config']);
 

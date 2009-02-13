@@ -99,8 +99,8 @@ class Phprojekt_Table
                 }
                 $sqlString .= $fieldName;
                 $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                        $fieldDefinition['null'], $fieldDefinition['default'],
-                                                        $fieldDefinition['default_no_quote']) . ", ";
+                $fieldDefinition['null'], $fieldDefinition['default'],
+                $fieldDefinition['default_no_quote']) . ", ";
             }
         } else {
             return false;
@@ -157,8 +157,8 @@ class Phprojekt_Table
             }
             $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                    $fieldDefinition['null'], $fieldDefinition['default'],
-                                                    $fieldDefinition['default_no_quote']);
+            $fieldDefinition['null'], $fieldDefinition['default'],
+            $fieldDefinition['default_no_quote']);
         } else {
             return false;
         }
@@ -207,8 +207,8 @@ class Phprojekt_Table
 
             $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                    $fieldDefinition['null'], $fieldDefinition['default'],
-                                                    $fieldDefinition['default_no_quote']);
+            $fieldDefinition['null'], $fieldDefinition['default'],
+            $fieldDefinition['default_no_quote']);
         } else {
             return false;
         }
@@ -254,8 +254,8 @@ class Phprojekt_Table
             }
             $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                                                    $fieldDefinition['null'], $fieldDefinition['default'],
-                                                    $fieldDefinition['default_no_quote']);
+            $fieldDefinition['null'], $fieldDefinition['default'],
+            $fieldDefinition['default_no_quote']);
         } else {
             return false;
         }
@@ -336,7 +336,7 @@ class Phprojekt_Table
         $fieldDefinition = " " . $fieldType;
         if (!empty($fieldLength)) {
             if (($fieldType == 'int') ||
-                ($fieldType == 'varchar')) {
+            ($fieldType == 'varchar')) {
                 $fieldDefinition .= "(" . (int) $fieldLength . ") ";
             }
         }
@@ -399,6 +399,26 @@ class Phprojekt_Table
             return true;
         } catch (Exception $error) {
             Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Checks if a table exists
+     *
+     * @param string $tableName The name of the table
+     *
+     * @return boolean
+     */
+    public function tableExists($tableName)
+    {
+        $tableName = ucfirst($tableName);
+        $sqlString = "SELECT COUNT(*) FROM " . $this->_db->quoteIdentifier((string) $tableName);
+
+        try {
+            $this->_db->getConnection()->exec($sqlString);
+            return true;
+        } catch (Exception $error) {
             return false;
         }
     }
