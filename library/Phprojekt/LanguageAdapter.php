@@ -336,14 +336,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 
         if (isset($this->_translate[$locale][$moduleName]) &&
             isset($this->_translate[$locale][$moduleName][$messageId])) {
-            //$toReturn = "$moduleName - " . $this->_translate[$locale][$moduleName][$messageId];
             $toReturn = $this->_translate[$locale][$moduleName][$messageId];
         } else if (isset($this->_translate[$locale]['Default']) &&
             isset($this->_translate[$locale]['Default'][$messageId])) {
-            //$toReturn = "Default - " . $this->_translate[$locale]['Default'][$messageId];
             $toReturn = $this->_translate[$locale]['Default'][$messageId];
         } else{
-            //$toReturn = "NONE - " . $messageId;
             $toReturn = $messageId;
         }
         return $toReturn;

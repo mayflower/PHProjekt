@@ -610,21 +610,17 @@ dojo.declare("phpr.translator", null, {
     get:function(string, module) {
         // Special module
         if (module && this._strings[module] && this._strings[module][string]) {
-            //return module + " - " + this._strings[module][string];
             return this._strings[module][string];
         // Current module
         } else if (this._strings[phpr.module] && this._strings[phpr.module][string]) {
-            //return phpr.module + " - " + this._strings[phpr.module][string];
             return this._strings[phpr.module][string];
         // Default module
         } else if (this._strings['Default'] && this._strings['Default'][string]) {
-            //return "Default - " + this._strings['Default'][string];
             return this._strings['Default'][string];
         } else {
             // Check if the string is in other module
             for (var module in this._strings) {
                 if (this._strings[module] && this._strings[module][string]) {
-                    //return module + " - " + this._strings[module][string];
                     return this._strings[module][string];
                 }
             }
