@@ -694,7 +694,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // summary:
         //    Display the Help for one module
         // description:
-        //    The function will show the help under the string "Content Help for -module-"
+        //    The function will show the help under the string "Content Help"
         //    The translation must be an array and each index is a different tab
         phpr.destroyWidget('helpContent');
 

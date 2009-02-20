@@ -60,7 +60,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
         this.render(["phpr.Timecard.template", "form.html"], dojo.byId('detailsBox'), {
             hours:                    hours,
-            timecardProjectTimesText: phpr.nls.get("Project bookings"),
+            timecardProjectTimesText: phpr.nls.get("Project Bookings"),
             projectTimesHelpText:     phpr.nls.get("Project Times Help"),
             manageFavoritesText:      phpr.nls.get('Manage project list')
         });
@@ -162,6 +162,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
             date: this._date,
             timecardWorkingTimesText: phpr.nls.get("Working Times"),
+            workingTimesHelpText:     phpr.nls.get("Working Times Help"),
+            hoursHelpText:            phpr.nls.get("Hours Help"),
             timecardStartText:        phpr.nls.get("Start"),
             timecardEndText:          phpr.nls.get("End"),
             timecardTotalText:        phpr.nls.get("Total"),

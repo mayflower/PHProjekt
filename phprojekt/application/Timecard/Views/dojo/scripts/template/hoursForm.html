@@ -1,5 +1,15 @@
 <form dojoType="dijit.form.Form" id="hoursForm" name="hoursForm" style="display:inline;" onsubmit="return false;">
-<h4 style="color: #294064; font-weight: bold;">{{timecardWorkingTimesText}}</h4>
+<!-- Title -->
+<div style="height:30px;">
+    <h4 style="color: #294064; font-weight: bold; float: left;">&nbsp;{{timecardWorkingTimesText}}</h4>
+    <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+        <div dojoType="dijit.TooltipDialog">
+            <div style="white-space: nowrap;">
+            {{workingTimesHelpText}}
+            </div>
+        </div>
+    </button>
+</div>
 <div style="vertical-align: baseline; margin-left:10px; margin-right:10px; background: #fff; border: 3px solid #F1CE47; radius:8pt; -moz-border-radius:8pt 8pt; padding:5px;">
     <div style="color: #294064; text-align: center">
         <input dojoType="dijit.form.TextBox" type="hidden" id="date" name="date" value="{{date}}" />
@@ -13,8 +23,16 @@
                 </div>
             <div>
             <br />
+            <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+                <div dojoType="dijit.TooltipDialog">
+                    <div style="white-space: nowrap;">
+                    {{hoursHelpText}}
+                    </div>
+                </div>
+            </button>
             <button dojoType="dijit.form.Button" baseClass="positive" id="hoursSaveButton" type="submit" iconClass="tick">
             </button>
+            &nbsp;&nbsp;
         </div>
     </div>
 </div>

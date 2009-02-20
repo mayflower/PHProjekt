@@ -19,16 +19,28 @@ $lang["Notes"] = "Notas";
 $lang["date"] = "Fecha";
 $lang["Date"] = "Fecha";
 $lang["name"] = "Nombre";
+$lang["Name"] = "Nombre";
 $lang["label"] = "Etiqueta";
 $lang["active"] = "Activo";
 $lang["username"] = "Nombre de usuario";
+$lang["Username"] = "Nombre de usuario";
 $lang["password"] = "Contraseña";
 $lang["Password"] = "Contraseña";
 $lang["firstname"] = "Nombre";
+$lang["First Name"] = "Nombre";
+$lang["First name"] = "Nombre";
 $lang["lastname"] = "Apellido";
+$lang["Last Name"] = "Apellido";
+$lang["Last name"] = "Apellido";
+$lang["Email"] = "Email";
 $lang["email"] = "Email";
+$lang["E-Mail"] = "E-Mail";
 $lang["language"] = "Idioma";
 $lang["status"] = "Estado";
+$lang["admin"] = "Admin";
+$lang["Time Zone"] = "Zona horaria";
+$lang["timeZone"] = "Zona horaria";
+$lang["Title"] = "Título";
 $lang["title"] = "Título";
 $lang["parent"] = "Proyecto";
 $lang["projectId"] = "Proyecto";
@@ -44,17 +56,33 @@ $lang["Field"] = "Campo";
 $lang["Old value"] = "Valor anterior";
 $lang["NewValue"] = "Valor nuevo";
 $lang["Datetime"] = "Fecha";
+$lang["Comments"] = "Comentarios";
 $lang["comments"] = "Comentarios";
+$lang["Comment"] = "Comentario";
+$lang["Category"] = "Categoría";
 $lang["category"] = "Categoría";
 $lang["participantId"] = "Participantes";
 $lang["startTime"] = "Tiempo de inicio";
+$lang["Start Time"] = "Tiempo de inicio";
 $lang["endTime"] = "Tiempo final";
+$lang["End Time"] = "Tiempo final";
+$lang["Sum"] = "Suma";
 $lang["sum"] = "Suma";
 $lang["bookings"] = "Registro";
 $lang["amount"] = "Cantidad";
 $lang["Amount"] = "Cantidad";
 $lang["serialType"] = "Tipo de Serie";
 $lang["serialDays"] = "Serie de días";
+$lang["Upload"] = "Upload";
+$lang["Company"] = "Compañía";
+$lang["First phone"] = "Teléfono 1";
+$lang["Second phone"] = "Teléfono 2";
+$lang["Mobile phone"] = "Tel. celular";
+$lang["Street"] = "Calle";
+$lang["City"] = "Ciudad";
+$lang["Zip Code"] = "Código postal";
+$lang["Country"] = "País";
+$lang["Private"] = "Privado";
 
 // Access
 $lang["User"] = "Usuario";
@@ -73,13 +101,14 @@ $lang["Save"]   = "Grabar";
 $lang["Delete"] = "Borrar";
 $lang["Cancel"] = "Cancelar";
 $lang["Close"]  = "Cerrar";
+$lang["Edit"]  = "Editar";
 
 // Messages
 $lang["There are no entries on this level"] = "No hay elementos en este nivel";
 $lang["You do not have access to edit this item"] = "No tiene permisos para editar este item";
 $lang["The Item was added correctly"] = "El item fue agregado correctamente";
 $lang["The Item was edited correctly"] = "El item fue editado correctamente";
-$lang["The Items were edited correctly"] = "Los items fueron agregados correctamente";
+$lang["The Items were edited correctly"] = "Los ítems fueron agregados correctamente";
 $lang["The Item can't be deleted"] = "El item no puede ser borrado";
 $lang["The Item was deleted correctly"] = "El item fue borrado correctamente";
 $lang["Is a required field"] = "Es un campo requerido";
@@ -119,43 +148,33 @@ $lang["Administration"] = "Administración";
 $lang["Calendar"] = "Evento";
 $lang["Note"] = "Nota";
 $lang["Settings"] = "Configuración";
-$lang["Timecard"] = "Timecard";
+$lang["Timecard"] = "Asistencia";
 $lang["Todo"] = "Todo";
 $lang["Help"] = "Ayuda";
 $lang["Logout"] = "Salir";
 $lang["Groups"] = "Grupo";
 $lang["Role"] = "Rol";
-$lang["Tab"] = "Tab";
+$lang["Tab"] = "Solapa";
 $lang["User"] = "Usuario";
 $lang["History"] = "Historial";
 $lang["Basic Data"] = "Datos Básicos";
 $lang["Notification"] = "Notificación";
+$lang["Filemanager"] = "Archivos";
+$lang["Gantt"] = "Gantt";
+$lang["Statistic"] = "Estadísticas";
+$lang["Contact"] = "Contactos";
 
 // Titles
 $lang["Search results"] = "Resultados de la búsqueda";
 $lang["Tag results"] = "Tags";
 
-// Special System words of the module
-// Timecard
-$lang["Working Times"] = "Tiempos de Trabajo";
-$lang["Start working time"] = "Empezar tiempo de trabajo";
-$lang["Stop working time"] = "Terminar tiempo de trabajo";
+// Special System words of the modules
+// Originally from Timecard
 $lang["Hours"] = "Horas";
-$lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
 $lang["Change date"] = "Cambiar día";
-$lang["Project bookings"] = "Horas de proyectos";
-$lang["Add working time and drag projects into the bar"] = "Agregar tiempo de trabajo "
-    . "y luego arrastrar los proyectos en la barra";
-$lang["Manage project list"] = "Admin. lista de proyectos";
-$lang["Amount [hhmm]"] = "Cantidad [hhmm]";
 $lang["Total"] = "Total";
 
-// Settings module
-$lang["Please, log out and log in again to the application to apply the changes."] = "Por favor, "
-    . "salga e ingrese nuevamente a la aplicación para guardar los cambios.";
-$lang["The value for the setting is incorrect"] = "El valor elegido para la configuración es inválido";
-$lang["The password and confirmation are different or empty"] = "La contraseña y su confirmación son diferentes";
-$lang["The old password provided is invalid"] = "La contraseña anterior no es correcta";
+// Originally from Settings module
 $lang["keyValue"] = "Configuración";
 $lang["value"] = "Valor";
 $lang["Confirm Password"] = "Confirmar contraseña";
@@ -164,10 +183,9 @@ $lang["Language"] = "Idioma";
 $lang["Email"] = "Dirección de correo";
 $lang["Time Zone"] = "Huso Horario";
 $lang["Favorite projects"] = "Proyectos favoritos";
-$lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos";
 
-//Administration module
-//Visual Module Editor
+// Originally from Administration module
+// Visual Module Editor
 $lang["Open Dialog"]    = "Abrir Diseñador";
 $lang["Designer"]       = "Diseñador";
 $lang["Table"]          = "Tabla";
@@ -188,10 +206,6 @@ $lang["General"]        = "General";
 $lang["Status"]         = "Estado";
 $lang["Inactive"]       = "Inactivo";
 $lang["Required Field"] = "Campo requerido";
-
-// Search
-$lang["View all"] = "Ver todos";
-$lang["There are no Results"] = "No se encontraron resultados";
 
 // Notification tab
 $lang["Send Notification"] = "Enviar notificación";
@@ -237,6 +251,12 @@ $lang["October"] = "Octubre";
 $lang["November"] = "Noviembre";
 $lang["December"] = "Diciembre";
 
+$lang["Recurrence"] = "Repetición";
+$lang["Repeats"] = "Repeticiones";
+$lang["Interval"] = "Intervalo";
+$lang["Until"] = "Hasta";
+$lang["Weekdays"] = "Días de la semana";
+
 // Common status
 $lang["Offered"] = "Ofrecido";
 $lang["Ordered"] = "Ordenado";
@@ -246,3 +266,120 @@ $lang["Stopped"] = "Parado";
 $lang["Re-Opened"] = "Re-Abierto";
 $lang["Waiting"] = "Esperando";
 $lang["Accepted"] = "Aceptado";
+
+// Help
+$lang["Content Help"]["General"] = "<br/>
+    Esta es la <b>Ayuda General</b><br/>
+    <br/>
+    La pantalla Phprojekt está dividida en varias secciones:<br/>
+    <br/>
+    <ul>
+        <li>La <b>parte superior</b> que posee el logo del sistema a la izquierda y, a la derecha, algunos vínculos y
+            una caja de búsqueda.<br/>
+        <br/>
+        <ol>
+            <li>El <b>logo</b> es un vínculo al módulo Proyecto que una vez abierto mostrará todos los proyectos en 
+                el árbol de la izquierda y también en la grilla en el centro de la pantalla.<br/>
+            <li>La sección superior derecha contiene <b>varios</b> vínculos a módulos que no están directamente
+                asociados a un proyecto en particular. Para ver la ayuda de cada módulo, cierre esta ventana emergente,
+                abra el módulo y cliqueé en el vínculo de Ayuda nuevamente.<br/>
+            <ol>
+                <li><b>Evento:</b> módulo para administrar eventos situados temporalmente en un calendario.<br/>
+                <li><b>Asistencia:</b> módulo para cargar las horas trabajadas y asignarlas a proyectos. Posee una
+                    interfaz visual muy fácil de usar.<br/>
+                <li><b>Configuración:</b> aquí el usuario modifica configuración específica de su perfil, como
+                    contraseña, e-mail, etc.<br/>
+                <li><b>Administración:</b> esta es la sección de administración general del sistema, sólo visible y
+                accesible para usuarios con perfil Administrador.<br/>
+                <li><b>Ayuda:</b> es esta ventana dinámica. Siempre que es abierta muestra la ayuda general más la
+                    ayuda del módulo activo.<br/>
+                <li><b>Salir:</b> termina la sesión actual y regresa a la pantalla de ingreso.<br/>
+            </ol>
+            <li><b>Caja de búsqueda:</b> este campo permite buscar dentro del sitio ítems que contengan la cadena
+                ingresada.<br/>
+        </ol>
+        <li>Dos paneles izquierdos:<br/>
+        <br/>
+        <ol>
+            <li><b>Árbol de proyectos:</b> es un árbol jerárquico de proyectos y subproyectos. Ambos se abren en el
+                panel central sólo cliqueándolos dentro del árbol.<br/>
+            <li><b>Caja de tags:</b> es una <i>nube de etiquetas</i> (<i>tag cloud</i> en inglés) con vínculos a ítems
+                del sistema. Los tags son definidos por el usuario al editar cada ítem. A mayor veces que un tag se
+                repite en el sistema, más grande aparece aquí.<br/>
+        </ol>
+        <li>Los paneles centrales:<br/>
+        <br/>
+        Esta sección varía según el módulo con el que se esté trabajando. Generalmente tiene:<br/>
+        <ol>
+            <li>Una <b>barra superior</b> con solapas a la izquierda y algunos botones a la derecha:<br/>
+            <ol>
+                <li>Las <b>solapas a la izquierda</b> pueden representar módulos o submódulos.<br/>
+                <li>Generalmente los botones de la derecha son tres:<br/>
+                <ol>
+                    <li><b>Agregar:</b> para crear un nuevo ítem del módulo activo.<br/>
+                    <li><b>Grabar:</b> graba los cambios hechos en la grilla (edición en línea).<br/>
+                    <li><b>Exportar:</b> exporta los ítems que están siendo mostrados en la grilla a un archivo en formato
+                        CSV.<br/>
+                </ol>
+            </ol>
+            <li>Una <b>grilla</b> con el listado de ítems del módulo. Según los permisos del usuario, pueden ser
+                modificadas tan sólo cliqueando en una celda y modificándola.<br/>
+                Cliqueando en los encabezados de cada columna, el listado es reordenado alfabéticamente de acuerdo al
+                contenido de dicha columna.<br/>
+                Cuando un ítem es cliqueado sobre su Id, este se abre en el formulario debajo.<br/>
+            <li>Un <b>formulario</b> que es mostrado siempre que se crea un nuevo ítem o cuando se abre uno
+                existente.<br/>
+        </ol>
+    </ul><br/>
+    <br/>";
+
+$lang["Content Help"]["Datos Básicos"] = "<br/>
+    <b>Solapa Datos Básicos</b><br/>
+    <br/>
+    Dentro de esta solapa se ingresa la información principal sobre un ítem.<br/>
+    Posee una serie de campos para completar, de acuerdo al módulo del que se trate.<br/>
+    <br/>
+    <br/>";
+
+$lang["Content Help"]["Accesos"] = "<br/>
+    <b>Solapa Accesos</b><br/>
+    <br/>
+    Esta solapa permite establecer los permisos individuales para cada usuario para el ítem en creación o
+    modificación.<br/>
+    Los usuarios que se permite modificar esta solapa son todos excepto el usuario logueado. La intención de
+    esta sección es elegir a qué usuarios se les quiere dar acceso para el ítem, y qué tipo de acceso.<br/>
+    Por ejemplo usted crea un ítem y elige algunos usuarios para darles permiso de lectura y si quiere puede elegir
+    otro usuario para darle permiso de escritura (el usuario logueado predeterminadamente tiene acceso tipo 'admin'
+    para el ítem.<br/>
+    <br/>
+    Los permisos son:<br/>
+    <b>Lectura:</b> ver el ítem.<br/>
+    <b>Escritura:</b> modificar el ítem.<br/>
+    <b>Accesos:</b> acceder a los hijos del ítem (ej.: ver los subproyectos pero no ver el proyecto en sí).<br/>
+    <b>Creación:</b> crear un sub ítem.<br/>
+    <b>Copiar:</b> copiar el ítem para crear otro.<br/>
+    <b>Borrar:</b> borrar el ítem.<br/>
+    <b>Bajar:</b> bajar archivos (por ejemplo en el módulo <i>Archivos</i>).<br/>
+    <b>Admin:</b> todos los permisos en uno, incluyendo poder editar los permisos del ítem.<br/>
+    <b>Ninguno:</b> el usuario no puede siquiera ver el ítem.<br/>
+    <br/>
+    <u>Nota:</u> el dueño (creador) del ítem tiene predeterminadamente todos los permisos.<br/>";
+
+$lang["Content Help"]["Notificación"] = "<br/>
+    <b>Solapa Notificación</b><br/>
+    <br/>
+    Esta solapa permite enviar una notificación automática por email a todos los usuarios con acceso de
+    lectura para este ítem, o a los usuarios que el módulo tenga definido como criterio.<br/>
+    <br/>
+    Dicho correo les advertirá sobre la creación o modificación del ítem dándole detalles sobre el mismo.<br/>
+    <br/>
+    <br/>";
+
+$lang["Content Help"]["Historial"] = "<br/>
+    <b>Solapa Historial</b><br/>
+    <br/>
+    Muestra un listado de los cambios hechos al ítem desde su creación.<br/>
+    <br/>
+    Tiene 4 columnas: <i>fecha</i>, <i>usuario</i>, <i>campo</i> y <i>valor anterior</i>.<br/>
+    <br/>
+    <br/>";

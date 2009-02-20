@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // General
 $lang["Module"] = "Modul";
 $lang["Active"] = "Aktiv";
@@ -19,16 +19,28 @@ $lang["Notes"] = "Notiz";
 $lang["date"] = "Datum";
 $lang["Date"] = "Datum";
 $lang["name"] = "Name";
+$lang["Name"] = "Name";
 $lang["label"] = "Label";
 $lang["active"] = "Aktiv";
 $lang["username"] = "Username";
+$lang["Username"] = "Username";
 $lang["password"] = "Passwort";
 $lang["Password"] = "Passwort";
 $lang["firstname"] = "Vorname";
+$lang["First Name"] = "Vorname";
+$lang["First name"] = "Vorname";
 $lang["lastname"] = "Nachname";
+$lang["Last Name"] = "Nachname";
+$lang["Last name"] = "Nachname";
+$lang["Email"] = "Email";
 $lang["email"] = "Email";
+$lang["E-Mail"] = "Email";
 $lang["language"] = "Sprache";
 $lang["status"] = "Status";
+$lang["admin"] = "Admin";
+$lang["Time Zone"] = "Zeitzone";
+$lang["timeZone"] = "Zeitzone";
+$lang["Title"] = "Titel";
 $lang["title"] = "Titel";
 $lang["parent"] = "Oberprojekt";
 $lang["projectId"] = "Projekt ID";
@@ -44,17 +56,33 @@ $lang["Field"] = "Feld";
 $lang["Old value"] = "Alter Wert";
 $lang["NewValue"] = "Neuer Wert";
 $lang["Datetime"] = "Datum";
+$lang["Comments"] = "Kommentar";
 $lang["comments"] = "Kommentar";
+$lang["Comment"] = "Kommentar";
+$lang["Category"] = "Kategorie";
 $lang["category"] = "Kategorie";
 $lang["participantId"] = "TeilnehmerIn";
 $lang["startTime"] = "Startzeit";
+$lang["Start Time"] = "Startzeit";
 $lang["endTime"] = "Endzeit";
+$lang["End Time"] = "Endzeit";
+$lang["Sum"] = "Summe";
 $lang["sum"] = "Summe";
 $lang["bookings"] = "Buchungen";
 $lang["amount"] = "Menge";
 $lang["Amount"] = "Menge";
 $lang["serialType"] = "Serientyp";
 $lang["serialDays"] = "Serientermin";
+$lang["Upload"] = "Upload";
+$lang["Company"] = "Firma";
+$lang["First phone"] = "Fon 1";
+$lang["Second phone"] = "Fon 2";
+$lang["Mobile phone"] = "Mobiltelefon";
+$lang["Street"] = "Straße";
+$lang["City"] = "Stadt";
+$lang["Zip Code"] = "Postleitzahl";
+$lang["Country"] = "Land";
+$lang["Private"] = "Privat";
 
 // Access
 $lang["User"] = "User";
@@ -73,6 +101,7 @@ $lang["Save"] = "Speichern";
 $lang["Delete"] = "Löschen";
 $lang["Cancel"] = "Abbrechen";
 $lang["Close"] = "Schließen";
+$lang["Edit"] = "Editieren";
 
 // Messages
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines hinzufügen";
@@ -130,31 +159,22 @@ $lang["User"] = "User";
 $lang["History"] = "Historie";
 $lang["Basic Data"] = "Basisdaten";
 $lang["Notification"] = "Benachrichtigung";
+$lang["Filemanager"] = "Dateien";
+$lang["Gantt"] = "Gantt";
+$lang["Statistic"] = "Statistiken";
+$lang["Contact"] = "Kontakte";
 
 // Titles
 $lang["Search results"] = "Suchergebnisse";
 $lang["Tag results"] = "Tag Ergebnisse";
 
-// Special System words of the module
-// Timecard
-$lang["Working Times"] = "Arbeitszeiten";
-$lang["Start working time"] = "Arbeitszeit Start";
-$lang["Stop working time"] = "Arbeitszeit Ende";
+// Special System words of the modules
+// Originally from Timecard
 $lang["Hours"] = "Stunden";
-$lang["The end time must be after the start time"] = "Die Endzeit muss hinter der Startzeit liegen";
 $lang["Change date"] = "Neues Datum";
-$lang["Project bookings"] = "Projektbuchungen";
-$lang["Add working time and drag projects into the bar"] = "Füge Arbeitszeiten hinzu und ziehe ein Projekt in das Feld";
-$lang["Manage project list"] = "Projektliste verwalten";
-$lang["Amount [hhmm]"] = "Zeit [hhmm]";
 $lang["Total"] = "Gesamt";
 
-// Settings module
-$lang["Please, log out and log in again to the application to apply the changes."] = "Bitte aus und einloggen, "
-    . "um die Änderungen wirksam werden zu lassen.";
-$lang["The value for the setting is incorrect"] = "Der Wert für diese Einstellung ist nicht gültig";
-$lang["The password and confirmation are different or empty"] = "Das Passwort und die Wiederholung stimmen nicht überein";
-$lang["The old password provided is invalid"] = "Das alte Passwort ist nicht richtig";
+// Originally from Settings module
 $lang["keyValue"] = "Schlüssel";
 $lang["value"] = "Wert";
 $lang["Confirm Password"] = "Passwort bestätigen";
@@ -163,10 +183,9 @@ $lang["Language"] = "Sprache";
 $lang["Email"] = "Email";
 $lang["Time Zone"] = "Zeitzone";
 $lang["Favorite projects"] = "Angezeigte Projekte";
-$lang["Max Number of favorites projects"] = "Max. Nummer von angezeigten Projekten";
 
-//Administration module
-//Visual Module Editor
+// Originally from Administration module
+// Visual Module Editor
 $lang["Open Dialog"] =   "Maske öffnen";
 $lang["Designer"]    = "Desinger";
 $lang["Table"] = "Tisch";
@@ -187,10 +206,6 @@ $lang["General"] = "Allgemeine";
 $lang["Status"] = "Status";
 $lang["Inactive"] = "Inaktive";
 $lang["Required Field"] = "Pflichtfeld";
-
-// Search
-$lang["View all"] = "Zeige Alle";
-$lang["There are no Results"] = "Es sind keine Results vorhanden";
 
 // Notification tab
 $lang["Send Notification"] = "Benachrichtigung senden";
@@ -235,6 +250,12 @@ $lang["September"] = "September";
 $lang["October"] = "Oktober";
 $lang["November"] = "November";
 $lang["December"] = "Dezember";
+
+$lang["Recurrence"] = "Wiederholung";
+$lang["Repeats"] = "Serientyp";
+$lang["Interval"] = "Intervall";
+$lang["Until"] = "Bis";
+$lang["Weekdays"] = "Wochentage";
 
 // Common status
 $lang["Offered"] = "Angebotene";

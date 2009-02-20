@@ -42,9 +42,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     reload:function() {
         phpr.module = this.module;
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
-            selectDate:           phpr.nls.get('Change date'),
+            startStopButtonsHelp: phpr.nls.get('Start Stop Buttons Help'),
             startWorkingTimeText: phpr.nls.get('Start Working Time'),
-            stopWorkingTimeText:  phpr.nls.get('Stop Working Time')
+            stopWorkingTimeText:  phpr.nls.get('Stop Working Time'),
+            selectDate:           phpr.nls.get('Change date')
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.cleanPage();

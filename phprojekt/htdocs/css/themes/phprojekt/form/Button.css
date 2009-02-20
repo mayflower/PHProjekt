@@ -201,6 +201,27 @@
     vertical-align: top;
 }
 
+.phprojekt #changeView .tooltip .dijitButtonNode {
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: top;
+}
+
+.phprojekt #ganttChart .tooltip .dijitButtonNode {
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: top;
+}
+
+.phprojekt #statisticChart .tooltip .dijitButtonNode {
+    width: 20px;
+    border: none;
+    background: none;
+    vertical-align: top;
+}
+
 .phprojekt #filesList .closeButton .dijitButtonNode {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;

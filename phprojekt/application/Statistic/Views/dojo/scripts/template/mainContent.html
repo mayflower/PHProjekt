@@ -7,7 +7,7 @@
             </td>
             <td>
                 <fieldset style="border:1px solid; padding:5px;width:500px;">
-                    <legend>{{timelineText}}:</legend>
+                    <legend>{{selectedPeriodText}}:</legend>
                     <input id="startDate" name="startDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}" value="{startDate}"
                     style="width: 85px;">
                     &nbsp;
@@ -19,6 +19,14 @@
                         if (dijit.byId('startDate').attr('value') != null && dijit.byId('endDate').attr('value') != null) {
                             dojo.publish('Statistic.changeDate',[dijit.byId('startDate').attr('value'), dijit.byId('endDate').attr('value')]);
                         }">
+                    </button>
+                    &nbsp;
+                    <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+                        <div dojoType="dijit.TooltipDialog">
+                            <div style="white-space: nowrap;">
+                            {{selectedPeriodHelp}}
+                            </div>
+                        </div>
                     </button>
                 </fieldset>
             </td>

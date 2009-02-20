@@ -19,3 +19,24 @@ $lang["Click \"OK\" to adjust sub-project to new start date"] = "Click \"OK\" to
 
 $lang["Click \"Reset\" to reset current project"] = "Click \"Reset\" to reset current project";
 $lang["Click \"x\" or \"ESC\" to do nothing"] = "Click \"x\" or \"ESC\" to do nothing";
+
+// Help
+$lang["Content Help"]["General"] = "DEFAULT";
+$lang["Content Help"]["Gantt"] = "<br/>
+    This is the <b>General Help of Gantt module</b><br/>
+    <br/>
+    This module is a Gantt chart interface, mouse editable, which is automatically synchronized to the data loaded
+    in the database.<br/>
+    <br/>
+    It reads the Projects and Subprojects and elaborates this graphic that has one horizontal bar per Project
+    (timeline) which can be moved with the mouse scrolling it over time or just increasing or decreasing the start and
+    end dates.<br/>
+    <br/>
+    Up the chart there is a panel &#39;Selected Project Timeline&#39;, when you click on a Project timeline bar, this
+    panel's fields get loaded with the start and end dates of it, so that you can see and/or modify them writing a
+    different date or graphically selecting a day in the calendar that pops up.<br/>
+    <br/>
+    <br/>";
+
+// General Tooltip buttons Help
+$lang["Project Period Help"] = "Click on a Project timeline and see and/or change here the Start and End dates.";
