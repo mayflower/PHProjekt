@@ -3,6 +3,7 @@ style="width:100%; height:100%">
     <!-- Timecards summary views buttons -->
     <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24"
     style="width: 100%; height:6%; overflow:hidden;">
+        &nbsp;
         <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="start" alt="{{startWorkingTimeText}}"
             onClick="dojo.publish('Timecard.Workingtimes.start');">
         </button>
@@ -11,10 +12,18 @@ style="width:100%; height:100%">
             onClick="dojo.publish('Timecard.Workingtimes.stop');">
         </button>
         &nbsp;
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+            <div dojoType="dijit.TooltipDialog">
+                <div style="white-space: nowrap;">
+                {{startStopButtonsHelp}}
+                </div>
+            </div>
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         {{selectDate}}
         &nbsp;
-        <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'yyyy-MM-dd', strict:true}"
-        style="width: 85px;">
+        <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
+        constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 90px;">
         &nbsp;
         <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
             onClick="

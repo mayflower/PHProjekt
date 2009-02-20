@@ -40,7 +40,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         phpr.module = this.module;
         this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             webpath:                     phpr.webpath,
-            selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline")
+            selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline"),
+            projectPeriodHelp:           phpr.nls.get("Project Period Help")
         });
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {

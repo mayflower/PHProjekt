@@ -83,7 +83,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
             iconClass: "export",
             alt:       "Export",
             disabled:  false,
-            label:     phpr.nls.get("Project bookings")
+            label:     phpr.nls.get("Project Bookings")
         };
         var exportButtonProjects = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(exportButtonProjects.domNode);

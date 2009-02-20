@@ -38,8 +38,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         //    Reload function for Statistics
         phpr.module = this.module;
         this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
-            webpath:      phpr.webpath,
-            timelineText: phpr.nls.get("Selected Statistic Timeline")
+            webpath:            phpr.webpath,
+            selectedPeriodText: phpr.nls.get("Selected Statistic Period"),
+            selectedPeriodHelp: phpr.nls.get("Selected Period Help")
         });
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
