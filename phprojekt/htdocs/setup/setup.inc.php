@@ -178,7 +178,8 @@ function installPhprojekt() {
         die("Error connecting to server " . "(" . $error->getMessage() . ")");
     }
 
-    $tableList = array("Timecard",
+    $tableList = array("Contact",
+    "Timecard",
     "Timeproj",
     "ItemRights",
     "Configuration",
@@ -283,7 +284,7 @@ function installPhprojekt() {
     'status' => array(
     'type' => 'varchar', 'length' => 1, 'null' => true, 'default' => 'A'),
     'admin' => array(
-    'type' => 'int', 'length' => 11, 'null' => false , 'default' => 0),
+    'type' => 'int', 'length' => 1, 'null' => false , 'default' => 0),
     ),
     array('id'));
     if (!$result) {
@@ -384,7 +385,8 @@ function installPhprojekt() {
     'type' => 'varchar', 'length' => 10, 'null' => true),
     'budget' => array(
     'type' => 'varchar', 'length' => 10, 'null' => true),
-
+    'contactId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
     ),
     array('id'));
     if (!$result) {
@@ -466,6 +468,9 @@ function installPhprojekt() {
     'type' => 'int', 'length' => 11, 'null' => true),
     'currentStatus' => array(
     'type' => 'varchar', 'length' => 50, 'null' => true, 'default' => 'working'),
+    'userId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    
     ),
     array('id'));
     if (!$result) {
@@ -738,7 +743,45 @@ function installPhprojekt() {
     ),
     array('id'));
     if (!$result) {
-        die("Error creating the table ");
+        die("Error creating the table Calendar");
+    }
+    
+    
+    $result = $tableManager->createTable('Contact',
+    array('id' => array (
+    'type' => 'auto_increment', 'null' => false),
+    'ownerId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'name' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'email' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'company' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'firstphone' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'secondphone' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'mobilephone' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'street' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'city' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'zipcode' => array(
+    'type' => 'varchar', 'length' => 50, 'null' => true),
+    'country' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'comment' => array(
+    'type' => 'text', 'null' => true),
+    'private' => array(
+    'type' => 'int', 'length' => 1, 'null' => true),
+    ),
+    array('id'));
+    if (!$result) {
+        die("Error creating the table Contact");
     }
 
     $result = $tableManager->createTable('Filemanager',
@@ -1023,6 +1066,28 @@ function installPhprojekt() {
     'isRequired' => 0,
     'isUnique' => 0
     ));
+    
+    $db->insert('DatabaseManager', array(
+    'id' => 35,
+    'tableName' => 'Todo',
+    'tableField' => 'contactId',
+    'formTab' => 1,
+    'formLabel' => 'Contact',
+    'formType' => 'selectValues',
+    'formPosition' => 10,
+    'formColumns' => 1,
+    'formRegexp' => '',
+    'formRange' => 'Contact#id#name',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 1,
+    'status' => '1',
+    'isInteger' => 1,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
 
     $db->insert('DatabaseManager', array(
     'id' => 10,
@@ -1167,6 +1232,28 @@ function installPhprojekt() {
     'formColumns' => 1,
     'formRegexp' => '',
     'formRange' => 'Project#id#title',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 1,
+    'status' => '1',
+    'isInteger' => 1,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+    
+     $db->insert('DatabaseManager', array(
+    'id' => 34,
+    'tableName' => 'Todo',
+    'tableField' => 'userId',
+    'formTab' => 1,
+    'formLabel' => 'User',
+    'formType' => 'selectValues',
+    'formPosition' => 8,
+    'formColumns' => 1,
+    'formRegexp' => '',
+    'formRange' => 'User#id#lastname',
     'defaultValue' => '',
     'listPosition' => 0,
     'listAlign' => '',
@@ -1590,41 +1677,44 @@ function installPhprojekt() {
     'value' => '2',
     'identifier' => 'Core'));
     
-    $db->insert('User', array('id' => 2,
-    'username' => 'test',
-    'firstname' => 'Test',
-    'lastname' => 'Test',
-    'status' => 'A',
-    'admin' => 0));
-
-    $db->insert('Setting', array('id' => 5,
-    'userId' => 2,
-    'moduleId' => 0,
-    'keyValue' => 'password',
-    'value' => md5('phprojektmd5'.$_REQUEST['admin_pass']),
-    'identifier' => 'Core'));
-
-    $db->insert('Setting', array('id' => 6,
-    'userId' => 2,
-    'moduleId' => 0,
-    'keyValue' => 'email',
-    'value' => 'test@example.com',
-    'identifier' => 'Core'));
-
-    $db->insert('Setting', array('id' => 7,
-    'userId' => 2,
-    'moduleId' => 0,
-    'keyValue' => 'language',
-    'value' => 'en',
-    'identifier' => 'Core'));
-
-    $db->insert('Setting', array('id' => 8,
-    'userId' => 2,
-    'moduleId' => 0,
-    'keyValue' => 'timeZone',
-    'value' => '2',
-    'identifier' => 'Core'));
-
+    // If it is not a migration, we will create the test user
+    if (empty($_REQUEST["migration_config"])) {
+        $db->insert('User', array('id' => 2,
+        'username' => 'test',
+        'firstname' => 'Test',
+        'lastname' => 'Test',
+        'status' => 'A',
+        'admin' => 0));
+    
+        $db->insert('Setting', array('id' => 5,
+        'userId' => 2,
+        'moduleId' => 0,
+        'keyValue' => 'password',
+        'value' => md5('phprojektmd5'.$_REQUEST['admin_pass']),
+        'identifier' => 'Core'));
+    
+        $db->insert('Setting', array('id' => 6,
+        'userId' => 2,
+        'moduleId' => 0,
+        'keyValue' => 'email',
+        'value' => 'test@example.com',
+        'identifier' => 'Core'));
+    
+        $db->insert('Setting', array('id' => 7,
+        'userId' => 2,
+        'moduleId' => 0,
+        'keyValue' => 'language',
+        'value' => 'en',
+        'identifier' => 'Core'));
+    
+        $db->insert('Setting', array('id' => 8,
+        'userId' => 2,
+        'moduleId' => 0,
+        'keyValue' => 'timeZone',
+        'value' => '2',
+        'identifier' => 'Core'));
+    }
+    
     $db->insert('Project', array('id' => 1,
     'projectId' => null,
     'path' => '/',
@@ -1916,7 +2006,7 @@ mailEndOfLine        = 0    ; (0 = \r\n  1 = \n)
 ; Name or IP address of the SMTP server to be used to send that notifications.
 smtpServer           = "localhost"
 
-; If the SMTP server requires authentication, remove the semicolons ';' and
+; If the SMTP server requires authentication, remove the semicolons ";" and
 ; write inside the inverted commas "" the appropriate username and password.
 ;smtpUser            = ""
 ;smtpPassword        = ""
@@ -2115,6 +2205,11 @@ useCacheForClasses   = true;
             $paths[$ID] = $project["path"];
 
             $tmpStatus = $project["kategorie"];
+            if (!empty($statusConversion[$tmpStatus])) {
+                $tmpStatus = $statusConversion[$tmpStatus];
+            } else {
+                $tmpStatus = $statusConversion[3];
+            }
 
             $db->insert('Project', array('id' => $project["ID"],
             'projectId' => $project["parent"],
@@ -2125,7 +2220,7 @@ useCacheForClasses   = true;
             "startDate" => $project["anfang"],
             "endDate" => $project["ende"],
             "priority" => $project["wichtung"],
-            "currentStatus" => $statusConversion[$tmpStatus],
+            "currentStatus" => $tmpStatus,
             "completePercent" => $project["status"],
             "hourlyWageRate" => $project["stundensatz"],
             "budget" => $project["budget"]));
