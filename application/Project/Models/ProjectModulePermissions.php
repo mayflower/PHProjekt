@@ -46,19 +46,21 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
     {
         $modules = array();
         $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll(' active = 1 AND (saveType = 0 OR saveType = 2) ', ' name ASC ') as $module) {
+        foreach ($model->fetchAll(" active = 1 AND (" . 
+                 $this->_db->quoteIdentifier("saveType")." = 0 OR ".$this->_db->quoteIdentifier("saveType")." = 2) ", 
+                 ' name ASC ') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']        = $module->id;
             $modules['data'][$module->id]['name']      = $module->name;
             $modules['data'][$module->id]['label']     = Phprojekt::getInstance()->translate($module->label);
             $modules['data'][$module->id]['inProject'] = false;
         }
-        $where  = ' ProjectModulePermissions.projectId = ' . $projectId;
-        $where .= ' AND Module.active = 1 ';
-        $order  = ' Module.name ASC';
-        $select = ' Module.id as moduleId ';
-        $join   = ' RIGHT JOIN Module ON ( Module.id = ProjectModulePermissions.moduleId ';
-        $join  .= ' AND (Module.saveType = 0 OR Module.saveType = 2) )';
+        $where  = " ".$this->_db->quoteIdentifier("ProjectModulePermissions.projectId")." = " . $projectId;
+        $where .= " AND ".$this->_db->quoteIdentifier("Module.active")." = 1 ";
+        $order  = " Module.name ASC";
+        $select = " ".$this->_db->quoteIdentifier("Module").".id as ".$this->_db->quoteIdentifier("ModuleId")." ";
+        $join   = " RIGHT JOIN ".$this->_db->quoteIdentifier("Module")." ON ( ".$this->_db->quoteIdentifier("Module.id")." = ".$this->_db->quoteIdentifier("ProjectModulePermissions.moduleId")." ";
+        $join  .= " AND (".$this->_db->quoteIdentifier("saveType")." = 0 OR ".$this->_db->quoteIdentifier("saveType")." = 2) )";
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $modules['data'][$right->moduleId]['inProject'] = true;
         }

@@ -142,9 +142,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
 
         $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
         if (!isset($settingNamespace->$settingName)) {
-            $record = $this->fetchAll("userId = ". (int) $userId .
-                                      " AND keyValue = ".$this->_db->quote($settingName) .
-                                      " AND moduleId = ".$this->_db->quote($this->_moduleId));
+            $record = $this->fetchAll($this->_db->quoteIdentifier("userId")." = ". (int) $userId .
+                                  " AND ".$this->_db->quoteIdentifier("keyValue")." = ".$this->_db->quote($settingName) .
+                                  " AND ".$this->_db->quoteIdentifier("moduleId")." = ".$this->_db->quote($this->_moduleId));
             if (!empty($record)) {
                 $toReturn = $record[0]->value;
             }

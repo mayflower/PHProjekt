@@ -97,7 +97,7 @@ class Phprojekt_Table
                 if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
                     $fieldDefinition['default_no_quote'] = false;
                 }
-                $sqlString .= $fieldName;
+                $sqlString .= $this->_db->quoteIdentifier((string)$fieldName);
                 $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
                 $fieldDefinition['null'], $fieldDefinition['default'],
                 $fieldDefinition['default_no_quote']) . ", ";
@@ -109,7 +109,7 @@ class Phprojekt_Table
         if (isset($keys)) {
             $sqlString .= "PRIMARY KEY (";
             foreach ($keys as $oneKey) {
-                $sqlString .= $oneKey . ", ";
+                $sqlString .= $this->_db->quoteIdentifier((string)$oneKey) . ", ";
             }
             $sqlString = substr($sqlString, 0, -2);
             $sqlString .= ")";
@@ -155,7 +155,7 @@ class Phprojekt_Table
             if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
             }
-            $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
+            $sqlString .= $this->_db->quoteIdentifier((string)$fieldDefinition['name']);
             $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
             $fieldDefinition['null'], $fieldDefinition['default'],
             $fieldDefinition['default_no_quote']);
