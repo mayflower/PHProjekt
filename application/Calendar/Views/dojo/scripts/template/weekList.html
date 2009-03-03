@@ -1,0 +1,37 @@
+<!-- Events inside the schedule chart -->
+<div id="calendarSchedule">
+    <table width="{{widthTable}}%">
+        <tr>
+            <td width="{{widthHourColumn}}%"></td>
+            {% for day in header.days %}
+            <td width="{{header.columnsWidth}}%" class="hours" colspan="{{day.columnsTotal}}">{{day.dayAbbrev}}.
+                {{day.date}} &nbsp;
+                <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
+                    onClick="dojo.publish('Calendar.openForm', [null, null, '{{day.date}}']);">
+                </td>
+            {% endfor %}
+        </tr>
+        {% for row in schedule %}
+        <tr>
+            <td width="{{widthHourColumn}}%" class="hours">{{row.hour}}</td>
+            {% for day in row %}
+                {% for column in day.columns %}
+                    {% if column.occupied %}
+                        {% ifequal column.typeEvent 1 %}
+            <td rowspan="{{column.quartersDuration}}" width="{{column.width}}%" class="events">
+                <a href="javascript:dojo.publish('Calendar.showFormFromList', [{{column.id}}]);">{{column.startTime}}
+                    - {{column.endTime}}</a> {{column.title|safe}}<br />
+                <div class="horizontalLine">
+                </div>
+                {{column.notes|safe}}
+            </td>
+                        {% endifequal %}
+                    {% else %}
+            <td width="{{column.width}}%" class="{{column.class}}"></td>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>

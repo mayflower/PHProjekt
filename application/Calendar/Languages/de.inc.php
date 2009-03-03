@@ -1,8 +1,11 @@
-<?php
+﻿<?php
 // Words and phrases
 $lang["View"] = "Anzeigen";
-$lang["Day"] = "Tag";
 $lang["List"] = "Liste";
+$lang["Day"] = "Tag";
+$lang["Week"] = "Woche";
+$lang["Self"] = "Mein Kalender";
+$lang["Selection"] = "Auswahl";
 $lang["Once"] = "Einmal";
 $lang["Daily"] = "Tglich";
 $lang["Weekly"] = "Weekly";
@@ -15,12 +18,16 @@ $lang["Thursday"] = "Donnerstag";
 $lang["Friday"] = "Freitag";
 $lang["Saturday"] = "Samstag";
 $lang["Sunday"] = "Sonntag";
-$lang["Other events"] = "Weitere Termine";
+$lang["Further events"] = "Weitere Termine";
 $lang["Today"] = "Heute";
+$lang["Done"] = "Ok";
+$lang["Select users for the group view"] = "Bitte User für Gruppenansicht auswählen";
+$lang["You have to select at least one user!"] = "Sie müssen mindestens einen User auswählen";
+$lang["User selection"] = "Benutzerauswahl";
 
 $lang["January"] = "Januar";
 $lang["February"] = "Februar";
-$lang["March"] = "M�rz";
+$lang["March"] = "März";
 $lang["April"] = "April";
 $lang["May"] = "Mai";
 $lang["June"] = "Juni";
@@ -36,3 +43,11 @@ $lang["Repeats"] = "Serientyp";
 $lang["Interval"] = "Intervall";
 $lang["Until"] = "Bis";
 $lang["Weekdays"] = "Wochentage";
+
+$lang["Mo"] = "Mo";
+$lang["Tu"] = "Di";
+$lang["We"] = "Mi";
+$lang["Th"] = "Do";
+$lang["Fr"] = "Fr";
+$lang["Sa"] = "Sa";
+$lang["Su"] = "So";

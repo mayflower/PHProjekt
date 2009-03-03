@@ -1,8 +1,11 @@
 <?php
 // Words and phrases
 $lang["View"] = "View";
-$lang["Day"] = "Day";
 $lang["List"] = "List";
+$lang["Day"] = "Day";
+$lang["Week"] = "Week";
+$lang["Self"] = "Self";
+$lang["Selection"] = "Selection";
 $lang["Once"] = "Once";
 $lang["Daily"] = "Daily";
 $lang["Weekly"] = "Weekly";
@@ -15,8 +18,12 @@ $lang["Thursday"] = "Thursday";
 $lang["Friday"] = "Friday";
 $lang["Saturday"] = "Saturday";
 $lang["Sunday"] = "Sunday";
-$lang["Other events"] = "Other events";
+$lang["Further events"] = "Further events";
 $lang["Today"] = "Today";
+$lang["Done"] = "Done";
+$lang["Select users for the group view"] = "Select users for the group view";
+$lang["You have to select at least one user!"] = "You have to select at least one user!";
+$lang["User selection"] = "User selection";
 
 $lang["January"] = "January";
 $lang["February"] = "February";
@@ -36,6 +43,14 @@ $lang["Repeats"] = "Repeats";
 $lang["Interval"] = "Interval";
 $lang["Until"] = "Until";
 $lang["Weekdays"] = "Weekdays";
+
+$lang["Mo"] = "Mo";
+$lang["Tu"] = "Tu";
+$lang["We"] = "We";
+$lang["Th"] = "Th";
+$lang["Fr"] = "Fr";
+$lang["Sa"] = "Sa";
+$lang["Su"] = "Su";
 
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
