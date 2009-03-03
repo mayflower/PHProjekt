@@ -1,0 +1,26 @@
+﻿<div id="calendarGroupSelection">
+    <table>
+        <tr>
+            <td class="label" id="instructions">{{label}}:</td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <select id="userList" dojoType="dijit.form.MultiSelect" required="true" autocomplete="true"
+                    searchAttr="name" invalidMessage="" multiple="true" size="10">
+                {% for user in userList %}
+                    <option value ="{{user.id}}">{{user.lastname}}, {{user.firstname}}</option>
+                {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr style="height: 27px;">
+            <td class="label" id="usersSelectorError" style="visibility:hidden;">{{noUsersSelected}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.usersSelectionDoneClick');">
+                    {{done}}</button>
+            </td>
+        </tr>
+    </table>
+</div>

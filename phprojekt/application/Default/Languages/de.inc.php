@@ -219,10 +219,15 @@ $lang["Current data"] = "Aktuelle Daten";
 $lang["Changes done"] = "Änderungen durchgeführt";
 $lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
 
-//Tags
+// Tags
 $lang["There are no Tags"] = "Es sind keine Tags vorhanden";
 
-// Calendar
+// Originally from Calendar
+$lang["View"] = "Anzeigen";
+$lang["Day"] = "Tag";
+$lang["Week"] = "Woche";
+$lang["Self"] = "Mein Kalender";
+$lang["Selection"] = "Auswahl";
 $lang["Once"] = "Einmal";
 $lang["Daily"] = "Tglich";
 $lang["Weekly"] = "Weekly";
@@ -235,8 +240,10 @@ $lang["Thursday"] = "Donnerstag";
 $lang["Friday"] = "Freitag";
 $lang["Saturday"] = "Samstag";
 $lang["Sunday"] = "Sonntag";
-$lang["Other events"] = "Weitere Termine";
+$lang["Further events"] = "Weitere Termine";
 $lang["Today"] = "Heute";
+$lang["Done"] = "Ok";
+$lang["User selection"] = "Benutzerauswahl";
 
 $lang["January"] = "Januar";
 $lang["February"] = "Februar";

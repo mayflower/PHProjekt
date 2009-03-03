@@ -173,6 +173,19 @@
     border-color: black;
 }
 
+.phprojekt #calendarSchedule .emptyCellSingle {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.phprojekt #calendarSchedule .emptyCellLeft {
+    border-left: 1px solid black;
+}
+
+.phprojekt #calendarSchedule .emptyCellRight {
+    border-right: 1px solid black;
+}
+
 .phprojekt #calendarSchedule .horizontalLine {
     margin:3px;
     border-bottom:1px dashed #203040;
@@ -194,4 +207,15 @@
 
 .phprojekt #calendarSchedule table {
     border-collapse: collapse;
+}
+
+.phprojekt #calendarGroupSelection #instructions {
+    text-align: center;
+    font-weight: bold;
+}
+
+.phprojekt #calendarGroupSelection #usersSelectorError {
+    text-align: center;
+    font-weight: bold;
+    color: red;
 }
