@@ -2118,11 +2118,17 @@ useCacheForClasses   = true;
                     }
                 }
 
+                if (defined("PHPR_VERSION") && PHPR_VERSION >= '5.2.1') {
+                    $password = $user['pw'];
+                } else {
+                    $password = md5('phprojektmd5'.$username);
+                }
+
                 $db->insert('Setting', array('id' => null,
                 'userId' => $user["ID"],
                 'moduleId' => 0,
                 'keyValue' => 'password',
-                'value' => md5('phprojektmd5'.$username),
+                'value' => $password,
                 'identifier' => 'Core'));
 
                 $db->insert('Setting', array('id' => null,
