@@ -144,7 +144,7 @@
                               <li>It could take several minutes depending on the number of projects to be migrated.</li>
                               <li>The migration is compatible with version 5.1 or superion.</li>
                               <li>The config.inc.php needs to be on the same server where you are installing PHProjekt 6</li>
-                              <li>User passwords will not be migrated. All migrated users will have the same username and password.</li>
+                              <li>User passwords will be migrated from version 5.2.1 or better. All previous versions migration will have the same username and password.</li>
                               <li>Root user will not be migrated. Please use the admin user.</li>
                               <li>The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Timecard and Filemanager.</li>
                               <li>Customized module fields will not be migrated.</li>
