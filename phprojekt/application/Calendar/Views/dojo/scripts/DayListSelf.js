@@ -217,6 +217,7 @@ dojo.declare("phpr.Calendar.DayListSelf", phpr.Component, {
         var hour    = temp[0];
         var minutes = temp[1];
         var result  = dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+
         return result;
     },
 
@@ -355,6 +356,7 @@ dojo.declare("phpr.Calendar.DayListSelf", phpr.Component, {
         //    Open a new window in CSV mode
         var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelf/date/" + dateString);
+
         return false;
     },
 
@@ -388,6 +390,7 @@ dojo.declare("phpr.Calendar.DayListSelf", phpr.Component, {
                 output += "&#" + str.charCodeAt(i) + ";";
             }
         }
+
         return output;
     }
 });
