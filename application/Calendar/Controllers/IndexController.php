@@ -200,6 +200,7 @@ class Calendar_IndexController extends IndexController
         $usersId = $this->getRequest()->getParam('users', null);
         $records = $this->getModelObject()->fetchAll('participantId IN (' . $usersId . ') AND startDate = "'
                    . $date . '"', null, $count, $offset);
+
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
@@ -306,9 +307,9 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonGetAllUsersAction()
     {
-        $where = "status = 'A'";
-        $order = "lastname";
-        $user  = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $where   = "status = 'A'";
+        $order   = "lastname";
+        $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where, $order);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -331,5 +332,4 @@ class Calendar_IndexController extends IndexController
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
-
 }

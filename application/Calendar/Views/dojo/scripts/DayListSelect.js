@@ -10,7 +10,7 @@
  *
  * @copyright  Copyright (c) 2009 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -83,8 +83,8 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         //    Sets the url for get the data from
         var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
         var users = this._users.join(",");
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelect"
-                   + "/date/" + dateString + "/users/" + users;
+        this.url  = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelect"
+            + "/date/" + dateString + "/users/" + users;
     },
 
     showTags:function() {
@@ -137,7 +137,7 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         // IMPORTANT NOTE: because of this function having lots of time and date variables, I added the suffix
         // '_Date' to the ones of Date type format, for making all these no so difficult to understand.
         // Also, to just a few of the String variables, there was added the '_String' suffix, with the same purpose.
-        
+
         var result                 = new Array(); // The variable that will be returned
         var scheduleStartTime_Date = new Date();
         var scheduleEndTime_Date   = new Date();
@@ -225,7 +225,7 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
             // Perform the comparison
             if (eventStartTime_Date.getTime() == askedTime_Date.getTime()) {
                 result['type'] = this.EVENT_TIME_START;
-            } else if ((eventStartTime_Date.getTime() < askedTime_Date.getTime()) 
+            } else if ((eventStartTime_Date.getTime() < askedTime_Date.getTime())
                        && (askedTime_Date.getTime() < eventEndTime_Date.getTime())) {
                 result['type'] = this.EVENT_TIME_INSIDE;
             } else {
@@ -243,6 +243,7 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         var hour    = temp[0];
         var minutes = temp[1];
         var result  = dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+
         return result;
     },
 
@@ -255,6 +256,7 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         var day     = temp[2];
         var result  = year + '-' + dojo.number.format(month, {pattern: '00'}) + '-'
             + dojo.number.format(day, {pattern: '00'});
+
         return result;
     },
 
@@ -295,9 +297,10 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         // Description:
         //    Open a new window in CSV mode
         var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
-        var users = this._users.join(",");
+        var users      = this._users.join(",");
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelect"
-                   + "/date/" + dateString + "/users/" + users);
+            + "/date/" + dateString + "/users/" + users);
+
         return false;
     },
 
@@ -331,6 +334,7 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
                 output += "&#" + str.charCodeAt(i) + ";";
             }
         }
+
         return output;
     },
 
@@ -351,7 +355,8 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         for (var hour = 8; hour < 20; hour++) {
             for (var quarter = 0; quarter < 4; quarter++) {
                 var minute = quarter * 15;
-                var row = ((hour - 8) * 4) + quarter;
+                var row    = ((hour - 8) * 4) + quarter;
+
                 this._schedule[row]['hour'] = this.formatTime(hour + ':' + minute);
             }
         }
@@ -367,9 +372,9 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         this._header['users']        = new Array();
 
         for (var user in headerData) {
-            userId    = parseInt(headerData[user]['id']);
-            lastname  = headerData[user]['lastname'];
-            firstname = headerData[user]['firstname'];
+            var userId    = parseInt(headerData[user]['id']);
+            var lastname  = headerData[user]['lastname'];
+            var firstname = headerData[user]['firstname'];
 
             this._header['users'][user]                 = new Array();
             this._header['users'][user]['id']           = userId;
@@ -393,8 +398,7 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
                 var eventInfo = this.getEventInfo(content[event]['startTime'],
                                                   content[event]['endTime'],
                                                   this._schedule[row]['hour']);
-                if (eventInfo['type'] == this.EVENT_TIME_START
-                 || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
+                if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventsNow[row][this.getUserColumnPosition(userId)] ++;
                 }
             }
@@ -405,9 +409,10 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
                 }
             }
         }
+
         this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / this._header['users'].length);
     },
-    
+
     fillScheduleArrayStructure_part2:function() {
         // Summary:
         //    Continues creating the schedule array structure, supporting simultaneous events.
@@ -447,17 +452,17 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Component, {
         // position inside the schedule array.
 
         for (var event in content) {
-            var eventInfo = this.getEventInfo(content[event]['startTime'],
-                                              content[event]['endTime']);
+            var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
 
             if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
                 var rowEventBegins   = eventInfo['quarterBeginning'];
                 var rowEventFinishes = rowEventBegins + eventInfo['quartersDuration'];
+
                 var userId = parseInt(content[event]['participantId']);
-                var user = this.getUserColumnPosition(userId);
+                var user   = this.getUserColumnPosition(userId);
 
                 // Find which column to use
-                var useColumn = -1;
+                var useColumn       = -1;
                 var columnsTotalDay = this._header['users'][user]['columnsTotal'];
 
                 for (column = 0; column < columnsTotalDay; column++) {

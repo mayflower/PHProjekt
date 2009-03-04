@@ -10,7 +10,7 @@
  *
  * @copyright  Copyright (c) 2009 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -240,6 +240,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
         var hour    = temp[0];
         var minutes = temp[1];
         var result  = dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+
         return result;
     },
 
@@ -252,6 +253,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
         var day     = temp[2];
         var result  = year + '-' + dojo.number.format(month, {pattern: '00'}) + '-'
             + dojo.number.format(day, {pattern: '00'});
+
         return result;
     },
 
@@ -299,6 +301,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
         //    Opens a new window in CSV mode
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList"
             + "/dateStart/" + this._weekDays[0] + "/dateEnd/" + this._weekDays[6]);
+
         return false;
     },
 
@@ -332,6 +335,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
                 output += "&#" + str.charCodeAt(i) + ";";
             }
         }
+
         return output;
     },
 
@@ -365,7 +369,8 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
         for (var hour = 8; hour < 20; hour++) {
             for (var quarter = 0; quarter < 4; quarter++) {
                 var minute = quarter * 15;
-                var row = ((hour - 8) * 4) + quarter;
+                var row    = ((hour - 8) * 4) + quarter;
+
                 this._schedule[row]['hour'] = this.formatTime(hour + ':' + minute);
             }
         }
