@@ -175,7 +175,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    It only reloads those parts of the page which might change during a PHProjekt session
 
         // important set the global phpr.module to the module which is currently loaded!!!
-        phpr.module = this.module;
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
