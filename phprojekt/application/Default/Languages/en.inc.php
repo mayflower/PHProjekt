@@ -295,7 +295,7 @@ $lang["Content Help"]["General"] = "<br/>
                     calendar.<br/>
                 <li><b>Timecard:</b> a module for charging working hours to the Projects. It has a visual interface and
                     is very easy to use.<br/>
-                <li><b>Setting:</b> here the user sets and changes specific configuration parameters of his/her
+                <li><b>Setting:</b> here the user sets and changes specific configurations parameters of his/her
                     profile, like password, e-mail, etc.<br/>
                 <li><b>Administration:</b> this is the general site administration section and is only visible and
                     accessible to users with Admin profile.<br/>

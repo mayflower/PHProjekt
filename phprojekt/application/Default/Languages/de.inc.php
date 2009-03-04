@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // General
 $lang["Module"] = "Modul";
 $lang["Active"] = "Aktiv";

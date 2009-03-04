@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Words and phrases
 // Visual Module Editor
 $lang["Open Dialog"]    = "Abrir Diseñador";
@@ -106,7 +106,7 @@ $lang["Content Help"]["Modulo"] = "<br/>
             Verá dos grandes paneles, uno a la izquierda y otro a la derecha, y un espacio vacío abajo a la izquierda
             donde la ventana de edición de campos aparece eventualmente.<br/>
             En el panel derecho (el módulo como será visto fuera del diseñador) hay un campo Project. Ese campo debe
-            existir para que el módulo funcione, es la relación del ítem con los proyectos, no lo borre.<br/> 
+            existir para que el módulo funcione, es la relación del ítem con los proyectos, no lo borre.<br/>
         <li>Agregue al panel derecho mediante arrastrar y soltar un campo de su elección. Si hay más de una solapa
             en el panel derecho, puede elegir la solapa previo a depositar el campo, para ponerlo allí. En ambos casos,
             luego de soltarlo la ventana de edición aparece para que lo configure.<br/>
@@ -191,7 +191,7 @@ $lang["Content Help"]["Usuario"] = "<br/>
     <br/>";
 
 $lang["Content Help"]["Rol"] = "<br/>
-    <b>Role tab</b><br/>
+    <b>Solapa Rol</b><br/>
     <br/>
     Esta sección permite administrar los Roles.<br/>
     <br/>
@@ -216,4 +216,3 @@ $lang["Content Help"]["Rol"] = "<br/>
         representa los Subproyectos de Proyectos.<br/>
     <br/>
     <br/>";
- 

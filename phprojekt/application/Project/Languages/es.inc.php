@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Proyecto"] = "<br/>
@@ -65,7 +65,7 @@ $lang["Content Help"]["Rol"] = "<br/>
     Esta solapa permite asignar Roles a los usuarios. Un Rol es un conjunto específico de permisos definidos para
     cada módulo. Se configuran en <b>Administración -&#62; Rol</b>. Por ejemplo un rol puede ser 'Admin en todos los
     módulos' o 'Admin en Archivos, sólo lectura en el resto'.<br/>
-    El permiso final de un usuario específico para trabajar con un ítem está definido por la combinación de lo que 
+    El permiso final de un usuario específico para trabajar con un ítem está definido por la combinación de lo que
     esté asignado en las solapas Rol y Accesos.<br/>
     <br/>
     Predeterminadamente, ningún rol se asigna a nadie y el permiso para un proyecto nuevo será el acceso <b>Admin</b>
@@ -76,4 +76,3 @@ $lang["Content Help"]["Rol"] = "<br/>
 
 $lang["Content Help"]["Notificación"] = "DEFAULT";
 $lang["Content Help"]["Historial"] = "DEFAULT";
- 

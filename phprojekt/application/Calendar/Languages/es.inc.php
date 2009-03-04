@@ -1,8 +1,8 @@
-﻿<?php
+<?php
 // Words and phrases
 $lang["View"] = "Ver";
 $lang["List"] = "Lista";
-$lang["Day"] = "D&#237;a";
+$lang["Day"] = "Día";
 $lang["Week"] = "Semana";
 $lang["Self"] = "Propio";
 $lang["Selection"] = "Selección";

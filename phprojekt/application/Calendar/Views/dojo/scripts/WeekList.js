@@ -1,4 +1,4 @@
-﻿/**
+/**
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1 as published by the Free Software Foundation
@@ -222,7 +222,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
             // Perform the comparison
             if (eventStartTime_Date.getTime() == askedTime_Date.getTime()) {
                 result['type'] = this.EVENT_TIME_START;
-            } else if ((eventStartTime_Date.getTime() < askedTime_Date.getTime()) 
+            } else if ((eventStartTime_Date.getTime() < askedTime_Date.getTime())
                        && (askedTime_Date.getTime() < eventEndTime_Date.getTime())) {
                 result['type'] = this.EVENT_TIME_INSIDE;
             } else {
@@ -270,14 +270,14 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
 
         this._furtherEvents['show']   = false;
         this._furtherEvents['events'] = new Array();
-        
+
         this.fillHeaderArray();
 
         // Fill the structure of the main array
         this.fillScheduleArrayStructure_part1();
         this.determineColumnsPerDay(content);
         this.fillScheduleArrayStructure_part2();
-       
+
         // Fill it with the data of the events
         this.fillScheduleArrayData(content);
 
@@ -354,7 +354,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
         // Description:
         // Fills the array with the header and all the possible points in time for this day view: 8:00, 8:15, 8:30
         // and so on, until 19:45. Each of that rows will have as many columns as days plus simultaneous events exist
-        
+
         for (var i = 0; i < 48; i ++) {
             this._schedule[i] = new Array(7);
             for (var j = 0; j < 7; j ++) {
@@ -424,7 +424,7 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
 
         this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / 7);
     },
-    
+
     fillScheduleArrayStructure_part2:function() {
         // Summary:
         //    Continues creating the schedule array structure, supporting simultaneous events.
@@ -524,4 +524,3 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Component, {
         }
     }
 });
- 

@@ -294,7 +294,7 @@ $lang["Content Help"]["General"] = "<br/>
                 <li><b>Evento:</b> módulo para administrar eventos situados temporalmente en un calendario.<br/>
                 <li><b>Asistencia:</b> módulo para cargar las horas trabajadas y asignarlas a proyectos. Posee una
                     interfaz visual muy fácil de usar.<br/>
-                <li><b>Configuración:</b> aquí el usuario modifica configuración específica de su perfil, como
+                <li><b>Configuración:</b> aquí el usuario modifica configuraciones específicas de su perfil, como
                     contraseña, e-mail, etc.<br/>
                 <li><b>Administración:</b> esta es la sección de administración general del sistema, sólo visible y
                 accesible para usuarios con perfil Administrador.<br/>

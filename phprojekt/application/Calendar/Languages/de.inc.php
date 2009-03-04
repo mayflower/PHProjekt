@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Words and phrases
 $lang["View"] = "Anzeigen";
 $lang["List"] = "Liste";
