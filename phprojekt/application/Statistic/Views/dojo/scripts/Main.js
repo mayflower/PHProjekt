@@ -36,7 +36,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         //    Reload function for Statistics
         // description:
         //    Reload function for Statistics
-        phpr.module = this.module;
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
         this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             webpath:            phpr.webpath,
             selectedPeriodText: phpr.nls.get("Selected Statistic Period"),

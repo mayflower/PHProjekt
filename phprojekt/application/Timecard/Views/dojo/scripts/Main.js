@@ -40,7 +40,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 
     reload:function() {
-        phpr.module = this.module;
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             startStopButtonsHelp: phpr.nls.get('Start Stop Buttons Help'),
             startWorkingTimeText: phpr.nls.get('Start Working Time'),

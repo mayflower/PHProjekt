@@ -37,7 +37,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     },
 
     reload:function() {
-        phpr.module = this.module;
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
         this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             webpath:                     phpr.webpath,
             selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline"),

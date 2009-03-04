@@ -32,8 +32,9 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
     },
 
     reload:function() {
-        phpr.module    = this.module;
-        phpr.submodule = '';
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
         this.render(["phpr.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'));
         this.cleanPage();
         this.setSubGlobalModulesNavigation();
