@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Words and phrases
 $lang["Working Times"] = "Arbeitszeiten";
 $lang["Start working time"] = "Arbeitszeit Start";

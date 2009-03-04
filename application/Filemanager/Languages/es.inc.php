@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Archivos"] = "<br/>
@@ -14,4 +14,3 @@ $lang["Content Help"]["Datos Básicos"] = "DEFAULT";
 $lang["Content Help"]["Accesos"] = "DEFAULT";
 $lang["Content Help"]["Notificación"] = "DEFAULT";
 $lang["Content Help"]["Historial"] = "DEFAULT";
- 

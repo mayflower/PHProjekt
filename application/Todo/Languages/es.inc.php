@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Todo"] = "<br/>

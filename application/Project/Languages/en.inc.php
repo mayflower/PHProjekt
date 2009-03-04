@@ -63,7 +63,7 @@ $lang["Content Help"]["Role"] = "<br/>
     The final right for a specific user to work with an item is defined by the conjunction of what is defined both
     inside Role and Access tabs.<br/>
     <br/>
-    By default, no Role is assigned to anybody, and the right to a new project will be <b>Admin</b> access 
+    By default, no Role is assigned to anybody, and the right to a new project will be <b>Admin</b> access
     for the creator and nothing for the rest. This changes when permissions are assigned in the <b>Access</b> and
     <b>Role</b> tabs.<br/>
     <br/>

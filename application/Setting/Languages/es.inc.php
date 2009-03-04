@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Words and phrases
 $lang["Please, log out and log in again to the application to apply the changes."] = "Por favor, "
     . "salga e ingrese nuevamente a la aplicación para guardar los cambios.";
@@ -47,4 +47,3 @@ $lang["Content Help"]["Asistencia"] = "<br/>
     Se permite cambiar: <i>Max. Número de Proyectos favoritos</i> y qué <i>Proyectos favoritos</i> se eligen.<br/>
     <br/>
     <br/>";
- 

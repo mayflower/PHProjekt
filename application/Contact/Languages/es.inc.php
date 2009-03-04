@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Contactos"] = "<br/>
@@ -13,4 +13,3 @@ $lang["Content Help"]["Contactos"] = "<br/>
 
 $lang["Content Help"]["Datos Básicos"] = "DEFAULT";
 $lang["Content Help"]["Historial"] = "DEFAULT";
- 

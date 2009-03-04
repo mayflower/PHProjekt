@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // General
 $lang["Selected Statistic Period"] = "Período de Estadísticas Seleccionado";
 
