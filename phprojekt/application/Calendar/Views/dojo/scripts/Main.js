@@ -63,7 +63,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // important set the global phpr.module to the module which is currently loaded!!!
 
         phpr.module = this.module;
-        this.render(["phpr.Calendar.template", "mainContent.html"],dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
             view:       phpr.nls.get('View'),
             list:       phpr.nls.get('List'),
             day:        phpr.nls.get('Day'),
@@ -239,7 +239,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         } else if (this.weekList) {
             var interval = 'week';
         }
-        
+
         switch (day) {
             case PREVIOUS:
                 var dCurrentDate = dijit.byId('selectDate').attr('value');
@@ -278,7 +278,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 params['endTime']   = '10:00';
 
             } else if ((this._listMode.substr(0,7) == 'dayList') || (this._listMode == 'weekList')) {
-                
+
                 if (startDate != undefined) {
                     params['startDate'] = startDate;
 
@@ -291,7 +291,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                         + dojo.number.format(tmpDate.getDate(), {pattern: '00'});
                     params['startDate'] = selectedDate;
                 }
-                
+
                 if (startTime == undefined) {
                     params['startTime'] = '08:00';
                     params['endTime']   = '10:00';
