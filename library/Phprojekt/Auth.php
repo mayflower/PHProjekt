@@ -176,7 +176,15 @@ class Phprojekt_Auth extends Zend_Auth
         return md5($password);
     }
 
-    public static function cryptString($string) {
+    /**
+     * String to be crytped
+     *
+     * @param string $string string to be cripted
+     *
+     * @return scring crypted password
+     */
+    public static function cryptString($string)
+    {
         $cryptedString = 'phprojektmd5'.$string;
         return Phprojekt_Auth::_cryptPassword($cryptedString);
     }

@@ -82,7 +82,7 @@
                             <td class="label"></td>
 
                             <td>
-                                Installation done!. Please login at <a href="<%SERVER_URL%>"><%SERVER_URL%></a>
+                                Installation done!. Please login at <a href="<%SERVER_URL%>index.php"><%SERVER_URL%>index.php</a>
                             </td>
                         </tr>
 

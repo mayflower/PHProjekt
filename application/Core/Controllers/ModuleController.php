@@ -111,11 +111,12 @@ class Core_ModuleController extends Core_IndexController
         $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
         foreach ($model->fetchAll(' active = 1 AND (saveType = 1 OR saveType = 2) ', ' name ASC ') as $module) {
             $modules['data'][$module->id] = array();
-            $modules['data'][$module->id]['id']        = $module->id;
-            $modules['data'][$module->id]['name']      = $module->name;
-            $modules['data'][$module->id]['label']     = $module->name;
+            $modules['data'][$module->id]['id']    = $module->id;
+            $modules['data'][$module->id]['name']  = $module->name;
+            $modules['data'][$module->id]['label'] = $module->name;
         }
         $modules['metadata'] = Phprojekt_Auth::isAdminUser();
+
         echo Phprojekt_Converter_Json::convert($modules);
     }
 
