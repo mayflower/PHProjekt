@@ -119,7 +119,7 @@ phpr.deleteModuleDesignerField = function(nodeId) {
         if (node) {
             var tab = eval(tabId);
             // make sure it is not the anchor
-            if(tab.anchor == node){
+            if (tab.anchor == node){
                 tab.anchor = null;
             }
             // remove it from the master map
