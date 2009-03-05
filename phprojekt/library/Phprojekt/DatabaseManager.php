@@ -440,7 +440,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $this->_error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Module Designer'),
                     'message' => Phprojekt::getInstance()->translate('The Table Field must be completed '
-                        + 'for all the fields')));
+                        . 'for all the fields')));
                 break;
             } else {
                 if (in_array($field['tableField'], $foundFields)) {
@@ -448,7 +448,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $this->_error->addError(array(
                         'field'   =>Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('There are two fields with the same '
-                            + 'Field Name')));
+                            . 'Field Name')));
                     break;
                 } else {
                     $foundFields[] = $field['tableField'];
@@ -461,7 +461,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $this->_error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('The lenght of the varchar fields must be '
-                            + 'between 1 and 255')));
+                            . 'between 1 and 255')));
                     break;
                 }
             }
@@ -472,7 +472,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $this->_error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('The lenght of the int fields must be between'
-                            + ' 1 and 11')));
+                            . ' 1 and 11')));
                     break;
                 }
             }
@@ -496,7 +496,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $this->_error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('The module must have a project selector called '
-                    + 'projectId')));
+                    . 'projectId')));
         }
 
         return $validated;
