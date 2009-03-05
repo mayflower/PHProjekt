@@ -151,6 +151,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.hideSuggest();
 
+        // Get all the tabs
+        var tabStore = new phpr.Store.Tab();
+        tabStore.fetch();
+
+        // Get all the active users
+        var userStore = new phpr.Store.User();
+        userStore.fetch();
+
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {

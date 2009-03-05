@@ -101,12 +101,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._formNode = dijit.byId("detailsBox");
     },
 
-    getInitData:function(params) {
+    getInitData:function() {
         // summary:
         //    Process all the POST in cascade for get all the data from the server
         // description:
         //    Process all the POST in cascade for get all the data from the server
-        params = this._initData.pop();
+        var params = this._initData.pop();
 
         if (params.url || params.store) {
             if (!params.noCache) {
