@@ -45,6 +45,47 @@ dojo.declare("phpr.Default.CalendarDayBasedList", phpr.Component, {
     EVENT_BEGIN:         1,
     EVENT_CONTINUES:     2,
 
+    constructor:function(/*Object*/ main, /*Int*/ id, /*String*/ date, /*Array*/ users) {
+        // Summary:
+        //    Render the schedule table
+        // Description:
+        //    This function receives the list data from the server and renders the corresponding table
+        this.main   = main;
+        this.id     = id;
+        this.url    = null;
+        this._date  = date;
+        
+        this.beforeConstructor();
+        
+        if (users != null) {
+            // Just for the Day group view
+            this._users = users;
+        }
+
+        this.setUrl();
+
+        if (dojo.isIE) {
+            // This is to avoid a pair of scrollbars that eventually appears (not when first loading)
+            this._widthTable = 97;
+        } else {
+            this._widthTable = 100;
+        }
+        this._widthHourColumn = 7;
+
+        // Draw the tags
+        this.showTags();
+
+        this.afterConstructor();
+    },
+
+    beforeConstructor:function() {
+        // Summary:
+        //    Function called almost at the top of 'constructor' function.
+        // Description:
+        //    If there is something that must be done before executing the most of sentences of 'constructor' function,
+        // inherit this function and put it inside it.
+    },
+
     showTags:function() {
         // Summary:
         //    Draws the tags

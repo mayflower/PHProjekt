@@ -25,31 +25,11 @@ dojo.declare("phpr.Calendar.DayListSelf", phpr.Default.CalendarDayBasedList, {
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
 
-    constructor:function(/*Object*/ main, /*Int*/ id, /*String*/ date) {
+    afterConstructor:function() {
         // Summary:
-        //    Render the schedule table
-        // Description:
-        //    This function receives the list data from the server and renders the corresponding table
-        this.main  = main;
-        this.id    = id;
-        this.url   = null;
-        this._date = date;
-
-        this.setUrl();
-
-        if (dojo.isIE) {
-            // This is to avoid a pair of scrollbars that eventually appears (not when first loading)
-            this._widthTable = 97;
-        } else {
-            this._widthTable = 100;
-        }
-        this._widthHourColumn = 7;
-
+        //    Loads the data from the database
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
-
-        // Draw the tags
-        this.showTags();
     },
 
     setUrl:function() {
