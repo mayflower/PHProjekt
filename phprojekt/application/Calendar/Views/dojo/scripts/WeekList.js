@@ -19,7 +19,7 @@
 
 dojo.provide("phpr.Calendar.WeekList");
 
-dojo.declare("phpr.Calendar.WeekList", phpr.Default.CalendarDayBasedList, {
+dojo.declare("phpr.Calendar.WeekList", phpr.Calendar.DefaultView, {
     // Summary:
     //    Class for displaying a Calendar Week List
     // description:
@@ -171,9 +171,8 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Default.CalendarDayBasedList, {
             }
 
             for (var event in content) {
-                var eventInfo = this.getEventInfo(content[event]['startTime'],
-                                                  content[event]['endTime'],
-                                                  this._schedule[row]['hour']);
+                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'],
+                    this._schedule[row]['hour']);
 
                 if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventsNow[row][content[event]['startDate']] ++;
@@ -229,10 +228,8 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Default.CalendarDayBasedList, {
         // day in the appropriate position inside the array.
 
         for (var event in content) {
-            var eventInfo = this.getEventInfo(content[event]['startTime'],
-                                              content[event]['endTime'],
-                                              null,
-                                              content[event]['startDate']);
+            var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'], null,
+                content[event]['startDate']);
 
             if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
                 var rowEventBegins   = eventInfo['quarterBeginning'];
