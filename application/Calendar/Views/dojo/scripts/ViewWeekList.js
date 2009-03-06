@@ -17,9 +17,9 @@
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Calendar.WeekList");
+dojo.provide("phpr.Calendar.ViewWeekList");
 
-dojo.declare("phpr.Calendar.WeekList", phpr.Calendar.DefaultView, {
+dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     // Summary:
     //    Class for displaying a Calendar Week List
     // description:

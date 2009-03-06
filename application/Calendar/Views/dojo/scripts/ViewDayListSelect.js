@@ -17,9 +17,9 @@
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Calendar.DayListSelect");
+dojo.provide("phpr.Calendar.ViewDayListSelect");
 
-dojo.declare("phpr.Calendar.DayListSelect", phpr.Calendar.DefaultView, {
+dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     // Summary:
     //    Class for displaying a Calendar Day List for a specific selection of users
     // description:
