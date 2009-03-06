@@ -45,9 +45,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".usersSelectionDoneClick", this, "usersSelectionDoneClick");
 
         this.gridWidget          = phpr.Calendar.Grid;
-        this.dayListSelfWidget   = phpr.Calendar.DayListSelf;
-        this.dayListSelectWidget = phpr.Calendar.DayListSelect;
-        this.weekListWidget      = phpr.Calendar.WeekList;
+        this.dayListSelfWidget   = phpr.Calendar.ViewDayListSelf;
+        this.dayListSelectWidget = phpr.Calendar.ViewDayListSelect;
+        this.weekListWidget      = phpr.Calendar.ViewWeekList;
         this.formWidget          = phpr.Calendar.Form;
         this.treeWidget          = phpr.Calendar.Tree;
         this._listMode           = 'grid';

@@ -17,9 +17,9 @@
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Calendar.DayListSelf");
+dojo.provide("phpr.Calendar.ViewDayListSelf");
 
-dojo.declare("phpr.Calendar.DayListSelf", phpr.Calendar.DefaultView, {
+dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
     // Summary:
     //    Class for displaying a Calendar Day List for the logged user (self)
     // description:
