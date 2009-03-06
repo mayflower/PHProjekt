@@ -19,7 +19,7 @@
 
 dojo.provide("phpr.Calendar.DayListSelf");
 
-dojo.declare("phpr.Calendar.DayListSelf", phpr.Default.CalendarDayBasedList, {
+dojo.declare("phpr.Calendar.DayListSelf", phpr.Calendar.DefaultView, {
     // Summary:
     //    Class for displaying a Calendar Day List for the logged user (self)
     // description:
@@ -174,5 +174,4 @@ dojo.declare("phpr.Calendar.DayListSelf", phpr.Default.CalendarDayBasedList, {
 
         return false;
     }
-
 });

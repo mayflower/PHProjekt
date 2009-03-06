@@ -1,4 +1,4 @@
-﻿/**
+/**
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1 as published by the Free Software Foundation
@@ -10,16 +10,16 @@
  *
  * @copyright  Copyright (c) 2009 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Default.CalendarDayBasedList");
+dojo.provide("phpr.Calendar.DefaultView");
 
-dojo.declare("phpr.Default.CalendarDayBasedList", phpr.Component, {
+dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     // Summary:
     //    Parent class for displaying a Calendar Day Based List. Day based list: it means, not grid but Day List,
     // Week List, etc. This should be inherited by each respective JS view.
@@ -34,12 +34,14 @@ dojo.declare("phpr.Default.CalendarDayBasedList", phpr.Component, {
     _date:               null,
      _widthTable:        0,
     _widthHourColumn:    8,
+
     // Constants used by the function getEventInfo:
     EVENT_TIME_START:    0,
     EVENT_TIME_INSIDE:   1,
     EVENT_TIME_OUTSIDE:  2,
     EVENT_INSIDE_CHART:  0,
     EVENT_OUTSIDE_CHART: 1,
+
     // Constants used to define a calendar event time in comparison to a specific moment:
     EVENT_NONE:          0,
     EVENT_BEGIN:         1,
@@ -50,13 +52,13 @@ dojo.declare("phpr.Default.CalendarDayBasedList", phpr.Component, {
         //    Render the schedule table
         // Description:
         //    This function receives the list data from the server and renders the corresponding table
-        this.main   = main;
-        this.id     = id;
-        this.url    = null;
-        this._date  = date;
-        
+        this.main  = main;
+        this.id    = id;
+        this.url   = null;
+        this._date = date;
+
         this.beforeConstructor();
-        
+
         if (users != null) {
             // Just for the Day group view
             this._users = users;
@@ -295,5 +297,4 @@ dojo.declare("phpr.Default.CalendarDayBasedList", phpr.Component, {
 
         return output;
     }
-
 });
