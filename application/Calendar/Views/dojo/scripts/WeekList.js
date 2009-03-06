@@ -29,32 +29,17 @@ dojo.declare("phpr.Calendar.WeekList", phpr.Default.CalendarDayBasedList, {
     _furtherEvents:      Array,
     _weekDays:           Array(7),
 
-    constructor:function(/*Object*/ main, /*Int*/ id, /*String*/ date) {
+    beforeConstructor:function() {
         // Summary:
-        //    Render the schedule table
-        // Description:
-        //    This function receives the list data from the server and renders the corresponding table
-        this.main  = main;
-        this.id    = id;
-        this.url   = null;
-        this._date = date;
-
+        //    Calls the weekDays array creating function, before constructor function
         this.setWeekDays();
-        this.setUrl();
+    },
 
-        if (dojo.isIE) {
-            // This is to avoid a pair of scrollbars that eventually appears (not when first loading)
-            this._widthTable = 97;
-        } else {
-            this._widthTable = 100;
-        }
-        this._widthHourColumn = 7;
-
+    afterConstructor:function() {
+        // Summary:
+        //    Loads the data from the database
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
-
-        // Draw the tags
-        this.showTags();
     },
 
     setUrl:function() {

@@ -29,28 +29,9 @@ dojo.declare("phpr.Calendar.DayListSelect", phpr.Default.CalendarDayBasedList, {
     _schedule:          Array(48),
     _users:             Array(),
 
-    constructor:function(/*Object*/ main, /*Int*/ id, /*String*/ date, /*Array*/ users) {
+    afterConstructor:function() {
         // Summary:
-        //    Render the schedule table
-        // Description:
-        //    This function receives the list data from the server and renders the corresponding table
-        this.main   = main;
-        this.id     = id;
-        this.url    = null;
-        this._date  = date;
-        this._users = users;
-        this.setUrl();
-
-        if (dojo.isIE) {
-            // This is to avoid a pair of scrollbars that eventually appears (not when first loading)
-            this._widthTable = 97;
-        } else {
-            this._widthTable = 100;
-        }
-        this._widthHourColumn = 7;
-
-        // Draw the tags
-        this.showTags();
+        //    Starts the data loading process, requesting it from the database
 
         // Request header data
         var users           = this._users.join(",");
