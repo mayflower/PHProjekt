@@ -29,6 +29,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.module = "Calendar";
         this.loadFunctions(this.module);
         dojo.subscribe(this.module + ".showFormFromList", this, "showFormFromList");
+        dojo.subscribe(this.module + ".listViewClick", this, "listViewClick");
         dojo.subscribe(this.module + ".dayViewClick", this, "dayViewClick");
         dojo.subscribe(this.module + ".weekViewClick", this, "weekViewClick");
         dojo.subscribe(this.module + ".setDate", this, "setDate");
@@ -179,6 +180,12 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (this.weekList) {
             this.weekList.updateData();
         }
+    },
+
+    listViewClick:function() {
+        // Summary:
+        //    List button clicked, loads the regular grid
+        this.loadGrid();
     },
 
     dayViewClick:function() {
@@ -341,14 +348,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
     userSelectionClick:function() {
         // Summary:
-        //    This function loads the corresponding view in 'selection' mode (group view)
-        this._usersSelectionMode = true;
-        this.highlightBarUserSelection();
-        this.showSelector();
-    },
-
-    showSelector:function() {
-        // Summary:
         //    First function of the user selection window process, for the group view.
         // Description:
         //    Request the user list to the DB and then calls the next function of the process to show the selection
@@ -389,12 +388,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             dojo.byId("usersSelectorError").style.visibility='visible';
             return;
         }
+        this._usersSelectionMode = true;
+        this.highlightBarUserSelection();
         dojo.byId("usersSelectorError").style.visibility='hidden';
         this._usersSelected = new Array();
         dijit.byId('selectorDialog').hide();
 
-        // The userList array comes with lots and lots of string indexes apart from the number indexes that are the
-        // correct ones, that seems to be a Dojo bug. So, here it will be picked up the only the ones that matter.
+        // The userList array comes with lots and lots of string indexes apart from the number indexes (these last ones
+        // are the correct ones). This seems to be a Dojo bug. So, here it will be picked up the only the ones that
+        // matter.
         for (var i = 0; i < userList.length; i ++) {
             this._usersSelected[i] = userList[i];
         }
