@@ -4,8 +4,9 @@
         <tr>
             <td width="{{widthHourColumn}}%"></td>
             {% for day in header.days %}
-            <td width="{{header.columnsWidth}}%" class="hours" colspan="{{day.columnsTotal}}">{{day.dayAbbrev}}.
-                {{day.date}} &nbsp;
+            <td width="{{header.columnsWidth}}%" class="hours" colspan="{{day.columnsTotal}}">
+                <a href="javascript:dojo.publish('Calendar.weekViewDayClick', ['{{day.date}}']);">
+                    {{day.dayAbbrev}}.{{day.date}}</a> &nbsp;
                 <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
                     onClick="dojo.publish('Calendar.openForm', [null, null, '{{day.date}}']);">
                 </td>
