@@ -22,7 +22,11 @@
             </td>
                         {% endifequal %}
                     {% else %}
-            <td width="{{column.width}}%" class="{{column.class}}"></td>
+                        {% ifequal row.even true %}
+            <td width="{{column.width}}%" class="{{column.class}}" style="background-color: white;"></td>
+                        {% else %}
+            <td width="{{column.width}}%" class="{{column.class}}" style="background-color: #e9f3ff;"></td>
+                        {% endifequal %}
                     {% endif %}
                 {% endfor %}
             {% endfor %}

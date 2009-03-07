@@ -1,13 +1,13 @@
 <!-- Events inside the schedule chart -->
 <div id="calendarSchedule">
     <table width="{{widthTable}}%">
-    {% for moment in timeSquare %}
+    {% for row in timeSquare %}
         <tr>
-            <td width="{{widthHourColumn}}%" class="hours">{{moment.hour}} &nbsp;
+            <td width="{{widthHourColumn}}%" class="hours">{{row.hour}} &nbsp;
                 <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-                    onClick="dojo.publish('Calendar.openForm', [null, null, null, '{{moment.hour}}']);">
+                    onClick="dojo.publish('Calendar.openForm', [null, null, null, '{{row.hour}}']);">
             </td>
-            {% for column in moment.columns %}
+            {% for column in row.columns %}
                 {% if column.occupied %}
                     {% ifequal column.typeEvent 1 %}
             <td rowspan="{{column.quartersDuration}}" width="{{column.widthColumn}}%" class="events">
@@ -19,7 +19,11 @@
             </td>
                     {% endifequal %}
                 {% else %}
-            <td width="{{column.widthColumn}}%"></td>
+                    {% ifequal row.even true %}
+            <td width="{{column.width}}%" style="background-color: white;"></td>
+                    {% else %}
+            <td width="{{column.width}}%" style="background-color: #e9f3ff;"></td>
+                    {% endifequal %}
                 {% endif %}
             {% endfor %}
         </tr>

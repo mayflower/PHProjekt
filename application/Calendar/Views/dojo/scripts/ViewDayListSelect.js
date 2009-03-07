@@ -106,22 +106,28 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         // Summary:
         //    This function fills the week days arrays with the rows for every quarter of hour.
         // Description:
-        //    Fills the array with the header and all the possible points in time for this day view: 8:00, 8:15, 8:30
-        // and so on, until 19:45. Each of that rows will have as many columns as days plus simultaneous events exist
-
-        for (var i = 0; i < 48; i ++) {
-            this._schedule[i] = new Array(this._users.length);
-            for (var j = 0; j < this._users.length; j ++) {
-                this._schedule[i][j] = new Array();
-            }
-        }
+        //    Fills the array with the users and all the possible points in time for this day view: 8:00, 8:15, 8:30
+        // and so on, until 19:45. Each of that rows will have as many columns as users plus simultaneous events exist.
+        // Also sets for every row whether it is even or not.
 
         for (var hour = 8; hour < 20; hour++) {
             for (var quarter = 0; quarter < 4; quarter++) {
                 var minute = quarter * 15;
                 var row    = ((hour - 8) * 4) + quarter;
 
+                this._schedule[row] = new Array(this._users.length);
+                for (var user = 0; user < this._users.length; user ++) {
+                    this._schedule[row][user] = new Array();
+                }
+
                 this._schedule[row]['hour'] = this.formatTime(hour + ':' + minute);
+                if (Math.floor(row / 2) == (row / 2)) {
+                    // Even row
+                    this._schedule[row]['even'] = true;
+                } else {
+                    // Odd row
+                    this._schedule[row]['even'] = false;
+                }
             }
         }
     },

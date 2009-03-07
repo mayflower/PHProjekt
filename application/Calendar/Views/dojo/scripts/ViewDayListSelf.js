@@ -62,14 +62,21 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         furtherEvents['events'] = new Array();
 
         // Fill the main array with all the possible points in time for this day view
-        // 8:00, 8:15, 8:30 and so on, until 19:45
-        var i = -1;
-        for (j = 8; j < 20; j++) {
-            for (var k = 0; k < 4; k++) {
-                l = k * 15;
-                i++;
-                timeSquare[i]         = new Array();
-                timeSquare[i]['hour'] = this.formatTime(j + ':' + l);
+        // 8:00, 8:15, 8:30 and so on, until 19:45, and whether it is an even row or not.
+        for (var hour = 8; hour < 20; hour++) {
+            for (var quarter = 0; quarter < 4; quarter++) {
+                var minute = quarter * 15;
+                var row    = ((hour - 8) * 4) + quarter;
+
+                timeSquare[row]         = new Array();
+                timeSquare[row]['hour'] = this.formatTime(hour + ':' + minute);
+                if (Math.floor(row / 2) == (row / 2)) {
+                    // Even row
+                    timeSquare[row]['even'] = true;
+                } else {
+                    // Odd row
+                    timeSquare[row]['even'] = false;
+                }
             }
         }
 
@@ -98,7 +105,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                 timeSquare[row]['columns'][column]                = new Array();
                 timeSquare[row]['columns'][column]['occupied']    = false;
                 timeSquare[row]['columns'][column]['typeEvent']   = this.EVENT_NONE;
-                timeSquare[row]['columns'][column]['widthColumn'] = widthColumns;
+                timeSquare[row]['columns'][column]['width']       = widthColumns;
             }
         }
 
