@@ -672,10 +672,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     updateCacheData:function() {
-        // summary:
-        //    This function reload the grid place with the result of a search or a tagt
-        // description:
-        //    The server return the found records and the function display it
+        // Summary:
+        //    Forces every widget of the page to update its data, by deleting its cache. 
         if (this.grid) {
             this.grid.updateData();
         }
