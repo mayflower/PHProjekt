@@ -428,7 +428,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // summary:
         //    Update all the caches
         // description:
-        //    Update list, parent and from cached for the changed projects
+        //    Update list, parent and form cached for the changed projects
         for (var i in ids) {
             // List
             var listUrl = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + ids[i];

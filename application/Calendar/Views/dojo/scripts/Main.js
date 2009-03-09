@@ -160,28 +160,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.publish("openForm", [rowID]);
     },
 
-    updateCacheData:function() {
-        // summary:
-        //    This function reloads the grid place with the result of a search or a tag
-        // description:
-        //    The server returns the found records and the function displays it
-        if (this.grid) {
-            this.grid.updateData();
-        }
-        if (this.form) {
-            this.form.updateData();
-        }
-        if (this.dayListSelf) {
-            this.dayListSelf.updateData();
-        }
-        if (this.dayListSelect) {
-            this.dayListSelect.updateData();
-        }
-        if (this.weekList) {
-            this.weekList.updateData();
-        }
-    },
-
     listViewClick:function() {
         // Summary:
         //    List button clicked, loads the regular grid
