@@ -34,7 +34,7 @@ $lang["Content Help"]["Administración"] = "<br/>
     Este módulo es sólo accesible por usuario con perfil Admin.<br/>
     Aquí pueden configurarse parámetros generales del sitio que afectan a <b>todos los usuarios</b>.<br/>
     <br/>
-    Está dividido en 4 partes::<br/>
+    Está dividido en 4 partes:<br/>
     <br/>
     <ul>
         <li><b>Modulo:</b> este es el Diseñador de Módulos, una interfaz muy fácil de usar, con un manejo visual y con
@@ -82,6 +82,8 @@ $lang["Content Help"]["Modulo"] = "<br/>
             vuelta hacia el panel izquierdo o sólo presionando <b>Borrar</b>.<br/>
             Hay tantas solapas en este panel como solapas están definidas en el módulo <b>Administración</b> submódulo
             <b>Solapa</b>.<br/>
+            No necesita usar todas las solapas creadas. La solapa aparecerá en el módulo sólo si hay campos dentro de
+            ella.<br/>
             <br/>
         <li><b>El panel de edición, debajo a la izquierda:</b> aquí, cuando se presiona el botón <b>Editar</b> de un
             campo, un panel aparece para modificar sus valores y parámetros.<br/>

@@ -4,6 +4,10 @@
     padding: 0px;
 }
 
+.phprojekt .dijitContentPane #helpContainer ol {
+    margin-left: 2.5em;
+    }
+
 /* nested layouts */
 .phprojekt .dijitTabContainerTop-dijitContentPane,
 .phprojekt .dijitTabContainerLeft-dijitContentPane,

@@ -64,8 +64,8 @@ $lang["category"] = "Categoría";
 $lang["participantId"] = "Participantes";
 $lang["startTime"] = "Tiempo de inicio";
 $lang["Start Time"] = "Tiempo de inicio";
-$lang["endTime"] = "Tiempo final";
-$lang["End Time"] = "Tiempo final";
+$lang["endTime"] = "Tiempo de fin";
+$lang["End Time"] = "Tiempo de fin";
 $lang["Sum"] = "Suma";
 $lang["sum"] = "Suma";
 $lang["bookings"] = "Registro";
@@ -108,7 +108,7 @@ $lang["There are no entries on this level"] = "No hay elementos en este nivel";
 $lang["You do not have access to edit this item"] = "No tiene permisos para editar este item";
 $lang["The Item was added correctly"] = "El item fue agregado correctamente";
 $lang["The Item was edited correctly"] = "El item fue editado correctamente";
-$lang["The Items were edited correctly"] = "Los ítems fueron agregados correctamente";
+$lang["The Items were edited correctly"] = "Los ítems fueron editados correctamente";
 $lang["The Item can't be deleted"] = "El item no puede ser borrado";
 $lang["The Item was deleted correctly"] = "El item fue borrado correctamente";
 $lang["Is a required field"] = "Es un campo requerido";
@@ -139,8 +139,8 @@ $lang["The module was added correctly"] = "El módulo se agregó correctamente";
 $lang["The module was edited correctly"] = "El módulo se editó correctamente";
 $lang["The module can not be deleted"] = "El módulo no pudo ser borrado";
 $lang["The module was deleted correctly"] = "El módulo fue borrado correctamente";
-$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "USTED DEBE ACTUALIZAR LA WEB PARA TRABAJAR "
-    . "CON EL MÓDULO NUEVO";
+$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "USTED DEBE REFRESCAR LA PAGINA EN SU NAVEGADOR PARA "
+    . "TRABAJAR CON EL MÓDULO NUEVO";
 $lang["No help available"] = "No hay ayuda disponible";
 
 // System Modules
@@ -163,6 +163,7 @@ $lang["Filemanager"] = "Archivos";
 $lang["Gantt"] = "Gantt";
 $lang["Statistic"] = "Estadísticas";
 $lang["Contact"] = "Contactos";
+$lang["Module Designer"] = "Diseñador de Módulos";
 
 // Titles
 $lang["Search results"] = "Resultados de la búsqueda";
@@ -273,6 +274,20 @@ $lang["Stopped"] = "Parado";
 $lang["Re-Opened"] = "Re-Abierto";
 $lang["Waiting"] = "Esperando";
 $lang["Accepted"] = "Aceptado";
+
+// Error messages from Module Designer (this later should be moved to Administration language file)
+$lang["The module must contain fields"] = "El módulo debe contener campos";
+$lang["The module must contain a name"] = "El módulo debe contener un nombre";
+$lang["The module name must start with a letter"] = "El nombre del módulo debe comenzar con una letra";
+$lang["The Table Field must be completed for all the fields"] = "El nombre del campo en la Tabla debe ser completado "
+    . "para todos los campos del módulo";
+$lang["There are two fields with the same Field Name"] = "Hay dos campos con el mismo nombre de campo para la Tabla";
+$lang["The lenght of the varchar fields must be between 1 and 255"] = "El largo de los campos Varchar debe ser entre "
+    . "1 y 255";
+$lang["The lenght of the int fields must be between 1 and 11"] = "El largo de los campos Int debe ser entre 1 y 11"; 
+$lang["Invalid form Range for the select field"] = "Rango invalido en la solapa Formulario, para el campo Select";
+$lang["The module must have a project selector called projectId"] = "El módulo debe tener un selector de proyecto "
+    . "llamado projectId";
 
 // Help
 $lang["Content Help"]["General"] = "<br/>

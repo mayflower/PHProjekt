@@ -7,6 +7,7 @@ $lang["Week"] = "Woche";
 $lang["Self"] = "Mein Kalender";
 $lang["Selection"] = "Auswahl";
 $lang["Once"] = "Einmal";
+$lang["None"] = "Kein";
 $lang["Daily"] = "Tglich";
 $lang["Weekly"] = "Weekly";
 $lang["Monthly"] = "Monatliche";
