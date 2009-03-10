@@ -7,6 +7,7 @@ $lang["Week"] = "Semana";
 $lang["Self"] = "Propio";
 $lang["Selection"] = "Selección";
 $lang["Once"] = "Una vez";
+$lang["None"] = "Ninguno";
 $lang["Daily"] = "Diario";
 $lang["Weekly"] = "Semanal";
 $lang["Monthly"] = "Mensual";
@@ -77,10 +78,23 @@ $lang["Content Help"]["Evento"] = "<br/>
                 <li><b>Lista:</b> una grilla con todos los eventos para el usuario logueado.<br/>
                 <li><b>Día:</b> una agenda desde las 8:00 hasta las 20:00 hs. donde se muestran todos los eventos de un
                     día determinado.<br/>
+                    <u>Tiene dos subtipos</u> que son elegidos a través de los botones <b>Propio</b> y <b>Selección</b>
+                    que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> esta activo:
+                    <ul>
+                        <li><b>Propio:</b> se muestran los eventos del día elegido, para el usuario activo.
+                        <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece permitiendo
+                            al usuario seleccionar un pequeño grupo de gente de modo que la lista de eventos contendrá
+                            tantas columnas como usuarios elegidos; se verá una agenda grupal para el día activo.
+                    </ul>
+                <li><b>Semana:</b> una agenda semanal, igual la diaria pero para los siete días de la semana
+                    simultáneamente.
             </ul>
-            Cuando Día es la vista activa, otros elementos aparecen en esta botonera. Son un <i>campo de fecha</i> para
-            elegir la agenda de un día específico, y los botones <i>previo</i>, <i>hoy</i> y <i>siguiente</i>, para
-            cambiar los días secuencialmente.<br/>
+            Cuando Día o Semana son la vista activa, otros elementos aparecen en esta botonera. Son un <i>campo de
+            fecha</i> para elegir la agenda de un día / semana específica, y los botones <i>previo</i>, <i>hoy</i> y
+            <i>siguiente</i>, para cambiar los días / semanas secuencialmente.<br/>
+            Aparte de esto, cuando <b>Día</b> es el modo elegido, una sección llamada <i>Usuario</i> es mostrada en la
+            misma barra con dos modos disponibles para elegir para el listado: <b>Propio</b> y <b>Selección</b>. Ellos
+            están explicados previamente arriba de este párrafo.<br/>
             <br/>
         <li><b>Grilla / Lista:</b> aquí se muestra la lista de ítems o la agenda de un día determinado, según la vista
             elegida.<br/>

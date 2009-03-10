@@ -7,6 +7,7 @@ $lang["Week"] = "Week";
 $lang["Self"] = "Self";
 $lang["Selection"] = "Selection";
 $lang["Once"] = "Once";
+$lang["None"] = "None";
 $lang["Daily"] = "Daily";
 $lang["Weekly"] = "Weekly";
 $lang["Monthly"] = "Monthly";
@@ -72,15 +73,28 @@ $lang["Content Help"]["Calendar"] = "<br/>
                     this button to save the changes made.<br/>
                 <li><b>Export:</b> exports to a CSV file the results and offers you to download it.<br/>
             </ul>
-        <li><b>List / Day button bar:</b> there are two types of listings that are activated through <b>List</b> and
-            <b>Day</b> buttons.<br/>
+        <li><b>List Mode button bar:</b> there are three types of listings that are activated through <b>List</b>,
+            <b>Day</b> and <b>Week</b> buttons.<br/>
             <ul>
                 <li><b>List:</b> a grid with all the events for the current user.<br/>
                 <li><b>Day:</b> a schedule from 8:00 to 20:00 where all the events of a specific day are shown.<br/>
+                    <u>It has two subtypes</u> that are chosen through the <b>Self</b> and <b>Selection</b> buttons
+                    that appear at the right of the same bar, when <b>Day</b> mode is active:
+                    <ul>
+                        <li><b>Self:</b> the events of the chosen day, for the current user are shown.
+                        <li><b>Selection:</b> when this button is pressed, a pop-up window appears letting the user
+                            select a small group of people so that the list of events will have as many columns as
+                            users selected; there will be seen a group schedule for the active day.
+                    </ul>
+                <li><b>Week:</b> a week schedule, like the common day schedule, but for the seven days of the week
+                    simultaneously.
             </ul>
-            When the Day view is active, another things appear on this button bar. They are a <i>date field</i> to
-            select the schedule of a specific day and <i>previous</i>, <i>today</i> and <i>next</i> buttons to change
-            the day in sequence.<br/>
+            When the Day or Week view are active, another things appear on this button bar. They are a <i>date
+            field</i> to select the schedule of a specific day / week and <i>previous</i>, <i>today</i> and <i>next</i>
+            buttons to change the day / week in sequence.<br/>
+            In addition to this, when <b>Day</b> is the selected mode, a section called <i>User</i> is shown in the
+            same button bar with two modes available to choose for the listing: <b>Self</b> and <b>Selection</b>. They
+            are explained previously up this paragraph.<br/>
             <br/>
         <li><b>Grid / List:</b> here are shown the list of items or a determined day's schedule, depending on the
             selected view.<br/>

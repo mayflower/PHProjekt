@@ -83,6 +83,8 @@ $lang["Content Help"]["Module"] = "<br/>
             tab dragging & dropping them back to the left panel or just pressing <b>Delete</b> button.<br/>
             There are as many tabs in this panel as tabs are defined in module <b>Administration</b> submodule
             <b>Tab</b>.<br/>
+            You don't need to use all the tabs created. The tab will appear in the module only if there are fields
+            inside it.<br/>
             <br/>
         <li><b>The left bottom editing panel:</b> here, when it is pressed the <b>Edit</b> button of a field, a
             window appears to modify its values and parameters.<br/>

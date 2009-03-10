@@ -48,7 +48,7 @@ $lang["startDate"] = "Start Date";
 $lang["endDate"] = "End Date";
 $lang["priority"] = "Priority";
 $lang["currentStatus"] = "Current Status";
-$lang["completePercent"] = "Complete Percent";
+$lang["completePercent"] = "Percentage Completed";
 $lang["budget"] = "Budget";
 $lang["UserId"] = "User";
 $lang["ItemId"] = "Item";
@@ -139,7 +139,7 @@ $lang["The module was added correctly"] = "The module was added correctly";
 $lang["The module was edited correctly"] = "The module was edited correctly";
 $lang["The module can not be deleted"] = "The module can not be deleted";
 $lang["The module was deleted correctly"] = "The module was deleted correctly";
-$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "YOU MUST TO REFRESH THE PAGE TO WORK WITH "
+$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "YOU MUST REFRESH THE PAGE TO WORK WITH "
     . "THE NEW MODULE";
 $lang["No help available"] = "No help available";
 
@@ -163,6 +163,7 @@ $lang["Filemanager"] = "Filemanager";
 $lang["Gantt"] = "Gantt";
 $lang["Statistic"] = "Statistic";
 $lang["Contact"] = "Contacts";
+$lang["Module Designer"] = "Module Designer";
 
 // Titles
 $lang["Search results"] = "Search results";
@@ -273,6 +274,20 @@ $lang["Stopped"] = "Stopped";
 $lang["Re-Opened"] = "Re-Opened";
 $lang["Waiting"] = "Waiting";
 $lang["Accepted"] = "Accepted";
+
+// Error messages from Module Designer (this later should be moved to Administration language file)
+$lang["The module must contain fields"] = "The module must contain fields";
+$lang["The module must contain a name"] = "The module must contain a name";
+$lang["The module name must start with a letter"] = "The module name must start with a letter";
+$lang["The Table Field must be completed for all the fields"] = "The Table Field must be completed for all the fields";
+$lang["There are two fields with the same Field Name"] = "There are two fields with the same Field Name";
+$lang["The lenght of the varchar fields must be between 1 and 255"] = "The lenght of the varchar fields must be "
+    . "between 1 and 255";
+$lang["The lenght of the int fields must be between 1 and 11"] = "The lenght of the int fields must be between 1 and "
+    . "11";
+$lang["Invalid form Range for the select field"] = "Invalid form Range for the select field";
+$lang["The module must have a project selector called projectId"] = "The module must have a project selector called "
+    . "projectId";
 
 // Help
 $lang["Content Help"]["General"] = "<br/>

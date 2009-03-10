@@ -118,7 +118,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         // create ranges
         rangeFreq = new Array(
-            {'id': '', 'name': phpr.nls.get('Once')},
+            {'id': '', 'name': phpr.nls.get('None')},
             {'id': 'DAILY', 'name': phpr.nls.get('Daily')},
             {'id': 'WEEKLY', 'name': phpr.nls.get('Weekly')},
             {'id': 'MONTHLY', 'name': phpr.nls.get('Monthly')},
