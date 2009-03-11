@@ -276,15 +276,14 @@ $lang["Waiting"] = "Esperando";
 $lang["Accepted"] = "Aceptado";
 
 // Error messages from Module Designer (this later should be moved to Administration language file)
-$lang["The module must contain fields"] = "El módulo debe contener campos";
-$lang["The module must contain a name"] = "El módulo debe contener un nombre";
+$lang["The Module must contain at least one field"] = "El módulo debe contener al menos un campo";
+$lang["Please enter a name for this module"] = "Por favor ingrese un nombre para este módulo";
 $lang["The module name must start with a letter"] = "El nombre del módulo debe comenzar con una letra";
-$lang["The Table Field must be completed for all the fields"] = "El nombre del campo en la Tabla debe ser completado "
-    . "para todos los campos del módulo";
+$lang["All the fields must have a table name"] = "Todos los campos deben tener un nombre para la tabla";
 $lang["There are two fields with the same Field Name"] = "Hay dos campos con el mismo nombre de campo para la Tabla";
-$lang["The lenght of the varchar fields must be between 1 and 255"] = "El largo de los campos Varchar debe ser entre "
+$lang["The length of the varchar fields must be between 1 and 255"] = "El largo de los campos Varchar debe ser entre "
     . "1 y 255";
-$lang["The lenght of the int fields must be between 1 and 11"] = "El largo de los campos Int debe ser entre 1 y 11"; 
+$lang["The length of the int fields must be between 1 and 11"] = "El largo de los campos Int debe ser entre 1 y 11"; 
 $lang["Invalid form Range for the select field"] = "Rango invalido en la solapa Formulario, para el campo Select";
 $lang["The module must have a project selector called projectId"] = "El módulo debe tener un selector de proyecto "
     . "llamado projectId";
