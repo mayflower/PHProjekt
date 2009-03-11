@@ -415,14 +415,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $validated = false;
             $this->_error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Module Designer'),
-                'message' => Phprojekt::getInstance()->translate('The module must contain fields')));
+                'message' => Phprojekt::getInstance()->translate('The Module must contain at least one field')));
         }
 
         if (empty($data[0]['tableName'])) {
             $validated = false;
             $this->_error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Module Designer'),
-                'message' => Phprojekt::getInstance()->translate('The module must contain a name')));
+                'message' => Phprojekt::getInstance()->translate('Please enter a name for this module')));
         } else {
             if (!preg_match("/^[a-zA-Z]/", $data[0]['tableName'])) {
                 $validated = false;
@@ -460,7 +460,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $validated = false;
                     $this->_error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Module Designer'),
-                        'message' => Phprojekt::getInstance()->translate('The lenght of the varchar fields must be '
+                        'message' => Phprojekt::getInstance()->translate('The length of the varchar fields must be '
                             . 'between 1 and 255')));
                     break;
                 }
@@ -471,7 +471,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $validated = false;
                     $this->_error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Module Designer'),
-                        'message' => Phprojekt::getInstance()->translate('The lenght of the int fields must be between'
+                        'message' => Phprojekt::getInstance()->translate('The length of the int fields must be between'
                             . ' 1 and 11')));
                     break;
                 }

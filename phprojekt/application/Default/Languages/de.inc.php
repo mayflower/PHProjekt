@@ -163,6 +163,7 @@ $lang["Filemanager"] = "Dateien";
 $lang["Gantt"] = "Gantt";
 $lang["Statistic"] = "Statistiken";
 $lang["Contact"] = "Kontakte";
+$lang["Module Designer"] = "Moduldesigner";
 
 // Titles
 $lang["Search results"] = "Suchergebnisse";
@@ -273,3 +274,17 @@ $lang["Stopped"] = "Stopped";
 $lang["Re-Opened"] = "Wieder geöffnet";
 $lang["Waiting"] = "Warten";
 $lang["Accepted"] = "Akzeptiert";
+
+// Error messages from Module Designer (this later should be moved to Administration language file)
+$lang["The Module must contain at least one field"] = "Das Modul muss mindestens ein Feld enthalten";
+$lang["Please enter a name for this module"] = "Bitte geben Sie dem Modul einen Namen";
+$lang["The module name must start with a letter"] = "Der Modulname muss mit einem Buchstaben beginnen";
+$lang["All the fields must have a table name"] = "Alle Felder müssen einen namen in der Tabelle haben";
+$lang["There are two fields with the same Field Name"] = "Zwei Felder mit demselben Namen existieren";
+$lang["The length of the varchar fields must be between 1 and 255"] = "Die Länge des Textfelds muss zwischen 1 und "
+    . "255 Zeichen liegen";
+$lang["The length of the int fields must be between 1 and 11"] = "Die Feldlänger von Integer Feldern muss zwischen 1 "
+    . "und 11 liegen";
+$lang["Invalid form Range for the select field"] = "Ungültiger Wert für die Select Box";
+$lang["The module must have a project selector called projectId"] = "Das Modul muss ein Feld als Projektauswahlbox "
+    . "enhalten";
