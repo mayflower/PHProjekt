@@ -40,7 +40,7 @@ class Phprojekt_Date_Collection
      *
      * @var array
      */
-    private $elements = array();
+    private $_elements = array();
 
     /**
      * The highest value that should be allowed. If a higher value is added
@@ -49,7 +49,7 @@ class Phprojekt_Date_Collection
      * @var Zend_Date
      */
 
-    private $maxDate = null;
+    private $_maxDate = null;
 
     /**
      * The lowest value that should be allowed. If a lower value is added
@@ -69,7 +69,7 @@ class Phprojekt_Date_Collection
     {
         $this->minDate = new Zend_Date(strtotime($minDate));
         if (null != $maxDate) {
-            $this->maxDate = new Zend_Date(strtotime($maxDate));
+            $this->_maxDate = new Zend_Date(strtotime($maxDate));
         }
     }
 
@@ -86,8 +86,8 @@ class Phprojekt_Date_Collection
                 $this->add($e);
             }
         } else {
-            if (!isset($this->elements[$element->get()])) {
-                $this->elements[$element->get()] = $element;
+            if (!isset($this->_elements[$element->get()])) {
+                $this->_elements[$element->get()] = $element;
             }
         }
     }
@@ -104,7 +104,7 @@ class Phprojekt_Date_Collection
     public function applyRrule($rrule)
     {
         // Clear collection
-        $this->elements = array();
+        $this->_elements = array();
         // Parse RRule
         $rules = $this->parseRrule($rrule);
         // Detect mathod to use for increment
@@ -170,7 +170,7 @@ class Phprojekt_Date_Collection
             switch ($name) {
                 case 'UNTIL':
                     $value = Phprojekt_Date_Converter::parseIsoDateTime($value);
-                    $this->maxDate = $value;
+                    $this->_maxDate = $value;
                     break;
                 case 'BYDAY':
                     $value = explode(',', $value);
@@ -192,7 +192,7 @@ class Phprojekt_Date_Collection
 
         if (!isset($rules['UNTIL'])) {
             $rules['UNTIL'] = $this->minDate;
-            $this->maxDate = $this->minDate;
+            $this->_maxDate = $this->minDate;
         }
 
         return $rules;
@@ -243,7 +243,9 @@ class Phprojekt_Date_Collection
      */
     public function getValues()
     {
-        return $this->elements;
+        ksort($this->_elements);
+
+        return $this->_elements;
     }
 
     /**
@@ -254,10 +256,10 @@ class Phprojekt_Date_Collection
      */
     public function filter($exclude)
     {
-        for ($dateIndex = 0; $dateIndex < count($this->elements); $dateIndex++) {
+        for ($dateIndex = 0; $dateIndex < count($this->_elements); $dateIndex++) {
             foreach ($exclude as $exDate) {
-                if ($exDate->compare($this->elements[$dateIndex]) == 0) {
-                    unset($this->elements[$dateIndex]);
+                if ($exDate->compare($this->_elements[$dateIndex]) == 0) {
+                    unset($this->_elements[$dateIndex]);
                     continue;
                 }
             }
