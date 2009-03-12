@@ -511,7 +511,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'startTime', 1, 'startTime', 'time', 4, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endDate', 1, 'endDate', 'date', 0, 1, NULL, NULL, '', 0, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endTime', 1, 'endTime', 'time', 6, 1, NULL, NULL, '', 6, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'participantId', 1, 'participantId', 'multipleSelectValues', 7, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'participantId', 1, 'participantId', 'multipleSelectValues', 0, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'rrule', 1, 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0),
 
 (0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
@@ -559,8 +559,8 @@ INSERT INTO `Groups` (`id`, `name`) VALUES
 
 INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
 (1, 'admin in all', null), #Necessary
-(2, 'can Read TODOs and CALENDARsonly', null),
-(3, 'admin in CALENDARs and PROJECTs', null),
+(2, 'can Read TODOs only', null),
+(3, 'admin in PROJECTs', null),
 (4, 'read only in All', null);
 
 INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
@@ -582,42 +582,30 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 1, 139),
 (1, 2, 139),
 (1, 3, 139),
-(1, 4, 139),
-(1, 5, 139),
 (1, 6, 139),
 (1, 7, 139),
 (1, 8, 139),
-(1, 9, 139),
 
 (2, 1, 0),
 (2, 2, 1),
 (2, 3, 0),
-(2, 4, 0),
-(2, 5, 1),
 (2, 6, 0),
 (2, 7, 0),
 (2, 8, 0),
-(2, 9, 0),
 
 (3, 1, 139),
 (3, 2, 0),
 (3, 3, 0),
-(3, 4, 0),
-(3, 5, 139),
 (3, 6, 0),
 (3, 7, 0),
 (3, 8, 0),
-(3, 9, 0),
 
 (4, 1, 1),
 (4, 2, 1),
 (4, 3, 1),
-(4, 4, 1),
-(4, 5, 1),
 (4, 6, 1),
 (4, 7, 1),
-(4, 8, 1),
-(4, 9, 1);
+(4, 8, 1);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
