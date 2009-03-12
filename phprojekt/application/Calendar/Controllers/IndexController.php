@@ -42,22 +42,30 @@ class Calendar_IndexController extends IndexController
      * If not, the return is a string with the same format than the Phprojekt_PublishedException
      * but with success type
      *
-     * @requestparam integer id ...
+     * @requestparam integer id              Current item id or null for new
+     * @requestparam string  date            Start Date for the item or recurring
+     * @requestparam string  rrule           Rule for aply the recurring
+     * @requestparam array   dataParticipant Array with usersId involved in the event
+     * @requestparam bool    multipleEvents  Aply the save for one item or multiple events
      *
      * @return void
      */
     public function jsonSaveAction()
     {
-        $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-        $id      = (int) $this->getRequest()->getParam('id');
+        $message        = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+        $id             = (int) $this->getRequest()->getParam('id');
+        $startDate      = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
+        $rrule          = (string) $this->getRequest()->getParam('rrule', null);
+        $participants   = (array) $this->getRequest()->getParam('dataParticipant');
+        $multipleEvents = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
 
-        // getting the main row if the group if an id is provided
         if (!empty($id)) {
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
-        $record = $this->getModelObject();
-        $id     = $record->saveEvent($this->getRequest());
+        $record  = $this->getModelObject();
+        $request = $this->getRequest()->getParams();
+        $id      = $record->saveEvent($request, $id, $startDate, $rrule, $participants, $multipleEvents);
 
         $return = array('type'    => 'success',
                         'message' => $message,
@@ -68,37 +76,39 @@ class Calendar_IndexController extends IndexController
     }
 
     /**
-     * Returns the detail for a calendar in JSON.
+     * Returns all the participants for one item
+     * (Check the recurrent and return all the users involved)
      *
-     * @requestparam integer id ...
+     * @requestparam integer id The event id
      *
      * @return void
      */
-    public function jsonDetailAction()
+    public function jsonGetParticipantsAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $id   = (int) $this->getRequest()->getParam('id');
+        $data = array('data' => array());
 
-        if (empty($id)) {
-            $record = $this->getModelObject();
-        } else {
-            $record = $this->getModelObject();
-            $record->find($id);
-            $record->getAllParticipants();
+        if ($id > 0) {
+            $record = $this->getModelObject()->find($id);
+            $data   = array('data' => $record->getAllParticipants());
         }
 
-        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        echo Phprojekt_Converter_Json::convert($data);
     }
 
     /**
-     * Deletes an event, it includes all related events to this parent event
+     * Deletes an event.
+     * If the multipleEvents is true, all the related events will be deleted too
      *
-     * requestparam integer id ...
+     * @requestparam integer id             The event id
+     * @requestparam bool    multipleEvents Aply the save for one item or multiple events
      *
      * @return void
      */
     public function jsonDeleteAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $id             = (int) $this->getRequest()->getParam('id');
+        $multipleEvents = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -107,8 +117,7 @@ class Calendar_IndexController extends IndexController
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $model->deleteRelatedEvents();
-            $model->delete();
+            $model->deleteEvents($multipleEvents);
             $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             $return  = array('type'    => 'success',
                              'message' => $message,
@@ -144,8 +153,8 @@ class Calendar_IndexController extends IndexController
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
         } else {
-            $userId  = PHprojekt_Auth::getUserId();
-            $records = $this->getModelObject()->fetchAll('participantId = ' . $userId, null, $count, $offset);
+            $where   = 'deleted is NULL AND participantId = ' . PHprojekt_Auth::getUserId();
+            $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
         }
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -171,8 +180,8 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $userId  = PHprojekt_Auth::getUserId();
-        $records = $this->getModelObject()->fetchAll('participantId = ' . $userId . ' AND startDate = "'
-                   . $date . '"', null, $count, $offset);
+        $where   = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate = "' . $date . '"';
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -198,8 +207,7 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $usersId = $this->getRequest()->getParam('users', null);
-        $records = $this->getModelObject()->fetchAll('participantId IN (' . $usersId . ') AND startDate = "'
-                   . $date . '"', null, $count, $offset);
+        $records = $this->getModelObject()->getUserSelectionRecords($usersId, $date, $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -226,16 +234,15 @@ class Calendar_IndexController extends IndexController
         $dateStart = Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d")));
         $dateEnd   = Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d")));
         $userId    = PHprojekt_Auth::getUserId();
-        $records   = $this->getModelObject()->fetchAll('participantId = ' . $userId .
-                     ' AND startDate BETWEEN "' . $dateStart . '" AND "' . $dateEnd . '"', "startDate",
-                     $count, $offset);
+        $where     = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate BETWEEN "' . $dateStart
+            . '" AND "' . $dateEnd . '"';
+        $records   = $this->getModelObject()->fetchAll($where, "startDate", $count, $offset);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
      * Returns the Day List for the logged user in CSV format.
-     *
      *
      * @return void
      */
@@ -245,15 +252,14 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $userId  = PHprojekt_Auth::getUserId();
-        $records = $this->getModelObject()->fetchAll('participantId = ' . $userId . ' AND startDate = "'
-                   . $date . '"', null, $count, $offset);
+        $where   = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate = "' . $date . '"';
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
      * Returns the Day List for a specific selection of users in CSV format.
-     *
      *
      * @return void
      */
@@ -265,22 +271,14 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $usersId = $this->getRequest()->getParam('users', null);
-        $records = $this->getModelObject()->fetchAll('participantId IN (' . $usersId . ') AND startDate = "'
-                   . $date . '"', null, $count, $offset);
+        $where   = 'deleted is NULL AND participantId IN (' . $usersId . ') AND startDate = "' . $date . '"';
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         echo Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
      * Returns a List for a specific period (like week or month) in CSV format.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
-     * @requestparam string  dateStart ...
-     * @requestparam string  dateEnd ...
      *
      * @return void
      */
@@ -293,26 +291,11 @@ class Calendar_IndexController extends IndexController
         $dateStart = Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d")));
         $dateEnd   = Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d")));
         $userId    = PHprojekt_Auth::getUserId();
-        $records   = $this->getModelObject()->fetchAll('participantId = ' . $userId .
-                     ' AND startDate BETWEEN "' . $dateStart . '" AND "' . $dateEnd . '"', "startDate",
-                     $count, $offset);
+        $where     = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate BETWEEN "' . $dateStart
+            . '" AND "' . $dateEnd . '"';
+        $records   = $this->getModelObject()->fetchAll($where, "startDate", $count, $offset);
 
         echo Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Return a list of all the users
-     *
-     * @return void
-     */
-    public function jsonGetAllUsersAction()
-    {
-        $where   = "status = 'A'";
-        $order   = "lastname";
-        $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $records = $user->fetchAll($where, $order);
-
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**

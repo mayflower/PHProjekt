@@ -21,7 +21,6 @@ dojo.provide("phpr.Calendar.Main");
 
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _date:               new Date(),
-    _urlUserList:        null,
     _usersSelectionMode: false,
     _usersSelected:      Array(),
 
@@ -330,16 +329,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Description:
         //    Request the user list to the DB and then calls the next function of the process to show the selection
         // window.
-        this._urlUserList = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetAllUsers/";
-        phpr.DataStore.addStore({url: this._urlUserList});
-        phpr.DataStore.requestData({url: this._urlUserList, processData: dojo.hitch(this, "selectorRender")});
+        var allUsers = true;
+        this.userStore = new phpr.Store.allUsers();
+        this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 
     selectorRender:function() {
         // Summary:
         //    Called after receiving the users list from the DB. Shows the user selection window for the group view.
-
-        var userList = phpr.DataStore.getData({url: this._urlUserList});
+        var userList = this.userStore.getList();
 
         phpr.destroyWidget('selectorContent');
         dojo.byId('selectorTitle').innerHTML = phpr.nls.get('User selection');
