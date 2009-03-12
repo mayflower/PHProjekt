@@ -723,8 +723,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //    or modified. It has a "Send Notification" checkbox.
+
         // Add field
-        var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '');
+        var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '',
+                phpr.nls.get('Check this box to send an email notification to the people involved'));
         // Add the tab to the form
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
     },

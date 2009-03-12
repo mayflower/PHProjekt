@@ -1,4 +1,7 @@
 <?php
+// Tooltip Help
+$lang["Tooltip"]["projectId"] = "El proyecto padre, si no tiene padre elegir PHProjekt.";
+
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Todo"] = "<br/>

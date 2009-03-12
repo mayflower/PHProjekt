@@ -15,6 +15,9 @@ $lang["Time Zone"] = "Huso Horario";
 $lang["Favorite projects"] = "Proyectos favoritos";
 $lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos";
 
+// Tooltip Help
+$lang["Tooltip"]["amount"] = "Proyectos que serán vistos en Asistencia y estarán listos para Arrastrar y Soltar";
+
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Configuración"] = "<br/>

@@ -289,6 +289,10 @@ $lang["Invalid form Range for the select field"] = "Invalid form Range for the s
 $lang["The module must have a project selector called projectId"] = "The module must have a project selector called "
     . "projectId";
 
+// Tooltip Help
+$lang["Check this box to send an email notification to the people involved"] = "Check this box to send an email "
+    . "notification to the people involved";
+
 // Help
 $lang["Content Help"]["General"] = "<br/>
     This is the <b>General Help</b><br/>
