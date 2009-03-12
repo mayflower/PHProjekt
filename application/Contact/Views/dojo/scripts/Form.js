@@ -33,14 +33,6 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
         }
     },
 
-    setPermissions:function(data) {
-        if (this.id > 0) {
-            this._writePermissions  = true;
-            this._deletePermissions = true;
-            this._accessPermissions = true;
-        }
-    },
-
     addModuleTabs:function(data) {
         if (this.id > 0) {
             this.addTab(this.getHistoryData(), 'tabHistory', 'History');

@@ -220,9 +220,15 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Get the permission for the current user on the item
         if (this.id > 0) {
-            this._writePermissions  = data[0]["rights"]["currentUser"]["write"];
-            this._deletePermissions = data[0]["rights"]["currentUser"]["delete"];
-            this._accessPermissions = data[0]["rights"]["currentUser"]["admin"];
+            if (this.main._isGlobalModule(phpr.module)) {
+                this._writePermissions  = true;
+                this._deletePermissions = true;
+                this._accessPermissions = false;
+            } else {
+                this._writePermissions  = data[0]["rights"]["currentUser"]["write"];
+                this._deletePermissions = data[0]["rights"]["currentUser"]["delete"];
+                this._accessPermissions = data[0]["rights"]["currentUser"]["admin"];
+            }
         }
     },
 
