@@ -87,6 +87,8 @@ final class Default_Helpers_Save
             throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(1, $projectId)) {
             throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
+        } else if (!$newItem && !self::_checkItemRights($node->getActiveRecord(), 'Project')) {
+            throw new Phprojekt_PublishedException('You do not have access to edit this item');
         } else {
             if (null === $node->id || $node->id == 0) {
                 $parentNode->appendNode($node);
@@ -133,10 +135,12 @@ final class Default_Helpers_Save
             }
 
             // Save the module-project relation
-            if (!isset($params['checkModuleRelation'])) {
-                $params['checkModuleRelation'] = array();
+            if (isset($params['moduleRelation'])) {
+                if (!isset($params['checkModuleRelation'])) {
+                    $params['checkModuleRelation'] = array();
+                }
+                $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
             }
-            $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
 
             // Save the role-user-project relation
             if (isset($params['userRelation'])) {
@@ -199,6 +203,8 @@ final class Default_Helpers_Save
             throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
+        } else if (!$newItem && !self::_checkItemRights($model, $moduleName)) {
+            throw new Phprojekt_PublishedException('You do not have access to edit this item');
         } else {
             $model->save();
 
@@ -361,5 +367,37 @@ final class Default_Helpers_Save
             $boolean = true;
         }
         return $boolean;
+    }
+
+    /**
+     * Check if the user have write access to the item if is not a global module
+     *     *
+     * @param Phprojekt_Model_Interface $model      The model to save
+     * @param string                    $moduleName The current module
+     *
+     * @return boolean
+     */
+    private function _checkItemRights($model, $moduleName)
+    {
+        $canWrite = false;
+
+        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($moduleName) == 0)) {
+            $itemRights = $model->getRights();
+
+            if (isset($itemRights['currentUser'])) {
+                if (!$itemRights['currentUser']['write']  &&
+                    !$itemRights['currentUser']['create'] &&
+                    !$itemRights['currentUser']['copy']   &&
+                    !$itemRights['currentUser']['admin']) {
+                    $canWrite = false;
+                } else {
+                    $canWrite = true;
+                }
+            }
+        } else {
+            $canWrite = true;
+        }
+
+        return $canWrite;
     }
 }
