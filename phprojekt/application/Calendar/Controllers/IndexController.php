@@ -43,7 +43,7 @@ class Calendar_IndexController extends IndexController
      * but with success type
      *
      * @requestparam integer id              Current item id or null for new
-     * @requestparam string  date            Start Date for the item or recurring
+     * @requestparam string  startDate       Start Date for the item or recurring
      * @requestparam string  rrule           Rule for aply the recurring
      * @requestparam array   dataParticipant Array with usersId involved in the event
      * @requestparam bool    multipleEvents  Aply the save for one item or multiple events

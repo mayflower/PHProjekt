@@ -43,7 +43,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDate', '2008-06-02');
         $this->request->setParam('startTime', strtotime('09:00'));
         $this->request->setParam('endTime', strtotime('10:00'));
-        $this->request->setParam('participantId', 1);
+        $this->request->setParam('dataParticipant', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::ADD_TRUE_TEXT) > 0);
 
@@ -55,31 +55,32 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDate', '2008-06-02');
         $this->request->setParam('startTime', strtotime('09:00'));
         $this->request->setParam('endTime', strtotime('10:00'));
-        $this->request->setParam('participantId', 1);
+        $this->request->setParam('dataParticipant', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::EDIT_TRUE_TEXT) > 0);
 
         // Multiple Events
         $this->setRequestUrl('Calendar/index/jsonSave/');
-        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1');
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081202T040000Z;INTERVAL=1');
         $this->request->setParam('startDate', '2008-12-01');
         $this->request->setParam('startTime', strtotime('02:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('title', 'Multiple');
         $this->request->setParam('projectId', 1);
-        $this->request->setParam('participantId', array(1,2));
+        $this->request->setParam('dataParticipant', array(1,2));
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::ADD_TRUE_TEXT) > 0);
 
         $this->setRequestUrl('Calendar/index/jsonSave/');
         $this->request->setParam('id', 4);
-        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1');
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081202T040000Z;INTERVAL=1');
         $this->request->setParam('startDate', '2008-12-01');
         $this->request->setParam('startTime', strtotime('02:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('title', 'Multiple');
         $this->request->setParam('projectId', 1);
-        $this->request->setParam('participantId', array(1,2));
+        $this->request->setParam('dataParticipant', array(1,2));
+        $this->request->setParam('multipleEvents', true);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::EDIT_TRUE_TEXT) > 0);
     }
@@ -106,7 +107,7 @@ class Calendar_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Calendar/index/jsonList/');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
+        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
 
         $this->setRequestUrl('Calendar/index/jsonList/');
         $this->request->setParam('id', 1);
@@ -127,7 +128,8 @@ class Calendar_IndexController_Test extends FrontInit
 
         // Multiple Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
-        $this->request->setParam('id', 6);
+        $this->request->setParam('id', 3);
+        $this->request->setParam('multipleEvents', true);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
     }
