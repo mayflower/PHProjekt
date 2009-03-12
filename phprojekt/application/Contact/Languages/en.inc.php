@@ -1,4 +1,7 @@
 <?php
+// Tooltip Help
+$lang["Tooltip"]["private"] = "No: all users can see it - Yes: only you can see it";
+
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Contacts"] = "<br/>

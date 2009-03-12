@@ -15,6 +15,9 @@ $lang["Time Zone"] = "Time Zone";
 $lang["Favorite projects"] = "Favorite projects";
 $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 
+// Tooltip Help
+$lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop";
+
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Setting"] = "<br/>
