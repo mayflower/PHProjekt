@@ -430,48 +430,62 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function getRights()
     {
         $rights   = $this->_rights->getRights(Phprojekt_Module::getId($this->getTableName()), $this->id);
-        $moduleId = Phprojekt_Module::getId($this->getTableName());
+        $saveType = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getTableName()));
+        switch ($saveType) {
+            case 0:
+                $moduleId        = Phprojekt_Module::getId($this->getTableName());
+                $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
+                $roleRightRead   = $roleRights->hasRight('read');
+                $roleRightWrite  = $roleRights->hasRight('write');
+                $roleRightCreate = $roleRights->hasRight('create');
+                $roleRightAdmin  = $roleRights->hasRight('admin');
 
-        $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
-        $roleRightRead   = $roleRights->hasRight('read');
-        $roleRightWrite  = $roleRights->hasRight('write');
-        $roleRightCreate = $roleRights->hasRight('create');
-        $roleRightAdmin  = $roleRights->hasRight('admin');
-
-        // Map roles with item rigths and make one array
-        foreach ($rights as $userId => $access) {
-            foreach ($access as $name => $value) {
-                switch ($name) {
-                    case 'admin':
-                        $rights[$userId]['admin'] = $roleRightAdmin && $value;
-                        break;
-                    case 'donwload':
-                        $rights[$userId]['donwload'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;
-                        break;
-                    case 'delete':
-                        $rights[$userId]['delete'] = ($roleRightWrite || $roleRightAdmin) && $value;
-                        break;
-                    case 'copy':
-                        $rights[$userId]['copy'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
-                        break;
-                    case 'create':
-                        $rights[$userId]['create'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
-                        break;
-                    case 'access':
-                        $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite ||
-                                                      $roleRightCreate || $roleRightAdmin) && $value;
-                        break;
-                    case 'write':
-                        $rights[$userId]['write'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin) && $value;
-                        break;
-                    case 'read':
-                        $rights[$userId]['read'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin) && $value;
-                        break;
-                    case 'none':
-                        $rights[$userId]['none'] = $value;
-                        break;
+                // Map roles with item rigths and make one array
+                foreach ($rights as $userId => $access) {
+                    foreach ($access as $name => $value) {
+                        switch ($name) {
+                            case 'admin':
+                                $rights[$userId]['admin'] = $roleRightAdmin && $value;
+                                break;
+                            case 'donwload':
+                                $rights[$userId]['donwload'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
+                                    && $value;
+                                break;
+                            case 'delete':
+                                $rights[$userId]['delete'] = ($roleRightWrite || $roleRightAdmin) && $value;
+                                break;
+                            case 'copy':
+                                $rights[$userId]['copy'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
+                                    && $value;
+                                break;
+                            case 'create':
+                                $rights[$userId]['create'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
+                                    && $value;
+                                break;
+                            case 'access':
+                                $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightCreate
+                                || $roleRightAdmin) && $value;
+                                break;
+                            case 'write':
+                                $rights[$userId]['write'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
+                                    && $value;
+                                break;
+                            case 'read':
+                                $rights[$userId]['read'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
+                                    && $value;
+                                break;
+                            case 'none':
+                                $rights[$userId]['none'] = $value;
+                                break;
+                        }
+                    }
                 }
-            }
+                break;
+            case 1:
+                break;
+            case 2:
+                // Implement saveType 2
+                break;
         }
 
         return $rights;

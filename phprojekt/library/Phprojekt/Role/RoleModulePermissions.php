@@ -46,24 +46,27 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     {
         $modules = array();
         $where   = ' RoleModulePermissions.roleId = ' . $roleId .' OR RoleModulePermissions.roleId is null ';
+        $where  .= ' AND (Module.saveType = 0 OR Module.saveType = 2) ';
         $order   = ' Module.name ASC';
         $select  = ' Module.id as moduleId ';
         $join    = ' RIGHT JOIN Module ON Module.id = RoleModulePermissions.moduleId ';
+
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $modules['data'][$right->moduleId] = array();
 
-            $modules['data'][$right->moduleId]['id']   = $right->moduleId;
-            $modules['data'][$right->moduleId]['name'] = Phprojekt_Module::getModuleName($right->moduleId);
+            $modules['data'][$right->moduleId]['id']    = $right->moduleId;
+            $modules['data'][$right->moduleId]['name']  = Phprojekt_Module::getModuleName($right->moduleId);
             $label = Phprojekt_Module::getModuleLabel($right->moduleId);
             $modules['data'][$right->moduleId]['label'] = Phprojekt::getInstance()->translate($label); 
             
 
             $modules['data'][$right->moduleId] = array_merge($modules['data'][$right->moduleId],
-                                                             Phprojekt_Acl::convertBitmaskToArray($right->access));
+                Phprojekt_Acl::convertBitmaskToArray($right->access));
         }
+
         if (empty($modules)) {
             $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-            foreach ($model->fetchAll(null, ' name ASC ') as $module) {
+            foreach ($model->fetchAll(' (saveType = 0 OR saveType = 2) ', ' name ASC ') as $module) {
                 $modules['data'][$module->id] = array();
 
                 $modules['data'][$module->id]['id']    = $module->id;
@@ -71,9 +74,10 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
                 $modules['data'][$module->id]['label'] = Phprojekt::getInstance()->translate($module->label);
 
                 $modules['data'][$module->id] = array_merge($modules['data'][$module->id],
-                                                Phprojekt_Acl::convertBitmaskToArray(0));
+                    Phprojekt_Acl::convertBitmaskToArray(0));
             }
         }
+
         return $modules;
     }
 
