@@ -19,6 +19,7 @@
 
 dojo.provide("phpr.Store");
 dojo.provide("phpr.Store.User");
+dojo.provide("phpr.Store.allUsers");
 dojo.provide("phpr.Store.Module");
 dojo.provide("phpr.Store.Role");
 dojo.provide("phpr.Store.RoleModuleAccess");
@@ -70,7 +71,7 @@ dojo.declare("phpr.Store", phpr.Component, {
 
 dojo.declare("phpr.Store.User", phpr.Store, {
     constructor:function() {
-        this._url = phpr.webpath+"index.php/Core/user/jsonGetUsers";
+        this._url = phpr.webpath + "index.php/Core/user/jsonGetUsers";
     },
 
     makeSelect:function() {
@@ -79,17 +80,42 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         // description:
         //    This function get all the active users, except the current user
         //    and make the array for the select
-        var users    = phpr.DataStore.getData({url: this._url});
+        var users  = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in users) {
-            this._list.push({"id":users[i]['id'],"name":users[i]['username']});
+            this._list.push({"id":        users[i]['id'],
+                             "name":      users[i]['username'],
+                             "firstname": users[i]['firstname'],
+                             "lastname":  users[i]['lastname']});
+        }
+    }
+});
+
+dojo.declare("phpr.Store.allUsers", phpr.Store, {
+    constructor:function() {
+        this._url = phpr.webpath + "index.php/Core/user/jsonGetAllUsers";
+    },
+
+    makeSelect:function() {
+        // summary:
+        //    This function get all the active users
+        // description:
+        //    This function get all the active users, including the current user
+        //    and make the array for the select
+        var users  = phpr.DataStore.getData({url: this._url});
+        this._list = new Array();
+        for (i in users) {
+            this._list.push({"id":        users[i]['id'],
+                             "name":      users[i]['username'],
+                             "firstname": users[i]['firstname'],
+                             "lastname":  users[i]['lastname']});
         }
     }
 });
 
 dojo.declare("phpr.Store.Module", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath+"index.php/Project/index/jsonGetModulesProjectRelation/id/" + id
+        this._url = phpr.webpath + "index.php/Project/index/jsonGetModulesProjectRelation/id/" + id
     },
 
     makeSelect:function() {
@@ -99,12 +125,12 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
         //    This function get all the active modules,
         //    and make the array for draw it with the relation module-project
         var modules = phpr.DataStore.getData({url: this._url});
-        this._list = new Array();
+        this._list  = new Array();
         for (i in modules) {
-            this._list.push({"id":modules[i]['id'],
-                             "name":modules[i]['name'],
-                             "label":modules[i]['label'],
-                             "inProject":modules[i]['inProject']})
+            this._list.push({"id":        modules[i]['id'],
+                             "name":      modules[i]['name'],
+                             "label":     modules[i]['label'],
+                             "inProject": modules[i]['inProject']})
         }
     }
 });
@@ -113,7 +139,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
     _relationList: null,
 
     constructor:function(id) {
-        this._url = phpr.webpath+"index.php/Project/index/jsonGetProjectRoleUserRelation/id/" + id
+        this._url = phpr.webpath + "index.php/Project/index/jsonGetProjectRoleUserRelation/id/" + id
     },
 
     makeSelect:function() {
@@ -121,8 +147,8 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
         //    This function get all the roles and their assignes user for onw project
         // description:
         //    This function get all the roles and their assignes user for onw project
-        var roles  = phpr.DataStore.getData({url: this._url});
-        this._list = new Array();
+        var roles          = phpr.DataStore.getData({url: this._url});
+        this._list         = new Array();
         this._relationList = new Array();
         for (i in roles) {
             this._list.push({"id":roles[i]['id'], "name":roles[i]['name']});
@@ -142,7 +168,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
 
 dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath+"index.php/Core/"+phpr.module.toLowerCase()+"/jsonGetModulesAccess/id/" + id;
+        this._url = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonGetModulesAccess/id/" + id;
     },
 
     makeSelect:function() {
@@ -151,22 +177,22 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
         // description:
         //    This function get all the roles and their assignes user for onw project
         var modules = phpr.DataStore.getData({url: this._url});
-        this._list = new Array();
+        this._list  = new Array();
         for (i in modules) {
-            this._list.push({"id":modules[i]['id'],
-                             "name":modules[i]['name'],
-                             "label":modules[i]['label'],
-                             "read":modules[i]['read'],
-                             "write":modules[i]['write'],
-                             "create":modules[i]['create'],
-                             "admin":modules[i]['admin']})
+            this._list.push({"id":     modules[i]['id'],
+                             "name":   modules[i]['name'],
+                             "label":  modules[i]['label'],
+                             "read":   modules[i]['read'],
+                             "write":  modules[i]['write'],
+                             "create": modules[i]['create'],
+                             "admin":  modules[i]['admin']})
         }
     }
 });
 
 dojo.declare("phpr.Store.Tab", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath+"index.php/Core/tab/jsonList";
+        this._url = phpr.webpath + "index.php/Core/tab/jsonList";
     },
 
     makeSelect:function() {
@@ -174,11 +200,13 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
         //    This function get all the roles and their assignes user for onw project
         // description:
         //    This function get all the roles and their assignes user for onw project
-        var tabs = phpr.DataStore.getData({url: this._url});
+        var tabs   = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in tabs) {
             var nameId = tabs[i]['label'].toString().split(' ').join('');
-            this._list.push({"id":tabs[i]['id'],"name":tabs[i]['label'],"nameId":nameId})
+            this._list.push({"id":     tabs[i]['id'],
+                             "name":   tabs[i]['label'],
+                             "nameId": nameId})
         }
     }
 });

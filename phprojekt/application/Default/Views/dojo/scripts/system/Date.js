@@ -27,12 +27,13 @@ dojo.declare("phpr.Date", null, {
         //    Convert a js date into ISO date
         var day = date.getDate();
         if (day < 10) {
-            day = '0'+day;
+            day = '0' + day;
         }
         var month = (date.getMonth()+1);
         if (month < 10) {
-            month = '0'+month
+            month = '0' + month
         }
+
         return date.getFullYear() + '-' + month + '-' + day;
     },
 
@@ -43,7 +44,8 @@ dojo.declare("phpr.Date", null, {
         //    Convert a js time into ISO time
        time        = time.replace(/\D/g, "");
        var minutes = time.substr(time.length - 2);
-       var hour    = time.substr(0,time.length-2);
+       var hour    = time.substr(0, time.length - 2);
+
        return hour + ':' + minutes;
     },
 
@@ -61,6 +63,19 @@ dojo.declare("phpr.Date", null, {
         if (minutesDiff == 0 || minutesDiff < 10) {
             minutesDiff = '0' + minutesDiff;
         }
+
         return hoursDiff + ':' + minutesDiff;
+    },
+
+    isoDateTojsDate:function(date) {
+        // summary:
+        //    Convert a iso string of a date into a js object date
+        // description:
+        //    Convert a iso string of a date into a js object date
+        var day   = date.substr(8,2);
+        var month = date.substr(5,2);
+        var year  = date.substr(0,4);
+
+        return new Date(year, month - 1, day);
     }
 });
