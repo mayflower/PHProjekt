@@ -132,6 +132,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             if (($startTime > 2359) || ($startTime < 0)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
             }
@@ -141,6 +142,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The end time must be after the start time')));
                 return false;
             }
@@ -153,6 +155,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             if (($endTime > 2359) || ($endTime < 0)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The end time is invalid')));
                 return false;
             }
@@ -163,6 +166,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
             }

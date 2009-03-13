@@ -131,6 +131,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         if (($amount > 2359) || ($amount <= 0)) {
             $this->_validate->error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Amount'),
+                'label'   => Phprojekt::getInstance()->translate('Amount'),
                 'message' => Phprojekt::getInstance()->translate('The amount is invalid')));
                 return false;
         }

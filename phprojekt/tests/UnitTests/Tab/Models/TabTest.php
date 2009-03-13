@@ -44,7 +44,9 @@ class Phprojekt_TabModelTab_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals($tabModel->saveRights(), null);
         $this->assertEquals($tabModel->recordValidate(), false);
         $this->assertEquals($tabModel->getError(),
-            array(0 => array('field'=> 'Label', 'message' => 'Is a required field')));
+            array(0 => array('field'   => 'label',
+                             'label'   => 'Label',
+                             'message' => 'Is a required field')));
         $this->assertEquals($tabModel->__toString(), '');
     }
 }
