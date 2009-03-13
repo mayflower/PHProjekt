@@ -152,7 +152,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $table = $this->_model->getTableName();
 
                 if (in_array($order, $this->_mapping)) {
-                    $where = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
+                    $where  = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
                     $result = $this->fetchAll($where, $order);
                     $this->_dbFields[$order] = $result;
                 }

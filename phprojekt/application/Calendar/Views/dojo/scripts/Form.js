@@ -269,7 +269,6 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             BYDAY: ''
         };
 
-        console.debug('a');
         // Parse data to fill the form
         if (data[0].rrule && data[0].rrule.length > 0) {
             var rrule = data[0].rrule.split(';');
@@ -307,7 +306,6 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             {'id': 'SU', 'name': phpr.nls.get('Sunday')}
         );
 
-        console.debug('a1');
         // Add fields
         // If the user is not the owner, can see the recurrence but disabled (add hidden fields for keep the value)
         if (this.id > 0) {

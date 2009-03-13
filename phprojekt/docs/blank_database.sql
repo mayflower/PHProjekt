@@ -511,7 +511,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Calendar', 'startTime', 1, 'startTime', 'time', 4, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endDate', 1, 'endDate', 'date', 0, 1, NULL, NULL, '', 0, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Calendar', 'endTime', 1, 'endTime', 'time', 6, 1, NULL, NULL, '', 6, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'participantId', 1, 'participantId', 'multipleSelectValues', 0, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'participantId', 1, 'participantId', 'hidden', 7, 1, NULL, NULL, '', 0, NULL, 1, 1, '1', 1, 1, 0),
 (0, 'Calendar', 'rrule', 1, 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0),
 
 (0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
