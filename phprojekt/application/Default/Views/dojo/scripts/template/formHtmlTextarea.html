@@ -1,6 +1,11 @@
 <tr>
     <td class="label">
-        <label for="{{labelfor}}">{{label}}</label>
+        <label for="{{labelfor}}">
+        {{label}}
+        {% if required %}
+        &nbsp;(*)
+        {% endif %}
+        </label>
     </td>
     <td>
         <div id="displayText_{{id}}"

@@ -138,12 +138,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._initData.push({'store': this.userStore});
 
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
+            + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
 
         // History data
         if (this.id > 0) {
-            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module
+                + "/itemId/" + this.id
             this._initData.push({'url': this._historyUrl, 'noCache': true});
         }
     },
@@ -208,8 +210,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var tmp = new dijit.form.Button(params);
                 dojo.byId(buttonName).appendChild(tmp.domNode);
                 dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteAccess", userId));
-                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
-                dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
+                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
+                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+                dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick",
+                    dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
             }
         }
     },
@@ -345,13 +349,18 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                 itemrequired, itemdisabled, itemhint);
                     break;
                 case 'upload':
-                    iFramePath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/'+ this.id + '/field/' + itemid + '/value/' + itemvalue;
+                    iFramePath = phpr.webpath + 'index.php/' + phpr.module + '/index/uploadForm/id/' + this.id
+                        + '/field/' + itemid + '/value/' + itemvalue;
                     this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue,
                                                 itemrequired, itemdisabled, iFramePath, itemhint);
                     break;
                 case 'hidden':
                     this.formdata[itemtab] += this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue, itemrequired,
                                                 itemdisabled, itemhint);
+                    break;
+                case 'display':
+                    this.formdata[itemtab] += this.fieldTemplate.displayFieldRender(itemlabel, itemid, itemvalue,
+                        itemhint);
                     break;
                 default:
                     this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,
@@ -368,7 +377,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         for (t in tabs) {
             if (this.formdata[tabs[t].id]) {
-                this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, phpr.nls.get(tabs[t].name), 'dataFormTab' + tabs[t].id);
+                this.formdata[tabs[t].id] += this.fieldTemplate.displayFieldRender('', 'requiredField' + tabs[t].id,
+                    '(*) ' + phpr.nls.get('Required Field'), '');
+                this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, phpr.nls.get(tabs[t].name),
+                    'dataFormTab' + tabs[t].id);
             }
         }
 
@@ -471,25 +483,44 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             row.id       = "trAccessFor" + userId;
 
             var cell = row.insertCell(0);
-            cell.innerHTML = '<input id="dataAccess[' + userId + ']" name="dataAccess[' + userId + ']" type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
+            cell.innerHTML = '<input id="dataAccess[' + userId + ']" name="dataAccess[' + userId + ']" '
+                + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(1);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkReadAccess[' + userId + ']" name="checkReadAccess[' + userId + ']" checked="' + dijit.byId("checkReadAccessAdd").checked + '" value="1" />';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkReadAccess[' + userId + ']" name="checkReadAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkReadAccessAdd").checked + '" value="1" />';
             var cell = row.insertCell(2);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkWriteAccess[' + userId + ']" name="checkWriteAccess[' + userId + ']" checked="' + dijit.byId("checkWriteAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkWriteAccess[' + userId + ']" name="checkWriteAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkWriteAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(3);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAccessAccess[' + userId + ']" name="checkAccessAccess[' + userId + ']" checked="' + dijit.byId("checkAccessAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkAccessAccess[' + userId + ']" name="checkAccessAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkAccessAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(4);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkCreateAccess[' + userId + ']" name="checkCreateAccess[' + userId + ']" checked="' + dijit.byId("checkCreateAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkCreateAccess[' + userId + ']" name="checkCreateAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkCreateAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(5);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkCopyAccess[' + userId + ']" name="checkCopyAccess[' + userId + ']" checked="' + dijit.byId("checkCopyAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkCopyAccess[' + userId + ']" name="checkCopyAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkCopyAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(6);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkDeleteAccess[' + userId + ']" name="checkDeleteAccess[' + userId + ']" checked="' + dijit.byId("checkDeleteAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkDeleteAccess[' + userId + ']" name="checkDeleteAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkDeleteAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(7);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkDownloadAccess[' + userId + ']" name="checkDownloadAccess[' + userId + ']" checked="' + dijit.byId("checkDownloadAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkDownloadAccess[' + userId + ']" name="checkDownloadAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkDownloadAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(8);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAdminAccess[' + userId + ']" name="checkAdminAccess[' + userId + ']" checked="' + dijit.byId("checkAdminAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkAdminAccess[' + userId + ']" name="checkAdminAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkAdminAccessAdd").checked + '" value="1" /></div>';
             var cell = row.insertCell(9);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" id="checkNoneAccess[' + userId + ']" name="checkNoneAccess[' + userId + ']" checked="' + dijit.byId("checkNoneAccessAdd").checked + '" value="1" /></div>';
+            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
+                + ' id="checkNoneAccess[' + userId + ']" name="checkNoneAccess[' + userId + ']" '
+                + ' checked="' + dijit.byId("checkNoneAccessAdd").checked + '" value="1" /></div>';
 
             var cell = row.insertCell(10);
             cell.innerHTML = '<div id="accessDeleteButton' + userId + '"></div>';
@@ -505,8 +536,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             var tmp = new dijit.form.Button(params);
             dojo.byId(buttonName).appendChild(tmp.domNode);
             dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteAccess", userId));
-            dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
-            dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick", dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
+            dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
+                dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+            dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick",
+                dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
         }
     },
 
@@ -606,7 +639,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                }
                if (data.type == 'success') {
                    phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' + this.id,
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
+                            + '/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
@@ -632,7 +666,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {
                    phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' + phpr.module + '/id/' + this.id,
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' + phpr.module
+                            + '/id/' + this.id,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type =='success') {

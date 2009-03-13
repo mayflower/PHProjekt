@@ -1,6 +1,6 @@
 <tr>
     <td class="label">
-        <label for="{{labelfor}}">
+        <label>
         {{label}}
         {% if required %}
         &nbsp;(*)
@@ -8,9 +8,7 @@
         </label>
     </td>
     <td>
-        <textarea dojoType="dijit.form.Textarea"
-        id="{{id}}"
-        name="{{id}}">{{value}}</textarea>
+        <label>{{value}}</label>
     </td>
     <td>
         {{tooltip|safe}}

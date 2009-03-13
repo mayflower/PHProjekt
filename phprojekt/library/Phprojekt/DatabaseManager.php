@@ -201,7 +201,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     break;
                 case 'display':
                     $entry             = $this->_convertStandard($field);
-                    $entry['type']     = 'label';
+                    $entry['type']     = 'display';
                     $entry['readOnly'] = true;
                     $converted[]       = $entry;
                     break;
