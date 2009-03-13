@@ -48,15 +48,16 @@ class Core_UserController extends Core_IndexController
     }
 
     /**
-     * Return a list of all the users
+     * Return a list of all the users sorted by last name
      *
      * @return void
      */
     public function jsonGetAllUsersAction()
     {
         $where   = "status = 'A'";
+        $order   = "lastname";
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $records = $user->fetchAll($where);
+        $records = $user->fetchAll($where, $order);
 
         echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
