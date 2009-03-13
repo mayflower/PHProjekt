@@ -258,6 +258,16 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
     },
 
+    displayFieldRender:function(itemlabel, itemid, itemvalue, itemhint) {
+        phpr.destroyWidget(itemid + "_disabled");
+        var html = this.render(["phpr.Default.template", "formdisplay.html"], null, {
+                            label:   itemlabel,
+                            value:   itemvalue,
+                            tooltip: this.getTooltip(itemhint)
+                });
+        return html + this.disabledField(itemlabel, itemid, itemvalue, false, true);
+    },
+
     disabledField:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         if (itemdisabled) {
             return this.hiddenFieldRender(itemlabel, itemid, itemvalue, itemrequired, false);
