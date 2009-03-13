@@ -130,7 +130,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
                 formPosition++;
                 data[i]['formPosition']  = formPosition;
-                data[i]['formTab']       = tabs[j]['id'];
+                data[i]['formTab']       = parseInt(tabs[j]['id']);
                 data[i]['formColumns']   = 1;
                 data[i]['formRegexp']    = null;
                 data[i]['listAlign']     = 'center';
