@@ -414,20 +414,23 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (empty($data)) {
             $validated = false;
             $this->_error->addError(array(
-                'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'field'   => 'Module Designer',
+                'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('The Module must contain at least one field')));
         }
 
         if (empty($data[0]['tableName'])) {
             $validated = false;
             $this->_error->addError(array(
-                'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'field'   => 'Module Designer',
+                'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('Please enter a name for this module')));
         } else {
             if (!preg_match("/^[a-zA-Z]/", $data[0]['tableName'])) {
                 $validated = false;
                 $this->_error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                    'field'   => 'Module Designer',
+                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                     'message' => Phprojekt::getInstance()->translate('The module name must start with a letter')));
             }
         }
@@ -438,7 +441,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             if (empty($field['tableField'])) {
                 $validated = false;
                 $this->_error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                    'field'   => 'Module Designer',
+                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                     'message' => Phprojekt::getInstance()->translate('The Table Field must be completed '
                         . 'for all the fields')));
                 break;
@@ -446,7 +450,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 if (in_array($field['tableField'], $foundFields)) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   =>Phprojekt::getInstance()->translate('Module Designer'),
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('There are two fields with the same '
                             . 'Field Name')));
                     break;
@@ -459,7 +464,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 if ($field['tableLength'] < 1 && $field['tableLength'] > 255) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('The length of the varchar fields must be '
                             . 'between 1 and 255')));
                     break;
@@ -470,7 +476,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 if ($field['tableLength'] < 1 && $field['tableLength'] > 11) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('The length of the int fields must be between'
                             . ' 1 and 11')));
                     break;
@@ -481,7 +488,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 if (!strstr($field['formRange'], '#')) {
                     $validated = false;
                     $this->_error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for the select field')));
                     break;
                 }
@@ -494,7 +502,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (!$foundProjectId) {
             $validated = false;
             $this->_error->addError(array(
-                'field'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'field'   => 'Module Designer',
+                'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('The module must have a project selector called '
                     . 'projectId')));
         }

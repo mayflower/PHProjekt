@@ -109,7 +109,7 @@ class Core_ModuleDesignerController extends Core_IndexController
                 }
             } else {
                 $error   = $databaseManager->getError();
-                $message = $error['field'].': '.$error['message'];
+                $message = $error['label'].': '.$error['message'];
                 $type    = 'error';
             }
         } else {

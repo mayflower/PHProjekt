@@ -286,7 +286,8 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     public function testGetError()
     {
         $result= array();
-        $result[] = array('field'    => 'Title',
+        $result[] = array('field'    => 'title',
+                          'label'    => 'Title',
                           'message'  => 'Is a required field');
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->getError();

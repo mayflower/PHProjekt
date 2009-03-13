@@ -25,7 +25,8 @@
  * The class collect a number of errors in an array and the return it all together.
  *
  * For use with templates, you can assign array like:
- * addError(array('field' => 'title',
+ * addError(array('field'   => 'title',
+ *                'label'   => 'Label'),
  *                'message' => 'Hello');
  * So the template can get the array and use the fields "field" and "message".
  * You can use the class with the array that you want.
@@ -54,7 +55,9 @@ class Phprojekt_Error
 
     /**
      * Collect all the errors in an array for show it later
-     * Use like addError(array('field' => 'title','message' => 'Hello');
+     * Use like addError(array('field'   => 'title',
+     *                         'label'   => 'Label',
+     *                         'message' => 'Hello');
      * So the template can get the array and use each field of them
      *
      * @param array $data Array contain the fields for show

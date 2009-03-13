@@ -79,8 +79,9 @@ class Phprojekt_Model_Validate
                             if (null !== $error) {
                                 $validated = false;
                                 $this->error->addError(array(
-                                'field'   => Phprojekt::getInstance()->translate($varname),
-                                'message' => Phprojekt::getInstance()->translate($error)));
+                                    'field'   => $varname,
+                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'message' => Phprojekt::getInstance()->translate($error)));
                                 break;
                             }
                         }
@@ -89,8 +90,9 @@ class Phprojekt_Model_Validate
                         if (false === $error) {
                             $validated = false;
                             $this->error->addError(array(
-                            'field'   => Phprojekt::getInstance()->translate($varname),
-                            'message' => Phprojekt::getInstance()->translate("Invalid Format")));
+                                'field'   => $varname,
+                                'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                'message' => Phprojekt::getInstance()->translate("Invalid Format")));
                         }
                         break;
                     }
@@ -104,8 +106,9 @@ class Phprojekt_Model_Validate
                         if (null !== $error) {
                             $validated = false;
                             $this->error->addError(array(
-                            'field'   => Phprojekt::getInstance()->translate($varname),
-                            'message' => Phprojekt::getInstance()->translate($error)));
+                                'field'   => $varname,
+                                'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                'message' => Phprojekt::getInstance()->translate($error)));
                         }
                     }
                 }
