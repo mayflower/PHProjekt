@@ -393,6 +393,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this._date.setDate(day);
 
         dijit.byId("selectDate").attr('value', this._date);
+        this._usersSelectionMode = false;
         this.loadDayListSelf();
     },
 
