@@ -443,8 +443,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $this->_error->addError(array(
                     'field'   => 'Module Designer',
                     'label'   => Phprojekt::getInstance()->translate('Module Designer'),
-                    'message' => Phprojekt::getInstance()->translate('The Table Field must be completed '
-                        . 'for all the fields')));
+                    'message' => Phprojekt::getInstance()->translate('All the fields must have a table name')));
                 break;
             } else {
                 if (in_array($field['tableField'], $foundFields)) {
