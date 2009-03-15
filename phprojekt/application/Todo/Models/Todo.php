@@ -33,4 +33,17 @@
  */
 class Todo_Models_Todo extends Phprojekt_Item_Abstract
 {
+    /**
+     * Get all the recipients for the mail notification
+     *
+     * @return string
+     */
+    public function getNotificationRecipients()
+    {
+        $recipients = $this->ownerId;
+        if ($this->userId != 0 && $this->userId != $this->ownerId) {
+            $recipients .= "," . $this->userId;
+        }
+        return $recipients;
+    }
 }

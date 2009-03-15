@@ -45,7 +45,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
     private $_tableName;
     private $_customFrom;
-    private $_customTo;
+    private $_customTo = Array();
     private $_customSubject;
     private $_bodyMode;
     private $_view;
@@ -193,29 +193,44 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      */
     private function _setTo()
     {
-        $rights  = $this->_model->getRights();
-        $i       = 0;
         $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        foreach ($rights as $userId => $userRights) {
-            if ($userRights['read']) {
-                $i++;
-                if ((int) $userId) {
-                    $phpUser->find($userId);
-                } else {
-                    $phpUser->find(Phprojekt_Auth::getUserId());
-                }
-                $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-                $email   = $setting->getSetting('email', (int) $userId);
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
 
-                $this->_customTo[$i]    = array();
-                $this->_customTo[$i][0] = $email;
-
-                $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-                if (!empty($fullname)) {
-                    $this->_customTo[$i][1] = $fullname . ' (' . $phpUser->username . ')';
-                } else {
-                    $this->_customTo[$i][1] = $phpUser->username;
+        // The model has an exception to define the recipients of the notification?
+        if (!method_exists($this->_model, 'getNotificationRecipients')) {
+            // No - The recipients will be all the users with at least 'read' access to the item
+            $rights     = $this->_model->getRights();
+            $recipients = Array();
+            foreach ($rights as $userId => $userRights) {
+                if ($userRights['read']) {
+                    $recipients[] = $userId;
                 }
+            }
+
+        } else {
+            // Yes - The model defines its own recipients
+            $recipients = split(',', $this->_model->getNotificationRecipients());
+        }
+
+        // All the recipients IDs are inside $recipients, now add emails and descriptive names to _customTo 
+        foreach($recipients as $recipient) {
+            $email   = $setting->getSetting('email', (int) $recipient);
+
+            if ((int) $recipient) {
+                $phpUser->find($recipient);
+            } else {
+                $phpUser->find(Phprojekt_Auth::getUserId());
+            }
+
+            $this->_customTo[]             = array();
+            $lastItem                      = count($this->_customTo) - 1;
+            $this->_customTo[$lastItem][0] = $email;
+
+            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
+            if (!empty($fullname)) {
+                $this->_customTo[$lastItem][1] = $fullname . ' (' . $phpUser->username . ')';
+            } else {
+                $this->_customTo[$lastItem][1] = $phpUser->username;
             }
         }
     }
