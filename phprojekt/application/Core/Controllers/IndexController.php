@@ -59,9 +59,6 @@ class Core_IndexController extends IndexController
             } else if ($this->getRequest()->getControllerName() == 'user' &&
                 $this->getRequest()->getActionName() == 'jsonGetUsers') {
                 $valid = true;
-            } else if ($this->getRequest()->getControllerName() == 'user' &&
-                $this->getRequest()->getActionName() == 'jsonGetAllUsers') {
-                $valid = true;
             } else if ($this->getRequest()->getControllerName() == 'tab' &&
                 $this->getRequest()->getActionName() == 'jsonList') {
                 $valid = true;

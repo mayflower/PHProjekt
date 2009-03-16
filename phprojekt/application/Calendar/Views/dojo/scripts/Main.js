@@ -329,8 +329,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Description:
         //    Request the user list to the DB and then calls the next function of the process to show the selection
         // window.
-        var allUsers = true;
-        this.userStore = new phpr.Store.allUsers();
+        this.userStore = new phpr.Store.User();
         this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 
