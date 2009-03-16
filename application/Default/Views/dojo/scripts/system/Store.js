@@ -19,7 +19,6 @@
 
 dojo.provide("phpr.Store");
 dojo.provide("phpr.Store.User");
-dojo.provide("phpr.Store.allUsers");
 dojo.provide("phpr.Store.Module");
 dojo.provide("phpr.Store.Role");
 dojo.provide("phpr.Store.RoleModuleAccess");
@@ -79,28 +78,6 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         //    This function get all the active users
         // description:
         //    This function get all the active users, except the current user
-        //    and make the array for the select
-        var users  = phpr.DataStore.getData({url: this._url});
-        this._list = new Array();
-        for (i in users) {
-            this._list.push({"id":        users[i]['id'],
-                             "name":      users[i]['username'],
-                             "firstname": users[i]['firstname'],
-                             "lastname":  users[i]['lastname']});
-        }
-    }
-});
-
-dojo.declare("phpr.Store.allUsers", phpr.Store, {
-    constructor:function() {
-        this._url = phpr.webpath + "index.php/Core/user/jsonGetAllUsers";
-    },
-
-    makeSelect:function() {
-        // summary:
-        //    This function get all the active users
-        // description:
-        //    This function get all the active users, including the current user
         //    and make the array for the select
         var users  = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
