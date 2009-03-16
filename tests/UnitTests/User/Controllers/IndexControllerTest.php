@@ -38,6 +38,6 @@ class User_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/user/jsonGetUsers');
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response), strtolower('"numRows":1')) > 0);
+        $this->assertTrue(strpos(strtolower($response), strtolower('"numRows":2')) > 0);
     }
 }

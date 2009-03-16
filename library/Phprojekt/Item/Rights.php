@@ -92,10 +92,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     private function _saveRight($moduleId, $itemId, $userId, $access)
     {
-        $data['moduleId']     = (int) $moduleId;
-        $data['itemId']       = (int) $itemId;
-        $data['userId']       = (int) $userId;
-        $data['access']       = (int) $access;
+        $data['moduleId'] = (int) $moduleId;
+        $data['itemId']   = (int) $itemId;
+        $data['userId']   = (int) $userId;
+        $data['access']   = (int) $access;
         $this->insert($data);
     }
 
@@ -157,7 +157,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $sessionName    = 'Phprojekt_Item_Rights-getRights' . '-' . $moduleId . '-' . $itemId;
         $rightNamespace = new Zend_Session_Namespace($sessionName);
         if (!isset($rightNamespace->right)) {
-            $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $where  = array();
             $values = array();
 
@@ -166,7 +165,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $where   = implode(' AND ', $where);
             $rows    = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
-                $row['userName'] = $user->findUserById($row['userId'])->username;
                 $row = array_merge($row, Phprojekt_Acl::convertBitmaskToArray($row['access']));
                 if (Phprojekt_Auth::getUserId() == $row['userId']) {
                     $values['currentUser'] = $row;
@@ -188,11 +186,11 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public function saveDefaultRights($userId)
     {
-        $data = array();
-        $data['moduleId']     = Phprojekt_Module::getId('Project');
-        $data['itemId']       = 1;
-        $data['userId']       = (int) $userId;
-        $data['access']       = (int) Phprojekt_Acl::WRITE;
+        $data             = array();
+        $data['moduleId'] = Phprojekt_Module::getId('Project');
+        $data['itemId']   = 1;
+        $data['userId']   = (int) $userId;
+        $data['access']   = (int) Phprojekt_Acl::WRITE;
         $this->insert($data);
     }
 }

@@ -156,11 +156,29 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Display all the users and the acces
         //    The user can assign to each user different access on the item
-        var userList = this.userStore.getList();
+        var userList      = this.userStore.getList();
         var accessContent = data[0]["rights"];
         var currentUser   = 0;
+        var users         = new Array();
+
         if (this.id > 0) {
             currentUser = data[0]["rights"]["currentUser"]["userId"];
+        }
+
+        if (userList) {
+            for (var i in userList) {
+                // Make an array with the users expect the current one
+                if (userList[i].id != currentUser) {
+                    users.push({'id': userList[i].id, 'name': userList[i].name});
+                }
+                // Found the name of each user
+                for (j in accessContent) {
+                    if (userList[i].id == accessContent[j].userId) {
+                        accessContent[j].userName = userList[i].name;
+                        break;
+                    }
+                }
+            }
         }
 
         if (this._accessPermissions) {
@@ -177,7 +195,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 accessAdminText:    phpr.nls.get('Admin'),
                 accessNoneText:     phpr.nls.get('None'),
                 accessActionText:   phpr.nls.get('Action'),
-                users:              userList,
+                users:              users,
                 currentUser:        currentUser,
                 accessContent:      accessContent
             });
@@ -714,7 +732,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
+        var userList    = this.userStore.getList();
         var historyData = '<tr><td colspan="3"><table id="historyTable" style="position: relative; left: 75px">';
+        var userNames   = new Array();
 
         if (history.length > 0) {
             historyData += "<tr><td><label>" + phpr.nls.get('Date');
@@ -724,7 +744,20 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
 
         for (var i = 0; i < history.length; i++) {
-            historyUser     = history[i]["userId"];
+            // Search for the user name
+            if (!userNames[history[i]["userId"]]) {
+                for (var u in userList) {
+                    if (userList[u].id == history[i]["userId"]) {
+                        userNames[history[i]["userId"]] = userList[u].lastname + ", " + userList[u].firstname;
+                        break;
+                    }
+                }
+            }
+            if (userNames[history[i]["userId"]]) {
+                historyUser = userNames[history[i]["userId"]];
+            } else {
+                historyUser = '';
+            }
             historyModule   = history[i]["moduleId"];
             historyItemId   = history[i]["itemId"];
             historyField    = history[i]["field"];
