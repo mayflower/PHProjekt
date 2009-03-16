@@ -66,9 +66,21 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // description:
         //    Add Tab for user-role relation into the project
         if (this._accessPermissions) {
-            var currentUser   = 0;
+            var currentUser = 0;
+            var users       = new Array();
+            var userList    = this.userStore.getList();
+
             if (this.id > 0) {
                 currentUser = data[0]["rights"]["currentUser"]["userId"];
+            }
+
+            // Make an array with the users expect the current one
+            if (userList) {
+                for (var i in userList) {
+                    if (userList[i].id != currentUser) {
+                        users.push({'id': userList[i].id, 'name': userList[i].name});
+                    }
+                }
             }
 
             var relationList = this.roleStore.getRelationList();
@@ -76,7 +88,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 accessUserText:   phpr.nls.get('User'),
                 accessRoleText:   phpr.nls.get('Role'),
                 accessActionText: phpr.nls.get('Action'),
-                users:            this.userStore.getList(),
+                users:            users,
                 roles:            this.roleStore.getList(),
                 currentUser:      currentUser,
                 relations:        relationList

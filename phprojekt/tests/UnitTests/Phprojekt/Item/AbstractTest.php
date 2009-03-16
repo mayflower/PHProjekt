@@ -381,8 +381,10 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
         $getRights = $module->getRights();
         $this->assertTrue($getRights['currentUser']['admin']);
-        $this->assertEquals($getRights['currentUser']['userName'], 'david');
-        $this->assertEquals($getRights[3]['userName'], 'inactive');
+        $this->assertEquals($getRights['currentUser']['userId'], '1');
+        $this->assertEquals($getRights['currentUser']['write'], true);
+        $this->assertEquals($getRights[3]['itemId'], 2);
+        $this->assertEquals($getRights[3]['write'], true);
 
         $module = Phprojekt_Loader::getModel('Timecard', 'Timecard', array('db' => $this->sharedFixture));
         $this->assertEquals(array(), $module->getRights());
