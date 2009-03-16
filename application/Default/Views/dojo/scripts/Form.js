@@ -735,12 +735,15 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         var userList    = this.userStore.getList();
         var historyData = '<tr><td colspan="3"><table id="historyTable" style="position: relative; left: 75px">';
         var userNames   = new Array();
+        var row         = 0;
 
         if (history.length > 0) {
-            historyData += "<tr><td><label>" + phpr.nls.get('Date');
-            historyData += "</label></td><td><label>" + phpr.nls.get('User');
-            historyData += "</label></td><td><label>" + phpr.nls.get('Field');
-            historyData += "</label></td><td><label>" + phpr.nls.get('Old value') + "</label></td></tr>";
+            historyData += '<tr>';
+            historyData += '<th><label>' + phpr.nls.get('Date') + '</label></th>';
+            historyData += '<th><label>' + phpr.nls.get('User') + '</label></th>';
+            historyData += '<th><label>' + phpr.nls.get('Field') + '</label></th>';
+            historyData += '<th><label>' + phpr.nls.get('Old value') + '</label></td>';
+            historyData += '</tr>';
         }
 
         for (var i = 0; i < history.length; i++) {
@@ -766,12 +769,22 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             historyAction   = history[i]["action"];
             historyDate     = history[i]["datetime"];
 
-            historyData += "<tr><td>" + historyDate;
-            historyData += "</td><td>" + historyUser;
-            historyData += "</td><td>" + historyField;
-            historyData += "</td><td>" + historyOldValue;
+            if (Math.floor(row / 2) == (row / 2)) {
+                var trClass = 'grey';
+            } else {
+                var trClass = 'white';
+            }
+
+            historyData += '<tr class="' + trClass + '">';
+            historyData += '<td>' + historyDate + '</td>';
+            historyData += '<td>' + historyUser + '</td>';
+            historyData += '<td>' + historyField + '</td>';
+            historyData += '<td>' + historyOldValue + '</td>';
+            historyData += '</tr>';
+
+            row++;
         }
-        historyData += "</table></td></tr>";
+        historyData += '</table></td></tr>';
 
         return historyData;
     },
