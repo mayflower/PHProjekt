@@ -33,17 +33,5 @@ dojo.declare("phpr.User.Form", phpr.Core.Form, {
 
     useCache:function() {
         return false;
-    },
-
-    updateData:function() {
-        phpr.DataStore.deleteData({url: this._url});
-
-        // Delete User Cache
-        this.userStore = new phpr.Store.User();
-        this.userStore.update();
-
-        // Delete settings for the user
-        var url = phpr.webpath+"index.php/Core/user/jsonGetSettingList/nodeId/" + this.id;
-        phpr.DataStore.deleteData({url: url});
     }
 });

@@ -45,14 +45,6 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
     },
 
     updateCacheData:function() {
-        if (this.tree) {
-            this.tree.updateData();
-        }
-        if (this.grid) {
-            this.grid.updateData();
-        }
-        if (this.form) {
-            this.form.updateData();
-        }
+        phpr.DataStore.deleteAllCache();
     }
 });

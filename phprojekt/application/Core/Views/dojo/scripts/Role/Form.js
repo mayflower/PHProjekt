@@ -40,10 +40,5 @@ dojo.declare("phpr.Role.Form", phpr.Core.Form, {
             label: phpr.nls.get('Access'),
             modules: this.roleModuleAccessStore.getList()
         });
-    },
-
-    updateData:function() {
-        phpr.DataStore.deleteData({url: this._url});
-        this.roleModuleAccessStore.update();
     }
 });
