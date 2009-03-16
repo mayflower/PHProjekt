@@ -471,3 +471,32 @@ h1,h2,h3,h4,h5,h6 {
     box-sizing: border-box;
     overflow: hidden;
 }
+
+/* History Table */
+.phprojekt #historyTable th {
+    background: #E9E9E9 url(images/titleBar.png) repeat-x scroll center top;
+    color: #000000 !important;
+    padding-bottom: 0;
+    border: 1px dotted #A6A6A6;
+}
+
+.phprojekt #historyTable label {
+    color: #000;
+    text-transform: none;
+    font-weight: normal;
+    font-size: 96%;
+    vertical-align: top;
+}
+
+.phprojekt #historyTable td {
+    border: 1px dotted #A6A6A6;
+    padding: 5px;
+}
+
+.phprojekt #historyTable .grey {
+    background-color: #F2F5F9;
+}
+
+.phprojekt #historyTable .white {
+    background-color: white;
+}
