@@ -269,9 +269,5 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                }
             })
         });
-    },
-
-    updateData:function() {
-        phpr.DataStore.deleteAllCache();
     }
 });

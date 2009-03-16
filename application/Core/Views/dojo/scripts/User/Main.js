@@ -31,5 +31,9 @@ dojo.declare("phpr.User.Main", phpr.Core.Main, {
 
     customSetSubmoduleNavigation:function() {
         this.setNewEntry();
+    },
+
+    updateCacheData:function() {
+        phpr.DataStore.deleteAllCache();
     }
 });

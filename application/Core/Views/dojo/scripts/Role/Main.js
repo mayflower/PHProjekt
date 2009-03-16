@@ -29,7 +29,11 @@ dojo.declare("phpr.Role.Main", phpr.Core.Main, {
         this.treeWidget = phpr.Role.Tree;
     },
 
-     customSetSubmoduleNavigation:function() {
+    customSetSubmoduleNavigation:function() {
         this.setNewEntry();
-     }
+    },
+
+    updateCacheData:function() {
+        phpr.DataStore.deleteAllCache();
+    }
 });

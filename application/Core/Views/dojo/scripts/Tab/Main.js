@@ -31,5 +31,16 @@ dojo.declare("phpr.Tab.Main", phpr.Core.Main, {
 
      customSetSubmoduleNavigation:function() {
         this.setNewEntry();
-     }
+     },
+
+    updateCacheData:function() {
+        if (this.grid) {
+            this.grid.updateData();
+        }
+        if (this.form) {
+            this.form.updateData();
+        }
+        var tabStore = new phpr.Store.Tab();
+        tabStore.update();
+    }
 });
