@@ -187,41 +187,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         parent.removeChild(e);
     },
 
-    submitForm:function() {
-        // summary:
-        //    This function is responsible for submitting the formdata
-        // description:
-        //    This function sends the form data as json data to the server
-        //    and call the reload routine
-        if (!this.prepareSubmission()) {
-            return false;
-        }
-
-        phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (!this.id) {
-                   this.id = data['id'];
-               }
-               if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
-                            if (data.type =='success') {
-                                this.publish("updateCacheData");
-                                this.publish("changeProject", [this.id]);
-                            }
-                        })
-                    });
-               }
-            })
-        });
-    },
-
     updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
