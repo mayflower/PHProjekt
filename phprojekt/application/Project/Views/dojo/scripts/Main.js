@@ -34,6 +34,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     loadResult:function(id, module, projectId) {
         this.cleanPage();
         phpr.currentProjectId = id;
+        phpr.TreeContent.fadeIn();
         this.basicData();
     },
 

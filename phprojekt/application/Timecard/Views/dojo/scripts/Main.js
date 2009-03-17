@@ -51,6 +51,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         });
         dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
         this.cleanPage();
+        phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();

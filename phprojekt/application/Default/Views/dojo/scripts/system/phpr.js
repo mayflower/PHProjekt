@@ -683,3 +683,31 @@ dojo.declare("phpr.Dialog", [dijit.Dialog], {
         }
     }
 });
+
+dojo.declare("phpr.TreeContent", null, {
+    // summary:
+    //     Manage the visibility of the tree panel
+    // description:
+    //     Manage the visibility of the tree panel
+    fadeOut:function() {
+        if (dojo.style("treeBox", "opacity") != 0.3) {
+            var temp = dojo.fadeOut({
+                node:  "treeBox",
+                onEnd: function () {
+                    dojo.style("treeBox", "opacity", 0.3);
+                }
+            }).play();
+        }
+    },
+
+    fadeIn:function() {
+        if (dojo.style("treeBox", "opacity") != 1) {
+            var temp = dojo.fadeIn({
+                node:  "treeBox",
+                onEnd: function () {
+                    dojo.style("treeBox", "opacity", 1);
+                }
+            }).play();
+        }
+    }
+});

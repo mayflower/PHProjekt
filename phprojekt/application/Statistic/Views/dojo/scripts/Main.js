@@ -46,8 +46,10 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         });
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
+            phpr.TreeContent.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
+            phpr.TreeContent.fadeIn();
             this.setSubmoduleNavigation();
         }
         this.hideSuggest();

@@ -66,11 +66,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
         this.cleanPage();
         phpr.currentProjectId = projectId;
-        this.loadSubElements(projectId);
+        if (this._isGlobalModule(module)) {
+            phpr.TreeContent.fadeOut();
+        } else {
+            phpr.TreeContent.fadeIn();
+        }
+        this.loadSubElements(projectId, "loadResult");
         this.openForm(id, module);
     },
 
-    loadSubElements:function(projectId) {
+    loadSubElements:function(projectId, functionFrom) {
         // summary:
         //    this function loads a new project with the default submodule
         // description:
@@ -91,14 +96,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.module == 'Module') {
                 dojo.publish("Project.changeProject", [phpr.currentProjectId]);
             } else {
-                if (this.module == 'Timecard') {
-                    dojo.publish("Project.changeProject", [phpr.currentProjectId]);
-                } else {
+                if (functionFrom && functionFrom == 'loadResult') {
                     dojo.publish(this.module + ".reload");
+                } else {
+                    dojo.publish("Project.changeProject", [phpr.currentProjectId]);
                 }
             }
         } else {
-            var subModuleUrl   = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
+            var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
             phpr.DataStore.requestData({
                 url: subModuleUrl,
@@ -189,8 +194,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
+            phpr.TreeContent.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
+            phpr.TreeContent.fadeIn();
             this.setSubmoduleNavigation();
         }
         this.hideSuggest();
@@ -626,6 +633,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Clean the navigation and forms buttons
         this.cleanPage();
 
+        phpr.TreeContent.fadeIn();
         this.hideSuggest();
 
         phpr.send({
@@ -673,7 +681,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
     updateCacheData:function() {
         // Summary:
-        //    Forces every widget of the page to update its data, by deleting its cache. 
+        //    Forces every widget of the page to update its data, by deleting its cache.
         if (this.grid) {
             this.grid.updateData();
         }

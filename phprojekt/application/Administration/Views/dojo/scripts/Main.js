@@ -37,6 +37,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.parentmodule = '';
         this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'));
         this.cleanPage();
+        phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
