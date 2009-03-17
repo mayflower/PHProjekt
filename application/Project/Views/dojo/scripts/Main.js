@@ -26,9 +26,10 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
         dojo.subscribe("Project.basicData", this, "basicData");
 
-        this.gridWidget = phpr.Project.Grid;
-        this.formWidget = phpr.Project.Form;
-        this.treeWidget = phpr.Project.Tree;
+        this.gridWidget          = phpr.Project.Grid;
+        this.formWidget          = phpr.Project.Form;
+        this.formBasicDataWidget = phpr.Project.FormBasicData;
+        this.treeWidget          = phpr.Project.Tree;
     },
 
     loadResult:function(id, module, projectId) {
@@ -45,11 +46,10 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
-        this.openForm(phpr.currentProjectId, phpr.module);
-        // Remove delete button
-        if (dijit.byId("deleteButton")) {
-            dijit.byId("deleteButton").destroy();
+        if (!dojo.byId('detailsBox')) {
+            this.reload();
         }
+        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module);
     },
 
     updateCacheData:function() {

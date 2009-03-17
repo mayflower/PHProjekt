@@ -82,7 +82,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    If the current submodule don´t have access, the first found submodule is used
         //    When a new submodule is called, the new grid is displayed,
         //    the navigation changed and the Detail View is resetted
-        phpr.currentProjectId = projectId;
+        phpr.currentProjectId = parseInt(projectId);
         if (!phpr.currentProjectId) {
             phpr.currentProjectId = phpr.rootProjectId;
         }
