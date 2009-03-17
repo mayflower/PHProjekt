@@ -72,8 +72,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                                                         this._date.getDate()));
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
+            phpr.TreeContent.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
+            phpr.TreeContent.fadeIn();
             this.setSubmoduleNavigation();
         }
         this.hideSuggest();
