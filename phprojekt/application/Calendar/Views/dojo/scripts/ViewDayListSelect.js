@@ -283,5 +283,5 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                 return i;
             }
         }
-    },
+    }
 });
