@@ -132,7 +132,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // IMPORTANT NOTE: because of this function having lots of time and date variables, I added the suffix
         // '_Date' to the ones of Date type format, for making all these no so difficult to understand.
         // Also, to just a few of the String variables, there was added the '_String' suffix, with the same purpose.
-
         var result                 = new Array(); // The variable that will be returned
         var scheduleStartTime_Date = new Date();
         var scheduleEndTime_Date   = new Date();
@@ -209,8 +208,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
         var quarterBeginning       = eventStartTime_Date.getTime() - scheduleStartTime_Date.getTime();
         var duration               = eventEndTime_Date.getTime() - eventStartTime_Date.getTime();
-        result['quarterBeginning'] = Math.floor(quarterBeginning / (1000*60*15));
-        result['quartersDuration'] = Math.floor(duration / (1000*60*15));
+        result['quarterBeginning'] = Math.floor(quarterBeginning / (1000 * 60 * 15));
+        result['quartersDuration'] = Math.floor(duration / (1000 * 60 * 15));
 
         if (askedTime != null) {
             var temp             = askedTime.split(':');
@@ -218,8 +217,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             var askedTimeMinutes = temp[1];
 
             // Round downwards the time to search for, to the nearest quarter of hour
-            if ((askedTimeMinutes/15) != Math.floor(askedTimeMinutes/15)) {
-                askedTimeMinutes = Math.floor(askedTimeMinutes/15) * 15;
+            if ((askedTimeMinutes / 15) != Math.floor(askedTimeMinutes / 15)) {
+                askedTimeMinutes = Math.floor(askedTimeMinutes / 15) * 15;
             }
             var askedTime_Date = new Date();
             askedTime_Date.setHours(askedTimeHour);
@@ -254,11 +253,11 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     formatDate:function(date) {
         // Summary:
         //    Formats a date string. E.g. receives '2009-5-4' and returns '2009-05-04'
-        var temp    = date.split('-');
-        var year    = temp[0];
-        var month   = temp[1];
-        var day     = temp[2];
-        var result  = year + '-' + dojo.number.format(month, {pattern: '00'}) + '-'
+        var temp   = date.split('-');
+        var year   = temp[0];
+        var month  = temp[1];
+        var day    = temp[2];
+        var result = year + '-' + dojo.number.format(month, {pattern: '00'}) + '-'
             + dojo.number.format(day, {pattern: '00'});
 
         return result;

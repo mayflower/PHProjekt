@@ -26,7 +26,7 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
 
         // Delete parent cache
         var parentId = this.main.tree.getParentId(phpr.currentProjectId);
-        var url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/" + parentId;
+        var url      = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + parentId;
         phpr.DataStore.deleteData({url: url});
     }
 });

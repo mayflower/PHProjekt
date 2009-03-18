@@ -40,7 +40,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:                     phpr.webpath,
             selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline"),
             projectPeriodHelp:           phpr.nls.get("Project Period Help")
@@ -94,7 +94,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 if (caption.length > 25) {
                     caption = caption.substr(0, 25) + '...';
                 }
-                dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null ,{
+                dojo.byId('projectList').innerHTML += this.render(["phpr.Gantt.template", "inner.html"], null, {
                     name:     this.buildProjectName(j),
                     level:    this.gantt.projectDataBuffer[j].level,
                     caption:  caption,
@@ -115,7 +115,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             dojo.byId('projectList').innerHTML = phpr.drawEmptyMessage('There are no valid projects');
         }
 
-        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
+        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"), {
             writePermissions:  data["rights"]["currentUser"]["write"],
             deletePermissions: false,
             saveText:          phpr.nls.get('Save'),
@@ -134,27 +134,31 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         phpr.destroyWidget("minDate");
         phpr.destroyWidget("maxDate");
         // the project begin date widget (calendar view)
-        this.gantt.DateMin = new dijit.form.DateTextBox({name:          'minDate',
-                                                         id:            'minDate',
-                                                         constraints:   {datePattern:'yyyy-MM-dd', strict:true},
-                                                         promptMessage: "yyyy-MM-dd",
-                                                         onChange:      dojo.hitch(this,function() {
-                                                                            this.gantt.setRangeSelect(arguments[0], 'min');
-                                                                        }),
-                                                         style:         'width:150px;',
-                                                         required:      true},
-                                                         dojo.byId('TgtMin'));
+        this.gantt.DateMin = new dijit.form.DateTextBox({
+            name:          'minDate',
+            id:            'minDate',
+            constraints:   {datePattern:'yyyy-MM-dd', strict:true},
+            promptMessage: "yyyy-MM-dd",
+            onChange:      dojo.hitch(this, function() {
+                this.gantt.setRangeSelect(arguments[0], 'min');
+            }),
+            style:         'width:150px;',
+            required:      true},
+            dojo.byId('TgtMin')
+        );
         // the project end date widget (calendar view)
-        this.gantt.DateMax = new dijit.form.DateTextBox({name:          'maxDate',
-                                                         id:            'maxDate',
-                                                         constraints:   {datePattern:'yyyy-MM-dd', strict:true},
-                                                         promptMessage: "yyyy-MM-dd",
-                                                         onChange:      dojo.hitch(this,function() {
-                                                                            this.gantt.setRangeSelect(arguments[0], 'max');
-                                                                        }),
-                                                         style:         'width:150px;',
-                                                         required:      true},
-                                                         dojo.byId('TgtMax'));
+        this.gantt.DateMax = new dijit.form.DateTextBox({
+            name:          'maxDate',
+            id:            'maxDate',
+            constraints:   {datePattern:'yyyy-MM-dd', strict:true},
+            promptMessage: "yyyy-MM-dd",
+            onChange:      dojo.hitch(this, function() {
+                this.gantt.setRangeSelect(arguments[0], 'max');
+            }),
+            style:         'width:150px;',
+            required:      true},
+            dojo.byId('TgtMax')
+        );
     },
 
     installProjects:function() {
@@ -176,7 +180,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var ProjectChilds = new String(this.gantt.projectDataBuffer[listIndex].childs)
             dijit.byId(projectName).container = this.gantt;
             dijit.byId(projectName).attr('value', projectValues);
-            this.gantt.projectDataBuffer[listIndex] = new Array(projectName, projectValues[0], projectValues[1], ProjectChilds);
+            this.gantt.projectDataBuffer[listIndex] = new Array(projectName, projectValues[0], projectValues[1],
+                ProjectChilds);
         }
     },
 
@@ -248,7 +253,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             }
             var info = self.decodeName(element);
             if (info.id > 0) {
-                a.onclick = dojo.hitch(this,function() {
+                a.onclick = dojo.hitch(this, function() {
                     dojo.publish('Gantt.toggle', [a, info.parent, info.id]);
                 });
             }
@@ -314,7 +319,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var element   =  dojo.byId('gantt_timeline');
         var startDate = new Date(this.gantt.MIN_DATE);
         var endDate   = new Date(this.gantt.MAX_DATE);
-        var months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+            'October', 'November', 'December'];
         var surface   = dojox.gfx.createSurface("timeLine", 1024, 100);
         var m         = dojox.gfx.matrix;
 
@@ -323,7 +329,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         html += '<li style="width:12px; float: left;">&nbsp;</li>';
         html += '<li class="slider" style="float:left; margin-top:0px; left:0px;">';
         html += '<ul style="margin-top:0px; width:100%; left:0px;">';
-        html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
+        html += '<li class="splitter" style="float:left; width:1px; height:5px; ';
+        html += 'border-left:1px dotted #3d3d3d; margin-left: -1px;"></li>';
 
         // Get how many years there are
         var years = 1;
@@ -359,7 +366,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var month = months[i];
 
             html += '<li style="width:' + width + 'px; float:left;">&nbsp;</li>';
-            html += '<li class="splitter" style="float:left; width:1px; height:5px; border-left:1px dotted #3d3d3d;margin-left: -2px;"></li>';
+            html += '<li class="splitter" style="float:left; width:1px; height:5px; ';
+            html += 'border-left:1px dotted #3d3d3d;margin-left: -2px;"></li>';
 
             var x = 260 + (totalWidth -(width / 2));
             if (years > 3) {
@@ -409,7 +417,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var name  = this.gantt.projectDataBuffer[listIndex][0];
             var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));
             var id    = name.split(':')[2];
-            projects[listIndex] = id + "," + this.gantt.convertIndex2DateString(value[0]) + "," + this.gantt.convertIndex2DateString(value[1]);
+            projects[listIndex] = id + "," + this.gantt.convertIndex2DateString(value[0]) + ","
+                + this.gantt.convertIndex2DateString(value[1]);
             ids.push(id);
         }
         sendData['projects[]'] = projects;

@@ -85,9 +85,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         for (var i in timeSquare) {
             var currentEventNow = -1;
             for (var event in content) {
-                var eventInfo = this.getEventInfo(content[event]['startTime'],
-                                                  content[event]['endTime'],
-                                                  timeSquare[i]['hour']);
+                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'],
+                    timeSquare[i]['hour']);
                 if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventNow++;
                 }
@@ -102,10 +101,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         for (var row in timeSquare) {
             timeSquare[row]['columns'] = new Array();
             for (column=0; column < maxSimultEvents; column++) {
-                timeSquare[row]['columns'][column]                = new Array();
-                timeSquare[row]['columns'][column]['occupied']    = false;
-                timeSquare[row]['columns'][column]['typeEvent']   = this.EVENT_NONE;
-                timeSquare[row]['columns'][column]['width']       = widthColumns;
+                timeSquare[row]['columns'][column]              = new Array();
+                timeSquare[row]['columns'][column]['occupied']  = false;
+                timeSquare[row]['columns'][column]['typeEvent'] = this.EVENT_NONE;
+                timeSquare[row]['columns'][column]['width']     = widthColumns;
             }
         }
 
@@ -149,7 +148,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                     timeSquare[row]['columns'][useColumn]['occupied']  = true;
                     timeSquare[row]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
                 }
-
             } else if (eventInfo['range'] == this.EVENT_OUTSIDE_CHART) {
                 furtherEvents['show'] = true;
                 var nextPosition      = furtherEvents['events'].length;
@@ -163,10 +161,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
 
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "dayListSelf.html"], dojo.byId('gridBox'), {
-            widthTable          : this._widthTable,
-            widthHourColumn     : this._widthHourColumn,
-            timeSquare          : timeSquare,
-            furtherEvents       : furtherEvents,
+            widthTable:           this._widthTable,
+            widthHourColumn:      this._widthHourColumn,
+            timeSquare:           timeSquare,
+            furtherEvents:        furtherEvents,
             furtherEventsMessage: phpr.nls.get('Further events')
         });
     },

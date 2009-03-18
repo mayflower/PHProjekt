@@ -53,9 +53,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
         // important set the global phpr.module to the module which is currently loaded!!!
-
         phpr.module = this.module;
-        this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             view:       phpr.nls.get('View'),
             list:       phpr.nls.get('List'),
             day:        phpr.nls.get('Day'),
@@ -67,9 +66,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             selection:  phpr.nls.get('Selection')
         });
 
-        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(),
-                                                        this._date.getMonth(),
-                                                        this._date.getDate()));
+        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(),
+            this._date.getDate()));
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
             phpr.TreeContent.fadeOut();
@@ -108,8 +106,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.setNewEntry();
         dojo.byId('scheduleBar').style.display      = 'none';
         dojo.byId('scheduleGroupBar').style.display = 'none';
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
-        this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+
+        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
+            + phpr.currentProjectId;
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         this.highlightBarMainSelection();
     },
 
@@ -121,7 +121,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.setNewEntry();
         dojo.byId('scheduleBar').style.display      = 'inline';
         dojo.byId('scheduleGroupBar').style.display = 'inline';
-        this._date = dijit.byId('selectDate').attr('value');
+
+        this._date       = dijit.byId('selectDate').attr('value');
         this.dayListSelf = new this.dayListSelfWidget(this, phpr.currentProjectId, this._date);
         this.highlightBarMainSelection();
         this.highlightBarUserSelection();
@@ -135,9 +136,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.setNewEntry();
         dojo.byId('scheduleBar').style.display      = 'inline';
         dojo.byId('scheduleGroupBar').style.display = 'inline';
-        this._date = dijit.byId('selectDate').attr('value');
-        this.dayListSelect = new this.dayListSelectWidget(this, phpr.currentProjectId, this._date,
-                                                          this._usersSelected);
+
+        this._date         = dijit.byId('selectDate').attr('value');
+        this.dayListSelect = new this.dayListSelectWidget(this, phpr.currentProjectId, this._date, this._usersSelected);
         this.highlightBarMainSelection();
         this.highlightBarUserSelection();
     },
@@ -150,7 +151,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.setNewEntry();
         dojo.byId('scheduleBar').style.display      = 'inline';
         dojo.byId('scheduleGroupBar').style.display = 'none';
-        this._date = dijit.byId('selectDate').attr('value');
+
+        this._date    = dijit.byId('selectDate').attr('value');
         this.weekList = new this.weekListWidget(this, phpr.currentProjectId, this._date);
         this.highlightBarMainSelection();
     },
@@ -227,7 +229,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate, /*String*/ startTime) {
         // Summary:
         //    This function opens a new Detail View
-
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
@@ -238,12 +239,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 params['startDate'] = '';
                 params['startTime'] = '08:00';
                 params['endTime']   = '10:00';
-
             } else if (this.dayListSelf || this.dayListSelect || this.weekList) {
-
                 if (startDate != undefined) {
                     params['startDate'] = startDate;
-
                 } else {
                     var tmpDate      = dijit.byId("selectDate").attr('value');
                     var selectedDate = tmpDate.getFullYear()
@@ -257,15 +255,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 if (startTime == undefined) {
                     params['startTime'] = '08:00';
                     params['endTime']   = '10:00';
-
                 } else {
                     params['startTime'] = startTime;
                     // Generate the End Time, 2 hours after the Start Time
-                    var temp         = startTime.split(':');
-                    var startHour    = parseInt(temp[0], 10);
-                    var startMinutes = parseInt(temp[1], 10);
-                    startHour += 2;
-                    endTime = dojo.number.format(startHour, {pattern: '00'}) + ':' + dojo.number.format(startMinutes, {pattern: '00'});
+                    var temp          = startTime.split(':');
+                    var startHour     = parseInt(temp[0], 10);
+                    var startMinutes  = parseInt(temp[1], 10);
+                    startHour        += 2;
+                    endTime           = dojo.number.format(startHour, {pattern: '00'}) + ':'
+                        + dojo.number.format(startMinutes, {pattern: '00'});
                     params['endTime'] = endTime;
                 }
             }
@@ -276,7 +274,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     highlightBarMainSelection:function() {
         // Summary:
         //    This function highlights setting to bold the button of the selected view mode (and unbolding the rest)
-
         if (this.grid) {
             dojo.byId('gridBarButton').style.fontWeight = 'bold';
             dojo.byId('gridBarButton').blur();
@@ -303,7 +300,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     highlightBarUserSelection:function() {
         // Summary:
         //    This function highlights setting to bold the button of user mode (self/selection) and unbolding the other
-
         if (!this._usersSelectionMode) {
             dojo.byId('selfBarButton').style.fontWeight      = 'bold';
             dojo.byId('selectionBarButton').style.fontWeight = '';
@@ -345,10 +341,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dijit.byId('selectorDialog').attr('title', phpr.nls.get('Calendar'));
 
         this.render(["phpr.Calendar.template", "usersSelector.html"], dojo.byId('selectorContainer'), {
-            label           : phpr.nls.get('Select users for the group view'),
-            userList        : userList,
-            done            : phpr.nls.get('Done'),
-            noUsersSelected : phpr.nls.get('You have to select at least one user!')
+            label:           phpr.nls.get('Select users for the group view'),
+            userList:        userList,
+            done:            phpr.nls.get('Done'),
+            noUsersSelected: phpr.nls.get('You have to select at least one user!')
         });
         if (this._usersSelected.length > 0) {
             dijit.byId('userList').setValue(this._usersSelected.join(','));
@@ -359,15 +355,14 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     usersSelectionDoneClick:function() {
         // Summary:
         //    Called once the users of the selection window have been selected.
-
         var userList = dijit.byId('userList').attr('value');
         if (userList.length == 0) {
-            dojo.byId("usersSelectorError").style.visibility='visible';
+            dojo.byId("usersSelectorError").style.visibility = 'visible';
             return;
         }
         this._usersSelectionMode = true;
         this.highlightBarUserSelection();
-        dojo.byId("usersSelectorError").style.visibility='hidden';
+        dojo.byId("usersSelectorError").style.visibility = 'hidden';
         this._usersSelected = new Array();
         dijit.byId('selectorDialog').hide();
 
@@ -383,7 +378,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     weekViewDayClick:function(date) {
         // Summary:
         //    The header of every day in the week view has a link to this function to load the day list of that day.
-
         var temp  = date.split('-');
         var year  = temp[0];
         var month = temp[1];
@@ -401,7 +395,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     destroyOtherLists:function(mode) {
         // Summary:
         //    Destroys the objects of the lists not being used
-
         if (mode != 'grid') {
             this.grid = null;
         }

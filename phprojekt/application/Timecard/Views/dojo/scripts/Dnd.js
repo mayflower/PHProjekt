@@ -66,7 +66,7 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
             dojo.style(node, "display", "none");
         }
         for (var i in timecardProjectPositions) {
-            if (start && position >= timecardProjectPositions[i].start && position <= timecardProjectPositions[i].end ) {
+            if (start && position >= timecardProjectPositions[i].start && position <= timecardProjectPositions[i].end) {
                 id    = timecardProjectPositions[i].id;
                 start = 0;
                 dojo.fadeIn({
@@ -102,14 +102,16 @@ dojo.declare("phpr.Timecard.ContentBar", null, {
     },
 
     convertHourToPixels:function(hourHeight, time) {
-        var hours   = ((time.substr(0,2) - this.start) * hourHeight);
-        var minutes = Math.floor((((time.substr(3,2) / 60)) * hourHeight));
+        var hours   = ((time.substr(0, 2) - this.start) * hourHeight);
+        var minutes = Math.floor((((time.substr(3, 2) / 60)) * hourHeight));
+
         return hours + minutes;
     },
 
     convertAmountToPixels:function(hourHeight, time) {
-        var hours   = (time.substr(0,2) * hourHeight);
-        var minutes = Math.floor((time.substr(3,2)/60) * hourHeight);
+        var hours   = (time.substr(0, 2) * hourHeight);
+        var minutes = Math.floor((time.substr(3, 2) / 60) * hourHeight);
+
         return hours + minutes;
     }
 });
@@ -122,7 +124,8 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
                 // Add a item
                 var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
                 dojo.byId('selectedProjectFavorites').value += id + ",";
-                dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" style="cursor: move;" id="' + id + '">' + nodes[0].innerHTML + '</div><br />';
+                dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
+                    + 'style="cursor: move;" id="' + id + '">' + nodes[0].innerHTML + '</div><br />';
                 projectBookingSource.sync();
             } else if (source.node.id == 'projectFavoritesTarget') {
                 // Delete a items
@@ -132,7 +135,8 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
                     var id = node.id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
                     var name = node.innerHTML;
                     tmp += id + ',';
-                    dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" style="cursor: move;" id="' + id + '">' + name + '</div><br />';
+                    dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
+                        + 'style="cursor: move;" id="' + id + '">' + name + '</div><br />';
                 });
                 dojo.byId('selectedProjectFavorites').value = tmp;
                 projectBookingSource.sync();

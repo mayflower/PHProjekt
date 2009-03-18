@@ -41,7 +41,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         // History data
         if (this.id > 0) {
-            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module
+            this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
                 + "/itemId/" + this.id
             this._initData.push({'url': this._historyUrl, 'noCache': true});
         }
@@ -145,11 +145,17 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    Display all the users for add into the event
         var userList     = this.userStore.getList();
         var urlData      = phpr.DataStore.getData({url: this._participantUrl});
-        var currentUser  = 0;
+        var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
         var participants = new Array();
-        var currentUser  = 0;
-        if (this.id > 0) {
-            currentUser = data[0]["rights"]["currentUser"]["userId"];
+        var users        = new Array();
+
+        if (userList) {
+            for (var i in userList) {
+                // Make an array with the users expect the current one
+                if (userList[i].id != currentUser) {
+                    users.push({'id': userList[i].id, 'name': userList[i].name});
+                }
+            }
         }
 
         // Make an array with the current participants
@@ -172,7 +178,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         var participantData = this.render(["phpr.Calendar.template", "participanttab.html"], null, {
             participantUserText:    phpr.nls.get('User'),
             participantActionText:  phpr.nls.get('Action'),
-            users:                  userList,
+            users:                  users,
             currentUser:            currentUser,
             participants:           participants
         });
@@ -249,7 +255,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         phpr.destroyWidget("dataParticipant[" + userId + "]");
         phpr.destroyWidget("participantDeleteButton" + userId);
 
-        var e = dojo.byId("trParticipantFor" + userId);
+        var e      = dojo.byId("trParticipantFor" + userId);
         var parent = e.parentNode;
         parent.removeChild(e);
     },
@@ -382,8 +388,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         // Add button for multiple event
         var params = {
-            label:     phpr.nls.get(action + ' all occurrences'),
-            alt:       phpr.nls.get(action + ' all occurrences')
+            label: phpr.nls.get(action + ' all occurrences'),
+            alt:   phpr.nls.get(action + ' all occurrences')
         };
         var multipleEvent = new dijit.form.Button(params);
         dojo.byId("eventSelectorContainer").appendChild(multipleEvent.domNode);

@@ -22,7 +22,7 @@ dojo.provide("phpr.Administration.Form");
 dojo.declare("phpr.Administration.Form", phpr.Default.Form, {
 
     setUrl:function() {
-        this._url = phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/moduleName/" + phpr.submodule;
+        this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/moduleName/" + phpr.submodule;
     },
 
     initData:function() {

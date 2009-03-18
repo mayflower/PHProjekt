@@ -90,7 +90,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Set the url for get the data
         // description:
         //    Set the url for get the data
-        this._url = phpr.webpath+"index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id
+        this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id;
     },
 
     setNode:function() {
@@ -144,7 +144,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         // History data
         if (this.id > 0) {
-            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module
+            this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
                 + "/itemId/" + this.id
             this._initData.push({'url': this._historyUrl, 'noCache': true});
         }
@@ -158,12 +158,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    The user can assign to each user different access on the item
         var userList      = this.userStore.getList();
         var accessContent = data[0]["rights"];
-        var currentUser   = 0;
+        var currentUser   = data[0]["rights"]["currentUser"]["userId"] || 0;
         var users         = new Array();
-
-        if (this.id > 0) {
-            currentUser = data[0]["rights"]["currentUser"]["userId"];
-        }
 
         if (userList) {
             for (var i in userList) {
@@ -262,7 +258,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    to the array of values for save it later
         phpr.destroyWidget(id);
         phpr.destroyWidget(formId);
-        var html = this.render(["phpr.Default.template", "tabs.html"], null,{
+        var html = this.render(["phpr.Default.template", "tabs.html"], null, {
             innerTabs: innerTabs,
             formId:    formId || ''
         });
@@ -337,11 +333,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     break;
 
                 case'selectbox':
-                    this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange ,itemlabel, itemid, itemvalue,
+                    this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange, itemlabel, itemid, itemvalue,
                                                 itemrequired, itemdisabled, itemhint);
                     break;
                 case'multipleselectbox':
-                    this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange ,itemlabel, itemid,
+                    this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange, itemlabel, itemid,
                                                 itemvalue, itemrequired, itemdisabled, 5, "multiple", itemhint);
                     break;
                 case'date':
@@ -405,7 +401,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._formNode.attr('content', this.form.domNode);
         this.form.startup();
 
-        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"),{
+        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"), {
             writePermissions:  this._writePermissions,
             deletePermissions: this._deletePermissions,
             saveText:          phpr.nls.get('Save'),
@@ -590,14 +586,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Select all the access
         if (dijit.byId("checkAdminAccess"+str).checked) {
-            dijit.byId("checkReadAccess"+str).attr('checked',true);
-            dijit.byId("checkWriteAccess"+str).attr('checked',true);
-            dijit.byId("checkAccessAccess"+str).attr('checked',true);
-            dijit.byId("checkCreateAccess"+str).attr('checked',true);
-            dijit.byId("checkCopyAccess"+str).attr('checked',true);
-            dijit.byId("checkDeleteAccess"+str).attr('checked',true);
-            dijit.byId("checkDownloadAccess"+str).attr('checked',true);
-            dijit.byId("checkNoneAccess"+str).attr('checked',false);
+            dijit.byId("checkReadAccess"+str).attr('checked', true);
+            dijit.byId("checkWriteAccess"+str).attr('checked', true);
+            dijit.byId("checkAccessAccess"+str).attr('checked', true);
+            dijit.byId("checkCreateAccess"+str).attr('checked', true);
+            dijit.byId("checkCopyAccess"+str).attr('checked', true);
+            dijit.byId("checkDeleteAccess"+str).attr('checked', true);
+            dijit.byId("checkDownloadAccess"+str).attr('checked', true);
+            dijit.byId("checkNoneAccess"+str).attr('checked', false);
         }
     },
 
@@ -607,14 +603,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Un-select all the access
         if (dijit.byId("checkNoneAccess"+str).checked) {
-            dijit.byId("checkReadAccess"+str).attr('checked',false);
-            dijit.byId("checkWriteAccess"+str).attr('checked',false);
-            dijit.byId("checkAccessAccess"+str).attr('checked',false);
-            dijit.byId("checkCreateAccess"+str).attr('checked',false);
-            dijit.byId("checkCopyAccess"+str).attr('checked',false);
-            dijit.byId("checkDeleteAccess"+str).attr('checked',false);
-            dijit.byId("checkDownloadAccess"+str).attr('checked',false);
-            dijit.byId("checkAdminAccess"+str).attr('checked',false);
+            dijit.byId("checkReadAccess"+str).attr('checked', false);
+            dijit.byId("checkWriteAccess"+str).attr('checked', false);
+            dijit.byId("checkAccessAccess"+str).attr('checked', false);
+            dijit.byId("checkCreateAccess"+str).attr('checked', false);
+            dijit.byId("checkCopyAccess"+str).attr('checked', false);
+            dijit.byId("checkDeleteAccess"+str).attr('checked', false);
+            dijit.byId("checkDownloadAccess"+str).attr('checked', false);
+            dijit.byId("checkAdminAccess"+str).attr('checked', false);
         }
     },
 
@@ -720,7 +716,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         }
 
         // Draw the tags
-        this.publish("drawTagsBox",[currentTags]);
+        this.publish("drawTagsBox", [currentTags]);
 
         return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, false, false);
     },
@@ -804,7 +800,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // description:
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //    or modified. It has a "Send Notification" checkbox.
-
         // Add field
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '',
                 phpr.nls.get('Check this box to send an email notification to the people involved'));

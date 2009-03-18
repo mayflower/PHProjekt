@@ -39,7 +39,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:            phpr.webpath,
             selectedPeriodText: phpr.nls.get("Selected Statistic Period"),
             selectedPeriodHelp: phpr.nls.get("Selected Period Help")
@@ -133,7 +133,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var totalRow = new Array();
         totalRow.push({"title": phpr.nls.get("Total"), "userData": totalPerUser, "sum": phpr.Date.convertTime(total)});
 
-        this.render(["phpr.Statistic.template", "table.html"], dojo.byId('statisticContent') ,{
+        this.render(["phpr.Statistic.template", "table.html"], dojo.byId('statisticContent'), {
             sumTxt: phpr.nls.get("Sum"),
             projectTxt: phpr.nls.get("Project"),
             rows:   rows,

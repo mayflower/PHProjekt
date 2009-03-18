@@ -51,7 +51,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         }
         phpr.submodule = module;
         this.setSubGlobalModulesNavigation();
-        this.form = new this.formWidget(this,0,this.module);
+        this.form = new this.formWidget(this, 0, this.module);
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
@@ -60,7 +60,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
             url: subModuleUrl,
-            processData: dojo.hitch(this,function() {
+            processData: dojo.hitch(this, function() {
                 modules = phpr.DataStore.getData({url: subModuleUrl});
                 var navigation ='<ul id="nav_main">';
                 for (var i = 0; i < modules.length; i++) {

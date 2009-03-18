@@ -24,10 +24,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     //    Class for displaying a Calendar Day List for a specific selection of users
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
-    _headerDataUrl:     null,
-    _header:            Array(),
-    _schedule:          Array(48),
-    _users:             Array(),
+    _headerDataUrl: null,
+    _header:        Array(),
+    _schedule:      Array(48),
+    _users:         Array(),
 
     afterConstructor:function() {
         // Summary:
@@ -82,10 +82,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
 
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "dayListSelect.html"], dojo.byId('gridBox'), {
-            widthTable          : this._widthTable,
-            widthHourColumn     : this._widthHourColumn,
-            header              : this._header,
-            schedule            : this._schedule
+            widthTable:      this._widthTable,
+            widthHourColumn: this._widthHourColumn,
+            header:          this._header,
+            schedule:        this._schedule
         });
     },
 
@@ -135,7 +135,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     fillHeaderArray:function() {
         // Summary:
         //    Fills the header array with the main row of the table.
-
         var headerData               = phpr.DataStore.getData({url: this._headerDataUrl});
         this._header                 = new Array(); //It is needed to explicitly empty the array
         this._header['columnsWidth'] = -1;
@@ -148,7 +147,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
 
             this._header['users'][user]                 = new Array();
             this._header['users'][user]['id']           = userId;
-            this._header['users'][user]['text']         = lastname + ' ' + firstname.substr(0,1) + '.';
+            this._header['users'][user]['text']         = lastname + ' ' + firstname.substr(0, 1) + '.';
             this._header['users'][user]['columnsTotal'] = 1;
         }
     },
@@ -156,7 +155,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     determineColumnsPerUser:function(content) {
         // Summary:
         //    This function designs the simultaneous events, settting how many columns will be shown for each user.
-
         var currentEventsNow = new Array();
         for (var row = 0; row < 48; row ++) {
             currentEventsNow[row] = new Array();
@@ -165,9 +163,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
             }
             for (var event in content) {
                 var userId = parseInt(content[event]['participantId']);
-                var eventInfo = this.getEventInfo(content[event]['startTime'],
-                                                  content[event]['endTime'],
-                                                  this._schedule[row]['hour']);
+                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'],
+                    this._schedule[row]['hour']);
                 if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventsNow[row][this.getUserColumnPosition(userId)] ++;
                 }
@@ -186,12 +183,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     fillScheduleArrayStructure_part2:function() {
         // Summary:
         //    Continues creating the schedule array structure, supporting simultaneous events.
-
         for (var row = 0; row < 48; row ++) {
             for (var user = 0; user < this._header['users'].length; user ++) {
                 this._schedule[row][user]['columns'] = new Array();
-                var widthColumn = Math.floor(this._header['columnsWidth']
-                                  / this._header['users'][user]['columnsTotal']);
+                var widthColumn  = Math.floor(this._header['columnsWidth']/this._header['users'][user]['columnsTotal']);
                 var totalColumns = this._header['users'][user]['columnsTotal'];
                 for (var column = 0; column < totalColumns; column ++) {
                     this._schedule[row][user]['columns'][column]              = new Array();
@@ -220,7 +215,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         // Description:
         //    Receives the response from the DB and puts all the events of the selected users in the appropriate
         // position inside the schedule array.
-
         for (var event in content) {
             var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
 
@@ -267,7 +261,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                     this._schedule[row][user]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
                     this._schedule[row][user]['columns'][useColumn]['class']     = '';
                 }
-
             } else if (eventInfo['range'] == this.EVENT_OUTSIDE_CHART) {
                 // For the events out of schedule (not from 8:00 to 20:00).
                 // Nothing programmed by the moment

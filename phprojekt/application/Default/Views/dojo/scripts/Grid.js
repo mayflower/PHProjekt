@@ -64,7 +64,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Set the url for get the data
         // description:
         //    Set the url for get the data
-        this.url = phpr.webpath+"index.php/"+phpr.module+"/index/jsonList/nodeId/" + this.id;
+        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + this.id;
     },
 
     setNode:function() {
@@ -84,7 +84,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
-            this.publish("drawTagsBox",[phpr.DataStore.getData({url: this._tagUrl})]);
+            this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
           })
         });
     },
@@ -128,7 +128,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     this.gridLayout.push({
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
-                        styles:   "text-align:center;",
+                        styles:   "text-align: center;",
                         type:     phpr.grid.cells.Select,
                         width:    porcent,
                         options:  opts,
@@ -142,7 +142,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:         porcent,
                         name:          meta[i]["label"],
                         field:         meta[i]["key"],
-                        styles:        "text-align:center;",
+                        styles:        "text-align: center;",
                         type:          phpr.grid.cells.DateTextBox,
                         promptMessage: 'yyyy-MM-dd',
                         constraint:    {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
@@ -155,7 +155,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:       porcent,
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
-                        styles:      "text-align:center;",
+                        styles:      "text-align: center;",
                         type:        dojox.grid.cells._Widget,
                         widgetClass: "dijit.form.HorizontalSlider",
                         formatter:   phpr.grid.formatPercentage,
@@ -168,7 +168,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:      porcent,
                         name:       meta[i]["label"],
                         field:      meta[i]["key"],
-                        styles:     "text-align:center;",
+                        styles:     "text-align: center;",
                         type:       dojox.grid.cells.Input,
                         formatter:  phpr.grid.formatTime,
                         editable:   meta[i]['readOnly'] ? false : true
@@ -180,7 +180,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:       porcent,
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
-                        styles:      "text-align:center;",
+                        styles:      "text-align: center;",
                         type:        dojox.grid.cells._Widget,
                         formatter:   phpr.grid.formatUpload,
                         editable:    false
@@ -301,9 +301,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this._node.attr('content', this.grid.domNode);
             this.grid.startup();
 
-            dojo.connect(this.grid,"onCellClick",dojo.hitch(this,"showForm"));
-            dojo.connect(this.grid,"onApplyCellEdit",dojo.hitch(this,"cellEdited"));
-            dojo.connect(this.grid,"onStartEdit",dojo.hitch(this,"checkCanEdit"));
+            dojo.connect(this.grid, "onCellClick", dojo.hitch(this, "showForm"));
+            dojo.connect(this.grid, "onApplyCellEdit", dojo.hitch(this, "cellEdited"));
+            dojo.connect(this.grid, "onStartEdit", dojo.hitch(this, "checkCanEdit"));
         }
     },
 
@@ -405,7 +405,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             var item = this.grid.getItem(i);
             var curId = this.grid.store.getValue(item, 'id');
             for (var j in this._newRowValues[i]) {
-                content += '&data['+ encodeURIComponent(curId) +']['+encodeURIComponent(j)+']='+encodeURIComponent(this._newRowValues[i][j]);
+                content += '&data[' + encodeURIComponent(curId) + '][' + encodeURIComponent(j) + ']='
+                    + encodeURIComponent(this._newRowValues[i][j]);
             }
         }
 
@@ -415,7 +416,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             postData: content,
             handleAs: "json",
             load: dojo.hitch(this, function(response, ioArgs) {
-                new phpr.handleResponse('serverFeedback',response);
+                new phpr.handleResponse('serverFeedback', response);
                 if (response.type =='success') {
                     this._newRowValues = {};
                     this._oldRowValues = {};
@@ -424,7 +425,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 }
             }),
             error:function(response, ioArgs) {
-                new phpr.handleResponse('serverFeedback',response);
+                new phpr.handleResponse('serverFeedback', response);
             }
         });
     },
@@ -434,7 +435,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Open a new widnows in CVS mode
         // description:
         //    Open a new widnows in CVS mode
-        window.open(phpr.webpath+"index.php/"+phpr.module+"/index/csvList/nodeId/"+this.id);
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList/nodeId/" + this.id);
         return false;
     },
 

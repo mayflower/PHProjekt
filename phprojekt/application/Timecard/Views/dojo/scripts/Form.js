@@ -94,7 +94,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Load all the views
         this.setHourUrl();
         this.setBookUrl();
-        this.getFormData(1,1,1);
+        this.getFormData(1, 1, 1);
     },
 
     setHourUrl:function() {
@@ -110,8 +110,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Set the url for get the data
         // description:
         //    Set the url for get the data
-        this._bookUrl      = phpr.webpath+"index.php/" + phpr.module + "/index/jsonBookingDetail/date/" + this._date
-        this._favoritesUrl = phpr.webpath+"index.php/" + phpr.module + "/index/jsonGetFavoritesProjects";
+        this._bookUrl      = phpr.webpath + "index.php/" + phpr.module + "/index/jsonBookingDetail/date/" + this._date
+        this._favoritesUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetFavoritesProjects";
     },
 
     getFormData:function(hours, date, books) {
@@ -127,7 +127,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             phpr.DataStore.addStore({url: this._favoritesUrl});
             phpr.DataStore.requestData({url: this._favoritesUrl, processData: dojo.hitch(this, function() {
                     phpr.DataStore.addStore({url: this._bookUrl});
-                    phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, "reloadBookingView")});
+                    phpr.DataStore.requestData({
+                        url:         this._bookUrl,
+                        processData: dojo.hitch(this, "reloadBookingView")
+                    });
                 })
             });
         }
@@ -172,7 +175,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         });
 
         for (var i = 0; i < data.length; i++) {
-            dojo.connect(dijit.byId("deleteHourButton_" + data[i].id), "onClick", dojo.hitch(this, "deleteForm", [data[i].id]));
+            dojo.connect(dijit.byId("deleteHourButton_" + data[i].id), "onClick",
+                dojo.hitch(this, "deleteForm", [data[i].id]));
         }
         dojo.connect(dijit.byId("hoursSaveButton"), "onClick", dojo.hitch(this, "submitForm"));
     },
@@ -190,7 +194,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var days    = new Array();
         var today   = this.dateObject.getDate();
 
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Agoust', 'September', 'October', 'November', 'December'];
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Agoust', 'September',
+            'October', 'November', 'December'];
         var weeks = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         var monthString = phpr.nls.get(months[month-1]);
 
@@ -250,7 +255,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.showProjectsSources(favoritesList);
 
         // Make Dialog
-        this.createFavoritesDialog(allProjects,favoritesList);
+        this.createFavoritesDialog(allProjects, favoritesList);
 
         // Clean "Day View"
         dijit.byId("projectBookingContainer").destroyDescendants();
@@ -303,12 +308,20 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                             }
                         }
                         if (bookingHeight > 0) {
-                            var tmpDraw = this._surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3, width: 197, r: 13});
-                            tmpDraw.setFill([68,74,82,1]);
-                            tmpDraw.setStroke({color:[68,74,82,1], width: 2});
-                            timecardProjectPositions.push({'start': lastHour, 'end'  : lastHour + bookingHeight, 'id'   : timeprojData[j].id});
+                            var tmpDraw = this._surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3,
+                                width: 197, r: 13});
+                            tmpDraw.setFill([68, 74, 82, 1]);
+                            tmpDraw.setStroke({color:[68, 74, 82, 1], width: 2});
+                            timecardProjectPositions.push({
+                                'start': lastHour,
+                                'end':   lastHour + bookingHeight,
+                                'id':    timeprojData[j].id});
 
-                            phpr.Gfx.makeText(this._surface, {x: 15, y: lastHour + 15, text: timeprojData[j].projectName, align: "start"},
+                            phpr.Gfx.makeText(this._surface, {
+                                x:     15,
+                                y:     lastHour + 15,
+                                text:  timeprojData[j].projectName,
+                                align: "start"},
                                 {family: "Verdana", size: "8pt"}, "white", "white");
                         }
 
@@ -379,8 +392,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
         // Event buttons
         for (j in timeprojData) {
-            dojo.connect(dijit.byId("deleteBookingButton_" + timeprojData[j].id), "onClick", dojo.hitch(this, "deleteBookingForm", [timeprojData[j].id]));
-            dojo.connect(dijit.byId("saveBookingButton_" + timeprojData[j].id), "onClick", dojo.hitch(this, "submitBookingForm", [timeprojData[j].id]));
+            dojo.connect(dijit.byId("deleteBookingButton_" + timeprojData[j].id), "onClick",
+                dojo.hitch(this, "deleteBookingForm", [timeprojData[j].id]));
+            dojo.connect(dijit.byId("saveBookingButton_" + timeprojData[j].id), "onClick",
+                dojo.hitch(this, "submitBookingForm", [timeprojData[j].id]));
         }
 
         dojo.connect(dijit.byId("deleteBookingButton_0"), "onClick", function(){
@@ -463,8 +478,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: this._hourUrl});
                     phpr.DataStore.deleteData({url: this._bookUrl});
-                    this.getFormData(1,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
+                    this.getFormData(1, 0, 1);
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(),
+                        (this.main._date.getMonth() + 1));
                }
             })
         });
@@ -489,8 +505,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: this._bookUrl});
-                    this.getFormData(1,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
+                    this.getFormData(1, 0, 1);
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(),
+                        (this.main._date.getMonth() + 1));
                }
             })
         });
@@ -529,8 +546,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: this._hourUrl});
                     phpr.DataStore.deleteData({url: this._bookUrl});
-                    this.getFormData(1,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
+                    this.getFormData(1, 0, 1);
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(),
+                        (this.main._date.getMonth() + 1));
                }
             })
         });
@@ -548,8 +566,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: this._bookUrl});
-                    this.getFormData(0,0,1);
-                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(), (this.main._date.getMonth() + 1));
+                    this.getFormData(0, 0, 1);
+                    this.main.grid.reloadView(this.main._view, this.main._date.getFullYear(),
+                        (this.main._date.getMonth() + 1));
                }
             })
         });
