@@ -160,6 +160,14 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $where  = array();
             $values = array();
 
+            // Set the current User
+            // Use for an empty rights, if not, will be re-write
+            $values['currentUser']['moduleId'] = $moduleId;
+            $values['currentUser']['itemId']   = $itemId;
+            $values['currentUser']['userId']   = Phprojekt_Auth::getUserId();
+            $access                            = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
+            $values['currentUser']             = array_merge($values['currentUser'], $access);
+
             $where[] = 'moduleId = '. (int) $moduleId;
             $where[] = 'itemId = '. (int) $itemId;
             $where   = implode(' AND ', $where);
