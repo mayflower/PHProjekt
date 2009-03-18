@@ -206,15 +206,14 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                     $recipients[] = $userId;
                 }
             }
-
         } else {
             // Yes - The model defines its own recipients
             $recipients = split(',', $this->_model->getNotificationRecipients());
         }
 
-        // All the recipients IDs are inside $recipients, now add emails and descriptive names to _customTo 
+        // All the recipients IDs are inside $recipients, now add emails and descriptive names to _customTo
         foreach($recipients as $recipient) {
-            $email   = $setting->getSetting('email', (int) $recipient);
+            $email = $setting->getSetting('email', (int) $recipient);
 
             if ((int) $recipient) {
                 $phpUser->find($recipient);
@@ -349,20 +348,22 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     {
         // Has the name been set?
         if (sizeof($this->_customFrom) == 2) {
-            $this->setFrom($this->_customFrom[0],     // Address
-                           $this->_customFrom[1]);    // Name
+            // Address, Name
+            $this->setFrom($this->_customFrom[0], $this->_customFrom[1]);
         } else {
-            $this->setFrom($this->_customFrom[0]);    // Address
+            // Address
+            $this->setFrom($this->_customFrom[0]);
         }
 
         // Iterates on the array to fill every recipient
         foreach ($this->_customTo as $recipient) {
             // Has the name been set?
             if (sizeof($recipient) == 2) {
-                $this->addTo($recipient[0],           // Address
-                             $recipient[1]);          // Name
+                // Address, Name
+                $this->addTo($recipient[0], $recipient[1]);
             } else {
-                $this->addTo($recipient[0]);          // Address
+                // Address
+                $this->addTo($recipient[0]);
             }
         }
 
