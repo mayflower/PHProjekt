@@ -72,9 +72,9 @@ dojo.declare("phpr.Date", null, {
         //    Convert a iso string of a date into a js object date
         // description:
         //    Convert a iso string of a date into a js object date
-        var day   = date.substr(8,2);
-        var month = date.substr(5,2);
-        var year  = date.substr(0,4);
+        var day   = date.substr(8, 2);
+        var month = date.substr(5, 2);
+        var year  = date.substr(0, 4);
 
         return new Date(year, month - 1, day);
     }

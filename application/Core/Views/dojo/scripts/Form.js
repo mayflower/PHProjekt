@@ -25,7 +25,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
     },
 
     setUrl:function() {
-        this._url = phpr.webpath+"index.php/Core/"+phpr.module.toLowerCase()+"/jsonDetail/id/" + this.id
+        this._url = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonDetail/id/" + this.id;
     },
 
     setPermissions:function(data) {
@@ -49,7 +49,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonSave/id/' + this.id,
+            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
@@ -63,7 +63,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
 
     deleteForm:function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonDelete/id/' + this.id,
+            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {

@@ -28,7 +28,8 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
 
         // History data
         if (this.id > 0) {
-            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
+                + "/itemId/" + this.id
             this._initData.push({'url': this._historyUrl, 'noCache': true});
         }
     },

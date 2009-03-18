@@ -81,7 +81,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    Shows the dialog box to alert a conflict
         // description:
         //    Shows the dialog box to alert a conflict
-        var content = this.main.render(["phpr.Gantt.template", "dialog.html"], null ,{
+        var content = this.main.render(["phpr.Gantt.template", "dialog.html"], null, {
             text:        text,
             ok:          phpr.nls.get('OK'),
             reset:       phpr.nls.get('Reset'),

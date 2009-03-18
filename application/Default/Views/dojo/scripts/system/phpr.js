@@ -249,7 +249,7 @@ phpr.send = function(/*Object*/paramsIn) {
         }
     } else {
         _onError = function(response, ioArgs) {
-            new phpr.handleResponse('serverFeedback',response);
+            new phpr.handleResponse('serverFeedback', response);
             _onEnd();
         }
     }
@@ -260,7 +260,7 @@ phpr.send = function(/*Object*/paramsIn) {
             try {
                 // 500 is the error code for logut
                 if (data.code && data.code == 500) {
-                    location = phpr.webpath+"index.php/Login/logout";
+                    location = phpr.webpath + "index.php/Login/logout";
                     return;
                 } else {
                     params.onSuccess(data, ioArgs);
@@ -271,12 +271,12 @@ phpr.send = function(/*Object*/paramsIn) {
                 var response = {};
                 response.type ='error';
                 response.message = e;
-                new phpr.handleResponse('serverFeedback',response);
+                new phpr.handleResponse('serverFeedback', response);
             }
         };
     } else {
         _onSuccess = function(data) {
-            new phpr.handleResponse('serverFeedback',data);
+            new phpr.handleResponse('serverFeedback', data);
             _onEnd();
         };
     }
@@ -290,8 +290,7 @@ phpr.send = function(/*Object*/paramsIn) {
     });
 };
 
-phpr.handleResponse = function(resultArea,result)
-{
+phpr.handleResponse = function(resultArea, result) {
     phpr.loading.hide();
     var css = 'error';
     if (result.type == 'success') {
@@ -306,7 +305,7 @@ phpr.handleResponse = function(resultArea,result)
     phpr.serverFeedback.addMessage({cssClass: css, output:message});
 };
 
-phpr.getCurrent = function(data, identifier, value){
+phpr.getCurrent = function(data, identifier, value) {
     var current = null;
     for (var i = 0; i < data.length; i++) {
         if (value == data[i][identifier]) {
@@ -536,7 +535,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     }
 });
 
-dojo.declare("phpr.DateTextBox",[dijit.form.DateTextBox], {
+dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
     serialize:function(d, options) {
         // summary:
         //     This function overwrites the dijit.form.DateTextBox display
@@ -635,7 +634,7 @@ dojo.declare("phpr.Dialog", [dijit.Dialog], {
     //     Provide a dialog with some changes
     // description:
     //     Allow dialog into other dialog and fix the key input
-    _onKey: function(/*Event*/ evt) {
+    _onKey:function(/*Event*/ evt) {
     // summary: handles the keyboard events for accessibility reasons
         if (evt.charOrCode) {
             var dk   = dojo.keys;

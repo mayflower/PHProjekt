@@ -37,7 +37,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Add the all the functions for the current module
         //    So is possible use Module.Function
         dojo.subscribe(module + ".load", this, "load");
-        dojo.subscribe(module + ".changeProject",this, "loadSubElements");
+        dojo.subscribe(module + ".changeProject", this, "loadSubElements");
         dojo.subscribe(module + ".reload", this, "reload");
         dojo.subscribe(module + ".openForm", this, "openForm");
         dojo.subscribe(module + ".showSuggest", this, "showSuggest");
@@ -60,7 +60,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
-        this.form = new this.formWidget(this,id,module);
+        this.form = new this.formWidget(this, id, module);
     },
 
     loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
@@ -103,11 +103,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 }
             }
         } else {
-            var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
+            var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
+                + phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
             phpr.DataStore.requestData({
                 url: subModuleUrl,
-                processData: dojo.hitch(this,function() {
+                processData: dojo.hitch(this, function() {
                     var usefirstModule = true;
                     var firstModule    = null;
                     var currentModule  = null;
@@ -153,7 +154,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             currentModule: phpr.module
         });
 
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
+        this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
         this.hideSuggest();
 
         // Get all the tabs
@@ -173,9 +174,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.setGlobalModulesNavigation();
                 this.setSubmoduleNavigation();
                 this.setSearchForm();
-                var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
-                this.tree     = new this.treeWidget(this);
-                this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+                var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/'
+                    + phpr.currentProjectId;
+                this.tree = new this.treeWidget(this);
+                this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
           })
         });
     },
@@ -191,7 +193,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Default.template", "mainContent.html"],dojo.byId('centerMainContent'));
+        this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
             phpr.TreeContent.fadeOut();
@@ -203,13 +205,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.hideSuggest();
         this.setSearchForm();
         this.tree     = new this.treeWidget(this);
-        var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
-        this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        var updateUrl = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/'
+            + phpr.currentProjectId;
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
     setGlobalModulesNavigation:function() {
         var toolbar   = dijit.byId('mainNavigation');
-        var globalUrl = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
+        var globalUrl = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
         phpr.DataStore.addStore({url: globalUrl});
         phpr.DataStore.requestData({url: globalUrl, processData: dojo.hitch(this, function() {
                 var globalModules = phpr.DataStore.getData({url: globalUrl});
@@ -277,7 +280,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     label:     phpr.nls.get('Logout'),
                     showLabel: true,
                     onClick:   dojo.hitch(this, function() {
-                        location = phpr.webpath+"index.php/Login/logout";
+                        location = phpr.webpath + "index.php/Login/logout";
                     })
                 });
                 toolbar.addChild(button);
@@ -290,7 +293,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Return if the module is global or per project
         // description:
         //    Return if the module is global or per project
-        var globalUrl     = phpr.webpath+"index.php/Core/module/jsonGetGlobalModules";
+        var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
         var globalModules = phpr.DataStore.getData({url: globalUrl});
 
         // System Global Modules
@@ -316,13 +319,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        var subModuleUrl      = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
+        var subModuleUrl      = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
+            + phpr.currentProjectId;
         var self              = this;
         var createPermissions = false;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
             url: subModuleUrl,
-            processData: dojo.hitch(this,function() {
+            processData: dojo.hitch(this, function() {
                 var modules        = phpr.DataStore.getData({url: subModuleUrl});
                 var foundBasicData = false;
                 for (var i = 0; i < modules.length; i++) {
@@ -448,7 +452,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
             }
-            window.mytimeout = window.setTimeout(dojo.hitch(this,"showSearchSuggest"), 500);
+            window.mytimeout = window.setTimeout(dojo.hitch(this, "showSearchSuggest"), 500);
         }
     },
 
@@ -466,7 +470,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.send({
                 url:       getDataUrl,
                 handleAs: "json",
-                onSuccess: dojo.hitch(this,function(data){
+                onSuccess: dojo.hitch(this, function(data) {
                     var search        = '';
                     var results       = {};
                     var index         = 0;
@@ -475,7 +479,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         if (!results[modulesData.moduleLabel]) {
                             results[modulesData.moduleLabel] = '';
                         }
-                        results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"], null, {
+                        results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results",
+                            "results.html"], null, {
                             id :           modulesData.id,
                             moduleId :     modulesData.modulesId,
                             moduleName:    modulesData.moduleName,
@@ -502,7 +507,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         search += "</div>";
                     } else {
                         search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += "<a class=\"searchsuggesttitle\" href='javascript:dojo.publish(\""+this.module+".clickResult\",[\"search\"]); dojo.publish(\""+this.module+".showSearchResults\",[\"" + words + "\"])'>" + phpr.nls.get('View all') + "</a>";
+                        search += "<a class=\"searchsuggesttitle\" href='javascript: dojo.publish(\""
+                            + this.module + ".clickResult\", [\"search\"]); dojo.publish(\""
+                            + this.module + ".showSearchResults\", [\"" + words + "\"])'>" + phpr.nls.get('View all')
+                            + "</a>";
                         search += "</div>";
                     }
 
@@ -639,10 +647,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.send({
             url:       getDataUrl,
             handleAs: "json",
-            onSuccess: dojo.hitch(this,function(data){
-                this.render(["phpr.Default.template.results", "mainContentResults.html"],dojo.byId('centerMainContent') ,{
-                    resultsTitle:   resultsTitle
-                });
+            onSuccess: dojo.hitch(this, function(data) {
+                this.render(["phpr.Default.template.results", "mainContentResults.html"],
+                    dojo.byId('centerMainContent'), {
+                        resultsTitle: resultsTitle
+                    });
                 var search        = '';
                 var results       = {};
                 var index         = 0;
@@ -651,7 +660,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     if (!results[modulesData.moduleLabel]) {
                         results[modulesData.moduleLabel] = '';
                     }
-                    results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"], null, {
+                    results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"],
+                        null, {
                         id :           modulesData.id,
                         moduleId :     modulesData.modulesId,
                         moduleName:    modulesData.moduleName,

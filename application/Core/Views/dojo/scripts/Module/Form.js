@@ -33,7 +33,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
         // Button for open the dialog
         if (designerData && (typeof designerData === 'object')) {
-            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton', phpr.nls.get('Open Dialog'), '', 'dojo.publish(\'Module.openDialog\');');
+            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton',
+                phpr.nls.get('Open Dialog'), '', 'dojo.publish(\'Module.openDialog\');');
         }
 
         // Hidden field for the MD data
@@ -64,7 +65,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             designerData[0]['isRequired']    = 1;
         }
         var jsonDesignerData = dojo.toJson(designerData);
-        this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false);
+        this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData,
+            true, false);
     },
 
     postRenderForm:function() {
@@ -245,7 +247,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                 if (!this.id) {
                                     var response     = {};
                                     response.type    = 'notice';
-                                    response.message = phpr.nls.get('YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE');
+                                    response.message = phpr.nls.get('YOU MUST REFRESH THE PAGE TO WORK WITH THE '
+                                        + 'NEW MODULE');
                                     new phpr.handleResponse('serverFeedback', response);
                                 }
                                 this.publish("updateCacheData");

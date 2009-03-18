@@ -24,10 +24,10 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     //    Class for displaying a Calendar Week List
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
-    _header:             Array(7),
-    _schedule:           Array(48),
-    _furtherEvents:      Array,
-    _weekDays:           Array(7),
+    _header:        Array(7),
+    _schedule:      Array(48),
+    _furtherEvents: Array,
+    _weekDays:      Array(7),
 
     beforeConstructor:function() {
         // Summary:
@@ -79,11 +79,11 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "weekList.html"], dojo.byId('gridBox'), {
-            widthTable          : this._widthTable,
-            widthHourColumn     : this._widthHourColumn,
-            header              : this._header,
-            schedule            : this._schedule,
-            furtherEvents       : this._furtherEvents,
+            widthTable:           this._widthTable,
+            widthHourColumn:      this._widthHourColumn,
+            header:               this._header,
+            schedule:             this._schedule,
+            furtherEvents:        this._furtherEvents,
             furtherEventsMessage: phpr.nls.get('Further events')
         });
     },
@@ -119,7 +119,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Fills the array with the header and all the possible points in time for this week view: 8:00, 8:15, 8:30
         // and so on, until 19:45. Each of that rows will have as many columns as days plus simultaneous events exist.
         // Also sets for every row whether it is even or not.
-
         for (var hour = 8; hour < 20; hour++) {
             for (var quarter = 0; quarter < 4; quarter++) {
                 var minute = quarter * 15;
@@ -146,7 +145,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     fillHeaderArray:function() {
         // Summary:
         //    Fills the header array with the main row of the table.
-
         this._header['columnsWidth'] = -1;
         var daysAbbrev = new Array(phpr.nls.get('Mo'),
                                    phpr.nls.get('Tu'),
@@ -169,7 +167,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     determineColumnsPerDay:function(content) {
         // Summary:
         //    This function designs the simultaneous events, settting how many columns will be shown for each user.
-
         var currentEventsNow = new Array();
         for (var row = 0; row < 48; row ++) {
             currentEventsNow[row] = new Array();
@@ -199,12 +196,10 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     fillScheduleArrayStructure_part2:function() {
         // Summary:
         //    Continues creating the schedule array structure, supporting simultaneous events.
-
         for (var row = 0; row < 48; row ++) {
             for (var day = 0; day < 7; day ++) {
                 this._schedule[row][day]['columns'] = new Array();
-                var widthColumn = Math.floor(this._header['columnsWidth']
-                                 / this._header['days'][day]['columnsTotal']);
+                var widthColumn  = Math.floor(this._header['columnsWidth'] / this._header['days'][day]['columnsTotal']);
                 var totalColumns = this._header['days'][day]['columnsTotal'];
                 for (var column = 0; column < totalColumns; column ++) {
                     this._schedule[row][day]['columns'][column]              = new Array();
@@ -233,7 +228,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Description:
         //    Receives the array of a day of the week, and the response from the DB and puts all the events of that
         // day in the appropriate position inside the array.
-
         for (var event in content) {
             var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'], null,
                 content[event]['startDate']);
@@ -241,10 +235,10 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
                 var rowEventBegins   = eventInfo['quarterBeginning'];
                 var rowEventFinishes = rowEventBegins + eventInfo['quartersDuration'];
-                var day = eventInfo['weekDay'];
+                var day              = eventInfo['weekDay'];
 
                 // Find which column to use
-                var useColumn = -1;
+                var useColumn       = -1;
                 var columnsTotalDay = this._header['days'][day]['columnsTotal'];
 
                 for (column = 0; column < columnsTotalDay; column++) {

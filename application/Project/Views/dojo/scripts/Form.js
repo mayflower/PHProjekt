@@ -34,12 +34,14 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
+            + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
 
         // History data
         if (this.id > 0) {
-            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module + "/itemId/" + this.id
+            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module
+                + "/itemId/" + this.id
             this._initData.push({'url': this._historyUrl, 'noCache': true});
         }
     },
@@ -66,13 +68,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // description:
         //    Add Tab for user-role relation into the project
         if (this._accessPermissions) {
-            var currentUser = 0;
-            var users       = new Array();
-            var userList    = this.userStore.getList();
-
-            if (this.id > 0) {
-                currentUser = data[0]["rights"]["currentUser"]["userId"];
-            }
+            var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
+            var users        = new Array();
+            var userList     = this.userStore.getList();
+            var relationList = this.roleStore.getRelationList();
 
             // Make an array with the users expect the current one
             if (userList) {
@@ -83,7 +82,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 }
             }
 
-            var relationList = this.roleStore.getRelationList();
             var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
                 accessUserText:   phpr.nls.get('User'),
                 accessRoleText:   phpr.nls.get('Role'),
@@ -152,9 +150,11 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             row.id       = "trRelationFor" + userId;
 
             var cell = row.insertCell(0);
-            cell.innerHTML = '<input name="roleRelation[' + userId + ']" type="hidden" value="' + roleId + '" dojoType="dijit.form.TextBox" />' + roleName;
+            cell.innerHTML = '<input name="roleRelation[' + userId + ']" type="hidden" value="' + roleId
+                + '" dojoType="dijit.form.TextBox" />' + roleName;
             var cell = row.insertCell(1);
-            cell.innerHTML = '<input name="userRelation[' + userId + ']" type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
+            cell.innerHTML = '<input name="userRelation[' + userId + ']" type="hidden" value="' + userId
+                + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(2);
             cell.innerHTML = '<div id="relationDeleteButton' + userId + '"></div>';
 

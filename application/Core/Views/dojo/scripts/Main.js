@@ -40,8 +40,9 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
-        var updateUrl = phpr.webpath + 'index.php/Core/'+phpr.module.toLowerCase()+'/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
-        this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/'
+            + phpr.currentProjectId;
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
@@ -50,15 +51,35 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
             url: subModuleUrl,
-            processData: dojo.hitch(this,function() {
+            processData: dojo.hitch(this, function() {
                 var modules = new Array();
-                modules.push({"name":"Module", "label": phpr.nls.get("Module"), "moduleFunction": "reload", "module": "Module"});
-                modules.push({"name":"Tab", "label": phpr.nls.get("Tab"), "moduleFunction": "reload", "module": "Tab"});
-                modules.push({"name":"User", "label": phpr.nls.get("User"), "moduleFunction": "reload", "module": "User"});
-                modules.push({"name":"Role", "label": phpr.nls.get("Role"), "moduleFunction": "reload", "module": "Role"});
+                modules.push({
+                    "name":           "Module",
+                    "label":          phpr.nls.get("Module"),
+                    "moduleFunction": "reload",
+                    "module":         "Module"});
+                modules.push({
+                    "name":           "Tab",
+                    "label":          phpr.nls.get("Tab"),
+                    "moduleFunction": "reload",
+                    "module":         "Tab"});
+                modules.push({
+                    "name":           "User",
+                    "label":          phpr.nls.get("User"),
+                    "moduleFunction": "reload",
+                    "module":         "User"});
+                modules.push({
+                    "name":           "Role",
+                    "label":          phpr.nls.get("Role"),
+                    "moduleFunction": "reload",
+                    "module":         "Role"});
                 tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
-                    modules.push({"name": tmp[i].name, "label": tmp[i].label, "moduleFunction": "loadSubModule", "module": "Administration"});
+                    modules.push({
+                        "name":           tmp[i].name,
+                        "label":          tmp[i].label,
+                        "moduleFunction": "loadSubModule",
+                        "module":         "Administration"});
                 }
                 var navigation ='<ul id="nav_main">';
                 for (var i = 0; i < modules.length; i++) {

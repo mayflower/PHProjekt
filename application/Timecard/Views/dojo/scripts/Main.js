@@ -31,7 +31,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Timecard.Grid;
         this.formWidget = phpr.Timecard.Form;
         this.treeWidget = phpr.Timecard.Tree;
-        this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
+        this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/'
+            + phpr.currentProjectId;
 
         dojo.subscribe("Timecard.Workingtimes.start", this, "workingtimesStart");
         dojo.subscribe("Timecard.Workingtimes.stop", this, "workingtimesStop");
@@ -43,13 +44,14 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent') ,{
+        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             startStopButtonsHelp: phpr.nls.get('Start Stop Buttons Help'),
             startWorkingTimeText: phpr.nls.get('Start Working Time'),
             stopWorkingTimeText:  phpr.nls.get('Stop Working Time'),
             selectDate:           phpr.nls.get('Change date')
         });
-        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
+        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(),
+            this._date.getDate()));
         this.cleanPage();
         phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
@@ -58,7 +60,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.tree     = new this.treeWidget(this);
         var updateUrl = null;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-        this.form     = new this.formWidget(this,0,this.module, this._date);
+        this.form     = new this.formWidget(this, 0, this.module, this._date);
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
@@ -87,7 +89,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.grid.reloadView(this._view, this._date.getFullYear(), (this._date.getMonth()+1));
         this.form.setDate(this._date);
         this.form.loadView(this._date);
-        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()));
+        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(),
+            this._date.getDate()));
     },
 
     workingtimesStop:function() {

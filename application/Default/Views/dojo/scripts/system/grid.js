@@ -131,7 +131,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
             var year  = parts[0];
             var month = parts[1]-1;
             var day   = parts[2];
-            this.widget.attr('value',new Date(year, month, day));
+            this.widget.attr('value', new Date(year, month, day));
         } else {
             this.inherited(arguments);
         }
