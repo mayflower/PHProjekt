@@ -29,7 +29,9 @@
             <div dojoType="dijit.layout.ContentPane" id="dialogContentFor_{{id}}"
             style="width: 99%; height: 99%; border: 1px solid;">
             </div>
-            <button dojoType="dijit.form.Button" iconClass="tick" type="submit"">{{saveTxt}}</button>
+            <button dojoType="dijit.form.Button" iconClass="tick" type="submit"">
+                {{saveTxt}}
+            </button>
         </div>
     </td>
     <td>
@@ -42,14 +44,14 @@
                 dojo.byId('textButtons_{{id}}').style.display = 'none';
                 dojo.byId('displayHtml_{{id}}').style.display = 'inline';
                 dojo.byId('htmlButtons_{{id}}').style.display = 'inline';
-                dojo.publish('{{moduleName}}.openHtmlEditor',['{{id}}', dijit.byId('{{id}}').attr('value')]);">
+                dojo.publish('{{moduleName}}.openHtmlEditor', ['{{id}}', dijit.byId('{{id}}').attr('value')]);">
             </button>
         </div>
         <div id="htmlButtons_{{id}}"
         style="display: {{displayHtml}};">
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="edit" class="editButton"
             title="{{editHtmlTxt}}" onclick="
-                dojo.publish('{{moduleName}}.openHtmlEditor',['{{id}}', dijit.byId('{{id}}').attr('value')]);">
+                dojo.publish('{{moduleName}}.openHtmlEditor', ['{{id}}', dijit.byId('{{id}}').attr('value')]);">
             </button>
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toTextButton" class="toTextButton"
             title="{{textModeTxt}}" onclick="

@@ -1,23 +1,22 @@
 <tr>
     <td colspan="3">
-    <table id="participantTable" style="position: relative; left: 75px">
+    <table id="participantTable"
+    style="position: relative; left: 75px">
     <tr>
-        <td><label>{{participantUserText}}</label></td>
-        <td><label>{{participantActionText}}</label></td>
+        <td>
+            <label>{{participantUserText}}</label>
+        </td>
+        <td>
+            <label>{{participantActionText}}</label>
+        </td>
     </tr>
     <tr>
         <td>
-            <select
-            id="dataParticipantAdd"
-            name="dataParticipantAdd"
-            dojoType="dijit.form.FilteringSelect"
-            required="true"
-            autocomplete="true"
-            value=""
-            invalidMessage="" >
-            {% for user in users %}
-            <option value="{{user.id}}" >{{user.name}}</option>
-            {% endfor %}
+            <select id="dataParticipantAdd" name="dataParticipantAdd" dojoType="dijit.form.FilteringSelect"
+            required="true" autocomplete="true" value="" invalidMessage="" >
+                {% for user in users %}
+                <option value="{{user.id}}" >{{user.name}}</option>
+                {% endfor %}
             </select>
         </td>
         <td>
@@ -32,11 +31,8 @@
         {% endifequal %}
     >
         <td>
-            <input id="dataParticipant[{{item.userId}}]"
-            id="dataParticipant[{{item.userId}}]"
-            name="dataParticipant[{{item.userId}}]"
-            type="hidden"
-            value="{{item.userId}}"
+            <input id="dataParticipant[{{item.userId}}]" id="dataParticipant[{{item.userId}}]"
+            name="dataParticipant[{{item.userId}}]" type="hidden" value="{{item.userId}}"
             dojoType="dijit.form.TextBox" />
             {{item.userName}}
         </td>

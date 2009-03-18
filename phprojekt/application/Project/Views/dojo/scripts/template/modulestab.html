@@ -1,27 +1,27 @@
 <tr>
     <td colspan="3">
-    <table id="modulesTable" style="position: relative; left: 75px">
+    <table id="modulesTable"
+    style="position: relative; left: 75px">
     <tr>
-        <td><label>{{moduleNameText}}</label></td>
-        <td><label>{{moduleActiveText}}</label></td>
+        <td>
+            <label>{{moduleNameText}}</label>
+        </td>
+        <td>
+            <label>{{moduleActiveText}}</label>
+        </td>
     </tr>
     {% for module in modules %}
     <tr id="trModulesFor{{module.id}}">
         <td>
-            <input id="moduleRelation[{{module.id}}]"
-            name="moduleRelation[{{module.id}}]"
-            type="hidden"
-            value="{{module.name}}"
-            dojoType="dijit.form.TextBox" />
+            <input id="moduleRelation[{{module.id}}]" name="moduleRelation[{{module.id}}]" type="hidden"
+            value="{{module.name}}" dojoType="dijit.form.TextBox" />
             {{module.label}}
         </td>
-        <td><div align="center">
-            <input type="checkbox"
-            dojotype="dijit.form.CheckBox"
-            id="checkModuleRelation[{{module.id}}]"
-            name="checkModuleRelation[{{module.id}}]"
-            checked="{{module.inProject}}"
-            value="1" /></div>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkModuleRelation[{{module.id}}]"
+                name="checkModuleRelation[{{module.id}}]" checked="{{module.inProject}}" value="1" />
+            </div>
         </td>
     </tr>
     {% endfor %}

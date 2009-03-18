@@ -8,19 +8,11 @@
         </label>
     </td>
     <td>
-        <select
-        id="{{id}}"
-        name="{{id}}"
-        dojoType="dijit.form.FilteringSelect"
-        required="{{required}}"
-        {{disabled}}
-        autocomplete="true"
-        value="{{value}}"
-        searchAttr="name"
-        invalidMessage="" >
-        {% for item in values %}
-        <option value ="{{item.id}}">{{item.name}}</option>
-        {% endfor %}
+        <select id="{{id}}" name="{{id}}" dojoType="dijit.form.FilteringSelect" required="{{required}}" {{disabled}}
+        autocomplete="true" value="{{value}}" searchAttr="name" invalidMessage="" >
+            {% for item in values %}
+            <option value ="{{item.id}}">{{item.name}}</option>
+            {% endfor %}
         </select>
     </td>
     <td>

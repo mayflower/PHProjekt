@@ -1,41 +1,38 @@
 <tr>
     <td colspan="3">
-    <table id="relationTable" style="position: relative; left: 75px">
+    <table id="relationTable"
+        style="position: relative; left: 75px">
     <tr>
-        <td><label>{{accessRoleText}}</label></td>
-        <td><label>{{accessUserText}}</label></td>
-        <td><label>{{accessActionText}}</label></td>
+        <td>
+            <label>{{accessRoleText}}</label>
+        </td>
+        <td>
+            <label>{{accessUserText}}</label>
+        </td>
+        <td>
+            <label>{{accessActionText}}</label>
+        </td>
     </tr>
     <tr>
         <td>
-            <select
-            id="relationRoleAdd"
-            name="relationRoleAdd"
-            dojoType="dijit.form.FilteringSelect"
-            required="true"
-            autocomplete="true"
-            value=""
-            invalidMessage="" >
-            {% for role in roles %}
-            <option value="{{role.id}}" >{{role.name}}</option>
-            {% endfor %}
+            <select id="relationRoleAdd" name="relationRoleAdd" dojoType="dijit.form.FilteringSelect" required="true"
+            autocomplete="true" value="" invalidMessage="" >
+                {% for role in roles %}
+                <option value="{{role.id}}" >{{role.name}}</option>
+                {% endfor %}
             </select>
         </td>
         <td>
-            <select
-            id="relationUserAdd"
-            name="relationUserAdd"
-            dojoType="dijit.form.FilteringSelect"
-            required="true"
-            autocomplete="true"
-            value=""
-            invalidMessage="" >
-            {% for user in users %}
-            <option value="{{user.id}}" >{{user.name}}</option>
-            {% endfor %}
+            <select id="relationUserAdd" name="relationUserAdd" dojoType="dijit.form.FilteringSelect" required="true"
+            autocomplete="true" value="" invalidMessage="" >
+                {% for user in users %}
+                <option value="{{user.id}}" >{{user.name}}</option>
+                {% endfor %}
             </select>
         </td>
-        <td><div id="relationAddButton"></div></td>
+        <td>
+            <div id="relationAddButton"></div>
+        </td>
     </tr>
     {% for rel in relations %}
     <tr id="trRelationFor{{rel.userId}}"
@@ -44,22 +41,18 @@
         {% endifequal %}
     >
         <td>
-            <input
-            name="roleRelation[{{rel.userId}}]"
-            type="hidden"
-            value="{{rel.roleId}}"
+            <input name="roleRelation[{{rel.userId}}]" type="hidden" value="{{rel.roleId}}"
             dojoType="dijit.form.TextBox" />
             {{rel.roleName}}
         </td>
         <td>
-            <input
-            name="userRelation[{{rel.userId}}]"
-            type="hidden"
-            value="{{rel.userId}}"
+            <input name="userRelation[{{rel.userId}}]" type="hidden" value="{{rel.userId}}"
             dojoType="dijit.form.TextBox" />
             {{rel.userName}}
         </td>
-        <td><div id="relationDeleteButton{{rel.userId}}"></div></td>
+        <td>
+            <div id="relationDeleteButton{{rel.userId}}"></div>
+        </td>
     </tr>
     {% endfor %}
     </table>
