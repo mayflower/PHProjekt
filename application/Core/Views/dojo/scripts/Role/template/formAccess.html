@@ -5,54 +5,44 @@
     <td colspan="2">
         <table id="accessTable">
         <tr>
-            <td>{{accessModuleText}}</td>
-            <td>{{accessReadText}}</td>
-            <td>{{accessWriteText}}</td>
-            <td>{{accessCreateText}}</td>
-            <td>{{accessAdminText}}</td>
+            <td>
+                {{accessModuleText}}
+            </td>
+            <td>
+                {{accessReadText}}
+            </td>
+            <td>
+                {{accessWriteText}}
+            </td>
+            <td>
+                {{accessCreateText}}
+            </td>
+            <td>
+                {{accessAdminText}}
+            </td>
         </tr>
         {% for module in modules %}
         <tr id="trAccessFor{{module.id}}">
             <td>
-                <input
-                id="dataAccess[{{module.id}}]"
-                name="dataAccess[{{module.id}}]"
-                type="hidden"
-                value="{{module.name}}"
-                dojoType="dijit.form.TextBox" />
+                <input id="dataAccess[{{module.id}}]" name="dataAccess[{{module.id}}]" type="hidden"
+                value="{{module.name}}" dojoType="dijit.form.TextBox" />
                 {{module.label}}
             </td>
             <td>
-                <input type="checkbox"
-                dojotype="dijit.form.CheckBox"
-                id="checkReadAccess[{{module.id}}]"
-                name="checkReadAccess[{{module.id}}]"
-                checked="{{module.read}}"
-                value="1" />
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkReadAccess[{{module.id}}]"
+                name="checkReadAccess[{{module.id}}]" checked="{{module.read}}" value="1" />
             </td>
             <td>
-                <input type="checkbox"
-                dojotype="dijit.form.CheckBox"
-                id="checkWriteAccess[{{module.id}}]"
-                name="checkWriteAccess[{{module.id}}]"
-                checked="{{module.write}}"
-                value="1" />
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkWriteAccess[{{module.id}}]"
+                name="checkWriteAccess[{{module.id}}]" checked="{{module.write}}" value="1" />
             </td>
             <td>
-                <input type="checkbox"
-                dojotype="dijit.form.CheckBox"
-                id="checkCreateAccess[{{module.id}}]"
-                name="checkCreateAccess[{{module.id}}]"
-                checked="{{module.create}}"
-                value="1" />
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkCreateAccess[{{module.id}}]"
+                name="checkCreateAccess[{{module.id}}]" checked="{{module.create}}" value="1" />
             </td>
             <td>
-                <input type="checkbox"
-                dojotype="dijit.form.CheckBox"
-                id="checkAdminAccess[{{module.id}}]"
-                name="checkAdminAccess[{{module.id}}]"
-                checked="{{module.admin}}"
-                value="1" />
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAdminAccess[{{module.id}}]"
+                name="checkAdminAccess[{{module.id}}]" checked="{{module.admin}}" value="1" />
             </td>
         </tr>
         {% endfor %}

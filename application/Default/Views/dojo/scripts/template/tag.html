@@ -1,4 +1,7 @@
 {% if newline %}
 <br />
 {% endif %}
-<a href='javascript:dojo.publish("{{moduleName}}.showTagsResults",["{{tag}}"])'><span style="font-size: {{size}}px">{{tag}}</span></a>&nbsp;
+<a href='javascript: dojo.publish("{{moduleName}}.showTagsResults", ["{{tag}}"])'>
+    <span
+    style="font-size: {{size}}px">{{tag}}</span>
+</a>&nbsp;

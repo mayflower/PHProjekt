@@ -1,36 +1,38 @@
 <!-- Events inside the schedule chart -->
 <div id="calendarSchedule">
     <table width="{{widthTable}}%">
-        <tr>
-            <td width="{{widthHourColumn}}%"></td>
-            {% for user in header.users %}
-            <td width="{{header.columnsWidth}}%" class="hours" colspan="{{user.columnsTotal}}">{{user.text}}</td>
-            {% endfor %}
-        </tr>
-        {% for row in schedule %}
-        <tr>
-            <td width="{{widthHourColumn}}%" class="hours">{{row.hour}}</td>
-            {% for user in row %}
-                {% for column in user.columns %}
-                    {% if column.occupied %}
-                        {% ifequal column.typeEvent 1 %}
-            <td rowspan="{{column.quartersDuration}}" width="{{column.width}}%" class="events">
-                {{column.startTime}} - {{column.endTime}} {{column.title|safe}}<br />
-                <div class="horizontalLine">
-                </div>
-                {{column.notes|safe}}
-            </td>
-                        {% endifequal %}
-                    {% else %}
-                        {% ifequal row.even true %}
-            <td width="{{column.width}}%" class="{{column.class}}" style="background-color: white;"></td>
-                        {% else %}
-            <td width="{{column.width}}%" class="{{column.class}}" style="background-color: #e9f3ff;"></td>
-                        {% endifequal %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        </tr>
+    <tr>
+        <td width="{{widthHourColumn}}%"></td>
+        {% for user in header.users %}
+        <td width="{{header.columnsWidth}}%" class="hours" colspan="{{user.columnsTotal}}">{{user.text}}</td>
         {% endfor %}
+    </tr>
+    {% for row in schedule %}
+    <tr>
+        <td width="{{widthHourColumn}}%" class="hours">{{row.hour}}</td>
+        {% for user in row %}
+            {% for column in user.columns %}
+                {% if column.occupied %}
+                   {% ifequal column.typeEvent 1 %}
+        <td rowspan="{{column.quartersDuration}}" width="{{column.width}}%" class="events">
+            {{column.startTime}} - {{column.endTime}} {{column.title|safe}}<br />
+            <div class="horizontalLine">
+            </div>
+            {{column.notes|safe}}
+        </td>
+                    {% endifequal %}
+                {% else %}
+                    {% ifequal row.even true %}
+        <td width="{{column.width}}%" class="{{column.class}}"
+        style="background-color: white;"></td>
+                    {% else %}
+        <td width="{{column.width}}%" class="{{column.class}}"
+        style="background-color: #e9f3ff;"></td>
+                    {% endifequal %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
     </table>
 </div>

@@ -1,34 +1,53 @@
-<form dojoType="dijit.form.Form" id="hoursForm" name="hoursForm" style="display:inline;" onsubmit="return false;">
+<form dojoType="dijit.form.Form" id="hoursForm" name="hoursForm" onsubmit="return false;"
+ style="display: inline;">
 <!-- Title -->
-<div style="height:30px;">
-    <h4 style="color: #294064; font-weight: bold; float: left;">&nbsp;{{timecardWorkingTimesText}}</h4>
+<div
+ style="height: 30px;">
+    <h4
+    style="color: #294064; font-weight: bold; float: left;">&nbsp;{{timecardWorkingTimesText}}</h4>
     <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
         <div dojoType="dijit.TooltipDialog">
-            <div style="white-space: nowrap;">
+            <div
+            style="white-space: nowrap;">
             {{workingTimesHelpText}}
             </div>
         </div>
     </button>
 </div>
-<div style="vertical-align: baseline; margin-left:10px; margin-right:10px; background: #fff; border: 3px solid #F1CE47; radius:8pt; -moz-border-radius:8pt 8pt; padding:5px;">
-    <div style="color: #294064; text-align: center">
+<div
+ style="vertical-align: baseline; margin-left: 10px; margin-right: 10px; background: #fff; border: 3px solid #F1CE47;
+ radius: 8pt; -moz-border-radius: 8pt 8pt; padding: 5px;">
+    <div
+    style="color: #294064; text-align: center">
         <input dojoType="dijit.form.TextBox" type="hidden" id="date" name="date" value="{{date}}" />
-        <div style="color: #294064;">
-            <div style="width:100%">{{timecardStartText}}</div>
-                <input style="width:52px;" type="text" name="startTime" dojoType="dijit.form.TextBox" constraints="{formatLength:'short', timePattern:'HHmm'}" />
+        <div
+        style="color: #294064;">
+            <div
+            style="width: 100%">
+                {{timecardStartText}}
             </div>
-            <div style="color: #294064;">
-                <div style="width:100%">{{timecardEndText}}</div>
-                    <input style="width:52px" type="text" name="endTime" dojoType="dijit.form.TextBox" constraints="{formatLength:'short', timePattern:'HHmm'}" />
-                </div>
-            <div>
+            <input type="text" name="startTime" dojoType="dijit.form.TextBox"
+            constraints="{formatLength: 'short', timePattern: 'HHmm'}"
+            style="width: 52px;" />
+         </div>
+         <div style="color: #294064;">
+             <div style="width: 100%">
+                {{timecardEndText}}
+             </div>
+             <input type="text" name="endTime" dojoType="dijit.form.TextBox"
+             constraints="{formatLength: 'short', timePattern: 'HHmm'}"
+             style="width: 52px" />
+        </div>
+        <div>
             <br />
-            <button dojoType="dijit.form.Button" baseClass="positive" id="hoursSaveButton" type="submit" iconClass="tick">
+            <button dojoType="dijit.form.Button" baseClass="positive" id="hoursSaveButton" type="submit"
+            iconClass="tick">
             </button>
             <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
                 <div dojoType="dijit.TooltipDialog">
-                    <div style="white-space: nowrap;">
-                    {{hoursHelpText}}
+                    <div
+                    style="white-space: nowrap;">
+                        {{hoursHelpText}}
                     </div>
                 </div>
             </button>
@@ -38,5 +57,6 @@
 </div>
 <br />
 {{hoursdata|safe}}
-<h6 style="text-align:center; color: #294064;">{{timecardTotalText}}: {{totalHours}}</h6>
+<h6
+ style="text-align: center; color: #294064;">{{timecardTotalText}}: {{totalHours}}</h6>
 </form>

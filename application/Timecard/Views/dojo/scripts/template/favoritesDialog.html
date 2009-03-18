@@ -1,5 +1,5 @@
 <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesSource" selfAccept="false"
-style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: left;">
+ style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: left;">
     {% for item in allProjects %}
     <div class="dojoDndItem" id="favoritesTarget-{{item.id}}"
     style="cursor: move;">
@@ -9,7 +9,7 @@ style="background-color: white; border: 2px solid black; width: 200px; margin: 4
 </div>
 
 <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesTarget" jsId="projectFavoritesTarget" selfAccept="false"
-style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: right;">
+ style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: right;">
     {% for item in favoritesList %}
     <div class="dojoDndItem" id="favoritesSoruce-{{item.id}}"
     style="cursor: move;">
@@ -17,4 +17,5 @@ style="background-color: white; border: 2px solid black; width: 200px; margin: 4
     </div>
     {% endfor %}
 </div>
-<input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden" value="{% for item in favoritesList %}{{item.id}},{% endfor %}" />
+<input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden"
+value="{% for item in favoritesList %}{{item.id}}, {% endfor %}" />

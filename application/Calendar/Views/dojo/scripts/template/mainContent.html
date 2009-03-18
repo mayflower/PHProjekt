@@ -5,51 +5,61 @@
         style="height: 6%; overflow: hidden;">
         &nbsp;&nbsp;
         {{view}}:
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.listViewClick');"
-            id="gridBarButton">{{list}}</button>
+        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.listViewClick');" id="gridBarButton">
+            {{list}}
+        </button>
         &nbsp;&nbsp;&nbsp;
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.dayViewClick');"
-            id="dayBarButton">{{day|safe}}</button>
+        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.dayViewClick');" id="dayBarButton">
+            {{day|safe}}
+        </button>
         &nbsp;&nbsp;&nbsp;
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.weekViewClick');"
-            id="weekBarButton">{{week|safe}}</button>
+        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.weekViewClick');" id="weekBarButton">
+            {{week|safe}}
+        </button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div id="scheduleBar" style="display:none;">
+        <div id="scheduleBar"
+        style="display: none;">
             {{changeDate}}
             &nbsp;
             <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
-                constraints="{datePattern:'yyyy-MM-dd', strict:true}" style="width: 90px;">
+            constraints="{datePattern: 'yyyy-MM-dd', strict: true}"
+            style="width: 90px;">
             <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
-                onClick="dojo.publish('Calendar.loadAppropriateList');"></button>
+            onClick="dojo.publish('Calendar.loadAppropriateList');">
+            </button>
             &nbsp;&nbsp;&nbsp;
-            <a href="javascript:dojo.publish('Calendar.setDate', [0]);">&lt;&lt;</a>&nbsp;
-            <a href="javascript:dojo.publish('Calendar.setDate', [1]);">{{today}}</a>&nbsp;
-            <a href="javascript:dojo.publish('Calendar.setDate', [2]);">&gt;&gt;</a>
+            <a href="javascript: dojo.publish('Calendar.setDate', [0]);">&lt;&lt;</a>&nbsp;
+            <a href="javascript: dojo.publish('Calendar.setDate', [1]);">{{today}}</a>&nbsp;
+            <a href="javascript: dojo.publish('Calendar.setDate', [2]);">&gt;&gt;</a>
         </div>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div id="scheduleGroupBar" style="display:none;">
+        <div id="scheduleGroupBar"
+        style="display: none;">
             {{user}}
             &nbsp;
-            <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.userSelfClick');"
-                id="selfBarButton">{{self}}</button>
+            <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.userSelfClick');" id="selfBarButton">
+                {{self}}
+            </button>
             <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.userSelectionClick');"
-                id="selectionBarButton">{{selection}}</button>
+            id="selectionBarButton">
+                {{selection}}
+            </button>
         </div>
     </div>
-    <!-- List View: -->
+    <!-- List View -->
     <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" class="prepend-0 append-0">
     </div>
-    <!-- Form View: -->
+    <!-- Form View -->
     <div dojoType="dijit.layout.ContentPane" id="detailsBox" region="bottom" splitter="true"
-        style="height: 60%;">
+    style="height: 60%;">
     </div>
 </div>
 <!-- Users Selector -->
 <div dojoType="dijit.Dialog" id="selectorDialog" title="" draggable="false"
-    style="background-color:white; width:auto; height:auto;">
+    style="background-color: white; width: auto; height: auto;">
     <h1 id="selectorTitle"></h1>
     <div dojoType="dijit.layout.ContentPane" id="selectorContainer"
-        style="width: 330px; height:310px; border: 2px solid #294064; padding-left:7px;">
+        style="width: 330px; height: 310px; border: 2px solid #294064; padding-left: 7px;">
     </div>
 </div>
 <!-- Event Selector -->
