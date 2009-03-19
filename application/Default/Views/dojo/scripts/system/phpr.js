@@ -689,24 +689,14 @@ dojo.declare("phpr.TreeContent", null, {
     // description:
     //     Manage the visibility of the tree panel
     fadeOut:function() {
-        if (dojo.style("treeBox", "opacity") != 0.3) {
-            var temp = dojo.fadeOut({
-                node:  "treeBox",
-                onEnd: function () {
-                    dojo.style("treeBox", "opacity", 0.3);
-                }
-            }).play();
+        if (dojo.style("treeBox", "opacity") != 0.5) {
+            dojo.style("treeBox", "opacity", 0.5);
         }
     },
 
     fadeIn:function() {
         if (dojo.style("treeBox", "opacity") != 1) {
-            var temp = dojo.fadeIn({
-                node:  "treeBox",
-                onEnd: function () {
-                    dojo.style("treeBox", "opacity", 1);
-                }
-            }).play();
+            dojo.style("treeBox", "opacity", 1);
         }
     }
 });
