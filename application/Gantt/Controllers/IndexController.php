@@ -47,8 +47,8 @@ class Gantt_IndexController extends IndexController
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree->setup();
-        $min = mktime(0, 0, 0, 12, 31, 2030);
-        $max = mktime(0, 0, 0, 1, 1, 1970);
+        $min = gmmktime(0, 0, 0, 12, 31, 2030);
+        $max = gmmktime(0, 0, 0, 1, 1, 1970);
 
         $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
 
@@ -62,8 +62,8 @@ class Gantt_IndexController extends IndexController
                     list($startYear, $startMonth, $startDay) = split("-", $node->startDate);
                     list($endYear, $endMonth, $endDay)       = split("-", $node->endDate);
 
-                    $start = mktime(0, 0, 0, $startMonth, $startDay, $startYear);
-                    $end   = mktime(0, 0, 0, $endMonth, $endDay, $endYear);
+                    $start = gmmktime(10, 0, 0, $startMonth, $startDay, $startYear);
+                    $end   = gmmktime(0, 0, 0, $endMonth, $endDay, $endYear);
 
                     if ($start < $min) {
                         $min = $start;
@@ -77,8 +77,13 @@ class Gantt_IndexController extends IndexController
                                                         'childs'  => count($node->getChildren()),
                                                         'caption' => $node->title,
                                                         'start'   => $start,
-                                                        'end'     => $end);
-
+                                                        'end'     => $end,
+                                                        'startD'  => $startDay,
+                                                        'startM'  => $startMonth,
+                                                        'startY'  => $startYear,
+                                                        'endD'    => $endDay,                                                        'startD'  => $startDay,
+                                                        'endM'    => $endMonth,
+                                                        'endY'    => $endYear);
                     // Only allow write if all the projects have write or hight access
                     if ($data['data']['rights']["currentUser"]["write"]) {
                         if ($rights->getItemRight(1, $node->id, Phprojekt_Auth::getUserId()) < Phprojekt_Acl::WRITE) {
@@ -89,15 +94,14 @@ class Gantt_IndexController extends IndexController
             }
         }
 
-        $data['data']['min']  = mktime(0, 0, 0, 1, 1, date("Y", $min));
-        $data['data']['max']  = mktime(0, 0, 0, 12, 31, date("Y", $max));
-
+        $data['data']['min']  = gmmktime(0, 0, 0, 1, 1, date("Y", $min));
+        $data['data']['max']  = gmmktime(0, 0, 0, 12, 31, date("Y", $max));
         $data['data']['step'] = (date("L", $min)) ? 366 : 365;
 
         if (date("Y", $min) < date("Y", $max)) {
             while (date("Y", $min) != date("Y", $max)) {
                 $data['data']['step'] += (date("L", $max)) ? 366 : 365;
-                $max = mktime(0, 0, 0, 5, 5, date("Y", $max) - 1);
+                $max = gmmktime(0, 0, 0, 5, 5, date("Y", $max) - 1);
             }
         }
 
