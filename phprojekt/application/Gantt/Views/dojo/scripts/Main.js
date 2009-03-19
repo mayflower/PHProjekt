@@ -210,11 +210,11 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    This function sets the height of the vertical lines
         // description:
         //    This function sets the height of the vertical lines
-        var count  = this.getProjectCount(phpr.currentProjectId);
-        if (count < 4) {
-            count = count + 1;
+        var count = this.getProjectCount(phpr.currentProjectId) + 1;
+        if (phpr.currentProjectId == 1) {
+            count = this.getProjectCount(phpr.currentProjectId);
         }
-        var height = ((count + 1) * 22) + count;
+        var height = 45 + (count * 23.44);
         dojo.query('#gantt_timeline .slider .splitter').forEach(function(ele) {
             dojo.style(ele, 'height', (height)+'px');
         });

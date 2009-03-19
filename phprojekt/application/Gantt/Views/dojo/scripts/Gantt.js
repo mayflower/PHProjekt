@@ -204,8 +204,10 @@ dojo.declare('phpr.Project.GanttBase', null, {
         if (sliderName && this.activeSlider.length > 1) {
             values = this.normalizeValues(values, sliderName);
             this.assertUpdate(values[0], values[1], sliderName);
-            dojo.byId('minDate').value = this.convertIndex2DateString(values[0]);
-            dojo.byId('maxDate').value = this.convertIndex2DateString(values[1]);
+            if (this.activeSlider == sliderName) {
+                dojo.byId('minDate').value = this.convertIndex2DateString(values[0]);
+                dojo.byId('maxDate').value = this.convertIndex2DateString(values[1]);
+            }
         }
     },
 
@@ -244,6 +246,14 @@ dojo.declare('phpr.Project.GanttBase', null, {
             // Important hack:
             // this function is called once on active slider selection with the mouse.
             // this event also represent the logical begin of the adjustment sequence.
+            dojo.fadeIn({
+                node:        "gantSelectDates",
+                duration:    1000,
+                beforeBegin: function() {
+                    dojo.style("gantSelectDates", "opacity", 0);
+                    dojo.style("gantSelectDates", "display", "block");
+                }
+            }).play();
             if (this.activeSlider && this.activeSlider == sliderName) {
                 return;
             }
