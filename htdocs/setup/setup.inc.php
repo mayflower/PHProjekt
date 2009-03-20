@@ -80,7 +80,7 @@ function preInstallChecks()
 
         @mysql_connect($_REQUEST['server_host'], $_REQUEST['server_user'], $_REQUEST['server_pass']);
 
-        @mysql_query("CREATE DATABASE ".$_REQUEST['server_database']);
+        @mysql_query("CREATE DATABASE ".$_REQUEST['server_database']." DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
 
         if (!mysql_select_db($_REQUEST['server_database'])) {
             $_SESSION['error_message'] = "Error selecting database ".$_REQUEST['server_database'];
@@ -113,14 +113,14 @@ function preInstallChecks()
     // creating log folders
     $baseDir = substr($_SERVER['SCRIPT_FILENAME'], 0, -22);
 
-    $configFlie = $baseDir."configuration.ini";
+    $configFile = $baseDir."configuration.ini";
     
-    if (!file_exists($configFlie)) {
-        if (!file_put_contents($configFlie, "Test")) {
-            $_SESSION['error_message'] = "Error creating the configuration file at ".$configFlie;
+    if (!file_exists($configFile)) {
+        if (!file_put_contents($configFile, "Test")) {
+            $_SESSION['error_message'] = "Error creating the configuration file at ".$configFile;
             $returnValue = false;
         } else {
-            unlink($configFlie);
+            unlink($configFile);
         }
     }
 
@@ -1872,7 +1872,7 @@ function installPhprojekt() {
 
     // getting the language
 
-    $clientLanguaje = 'en'; // default value
+    $clientLanguage = 'en'; // default value
 
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
@@ -1880,7 +1880,7 @@ function installPhprojekt() {
         $headers['Accept-Language'] = $_ENV['HTTP_ACCEPT_LANGUAGE'];
     }
     if ((!empty($headers['Accept-Language'])) && strlen($headers['Accept-Language']) > 1) {
-        $clientLanguaje = substr($headers['Accept-Language'], 0, 2);
+        $clientLanguage = substr($headers['Accept-Language'], 0, 2);
     }
 
     if (strlen($_SERVER['REQUEST_URI']) > 16) {
@@ -1893,7 +1893,7 @@ function installPhprojekt() {
     $configurationFileContent = '[production]
 
 ; Language configuration
-language             = "'.$clientLanguaje.'"
+language             = "'.$clientLanguage.'"
 
 ; Path options
 webpath              = '.$webPath.'
@@ -1907,8 +1907,8 @@ database.password    = '.$_REQUEST['server_pass'].'
 database.name        = '.$_REQUEST['server_database'].'
 
 ; Log options
-log.debug.filename   = '.$logsDir.'\debug.log
-log.crit.filename    = '.$logsDir.'\crit.log
+log.debug.filename   = '.$logsDir.DIRECTORY_SEPARATOR.'debug.log
+log.crit.filename    = '.$logsDir.DIRECTORY_SEPARATOR.'crit.log
 itemsPerPage         = 3;
 
 
@@ -1934,7 +1934,7 @@ itemsPerPage         = 3;
 ; Here it is specified the default language for the system, could be "de" for
 ; German, "en" for English or "es" for Spanish. Actually, the language for each
 ; user is specified individually from Administration -> User
-language             = "'.$clientLanguaje.'"
+language             = "'.$clientLanguage.'"
 
 
 ; PATHS
@@ -1964,13 +1964,13 @@ database.params.dbname      = "'.$_REQUEST['server_database'].'"
 ; LOG
 ; Here will be logged things explicitly declared.
 ; E.G.: (PHP) Phprojekt::getInstance()->getLog()->debug("String to be logged");
-log.debug.filename   = "'.$logsDir.'\debug.log"
+log.debug.filename   = "'.$logsDir.DIRECTORY_SEPARATOR.'debug.log"
 
 ; This is another type of logging.
 ; E.G.: (PHP) Phprojekt::getInstance()->getLog()->crit("String to be logged");
 ; Note for developers: there are many different type of logs defined that can be
 ; added here, see the complete list in phprojekt\library\Phprojekt\Log.php
-log.crit.filename    = "'.$logsDir.'\crit.log"
+log.crit.filename    = "'.$logsDir.DIRECTORY_SEPARATOR.'crit.log"
 
 ; MODULES
 ; Not used at the moment, leave it as it is.
@@ -2090,7 +2090,7 @@ useCacheForClasses   = true;
                 'admin' => 0));
 
                 $timeZone = 1;
-                $languange = $clientLanguaje;
+                $language = $clientLanguage;
 
 
                 if ($settings = unserialize($user["settings"])) {
@@ -2098,7 +2098,7 @@ useCacheForClasses   = true;
                         $timeZone = $settings["timezone"];
                     }
                     if (isset($settings["language"])) {
-                        $languange = $settings["language"];
+                        $language = $settings["language"];
                     }
                 }
 
@@ -2126,7 +2126,7 @@ useCacheForClasses   = true;
                 'userId' => $user["ID"],
                 'moduleId' => 0,
                 'keyValue' => 'language',
-                'value' => $languange,
+                'value' => $language,
                 'identifier' => 'Core'));
 
                 $db->insert('Setting', array('id' => null,
