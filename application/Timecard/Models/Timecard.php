@@ -129,7 +129,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $startTime = substr($startTime, 0, 4);
             }
             $startTime = intval($startTime);
-            if (($startTime > 2359) || ($startTime < 0)) {
+            if (($startTime > 2100) || ($startTime < 800)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
@@ -152,7 +152,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $endTime = substr($endTime, 0, 4);
             }
             $endTime = intval($endTime);
-            if (($endTime > 2359) || ($endTime < 0)) {
+            if (($endTime > 2100) || ($endTime < 800)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
@@ -161,14 +161,26 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             }
 
             if (empty($data['startTime']) || $data['startTime'] == ':') {
-                if (strlen($startTime) == 6) {
-                    $startTime = substr($startTime, 0, 4);
-                }
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
+            }
+
+            if (!empty($data['startTime'])) {
+                $startTime = str_replace(":", "", $data['startTime']);
+                if (strlen($startTime) == 6) {
+                    $startTime = substr($startTime, 0, 4);
+                }
+                $startTime = intval($startTime);
+                if (($startTime > 2100) || ($startTime < 800)) {
+                    $this->_validate->error->addError(array(
+                        'field'   => Phprojekt::getInstance()->translate('Hours'),
+                        'label'   => Phprojekt::getInstance()->translate('Hours'),
+                        'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
+                    return false;
+                }
             }
         }
 

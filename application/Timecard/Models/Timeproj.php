@@ -128,7 +128,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             $amount = substr($amount, 0, 4);
         }
         $amount = intval($amount);
-        if (($amount > 2359) || ($amount <= 0)) {
+        if (($amount > 1300) || ($amount < 30)) {
             $this->_validate->error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Amount'),
                 'label'   => Phprojekt::getInstance()->translate('Amount'),
