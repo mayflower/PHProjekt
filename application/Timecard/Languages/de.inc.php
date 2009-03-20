@@ -11,3 +11,4 @@ $lang["Add working time and drag projects into the bar"] = "Füge Arbeitszeiten 
 $lang["Manage project list"] = "Projektliste verwalten";
 $lang["Amount [hhmm]"] = "Zeit [hhmm]";
 $lang["Total"] = "Gesamt";
+$lang["The amount is invalid"] = "Der Betrag ist ungültig (Von 30 bis 1300)";

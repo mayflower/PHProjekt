@@ -11,6 +11,7 @@ $lang["Add working time and drag projects into the bar"] = "Add working time and
 $lang["Manage project list"] = "Manage project list";
 $lang["Amount [hhmm]"] = "Amount [hhmm]";
 $lang["Total"] = "Total";
+$lang["The amount is invalid"] = "The amount is invalid (From 30 to 1300)";
 
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
@@ -148,7 +149,7 @@ $lang["Content Help"]["Step by step"] = "<br/>
                     button that allows you to delete it. Under that rectangle there is a legend with the total worked
                     hours for that day.
                 <li>In the <b>Working Times</b> panel, at the right side, inside the day schedule that goes from 8:00
-                    to 20:00, there will appear a yellow box that occupies a surface proportional to the loaded period. 
+                    to 20:00, there will appear a yellow box that occupies a surface proportional to the loaded period.
                 <li>In the <b>Month Grid</b>, that is the panel at the right of the screen, in the active day row,
                     there will be added to the amount of hours, in the column <b>Working times</b> the amount of hours
                     just loaded. If it is the first period you load for this day, there will only appear just that

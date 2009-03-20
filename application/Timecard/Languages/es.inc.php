@@ -12,6 +12,7 @@ $lang["Add working time and drag projects into the bar"] = "Agregar tiempo de tr
 $lang["Manage project list"] = "Admin. lista de proyectos";
 $lang["Amount [hhmm]"] = "Cantidad [hhmm]";
 $lang["Total"] = "Total";
+$lang["The amount is invalid"] = "La cantidad es inválida (De 30 a 1300)";
 
 // Help
 $lang["Content Help"]["General"] = "DEFAULT";
@@ -76,7 +77,7 @@ $lang["Content Help"]["Tiempo de Trabajo"] = "<br/>
     El formato para escribir las horas es <b>HH?MM</b>, en el que HH es la hora, el signo de interrogación representa
     los dos puntos (:) u otro signo a elección; aunque no es obligatorio, y MM los minutos. Ejemplos: 08:00, 8:00,
     0800, 800, 08.00 o 8.00<br/>
-    <br/>    
+    <br/>
     Luego el <b>botón con la tilde</b> lo graba y el período aparece en 3 lugares dentro de la pantalla:<br/>
     <ol>
         <li>Debajo del recuadro en el mismo panel.<br/>
@@ -149,7 +150,7 @@ $lang["Content Help"]["Paso a paso"] = "<br/>
             aparecerá el período dentro de esta pantalla en varios lugares:<br/>
             <ul>
                 <li>Debajo, en el mismo panel como un rectángulo pequeño de color, con el período que acaba de ingresar.
-                    El mismo posee un botón con una cruz, que le permite borrarlo. Debajo de dicho recuadro 
+                    El mismo posee un botón con una cruz, que le permite borrarlo. Debajo de dicho recuadro
                     dirá el total de tiempo de trabajo cargado para este día.
                 <li>En el panel <b>Horas de Proyectos</b> aparecerá en la parte derecha, en la agenda diaria de 8:00 a
                     20:00, un recuadro amarillo que ocupa la superficie acorde al período.
