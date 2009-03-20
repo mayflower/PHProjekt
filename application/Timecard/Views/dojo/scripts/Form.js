@@ -272,14 +272,18 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var start  = this._contentBar.convertHourToPixels(hourHeight, timecardData[i].startTime);
             var end    = this._contentBar.convertHourToPixels(hourHeight, timecardData[i].endTime);
             var top    = start + 'px';
-            var height = (end - start) - 6 + 'px';
             var finish = 0;
+            if ((end - start) - 6 < 0) {
+                var height = (end - start) + 'px';
+            } else {
+                var height = (end - start) - 6 + 'px';
+            }
             var totalbookingHeight = 0;
 
             totalHeight += (end - start);
 
-            var tmp = dojo.doc.createElement("div");
-            tmp.id = 'targetBooking' + timecardData[i].id;
+            var tmp       = dojo.doc.createElement("div");
+            tmp.id        = 'targetBooking' + timecardData[i].id;
             tmp.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
             dojo.addClass(tmp, "dndTarget");
             dojo.style(tmp, "top", top);
@@ -308,10 +312,15 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                             }
                         }
                         if (bookingHeight > 0) {
-                            var tmpDraw = this._surface.createRect({y: lastHour + 2, x: 1, height: bookingHeight - 3,
-                                width: 197, r: 13});
+                            var tmpDraw = this._surface.createRect({
+                                y:       lastHour + 2,
+                                x:       1,
+                                height:  bookingHeight - 3,
+                                width:   197,
+                                r:       13
+                            });
                             tmpDraw.setFill([68, 74, 82, 1]);
-                            tmpDraw.setStroke({color:[68, 74, 82, 1], width: 2});
+                            tmpDraw.setStroke({color: [68, 74, 82, 1], width: 2});
                             timecardProjectPositions.push({
                                 'start': lastHour,
                                 'end':   lastHour + bookingHeight,
@@ -326,6 +335,27 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                         }
 
                         if (finish) {
+                            // Draw a red fill if the project booking exceed the time
+                            var next = parseInt(i) + 1;
+                            if (timeprojData[j].remaind > 0 && typeof(timecardData[next]) == "undefined") {
+                                lastHour    = lastHour + bookingHeight;
+                                var tmpDraw = this._surface.createRect({
+                                    y:      lastHour + 2,
+                                    x:      1,
+                                    height: timeprojData[j].remaind - 3,
+                                    width:  197,
+                                    r:      13
+                                });
+                                tmpDraw.setFill("red");
+                                tmpDraw.setStroke({color: "red", width: 2});
+
+                                phpr.Gfx.makeText(this._surface, {
+                                    x:     15,
+                                    y:     lastHour + 15,
+                                    text:  timeprojData[j].projectName,
+                                    align: "start"},
+                                    {family: "Verdana", size: "8pt"}, "white", "white");
+                            }
                             totalbookingHeight += bookingHeight + end;
                             lastHour = 0;
                         } else {
