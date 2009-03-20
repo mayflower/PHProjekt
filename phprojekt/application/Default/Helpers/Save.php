@@ -82,7 +82,7 @@ final class Default_Helpers_Save
         // Checks
         if (!$node->getActiveRecord()->recordValidate()) {
             $error = array_pop($node->getActiveRecord()->getError());
-            throw new Phprojekt_PublishedException($error['label'] . ' ' . $error['message']);
+            throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
         } else if (!self::_checkAccess($projectId)) {
             throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(1, $projectId)) {
@@ -198,7 +198,7 @@ final class Default_Helpers_Save
         $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
         if (!$model->recordValidate()) {
             $error = array_pop($model->getError());
-            throw new Phprojekt_PublishedException($error['label'] . ' ' . $error['message']);
+            throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
         } else if (!self::_checkAccess($projectId)) {
             throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
