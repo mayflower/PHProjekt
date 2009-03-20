@@ -679,10 +679,6 @@ function installPhprojekt() {
     'type' => 'date', 'null' => true),
     'amount' => array(
     'type' => 'time', 'null' => true),
-    'startTime' => array(
-    'type' => 'time', 'null' => true),
-    'endTime' => array(
-    'type' => 'time', 'null' => true),
     ),
     array('id'));
     if (!$result) {
@@ -1491,14 +1487,14 @@ function installPhprojekt() {
     'tableField' => 'participantId',
     'formTab' => 1,
     'formLabel' => 'participantId',
-    'formType' => 'multipleSelectValues',
-    'formPosition' => 8,
+    'formType' => 'hidden',
+    'formPosition' => 7,
     'formColumns' => 1,
     'formRegexp' => '',
-    'formRange' => 'User#id#username',
+    'formRange' => '',
     'defaultValue' => '',
-    'listPosition' => 2,
-    'listAlign' => 'left',
+    'listPosition' => 0,
+    'listAlign' => '',
     'listUseFilter' => 1,
     'altPosition' => 1,
     'status' => '1',
@@ -1776,18 +1772,6 @@ function installPhprojekt() {
     $db->insert('RoleModulePermissions', array(
     'roleId' => 1,
     'moduleId' => 3,
-    'access' => 139
-    ));
-
-    $db->insert('RoleModulePermissions', array(
-    'roleId' => 1,
-    'moduleId' => 4,
-    'access' => 139
-    ));
-
-    $db->insert('RoleModulePermissions', array(
-    'roleId' => 1,
-    'moduleId' => 5,
     'access' => 139
     ));
 
