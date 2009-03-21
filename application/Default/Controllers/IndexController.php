@@ -208,11 +208,11 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Save some fields for many items
-     * Only edit exists items
-     * Use the model module for get the data
+     * Only edit existing items
+     * Use the model module to get the data
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
+     * If there is an error, the saving will return a Phprojekt_PublishedException
+     * If not, it returns is a string with the same format than the Phprojekt_PublishedException
      * but with success type
      *
      * @requestparam string data Array with fields and values
@@ -591,5 +591,43 @@ class IndexController extends Zend_Controller_Action
         }
 
         $this->render('upload');
+    }
+
+    /**
+     * Adds specific rights to the params that come from the view before saving them into a new or existing item.
+     * To see this function in action, look its call inside functions jsonSaveAction and jsonSaveMultipleAction
+     * of the model of Helpdesk module.
+     *
+     * @return void / array
+     */
+    public function addParamsRight($request, $right, $user) {
+        if (gettype($request) == 'object') {
+            // Called from jsonSaveAction - The $request is an object 'Zend_Controller_Request_Abstract'
+            // Adds the Id of the user, just in case it is no there
+            $dataAccess        = $request->getParam('dataAccess');
+            $dataAccess[$user] = $user;
+            $request->setParam('dataAccess', $dataAccess);
+
+            // Adds the specific right
+            $checkAccess        = $request->getParam($right);
+            $checkAccess[$user] = 1;
+            $request->setParam($right, $checkAccess);
+
+        } else if (gettype($request) == 'array') {
+            // Called from jsonMultipleSaveAction - The $request is an array
+            // Adds the Id of the user, just in case it is no there
+            if (!array_key_exists('dataAccess', $request)) {
+                $request['dataAccess'] = Array();
+            }
+            $request['dataAccess'][$user] = $user;
+
+            // Adds the specific right
+            if (!array_key_exists($right, $request)) {
+                $request[$right]        = Array();
+            }
+            $request[$right][$user] = 1;
+
+            return $request;
+        }
     }
 }
