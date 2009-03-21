@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS `DatabaseManager`;
 DROP TABLE IF EXISTS `Calendar`;
 DROP TABLE IF EXISTS `Filemanager`;
 DROP TABLE IF EXISTS `Contact`;
+DROP TABLE IF EXISTS `Helpdesk`;
 
 --
 -- Table structure for table `DatabaseManager`
@@ -464,6 +465,29 @@ CREATE TABLE `Contact` (
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+
+--
+-- Table structure for table `Contact`
+--
+CREATE TABLE `Helpdesk` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `assigned` int(11) default NULL,
+  `date` date default NULL,
+  `projectId` int(11) NOT NULL,
+  `priority` int(11) default NULL,
+  `attachments` text default NULL,
+  `description` text default NULL,
+  `status` varchar(50) NOT NULL,
+  `dueDate` date default NULL,
+  `author` varchar(255) default NULL,
+  `solvedBy` varchar(255) default NULL,
+  `solvedDate` date default NULL,
+  `contactId` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 --
 -- INSERT DATA
 --
@@ -477,7 +501,8 @@ INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
 (6, 'Gantt', 'Gantt', 0, 1),
 (7, 'Filemanager', 'Filemanager', 0, 1),
 (8, 'Statistic', 'Statistic', 0, 1),
-(9, 'Contact', 'Contact', 1, 1);
+(9, 'Contact', 'Contact', 1, 1),
+(10, 'Helpdesk', 'Helpdesk', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
@@ -531,7 +556,21 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Contact', 'zipcode', 1, 'Zip Code', 'text', 9, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'country', 1, 'Country', 'text', 10, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
 (0, 'Contact', 'comment', 1, 'Comment', 'textarea', 11, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'private', 1, 'Private', 'selectValues', 12, 1, NULL, '0#No|1#Yes', '0', 5, 'center', 1, 0, '1', 0, 0, 0);
+(0, 'Contact', 'private', 1, 'Private', 'selectValues', 12, 1, NULL, '0#No|1#Yes', '0', 5, 'center', 1, 0, '1', 0, 0, 0),
+
+(0, 'Helpdesk', 'title', 1, 'title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'assigned', 1, 'Assigned', 'selectValues', 3, 1, NULL, 'User#id#lastname', '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'date', 1, 'Date', 'display', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'projectId', 1, 'Project', 'selectValues', 6, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'priority', 1, 'Priority', 'selectValues', 7, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '', 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'attachments', 1, 'Attachments', 'upload', 8, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'description', 1, 'Description', 'textarea', 11, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Open|2#Assigned|3#Solved|4#Verified|5#Closed', '1', 6, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'dueDate', 1, 'Due date', 'date', 5, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'author', 1, 'author', 'display', 2, 1, NULL, 'User#id#lastname', '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'solvedBy', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'solvedDate', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'contactId', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0);
 
 INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES
 (1,'admin','MyName1','MyLastName1','A', 1),
@@ -585,6 +624,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 6, 139),
 (1, 7, 139),
 (1, 8, 139),
+(1, 10, 139),
 
 (2, 1, 0),
 (2, 2, 1),
@@ -592,6 +632,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (2, 6, 0),
 (2, 7, 0),
 (2, 8, 0),
+(2, 10, 0),
 
 (3, 1, 139),
 (3, 2, 0),
@@ -599,13 +640,15 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (3, 6, 0),
 (3, 7, 0),
 (3, 8, 0),
+(3, 10, 0),
 
 (4, 1, 1),
 (4, 2, 1),
 (4, 3, 1),
 (4, 6, 1),
 (4, 7, 1),
-(4, 8, 1);
+(4, 8, 1),
+(4, 10, 1);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
@@ -627,6 +670,7 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (7, 1),
 (8, 1),
 (9, 1),
+(10, 1),
 
 (1, 2),
 (2, 2),
@@ -635,6 +679,7 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (7, 2),
 (8, 2),
 (9, 2),
+(10, 2),
 
 (1, 3),
 (6, 3);

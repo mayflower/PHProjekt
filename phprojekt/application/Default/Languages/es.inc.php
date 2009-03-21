@@ -164,6 +164,7 @@ $lang["Gantt"] = "Gantt";
 $lang["Statistic"] = "Estadísticas";
 $lang["Contact"] = "Contactos";
 $lang["Module Designer"] = "Diseñador de Módulos";
+$lang["Helpdesk"] = "Incidencias";
 
 // Titles
 $lang["Search results"] = "Resultados de la búsqueda";
