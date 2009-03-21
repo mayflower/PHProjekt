@@ -200,10 +200,21 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $converted[]   = $entry;
                     break;
                 case 'display':
-                    $entry             = $this->_convertStandard($field);
-                    $entry['type']     = 'display';
-                    $entry['readOnly'] = true;
-                    $converted[]       = $entry;
+                    // Has it an Id value that should be translated into a descriptive String?
+                    if ($field->formRange == '') {
+                        // No
+                        $entry             = $this->_convertStandard($field);
+                        $entry['type']     = 'display';
+                        $entry['readOnly'] = true;
+                        $converted[]       = $entry;
+                        
+                    } else {
+                        // Yes
+                        $entry             = $this->_convertSelect($field);
+                        $entry['type']     = 'display';
+                        $entry['readOnly'] = true;
+                        $converted[]       = $entry;
+                    }
                     break;
                 case 'upload':
                     $entry         = $this->_convertStandard($field);

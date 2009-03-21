@@ -75,6 +75,21 @@ class Phprojekt_Converter_Text
                 $temp  = $model->$field['key'];
                 $value = substr($temp, 0, strrpos($temp, ":"));
                 break;
+            case 'display':
+                // Search if there is an Id value that should be translated into a descriptive String
+                foreach ($field['range'] as $range) {
+                    if (is_array($range)) {
+                        if ($range['id'] == $model->$field['key']) {
+                            $value = $range['name'];
+                            break 2;
+                        }
+                    }
+                }
+                if ($value == '') {
+                    $value = $model->$field['key'];
+                }
+                break;
+                
             case 'text':
             case 'textarea':
             case 'date':

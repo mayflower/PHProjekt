@@ -187,6 +187,43 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
+                case 'display':
+                    var range = meta[i]["range"];
+                    // Has it values for translating an Id into a descriptive String?
+                    if (range[0] != undefined) {
+                        // Yes
+                        var opts  = new Array();
+                        var vals  = new Array();
+                        var j     = 0;
+                        for (j in range){
+                            vals.push(range[j]["id"]);
+                            opts.push(range[j]["name"]);
+                            j++;
+                        }
+                        this.gridLayout.push({
+                            name:     meta[i]["label"],
+                            field:    meta[i]["key"],
+                            styles:   "text-align: center;",
+                            type:     phpr.grid.cells.Select,
+                            width:    porcent,
+                            options:  opts,
+                            values:   vals,
+                            editable: false
+                        });
+                    } else {
+                        // No
+                        this.gridLayout.push({
+                            width:     porcent,
+                            name:      meta[i]["label"],
+                            field:     meta[i]["key"],
+                            type:      dojox.grid.cells.Input,
+                            styles:    "text-align: center;",
+                            formatter: phpr.grid.formatText,
+                            editable:  false
+                        });
+                    }
+                    break;
+
                 default:
                     this.gridLayout.push({
                         width:     porcent,
