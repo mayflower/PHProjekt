@@ -169,7 +169,7 @@ final class Default_Helpers_Save
     {
         foreach ($params as $k => $v) {
             if (isset($model->$k)) {
-                // dont allow to set the id on save, since is doit by the activerecord
+                // Don't allow to set the id on save, since it is done by the ActiveRecord
                 if (!in_array($k, array('id'))) {
                     $model->$k = $v;
                 }
@@ -221,7 +221,7 @@ final class Default_Helpers_Save
             $right['download'] = true;
             $right['admin']    = true;
 
-            // Only set the full access if is a new item
+            // Only set the full access if it is a new item
             if ($newItem) {
                 $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
             }
@@ -282,7 +282,7 @@ final class Default_Helpers_Save
 
             $return = self::_saveTree($model, $params, $parentId);
 
-            //Send mail notification?
+            // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
                     $mail = new Phprojekt_Mail_Notification('UTF-8');
@@ -296,7 +296,7 @@ final class Default_Helpers_Save
         if ($model instanceof Phprojekt_Model_Interface) {
             $return = self::_saveModel($model, $params);
 
-            //Send mail notification?
+            // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
                     $mail = new Phprojekt_Mail_Notification('UTF-8');
@@ -312,7 +312,7 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Check if the user have write access to the parent project
+     * Check if the user has write access to the parent project
      *
      * @param integer $projectId The project Id to check
      *
@@ -338,7 +338,7 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Check if the parent project have this module enabled
+     * Check if the parent project has this module enabled
      *
      * @param integer $projectId The project Id to check
      *
@@ -370,7 +370,7 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Check if the user have write access to the item if is not a global module
+     * Check if the user has write access to the item if is not a global module
      *     *
      * @param Phprojekt_Model_Interface $model      The model to save
      * @param string                    $moduleName The current module
