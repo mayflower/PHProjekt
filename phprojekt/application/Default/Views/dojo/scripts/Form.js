@@ -374,7 +374,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     break;
                 case 'display':
                     this.formdata[itemtab] += this.fieldTemplate.displayFieldRender(itemlabel, itemid, itemvalue,
-                        itemhint);
+                            itemhint, itemrange);
                     break;
                 default:
                     this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,

@@ -261,8 +261,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($fieldDefinition as $key => $field) {
-            $value = Phprojekt_Converter_Text::convert($this->_model, $field);
-
+            $value        = Phprojekt_Converter_Text::convert($this->_model, $field);
             $fieldsView[] = array('label' => $field['label'],
                                   'value' => $value);
         }
@@ -282,8 +281,21 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                 if ($field['key'] == $this->_changes[$i]['field']) {
 
                     $this->_changes[$i]['field'] = $field['label'];
-                    // Is the field of a type that should be converted into a string?
+
+                    // Is the field of a type that should be translated from an Id into a descriptive String?
+                    $convertToString = false;
                     if ($field['type'] == 'selectbox') {
+                        $convertToString = true;
+                    } else if($field['type'] == 'display' && is_array($field['range'])) {
+                        foreach ($field['range'] as $range) {
+                            if (is_array($range)) {
+                                $convertToString = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($convertToString) {
                         // Yes, so translate it into the appropriate meaning
                         foreach ($field['range'] as $range) {
                             // Try to replace oldValue Integer with the String
