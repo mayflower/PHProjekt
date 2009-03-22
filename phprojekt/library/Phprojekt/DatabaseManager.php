@@ -204,17 +204,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     if ($field->formRange == '') {
                         // No
                         $entry             = $this->_convertStandard($field);
-                        $entry['type']     = 'display';
-                        $entry['readOnly'] = true;
-                        $converted[]       = $entry;
-                        
                     } else {
                         // Yes
                         $entry             = $this->_convertSelect($field);
-                        $entry['type']     = 'display';
-                        $entry['readOnly'] = true;
-                        $converted[]       = $entry;
                     }
+                    $entry['type']     = 'display';
+                    $entry['readOnly'] = true;
+                    $converted[]       = $entry;
                     break;
                 case 'upload':
                     $entry         = $this->_convertStandard($field);
