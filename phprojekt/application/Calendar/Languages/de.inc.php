@@ -39,6 +39,7 @@ $lang["October"] = "Oktober";
 $lang["November"] = "November";
 $lang["December"] = "Dezember";
 
+$lang["Participants"] = "Teilnehmer";
 $lang["Recurrence"] = "Wiederholung";
 $lang["Repeats"] = "Serientyp";
 $lang["Interval"] = "Intervall";
