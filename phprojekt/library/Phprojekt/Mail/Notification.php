@@ -268,8 +268,6 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         $this->_view->mainFields = $fieldsView;
 
-        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-
         // The following algorithm loops inside $this->_changes and does the following:
         // * Translates the name of the field
         // * Searches Integer values that should be converted into Strings and converts them
