@@ -183,7 +183,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             participants:           participants
         });
 
-        this.addTab(participantData, 'tabParticipant', 'Participant', 'participantFormTab');
+        this.addTab(participantData, 'tabParticipant', 'Participants', 'participantFormTab');
 
         // Add button for participant
         var params = {
