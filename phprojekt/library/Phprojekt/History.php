@@ -215,9 +215,9 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 
         $datetime = null;
         $action   = null;
-        $results  = $this->fetchAll($where, 'id DESC');
+        $history  = $this->fetchAll($where, 'id DESC');
         $stop     = false;
-        foreach ($results as $row) {
+        foreach ($history as $row) {
             if (!$stop) {
                 if (null == $datetime) {
                     $datetime = $row->datetime;
@@ -244,7 +244,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-
+        $result = array_reverse($result);
         return $result;
     }
 
