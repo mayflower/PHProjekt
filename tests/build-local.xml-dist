@@ -11,11 +11,17 @@
     <property name="phpunit.log" location="${log.dir}/phpunit.xml" />
     <property name="project.configfile" location="${test.dir}/configuration.ini" />
     
+    <!-- Configure these values to fit your installation -->
+    <!-- Where does Zend_Cache put its files? -->
+    <property name="project.zendcache.dir" location="/tmp" />
+
+    <!-- How to connect to the mysql database? -->   
     <property name="database.params.host" value="localhost" />
     <property name="database.params.dbname" value="SET_DATABASE_HERE" />
     <property name="database.params.username" value="SET_USERNAME_HERE" />
     <property name="database.params.password" value="SET_PASSWORD_HERE" />
     
+    <!-- Where is the test data? -->
     <property name="database.testdatafile" location="${basedir}/test_database.sql" />
 
     
@@ -56,6 +62,9 @@ itemsPerPage         = 3;
         <exec dir="${test.dir}" executable="php" failonerror="false">
             <arg value="${phpunit.file}" />
         </exec>
+        <delete>
+            <fileset dir="${project.zendcache.dir}" includes="zend_cache*" />
+        </delete>
     </target>
     
     <target name="dbupdate" description="Set up the test db">
