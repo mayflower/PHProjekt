@@ -1,0 +1,83 @@
+<project name="phprojekt6" default="build" basedir=".">
+    
+    <property name="project.name" value="phprojekt6" />
+    <property name="project.dir" location="${basedir}/.." />
+    
+    <property name="test.dir" location="${project.dir}/tests/UnitTests" />
+    <property name="log.dir" location="${project.dir}/tests/log" />
+    
+    <property name="phpunit.class" value="AllTests" />
+    <property name="phpunit.file" location="${test.dir}/AllTests.php" />
+    <property name="phpunit.log" location="${log.dir}/phpunit.xml" />
+    <property name="project.configfile" location="${test.dir}/configuration.ini" />
+    
+    <property name="database.params.host" value="localhost" />
+    <property name="database.params.dbname" value="SET_DATABASE_HERE" />
+    <property name="database.params.username" value="SET_USERNAME_HERE" />
+    <property name="database.params.password" value="SET_PASSWORD_HERE" />
+    
+    <property name="database.testdatafile" location="${basedir}/test_database.sql" />
+
+    
+    <target name="prepare" description="Prepare the build process">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${log.dir}" />
+        </delete>
+        <mkdir dir="${log.dir}" />
+        
+        <touch file="${phpunit.log}" />
+    </target>
+    
+    <target name="configure" description="Create configuration.ini file">
+        <echo file="${project.configfile}" append="false">[testing-mysql : general]
+database.adapter            = "Pdo_Mysql"
+database.params.host        = "${database.params.host}"
+database.params.dbname      = "${database.params.dbname}"
+database.params.username    = "${database.params.username}"
+database.params.password    = "${database.params.password}"
+
+[testing-pgsql: general]
+database.adapter            = "Pdo_Pgsql"
+database.params.host        = "localhost"
+database.params.dbname      = "phprojekt-mvc-testing"
+database.params.username    = "phprojekt"
+database.params.password    = "phprojekt"
+
+[general]
+applicationDir       = "${project.dir}"
+
+log.debug.filename   = "${log.dir}/debug.log"
+
+itemsPerPage         = 3;
+</echo>
+    </target>
+
+    <target name="test" depends="dbupdate" description="Run the PHPUnit tests">
+        <exec dir="${test.dir}" executable="php" failonerror="false">
+            <arg value="${phpunit.file}" />
+        </exec>
+    </target>
+    
+    <target name="dbupdate" description="Set up the test db">
+        <fail message="You have not configured the database access in the build file.">
+            <condition>
+                <or>
+                    <equals arg1="${database.params.dbname}" arg2="SET_DATABASE_HERE" />
+                    <equals arg1="${database.params.username}" arg2="SET_USERNAME_HERE" />
+                    <equals arg1="${database.params.password}" arg2="SET_PASSWORD_HERE" />
+                </or>
+            </condition>
+        </fail>
+        <exec executable="/usr/bin/mysql">
+            <arg line="--user=${database.params.username}" />
+            <arg line="--password=${database.params.password}" />
+            <arg line="--database=${database.params.dbname}" />
+            <redirector input="${database.testdatafile}" />
+        </exec>
+    </target>
+    
+    <target name="build"
+        depends="prepare,configure,dbupdate,test"
+        description="Build the project" />
+    
+</project>
