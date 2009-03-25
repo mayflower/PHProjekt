@@ -259,59 +259,76 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     {
         $this->_view     = Phprojekt::getInstance()->getView();
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
-        foreach ($fieldDefinition as $key => $field) {
-            $value        = Phprojekt_Converter_Text::convert($this->_model, $field);
-            $fieldsView[] = array('label' => $field['label'],
-                                  'value' => $value);
+        $action          = $this->_changes[0]['action'];
+        
+        // The model has an exception to define the body 'Current data' contents?
+        if (!method_exists($this->_model, 'getNotificationBodyData')) {
+            // No
+            foreach ($fieldDefinition as $key => $field) {
+                $value        = Phprojekt_Converter_Text::convert($this->_model, $field);
+                $fieldsView[] = array('label' => $field['label'],
+                                      'value' => $value);
+            }
+        } else {
+            // Yes
+            $fieldsView = $this->_model->getNotificationBodyData();
         }
-
         $this->_view->mainFields = $fieldsView;
 
-        // The following algorithm loops inside $this->_changes and does the following:
-        // * Translates the name of the field
-        // * Searches Integer values that should be converted into Strings and converts them
+        if($action == self::LAST_ACTION_EDIT) {
+            // The model has an exception to define the body 'Changes done' contents?
+            if (!method_exists($this->_model, 'getNotificationBodyChanges')) {
+                // No
+            
+                // The following algorithm loops inside $this->_changes and does the following:
+                // * Translates the name of the field
+                // * Searches Integer values that should be converted into Strings and converts them
 
-        //Loop in every change done
-        for ($i = 0; $i < count($this->_changes); $i++) {
-            foreach ($fieldDefinition as $field) {
-                // Find the field definition for the field that has been modified
-                if ($field['key'] == $this->_changes[$i]['field']) {
+                // Iterate in every change done
+                for ($i = 0; $i < count($this->_changes); $i++) {
+                    foreach ($fieldDefinition as $field) {
+                        // Find the field definition for the field that has been modified
+                        if ($field['key'] == $this->_changes[$i]['field']) {
 
-                    $this->_changes[$i]['field'] = $field['label'];
+                            $this->_changes[$i]['field'] = $field['label'];
 
-                    // Is the field of a type that should be translated from an Id into a descriptive String?
-                    $convertToString = false;
-                    if ($field['type'] == 'selectbox') {
-                        $convertToString = true;
-                    } else if($field['type'] == 'display' && is_array($field['range'])) {
-                        foreach ($field['range'] as $range) {
-                            if (is_array($range)) {
+                            // Is the field of a type that should be translated from an Id into a descriptive String?
+                            $convertToString = false;
+                            if ($field['type'] == 'selectbox') {
                                 $convertToString = true;
-                                break;
+                            } else if($field['type'] == 'display' && is_array($field['range'])) {
+                                foreach ($field['range'] as $range) {
+                                    if (is_array($range)) {
+                                        $convertToString = true;
+                                        break;
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    if ($convertToString) {
-                        // Yes, so translate it into the appropriate meaning
-                        foreach ($field['range'] as $range) {
-                            // Try to replace oldValue Integer with the String
-                            if ($range['id'] == $this->_changes[$i]['oldValue']) {
-                                $this->_changes[$i]['oldValue'] = trim($range['name']);
-                            }
-                            // Try to replace newValue Integer with the String
-                            if ($range['id'] == $this->_changes[$i]['newValue']) {
-                                $this->_changes[$i]['newValue'] = trim($range['name']);
+                            if ($convertToString) {
+                                // Yes, so translate it into the appropriate meaning
+                                foreach ($field['range'] as $range) {
+                                    // Try to replace oldValue Integer with the String
+                                    if ($range['id'] == $this->_changes[$i]['oldValue']) {
+                                        $this->_changes[$i]['oldValue'] = trim($range['name']);
+                                    }
+                                    // Try to replace newValue Integer with the String
+                                    if ($range['id'] == $this->_changes[$i]['newValue']) {
+                                        $this->_changes[$i]['newValue'] = trim($range['name']);
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                // Yes
+                $this->_changes = $this->_model->getNotificationBodyChanges($this->_changes);
             }
         }
 
         // Is it an ADD or EDIT action?
-        switch ($this->_changes[0]['action']) {
+        switch ($action) {
             case self::LAST_ACTION_ADD:
                 $actionLabel          = "created";
                 $this->_view->changes = "";
