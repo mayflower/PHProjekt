@@ -67,6 +67,23 @@ class Helpdesk_Models_Helpdesk extends Phprojekt_Item_Abstract
             // No - Send it to the creator of the ticket
             $recipients = $this->author;
         }
+
+        // If the item has been reassigned, add the previous assigned user to the recipients
+        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $changes = $history->getLastHistoryData($this);
+        if ($changes[0]['action'] == 'edit') {
+            foreach ($changes as $change) {
+                if ($change['field'] == 'assigned') {
+                    // The user has changed
+                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0' 
+                        && $change['oldValue'] != null) {
+                        $recipients .= "," . $change['oldValue'];
+                        break;
+                    } 
+                }
+            }
+        }
+
         return $recipients;
     }
 }

@@ -44,6 +44,23 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
         if ($this->userId != 0 && $this->userId != $this->ownerId) {
             $recipients .= "," . $this->userId;
         }
+
+        // If the todo has been reassigned, add the previous assigned user to the recipients
+        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $changes = $history->getLastHistoryData($this);
+        if ($changes[0]['action'] == 'edit') {
+            foreach ($changes as $change) {
+                if ($change['field'] == 'userId') {
+                    // The user has changed
+                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0' 
+                        && $change['oldValue'] != null) {
+                        $recipients .= "," . $change['oldValue'];
+                        break;
+                    } 
+                }
+            }
+        }
+
         return $recipients;
     }
 }

@@ -63,6 +63,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     const EVENT_TYPE_ANUAL = 5;
 
+    private $_notifParticipants;
+    private $_startDate;
+
     /**
      * Save or inserts an event. It inserts one envent by participant
      *
@@ -78,8 +81,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     public static function saveEvent($request, $id, $startDate, $rrule, $participants, $multipleEvents)
     {
         $userId = Phprojekt_Auth::getUserId();
-        $model  = Phprojekt_Loader::getModel('Calendar', 'Calendar');
-
         $participantsList = array();
 
         // Getting requested dates for the serial meeting (if it is serial)
@@ -107,9 +108,28 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
         if ($id == 0) {
+            $sendNotification = false;
+            if (array_key_exists('sendNotification', $request)) {
+                if ($request['sendNotification'] == 'on') {
+                    $sendNotification = true;
+                    $request['sendNotification'] = '';
+                }
+            }
+
             // New Event
+            $totalParticipants = count($participantsList);
+            $participantNumber = 0;
             foreach ($participantsList as $participantId) {
-                $returnId = self::_saveNewEvent($request, $eventDates, $participantId);
+                $participantNumber ++;
+
+                // Last participant?
+                if ($participantNumber == $totalParticipants) {
+                    $lastParticipant = true;
+                } else {
+                    $lastParticipant = false;
+                }
+                $returnId = self::_saveNewEvent($request, $eventDates, $participantId, $lastParticipant,
+                                                $sendNotification, $participantsList);
                 if ($id == 0) {
                     $id = $returnId;
                 }
@@ -175,7 +195,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     /**
      * Get all the participants of one event
      *
-     * @return void
+     * @return string
      */
     public function getAllParticipants()
     {
@@ -313,12 +333,28 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return integer
      */
-    private function _saveNewEvent($request, $eventDates, $participantId)
+    private function _saveNewEvent($request, $eventDates, $participantId, $lastParticipant, $sendNotification,
+                                   $participantsList)
     {
         static $parentId = null;
-        $model = Phprojekt_Loader::getModel('Calendar', 'Calendar');
 
+        $model                     = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+        $model->_startDate         = $request['startDate'];
+        $model->_notifParticipants = implode(",", $participantsList);
+
+        $totalEvents = count($eventDates);
+        $eventNumber = 0;
+        $lastEvent   = false;
         foreach ($eventDates as $oneDate) {
+            $eventNumber ++;
+            // Last participant and last event? -> check if it was requested to send notification
+            if ($eventNumber == $totalEvents) {
+                $lastEvent = true;
+            }
+            if ($lastParticipant & $lastEvent & $sendNotification) {
+                $request['sendNotification'] = 'on';
+            }
+
             $clone    = clone($model);
             $parentId = self::_saveEvent($request, $clone, $oneDate, $participantId, $parentId);
         }
@@ -342,7 +378,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     private function _updateMultipleEvents($request, $id, $eventDates, $participantsList)
     {
-        $model = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+        $model                     = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+        $model->_startDate         = $request['startDate'];
+        $model->_notifParticipants = implode(",", $participantsList);
+
         $clone = clone($model);
 
         $addParticipants = true;
@@ -360,7 +399,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $currentParticipants = array();
         $records             = $model->fetchAll($where);
         foreach ($records as $record) {
-            $found                                       = false;
+            $found = false;
             if (null === $record->deleted && null !== $record->rrule) {
                 $currentParticipants[$record->participantId] = $record->participantId;
             }
@@ -369,6 +408,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 if (!$found && $date == $record->startDate) {
                     // Update old entry of recurrence
                     self::_saveEvent($request, $record, $oneDate, $record->participantId, $record->parentId);
+
+                    // If notification email was requested, then send it just once
+                    $request['sendNotification'] = '';
+
                     $found = true;
                     break;
                 }
@@ -398,6 +441,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     foreach ($participantsList as $participantId) {
                         $newModel = clone($clone);
                         self::_saveEvent($request, $newModel, $oneDate, $participantId, self::getRootEventId($model));
+
+                        // If notification email was requested, then send it just once
+                        $request['sendNotification'] = '';
                     }
                 }
             }
@@ -438,6 +484,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                             $newModel = clone($clone);
                             $parentId = self::getRootEventId($model);
                             self::_saveEvent($request, $newModel, $oneDate, $participantId, $parentId);
+
+                            // If notification email was requested, then send it just once
+                            $request['sendNotification'] = '';
                         }
                     }
                 }
@@ -457,7 +506,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     private function _updateSingleEvent($request, $id, $eventDates, $participantsList)
     {
-        $model = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+        $model                     = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+        $model->_startDate         = $request['startDate'];
+        $model->_notifParticipants = implode(",", $participantsList);
+
         $clone = clone($model);
 
         $addParticipants = true;
@@ -465,6 +517,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         $oneDate = $eventDates[0];
         self::_saveEvent($request, $model, $oneDate, $model->participantId, $model->parentId);
+
+        // If notification email was requested, then send it just once
+        $request['sendNotification'] = '';
 
         if (!self::_isOwner($model)) {
             // Save only the own events under the parentId
@@ -589,15 +644,322 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if (null === $model->uid) {
             $model->uid = md5($date . $participantId . time());
         }
-
         Default_Helpers_Save::save($model, $request);
 
         // Update the event for save the parentId with the id
         if (null === $parentId) {
+            $request['sendNotification'] = '';
             $request['parentId'] = $model->id;
             Default_Helpers_Save::save($model, $request);
         }
 
         return $model->parentId;
+    }
+
+    /**
+     * Gets all the recipients for the mail notification
+     *
+     * @return string
+     */
+    public function getNotificationRecipients()
+    {
+        return $this->_notifParticipants;
+    }
+
+    /**
+     * Returns the body 'Current data' part of the Notification email
+     *
+     * @return array
+     */
+    public function getNotificationBodyData()
+    {
+        $bodyData   = Array();
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Title'),
+                            'value' => $this->title);
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Notes'),
+                            'value' => $this->notes);
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('startDate'),
+                            'value' => $this->_translateDate($this->_startDate));
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start Time'),
+                            'value' => substr($this->startTime, 0, 5));
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End Time'),
+                            'value' => substr($this->endTime, 0, 5));
+
+        $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $participants      = split(",", $this->_notifParticipants);
+        $participantsValue = "";
+        $i                 = 0;
+        $lastItem          = count($participants);
+
+        // Participants field 
+        foreach($participants as $participant) {
+            $i++;
+            $phpUser->find((int) $participant);
+            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
+            if (!empty($fullname)) {
+                $participantsValue .= $fullname . ' (' . $phpUser->username . ')';
+            } else {
+                $participantsValue .= $phpUser->username;
+            }
+            if ($i < $lastItem) {
+                $participantsValue .= ", "; 
+            }
+        }
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Participants'),
+                            'value' => $participantsValue);
+
+        if ($this->rrule != null) {
+            $bodyData = array_merge($bodyData, $this->_getRruleDescriptive($this->rrule));
+        }
+
+        return $bodyData;
+    }
+
+    /**
+     * Returns the body 'Changes done' part of the Notification email
+     *
+     * @return array
+     */
+    public function getNotificationBodyChanges($changes) {
+        $fieldDefinition = $this->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+
+        // Iterate in every change done
+        for ($i = 0; $i < count($changes); $i++) {
+
+            // Translate the name of the field
+            foreach ($fieldDefinition as $field) {
+                // Find the field definition for the field that has been modified
+                if ($field['key'] == $changes[$i]['field']) {
+                    $changes[$i]['field'] = $field['label'];
+                }
+            }
+
+            // Recurrence
+            if ($changes[$i]['field'] == 'rrule') {
+                $oldRruleEmpty = false;
+                $newRruleEmpty = false;
+                if ($changes[$i]['oldValue'] != null) {
+                    $oldRrule = $this->_getRruleDescriptive($changes[$i]['oldValue']);
+                } else {
+                    $oldRruleEmpty = true;
+                }
+                if ($changes[$i]['newValue'] != null) {
+                    $newRrule = $this->_getRruleDescriptive($changes[$i]['newValue']);
+                } else {
+                    $newRruleEmpty = true;
+                }
+
+                // FIELDS: Repeats, Interval and Until
+                for ($i=0; $i < 3; $i++) {
+                    if (!$oldRruleEmpty) {
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " .
+                            $oldRrule[$i]['label'];
+                    } else {
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " .
+                            $newRrule[$i]['label'];
+                    }
+                    if (!$oldRruleEmpty) {
+                        $fieldOldValue = $oldRrule[$i]['value'];
+                    } else {
+                        $fieldOldValue = "";
+                    }
+                    if (!$newRruleEmpty) {
+                        $fieldNewValue = $newRrule[$i]['value'];
+                    } else {
+                        $fieldNewValue = "";
+                    }
+                    if ($fieldOldValue != $fieldNewValue) {
+                        $changes[] = Array('field'    => $fieldName,
+                                           'oldValue' => $fieldOldValue,
+                                           'newValue' => $fieldNewValue);
+                    }
+                }
+
+                // FIELD: Weekday (optional)
+                $oldWeekDayExists = false;
+                if (!$oldRruleEmpty) {
+                    if (count($oldRrule) == 4) {
+                        $oldWeekDayExists = true;
+                    }
+                }
+                $newWeekDayExists = false;
+                if (!$newRruleEmpty) {
+                    if (count($newRrule) == 4) {
+                        $newWeekDayExists = true;
+                    }
+                }
+                if ($oldWeekDayExists || $newWeekDayExists) {
+                    if (!$oldRruleEmpty) {
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " .
+                            $oldRrule[3]['label'];
+                        $fieldOldValue = $oldRrule[3]['value'];
+                    } else {
+                        $fieldOldValue = "";
+                    }
+                    if (!$newRruleEmpty) {
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " .
+                            $newRrule[3]['label'];
+                        $fieldNewValue = $newRrule[3]['value'];
+                    } else {
+                        $fieldOldValue = "";
+                    }
+
+                    if ($fieldOldValue != $fieldNewValue) {
+                        $changes[] = Array('field'    => $fieldName,
+                                           'oldValue' => $fieldOldValue,
+                                           'newValue' => $fieldNewValue);
+                    }
+                }
+            } else if ($changes[$i]['field'] == 'startDate') {
+                $changes[$i]['oldValue'] = $this->_translateDate($changes[$i]['oldValue']);
+                $changes[$i]['newValue'] = $this->_translateDate($changes[$i]['newValue']);
+            }
+        }
+
+        // Take out the original confusing 'rrule' element, if it is there
+        for($i = 0; $i < count($changes); $i++) {
+            if ($changes[$i]['field'] == 'rrule') {
+                unset($changes[$i]);
+            }
+        }
+
+        return $changes;
+    }
+
+    /**
+     * Returns the body 'Changes done' part of the Notification email
+     *
+     * @param string   $rrule      String with the recurrence 'rrule' field, as it is saved in the DB.
+     * 
+     * @return array
+     */
+    private function _getRruleDescriptive($rrule) {
+        $tmp1     = split(";", $rrule);
+        $tmp2     = split("=", $tmp1[0]);
+        $freq     = $tmp2[1];
+        $tmp2     = split("=", $tmp1[1]);
+        $until    = $tmp2[1];
+        $tmp2     = split("=", $tmp1[2]);
+        $interval = $tmp2[1];
+        $tmp2     = split("=", $tmp1[3]);
+        $byday    = $tmp2[1];
+
+        $freq = ucfirst(strtolower($freq));
+        $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Repeats'),
+                               'value' => Phprojekt::getInstance()->translate($freq));
+        $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Interval'),
+                               'value' => Phprojekt::getInstance()->translate($interval));
+
+        if ($until != null) {
+            $year      = substr($until, 0, 4);
+            $month     = substr($until, 4, 2);
+            $dayNum    = substr($until, 6, 2);
+            $untilDate = mktime(0, 0, 0, $month, $dayNum, $year);
+            $dayDesc   = date("D", $untilDate);
+            $monthDesc = date("M", $untilDate);
+            $untilDesc = $dayDesc . " " . $monthDesc . " " . $dayNum . " " . $year;
+
+            $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Until'),
+                                  'value' => $this->_translateDate($untilDesc));
+        }
+
+        if ($byday != null) {
+            switch ($byday) {
+                case 'MO':
+                    $weekDay = "Monday";
+                    break;
+                case 'TU':
+                    $weekDay = "Tuesday";
+                    break;
+                case 'WE':
+                    $weekDay = "Wednesday";
+                    break;
+                case 'TH':
+                    $weekDay = "Thursday";
+                    break;
+                case 'FR':
+                    $weekDay = "Friday";
+                    break;
+                case 'SA':
+                    $weekDay = "Saturday";
+                    break;
+                case 'SU':
+                    $weekDay = "Sunday";
+                    break;
+            }
+
+            $rruleFields[] = array('label' => 'Weekdays',
+                                   'value' => Phprojekt::getInstance()->translate($weekDay));
+        }
+
+    return $rruleFields;
+    }
+
+    /**
+     * Converts the date format and language, from an english '2009-04-25' or 'Sat Apr 25 2009' to
+     * 'Wednesday - March 24 2009' in the according language. 
+     *
+     * @param string  $date      String with the original date in english
+     * 
+     * @return string
+     */
+    private function _translateDate($date)
+    {
+        if (strlen($date) == 10) {
+            // '2009-04-25' style
+            $year      = (int) substr($date, 0, 4);
+            $month     = (int) substr($date, 5, 2);
+            $day       = (int) substr($date, 8, 2);
+        } else {
+            // 'Sat Apr 25 2009' style
+            $monthShort = substr($date, 4, 3);
+            $day        = (int) substr($date, 8, 2);
+            $year       = (int) substr($date, 11, 4);
+
+            switch ($monthShort) {
+                case 'Jan':
+                    $month = 1;
+                    break;
+                case 'Feb':
+                    $month = 2;
+                    break;
+                case 'Mar':
+                    $month = 3;
+                    break;
+                case 'Apr':
+                    $month = 4;
+                    break;
+                case 'May':
+                    $month = 5;
+                    break;
+                case 'Jun':
+                    $month = 6;
+                    break;
+                case 'Jul':
+                    $month = 7;
+                    break;
+                case 'Ago':
+                    $month = 8;
+                    break;
+                case 'Sep':
+                    $month = 9;
+                    break;
+                case 'Oct':
+                    $month = 10;
+                    break;
+                case 'Nov':
+                    $month = 11;
+                    break;
+                case 'Dec':
+                    $month = 12;
+                    break;
+            }
+        }
+        $dateUnix  = mktime(0, 0, 0, $month, $day, $year);
+        $dayDesc   = Phprojekt::getInstance()->translate(date("l", $dateUnix));
+        $monthDesc = Phprojekt::getInstance()->translate(date("F", $dateUnix));
+        $dateString = $dayDesc . " - " . $monthDesc . " " . $day . " " . $year;
+
+        return $dateString;
     }
 }
