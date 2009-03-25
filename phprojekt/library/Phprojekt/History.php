@@ -244,8 +244,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-        $result = array_reverse($result);
-        return $result;
+        return array_reverse($result);
     }
 
     /**

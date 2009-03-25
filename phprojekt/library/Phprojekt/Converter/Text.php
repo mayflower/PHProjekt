@@ -81,7 +81,7 @@ class Phprojekt_Converter_Text
                     if (is_array($range)) {
                         if ($range['id'] == $model->$field['key']) {
                             $value = $range['name'];
-                            break 2;
+                            break;
                         }
                     }
                 }
@@ -89,7 +89,6 @@ class Phprojekt_Converter_Text
                     $value = $model->$field['key'];
                 }
                 break;
-                
             case 'text':
             case 'textarea':
             case 'date':

@@ -595,12 +595,11 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Adds specific rights to the params that come from the view before saving them into a new or existing item.
-     * To see this function in action, look its call inside functions jsonSaveAction and jsonSaveMultipleAction
-     * of the model of Helpdesk module.
      *
      * @return void / array
      */
-    public function addParamsRight($request, $right, $user) {
+    public function addParamsRight($request, $right, $user)
+    {
         if (gettype($request) == 'object') {
             // Called from jsonSaveAction - The $request is an object 'Zend_Controller_Request_Abstract'
             // Adds the Id of the user, just in case it is no there
@@ -612,7 +611,6 @@ class IndexController extends Zend_Controller_Action
             $checkAccess        = $request->getParam($right);
             $checkAccess[$user] = 1;
             $request->setParam($right, $checkAccess);
-
         } else if (gettype($request) == 'array') {
             // Called from jsonMultipleSaveAction - The $request is an array
             // Adds the Id of the user, just in case it is no there
@@ -623,7 +621,7 @@ class IndexController extends Zend_Controller_Action
 
             // Adds the specific right
             if (!array_key_exists($right, $request)) {
-                $request[$right]        = Array();
+                $request[$right] = Array();
             }
             $request[$right][$user] = 1;
 

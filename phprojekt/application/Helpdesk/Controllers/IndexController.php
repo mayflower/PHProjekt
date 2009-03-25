@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -50,11 +50,9 @@ class Helpdesk_IndexController extends IndexController
 
         if (empty($id)) {
             // New item - Adds the author and the date of creation
-            $record = $this->getModelObject();
+            $record         = $this->getModelObject();
             $record->author = Phprojekt_Auth::getUserId();
-            $date           = getdate();
-            $dateString     = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
-            $record->date   = $dateString;
+            $record->date   = date("Y-m-d");
         } else {
             $record   = $this->getModelObject()->find($id);
             if ($record->solvedBy == null) {
@@ -85,15 +83,11 @@ class Helpdesk_IndexController extends IndexController
 
         if (empty($id)) {
             // New item
-            $model      = $this->getModelObject();
-            $message    = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-            $userId     = Phprojekt_Auth::getUserId();
-            $date       = getdate();
-            $dateString = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
+            $model   = $this->getModelObject();
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
             // Fills automatically the author and date of creation
-            $this->getRequest()->setParam('author', $userId);
-            $this->getRequest()->setParam('date', $dateString);
-
+            $this->getRequest()->setParam('author', Phprojekt_Auth::getUserId());
+            $this->getRequest()->setParam('date', date("Y-m-d"));
         } else {
             // Existing item
             $model   = $this->getModelObject()->find($id);
@@ -102,16 +96,14 @@ class Helpdesk_IndexController extends IndexController
             // The author comes as a STRING but must be saved as an INT (and it doesn't change since the item creation)
             $this->getRequest()->setParam('author', $model->author);
 
-            if ($this->getRequest()->getParam('status') != 3) {
+            if ($this->getRequest()->getParam('status') != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
                 // Status != 'Solved' - The solver should be null (the solved date can't be deleted, but should be)
                 $this->getRequest()->setParam('solvedBy', '');
             } else {
-                 // Status 'Solved' - If it has just been changed to this state, save user and date
-                if ($model->status != 3) {
+                // Status 'Solved' - If it has just been changed to this state, save user and date
+                if ($model->status != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
                     $this->getRequest()->setParam('solvedBy', Phprojekt_Auth::getUserId());
-                    $date       = getdate();
-                    $dateString = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
-                    $this->getRequest()->setParam('solvedDate', $dateString);
+                    $this->getRequest()->setParam('solvedDate', date("Y-m-d"));
                 } else {
                     // The solver comes as a STRING but must be saved as an INT (and the Id doesn't change)
                     $this->getRequest()->setParam('solvedBy', $model->solvedBy);
@@ -127,14 +119,13 @@ class Helpdesk_IndexController extends IndexController
                 $this->addParamsRight($this->getRequest(), 'checkReadAccess', $assignedUser);
                 $this->addParamsRight($this->getRequest(), 'checkWriteAccess', $assignedUser);
                 $this->addParamsRight($this->getRequest(), 'checkDownloadAccess', $assignedUser);
-
-            } else {                
+            } else {
                 // Existing item
                 // Has the logged user access to the 'Access' tab?
                 if ($this->getRequest()->getParam('dataAcess') == NULL) {
                     // No
                     // The rights will be added to the Request Params, but also it needs to be added the
-                    // already existing rights for users on this item. Case else, the saving routine deletes all 
+                    // already existing rights for users on this item. Case else, the saving routine deletes all
                     // other rights that the ones added for the assigned user (it happens d
 
                     // 1 - Add already existing rights of the item
@@ -163,7 +154,6 @@ class Helpdesk_IndexController extends IndexController
                     $params = $this->addParamsRight($params, 'checkReadAccess', $assignedUser);
                     $params = $this->addParamsRight($params, 'checkWriteAccess', $assignedUser);
                     $params = $this->addParamsRight($params, 'checkDownloadAccess', $assignedUser);
-
                 } else {
                     // Yes
                     $this->addParamsRight($this->getRequest(), 'checkReadAccess', $assignedUser);
@@ -211,17 +201,14 @@ class Helpdesk_IndexController extends IndexController
             $model = $this->getModelObject()->find((int) $id);
             // Has the status been modified?
             if (array_key_exists('status', $params)) {
-                if ($params['status'] != 3) {
-                    // Status != 'Solved' - The solver should be null. The solved date can't be deleted, but
-                    // should be.
+                if ($params['status'] != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
+                    // Status != 'Solved' - The solver should be null. The solved date can't be deleted, but should be.
                     $params['solvedBy'] = "";
                  } else {
-                     // Status 'Solved' - If it has just been changed to this state, save user and date
-                    if ($model->status != 3) { 
+                    // Status 'Solved' - If it has just been changed to this state, save user and date
+                    if ($model->status != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
                          $params['solvedBy']   = Phprojekt_Auth::getUserId();
-                         $date                 = getdate();
-                         $dateString           = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
-                         $params['solvedDate'] = $dateString;
+                         $params['solvedDate'] = date("Y-m-d");
                      }
                  }
             }
@@ -231,7 +218,7 @@ class Helpdesk_IndexController extends IndexController
                 $assignedUser = $params['assigned'];
                 if ($assignedUser != 0) {
                     // The rights will be added to the $params var, but also it needs to be added to $params, the
-                    // already existing rights for users on this item. Case else, the saving routine deletes all 
+                    // already existing rights for users on this item. Case else, the saving routine deletes all
                     // other rights that the ones added for the assigned user.
 
                     // 1 - Add already existing rights of the item, to $params
