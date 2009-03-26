@@ -367,7 +367,7 @@ class Phprojekt_Table
      *
      * @return array
      */
-    public function getTableFields($tableName, $fields, $keys = array('id'))
+    public function getTableFields($tableName, $fields, $keys = array('primary key' => array('id')))
     {
         try {
             $tableFields = $this->_db->describeTable($tableName);
