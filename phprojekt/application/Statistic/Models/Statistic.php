@@ -75,7 +75,7 @@ class Statistic_Models_Statistic
                 $user = $users->findUserById($record->ownerId);
                 $data['data']['users'][$record->ownerId] = $user->username;
             }
-            if (!isset($data[$record->projectId][$record->ownerId])) {
+            if (!isset($data['data']['rows'][$record->projectId][$record->ownerId])) {
                 $data['data']['rows'][$record->projectId][$record->ownerId] = 0;
             }
             $amount = Timecard_Models_Timecard::getDiffTime($record->amount, '00:00:00');
