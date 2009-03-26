@@ -97,39 +97,8 @@ final class Default_Helpers_Save
                 $node->setParentNode($parentNode);
             }
 
-            $right  = array();
-            $rights = array();
+            $rights = Default_Helpers_Right::getRigths($params, $newItem);
 
-            $right['none']     = true;
-            $right['read']     = true;
-            $right['write']    = true;
-            $right['access']   = true;
-            $right['create']   = true;
-            $right['copy']     = true;
-            $right['delete']   = true;
-            $right['download'] = true;
-            $right['admin']    = true;
-
-            // Only set the full access if is a new item
-            if ($newItem) {
-                $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
-            }
-            if (isset($params['dataAccess'])) {
-                $ids = array_keys($params['dataAccess']);
-                foreach ($ids as $accessId) {
-                    $right = array();
-                    $right['none']     = (isset($params['checkNoneAccess'][$accessId])) ? true : false;
-                    $right['read']     = (isset($params['checkReadAccess'][$accessId])) ? true : false;
-                    $right['write']    = (isset($params['checkWriteAccess'][$accessId])) ? true : false;
-                    $right['access']   = (isset($params['checkAccessAccess'][$accessId])) ? true : false;
-                    $right['create']   = (isset($params['checkCreateAccess'][$accessId])) ? true : false;
-                    $right['copy']     = (isset($params['checkCopyAccess'][$accessId])) ? true : false;
-                    $right['delete']   = (isset($params['checkDeleteAccess'][$accessId])) ? true : false;
-                    $right['download'] = (isset($params['checkDownloadAccess'][$accessId])) ? true : false;
-                    $right['admin']    = (isset($params['checkAdminAccess'][$accessId])) ? true : false;
-                    $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
-                }
-            }
             if (count($rights) > 0) {
                 $node->getActiveRecord()->saveRights($rights);
             }
@@ -208,42 +177,12 @@ final class Default_Helpers_Save
         } else {
             $model->save();
 
-            $right  = array();
-            $rights = array();
+            $rights = Default_Helpers_Right::getRigths($params, $newItem);
 
-            $right['none']     = true;
-            $right['read']     = true;
-            $right['write']    = true;
-            $right['access']   = true;
-            $right['create']   = true;
-            $right['copy']     = true;
-            $right['delete']   = true;
-            $right['download'] = true;
-            $right['admin']    = true;
-
-            // Only set the full access if it is a new item
-            if ($newItem) {
-                $rights[Phprojekt_Auth::getUserId()] = Phprojekt_Acl::convertArrayToBitmask($right);
-            }
-            if (isset($params['dataAccess'])) {
-                $ids = array_keys($params['dataAccess']);
-                foreach ($ids as $accessId) {
-                    $right = array();
-                    $right['none']     = (isset($params['checkNoneAccess'][$accessId])) ? true : false;
-                    $right['read']     = (isset($params['checkReadAccess'][$accessId])) ? true : false;
-                    $right['write']    = (isset($params['checkWriteAccess'][$accessId])) ? true : false;
-                    $right['access']   = (isset($params['checkAccessAccess'][$accessId])) ? true : false;
-                    $right['create']   = (isset($params['checkCreateAccess'][$accessId])) ? true : false;
-                    $right['copy']     = (isset($params['checkCopyAccess'][$accessId])) ? true : false;
-                    $right['delete']   = (isset($params['checkDeleteAccess'][$accessId])) ? true : false;
-                    $right['download'] = (isset($params['checkDownloadAccess'][$accessId])) ? true : false;
-                    $right['admin']    = (isset($params['checkAdminAccess'][$accessId])) ? true : false;
-                    $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
-                }
-            }
             if (count($rights) > 0) {
                 $model->saveRights($rights);
             }
+
             return $model;
         }
     }

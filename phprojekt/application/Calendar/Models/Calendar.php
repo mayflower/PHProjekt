@@ -595,22 +595,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $request['parentId']      = $parentId;
 
         // Add 'read, write and delete' access to the participant
-        $checkNoneAccess     = array();
-        $checkReadAccess     = array();
-        $checkWriteAccess    = array();
-        $checkAccessAccess   = array();
-        $checkCreateAccess   = array();
-        $checkCopyAccess     = array();
-        $checkDeleteAccess   = array();
-        $checkDownloadAccess = array();
-        $checkAdminAccess    = array();
-        $dataAccess          = array();
-
-        // Access for the user
-        $dataAccess[$participantId]        = $participantId;
-        $checkReadAccess[$participantId]   = 1;
-        $checkWriteAccess[$participantId]  = 1;
-        $checkDeleteAccess[$participantId] = 1;
+        $request = Default_Helpers_Right::allowReadWriteDelete($request, $participantId);
 
         // Access for the owner
         if (null !== $model->ownerId) {
@@ -618,28 +603,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         } else {
             $ownerId = Phprojekt_Auth::getUserId();
         }
-        $dataAccess[$ownerId]          = $ownerId;
-        $checkNoneAccess[$ownerId]     = $ownerId;
-        $checkReadAccess[$ownerId]     = $ownerId;
-        $checkWriteAccess[$ownerId]    = $ownerId;
-        $checkAccessAccess[$ownerId]   = $ownerId;
-        $checkCreateAccess[$ownerId]   = $ownerId;
-        $checkCopyAccess[$ownerId]     = $ownerId;
-        $checkDeleteAccess[$ownerId]   = $ownerId;
-        $checkDownloadAccess[$ownerId] = $ownerId;
-        $checkAdminAccess[$ownerId]    = $ownerId;
-
-        // Set the access
-        $request['dataAccess']          = $dataAccess;
-        $request['checkNoneAccess']     = $checkNoneAccess;
-        $request['checkReadAccess']     = $checkReadAccess;
-        $request['checkWriteAccess']    = $checkWriteAccess;
-        $request['checkAccessAccess']   = $checkAccessAccess;
-        $request['checkCreateAccess']   = $checkCreateAccess;
-        $request['checkCopyAccess']     = $checkCopyAccess;
-        $request['checkDeleteAccess']   = $checkDeleteAccess;
-        $request['checkDownloadAccess'] = $checkDownloadAccess;
-        $request['checkAdminAccess']    = $checkAdminAccess;
+        $request = Default_Helpers_Right::allowAll($request, $ownerId);
 
         if (null === $model->uid) {
             $model->uid = md5($date . $participantId . time());
@@ -691,7 +655,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $i                 = 0;
         $lastItem          = count($participants);
 
-        // Participants field 
+        // Participants field
         foreach($participants as $participant) {
             $i++;
             $phpUser->find((int) $participant);
@@ -702,7 +666,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $participantsValue .= $phpUser->username;
             }
             if ($i < $lastItem) {
-                $participantsValue .= ", "; 
+                $participantsValue .= ", ";
             }
         }
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Participants'),
@@ -830,7 +794,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Returns the body 'Changes done' part of the Notification email
      *
      * @param string   $rrule      String with the recurrence 'rrule' field, as it is saved in the DB.
-     * 
+     *
      * @return array
      */
     private function _getRruleDescriptive($rrule) {
@@ -897,10 +861,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
     /**
      * Converts the date format and language, from an english '2009-04-25' or 'Sat Apr 25 2009' to
-     * 'Wednesday - March 24 2009' in the according language. 
+     * 'Wednesday - March 24 2009' in the according language.
      *
      * @param string  $date      String with the original date in english
-     * 
+     *
      * @return string
      */
     private function _translateDate($date)

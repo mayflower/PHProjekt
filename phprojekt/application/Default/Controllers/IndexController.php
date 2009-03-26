@@ -592,40 +592,4 @@ class IndexController extends Zend_Controller_Action
 
         $this->render('upload');
     }
-
-    /**
-     * Adds specific rights to the params that come from the view before saving them into a new or existing item.
-     *
-     * @return void / array
-     */
-    public function addParamsRight($request, $right, $user)
-    {
-        if (gettype($request) == 'object') {
-            // Called from jsonSaveAction - The $request is an object 'Zend_Controller_Request_Abstract'
-            // Adds the Id of the user, just in case it is no there
-            $dataAccess        = $request->getParam('dataAccess');
-            $dataAccess[$user] = $user;
-            $request->setParam('dataAccess', $dataAccess);
-
-            // Adds the specific right
-            $checkAccess        = $request->getParam($right);
-            $checkAccess[$user] = 1;
-            $request->setParam($right, $checkAccess);
-        } else if (gettype($request) == 'array') {
-            // Called from jsonMultipleSaveAction - The $request is an array
-            // Adds the Id of the user, just in case it is no there
-            if (!array_key_exists('dataAccess', $request)) {
-                $request['dataAccess'] = Array();
-            }
-            $request['dataAccess'][$user] = $user;
-
-            // Adds the specific right
-            if (!array_key_exists($right, $request)) {
-                $request[$right] = Array();
-            }
-            $request[$right][$user] = 1;
-
-            return $request;
-        }
-    }
 }
