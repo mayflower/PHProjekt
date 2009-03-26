@@ -44,7 +44,7 @@ final class Default_Helpers_Right
     public function addUser($params, $user)
     {
         if (!array_key_exists('dataAccess', $params)) {
-            $params['dataAccess'] = Array();
+            $params['dataAccess'] = array();
         }
 
         if (!isset($params['dataAccess'][$user])) {

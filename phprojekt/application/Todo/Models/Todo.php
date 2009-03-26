@@ -52,11 +52,11 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
             foreach ($changes as $change) {
                 if ($change['field'] == 'userId') {
                     // The user has changed
-                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0' 
+                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0'
                         && $change['oldValue'] != null) {
                         $recipients .= "," . $change['oldValue'];
                         break;
-                    } 
+                    }
                 }
             }
         }
