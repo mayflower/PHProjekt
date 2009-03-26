@@ -74,7 +74,8 @@ class Phprojekt_Table
      * @param $tableName String table name
      * @param $fields    Array with fieldnames as key
      *                   Options: 'type', 'length', 'null', 'default')
-     * @param $keys      Array with primary keys
+     * @param $keys      Array with keys (each array needs to have the key name (primary key, unique, etc) and an array
+     *                   whit the key fields.
      *
      * @return boolean
      */
@@ -106,12 +107,15 @@ class Phprojekt_Table
         }
 
         if (isset($keys)) {
-            $sqlString .= "PRIMARY KEY (";
-            foreach ($keys as $oneKey) {
-               $sqlString .= $oneKey . ", ";
+            foreach ($keys as $keyName => $keyFields) {
+                $sqlString .= $keyName." (";
+                foreach ($keyFields as $oneKey) {
+                   $sqlString .= $oneKey . ", ";
+                }
+                $sqlString = substr($sqlString, 0, -2);
+                $sqlString .= "),";
             }
-            $sqlString = substr($sqlString, 0, -2);
-            $sqlString .= ")";
+            $sqlString = substr($sqlString, 0, -1);
         } else {
             $sqlString = substr($sqlString, 0, -2);
         }
@@ -121,7 +125,8 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            die ($sqlString);
+            //Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }
