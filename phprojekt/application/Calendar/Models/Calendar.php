@@ -907,9 +907,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     {
         if (strlen($date) == 10) {
             // '2009-04-25' style
-            $year      = (int) substr($date, 0, 4);
-            $month     = (int) substr($date, 5, 2);
-            $day       = (int) substr($date, 8, 2);
+            $year  = (int) substr($date, 0, 4);
+            $month = (int) substr($date, 5, 2);
+            $day   = (int) substr($date, 8, 2);
         } else {
             // 'Sat Apr 25 2009' style
             $monthShort = substr($date, 4, 3);
@@ -955,9 +955,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     break;
             }
         }
-        $dateUnix  = mktime(0, 0, 0, $month, $day, $year);
-        $dayDesc   = Phprojekt::getInstance()->translate(date("l", $dateUnix));
-        $monthDesc = Phprojekt::getInstance()->translate(date("F", $dateUnix));
+        $dateUnix   = mktime(0, 0, 0, $month, $day, $year);
+        $dayDesc    = Phprojekt::getInstance()->translate(date("l", $dateUnix));
+        $monthDesc  = Phprojekt::getInstance()->translate(date("F", $dateUnix));
         $dateString = $dayDesc . " - " . $monthDesc . " " . $day . " " . $year;
 
         return $dateString;
