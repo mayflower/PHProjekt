@@ -81,7 +81,7 @@ class Phprojekt_Converter_Text
                     if (is_array($range)) {
                         if ($range['id'] == $model->$field['key']) {
                             $value = $range['name'];
-                            break;
+                            break 2;
                         }
                     }
                 }
