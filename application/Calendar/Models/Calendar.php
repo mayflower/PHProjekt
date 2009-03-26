@@ -369,10 +369,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * - changes in the users (add, delete) (ONLY FOR OWNERS OF THE ITEM)
      * - changes in the recurring (add, delete, update) (ONLY FOR OWNERS OF THE ITEM)
      *
-     * @param array $request          Array with the POST data
-     * @param integer $id             Id of the current event
-     * @param array $eventDates       Array with the dates of the recurring
-     * @param array $participantsList Array with the users involved in the event
+     * @param array   $request          Array with the POST data
+     * @param integer $id               Id of the current event
+     * @param array   $eventDates       Array with the dates of the recurring
+     * @param array   $participantsList Array with the users involved in the event
      *
      * @return void
      */
@@ -495,7 +495,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Update only one  event
+     * Update only one event
      *
      * @param array $request          Array with the POST data
      * @param integer $id             Id of the current event
@@ -578,7 +578,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Do the save for the event
      * Add the full access to the owner and Read, Write and Delete access to the user involved
      *
-     * @param array $request                           Array with the POST data
+     * @param array                     $request       Array with the POST data
      * @param Phprojekt_Model_Interface $model         The model to check
      * @param Phprojekt_Date_Collection $oneDate       Date object to save
      * @param integer                   $participantId Id of the user to save the event
@@ -637,7 +637,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function getNotificationBodyData()
     {
-        $bodyData   = Array();
+        $bodyData   = array();
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Title'),
                             'value' => $this->title);
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Notes'),
@@ -684,12 +684,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return array
      */
-    public function getNotificationBodyChanges($changes) {
-        $fieldDefinition = $this->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    public function getNotificationBodyChanges($changes)
+    {
+        $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $fieldDefinition = $this->getInformation()->getFieldDefinition($order);
 
         // Iterate in every change done
         for ($i = 0; $i < count($changes); $i++) {
-
             // Translate the name of the field
             foreach ($fieldDefinition as $field) {
                 // Find the field definition for the field that has been modified
@@ -733,7 +734,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                         $fieldNewValue = "";
                     }
                     if ($fieldOldValue != $fieldNewValue) {
-                        $changes[] = Array('field'    => $fieldName,
+                        $changes[] = array('field'    => $fieldName,
                                            'oldValue' => $fieldOldValue,
                                            'newValue' => $fieldNewValue);
                     }
@@ -769,7 +770,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     }
 
                     if ($fieldOldValue != $fieldNewValue) {
-                        $changes[] = Array('field'    => $fieldName,
+                        $changes[] = array('field'    => $fieldName,
                                            'oldValue' => $fieldOldValue,
                                            'newValue' => $fieldNewValue);
                     }
@@ -793,11 +794,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     /**
      * Returns the body 'Changes done' part of the Notification email
      *
-     * @param string   $rrule      String with the recurrence 'rrule' field, as it is saved in the DB.
+     * @param string $rrule String with the recurrence 'rrule' field, as it is saved in the DB.
      *
      * @return array
      */
-    private function _getRruleDescriptive($rrule) {
+    private function _getRruleDescriptive($rrule)
+    {
         $tmp1     = split(";", $rrule);
         $tmp2     = split("=", $tmp1[0]);
         $freq     = $tmp2[1];
@@ -807,8 +809,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $interval = $tmp2[1];
         $tmp2     = split("=", $tmp1[3]);
         $byday    = $tmp2[1];
+        $freq     = ucfirst(strtolower($freq));
 
-        $freq = ucfirst(strtolower($freq));
         $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Repeats'),
                                'value' => Phprojekt::getInstance()->translate($freq));
         $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Interval'),
@@ -856,14 +858,14 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                    'value' => Phprojekt::getInstance()->translate($weekDay));
         }
 
-    return $rruleFields;
+        return $rruleFields;
     }
 
     /**
      * Converts the date format and language, from an english '2009-04-25' or 'Sat Apr 25 2009' to
      * 'Wednesday - March 24 2009' in the according language.
      *
-     * @param string  $date      String with the original date in english
+     * @param string $date String with the original date in english
      *
      * @return string
      */

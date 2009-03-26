@@ -86,11 +86,10 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * on the module received in the $model parameter.
      * To send a notification in Html mode, use function sendNotificationHtml()
      *
-     * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
-     *                                            Todo_Models_Todo
+     * @param Phprojekt_Model_Interface $model E.g.: A object of the type Todo_Models_Todo
      *
-     * @uses    $mailNotif = new Phprojekt_Mail_Notification();
-     *          $mailNotif->sendNotificationText($model);
+     * @uses $mailNotif = new Phprojekt_Mail_Notification();
+     *       $mailNotif->sendNotificationText($model);
      *
      * @see _sendNotification()
      *
@@ -139,23 +138,25 @@ class Phprojekt_Mail_Notification extends Zend_Mail
      * through sendNotificationHtml/Text(), it is automatically called _setFromUserLogued()
      * that sets the sender to the logued user.
      *
-     * @param array      $from   An array with two positions: the first value contains
-     *                           the email and the second one, the name (optional).
+     * @param array $from An array with two positions: the first value contains
+     *                    the email and the second one, the name (optional).
      *
-     * @uses     $mailNotif = new Phprojekt_Mail_Notification();
-     *           $mailNotif->setCustomFrom(array("mariano.lapenna@mayflower.de",
-     *                                           "Mariano"));
-     *           $mailNotif->sendNotificationHtml($model);
+     * @uses $mailNotif = new Phprojekt_Mail_Notification();
+     *       $mailNotif->setCustomFrom(array("mariano.lapenna@mayflower.de",
+     *                                       "Mariano"));
+     *       $mailNotif->sendNotificationHtml($model);
      *
      * @return void
      */
     public function setCustomFrom(array $from)
     {
-        $this->_customFrom[0] = $from[0];       //Email
+        //Email
+        $this->_customFrom[0] = $from[0];
 
         // Has the name been set?
         if (sizeof($from) == 2) {
-            $this->_customFrom[1] = $from[1];   //Name
+            //Name
+            $this->_customFrom[1] = $from[1];
         }
     }
 
@@ -258,9 +259,10 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     private function _setCustomBody()
     {
         $this->_view     = Phprojekt::getInstance()->getView();
-        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
         $action          = $this->_changes[0]['action'];
-        
+
         // The model has an exception to define the body 'Current data' contents?
         if (!method_exists($this->_model, 'getNotificationBodyData')) {
             // No
@@ -279,7 +281,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
             // The model has an exception to define the body 'Changes done' contents?
             if (!method_exists($this->_model, 'getNotificationBodyChanges')) {
                 // No
-            
+
                 // The following algorithm loops inside $this->_changes and does the following:
                 // * Translates the name of the field
                 // * Searches Integer values that should be converted into Strings and converts them
