@@ -125,8 +125,7 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            die ($sqlString);
-            //Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
             return false;
         }
     }
