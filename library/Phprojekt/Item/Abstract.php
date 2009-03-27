@@ -325,7 +325,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Use direclty the the Abstract Record to don't save the history or search words
+     * Use directly the the Abstract Record to don't save the history or search words
      *
      * @return void
      */

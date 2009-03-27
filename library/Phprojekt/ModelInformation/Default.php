@@ -57,7 +57,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 
     /**
      * The fields given by the ModelInformation interface
-     * are used by something undeclared, therefore we ust a
+     * are used by something undeclared, therefore we must use a
      * default value.
      */
     const ORDERING_DEFAULT = Phprojekt_ModelInformation_Default::ORDERING_LIST;
@@ -142,7 +142,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Sets a fields definitions for the form view
      *
-     * @param array $formFields All the field�s data for the form
+     * @param array $formFields All the field's data for the form
      *
      * @return void
      */
@@ -162,7 +162,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Sets a fields definitions for the list view
      *
-     * @param array $listFields All the field�s data for the list
+     * @param array $listFields All the field's data for the list
      *
      * @return void
      */
