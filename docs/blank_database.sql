@@ -521,9 +521,9 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Todo', 'startDate', 1, 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 (0, 'Todo', 'endDate', 1, 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Todo', 'priority', 1, 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
-(0, 'Todo', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
+(0, 'Todo', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 7, 'center', 1, 6, '1', 0, 0, 0),
 (0, 'Todo', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
-(0, 'Todo', 'userId', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 1, '1', 1, 0, 0),
+(0, 'Todo', 'userId', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', '', 6, 'left', 1, 1, '1', 1, 0, 0),
 
 (0, 'Note', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 0, 1, 0),
 (0, 'Note', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
