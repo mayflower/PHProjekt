@@ -693,6 +693,7 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (8, 1),
 (9, 1),
 (10, 1),
+(11, 1),
 
 (1, 2),
 (2, 2),
@@ -702,6 +703,7 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (8, 2),
 (9, 2),
 (10, 2),
+(11, 2),
 
 (1, 3),
 (6, 3);
