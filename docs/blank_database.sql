@@ -41,6 +41,7 @@ DROP TABLE IF EXISTS `Calendar`;
 DROP TABLE IF EXISTS `Filemanager`;
 DROP TABLE IF EXISTS `Contact`;
 DROP TABLE IF EXISTS `Helpdesk`;
+DROP TABLE IF EXISTS `Minutes`;
 
 --
 -- Table structure for table `DatabaseManager`
@@ -489,6 +490,18 @@ CREATE TABLE `Helpdesk` (
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
+-- Table structure for table `Minutes`
+--
+CREATE TABLE `Minutes` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) default NULL,
+  `title` varchar(255) default NULL,
+  `created` date default NULL,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+--
 -- INSERT DATA
 --
 
@@ -570,7 +583,11 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Helpdesk', 'author', 1, 'author', 'display', 2, 1, NULL, 'User#id#lastname', '', 3, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Helpdesk', 'solvedBy', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'solvedDate', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'contactId', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0);
+(0, 'Helpdesk', 'contactId', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
+
+(0, 'Minutes', 'projectId', 1, 'Project', 'hidden', 3, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'created', 1, 'Created', 'date', 2, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0);
 
 INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES
 (1,'admin','MyName1','MyLastName1','A', 1),
