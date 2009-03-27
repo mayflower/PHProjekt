@@ -27,26 +27,26 @@
  * You can get all the fields from an specific module
  * sorted by list or form order
  *
- * For each field we have all the data of the them needed for the project like:
+ * For each field we have all the data of the item needed for the project like:
  *
  * tableName     = Name of the module and the table of the module
- * tablefield    = Name of the field in the table
- * formTab       = Number of the tab for show it in various tabs
- * formLabel     = Text for display in the form (english text that is translated later)
+ * tableField    = Name of the field in the table
+ * formTab       = Number of the tab to show it in various tabs
+ * formLabel     = Text to display in the form (english text that is translated later)
  * formType      = Type of the field
  * formPosition  = Position of the field in the form
  * formColumns   = Number of columns that use the field
- * formRegexp    = Regular Expresion for check the field
- * formRange     = Mix value for make the data of the fields, like for select types
- * defaultValue  = Default falue
+ * formRegexp    = Regular Expression to check the field
+ * formRange     = Mix value to make the data of the fields, like for select types
+ * defaultValue  = Default value
  * listPosition  = Position of the field in the list
  * listAlign     = Aligment of the field in the list
  * listUseFilter = Use the field in the filter list or not
  * altPosition   = Position of the field in the alt view
  * status        = Active or Inactive field
  * isInteger     = Int field or not
- * isRequired    = If is a required field or not
- * isUnique      = If is a uniq value that can not be repeat or not
+ * isRequired    = Is it a required field or not
+ * isUnique      = Is it a unique value that can not be repeated or not
  *
  * The class itself is an ActiveRecord, so:
  * @see Phprojekt_ActiveRecord_Abstract
@@ -104,7 +104,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                Phprojekt_ModelInformation_Default::ORDERING_FILTER => 'listUseFilter');
 
     /**
-     * Initialize a new Database Manager and configurate it with a model
+     * Initialize a new Database Manager and configure it with a model
      *
      * @param Phprojekt_Item_Abstract $model Phprojekt_Item_Abstract
      * @param array                   $db    Db configurations
@@ -133,10 +133,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * If is defined a correct order, the array will return sorted by the order.
      * If not, the array will return sorted by id.
      *
-     * The firs call, the function save the fields order into and array,
-     * The second call, if is the same order, the function return the saved data,
-     * if not, get the new order fields and save it too.
-     * This is for make the querry to the database only one time and not for each request.
+     * On the first call, the function saves the fields order into an array,
+     * on the second call, if is the same order, the function returns the saved data,
+     * if not, it gets the new order fields and saves it too.
+     * This is for make the query to the database only once and not for each request.
      *
      * @param string $order Sort string
      *

@@ -52,11 +52,11 @@ class IndexController extends Zend_Controller_Action
     /**
      * Init function
      *
-     * First check if is a logued user, if not is redirect to the login form.
+     * First check if is a logged user, if not he is redirected to the login form.
      *
-     * The function inicialize all the Helpers,
+     * The function initializes all the Helpers,
      * collect the data from the Model Object for list and form
-     * and inicialited the Project Tree view
+     * and initializes the Project Tree view
      *
      * @return void
      */
