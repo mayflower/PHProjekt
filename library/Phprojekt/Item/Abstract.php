@@ -187,10 +187,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Cleaner::sanitize('time', $value);
 
                     // moving the value to UTC
-                    $timeZomeComplement = (int) $this->_timezone * -1;
+                    $timeZoneComplement = (int) $this->_timezone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
+                    $value = mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
                              date("s", $u), date("m"), date("d"), date("Y"));
 
                     $value = date("H:i:s", $value);
@@ -200,10 +200,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Cleaner::sanitize('timestamp', $value);
 
                     // moving the value to UTC
-                    $timeZomeComplement = (int) $this->_timezone * -1;
+                    $timeZoneComplement = (int) $this->_timezone * -1;
                     $u = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZomeComplement, date("i", $u),
+                    $value = mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
                              date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
 
                     // running again the sanitizer to normalize the format
@@ -440,15 +440,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 $roleRightCreate = $roleRights->hasRight('create');
                 $roleRightAdmin  = $roleRights->hasRight('admin');
 
-                // Map roles with item rigths and make one array
+                // Map roles with item rights and make one array
                 foreach ($rights as $userId => $access) {
                     foreach ($access as $name => $value) {
                         switch ($name) {
                             case 'admin':
                                 $rights[$userId]['admin'] = $roleRightAdmin && $value;
                                 break;
-                            case 'donwload':
-                                $rights[$userId]['donwload'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
+                            case 'download':
+                                $rights[$userId]['download'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
                                     && $value;
                                 break;
                             case 'delete':
@@ -492,7 +492,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Save the rigths for the current item
+     * Save the rights for the current item
      * The users are a POST array with userIds
      *
      * @param array $rights - Array of usersId with the bitmask access
