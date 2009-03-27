@@ -515,7 +515,8 @@ INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
 (7, 'Filemanager', 'Filemanager', 0, 1),
 (8, 'Statistic', 'Statistic', 0, 1),
 (9, 'Contact', 'Contact', 1, 1),
-(10, 'Helpdesk', 'Helpdesk', 0, 1);
+(10, 'Helpdesk', 'Helpdesk', 0, 1),
+(11, 'Minutes','Minutes', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
@@ -642,6 +643,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (1, 7, 139),
 (1, 8, 139),
 (1, 10, 139),
+(1, 11, 139),
 
 (2, 1, 0),
 (2, 2, 1),
@@ -650,6 +652,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (2, 7, 0),
 (2, 8, 0),
 (2, 10, 0),
+(2, 11, 0),
 
 (3, 1, 139),
 (3, 2, 0),
@@ -658,6 +661,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (3, 7, 0),
 (3, 8, 0),
 (3, 10, 0),
+(3, 11, 0),
 
 (4, 1, 1),
 (4, 2, 1),
@@ -665,6 +669,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (4, 6, 1),
 (4, 7, 1),
 (4, 8, 1),
+(4, 10, 1),
 (4, 10, 1);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
