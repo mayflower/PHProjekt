@@ -56,17 +56,17 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         var maxSimultEvents = 0;
 
         // Variables that will be passed to the template for django to render it
-        var timeSquare          = new Array(47);
+        var timeSquare          = new Array(23);
         var furtherEvents       = new Array();
         furtherEvents['show']   = false;
         furtherEvents['events'] = new Array();
 
         // Fill the main array with all the possible points in time for this day view
-        // 8:00, 8:15, 8:30 and so on, until 19:45, and whether it is an even row or not.
+        // 8:00, 8:30, 9:00 and so on, until 19:30, and whether it is an even row or not.
         for (var hour = 8; hour < 20; hour++) {
-            for (var quarter = 0; quarter < 4; quarter++) {
-                var minute = quarter * 15;
-                var row    = ((hour - 8) * 4) + quarter;
+            for (var half = 0; half < 2; half++) {
+                var minute = half * 30;
+                var row    = ((hour - 8) * 2) + half;
 
                 timeSquare[row]         = new Array();
                 timeSquare[row]['hour'] = this.formatTime(hour + ':' + minute);
@@ -113,13 +113,13 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
             var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
 
             if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
-                var eventBegins = eventInfo['quarterBeginning'];
+                var eventBegins = eventInfo['halfBeginning'];
 
                 // Find which column to use
                 var useColumn = -1;
                 for (column = 0; column < maxSimultEvents; column++) {
                     var useColumn = column;
-                    for (var row = eventBegins; row < (eventBegins + eventInfo['quartersDuration']); row++) {
+                    for (var row = eventBegins; row < (eventBegins + eventInfo['halvesDuration']); row++) {
                         if (timeSquare[row]['columns'][column]['occupied']) {
                             useColumn = -1;
                             break;
@@ -133,17 +133,17 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                 var notes = this.htmlEntities(content[event]['notes']);
                 notes     = notes.replace('\n', '<br />');
 
-                timeSquare[eventBegins]['columns'][useColumn]['occupied']         = true;
-                timeSquare[eventBegins]['columns'][useColumn]['typeEvent']        = this.EVENT_BEGIN;
-                timeSquare[eventBegins]['columns'][useColumn]['quartersDuration'] = eventInfo['quartersDuration'];
-                timeSquare[eventBegins]['columns'][useColumn]['id']               = content[event]['id'];
-                timeSquare[eventBegins]['columns'][useColumn]['title']            = this.htmlEntities(content[event]['title']);
-                timeSquare[eventBegins]['columns'][useColumn]['startTime']        = this.formatTime(content[event]['startTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['endTime']          = this.formatTime(content[event]['endTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['notes']            = notes;
+                timeSquare[eventBegins]['columns'][useColumn]['occupied']       = true;
+                timeSquare[eventBegins]['columns'][useColumn]['typeEvent']      = this.EVENT_BEGIN;
+                timeSquare[eventBegins]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
+                timeSquare[eventBegins]['columns'][useColumn]['id']             = content[event]['id'];
+                timeSquare[eventBegins]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
+                timeSquare[eventBegins]['columns'][useColumn]['startTime']      = this.formatTime(content[event]['startTime']);
+                timeSquare[eventBegins]['columns'][useColumn]['endTime']        = this.formatTime(content[event]['endTime']);
+                timeSquare[eventBegins]['columns'][useColumn]['notes']          = notes;
 
                 //For every next row that this event occupies
-                var rowThisEventFinishes = eventBegins + eventInfo['quartersDuration'] -1;
+                var rowThisEventFinishes = eventBegins + eventInfo['halvesDuration'] -1;
                 for (var row = eventBegins + 1; row <= rowThisEventFinishes; row++) {
                     timeSquare[row]['columns'][useColumn]['occupied']  = true;
                     timeSquare[row]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
