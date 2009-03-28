@@ -25,6 +25,7 @@ $lang["Done"] = "Done";
 $lang["Select users for the group view"] = "Select users for the group view";
 $lang["You have to select at least one user!"] = "You have to select at least one user!";
 $lang["User selection"] = "User selection";
+$lang["place"] = "Place";
 
 $lang["January"] = "January";
 $lang["February"] = "February";
