@@ -25,7 +25,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
     _header:        Array(7),
-    _schedule:      Array(48),
+    _schedule:      Array(24),
     _furtherEvents: Array,
     _weekDays:      Array(7),
 
@@ -47,8 +47,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         //    Sets the url to get the data from
         // Description:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonPeriodList"
-            + "/dateStart/" + this._weekDays[0] + "/dateEnd/" + this._weekDays[6];
+        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonPeriodList/dateStart/" + this._weekDays[0]
+            + "/dateEnd/" + this._weekDays[6];
     },
 
     onLoaded:function(dataContent) {
@@ -93,8 +93,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         //    Opens a new window in CSV mode
         // Description:
         //    Opens a new window in CSV mode
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList"
-            + "/dateStart/" + this._weekDays[0] + "/dateEnd/" + this._weekDays[6]);
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList" + "/dateStart/"
+            + this._weekDays[0] + "/dateEnd/" + this._weekDays[6]);
 
         return false;
     },
@@ -114,15 +114,15 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
     fillScheduleArrayStructure_part1:function() {
         // Summary:
-        //    This function fills the week days arrays with the rows for every quarter of hour.
+        //    This function fills the week days arrays with the rows for every half of hour.
         // Description:
-        // Fills the array with the header and all the possible points in time for this week view: 8:00, 8:15, 8:30
-        // and so on, until 19:45. Each of that rows will have as many columns as days plus simultaneous events exist.
+        //     Fills the array with the header and all the possible points in time for this week view: 8:00, 8:30, 9:00
+        // and so on, until 19:30. Each of that rows will have as many columns as days plus simultaneous events exist.
         // Also sets for every row whether it is even or not.
         for (var hour = 8; hour < 20; hour++) {
-            for (var quarter = 0; quarter < 4; quarter++) {
-                var minute = quarter * 15;
-                var row    = ((hour - 8) * 4) + quarter;
+            for (var half = 0; half < 2; half++) {
+                var minute = half * 30;
+                var row    = ((hour - 8) * 2) + half;
 
                 this._schedule[row] = new Array(7);
                 for (var day = 0; day < 7; day ++) {
@@ -168,7 +168,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Summary:
         //    This function designs the simultaneous events, settting how many columns will be shown for each user.
         var currentEventsNow = new Array();
-        for (var row = 0; row < 48; row ++) {
+        for (var row = 0; row < 24; row ++) {
             currentEventsNow[row] = new Array();
             for (var day = 0; day < 7; day ++) {
                 currentEventsNow[row][this._weekDays[day]] = 0; // Example: currentEventsNow[0]['2009-01-01'] = 0
@@ -196,10 +196,11 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     fillScheduleArrayStructure_part2:function() {
         // Summary:
         //    Continues creating the schedule array structure, supporting simultaneous events.
-        for (var row = 0; row < 48; row ++) {
+        for (var row = 0; row < 24; row ++) {
             for (var day = 0; day < 7; day ++) {
                 this._schedule[row][day]['columns'] = new Array();
-                var widthColumn  = Math.floor(this._header['columnsWidth'] / this._header['days'][day]['columnsTotal']);
+                var widthColumn  = Math.floor(this._header['columnsWidth'] /
+                    this._header['days'][day]['columnsTotal']);
                 var totalColumns = this._header['days'][day]['columnsTotal'];
                 for (var column = 0; column < totalColumns; column ++) {
                     this._schedule[row][day]['columns'][column]              = new Array();
@@ -233,8 +234,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 content[event]['startDate']);
 
             if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
-                var rowEventBegins   = eventInfo['quarterBeginning'];
-                var rowEventFinishes = rowEventBegins + eventInfo['quartersDuration'];
+                var rowEventBegins   = eventInfo['halfBeginning'];
+                var rowEventFinishes = rowEventBegins + eventInfo['halvesDuration'];
                 var day              = eventInfo['weekDay'];
 
                 // Find which column to use
@@ -257,15 +258,15 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 var notes = this.htmlEntities(content[event]['notes']);
                 notes     = notes.replace('\n', '<br />');
 
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['occupied']         = true;
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['typeEvent']        = this.EVENT_BEGIN;
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['quartersDuration'] = eventInfo['quartersDuration'];
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['id']               = content[event]['id'];
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['title']            = this.htmlEntities(content[event]['title']);
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['startTime']        = this.formatTime(content[event]['startTime']);
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['endTime']          = this.formatTime(content[event]['endTime']);
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['notes']            = notes;
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['class']            = '';
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['occupied']       = true;
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['typeEvent']      = this.EVENT_BEGIN;
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['id']             = content[event]['id'];
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['startTime']      = this.formatTime(content[event]['startTime']);
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['endTime']        = this.formatTime(content[event]['endTime']);
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['notes']          = notes;
+                this._schedule[rowEventBegins][day]['columns'][useColumn]['class']          = '';
 
                 //For every next row that this event occupies
                 for (var row = rowEventBegins + 1; row < rowEventFinishes; row++) {

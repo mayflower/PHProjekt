@@ -160,14 +160,14 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var eventEndHour      = parseInt(temp[0], 10);
         var eventEndMinutes   = parseInt(temp[1], 10);
 
-        // Round downwards the event start time to the nearest quarter of hour
-        if ((eventStartMinutes/15) != Math.floor(eventStartMinutes/15)) {
-            eventStartMinutes = Math.floor(eventStartMinutes/15) * 15;
+        // Round downwards the event start time to the nearest half of hour
+        if ((eventStartMinutes/30) != Math.floor(eventStartMinutes/30)) {
+            eventStartMinutes = Math.floor(eventStartMinutes/30) * 30;
         }
 
-        // Round upwards the event end time to the nearest quarter of hour
-        if ((eventEndMinutes/15) != Math.ceil(eventEndMinutes/15)) {
-            eventEndMinutes = Math.ceil(eventEndMinutes/15) * 15;
+        // Round upwards the event end time to the nearest half of hour
+        if ((eventEndMinutes/30) != Math.ceil(eventEndMinutes/30)) {
+            eventEndMinutes = Math.ceil(eventEndMinutes/30) * 30;
             if (eventEndMinutes == 60) {
                 eventEndHour ++;
                 eventEndMinutes = 0;
@@ -206,19 +206,19 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             eventEndTime_Date = scheduleEndTime_Date;
         }
 
-        var quarterBeginning       = eventStartTime_Date.getTime() - scheduleStartTime_Date.getTime();
-        var duration               = eventEndTime_Date.getTime() - eventStartTime_Date.getTime();
-        result['quarterBeginning'] = Math.floor(quarterBeginning / (1000 * 60 * 15));
-        result['quartersDuration'] = Math.floor(duration / (1000 * 60 * 15));
+        var quarterBeginning     = eventStartTime_Date.getTime() - scheduleStartTime_Date.getTime();
+        var duration             = eventEndTime_Date.getTime() - eventStartTime_Date.getTime();
+        result['halfBeginning']  = Math.floor(quarterBeginning / (1000 * 60 * 30));
+        result['halvesDuration'] = Math.floor(duration / (1000 * 60 * 30));
 
         if (askedTime != null) {
             var temp             = askedTime.split(':');
             var askedTimeHour    = temp[0];
             var askedTimeMinutes = temp[1];
 
-            // Round downwards the time to search for, to the nearest quarter of hour
-            if ((askedTimeMinutes / 15) != Math.floor(askedTimeMinutes / 15)) {
-                askedTimeMinutes = Math.floor(askedTimeMinutes / 15) * 15;
+            // Round downwards the time to search for, to the nearest half of hour
+            if ((askedTimeMinutes / 30) != Math.floor(askedTimeMinutes / 30)) {
+                askedTimeMinutes = Math.floor(askedTimeMinutes / 30) * 30;
             }
             var askedTime_Date = new Date();
             askedTime_Date.setHours(askedTimeHour);

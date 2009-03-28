@@ -14,7 +14,7 @@
             {% for column in user.columns %}
                 {% if column.occupied %}
                    {% ifequal column.typeEvent 1 %}
-        <td rowspan="{{column.quartersDuration}}" width="{{column.width}}%" class="events">
+        <td rowspan="{{column.halvesDuration}}" width="{{column.width}}%" class="events">
             {{column.startTime}} - {{column.endTime}} {{column.title|safe}}<br />
             <div class="horizontalLine">
             </div>
