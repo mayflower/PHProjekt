@@ -4,19 +4,6 @@
     <div dojoType="dijit.layout.ContentPane" id="buttonsBox" region="top" class="prepend-0 append-0"
         style="height: 6%; overflow: hidden;">
         &nbsp;&nbsp;
-        {{view}}:
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.listViewClick');" id="gridBarButton">
-            {{list}}
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.dayViewClick');" id="dayBarButton">
-            {{day|safe}}
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button dojoType="dijit.form.Button" onClick="dojo.publish('Calendar.weekViewClick');" id="weekBarButton">
-            {{week|safe}}
-        </button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div id="scheduleBar"
         style="display: none;">
             {{changeDate}}

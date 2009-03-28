@@ -79,7 +79,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
-
         this.loadAppropriateList();
     },
 
@@ -96,6 +95,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             // Nothing else loaded? Then loads the default one
             this.loadGrid();
         }
+        this.setSubmoduleNavigation();
     },
 
     loadGrid:function() {
@@ -110,7 +110,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-        this.highlightBarMainSelection();
     },
 
     loadDayListSelf:function() {
@@ -124,7 +123,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
         this._date       = dijit.byId('selectDate').attr('value');
         this.dayListSelf = new this.dayListSelfWidget(this, phpr.currentProjectId, this._date);
-        this.highlightBarMainSelection();
         this.highlightBarUserSelection();
     },
 
@@ -139,7 +137,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
         this._date         = dijit.byId('selectDate').attr('value');
         this.dayListSelect = new this.dayListSelectWidget(this, phpr.currentProjectId, this._date, this._usersSelected);
-        this.highlightBarMainSelection();
         this.highlightBarUserSelection();
     },
 
@@ -154,7 +151,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
         this._date    = dijit.byId('selectDate').attr('value');
         this.weekList = new this.weekListWidget(this, phpr.currentProjectId, this._date);
-        this.highlightBarMainSelection();
     },
 
     showFormFromList:function(rowID) {
@@ -167,6 +163,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //    List button clicked, loads the regular grid
         this.loadGrid();
+        this.setSubmoduleNavigation();
     },
 
     dayViewClick:function() {
@@ -178,6 +175,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             } else {
                 this.loadDayListSelect();
             }
+            this.setSubmoduleNavigation();
         }
     },
 
@@ -186,6 +184,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    This function loads the Week List with the entered date, if any.
         if (dijit.byId('selectDate').attr('value') != null) {
             this.loadWeekList();
+            this.setSubmoduleNavigation();
         }
     },
 
@@ -269,32 +268,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             }
         }
         this.form = new this.formWidget(this, id, module, params);
-    },
-
-    highlightBarMainSelection:function() {
-        // Summary:
-        //    This function highlights setting to bold the button of the selected view mode (and unbolding the rest)
-        if (this.grid) {
-            dojo.byId('gridBarButton').style.fontWeight = 'bold';
-            dojo.byId('gridBarButton').blur();
-        } else {
-            dojo.byId('gridBarButton').style.fontWeight = '';
-        }
-
-        if (this.dayListSelf || this.dayListSelect) {
-            dojo.byId('dayBarButton').style.fontWeight = 'bold';
-            dojo.byId('dayBarButton').blur();
-        } else {
-            dojo.byId('dayBarButton').style.fontWeight = '';
-        }
-
-        if (this.weekList) {
-            dojo.byId('weekBarButton').style.fontWeight = 'bold';
-            dojo.byId('weekBarButton').blur();
-        } else {
-            dojo.byId('weekBarButton').style.fontWeight = '';
-        }
-
     },
 
     highlightBarUserSelection:function() {
@@ -407,5 +380,58 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (mode != 'weekList') {
             this.weekList = null;
         }
-    }
+    },
+
+    setSubmoduleNavigation:function() {
+        // Description:
+        //    This function is responsible for displaying the Navigation top bar of the Calendar
+        //    Current submodules are: List, Day and Week.
+        var moduleViews       = new Array();
+        var dayListActive     = false;
+        if (this.isListActive(this.dayListSelf) || this.isListActive(this.dayListSelect)) {
+            dayListActive = true;
+        }
+        this.addModuleView(moduleViews, 'List', 'listViewClick', this.isListActive(this.grid));
+        this.addModuleView(moduleViews, 'Day', 'dayViewClick', dayListActive);
+        this.addModuleView(moduleViews, 'Week', 'weekViewClick', this.isListActive(this.weekList));
+
+        var navigation ='<ul id="nav_main">';
+        for (var i = 0; i < moduleViews.length; i++) {
+            var liclass = '';
+            if (moduleViews[i].activeTab) {
+                liclass = 'class = active';
+                }
+            navigation += this.render(["phpr.Default.template", "navigation.html"], null, {
+                moduleName :    'Calendar',
+                moduleLabel:    moduleViews[i].label,
+                liclass:        liclass,
+                moduleFunction: moduleViews[i].functionName
+            });
+        }
+        navigation += "</ul>";
+        dojo.byId("subModuleNavigation").innerHTML = navigation;
+        phpr.initWidgets(dojo.byId("subModuleNavigation"));
+    },
+
+    addModuleView:function(moduleViews, label, functionName, activeTab) {
+        // Summary:
+        //    Adds a specific view to the moduleViews array 
+        var i                          = moduleViews.length;
+        moduleViews[i]                 = new Array();
+        moduleViews[i]['label']        = label;
+        moduleViews[i]['functionName'] = functionName;
+        moduleViews[i]['activeTab']    = activeTab;
+    },
+
+    isListActive:function(list) {
+        // Summary
+        //    Returns whether a specific list type is active or not
+        if (list != undefined) {
+            answer = true;
+        } else {
+            answer = false;
+        }
+
+        return answer;
+    } 
 });
