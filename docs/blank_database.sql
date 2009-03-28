@@ -400,6 +400,7 @@ CREATE TABLE `Calendar` (
   `ownerId` int(11) default NULL,
   `projectId` int(11) NOT NULL,
   `title` varchar(255) default NULL,
+  `place` varchar(255) default NULL,
   `notes` text default NULL,
   `uid` varchar(255) NOT NULL,
   `startDate` date default NULL,
@@ -545,6 +546,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Note', 'category', 1, 'category', 'text', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 
 (0, 'Calendar', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
+(0, 'Calendar', 'place', 1, 'place', 'text', 2, 1, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'notes', 1, 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'startDate', 1, 'startDate', 'date', 3, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0),
 (0, 'Calendar', 'startTime', 1, 'startTime', 'time', 4, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),

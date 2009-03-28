@@ -246,6 +246,7 @@ $lang["Further events"] = "Further events";
 $lang["Today"] = "Today";
 $lang["Done"] = "Done";
 $lang["User selection"] = "User selection";
+$lang["place"] = "Place";
 
 $lang["January"] = "January";
 $lang["February"] = "February";
