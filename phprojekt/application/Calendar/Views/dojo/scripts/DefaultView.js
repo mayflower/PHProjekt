@@ -200,15 +200,15 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             eventStartTime_Date = scheduleStartTime_Date;
         }
 
-        // If end time is after 20:00, the schedule must show it until the 19:45 row inclusive (but the text will
+        // If end time is after 20:00, the schedule must show it until the 19:30 row inclusive (but the text will
         // show the real info)
         if (eventEndTime_Date > scheduleEndTime_Date) {
             eventEndTime_Date = scheduleEndTime_Date;
         }
 
-        var quarterBeginning     = eventStartTime_Date.getTime() - scheduleStartTime_Date.getTime();
+        var halfBeginning        = eventStartTime_Date.getTime() - scheduleStartTime_Date.getTime();
         var duration             = eventEndTime_Date.getTime() - eventStartTime_Date.getTime();
-        result['halfBeginning']  = Math.floor(quarterBeginning / (1000 * 60 * 30));
+        result['halfBeginning']  = Math.floor(halfBeginning / (1000 * 60 * 30));
         result['halvesDuration'] = Math.floor(duration / (1000 * 60 * 30));
 
         if (askedTime != null) {
