@@ -22,7 +22,7 @@ dojo.provide("phpr.Timecard.Grid");
 dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
 
     reloadView:function(/*String*/ view, /*int*/ year, /*int*/ month) {
-        this.main.setSubGlobalModulesNavigation();
+        this.main.cleanPage();
         this.gridLayout = new Array();
         this.setUrl(year, month, view);
         phpr.DataStore.addStore({url: this.url});

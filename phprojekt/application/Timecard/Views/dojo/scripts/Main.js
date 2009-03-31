@@ -31,7 +31,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Timecard.Grid;
         this.formWidget = phpr.Timecard.Form;
         this.treeWidget = phpr.Timecard.Tree;
-        this.updateUrl  = phpr.webpath + 'index.php/'+phpr.module+'/index/jsonSaveMultiple/nodeId/'
+        this.updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
 
         dojo.subscribe("Timecard.Workingtimes.start", this, "workingtimesStart");
@@ -64,7 +64,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        this.cleanPage();
     },
 
     changeListView:function(view) {
