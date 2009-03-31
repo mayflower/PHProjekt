@@ -112,6 +112,6 @@ class Statistic_IndexController extends IndexController
         }
         $rows[$index][] = $converter->convertMinutesToHours($total);
 
-        Phprojekt_Converter_Csv::convert($rows);
+        Phprojekt_Converter_Csv::echoConvert($rows);
     }
 }

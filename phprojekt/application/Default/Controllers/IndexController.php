@@ -375,7 +375,7 @@ class IndexController extends Zend_Controller_Action
             $records = $this->getModelObject()->fetchAll(null, null, 0, 0);
         }
 
-        Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
