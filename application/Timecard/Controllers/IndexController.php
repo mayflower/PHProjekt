@@ -360,7 +360,7 @@ class Timecard_IndexController extends IndexController
 
         $records = $this->getModelObject()->fetchAll($where);
 
-        Phprojekt_Converter_Csv::convert($records, 'export');
+        Phprojekt_Converter_Csv::echoConvert($records, 'export');
     }
 
     /**
@@ -383,6 +383,6 @@ class Timecard_IndexController extends IndexController
         $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         $records = $model->fetchAll($where);
 
-        Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_DEFAULT);
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_DEFAULT);
     }
 }

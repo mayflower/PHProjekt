@@ -255,7 +255,7 @@ class Calendar_IndexController extends IndexController
         $where   = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate = "' . $date . '"';
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
-        Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -274,7 +274,7 @@ class Calendar_IndexController extends IndexController
         $where   = 'deleted is NULL AND participantId IN (' . $usersId . ') AND startDate = "' . $date . '"';
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
-        echo Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -295,7 +295,7 @@ class Calendar_IndexController extends IndexController
             . '" AND "' . $dateEnd . '"';
         $records   = $this->getModelObject()->fetchAll($where, "startDate", $count, $offset);
 
-        echo Phprojekt_Converter_Csv::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -313,6 +313,6 @@ class Calendar_IndexController extends IndexController
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where, $order);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 }

@@ -58,6 +58,32 @@ class Phprojekt_Converter_Csv
         }
     }
 
+
+    /**
+     * Converts according to convert() and echos the result
+     * with the corresponding headers
+     *
+     * @see convert()
+     * @param mix $param1 - Array
+     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
+     *
+     * @return void
+     */
+    public static function echoConvert($param1, $param2 = null) {
+        $outputString = self::convert($param1, $param2);
+
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        header('Content-Length: ' . strlen($outputString));
+        header("Content-Disposition: attachment; filename=\"export.csv\"");
+        header('Content-Type: text/csv');
+
+        echo $outputString;
+    }
+
     /**
      * Convert a model or a model information into a CSV file
      *
@@ -158,15 +184,6 @@ class Phprojekt_Converter_Csv
             $outputString .= "\"\n";
         }
 
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        header('Content-Length: ' . strlen($outputString));
-        header("Content-Disposition: attachment; filename=\"export.csv\"");
-        header('Content-Type: text/csv');
-
-        echo $outputString;
+        return $outputString;
     }
 }
