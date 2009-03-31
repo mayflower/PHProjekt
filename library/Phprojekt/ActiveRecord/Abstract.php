@@ -334,7 +334,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $varname = trim($varname);
         $getter  = 'get' . ucfirst($varname);
         if (in_array($getter, get_class_methods(get_class($this)))) {
-            return call_user_method($getter, $this);
+            return call_user_method(array($getter, $this));
         } elseif (array_key_exists($varname, $this->hasMany)
         && array_key_exists('id', $this->_data)) {
             return $this->_hasMany($varname);
@@ -371,7 +371,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $setter = 'set' . ucfirst($varname);
 
         if (in_array($setter, get_class_methods(get_class($this)))) {
-            call_user_method($setter, $this, $value);
+            call_user_func(array($this, $setter), $value);
         } elseif (array_key_exists($varname, get_object_vars($this))) {
             $this->$varname = $value;
         } elseif (array_key_exists($varname, $this->_data)) {

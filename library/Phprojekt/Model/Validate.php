@@ -102,7 +102,7 @@ class Phprojekt_Model_Validate
                 $validater  = 'validate' . ucfirst($varname);
                 if ($validater != 'validateIsRequired') {
                     if (in_array($validater, get_class_methods($class))) {
-                        $error = call_user_method($validater, $class, $value);
+                        $error = call_user_func(array($class, $validater), $value);
                         if (null !== $error) {
                             $validated = false;
                             $this->error->addError(array(

@@ -388,7 +388,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             default:
                 $activeRecord = Phprojekt_Loader::getModel($module, $module);
                 if (in_array('getRangeFromModel', get_class_methods($activeRecord))) {
-                    $options = call_user_method('getRangeFromModel', $activeRecord, $field);
+                    $options = call_user_func(array($activeRecord, 'getRangeFromModel'), $field);
                 } else {
                     if (!$field->isRequired) {
                         $options[] = array('id'   => 0,

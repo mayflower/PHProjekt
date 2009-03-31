@@ -197,7 +197,7 @@ class Cleaner_Engine
             throw new Cleaner_Exception('Escaper of Type ' . $type. ' does not exist');
         }
 
-        return call_user_method('escape' . $scopeTypes[$type], $escaper, $value);
+        return call_user_func(array($escaper, 'escape' . $scopeTypes[$type]), $value);
     }
 
     /**
@@ -219,7 +219,7 @@ class Cleaner_Engine
             throw new Cleaner_Exception('Sanitizer of Type ' . $type . ' does not exist');
         }
 
-        return call_user_method_array('sanitize' . $sanitizer->sanitizers[$type], $sanitizer, array($value, $messages));
+        return call_user_func_array(array($sanitizer, 'sanitize' . $sanitizer->sanitizers[$type]), array($value, $messages));
     }
 
     /**
@@ -241,6 +241,6 @@ class Cleaner_Engine
             throw new Cleaner_Exception('Validator of Type ' . $type . ' does not exist');
         }
 
-        return call_user_method_array('validate' . $validator->validators[$type], $validator, array($value, $messages));
+        return call_user_func_array(array($validator, 'validate' . $validator->validators[$type]), array($value, $messages));
     }
 }
