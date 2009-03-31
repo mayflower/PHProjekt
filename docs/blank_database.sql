@@ -672,7 +672,7 @@ INSERT INTO `RoleModulePermissions` (`roleId`, `moduleId`, `access`) VALUES
 (4, 7, 1),
 (4, 8, 1),
 (4, 10, 1),
-(4, 10, 1);
+(4, 11, 1);
 
 INSERT INTO `ItemRights` (`moduleId`, `itemId`, `userId`, `access`) VALUES
 (1, 1, 1, 255),
