@@ -43,7 +43,7 @@ class Phprojekt_Converter_Text
      *
      * @return string
      */
-    static function convert($model, $field)
+    public static function convert($model, $field)
     {
         $value = "";
         switch ($field['type']) {

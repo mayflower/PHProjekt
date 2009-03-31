@@ -44,7 +44,7 @@ class Phprojekt_Converter_Csv
      *
      * @return string
      */
-    static function convert($param1, $param2 = null)
+    public static function convert($param1, $param2 = null)
     {
         // Convert Models
         if (is_array($param1) && isset($param1[0]) && $param1[0] instanceof Phprojekt_Model_Interface) {
