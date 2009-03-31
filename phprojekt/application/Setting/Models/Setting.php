@@ -181,7 +181,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                 if ($oneSetting->keyValue == $meta['key']) {
                     $getter = 'get'.ucfirst($oneSetting->keyValue);
                     if (in_array($getter, $functions)) {
-                        $data[$meta['key']] = call_user_method($getter, $this->getModel(), $oneSetting->value);
+                        $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $oneSetting->value);
                     } else {
                         $data[$meta['key']] = $oneSetting->value;
                     }
@@ -204,7 +204,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $message = null;
         if (in_array('validateSettings', get_class_methods($this->getModel()))) {
-            $message = call_user_method('validateSettings', $this->getModel(), $params);
+            $message = call_user_func(array($this->getModel(), 'validateSettings'), $params);
         }
         return $message;
     }
@@ -227,7 +227,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         $settingNamespace->unsetAll();
 
         if (in_array('setSettings', get_class_methods($this->getModel()))) {
-            call_user_method('setSettings', $this->getModel(), $params, $userId);
+            call_user_func(array($this->getModel(), 'setSettings'), $params, $userId);
         } else {
             $fields = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {

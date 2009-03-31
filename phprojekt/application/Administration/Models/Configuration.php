@@ -153,7 +153,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 if ($config->keyValue == $meta['key']) {
                     $getter = 'get'.ucfirst($config->keyValue);
                     if (in_array($getter, $functions)) {
-                        $data[$meta['key']] = call_user_method($getter, $this->getModel(), $config->value);
+                        $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $config->value);
                     } else {
                         $data[$meta['key']] = $config->value;
                     }
@@ -176,7 +176,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     {
         $message = null;
         if (in_array('validateConfigurations', get_class_methods($this->getModel()))) {
-            $message = call_user_method('validateConfigurations', $this->getModel(), $params);
+            $message = call_user_func(array($this->getModel(), 'validateConfigurations'), $params);
         }
         return $message;
     }
@@ -191,7 +191,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function setConfigurations($params)
     {
         if (in_array('setConfigurations', get_class_methods($this->getModel()))) {
-            call_user_method('setConfigurations', $this->getModel(), $params);
+            call_user_func(array($this->getModel(), 'setConfigurations'), $params);
         } else {
             $fields = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
