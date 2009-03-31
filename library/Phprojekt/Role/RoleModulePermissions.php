@@ -45,7 +45,8 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     public function getRoleModulePermissionsById($roleId)
     {
         $modules = array();
-        $where   = ' RoleModulePermissions.roleId = ' . $roleId .' OR RoleModulePermissions.roleId is null ';
+        $where   = ' RoleModulePermissions.roleId = ' . (int) $roleId;
+        $where  .= ' OR RoleModulePermissions.roleId is null ';
         $where  .= ' AND (Module.saveType = 0 OR Module.saveType = 2) ';
         $order   = ' Module.name ASC';
         $select  = ' Module.id as moduleId ';
