@@ -10,7 +10,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
