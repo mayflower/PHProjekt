@@ -366,6 +366,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dijit.byId("selectDate").attr('value', this._date);
         this._usersSelectionMode = false;
         this.loadDayListSelf();
+        this.setSubmoduleNavigation();
     },
 
     destroyOtherLists:function(mode) {
