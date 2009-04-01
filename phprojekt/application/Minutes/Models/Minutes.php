@@ -35,6 +35,14 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 {
     /**
      * Customized version to calculate the status of a minutes item regardless of its saved database entry.
+     * @param string|array $where  Where clause
+     * @param string|array $order  Order by
+     * @param string|array $count  Limit query
+     * @param string|array $offset Query offset
+     * @param string       $select The comma-separated columns of the joined columns
+     * @param string       $join   The join statements
+     *
+     * @return Zend_Db_Table_Rowset
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
@@ -46,6 +54,10 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      * Function to calculate status based on other item properties
      * 
      * @todo enter calculations based on spec
+     * 
+     * @param $item Item to do status calculations with
+     *  
+     * @return Phproject_Item_Abstract
      */
     protected function _calcStatus(Phprojekt_Model_Interface &$item)
     {
@@ -55,6 +67,8 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
     
     /**
      * customized save, forces status field to be zero - is calculated on loading
+     * 
+     * @return void
      * 
      */
     public function save()
