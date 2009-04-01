@@ -102,11 +102,11 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     setWeekDays:function() {
         // Summary:
         //    Fills the weekDays array with all the dates of the week in string format.
-        var dCurrentDate = dijit.byId('selectDate').attr('value');
+        var selectedDate = dijit.byId('selectDate').attr('value');
         var dayTemp;
 
         for (var i = 0; i < 7; i ++) {
-            dayTemp           = dojo.date.add(dCurrentDate, 'day', i + 1 - this._date.getDay());
+            dayTemp           = dojo.date.add(selectedDate, 'day', i + 1 - selectedDate.getDay());
             this._weekDays[i] = this.formatDate(dayTemp.getFullYear() + '-' + (dayTemp.getMonth() + 1) + '-'
                 + dayTemp.getDate());
         }
@@ -158,7 +158,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         for (var i = 0; i < 7; i ++) {
             this._header['days'][i]                 = new Array();
             this._header['days'][i]['columnsTotal'] = 1;
-            this._header['days'][i]['columnsWidth'] = -1;
             this._header['days'][i]['dayAbbrev']    = phpr.nls.get(daysAbbrev[i]);
             this._header['days'][i]['date']         = this._weekDays[i];
         }
@@ -170,22 +169,19 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         var currentEventsNow = new Array();
         for (var row = 0; row < 24; row ++) {
             currentEventsNow[row] = new Array();
-            for (var day = 0; day < 7; day ++) {
-                currentEventsNow[row][this._weekDays[day]] = 0; // Example: currentEventsNow[0]['2009-01-01'] = 0
-            }
 
-            for (var event in content) {
-                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'],
-                    this._schedule[row]['hour']);
-
-                if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
-                    currentEventsNow[row][content[event]['startDate']] ++;
+            for (var day in this._weekDays) {
+                currentEventsNow[row][day] = 0;
+                for (var event in content) {
+                    var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+                                                      content[event]['endDate'], content[event]['endTime'],
+                                                      this._weekDays[day], this._schedule[row]['hour']);
+                    if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
+                        currentEventsNow[row][day] ++;
+                    }
                 }
-            }
-
-            for (var day = 0; day < 7; day ++) {
-                if (currentEventsNow[row][this._weekDays[day]] > this._header['days'][day]['columnsTotal']) {
-                    this._header['days'][day]['columnsTotal'] = currentEventsNow[row][this._weekDays[day]];
+                if (currentEventsNow[row][day] > this._header['days'][day]['columnsTotal']) {
+                    this._header['days'][day]['columnsTotal'] = currentEventsNow[row][day];
                 }
             }
         }
@@ -229,61 +225,87 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Description:
         //    Receives the array of a day of the week, and the response from the DB and puts all the events of that
         // day in the appropriate position inside the array.
+        
+        furtherEventsTemp           = new Array();
+        furtherEventsTemp['show']   = false;
+        furtherEventsTemp['events'] = new Array();
+        // All events to be shown both in schedule and 'Further events'
+        eventsToBeShown             = new Array();
+
         for (var event in content) {
-            var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'], null,
-                content[event]['startDate']);
+            for (var day in this._weekDays) {
+                var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+                                                    content[event]['endDate'], content[event]['endTime'],
+                                                    this._weekDays[day]);
+                if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
+                    var rowEventBegins   = eventInfo['halfBeginning'];
+                    var rowEventFinishes = rowEventBegins + eventInfo['halvesDuration'];
 
-            if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
-                var rowEventBegins   = eventInfo['halfBeginning'];
-                var rowEventFinishes = rowEventBegins + eventInfo['halvesDuration'];
-                var day              = eventInfo['weekDay'];
+                    // Find which column to use
+                    var useColumn       = -1;
+                    var columnsTotalDay = this._header['days'][day]['columnsTotal'];
 
-                // Find which column to use
-                var useColumn       = -1;
-                var columnsTotalDay = this._header['days'][day]['columnsTotal'];
-
-                for (column = 0; column < columnsTotalDay; column++) {
-                    var useColumn = column;
-                    for (var row = rowEventBegins; row < rowEventFinishes; row ++) {
-                        if (this._schedule[row][day]['columns'][column]['occupied']) {
-                            useColumn = -1;
-                            break;
+                    for (column = 0; column < columnsTotalDay; column++) {
+                        var useColumn = column;
+                        for (var row = rowEventBegins; row < rowEventFinishes; row ++) {
+                            if (this._schedule[row][day]['columns'][column]['occupied']) {
+                                useColumn = -1;
+                                break;
+                            }
+                        }
+                        if (useColumn != -1) {
+                            break
                         }
                     }
-                    if (useColumn != -1) {
-                        break
+                    var notes = this.htmlEntities(content[event]['notes']);
+                    notes     = notes.replace('\n', '<br />');
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['occupied']       = true;
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['typeEvent']      = this.EVENT_BEGIN;
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['id']             = content[event]['id'];
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['time']           = eventInfo['time'];
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['notes']          = notes;
+                    this._schedule[rowEventBegins][day]['columns'][useColumn]['class']          = '';
+
+                    //For every next row that this event occupies
+                    for (var row = rowEventBegins + 1; row < rowEventFinishes; row++) {
+                        this._schedule[row][day]['columns'][useColumn]['occupied']  = true;
+                        this._schedule[row][day]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
+                        this._schedule[row][day]['columns'][useColumn]['class']     = '';
+                    }
+                    eventsToBeShown[eventsToBeShown.length] = content[event]['id'];
+
+                } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
+                    furtherEventsTemp['show'] = true;
+                    var nextPosition = furtherEventsTemp['events'].length;
+                    furtherEventsTemp['events'][nextPosition]          = new Array();
+                    furtherEventsTemp['events'][nextPosition]['id']    = content[event]['id'];
+                    furtherEventsTemp['events'][nextPosition]['time']  = eventInfo['time'];
+                    furtherEventsTemp['events'][nextPosition]['title'] = content[event]['title'];
+                }
+            }
+        }
+
+        // Clean the repeated 'further events'. Copy the rest to the global variable
+        if (furtherEventsTemp['show']) {
+            for (var event in furtherEventsTemp['events']) {
+                var repeated = false;
+                for (var i in eventsToBeShown) {
+                    if (eventsToBeShown[i] == furtherEventsTemp['events'][event]['id']) {
+                        repeated = true;
+                        break;
                     }
                 }
-
-                var notes = this.htmlEntities(content[event]['notes']);
-                notes     = notes.replace('\n', '<br />');
-
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['occupied']       = true;
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['typeEvent']      = this.EVENT_BEGIN;
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['id']             = content[event]['id'];
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['startTime']      = this.formatTime(content[event]['startTime']);
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['endTime']        = this.formatTime(content[event]['endTime']);
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['notes']          = notes;
-                this._schedule[rowEventBegins][day]['columns'][useColumn]['class']          = '';
-
-                //For every next row that this event occupies
-                for (var row = rowEventBegins + 1; row < rowEventFinishes; row++) {
-                    this._schedule[row][day]['columns'][useColumn]['occupied']  = true;
-                    this._schedule[row][day]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
-                    this._schedule[row][day]['columns'][useColumn]['class']     = '';
+                if (!repeated) {
+                    this._furtherEvents['show']                       = true;
+                    eventsToBeShown[eventsToBeShown.length]           = furtherEventsTemp['events'][event]['id'];
+                    var nextEvent                                     = this._furtherEvents['events'].length;
+                    this._furtherEvents['events'][nextEvent]          = new Array();
+                    this._furtherEvents['events'][nextEvent]['id']    = furtherEventsTemp['events'][event]['id'];
+                    this._furtherEvents['events'][nextEvent]['time']  = furtherEventsTemp['events'][event]['time'];
+                    this._furtherEvents['events'][nextEvent]['title'] = furtherEventsTemp['events'][event]['title'];
                 }
-
-            } else if (eventInfo['range'] == this.EVENT_OUTSIDE_CHART) {
-                this._furtherEvents['show'] = true;
-                var nextPosition            = this._furtherEvents['events'].length;
-                this._furtherEvents['events'][nextPosition]              = new Array();
-                this._furtherEvents['events'][nextPosition]['id']        = content[event]['id'];
-                this._furtherEvents['events'][nextPosition]['startDate'] = content[event]['startDate'];
-                this._furtherEvents['events'][nextPosition]['startTime'] = this.formatTime(content[event]['startTime']);
-                this._furtherEvents['events'][nextPosition]['endTime']   = this.formatTime(content[event]['endTime']);
-                this._furtherEvents['events'][nextPosition]['title']     = content[event]['title'];
             }
         }
     }

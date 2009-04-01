@@ -237,10 +237,12 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             if (this.grid) {
                 params['startDate'] = '';
                 params['startTime'] = '08:00';
+                params['endDate']   = '';
                 params['endTime']   = '10:00';
             } else if (this.dayListSelf || this.dayListSelect || this.weekList) {
                 if (startDate != undefined) {
                     params['startDate'] = startDate;
+                    params['endDate']   = startDate;
                 } else {
                     var tmpDate      = dijit.byId("selectDate").attr('value');
                     var selectedDate = tmpDate.getFullYear()
@@ -249,6 +251,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                         + '-'
                         + dojo.number.format(tmpDate.getDate(), {pattern: '00'});
                     params['startDate'] = selectedDate;
+                    params['endDate']   = selectedDate;
                 }
 
                 if (startTime == undefined) {

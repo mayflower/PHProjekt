@@ -25,6 +25,11 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
 
+    // Variables that will be passed to the template for django to render it
+    _schedule:       Array(23),
+    _furtherEvents : Array(),
+    _maxSimultEvents: 1,
+
     afterConstructor:function() {
         // Summary:
         //    Loads the data from the database
@@ -37,8 +42,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         //    Sets the url to get the data from
         // Description:
         //    Sets the url for get the data from
-        var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
-        this.url       = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelf/date/" + dateString;
+        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelf/date/" + this._date;
     },
 
     onLoaded:function(dataContent) {
@@ -52,75 +56,112 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         // Render export Button
         this.setExportButton(meta);
 
-        var content         = phpr.DataStore.getData({url: this.url});
-        var maxSimultEvents = 0;
+        var content = phpr.DataStore.getData({url: this.url});
 
-        // Variables that will be passed to the template for django to render it
-        var timeSquare          = new Array(23);
-        var furtherEvents       = new Array();
-        furtherEvents['show']   = false;
-        furtherEvents['events'] = new Array();
+        // Fill the structure and data of the main arrays
+        this.fillScheduleArrayStructure_part1();
+        this.determineColumns(content);
+        this.fillScheduleArrayStructure_part2(content);
 
-        // Fill the main array with all the possible points in time for this day view
-        // 8:00, 8:30, 9:00 and so on, until 19:30, and whether it is an even row or not.
+        // All done, let's render the template
+        this.render(["phpr.Calendar.template", "dayListSelf.html"], dojo.byId('gridBox'), {
+            widthTable:           this._widthTable,
+            widthHourColumn:      this._widthHourColumn,
+            schedule:             this._schedule,
+            furtherEvents:        this._furtherEvents,
+            furtherEventsMessage: phpr.nls.get('Further events')
+        });
+    },
+
+    exportData:function() {
+        // Summary:
+        //    Open a new window in CSV mode
+        // Description:
+        //    Open a new window in CSV mode
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelf/date/" + this._date);
+
+        return false;
+    },
+
+    fillScheduleArrayStructure_part1:function() {
+        // Summary:
+        //    This function fills the week days arrays with the rows for every half of hour.
+        // Description:
+        //    Fills the array with the users and all the possible points in time for this day view: 8:00, 8:30, 9:00
+        // and so on, until 19:30. Each of that rows will have as many columns as users plus simultaneous events exist.
+        // Also sets for every row whether it is even or not.
         for (var hour = 8; hour < 20; hour++) {
             for (var half = 0; half < 2; half++) {
                 var minute = half * 30;
                 var row    = ((hour - 8) * 2) + half;
 
-                timeSquare[row]         = new Array();
-                timeSquare[row]['hour'] = this.formatTime(hour + ':' + minute);
+                this._schedule[row]         = new Array();
+                this._schedule[row]['hour'] = this.formatTime(hour + ':' + minute);
                 if (Math.floor(row / 2) == (row / 2)) {
                     // Even row
-                    timeSquare[row]['even'] = true;
+                    this._schedule[row]['even'] = true;
                 } else {
                     // Odd row
-                    timeSquare[row]['even'] = false;
+                    this._schedule[row]['even'] = false;
                 }
             }
         }
+    },
+
+    determineColumns:function(content) {
+        // Summary:
+        //    This function designs the simultaneous events, settting how many columns will be shown.
 
         // Determine how many columns to show
-        var maxSimultEvents = 1;
-        for (var i in timeSquare) {
+        for (var i in this._schedule) {
             var currentEventNow = -1;
             for (var event in content) {
-                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'],
-                    timeSquare[i]['hour']);
+                var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+                                                  content[event]['endDate'], content[event]['endTime'],
+                                                  this._date, this._schedule[i]['hour']);
                 if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventNow++;
                 }
             }
-            if (currentEventNow >= maxSimultEvents) {
-                maxSimultEvents = currentEventNow + 1;
+            if (currentEventNow >= this._maxSimultEvents) {
+                this._maxSimultEvents = currentEventNow + 1;
             }
         }
-        var widthColumns = Math.floor((100 - this._widthHourColumn) / maxSimultEvents);
+        var widthColumns = Math.floor((100 - this._widthHourColumn) / this._maxSimultEvents);
 
         // Create the columns arrays
-        for (var row in timeSquare) {
-            timeSquare[row]['columns'] = new Array();
-            for (column=0; column < maxSimultEvents; column++) {
-                timeSquare[row]['columns'][column]              = new Array();
-                timeSquare[row]['columns'][column]['occupied']  = false;
-                timeSquare[row]['columns'][column]['typeEvent'] = this.EVENT_NONE;
-                timeSquare[row]['columns'][column]['width']     = widthColumns;
+        for (var row in this._schedule) {
+            this._schedule[row]['columns'] = new Array();
+            for (column=0; column < this._maxSimultEvents; column++) {
+                this._schedule[row]['columns'][column]              = new Array();
+                this._schedule[row]['columns'][column]['occupied']  = false;
+                this._schedule[row]['columns'][column]['typeEvent'] = this.EVENT_NONE;
+                this._schedule[row]['columns'][column]['width']     = widthColumns;
             }
         }
+    },
 
-        // For every event, put it somewhere in the arrays
+    fillScheduleArrayStructure_part2:function(content) {
+        // Summary:
+        //    Continues creating the schedule array structure, supporting simultaneous events. Puts every event 
+        // somewhere in the arrays.
+        
+        this._furtherEvents['show']   = false;
+        this._furtherEvents['events'] = new Array();
+
         for (var event in content) {
-            var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
-
-            if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
+            var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+                                              content[event]['endDate'], content[event]['endTime'],
+                                              this._date);
+            if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                 var eventBegins = eventInfo['halfBeginning'];
 
                 // Find which column to use
                 var useColumn = -1;
-                for (column = 0; column < maxSimultEvents; column++) {
+                for (column = 0; column < this._maxSimultEvents; column++) {
                     var useColumn = column;
                     for (var row = eventBegins; row < (eventBegins + eventInfo['halvesDuration']); row++) {
-                        if (timeSquare[row]['columns'][column]['occupied']) {
+                        if (this._schedule[row]['columns'][column]['occupied']) {
                             useColumn = -1;
                             break;
                         }
@@ -133,50 +174,29 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                 var notes = this.htmlEntities(content[event]['notes']);
                 notes     = notes.replace('\n', '<br />');
 
-                timeSquare[eventBegins]['columns'][useColumn]['occupied']       = true;
-                timeSquare[eventBegins]['columns'][useColumn]['typeEvent']      = this.EVENT_BEGIN;
-                timeSquare[eventBegins]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
-                timeSquare[eventBegins]['columns'][useColumn]['id']             = content[event]['id'];
-                timeSquare[eventBegins]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
-                timeSquare[eventBegins]['columns'][useColumn]['startTime']      = this.formatTime(content[event]['startTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['endTime']        = this.formatTime(content[event]['endTime']);
-                timeSquare[eventBegins]['columns'][useColumn]['notes']          = notes;
+                this._schedule[eventBegins]['columns'][useColumn]['occupied']       = true;
+                this._schedule[eventBegins]['columns'][useColumn]['typeEvent']      = this.EVENT_BEGIN;
+                this._schedule[eventBegins]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
+                this._schedule[eventBegins]['columns'][useColumn]['id']             = content[event]['id'];
+                this._schedule[eventBegins]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
+                this._schedule[eventBegins]['columns'][useColumn]['time']           = eventInfo['time'];
+                this._schedule[eventBegins]['columns'][useColumn]['notes']          = notes;
 
                 //For every next row that this event occupies
                 var rowThisEventFinishes = eventBegins + eventInfo['halvesDuration'] -1;
                 for (var row = eventBegins + 1; row <= rowThisEventFinishes; row++) {
-                    timeSquare[row]['columns'][useColumn]['occupied']  = true;
-                    timeSquare[row]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
+                    this._schedule[row]['columns'][useColumn]['occupied']  = true;
+                    this._schedule[row]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
                 }
-            } else if (eventInfo['range'] == this.EVENT_OUTSIDE_CHART) {
-                furtherEvents['show'] = true;
-                var nextPosition      = furtherEvents['events'].length;
-                furtherEvents['events'][nextPosition]              = new Array();
-                furtherEvents['events'][nextPosition]['id']        = content[event]['id'];
-                furtherEvents['events'][nextPosition]['startTime'] = this.formatTime(content[event]['startTime']);
-                furtherEvents['events'][nextPosition]['endTime']   = this.formatTime(content[event]['endTime']);
-                furtherEvents['events'][nextPosition]['title']     = content[event]['title'];
+
+            } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
+                this._furtherEvents['show'] = true;
+                var nextPosition      = this._furtherEvents['events'].length;
+                this._furtherEvents['events'][nextPosition]          = new Array();
+                this._furtherEvents['events'][nextPosition]['id']    = content[event]['id'];
+                this._furtherEvents['events'][nextPosition]['time']  = eventInfo['time'];
+                this._furtherEvents['events'][nextPosition]['title'] = content[event]['title'];
             }
         }
-
-        // All done, let's render the template
-        this.render(["phpr.Calendar.template", "dayListSelf.html"], dojo.byId('gridBox'), {
-            widthTable:           this._widthTable,
-            widthHourColumn:      this._widthHourColumn,
-            timeSquare:           timeSquare,
-            furtherEvents:        furtherEvents,
-            furtherEventsMessage: phpr.nls.get('Further events')
-        });
-    },
-
-    exportData:function() {
-        // Summary:
-        //    Open a new window in CSV mode
-        // Description:
-        //    Open a new window in CSV mode
-        var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelf/date/" + dateString);
-
-        return false;
     }
 });

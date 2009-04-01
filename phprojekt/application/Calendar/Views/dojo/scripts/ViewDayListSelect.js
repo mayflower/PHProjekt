@@ -45,9 +45,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Sets the url to get the data from
         // Description:
         //    Sets the url for get the data from
-        var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
         var users = this._users.join(",");
-        this.url  = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelect/date/" + dateString
+        this.url  = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelect/date/" + this._date
             + "/users/" + users;
     },
 
@@ -94,9 +93,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        var dateString = this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
         var users      = this._users.join(",");
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelect/date/" + dateString
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelect/date/" + this._date
             + "/users/" + users);
 
         return false;
@@ -162,9 +160,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                 currentEventsNow[row][user] = 0;
             }
             for (var event in content) {
-                var userId = parseInt(content[event]['participantId']);
-                var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime'],
-                    this._schedule[row]['hour']);
+                var userId    = parseInt(content[event]['participantId']);
+                var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+                                                  content[event]['endDate'], content[event]['endTime'],
+                                                  this._date, this._schedule[row]['hour']);
                 if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventsNow[row][this.getUserColumnPosition(userId)] ++;
                 }
@@ -217,9 +216,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Receives the response from the DB and puts all the events of the selected users in the appropriate
         // position inside the schedule array.
         for (var event in content) {
-            var eventInfo = this.getEventInfo(content[event]['startTime'], content[event]['endTime']);
-
-            if (eventInfo['range'] == this.EVENT_INSIDE_CHART) {
+        	var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+                                              content[event]['endDate'], content[event]['endTime'],
+                                              this._date);
+            if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                 var rowEventBegins   = eventInfo['halfBeginning'];
                 var rowEventFinishes = rowEventBegins + eventInfo['halvesDuration'];
 
@@ -243,6 +243,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                     }
                 }
 
+                // Put the event into the array
                 var notes = this.htmlEntities(content[event]['notes']);
                 notes     = notes.replace('\n', '<br />');
 
@@ -251,8 +252,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                 this._schedule[rowEventBegins][user]['columns'][useColumn]['halvesDuration'] = eventInfo['halvesDuration'];
                 this._schedule[rowEventBegins][user]['columns'][useColumn]['id']             = content[event]['id'];
                 this._schedule[rowEventBegins][user]['columns'][useColumn]['title']          = this.htmlEntities(content[event]['title']);
-                this._schedule[rowEventBegins][user]['columns'][useColumn]['startTime']      = this.formatTime(content[event]['startTime']);
-                this._schedule[rowEventBegins][user]['columns'][useColumn]['endTime']        = this.formatTime(content[event]['endTime']);
+                this._schedule[rowEventBegins][user]['columns'][useColumn]['time']           = eventInfo['time'];
                 this._schedule[rowEventBegins][user]['columns'][useColumn]['notes']          = notes;
                 this._schedule[rowEventBegins][user]['columns'][useColumn]['class']          = '';
 
@@ -262,7 +262,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                     this._schedule[row][user]['columns'][useColumn]['typeEvent'] = this.EVENT_CONTINUES;
                     this._schedule[row][user]['columns'][useColumn]['class']     = '';
                 }
-            } else if (eventInfo['range'] == this.EVENT_OUTSIDE_CHART) {
+            } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
                 // For the events out of schedule (not from 8:00 to 20:00).
                 // Nothing programmed by the moment
             }
