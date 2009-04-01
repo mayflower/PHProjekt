@@ -166,7 +166,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $data     = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
         $lastData = $history->getLastHistoryData($project);
 
-        $this->assertEquals(10, count($data));
+        $this->assertEquals(11, count($data));
         $this->assertEquals(1, count($lastData));
     }
 

@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `UserSetting`;
 DROP TABLE IF EXISTS `Setting`;
+DROP TABLE IF EXISTS `ModuleInstance`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
@@ -431,6 +432,18 @@ CREATE TABLE `Calendar` (
 
 
 --
+-- Table structure for table `ModuleInstance`
+--
+CREATE TABLE `ModuleInstance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) default NULL,
+  `module` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+
+--
 -- Table structure for table `Filemanager`
 --
 CREATE TABLE `Filemanager` (
@@ -469,7 +482,7 @@ CREATE TABLE `Contact` (
 
 
 --
--- Table structure for table `Contact`
+-- Table structure for table `Helpdesk`
 --
 CREATE TABLE `Helpdesk` (
   `id` int(11) NOT NULL auto_increment,
@@ -648,6 +661,7 @@ INSERT INTO `Groups` (`id`, `name`) VALUES
 
 INSERT INTO `Role` (`id`, `name`, `parent`) VALUES
 (1, 'admin', 0);
+
 INSERT INTO `GroupsUserRelation` (`id`, `groupsId`, `userId`) VALUES
 (1, 1, 1),
 (2, 2, 2),
