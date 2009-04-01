@@ -317,6 +317,6 @@ class Calendar_IndexController extends IndexController
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where, $order);
 
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 }
