@@ -35,6 +35,7 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 {
     /**
      * Customized version to calculate the status of a minutes item regardless of its saved database entry.
+     *
      * @param string|array $where  Where clause
      * @param string|array $order  Order by
      * @param string|array $count  Limit query
@@ -49,32 +50,31 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
         return array_map(array($this, '_calcStatus'), $result);
     }
-    
+
     /**
      * Function to calculate status based on other item properties
-     * 
+     *
      * @todo enter calculations based on spec
-     * 
+     *
      * @param Phproject_Item_Abstract Item to do status calculations with
-     *  
+     *
      * @return Phproject_Item_Abstract
      */
     protected function _calcStatus(Phprojekt_Item_Abstract &$item)
     {
-        $item->itemStatus = ($item->itemStatus == 0)? 2 : $item->itemStatus;
+        $item->itemStatus = ($item->itemStatus == 0) ? 2 : $item->itemStatus;
         return $item;
     }
-    
+
     /**
-     * customized save, forces status field to be zero - is calculated on loading
-     * 
+     * Customized save, forces status field to be zero - is calculated on loading
+     *
      * @return void
-     * 
      */
     public function save()
     {
-        $this->itemStatus = 0; // forced
+        // Forced
+        $this->itemStatus = 0;
         return parent::save();
     }
-    
 }
