@@ -32,22 +32,27 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     url:                 null,
     _tagUrl:             null,
     _date:               null,
-     _widthTable:        0,
+    _widthTable:         0,
     _widthHourColumn:    8,
+
+    // General constants
+    SCHEDULE_START_HOUR: 8,
+    SCHEDULE_END_HOUR:   20,
 
     // Constants used by the function getEventInfo:
     EVENT_TIME_START:    0,
     EVENT_TIME_INSIDE:   1,
     EVENT_TIME_OUTSIDE:  2,
-    EVENT_INSIDE_CHART:  0,
-    EVENT_OUTSIDE_CHART: 1,
+    SHOWN_INSIDE_CHART:  0,
+    SHOWN_OUTSIDE_CHART: 1,
+    SHOWN_NOT:           2,
 
     // Constants used to define a calendar event time in comparison to a specific moment:
     EVENT_NONE:          0,
     EVENT_BEGIN:         1,
     EVENT_CONTINUES:     2,
 
-    constructor:function(/*Object*/ main, /*Int*/ id, /*String*/ date, /*Array*/ users) {
+    constructor:function(/*Object*/ main, /*Int*/ id, /*Date*/ date, /*Array*/ users) {
         // Summary:
         //    Render the schedule table
         // Description:
@@ -55,7 +60,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         this.main  = main;
         this.id    = id;
         this.url   = null;
-        this._date = date;
+        this._date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
         this.beforeConstructor();
 
@@ -119,46 +124,63 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
     },
 
-    getEventInfo:function(/*string*/ eventStartTime_String, /*string*/ eventEndTime_String, /*string*/ askedTime,
-                          /*string*/ eventStartDate_String) {
+    getEventInfo:function(/*string*/ eventStartDate_String, /*string*/ eventStartTime_String,
+                          /*string*/ eventEndDate_String, /*string*/ eventEndTime_String, 
+                          /*string*/ momentAskedDate, /*string*/ momentAskedTime) {
         // Summary:
         //    Returns useful data about an event, used to create the schedule table.
         // Description:
         //    Returns useful data about an event, used to create the schedule table. E.g.: whether it is inside or
-        // outside the 8:00 to 20:00 range,  in what row (and maybe day) of the shown table should it start and end.
-        // If the 'askedTime' parameter is set, then which of three possibilities happens: 1) That time matchs the
-        // start time  2) Is just inside the period  3) It is outside that period.
+        // outside the 8:00 to 20:00 range, in what row (and maybe day) of the shown table should it start and end.
+        // If the 'momentAskedTime' optional parameter is set, then one of three possibilities happens and is informed:
+        // 1) The event start time matchs that start time  
+        // or 2) The moment asked is inside the event period but doesn't match the event start time
+        // or 3) The moment asked is outside the event time
+        // Note:
+        //    Because of this function having lots of time and date variables, I added the suffix '_Date' to the ones of
+        // Date type format, for making all these no so difficult to understand. Also, to just a few of the String
+        // variables, there was added the '_String' suffix, with the same purpose.
 
-        // IMPORTANT NOTE: because of this function having lots of time and date variables, I added the suffix
-        // '_Date' to the ones of Date type format, for making all these no so difficult to understand.
-        // Also, to just a few of the String variables, there was added the '_String' suffix, with the same purpose.
-        var result                 = new Array(); // The variable that will be returned
-        var scheduleStartTime_Date = new Date();
-        var scheduleEndTime_Date   = new Date();
+        var result             = new Array();  // The variable that will be returned
 
-        if (eventStartDate_String != null) {
-            // Just for the Week view: set the week day (0 to 6)
-            for (var i = 0; i < 7; i ++) {
-                if (this._weekDays[i] == eventStartDate_String) {
-                    result['weekDay'] = i;
-                }
-            }
-        }
+        var scheduleStart_Date = new Date();  // For the momentAskedDate (current Day), what time the schedule starts
+        var scheduleEnd_Date   = new Date();  // For the momentAskedDate (current Day), what time the schedule ends
+        var eventStart_Date    = new Date();  // Date and time the event starts
+        var eventEnd_Date      = new Date();  // Date and time the event ends
+        var momentAsked_Date   = new Date();  // momentAsked (with or without time)
+        var eventStartDay_Date = new Date();  // Just the year/month/day of the event start
+        var eventEndDay_Date   = new Date();  // Just the year/month/day of the event end
 
-        scheduleStartTime_Date.setHours(8);
-        scheduleStartTime_Date.setMinutes(0);
-        scheduleStartTime_Date.setSeconds(0);
-        scheduleEndTime_Date.setHours(20);
-        scheduleEndTime_Date.setMinutes(0);
-        scheduleEndTime_Date.setSeconds(0);
+        var temp             = momentAskedDate.split('-');
+        var momentAskedYear  = parseInt(temp[0], 10);
+        var momentAskedMonth = parseInt(temp[1], 10);
+        var momentAskedDay   = parseInt(temp[2], 10);
+        scheduleStart_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
+        scheduleStart_Date.setHours(this.SCHEDULE_START_HOUR, 0, 0, 0);
+        scheduleEnd_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
+        scheduleEnd_Date.setHours(this.SCHEDULE_END_HOUR, 0, 0, 0);
 
         // Convert event start and end Strings into Date formats
-        var temp              = eventStartTime_String.split(':');
+        temp                  = eventStartDate_String.split('-');
+        var eventStartYear    = parseInt(temp[0], 10);
+        var eventStartMonth   = parseInt(temp[1], 10);
+        var eventStartDay     = parseInt(temp[2], 10);
+        temp                  = eventStartTime_String.split(':');
         var eventStartHour    = parseInt(temp[0], 10);
         var eventStartMinutes = parseInt(temp[1], 10);
-        var temp              = eventEndTime_String.split(':');
+        temp                  = eventEndDate_String.split('-');
+        var eventEndYear      = parseInt(temp[0], 10);
+        var eventEndMonth     = parseInt(temp[1], 10);
+        var eventEndDay       = parseInt(temp[2], 10);
+        temp                  = eventEndTime_String.split(':');
         var eventEndHour      = parseInt(temp[0], 10);
         var eventEndMinutes   = parseInt(temp[1], 10);
+        temp                  = momentAskedDate.split('-');
+        if (momentAskedTime != null) {
+            var temp               = momentAskedTime.split(':');
+            var momentAskedHour    = parseInt(temp[0], 10);
+            var momentAskedMinutes = parseInt(temp[1], 10);
+        }
 
         // Round downwards the event start time to the nearest half of hour
         if ((eventStartMinutes/30) != Math.floor(eventStartMinutes/30)) {
@@ -174,68 +196,100 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             }
         }
 
-        var eventStartTime_Date = new Date();
-        var eventEndTime_Date   = new Date();
-
-        eventStartTime_Date.setHours(eventStartHour);
-        eventStartTime_Date.setMinutes(eventStartMinutes);
-        eventStartTime_Date.setSeconds(0);
-        eventEndTime_Date.setHours(eventEndHour);
-        eventEndTime_Date.setMinutes(eventEndMinutes);
-        eventEndTime_Date.setSeconds(0);
-
-        // Is the event completely out of range (before or after 8:00 to 20:00) ?
-        if (((scheduleStartTime_Date >= eventStartTime_Date) && (scheduleStartTime_Date >= eventEndTime_Date))
-            || ((scheduleEndTime_Date <= eventStartTime_Date) && (scheduleEndTime_Date <= eventEndTime_Date))) {
-            result['range'] = this.EVENT_OUTSIDE_CHART;
-            result['type']  = this.EVENT_TIME_OUTSIDE;
-            return result;
+        eventStart_Date.setFullYear(eventStartYear, eventStartMonth - 1, eventStartDay);
+        eventStart_Date.setHours(eventStartHour, eventStartMinutes, 0, 0);
+        eventEnd_Date.setFullYear(eventEndYear, eventEndMonth - 1, eventEndDay);
+        eventEnd_Date.setHours(eventEndHour, eventEndMinutes, 0, 0);
+        eventStartDay_Date.setFullYear(eventStartYear, eventStartMonth - 1, eventStartDay);
+        eventStartDay_Date.setHours(0, 0, 0, 0);
+        eventEndDay_Date.setFullYear(eventEndYear, eventEndMonth - 1, eventEndDay);
+        eventEndDay_Date.setHours(0, 0, 0, 0);
+        
+        momentAsked_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
+        if (momentAskedTime != null) {
+            momentAsked_Date.setHours(momentAskedHour, momentAskedMinutes, 0, 0);
         } else {
-            result['range'] = this.EVENT_INSIDE_CHART;
+            momentAsked_Date.setHours(0, 0, 0, 0);
         }
 
-        // If start time happens before 8:00, the schedule must show it from the 8:00 row (but the text will show
-        // the real info)
-        if (eventStartTime_Date < scheduleStartTime_Date) {
-            eventStartTime_Date = scheduleStartTime_Date;
-        }
-
-        // If end time is after 20:00, the schedule must show it until the 19:30 row inclusive (but the text will
-        // show the real info)
-        if (eventEndTime_Date > scheduleEndTime_Date) {
-            eventEndTime_Date = scheduleEndTime_Date;
-        }
-
-        var halfBeginning        = eventStartTime_Date.getTime() - scheduleStartTime_Date.getTime();
-        var duration             = eventEndTime_Date.getTime() - eventStartTime_Date.getTime();
-        result['halfBeginning']  = Math.floor(halfBeginning / (1000 * 60 * 30));
-        result['halvesDuration'] = Math.floor(duration / (1000 * 60 * 30));
-
-        if (askedTime != null) {
-            var temp             = askedTime.split(':');
-            var askedTimeHour    = temp[0];
-            var askedTimeMinutes = temp[1];
-
-            // Round downwards the time to search for, to the nearest half of hour
-            if ((askedTimeMinutes / 30) != Math.floor(askedTimeMinutes / 30)) {
-                askedTimeMinutes = Math.floor(askedTimeMinutes / 30) * 30;
-            }
-            var askedTime_Date = new Date();
-            askedTime_Date.setHours(askedTimeHour);
-            askedTime_Date.setMinutes(askedTimeMinutes);
-            askedTime_Date.setSeconds(0);
-
-            // Perform the comparison
-            if (eventStartTime_Date.getTime() == askedTime_Date.getTime()) {
-                result['type'] = this.EVENT_TIME_START;
-            } else if ((eventStartTime_Date.getTime() < askedTime_Date.getTime())
-                       && (askedTime_Date.getTime() < eventEndTime_Date.getTime())) {
-                result['type'] = this.EVENT_TIME_INSIDE;
+        if (momentAskedTime != null) {
+            // Compare the event start date and time with the momentAsked
+           	if (dojo.date.compare(eventStart_Date, momentAsked_Date) == 0) {
+                result['type'] = this.EVENT_TIME_START;    
+            } else if ((dojo.date.compare(eventStart_Date, momentAsked_Date) < 0)
+            	&& (dojo.date.compare(eventEnd_Date, momentAsked_Date) >= 0)) {
+                result['type'] = this.EVENT_TIME_INSIDE
             } else {
                 result['type'] = this.EVENT_TIME_OUTSIDE;
             }
-        }
+        } else {
+            // Determine if the event has to be shown for the day received (momentAskedDate). If so, also define:
+            // 1) Whether it has to be inside or outside the chart.
+            // 2) If it is inside the chart, in which row it has to begin, and how many rows it lasts.
+            if ((eventStartDay_Date <= momentAsked_Date) && (eventEndDay_Date >= momentAsked_Date)) {
+                // Shown
+                var startsBeforeScheduleEnds = false;
+                var endsAfterScheduleBegins  = false;
+                if (dojo.date.compare(eventStart_Date, scheduleEnd_Date) < 0) {
+                    startsBeforeScheduleEnds = true;
+                }
+                if (dojo.date.compare(eventEnd_Date, scheduleStart_Date) >= 0) {
+                    endsAfterScheduleBegins = true
+                }
 
+                if (startsBeforeScheduleEnds && endsAfterScheduleBegins) {
+                    result['range'] = this.SHOWN_INSIDE_CHART;
+                    var showFullTimeDescrip = false;
+                    // If event start happens before the asked day at 8:00, the schedule must show it from the 8:00 row 
+                    // (but the text will show the real info)
+                    if (eventStart_Date < scheduleStart_Date) {
+                        eventStart_Date = scheduleStart_Date;
+                        if (eventStartDay_Date < momentAsked_Date) {
+                            showFullTimeDescrip = true;
+                        }
+                    }
+                    // If event end happens after the asked day at 20:00, the schedule must show it until the 19:30 row
+                    // inclusive (but the text will show the real info)
+                    if (eventEnd_Date > scheduleEnd_Date) {
+                        eventEnd_Date = scheduleEnd_Date;
+                        if (eventEndDay_Date > momentAsked_Date) {
+                            showFullTimeDescrip = true;
+                        }
+                    }
+                    if (showFullTimeDescrip) {
+                        result['time'] = eventStartDate_String + ' ' + this.formatTime(eventStartTime_String) + ' - '
+                            + eventEndDate_String + ' ' + this.formatTime(eventEndTime_String) + '<br>';
+                    } else {
+                        result['time'] = this.formatTime(eventStartTime_String) + ' - '
+                            +  this.formatTime(eventEndTime_String);
+                    }
+                    var halfBeginning        = eventStart_Date.getTime() - scheduleStart_Date.getTime();
+                    var duration             = eventEnd_Date.getTime() - eventStart_Date.getTime();
+                    result['halfBeginning']  = Math.floor(halfBeginning / (1000 * 60 * 30));
+                    result['halvesDuration'] = Math.floor(duration / (1000 * 60 * 30));
+
+                } else {
+                    result['range']         = this.SHOWN_OUTSIDE_CHART;
+                    var showFullTimeDescrip = false;
+
+                    if (eventStartDay_Date < momentAsked_Date) {
+                        showFullTimeDescrip = true;
+                    }
+                    if (eventEndDay_Date > momentAsked_Date) {
+                        showFullTimeDescrip = true;
+                    }
+                    if (showFullTimeDescrip) {
+                        result['time'] = eventStartDate_String + ' ' + this.formatTime(eventStartTime_String) + ' - '
+                            + eventEndDate_String + ' ' + this.formatTime(eventEndTime_String);
+                    } else {
+                        result['time'] = this.formatTime(eventStartTime_String) + ' - '
+                            +  this.formatTime(eventEndTime_String);
+                    }
+                }
+            } else {
+                result['range'] = this.SHOWN_NOT;
+            }
+        }
         return result;
     },
 
