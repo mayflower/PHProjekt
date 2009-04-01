@@ -116,7 +116,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
         for (var i = 0; i < meta.length; i++) {
             switch(meta[i]["type"]) {
-                case'selectbox':
+                case 'selectbox':
                     var range = meta[i]["range"];
                     var opts  = new Array();
                     var vals  = new Array();
@@ -138,7 +138,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
-                case'date':
+                case 'date':
                     this.gridLayout.push({
                         width:         porcent,
                         name:          meta[i]["label"],
@@ -151,7 +151,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
-                case'percentage':
+                case 'percentage':
                     this.gridLayout.push({
                         width:       porcent,
                         name:        meta[i]["label"],
@@ -164,7 +164,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
-                case'time':
+                case 'time':
                     this.gridLayout.push({
                         width:      porcent,
                         name:       meta[i]["label"],
@@ -176,7 +176,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
-                case'upload':
+                case 'upload':
                     this.gridLayout.push({
                         width:       porcent,
                         name:        meta[i]["label"],
