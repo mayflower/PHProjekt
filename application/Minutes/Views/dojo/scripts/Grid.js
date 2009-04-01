@@ -23,12 +23,25 @@ dojo.declare("phpr.Minutes.Grid", phpr.Default.Grid, {
     customGridLayout:function(meta) {
         for (var i = 0; i < this.gridLayout.length; i++) {
             switch (this.gridLayout[i].field) {
+                case 'meetingDate':
+                    this.gridLayout[i].width = '10%';
+                    break;
+                case 'startTime':
+                    this.gridLayout[i].width = '5%';
+                    break;
                 case 'title':
                     this.gridLayout[i].formatter = function(value){ return value; };
-                    this.gridLayout[i].width = '80%';
+                    this.gridLayout[i].width = '35%';
                     break;
-                case 'created':
-                    this.gridLayout[i].width = '20%';
+                case 'description':
+                    this.gridLayout[i].formatter = function(value){ return (value.length>50)?value+'...':value; };
+                    this.gridLayout[i].width = '35%';
+                    break;
+                case 'place':
+                    this.gridLayout[i].width = '10%';
+                    break;
+                case 'itemStatus':
+                    this.gridLayout[i].width = '5%';
                     break;
             }
         }
