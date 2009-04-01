@@ -493,12 +493,22 @@ CREATE TABLE `Helpdesk` (
 --
 -- Table structure for table `Minutes`
 --
-CREATE TABLE `Minutes` (
+CREATE TABLE IF NOT EXISTS `Minutes` (
   `id` int(11) NOT NULL auto_increment,
   `ownerId` int(11) default NULL,
   `projectId` int(11) default NULL,
   `title` varchar(255) default NULL,
-  `created` date default NULL,
+  `description` text,
+  `meetingDate` date default NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
+  `place` varchar(255) default NULL,
+  `moderator` varchar(255) default NULL,
+  `participantsInvited` text,
+  `participantsAttending` text,
+  `participantsExcused` text,
+  `recipients` text,
+  `itemStatus` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -588,9 +598,20 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Helpdesk', 'solvedDate', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'contactId', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
 
-(0, 'Minutes', 'projectId', 1, 'Project', 'hidden', 3, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'created', 1, 'Created', 'date', 2, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0);
+(0, 'Minutes', 'projectId', 1, 'Select', 'hidden', 0, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, '', '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'meetingDate', 1, 'Date of Meeting', 'date', 4, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'startTime', 1, 'Start Time', 'time', 5, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'endTime', 1, 'End Time', 'time', 6, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, '', '', 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsInvited', 1, 'Invited', 'textarea', 9, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsAttending', 1, 'Attending', 'textarea', 10, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsExcused', 1, 'Excused', 'textarea', 11, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'recipients', 1, 'recipients', 'textarea', 12, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'itemStatus', 1, 'Status', 'selectValues', 13, 1, NULL, '1# PLANNED | 2# CREATED | 3# PREVIEW | 4 #FINAL', '0', 6, 'center', 1, 0, '1', 0, 0, 0);
+
 
 INSERT INTO `User` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES
 (1,'admin','MyName1','MyLastName1','A', 1),
