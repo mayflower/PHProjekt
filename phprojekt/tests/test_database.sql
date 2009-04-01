@@ -34,11 +34,14 @@ DROP TABLE IF EXISTS `Role`;
 DROP TABLE IF EXISTS `Groups`;
 DROP TABLE IF EXISTS `UserSetting`;
 DROP TABLE IF EXISTS `Setting`;
-DROP TABLE IF EXISTS `ModuleInstance`;
 DROP TABLE IF EXISTS `Module`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `DatabaseManager`;
 DROP TABLE IF EXISTS `Calendar`;
+DROP TABLE IF EXISTS `Filemanager`;
+DROP TABLE IF EXISTS `Contact`;
+DROP TABLE IF EXISTS `Helpdesk`;
+DROP TABLE IF EXISTS `Minutes`;
 
 --
 -- Table structure for table `DatabaseManager`
@@ -149,9 +152,10 @@ CREATE TABLE `Project` (
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
-  `completePercent` varchar(50) default NULL,
+  `completePercent` varchar(4) default NULL,
   `hourlyWageRate` varchar(10) default NULL,
   `budget` varchar(10) default NULL,
+  `contactId` int(11) default NULL,
   PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -210,11 +214,12 @@ CREATE TABLE `Todo` (
   `title` varchar(255) NOT NULL,
   `notes` text default NULL,
   `ownerId` int(11) default NULL,
-  `projectId` int(11) default NULL,
+  `projectId` int(11) NOT NULL,
   `startDate` date default NULL,
   `endDate` date default NULL,
   `priority` int(11) default NULL,
   `currentStatus` varchar(50) NOT NULL default 'working',
+  `userId` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -326,7 +331,7 @@ CREATE TABLE `ModuleTabRelation` (
 --
 CREATE TABLE `Note` (
   `id` int(11) NOT NULL auto_increment,
-  `projectId` int(11) default NULL,
+  `projectId` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `comments` text default NULL,
   `category` varchar(50) default NULL,
@@ -395,6 +400,7 @@ CREATE TABLE `Calendar` (
   `ownerId` int(11) default NULL,
   `projectId` int(11) NOT NULL,
   `title` varchar(255) default NULL,
+  `place` varchar(255) default NULL,
   `notes` text default NULL,
   `uid` varchar(255) NOT NULL,
   `startDate` date default NULL,
@@ -425,16 +431,86 @@ CREATE TABLE `Calendar` (
 
 
 --
--- Table structure for table `ModuleInstance`
+-- Table structure for table `Filemanager`
 --
-CREATE TABLE `ModuleInstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `projectId` int(11) default NULL,
-  `module` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+CREATE TABLE `Filemanager` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) default NULL,
+  `title` varchar(50) NOT NULL,
+  `comments` text default NULL,
+  `projectId` int(11) NOT NULL,
+  `category` varchar(50) default NULL,
+  `files` text NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+
+--
+-- Table structure for table `Contact`
+--
+CREATE TABLE `Contact` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `company` varchar(255) NOT NULL,
+  `firstphone` varchar(255) NOT NULL,
+  `secondphone` varchar(255) NOT NULL,
+  `mobilephone` varchar(255) NOT NULL,
+  `street` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `zipcode` varchar(50) NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `comment` text NOT NULL,
+  `private` int(1) default 0,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+--
+-- Table structure for table `Contact`
+--
+CREATE TABLE `Helpdesk` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `assigned` int(11) default NULL,
+  `date` date default NULL,
+  `projectId` int(11) NOT NULL,
+  `priority` int(11) default NULL,
+  `attachments` text default NULL,
+  `description` text default NULL,
+  `status` varchar(50) NOT NULL,
+  `dueDate` date default NULL,
+  `author` varchar(255) default NULL,
+  `solvedBy` varchar(255) default NULL,
+  `solvedDate` date default NULL,
+  `contactId` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+--
+-- Table structure for table `Minutes`
+--
+CREATE TABLE IF NOT EXISTS `Minutes` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) default NULL,
+  `projectId` int(11) default NULL,
+  `title` varchar(255) default NULL,
+  `description` text,
+  `meetingDate` date default NULL,
+  `startTime` time default NULL,
+  `endTime` time default NULL,
+  `place` varchar(255) default NULL,
+  `moderator` varchar(255) default NULL,
+  `participantsInvited` text,
+  `participantsAttending` text,
+  `participantsExcused` text,
+  `recipients` text,
+  `itemStatus` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
 -- INSERT DATA
@@ -446,7 +522,12 @@ INSERT INTO `Module` (`id`, `name`, `label`, `saveType`, `active`) VALUES
 (3, 'Note', 'Note', 0, 1),
 (4, 'Timecard', 'Timecard', 1, 1),
 (5, 'Calendar', 'Calendar', 1, 1),
-(6, 'Gantt', 'Gantt', 0, 1);
+(6, 'Gantt', 'Gantt', 0, 1),
+(7, 'Filemanager', 'Filemanager', 0, 1),
+(8, 'Statistic', 'Statistic', 0, 1),
+(9, 'Contact', 'Contact', 1, 1),
+(10, 'Helpdesk', 'Helpdesk', 0, 1),
+(11, 'Minutes','Minutes', 0, 1);
 
 INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `formLabel`, `formType`, `formPosition`, `formColumns`, `formRegexp`, `formRange`, `defaultValue`, `listPosition`, `listAlign`, `listUseFilter`, `altPosition`, `status`, `isInteger`, `isRequired`, `isUnique`) VALUES
 (0, 'Project', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
@@ -458,28 +539,78 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Project', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
 (0, 'Project', 'completePercent', 1, 'completePercent', 'percentage', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0),
 (0, 'Project', 'budget', 1, 'budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0),
+(0, 'Project', 'contactId', 1, 'Contact', 'selectValues', 10, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
 
 (0, 'Todo', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Todo', 'notes', 1, 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Todo', 'startDate', 1, 'startDate', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 (0, 'Todo', 'endDate', 1, 'endDate', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Todo', 'priority', 1, 'priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
-(0, 'Todo', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
-(0, 'Todo', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 0, 0),
+(0, 'Todo', 'currentStatus', 1, 'currentStatus', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 7, 'center', 1, 6, '1', 0, 0, 0),
+(0, 'Todo', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Todo', 'userId', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', '', 6, 'left', 1, 1, '1', 1, 0, 0),
 
 (0, 'Note', 'projectId', 1, 'project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 0, 1, 0),
-(0, 'Note', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 0, 0),
+(0, 'Note', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Note', 'comments', 1, 'comments', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Note', 'category', 1, 'category', 'text', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 
 (0, 'Calendar', 'title', 1, 'title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
-(0, 'Calendar', 'notes', 1, 'notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'startDate', 1, 'startDate', 'date', 3, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'startTime', 1, 'startTime', 'time', 4, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'endDate', 1, 'endDate', 'date', 0, 1, NULL, NULL, '', 0, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'endTime', 1, 'endTime', 'time', 6, 1, NULL, NULL, '', 6, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'participantId', 1, 'participantId', 'multipleSelectValues', 7, 1, NULL, 'User#id#username', '', 0, 'left', 1, 1, '1', 1, 1, 0),
-(0, 'Calendar', 'rrule', 1, 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0);
+(0, 'Calendar', 'place', 1, 'place', 'text', 2, 1, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'notes', 1, 'notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'startDate', 1, 'startDate', 'date', 4, 1, NULL, NULL, '', 2, 'center', 1, 3, '1', 0, 1, 0),
+(0, 'Calendar', 'startTime', 1, 'startTime', 'time', 5, 1, NULL, NULL, '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'endDate', 1, 'endDate', 'date', 6, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'endTime', 1, 'endTime', 'time', 7, 1, NULL, NULL, '', 5, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'participantId', 1, 'participantId', 'hidden', 8, 1, NULL, NULL, '', 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Calendar', 'rrule', 1, 'rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0),
+
+(0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Filemanager', 'projectId', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 0, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'category', 1, 'Category', 'text', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Filemanager', 'files', 1, 'Upload', 'upload', 5, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
+
+(0, 'Contact', 'name', 1, 'Name', 'text', 1, 1, NULL, '', '', 1, 'left', 1, 0, '1', 0, 1, 0),
+(0, 'Contact', 'email', 1, 'E-Mail', 'text', 2, 1, NULL, '', '', 2, 'left', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'company', 1, 'Company', 'text', 3, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'firstphone', 1, 'First phone', 'text', 4, 1, NULL, '', '',  3, 'left', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'secondphone', 1, 'Second phone', 'text', 5, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'mobilephone', 1, 'Mobile phone', 'text', 6, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'street', 1, 'Street', 'text', 7, 1, NULL, '', '', 4, 'left', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'city', 1, 'City', 'text', 8, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'zipcode', 1, 'Zip Code', 'text', 9, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'country', 1, 'Country', 'text', 10, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'comment', 1, 'Comment', 'textarea', 11, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'private', 1, 'Private', 'selectValues', 12, 1, NULL, '0#No|1#Yes', '0', 5, 'center', 1, 0, '1', 0, 0, 0),
+
+(0, 'Helpdesk', 'title', 1, 'title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'assigned', 1, 'Assigned', 'selectValues', 3, 1, NULL, 'User#id#lastname', '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'date', 1, 'Date', 'display', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'projectId', 1, 'Project', 'selectValues', 6, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'priority', 1, 'Priority', 'selectValues', 7, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '', 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'attachments', 1, 'Attachments', 'upload', 8, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'description', 1, 'Description', 'textarea', 11, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Open|2#Assigned|3#Solved|4#Verified|5#Closed', '1', 6, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'dueDate', 1, 'Due date', 'date', 5, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'author', 1, 'author', 'display', 2, 1, NULL, 'User#id#lastname', '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'solvedBy', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'solvedDate', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'contactId', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
+
+(0, 'Minutes', 'projectId', 1, 'Select', 'hidden', 0, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, '', '', 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'meetingDate', 1, 'Date of Meeting', 'date', 4, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'startTime', 1, 'Start Time', 'time', 5, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'endTime', 1, 'End Time', 'time', 6, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, '', '', 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsInvited', 1, 'Invited', 'textarea', 9, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsAttending', 1, 'Attending', 'textarea', 10, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsExcused', 1, 'Excused', 'textarea', 11, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'recipients', 1, 'recipients', 'textarea', 12, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'itemStatus', 1, 'Status', 'selectValues', 13, 1, NULL, '1# PLANNED | 2# CREATED | 3# PREVIEW | 4 #FINAL', '0', 6, 'center', 1, 0, '1', 0, 0, 0);
 
 INSERT INTO `User` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES
 (1,'david', NULL, NULL, 'A', 1),
@@ -629,3 +760,5 @@ INSERT INTO `SearchDisplay` (`ModuleId`, `ItemId`, `firstDisplay`, `projectId`) 
 
 INSERT INTO `Tab` (`id`, `label` ) VALUES
 (1, 'Basic Data');
+
+COMMIT;
