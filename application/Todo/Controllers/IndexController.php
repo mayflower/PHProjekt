@@ -69,7 +69,7 @@ class Todo_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -104,7 +104,7 @@ class Todo_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => implode(',', $showId));
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**

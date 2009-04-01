@@ -50,7 +50,7 @@ class Statistic_IndexController extends IndexController
 
         $data = $this->getModelObject()->getStatistics($startDate, $endDate, $projectId);
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**

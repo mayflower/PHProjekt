@@ -53,7 +53,7 @@ class Core_ModuleController extends Core_IndexController
             $record = $this->getModelObject()->find($id);
         }
 
-        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -97,7 +97,7 @@ class Core_ModuleController extends Core_IndexController
                         'code'    => 0,
                         'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -117,7 +117,7 @@ class Core_ModuleController extends Core_IndexController
         }
         $modules['metadata'] = Phprojekt_Auth::isAdminUser();
 
-        echo Phprojekt_Converter_Json::convert($modules);
+        Phprojekt_Converter_Json::echoConvert($modules);
     }
 
    /**
@@ -155,7 +155,7 @@ class Core_ModuleController extends Core_IndexController
                             'code'    => 0,
                             'id'      => $id);
 
-            echo Phprojekt_Converter_Json::convert($return);
+            Phprojekt_Converter_Json::echoConvert($return);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }

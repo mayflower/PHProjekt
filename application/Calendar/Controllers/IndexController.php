@@ -73,7 +73,7 @@ class Calendar_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => $id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -94,7 +94,7 @@ class Calendar_IndexController extends IndexController
             $data   = array('data' => $record->getAllParticipants());
         }
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -125,7 +125,7 @@ class Calendar_IndexController extends IndexController
                              'code'    => 0,
                              'id'      => $id);
 
-            echo Phprojekt_Converter_Json::convert($return);
+            Phprojekt_Converter_Json::echoConvert($return);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
@@ -158,7 +158,7 @@ class Calendar_IndexController extends IndexController
             $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
         }
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -185,7 +185,7 @@ class Calendar_IndexController extends IndexController
             . ' AND endDate >= "' . $date . '"';
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -211,7 +211,7 @@ class Calendar_IndexController extends IndexController
         $usersId = $this->getRequest()->getParam('users', null);
         $records = $this->getModelObject()->getUserSelectionRecords($usersId, $date, $count, $offset);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -240,7 +240,7 @@ class Calendar_IndexController extends IndexController
             . '" AND endDate >= "' . $dateStart . '"';
         $records   = $this->getModelObject()->fetchAll($where, "startDate", $count, $offset);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -317,6 +317,6 @@ class Calendar_IndexController extends IndexController
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where, $order);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 }

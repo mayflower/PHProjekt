@@ -46,6 +46,6 @@ class Core_RoleController extends Core_IndexController
         $roleId  = (int) $this->getRequest()->getParam('id', null);
         $modules = $role->getRoleModulePermissionsById($roleId);
 
-        echo Phprojekt_Converter_Json::convert($modules);
+        Phprojekt_Converter_Json::echoConvert($modules);
     }
 }

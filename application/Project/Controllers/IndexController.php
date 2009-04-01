@@ -75,7 +75,7 @@ class Project_IndexController extends IndexController
                            'code'    => 0,
                            'id'      => $showId);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -102,7 +102,7 @@ class Project_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => implode(',', $showId));
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -118,7 +118,7 @@ class Project_IndexController extends IndexController
         $project   = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
         $modules   = $project->getProjectModulePermissionsById($projectId);
 
-        echo Phprojekt_Converter_Json::convert($modules);
+        Phprojekt_Converter_Json::echoConvert($modules);
     }
 
     /**
@@ -134,6 +134,6 @@ class Project_IndexController extends IndexController
         $project   = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
         $roles     = $project->getProjectRoleUserPermissions($projectId);
 
-        echo Phprojekt_Converter_Json::convert($roles);
+        Phprojekt_Converter_Json::echoConvert($roles);
     }
 }

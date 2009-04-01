@@ -105,7 +105,7 @@ class LoginController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**

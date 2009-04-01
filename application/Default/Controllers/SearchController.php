@@ -54,6 +54,6 @@ class SearchController extends IndexController
         $search  = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Default');
         $results = $search->search($words, $count, $offset);
 
-        echo Phprojekt_Converter_Json::convert($results);
+        Phprojekt_Converter_Json::echoConvert($results);
     }
 }

@@ -40,6 +40,20 @@
 class Phprojekt_Converter_Json
 {
     /**
+     * Converts according to convert() and echos the result
+     *
+     * @see convert()
+     * @param mix $param1 - Tree class / Item class / Array
+     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
+     *
+     * @return void
+     */
+    public static function echoConvert($param1, $param2 = null)
+    {
+        echo self::convert($param1, $param2);
+    }
+
+    /**
      * The function check the parameters type
      * and choose which convert function must use
      *
@@ -48,7 +62,7 @@ class Phprojekt_Converter_Json
      *
      * @return string
      */
-    static function convert($param1, $param2 = null)
+    public static function convert($param1, $param2 = null)
     {
         // Convert a Tree class
         if ($param1 instanceof Phprojekt_Tree_Node_Database) {

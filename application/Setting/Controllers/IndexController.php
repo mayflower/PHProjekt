@@ -43,7 +43,7 @@ class Setting_IndexController extends IndexController
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $data    = $setting->getModules();
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -65,7 +65,7 @@ class Setting_IndexController extends IndexController
                       "data"     => $records,
                       "numRows"  => count($records));
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -97,6 +97,6 @@ class Setting_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => 0);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 }

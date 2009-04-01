@@ -63,7 +63,7 @@ class Timecard_IndexController extends IndexController
 
         $records = $this->getModelObject()->getRecords($view, $year, $month, $count, $offset);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -125,7 +125,7 @@ class Timecard_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => $showId);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -146,7 +146,7 @@ class Timecard_IndexController extends IndexController
 
         $records = $this->getModelObject()->fetchAll($where);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -167,7 +167,7 @@ class Timecard_IndexController extends IndexController
 
         $records = $model->getRecords($date);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
    /**
@@ -204,7 +204,7 @@ class Timecard_IndexController extends IndexController
                             'code'    => 0,
                             'id'      => $id);
 
-            echo Phprojekt_Converter_Json::convert($return);
+            Phprojekt_Converter_Json::echoConvert($return);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
@@ -230,7 +230,7 @@ class Timecard_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -270,7 +270,7 @@ class Timecard_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => $showId);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -297,7 +297,7 @@ class Timecard_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -316,7 +316,8 @@ class Timecard_IndexController extends IndexController
         } else {
             $favorites = array();
         }
-        echo Phprojekt_Converter_Json::convert($favorites);
+
+        Phprojekt_Converter_Json::echoConvert($favorites);
     }
 
     /**
@@ -337,7 +338,7 @@ class Timecard_IndexController extends IndexController
                          'code'    => 0,
                          'id'      => 0);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
