@@ -58,7 +58,6 @@ class Phprojekt_Converter_Csv
         }
     }
 
-
     /**
      * Converts according to convert() and echos the result
      * with the corresponding headers
@@ -69,7 +68,8 @@ class Phprojekt_Converter_Csv
      *
      * @return void
      */
-    public static function echoConvert($param1, $param2 = null) {
+    public static function echoConvert($param1, $param2 = null)
+    {
         $outputString = self::convert($param1, $param2);
 
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");

@@ -1,6 +1,6 @@
 <?php
 /**
- * Test suite for the Calendar module
+ * Test suite for the Minutes module
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id: AllTests.php 1385 2009-02-03 17:53:11Z gsolt $
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
 */
@@ -28,14 +28,14 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'Controllers/IndexControllerTest.php';
 
 /**
- * Test suite for the default module
+ * Test suite for the Minutes module
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 class Minutes_AllTests
 {

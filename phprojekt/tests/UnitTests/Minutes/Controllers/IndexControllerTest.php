@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id: IndexControllerTest.php 1458 2009-03-12 17:27:11Z gsolt $
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -27,7 +27,7 @@ require_once 'PHPUnit/Framework.php';
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 class Minutes_IndexController_Test extends FrontInit
 {
