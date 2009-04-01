@@ -51,7 +51,7 @@ class TagController extends IndexController
         $tags   = $tagObj->getTags($limit);
         $fields = $tagObj->getFieldDefinition();
 
-        echo Phprojekt_Converter_Json::convert($tags, $fields);
+        Phprojekt_Converter_Json::echoConvert($tags, $fields);
     }
 
     /**
@@ -80,7 +80,7 @@ class TagController extends IndexController
         }
         $fields = $tagObj->getFieldDefinition();
 
-        echo Phprojekt_Converter_Json::convert($tags, $fields);
+        Phprojekt_Converter_Json::echoConvert($tags, $fields);
     }
 
     /**
@@ -98,7 +98,7 @@ class TagController extends IndexController
         $limit  = (int) $this->getRequest()->getParam('limit', 0);
         $tags   = $tagObj->getModulesByTag($tag, $limit);
 
-        echo Phprojekt_Converter_Json::convert($tags);
+        Phprojekt_Converter_Json::echoConvert($tags);
     }
 
     /**
@@ -132,7 +132,7 @@ class TagController extends IndexController
                         'code'    => 0,
                         'id'      => 0);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -165,6 +165,6 @@ class TagController extends IndexController
                         'code'    => 0,
                         'id'      => 0);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 }

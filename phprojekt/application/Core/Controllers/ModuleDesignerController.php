@@ -56,7 +56,7 @@ class Core_ModuleDesignerController extends Core_IndexController
             }
         }
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -122,7 +122,7 @@ class Core_ModuleDesignerController extends Core_IndexController
                         'code'    => 0,
                         'id'      => $id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**

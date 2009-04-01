@@ -65,7 +65,8 @@ class Core_HistoryController extends Core_IndexController
             $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
             $data    = $history->getHistoryData(null, $itemId, $moduleId, $startDate, $endDate, $userId);
             $data    = array('data' => $data);
-            echo Phprojekt_Converter_Json::convert($data);
+
+            Phprojekt_Converter_Json::echoConvert($data);
         }
     }
 }

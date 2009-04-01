@@ -45,7 +45,7 @@ class Core_UserController extends Core_IndexController
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where, $order);
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -96,7 +96,7 @@ class Core_UserController extends Core_IndexController
                           "data"    => $records,
                           "numRows" => count($records));
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -140,6 +140,6 @@ class Core_UserController extends Core_IndexController
                         'code'    => 0,
                         'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 }

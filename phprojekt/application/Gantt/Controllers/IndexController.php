@@ -105,7 +105,7 @@ class Gantt_IndexController extends IndexController
             }
         }
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -136,6 +136,6 @@ class Gantt_IndexController extends IndexController
                         'code'    => 0,
                         'id'      => 0);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 }

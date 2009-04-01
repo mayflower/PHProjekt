@@ -113,7 +113,7 @@ class IndexController extends Zend_Controller_Action
         $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
         $tree->setup();
 
-        echo Phprojekt_Converter_Json::convert($tree);
+        Phprojekt_Converter_Json::echoConvert($tree);
     }
 
     /**
@@ -145,7 +145,7 @@ class IndexController extends Zend_Controller_Action
             $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
         }
 
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -168,7 +168,7 @@ class IndexController extends Zend_Controller_Action
             $record = $this->getModelObject()->find($id);
         }
 
-        echo Phprojekt_Converter_Json::convert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -203,7 +203,7 @@ class IndexController extends Zend_Controller_Action
                         'code'    => 0,
                         'id'      => $model->id);
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -235,7 +235,7 @@ class IndexController extends Zend_Controller_Action
                         'code'    => 0,
                         'id'      => implode(',', $showId));
 
-        echo Phprojekt_Converter_Json::convert($return);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
@@ -272,7 +272,7 @@ class IndexController extends Zend_Controller_Action
                             'code'    => 0,
                             'id'      => $id);
 
-            echo Phprojekt_Converter_Json::convert($return);
+            Phprojekt_Converter_Json::echoConvert($return);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
@@ -341,7 +341,7 @@ class IndexController extends Zend_Controller_Action
             $data = $allowedModules;
         }
 
-        echo Phprojekt_Converter_Json::convert($data);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
@@ -351,9 +351,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonGetProjectsAction()
     {
-        $object = Phprojekt_Loader::getModel('Project', 'Project');
+        $object  = Phprojekt_Loader::getModel('Project', 'Project');
         $records = $object->fetchAll();
-        echo Phprojekt_Converter_Json::convert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -390,7 +391,7 @@ class IndexController extends Zend_Controller_Action
         $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
         $translate = Phprojekt::getInstance()->getTranslate();
 
-        echo Phprojekt_Converter_Json::convert($translate->getTranslatedStrings($language));
+        Phprojekt_Converter_Json::echoConvert($translate->getTranslatedStrings($language));
     }
 
     /**
