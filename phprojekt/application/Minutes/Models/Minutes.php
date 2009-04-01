@@ -47,7 +47,7 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
-        return array_map(array($this,'_calcStatus'),$result);
+        return array_map(array($this, '_calcStatus'), $result);
     }
     
     /**
@@ -55,11 +55,11 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      * 
      * @todo enter calculations based on spec
      * 
-     * @param $item Item to do status calculations with
+     * @param Phproject_Item_Abstract Item to do status calculations with
      *  
      * @return Phproject_Item_Abstract
      */
-    protected function _calcStatus(Phprojekt_Model_Interface &$item)
+    protected function _calcStatus(Phprojekt_Item_Abstract &$item)
     {
         $item->itemStatus = ($item->itemStatus == 0)? 2 : $item->itemStatus;
         return $item;
