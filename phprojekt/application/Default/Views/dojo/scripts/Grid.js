@@ -33,7 +33,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     url:                null,
     _tagUrl:            null,
     _saveChanges:       null,
-    _entitiesConverted: false,
 
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // summary:
@@ -226,27 +225,15 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     break;
 
                 case 'text':
-                    if (!this._entitiesConverted) {
-                        this.gridLayout.push({
-                            width:     porcent,
-                            name:      meta[i]["label"],
-                            field:     meta[i]["key"],
-                            type:      dojox.grid.cells.Input,
-                            styles:    "",
-                            formatter: phpr.grid.formatText,
-                            editable:  meta[i]['readOnly'] ? false : true
-                        });
-                        } else {
-                        this.gridLayout.push({
-                            width:     porcent,
-                            name:      meta[i]["label"],
-                            field:     meta[i]["key"],
-                            type:      dojox.grid.cells.Input,
-                            styles:    "",
-                            formatter: "",
-                            editable:  meta[i]['readOnly'] ? false : true
-                        });
-                    }
+                    this.gridLayout.push({
+                        width:     porcent,
+                        name:      meta[i]["label"],
+                        field:     meta[i]["key"],
+                        type:      dojox.grid.cells.Input,
+                        styles:    "",
+                        formatter: phpr.grid.formatText,
+                        editable:  meta[i]['readOnly'] ? false : true
+                    });
                     break;
 
                 default:
@@ -331,7 +318,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             items: []
         };
         var content = phpr.DataStore.getData({url: this.url});
-        this.specialChars2Entities(meta, content);
         for (var i = 0; i < content.length; i++) {
             this.gridData.items.push(content[i]);
         }
@@ -509,42 +495,5 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Delete the cache for this grid
         phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.deleteData({url: this._tagUrl});
-    },
-
-    specialChars2Entities:function(meta, content) {
-        // Summary:
-        //    Converts the characters that could be misunderstood by the dojo grid into HTML entities.
-        // Description
-        //    It permits showing the following the '<' '>' special chars, in all their possible combinations 
-        for (var i in meta) {
-            if (meta[i]['type'] == 'text') {
-                field = meta[i]['key'];
-                for (var j in content) {
-                    content[j][field] = this.htmlEntities(content[j][field]);
-                }
-            }
-        }
-    },
-
-    htmlEntities:function(str) {
-        // Summary:
-        //    Converts the characters '<' and '>' into readable HTML entities.
-        // Description:
-        //    Example: receives 'This is very <important>' and returns 'This is a &#60;important&#62;'
-        var output    = '';
-        var character = '';
-
-        for (var i = 0; i < str.length; i++) {
-            str = str.toString(); // To avoid a bug
-            character = str.charCodeAt(i);
-            if (character == 60 || character == 62) {
-                output += "&#" + str.charCodeAt(i) + ";";
-                this._entitiesConverted = true;
-            } else {
-                output += str.charAt(i);
-            }
-        }
-
-        return output;
     }
 });

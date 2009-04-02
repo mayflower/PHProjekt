@@ -47,11 +47,33 @@ phpr.grid.formatPercentage = function(value) {
 },
 
 phpr.grid.formatText = function(value) {
+    // Summary:
+    //    Tries to convert the characters '<' and '>' into readable HTML entities. Example: receives 'This is very
+    // <important>' and returns 'This is a &#60;important&#62;'
+    //    If there weren't any of those characters to convert, then strips the string after the 25th character and
+    // adds '...' at the end.
+
     value = value.toString();
-    if (value.length > 25) {
-        value = value.substr(0, 25) + '...';
+
+    var output    = '';
+    var character = '';
+
+    for (var i = 0; i < value.length; i++) {
+        value = value.toString(); // To avoid a bug
+        character = value.charCodeAt(i);
+        if (character == 60 || character == 62) {
+            output += "&#" + value.charCodeAt(i) + ";";
+        } else {
+            output += value.charAt(i);
+        }
     }
-    return value;
+    if (output.length == value.length) {
+        if (value.length > 25) {
+            output = value.substr(0, 25) + '...';
+        }
+    }
+
+    return output;
 },
 
 phpr.grid.formatUpload = function(value) {
