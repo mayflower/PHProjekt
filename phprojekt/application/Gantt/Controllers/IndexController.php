@@ -81,7 +81,8 @@ class Gantt_IndexController extends IndexController
                                                         'startD'  => $startDay,
                                                         'startM'  => $startMonth,
                                                         'startY'  => $startYear,
-                                                        'endD'    => $endDay,                                                        'startD'  => $startDay,
+                                                        'endD'    => $endDay,
+                                                        'startD'  => $startDay,
                                                         'endM'    => $endMonth,
                                                         'endY'    => $endYear);
                     // Only allow write if all the projects have write or hight access

@@ -571,7 +571,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $info   = $this->_model->info();
             foreach ($fields as $field) {
                 $data[$i]['tableName'] = $info['name'];
-                while($field->valid()) {
+                while ($field->valid()) {
                     $key = $field->key();
                     if ($key != 'tableName') {
                         $data[$i][$key] = $field->$key;

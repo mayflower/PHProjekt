@@ -159,8 +159,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             }
 
             // Modules
-            $files = scandir (PHPR_CORE_PATH);
-            foreach($files as $module) {
+            $files = scandir(PHPR_CORE_PATH);
+            foreach ($files as $module) {
                 if ($module != '.' && $module != '..' && $module != 'Default' && $module != '.svn') {
                     /* Get the translation file */
                     $lang        = array ();
@@ -345,7 +345,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         } else if (isset($this->_translate[$locale]['Default']) &&
             isset($this->_translate[$locale]['Default'][$messageId])) {
             $toReturn = $this->_translate[$locale]['Default'][$messageId];
-        } else{
+        } else {
             $toReturn = $messageId;
         }
         return $toReturn;

@@ -70,7 +70,7 @@ class Statistic_Models_Statistic
 
         $users = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
 
-        foreach($records as $record) {
+        foreach ($records as $record) {
             if (!isset($data['data']['users'][$record->ownerId])) {
                 $user = $users->findUserById($record->ownerId);
                 $data['data']['users'][$record->ownerId] = $user->username;
