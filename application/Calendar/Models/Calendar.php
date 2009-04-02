@@ -661,7 +661,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $lastItem          = count($participants);
 
         // Participants field
-        foreach($participants as $participant) {
+        foreach ($participants as $participant) {
             $i++;
             $phpUser->find((int) $participant);
             $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
@@ -787,7 +787,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
         // Take out the original confusing 'rrule' element, if it is there
-        for($i = 0; $i < count($changes); $i++) {
+        for ($i = 0; $i < count($changes); $i++) {
             if ($changes[$i]['field'] == 'rrule') {
                 unset($changes[$i]);
             }
