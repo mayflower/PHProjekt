@@ -121,7 +121,7 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function saveRights($rights)
     {
-        foreach($this->modulePermissions->fetchAll() as $relation) {
+        foreach ($this->modulePermissions->fetchAll() as $relation) {
             $relation->delete();
         }
         foreach ($rights as $moduleId => $access) {
