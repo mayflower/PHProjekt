@@ -213,7 +213,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
 
         // All the recipients IDs are inside $recipients, now add emails and descriptive names to _customTo
-        foreach($recipients as $recipient) {
+        foreach ($recipients as $recipient) {
             $email = $setting->getSetting('email', (int) $recipient);
 
             if ((int) $recipient) {
@@ -277,7 +277,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
         $this->_view->mainFields = $fieldsView;
 
-        if($action == self::LAST_ACTION_EDIT) {
+        if ($action == self::LAST_ACTION_EDIT) {
             // The model has an exception to define the body 'Changes done' contents?
             if (!method_exists($this->_model, 'getNotificationBodyChanges')) {
                 // No
@@ -298,7 +298,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
                             $convertToString = false;
                             if ($field['type'] == 'selectbox') {
                                 $convertToString = true;
-                            } else if($field['type'] == 'display' && is_array($field['range'])) {
+                            } else if ($field['type'] == 'display' && is_array($field['range'])) {
                                 foreach ($field['range'] as $range) {
                                     if (is_array($range)) {
                                         $convertToString = true;
