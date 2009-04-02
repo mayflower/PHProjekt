@@ -219,7 +219,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function getRigths($params, $newItem, $ownerId = 0)
+    public function getRights($params, $newItem, $ownerId = 0)
     {
         $right  = array();
         $rights = array();

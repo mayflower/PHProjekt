@@ -97,7 +97,7 @@ final class Default_Helpers_Save
                 $node->setParentNode($parentNode);
             }
 
-            $rights = Default_Helpers_Right::getRigths($params, $newItem);
+            $rights = Default_Helpers_Right::getRights($params, $newItem);
 
             if (count($rights) > 0) {
                 $node->getActiveRecord()->saveRights($rights);
@@ -177,7 +177,7 @@ final class Default_Helpers_Save
         } else {
             $model->save();
 
-            $rights = Default_Helpers_Right::getRigths($params, $newItem);
+            $rights = Default_Helpers_Right::getRights($params, $newItem);
 
             if (count($rights) > 0) {
                 $model->saveRights($rights);
