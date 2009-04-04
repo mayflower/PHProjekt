@@ -31,23 +31,25 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".listViewClick", this, "listViewClick");
         dojo.subscribe(this.module + ".dayViewClick", this, "dayViewClick");
         dojo.subscribe(this.module + ".weekViewClick", this, "weekViewClick");
+        dojo.subscribe(this.module + ".monthViewClick", this, "monthViewClick");
         dojo.subscribe(this.module + ".setDate", this, "setDate");
         dojo.subscribe(this.module + ".userSelfClick", this, "userSelfClick");
         dojo.subscribe(this.module + ".userSelectionClick", this, "userSelectionClick");
         dojo.subscribe(this.module + ".usersSelectionDoneClick", this, "usersSelectionDoneClick");
-        dojo.subscribe(this.module + ".weekViewDayClick", this, "weekViewDayClick");
+        dojo.subscribe(this.module + ".anotherViewDayClick", this, "anotherViewDayClick");
         dojo.subscribe(this.module + ".loadAppropriateList", this, "loadAppropriateList");
 
         this.gridWidget          = phpr.Calendar.Grid;
         this.dayListSelfWidget   = phpr.Calendar.ViewDayListSelf;
         this.dayListSelectWidget = phpr.Calendar.ViewDayListSelect;
         this.weekListWidget      = phpr.Calendar.ViewWeekList;
+        this.monthListWidget     = phpr.Calendar.ViewMonthList;
         this.formWidget          = phpr.Calendar.Form;
         this.treeWidget          = phpr.Calendar.Tree;
     },
 
     reload:function() {
-        // summary:
+        // Summary:
         //    This function reloads the current module
         // description:
         //    This function initializes a module that might have been called before.
@@ -55,10 +57,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
         this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            view:       phpr.nls.get('View'),
-            list:       phpr.nls.get('List'),
-            day:        phpr.nls.get('Day'),
-            week:       phpr.nls.get('Week'),
             changeDate: phpr.nls.get('Change date'),
             today:      phpr.nls.get('Today'),
             user:       phpr.nls.get('User'),
@@ -91,6 +89,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             this.loadDayListSelect();
         } else if (this.weekList) {
             this.loadWeekList();
+        } else if (this.monthList) {
+            this.loadMonthList();
         } else {
             // Nothing else loaded? Then loads the default one
             this.loadGrid();
@@ -99,7 +99,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     },
 
     loadGrid:function() {
-        // summary:
+        // Summary:
         //   This function loads the Dojo Grid
         this.destroyOtherLists('grid');
         phpr.destroySubWidgets('buttonRow');
@@ -113,7 +113,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     },
 
     loadDayListSelf:function() {
-        // summary:
+        // Summary:
         //    This function loads the Day List in Self mode
         this.destroyOtherLists('dayListSelf');
         phpr.destroySubWidgets('buttonRow');
@@ -127,7 +127,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     },
 
     loadDayListSelect:function() {
-        // summary:
+        // Summary:
         //    This function loads the Day List in a Selection mode
         this.destroyOtherLists('dayListSelect');
         phpr.destroySubWidgets('buttonRow');
@@ -141,7 +141,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     },
 
     loadWeekList:function() {
-        // summary:
+        // Summary:
         //    This function loads the Week List
         this.destroyOtherLists('weekList');
         phpr.destroySubWidgets('buttonRow');
@@ -153,8 +153,21 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.weekList = new this.weekListWidget(this, phpr.currentProjectId, this._date);
     },
 
+    loadMonthList:function() {
+        // Summary:
+        //    This function loads the Month List
+        this.destroyOtherLists('monthList');
+        phpr.destroySubWidgets('buttonRow');
+        this.setNewEntry();
+        dojo.byId('scheduleBar').style.display      = 'inline';
+        dojo.byId('scheduleGroupBar').style.display = 'none';
+
+        this._date     = dijit.byId('selectDate').attr('value');
+        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, this._date);
+    },
+
     showFormFromList:function(rowID) {
-        // summary:
+        // Summary:
         //    This function opens an specific item clicked from the views
         this.publish("openForm", [rowID]);
     },
@@ -167,7 +180,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     },
 
     dayViewClick:function() {
-        // summary:
+        // Summary:
         //    This function loads the Day List with the entered date, if any.
         if (dijit.byId('selectDate').attr('value') != null) {
             if (!this._usersSelectionMode) {
@@ -180,7 +193,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     },
 
     weekViewClick:function() {
-        // summary:
+        // Summary:
         //    This function loads the Week List with the entered date, if any.
         if (dijit.byId('selectDate').attr('value') != null) {
             this.loadWeekList();
@@ -188,8 +201,17 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
     },
 
+    monthViewClick:function() {
+        // Summary:
+        //    This function loads the Month List with the entered date, if any.
+        if (dijit.byId('selectDate').attr('value') != null) {
+            this.loadMonthList();
+            this.setSubmoduleNavigation();
+        }
+    },
+
     setDate:function(day) {
-        // summary
+        // Summary
         //    This function is called by the buttons '<< Today >>' to load a specific date into the Day or Week List
         var PREVIOUS = 0;
         var TODAY    = 1;
@@ -199,6 +221,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             var interval = 'day';
         } else if (this.weekList) {
             var interval = 'week';
+        } else if (this.monthList) {
+            var interval = 'month';
         }
 
         switch (day) {
@@ -222,6 +246,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             this.loadDayListSelect();
         } else if (this.weekList) {
             this.loadWeekList();
+        } else if (this.monthList) {
+            this.loadMonthList();
         }
     },
 
@@ -239,7 +265,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 params['startTime'] = '08:00';
                 params['endDate']   = '';
                 params['endTime']   = '10:00';
-            } else if (this.dayListSelf || this.dayListSelect || this.weekList) {
+            } else if (this.dayListSelf || this.dayListSelect || this.weekList || this.monthList) {
                 if (startDate != undefined) {
                     params['startDate'] = startDate;
                     params['endDate']   = startDate;
@@ -351,9 +377,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.loadDayListSelect();
     },
 
-    weekViewDayClick:function(date) {
+    anotherViewDayClick:function(date) {
         // Summary:
-        //    The header of every day in the week view has a link to this function to load the day list of that day.
+        //    The header of every day in the week view and every cell of the month view have a link to this function to
+        // load the day list of a specific day.
         var temp  = date.split('-');
         var year  = temp[0];
         var month = temp[1];
@@ -384,6 +411,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (mode != 'weekList') {
             this.weekList = null;
         }
+        if (mode != 'monthList') {
+            this.monthList = null;
+        }
     },
 
     setSubmoduleNavigation:function() {
@@ -395,9 +425,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (this.isListActive(this.dayListSelf) || this.isListActive(this.dayListSelect)) {
             dayListActive = true;
         }
-        this.addModuleView(moduleViews, 'List', 'listViewClick', this.isListActive(this.grid));
-        this.addModuleView(moduleViews, 'Day', 'dayViewClick', dayListActive);
-        this.addModuleView(moduleViews, 'Week', 'weekViewClick', this.isListActive(this.weekList));
+
+        this.addModuleView(moduleViews, phpr.nls.get('List'), 'listViewClick', this.isListActive(this.grid));
+        this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', dayListActive);
+        this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
+        this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
 
         var navigation ='<ul id="nav_main">';
         for (var i = 0; i < moduleViews.length; i++) {

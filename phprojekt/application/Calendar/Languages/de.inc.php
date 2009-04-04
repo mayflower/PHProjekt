@@ -4,6 +4,7 @@ $lang["View"] = "Anzeigen";
 $lang["List"] = "Liste";
 $lang["Day"] = "Tag";
 $lang["Week"] = "Woche";
+$lang["Month"] = "Monat";
 $lang["Self"] = "Mein Kalender";
 $lang["Selection"] = "Auswahl";
 $lang["Once"] = "Einmal";

@@ -226,7 +226,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             // Determine if the event has to be shown for the day received (momentAskedDate). If so, also define:
             // 1) Whether it has to be inside or outside the chart.
             // 2) If it is inside the chart, in which row it has to begin, and how many rows it lasts.
-            if ((eventStartDay_Date <= momentAsked_Date) && (eventEndDay_Date >= momentAsked_Date)) {
+            if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) <= 0)
+                && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) >= 0)) {
                 // Shown
                 var startsBeforeScheduleEnds = false;
                 var endsAfterScheduleBegins  = false;
@@ -242,17 +243,17 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                     var showFullTimeDescrip = false;
                     // If event start happens before the asked day at 8:00, the schedule must show it from the 8:00 row 
                     // (but the text will show the real info)
-                    if (eventStart_Date < scheduleStart_Date) {
+                    if (dojo.date.compare(eventStart_Date, scheduleStart_Date) < 0) {
                         eventStart_Date = scheduleStart_Date;
-                        if (eventStartDay_Date < momentAsked_Date) {
+                        if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
                             showFullTimeDescrip = true;
                         }
                     }
                     // If event end happens after the asked day at 20:00, the schedule must show it until the 19:30 row
                     // inclusive (but the text will show the real info)
-                    if (eventEnd_Date > scheduleEnd_Date) {
+                    if (dojo.date.compare(eventEnd_Date, scheduleEnd_Date) > 0) {
                         eventEnd_Date = scheduleEnd_Date;
-                        if (eventEndDay_Date > momentAsked_Date) {
+                        if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
                             showFullTimeDescrip = true;
                         }
                     }
@@ -272,10 +273,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                     result['range']         = this.SHOWN_OUTSIDE_CHART;
                     var showFullTimeDescrip = false;
 
-                    if (eventStartDay_Date < momentAsked_Date) {
+                    if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
                         showFullTimeDescrip = true;
                     }
-                    if (eventEndDay_Date > momentAsked_Date) {
+                    if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
                         showFullTimeDescrip = true;
                     }
                     if (showFullTimeDescrip) {

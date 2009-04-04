@@ -31,7 +31,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
     beforeConstructor:function() {
         // Summary:
-        //    Calls the weekDays array creating function, before constructor function
+        //    Calls the weekDays array creation function, before constructor function
         this.setWeekDays();
     },
 
@@ -101,7 +101,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
     setWeekDays:function() {
         // Summary:
-        //    Fills the weekDays array with all the dates of the week in string format.
+        //    Fills the weekDays array with all the dates of the selected week in string format.
         var selectedDate = dijit.byId('selectDate').attr('value');
         var dayTemp;
 
@@ -145,20 +145,20 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     fillHeaderArray:function() {
         // Summary:
         //    Fills the header array with the main row of the table.
-        this._header['columnsWidth'] = -1;
-        var daysAbbrev = new Array(phpr.nls.get('Mo'),
-                                   phpr.nls.get('Tu'),
-                                   phpr.nls.get('We'),
-                                   phpr.nls.get('Th'),
-                                   phpr.nls.get('Fr'),
-                                   phpr.nls.get('Sa'),
-                                   phpr.nls.get('Su'));
+        this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / 7);
+        var daysAbbrev               = new Array(phpr.nls.get('Mo'),
+                                                 phpr.nls.get('Tu'),
+                                                 phpr.nls.get('We'),
+                                                 phpr.nls.get('Th'),
+                                                 phpr.nls.get('Fr'),
+                                                 phpr.nls.get('Sa'),
+                                                 phpr.nls.get('Su'));
 
         this._header['days'] = new Array();
         for (var i = 0; i < 7; i ++) {
             this._header['days'][i]                 = new Array();
             this._header['days'][i]['columnsTotal'] = 1;
-            this._header['days'][i]['dayAbbrev']    = phpr.nls.get(daysAbbrev[i]);
+            this._header['days'][i]['dayAbbrev']    = daysAbbrev[i];
             this._header['days'][i]['date']         = this._weekDays[i];
         }
     },
@@ -185,8 +185,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 }
             }
         }
-
-        this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / 7);
     },
 
     fillScheduleArrayStructure_part2:function() {
@@ -221,15 +219,12 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
     fillScheduleArrayData:function(content) {
         // Summary:
-        //    Puts every event in the corresponding array and position.
-        // Description:
-        //    Receives the array of a day of the week, and the response from the DB and puts all the events of that
-        // day in the appropriate position inside the array.
+        //    Puts every event in the corresponding array position.
         
         furtherEventsTemp           = new Array();
         furtherEventsTemp['show']   = false;
         furtherEventsTemp['events'] = new Array();
-        // All events to be shown both in schedule and 'Further events'
+        // All events IDs to be shown both in schedule and 'Further events'
         eventsToBeShown             = new Array();
 
         for (var event in content) {

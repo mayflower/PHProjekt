@@ -165,11 +165,29 @@
     border-color: black;
 }
 
+.phprojekt #calendarSchedule .weekDayHeaders {
+    border: 1px solid;
+    padding: 0;
+    vertical-align: middle;
+    text-align: center;
+    background-color: #d4dfea;
+    font-size: 10px;
+    border-color: black;
+}
+
 .phprojekt #calendarSchedule .events {
     border: 1px solid;
     padding: 4;
     vertical-align: middle;
     background-color: #DDDDDD;
+    border-color: black;
+}
+
+.phprojekt #calendarSchedule .monthEvents {
+    border: 1px solid;
+    height:80px; 
+    vertical-align:top;
+    padding: 4;
     border-color: black;
 }
 

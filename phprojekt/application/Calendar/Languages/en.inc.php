@@ -4,6 +4,7 @@ $lang["View"] = "View";
 $lang["List"] = "List";
 $lang["Day"] = "Day";
 $lang["Week"] = "Week";
+$lang["Month"] = "Month";
 $lang["Self"] = "Self";
 $lang["Selection"] = "Selection";
 $lang["Once"] = "Once";
@@ -88,12 +89,14 @@ $lang["Content Help"]["Calendar"] = "<br/>
                             select a small group of people so that the list of events will have as many columns as
                             users selected; there will be seen a group schedule for the active day.
                     </ul>
-                <li><b>Week:</b> a week schedule, like the common day schedule, but for the seven days of the week
+                <li><b>Week:</b> a weekly schedule, like the common day schedule, but for the seven days of the week
                     simultaneously.
+                <li><b>Month:</b> a monthly schedule, shows in a clear calendar table all the days of the month, and
+                    the necessary days of previous and next months in order to complety all the weeks shown.
             </ul>
-            When the Day or Week view are active, another things appear on this button bar. They are a <i>date
-            field</i> to select the schedule of a specific day / week and <i>previous</i>, <i>today</i> and <i>next</i>
-            buttons to change the day / week in sequence.<br/>
+            When the Day, Week or Month view are active, another things appear on this button bar. They are a <i>date
+            field</i> to select the schedule of a specific day / week / month and <i>previous</i>, <i>today</i> and
+            <i>next</i> buttons to change the day / week / month in sequence.<br/>
             In addition to this, when <b>Day</b> is the selected mode, a section called <i>User</i> is shown in the
             same button bar with two modes available to choose for the listing: <b>Self</b> and <b>Selection</b>. They
             are explained previously up this paragraph.<br/>

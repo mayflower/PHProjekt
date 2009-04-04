@@ -4,6 +4,7 @@ $lang["View"] = "Ver";
 $lang["List"] = "Lista";
 $lang["Day"] = "Día";
 $lang["Week"] = "Semana";
+$lang["Month"] = "Mes";
 $lang["Self"] = "Propio";
 $lang["Selection"] = "Selección";
 $lang["None"] = "Ninguna";
@@ -90,10 +91,12 @@ $lang["Content Help"]["Evento"] = "<br/>
                     </ul>
                 <li><b>Semana:</b> una agenda semanal, igual la diaria pero para los siete días de la semana
                     simultáneamente.
+                <li><b>Mes:</b> una agenda mensual que expone en un formato claro de calendario todos los días del mes,
+                    más los días necesarios del mes anterior y siguiente para completar todas las semanas mostradas.
             </ul>
-            Cuando Día o Semana son la vista activa, otros elementos aparecen en esta botonera. Son un <i>campo de
-            fecha</i> para elegir la agenda de un día / semana específica, y los botones <i>previo</i>, <i>hoy</i> y
-            <i>siguiente</i>, para cambiar los días / semanas secuencialmente.<br/>
+            Cuando Día, Semana o Mes son la vista activa, otros elementos aparecen en esta botonera. Son un <i>campo de
+            fecha</i> para elegir la agenda de un día / semana / mes específico, y los botones <i>previo</i>,
+            <i>hoy</i> y <i>siguiente</i>, para cambiar el día / semana / mes secuencialmente.<br/>
             Aparte de esto, cuando <b>Día</b> es el modo elegido, una sección llamada <i>Usuario</i> es mostrada en la
             misma barra con dos modos disponibles para elegir para el listado: <b>Propio</b> y <b>Selección</b>. Ellos
             están explicados previamente arriba de este párrafo.<br/>
