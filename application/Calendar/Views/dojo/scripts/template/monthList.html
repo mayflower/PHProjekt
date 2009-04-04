@@ -10,13 +10,13 @@
     <tr>
         {% for day in row %}
         <td class="monthEvents" style="background-color:{{day.color}};">
-        	<a href="javascript: dojo.publish('Calendar.anotherViewDayClick', ['{{day.date}}']);">{{day.day}}</a> &nbsp;
-        	<button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-            	onClick="dojo.publish('Calendar.openForm', [null, null, '{{day.date}}']);"></button><br>
+            <a href="javascript: dojo.publish('Calendar.anotherViewDayClick', ['{{day.date}}']);">{{day.day}}</a> &nbsp;
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
+                onClick="dojo.publish('Calendar.openForm', [null, null, '{{day.date}}']);"></button><br>
             {% for event in day.events %}
             <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{event.id}}]);">{{event.time|safe}}</a>
                 {{event.title|safe}}<br />
-			{% endfor %}
+            {% endfor %}
         </td>
         {% endfor %}
     </tr>
