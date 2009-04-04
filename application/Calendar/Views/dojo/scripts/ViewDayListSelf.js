@@ -191,7 +191,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
 
             } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
                 this._furtherEvents['show'] = true;
-                var nextPosition      = this._furtherEvents['events'].length;
+                var nextPosition            = this._furtherEvents['events'].length;
                 this._furtherEvents['events'][nextPosition]          = new Array();
                 this._furtherEvents['events'][nextPosition]['id']    = content[event]['id'];
                 this._furtherEvents['events'][nextPosition]['time']  = eventInfo['time'];

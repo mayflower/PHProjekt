@@ -1,0 +1,25 @@
+<!-- Events inside the schedule chart -->
+<div id="calendarSchedule">
+    <table width="{{widthTable}}%">
+    <tr>
+        {% for day in header.days %}
+        <td width="{{header.columnsWidth}}%" class="weekDayHeaders">{{day}}</td>
+        {% endfor %}
+    </tr>
+    {% for row in schedule %}
+    <tr>
+        {% for day in row %}
+        <td class="monthEvents" style="background-color:{{day.color}};">
+        	<a href="javascript: dojo.publish('Calendar.anotherViewDayClick', ['{{day.date}}']);">{{day.day}}</a> &nbsp;
+        	<button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
+            	onClick="dojo.publish('Calendar.openForm', [null, null, '{{day.date}}']);"></button><br>
+            {% for event in day.events %}
+            <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{event.id}}]);">{{event.time|safe}}</a>
+                {{event.title|safe}}<br />
+			{% endfor %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </table>
+</div>

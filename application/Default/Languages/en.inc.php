@@ -228,6 +228,7 @@ $lang["There are no Tags"] = "There are no Tags";
 $lang["View"] = "View";
 $lang["Day"] = "Day";
 $lang["Week"] = "Week";
+$lang["Month"] = "Month";
 $lang["Self"] = "Self";
 $lang["Selection"] = "Selection";
 $lang["Once"] = "Once";
