@@ -229,13 +229,14 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
             // Time description
             if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
                 && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
-                result['time'] = '<-->';
-            } else if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
-                result['time'] = '<-- ' + this.formatTime(eventEndTime_String);
+                result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_MIDDLE);
             } else if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
-                result['time'] = this.formatTime(eventStartTime_String) + ' -->';
+                result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_START, eventStartTime_String);
+            } else if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
+                result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, null, eventEndTime_String);
             } else {
-                result['time'] = this.formatTime(eventStartTime_String) + ' - ' +  this.formatTime(eventEndTime_String);
+                result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                                                           eventEndTime_String);
             }
         } else {
             // No

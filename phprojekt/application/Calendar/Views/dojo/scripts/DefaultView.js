@@ -48,9 +48,16 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     SHOWN_NOT:           2,
 
     // Constants used to define a calendar event time in comparison to a specific moment:
-    EVENT_NONE:          0,
-    EVENT_BEGIN:         1,
-    EVENT_CONTINUES:     2,
+    EVENT_NONE:      0,
+    EVENT_BEGIN:     1,
+    EVENT_CONTINUES: 2,
+
+    // Constants used to define the date and time description mode for the event
+    DATETIME_LONG:            0,
+    DATETIME_SHORT:           1,
+    DATETIME_MULTIDAY_START:  2,
+    DATETIME_MULTIDAY_MIDDLE: 3,
+    DATETIME_MULTIDAY_END:    4,
 
     constructor:function(/*Object*/ main, /*Int*/ id, /*Date*/ date, /*Array*/ users) {
         // Summary:
@@ -214,10 +221,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
         if (momentAskedTime != null) {
             // Compare the event start date and time with the momentAsked
-           	if (dojo.date.compare(eventStart_Date, momentAsked_Date) == 0) {
+            if (dojo.date.compare(eventStart_Date, momentAsked_Date) == 0) {
                 result['type'] = this.EVENT_TIME_START;    
             } else if ((dojo.date.compare(eventStart_Date, momentAsked_Date) < 0)
-            	&& (dojo.date.compare(eventEnd_Date, momentAsked_Date) >= 0)) {
+                && (dojo.date.compare(eventEnd_Date, momentAsked_Date) >= 0)) {
                 result['type'] = this.EVENT_TIME_INSIDE
             } else {
                 result['type'] = this.EVENT_TIME_OUTSIDE;
@@ -240,30 +247,44 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
                 if (startsBeforeScheduleEnds && endsAfterScheduleBegins) {
                     result['range'] = this.SHOWN_INSIDE_CHART;
-                    var showFullTimeDescrip = false;
                     // If event start happens before the asked day at 8:00, the schedule must show it from the 8:00 row 
                     // (but the text will show the real info)
                     if (dojo.date.compare(eventStart_Date, scheduleStart_Date) < 0) {
                         eventStart_Date = scheduleStart_Date;
-                        if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
-                            showFullTimeDescrip = true;
-                        }
                     }
                     // If event end happens after the asked day at 20:00, the schedule must show it until the 19:30 row
                     // inclusive (but the text will show the real info)
                     if (dojo.date.compare(eventEnd_Date, scheduleEnd_Date) > 0) {
                         eventEnd_Date = scheduleEnd_Date;
-                        if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
-                            showFullTimeDescrip = true;
+                    }
+
+                    // Date-time description
+                    if (this.main.dayListSelf != null || this.main.dayListSelect != null) {
+                        if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
+                            || (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG,
+                                             eventStartTime_String, eventEndTime_String,
+                                             eventStartDate_String, eventEndDate_String);
+                        } else {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                                                                       eventEndTime_String);
+                        }
+                    } else if (this.main.weekList != null || this.main.monthList != null) {
+                        if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
+                            && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_MIDDLE);
+                        } else if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_START,
+                                                                       eventStartTime_String);
+                        } else if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, null,
+                                                                       eventEndTime_String);
+                        } else {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                                                                       eventEndTime_String);
                         }
                     }
-                    if (showFullTimeDescrip) {
-                        result['time'] = eventStartDate_String + ' ' + this.formatTime(eventStartTime_String) + ' - '
-                            + eventEndDate_String + ' ' + this.formatTime(eventEndTime_String) + '<br>';
-                    } else {
-                        result['time'] = this.formatTime(eventStartTime_String) + ' - '
-                            +  this.formatTime(eventEndTime_String);
-                    }
+
                     var halfBeginning        = eventStart_Date.getTime() - scheduleStart_Date.getTime();
                     var duration             = eventEnd_Date.getTime() - eventStart_Date.getTime();
                     result['halfBeginning']  = Math.floor(halfBeginning / (1000 * 60 * 30));
@@ -271,20 +292,20 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
                 } else {
                     result['range']         = this.SHOWN_OUTSIDE_CHART;
-                    var showFullTimeDescrip = false;
 
-                    if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
-                        showFullTimeDescrip = true;
-                    }
-                    if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
-                        showFullTimeDescrip = true;
-                    }
-                    if (showFullTimeDescrip) {
-                        result['time'] = eventStartDate_String + ' ' + this.formatTime(eventStartTime_String) + ' - '
-                            + eventEndDate_String + ' ' + this.formatTime(eventEndTime_String);
+                    // Date-time description
+                    if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
+                        || (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                        result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG, eventStartTime_String,
+                                                                   eventEndTime_String, eventStartDate_String,
+                                                                   eventEndDate_String);
+                    } else if (this.main.weekList != null) {
+                        result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG, eventStartTime_String,
+                                                                   eventEndTime_String, eventStartDate_String,
+                                                                   eventEndDate_String);
                     } else {
-                        result['time'] = this.formatTime(eventStartTime_String) + ' - '
-                            +  this.formatTime(eventEndTime_String);
+                        result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                                                                   eventEndTime_String);
                     }
                 }
             } else {
@@ -321,8 +342,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     updateData:function() {
         // Summary:
         //    Deletes the cache for this List table
-        // Description:
-        //    Deletes the cache for this List table
         phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.deleteData({url: this._tagUrl});
     },
@@ -331,7 +350,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // Summary:
         //    Converts HTML tags and code to readable HTML entities
         // Description:
-        //    Converts HTML tags and code to readable HTML entities.
         //    Example: receives 'This is a <note>' and returns 'This is a &#60;note&#62;'
         var output    = '';
         var character = '';
@@ -350,5 +368,32 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
 
         return output;
+    },
+
+    eventDateTimeDescrip:function(mode, startTime, endTime, startDate, endDate) {
+        // Summary:
+        //    Creates the appropriate datetime event description according the mode requested
+        var description;
+        switch (mode) {
+            case this.DATETIME_LONG:    
+            default:    
+                description = startDate + ' ' + this.formatTime(startTime) + ' - ' + endDate + ' '
+                    + this.formatTime(endTime) + '<br>';            
+                break;
+            case this.DATETIME_SHORT:
+                description = this.formatTime(startTime) + ' - ' +  this.formatTime(endTime);
+                break;
+            case this.DATETIME_MULTIDAY_START:
+                description = this.formatTime(startTime) + ' -->';
+                break;
+            case this.DATETIME_MULTIDAY_MIDDLE:
+                description = '<-->';
+                break;
+            case this.DATETIME_MULTIDAY_END:
+                description = '<-- ' + this.formatTime(endTime);
+                break;
+        }
+
+        return description;
     }
 });
