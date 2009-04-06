@@ -27,9 +27,9 @@
     <div dojoType="dijit.layout.ContentPane" region="top" id="header"
     style="height: 55px; overflow: hidden;">
         <img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6"
-        onClick='phpr.currentProjectId = 1; dojo.publish("Project.reload")' />
+        onClick='phpr.currentProjectId = 1; dojo.publish("Project.setUrlHash", ["Project"])' />
         <form dojoType="dijit.form.Form" id="searchform" name="searchform"
-        onsubmit='dojo.publish("{{currentModule}}.showSearchResults", [dojo.byId("searchfield").value]);
+        onsubmit='dojo.publish("{{currentModule}}.showSearchResults", [{{currentModule}}, null, [dojo.byId("searchfield").value]]);
             return false;'
         style="display: inline">
         <div id="search-bar" class="last right align-right">

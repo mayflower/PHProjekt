@@ -8,8 +8,7 @@
         @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
     </style>
     <script type="text/javascript">
-        var djConfig = {isDebug: false, parseOnLoad: false, preventBackButtonFix: false,
-                        bindEncoding: "utf-8", dojoIframeHistoryUrl: '../resources/iframe_history.html',
+        var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
                         locale: '<?php echo $this->language; ?>', useCommentedJson: true};
     </script>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
@@ -45,15 +44,26 @@
             dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 55) + "px");
             dijit.byId('completeCenterContent').resize();
         }
-        dojo.addOnLoad(init);
-        window.onresize = function(){
+
+        dojo.addOnLoad(function(){
+            if (!window.location.hash) {
+                window.location.hash = "Project";
+            }
+            recentHash = window.location.hash;
+            setInterval(initialiseStateFromUrl, 500);
+            init();
+        });
+
+        window.onresize = function() {
             init();
         };
     </script>
 </head>
 <body class="phprojekt">
     <script type="text/javascript">
-        var main = new phpr.Main("<?php echo $this->webpath; ?>", "Project", 1, '<?php echo $this->language; ?>');
+        phpr.Url   = new phpr.Url();
+        var module = phpr.Url.getModule();
+        var main   = new phpr.Main("<?php echo $this->webpath; ?>", module, 1, '<?php echo $this->language; ?>');
     </script>
 </body>
 </html>

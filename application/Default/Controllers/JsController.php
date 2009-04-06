@@ -69,6 +69,7 @@ class JsController extends IndexController
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Store.js');
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Date.js');
         echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Gfx.js');
+        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Url.js');
 
         // Default Folder
         echo $this->_getDefaultScripts();
