@@ -364,7 +364,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         if (e.cellIndex == 0) {
             var item = this.grid.getItem(e.rowIndex);
             var rowID = this.grid.store.getValue(item, 'id');
-            this.publish("openForm", [rowID]);
+            this.main.setUrlHash(phpr.module, rowID);
         }
     },
 
