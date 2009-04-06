@@ -57,10 +57,12 @@ class Statistic_Models_Statistic
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree->setup();
-        $projectsId = array();
+        $projectsId = array(0);
         foreach ($tree as $node) {
-            $projectsId[] = $node->id;
-            $data['data']['projects'][$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
+            if ($node->id) {
+                $projectsId[] = $node->id;
+                $data['data']['projects'][$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
+            }
         }
 
         // Get TimeProj
