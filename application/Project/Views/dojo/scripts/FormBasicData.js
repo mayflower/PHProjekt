@@ -21,7 +21,9 @@ dojo.provide("phpr.Project.FormBasicData");
 
 dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
     postRenderForm:function() {
-        dijit.byId("deleteButton").destroy();
+        if (dijit.byId("deleteButton")) {
+            dijit.byId("deleteButton").destroy();
+        }
     },
 
     submitForm:function() {
