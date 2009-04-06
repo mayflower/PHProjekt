@@ -65,8 +65,6 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     },
 
     processActionFromUrlHash:function(data) {
-        console.debug('c');
-        console.debug(data);
         if (data[0] == 'basicData') {
             this.basicData();
         } else {
