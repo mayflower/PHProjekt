@@ -36,7 +36,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.cleanPage();
         phpr.currentProjectId = id;
         phpr.TreeContent.fadeIn();
-        this.basicData();
+        this.setUrlHash(module, null, ["basicData"]);
     },
 
     basicData:function() {
@@ -61,6 +61,16 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         }
         if (this.form) {
             this.form.updateData();
+        }
+    },
+
+    processActionFromUrlHash:function(data) {
+        console.debug('c');
+        console.debug(data);
+        if (data[0] == 'basicData') {
+            this.basicData();
+        } else {
+            this.reload();
         }
     }
 });
