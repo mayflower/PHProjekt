@@ -121,17 +121,19 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             var _this = this;
             this.tree.model.store.fetchItemByIdentity({identity: id,
                 onItem:function(item) {
-                    var paths = item.path.toString().split("\/");
-                    for (i in paths) {
-                        if (Math.abs(paths[i]) > 1) {
-                            node = _tree._itemNodeMap[paths[i]];
-                            _tree._expandNode(node);
+                    if (item) {
+                        var paths = item.path.toString().split("\/");
+                        for (i in paths) {
+                            if (Math.abs(paths[i]) > 1) {
+                                node = _tree._itemNodeMap[paths[i]];
+                                _tree._expandNode(node);
+                            }
                         }
-                    }
-                    var node = _tree._itemNodeMap[item.id];
-                    if (node) {
-                        _tree.focusNode(node);
-                        node.labelNode.style.fontWeight = "bold";
+                        var node = _tree._itemNodeMap[item.id];
+                        if (node) {
+                            _tree.focusNode(node);
+                            node.labelNode.style.fontWeight = "bold";
+                        }
                     }
             }});
         }
