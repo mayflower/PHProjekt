@@ -317,8 +317,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.gridData = {
             items: []
         };
-        var content = phpr.DataStore.getData({url: this.url});
-        for (var i = 0; i < content.length; i++) {
+        var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
+        for (var i in content) {
             this.gridData.items.push(content[i]);
         }
         store = new dojo.data.ItemFileWriteStore({data: this.gridData});
