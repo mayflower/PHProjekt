@@ -27,6 +27,8 @@ dojo.declare("phpr.User.Main", phpr.Core.Main, {
         this.gridWidget = phpr.User.Grid;
         this.formWidget = phpr.User.Form;
         this.treeWidget = phpr.User.Tree;
+
+        dojo.subscribe("User.customSetSubmoduleNavigation", this, "customSetSubmoduleNavigation");
     },
 
     customSetSubmoduleNavigation:function() {

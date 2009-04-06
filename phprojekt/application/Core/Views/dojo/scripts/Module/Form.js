@@ -252,7 +252,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                     new phpr.handleResponse('serverFeedback', response);
                                 }
                                 this.publish("updateCacheData");
-                                this.publish("reload");
+                                this.publish("setUrlHash", [phpr.module]);
                             }
                         })
                     });
@@ -268,7 +268,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {
                     this.publish("updateCacheData");
-                    this.publish("reload");
+                    this.publish("setUrlHash", [phpr.module]);
                }
             })
         });

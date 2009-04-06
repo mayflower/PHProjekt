@@ -29,6 +29,8 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         this.treeWidget = phpr.Administration.Tree;
 
         dojo.subscribe("Administration.loadSubModule", this, "loadSubModule");
+        dojo.subscribe("Administration.setSubGlobalModulesNavigation", this, "setSubGlobalModulesNavigation");
+        dojo.subscribe("Administration.customSetSubmoduleNavigation", this, "customSetSubmoduleNavigation");
     },
 
     reload:function() {
@@ -51,7 +53,11 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         }
         phpr.submodule = module;
         this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        this.cleanPage();
+        phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
+        this.hideSuggest();
+        this.setSearchForm();
         this.form = new this.formWidget(this, 0, this.module);
     },
 
@@ -66,30 +72,30 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                 modules.push({
                     "name":           "Module",
                     "label":          phpr.nls.get("Module"),
-                    "moduleFunction": "reload",
-                    "module":         "Module"});
+                    "moduleFunction": "setUrlHash",
+                    "functionParams": "'Module'"});
                 modules.push({
                     "name":           "Tab",
                     "label":          phpr.nls.get("Tab"),
-                    "moduleFunction": "reload",
-                    "module":         "Tab"});
+                    "moduleFunction": "setUrlHash",
+                    "functionParams": "'Tab'"});
                 modules.push({
                     "name":           "User",
                     "label":          phpr.nls.get("User"),
-                    "moduleFunction": "reload",
-                    "module":         "User"});
+                    "moduleFunction": "setUrlHash",
+                    "functionParams": "'User'"});
                 modules.push({
                     "name":           "Role",
                     "label":          phpr.nls.get("Role"),
-                    "moduleFunction": "reload",
-                    "module":         "Role"});
+                    "moduleFunction": "setUrlHash",
+                    "functionParams": "'Role'"});
                 tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
                     modules.push({
                         "name":           tmp[i].name,
                         "label":          tmp[i].label,
-                        "moduleFunction": "loadSubModule",
-                        "module":         "Administration"});
+                        "moduleFunction": "setUrlHash",
+                        "functionParams": "'Administration', null, ['" + tmp[i].name + "']"});
                 }
                 var navigation ='<ul id="nav_main">';
                 for (var i = 0; i < modules.length; i++) {
@@ -97,22 +103,27 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction;
-                    var module         = modules[i].module;
+                    var functionParams = modules[i].functionParams;
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
                     navigation += self.render(["phpr.Administration.template", "navigation.html"], null, {
                         moduleName :    moduleName,
                         moduleLabel:    moduleLabel,
-                        module:         module,
                         liclass:        liclass,
-                        moduleFunction: moduleFunction
+                        moduleFunction: moduleFunction,
+                        functionParams: functionParams
                     });
                 }
                 navigation += "</ul>";
                 dojo.byId("subModuleNavigation").innerHTML = navigation;
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
-                this.customSetSubmoduleNavigation();
+                if (phpr.submodule == 'Module' || phpr.submodule == 'Tab' ||
+                    phpr.submodule == 'User' || phpr.submodule == 'Role') {
+                    dojo.publish(phpr.submodule + ".customSetSubmoduleNavigation");
+                } else {
+                    dojo.publish("Administration.customSetSubmoduleNavigation");
+                }
             })
         })
     },
@@ -121,5 +132,15 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         if (this.form) {
             this.form.updateData();
         }
+    },
+
+    processActionFromUrlHash:function(data) {
+        switch (data[0]) {
+            default:
+                this.loadSubModule(data[0]);
+        }
+    },
+
+    customSetSubmoduleNavigation:function() {
     }
 });
