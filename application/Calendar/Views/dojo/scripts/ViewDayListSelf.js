@@ -143,9 +143,9 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
 
     fillScheduleArrayStructure_part2:function(content) {
         // Summary:
-        //    Continues creating the schedule array structure, supporting simultaneous events. Puts every event 
+        //    Continues creating the schedule array structure, supporting simultaneous events. Puts every event
         // somewhere in the arrays.
-        
+
         this._furtherEvents['show']   = false;
         this._furtherEvents['events'] = new Array();
 

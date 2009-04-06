@@ -10,7 +10,7 @@
  *
  * @copyright  Copyright (c) 2009 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
@@ -24,8 +24,8 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     //    Class for displaying a Calendar Month List
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
-    _header:        Array(7),
-    _schedule:      Array(),
+    _header:   Array(7),
+    _schedule: Array(),
 
     COLOR_WEEKDAY:      '#FFFFFF',
     COLOR_WEEKEND:      '#EFEFEF',
@@ -164,10 +164,11 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
                         if (typeof(this._schedule[row][weekDay]['events']) == 'undefined') {
                             this._schedule[row][weekDay]['events'] = new Array();
                         }
-                        var nextEvent = this._schedule[row][weekDay]['events'].length;
+                        var nextEvent    = this._schedule[row][weekDay]['events'].length;
+                        var contentTitle = content[event]['title'];
                         this._schedule[row][weekDay]['events'][nextEvent]          = new Array();
                         this._schedule[row][weekDay]['events'][nextEvent]['id']    = content[event]['id'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['title'] = this.htmlEntities(content[event]['title']);
+                        this._schedule[row][weekDay]['events'][nextEvent]['title'] = this.htmlEntities(contentTitle);
                         this._schedule[row][weekDay]['events'][nextEvent]['time']  = eventInfo['time'];
                     }
                 }
@@ -188,7 +189,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         var eventStartDay_Date = new Date();   // Just the year/month/day of the event start
         var eventEndDay_Date   = new Date();   // Just the year/month/day of the event end
 
-        // Convert strings variables into date ones 
+        // Convert strings variables into date ones
         temp                  = eventStartDate_String.split('-');
         var eventStartYear    = parseInt(temp[0], 10);
         var eventStartMonth   = parseInt(temp[1], 10);
@@ -209,7 +210,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         momentAsked_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
         momentAsked_Date.setHours(0, 0, 0, 0);
 
-        // Has the event to be shown for the day received (momentAskedDate)? 
+        // Has the event to be shown for the day received (momentAskedDate)?
         if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) <= 0)
             && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) >= 0)) {
             // Yes

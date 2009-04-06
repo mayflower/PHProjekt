@@ -132,7 +132,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     },
 
     getEventInfo:function(/*string*/ eventStartDate_String, /*string*/ eventStartTime_String,
-                          /*string*/ eventEndDate_String, /*string*/ eventEndTime_String, 
+                          /*string*/ eventEndDate_String, /*string*/ eventEndTime_String,
                           /*string*/ momentAskedDate, /*string*/ momentAskedTime) {
         // Summary:
         //    Returns useful data about an event, used to create the schedule table.
@@ -140,7 +140,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    Returns useful data about an event, used to create the schedule table. E.g.: whether it is inside or
         // outside the 8:00 to 20:00 range, in what row (and maybe day) of the shown table should it start and end.
         // If the 'momentAskedTime' optional parameter is set, then one of three possibilities happens and is informed:
-        // 1) The event start time matchs that start time  
+        // 1) The event start time matchs that start time
         // or 2) The moment asked is inside the event period but doesn't match the event start time
         // or 3) The moment asked is outside the event time
         // Note:
@@ -211,7 +211,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         eventStartDay_Date.setHours(0, 0, 0, 0);
         eventEndDay_Date.setFullYear(eventEndYear, eventEndMonth - 1, eventEndDay);
         eventEndDay_Date.setHours(0, 0, 0, 0);
-        
+
         momentAsked_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
         if (momentAskedTime != null) {
             momentAsked_Date.setHours(momentAskedHour, momentAskedMinutes, 0, 0);
@@ -222,7 +222,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         if (momentAskedTime != null) {
             // Compare the event start date and time with the momentAsked
             if (dojo.date.compare(eventStart_Date, momentAsked_Date) == 0) {
-                result['type'] = this.EVENT_TIME_START;    
+                result['type'] = this.EVENT_TIME_START;
             } else if ((dojo.date.compare(eventStart_Date, momentAsked_Date) < 0)
                 && (dojo.date.compare(eventEnd_Date, momentAsked_Date) >= 0)) {
                 result['type'] = this.EVENT_TIME_INSIDE
@@ -247,7 +247,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
                 if (startsBeforeScheduleEnds && endsAfterScheduleBegins) {
                     result['range'] = this.SHOWN_INSIDE_CHART;
-                    // If event start happens before the asked day at 8:00, the schedule must show it from the 8:00 row 
+                    // If event start happens before the asked day at 8:00, the schedule must show it from the 8:00 row
                     // (but the text will show the real info)
                     if (dojo.date.compare(eventStart_Date, scheduleStart_Date) < 0) {
                         eventStart_Date = scheduleStart_Date;
@@ -375,10 +375,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    Creates the appropriate datetime event description according the mode requested
         var description;
         switch (mode) {
-            case this.DATETIME_LONG:    
-            default:    
+            case this.DATETIME_LONG:
+            default:
                 description = startDate + ' ' + this.formatTime(startTime) + ' - ' + endDate + ' '
-                    + this.formatTime(endTime) + '<br>';            
+                    + this.formatTime(endTime) + '<br>';
                 break;
             case this.DATETIME_SHORT:
                 description = this.formatTime(startTime) + ' - ' +  this.formatTime(endTime);

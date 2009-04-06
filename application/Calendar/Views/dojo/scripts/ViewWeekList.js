@@ -220,7 +220,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     fillScheduleArrayData:function(content) {
         // Summary:
         //    Puts every event in the corresponding array position.
-        
+
         furtherEventsTemp           = new Array();
         furtherEventsTemp['show']   = false;
         furtherEventsTemp['events'] = new Array();
