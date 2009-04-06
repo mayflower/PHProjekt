@@ -122,7 +122,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                     if ($projectId > 1) {
                         $project = Phprojekt_Loader::getModel('Project', 'Project');
                         $parent  = $project->find($projectId);
-                        if (!is_null($parent) && $parent->projectId > 0) {
+                        if (!is_null($parent) && !empty($parent) && $parent->projectId > 0) {
                             $sessionName = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-'
                                          . $parent->projectId . '-' . $userId;
                             $roleParentNamespace = new Zend_Session_Namespace($sessionName);
