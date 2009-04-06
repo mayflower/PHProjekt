@@ -154,5 +154,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             + "/startDate/" + phpr.Date.getIsoDate(start)
             + "/endDate/" + phpr.Date.getIsoDate(end));
         return false;
+    },
+
+    openForm:function(id, module) {
     }
 });

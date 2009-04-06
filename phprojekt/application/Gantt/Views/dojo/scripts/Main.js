@@ -454,5 +454,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var formUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + ids[i];
             phpr.DataStore.deleteData({url: formUrl});
         }
+    },
+
+    openForm:function(id, module) {
     }
 });
