@@ -216,7 +216,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Receives the response from the DB and puts all the events of the selected users in the appropriate
         // position inside the schedule array.
         for (var event in content) {
-        	var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
+            var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
                                               content[event]['endDate'], content[event]['endTime'],
                                               this._date);
             if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
