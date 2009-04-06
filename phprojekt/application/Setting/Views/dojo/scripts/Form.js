@@ -67,7 +67,7 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
                }
                if (data.type =='success') {
                     this.publish("updateCacheData");
-                    this.publish("reload");
+                    this.publish("setUrlHash", [phpr.module]);
                 }
             })
         });

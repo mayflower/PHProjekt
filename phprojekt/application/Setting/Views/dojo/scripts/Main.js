@@ -67,7 +67,8 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
-                    var moduleFunction = modules[i].moduleFunction || "loadSubModule";
+                    var moduleFunction = "setUrlHash";
+                    var functionParams = "'Setting', null, ['" + modules[i].name + "']";
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
@@ -75,7 +76,8 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
                         moduleName :    moduleName,
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,
-                        moduleFunction: moduleFunction
+                        moduleFunction: moduleFunction,
+                        functionParams: functionParams
                     });
                 }
                 navigation += "</ul>";
@@ -89,6 +91,12 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
     updateCacheData:function() {
         if (this.form) {
             this.form.updateData();
+        }
+    },
+
+    processActionFromUrlHash:function(data) {
+        if (data[0]) {
+            this.loadSubModule(data[0]);
         }
     }
 });
