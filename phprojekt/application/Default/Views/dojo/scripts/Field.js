@@ -195,9 +195,20 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         phpr.destroyWidget(itemid + "_disabled");
         var options = new Array();
         var j       = 0;
+        var found   = false;
+        var first   = null;
         for (j in range) {
+            if (null == first) {
+                first = range[j].id;
+            }
+            if (range[j].id == itemvalue) {
+                found = true;
+            }
             options.push(range[j]);
             j++;
+        }
+        if (!found) {
+            itemvalue = first;
         }
         var html = this.render(["phpr.Default.template", "formfilterselect.html"], null, {
                             label:    itemlabel,
