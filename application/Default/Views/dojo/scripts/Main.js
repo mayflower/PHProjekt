@@ -297,6 +297,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             module == 'Setting' ||
             module == 'User' ||
             module == 'Role' ||
+            module == 'Tab' ||
             module == 'Module') {
             return true;
         } else {
