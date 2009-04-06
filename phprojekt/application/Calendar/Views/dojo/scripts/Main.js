@@ -420,8 +420,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Description:
         //    This function is responsible for displaying the Navigation top bar of the Calendar
         //    Current submodules are: List, Day and Week.
-        var moduleViews       = new Array();
-        var dayListActive     = false;
+        var moduleViews   = new Array();
+        var dayListActive = false;
         if (this.isListActive(this.dayListSelf) || this.isListActive(this.dayListSelect)) {
             dayListActive = true;
         }
@@ -436,12 +436,13 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             var liclass = '';
             if (moduleViews[i].activeTab) {
                 liclass = 'class = active';
-                }
+            }
             navigation += this.render(["phpr.Default.template", "navigation.html"], null, {
                 moduleName :    'Calendar',
                 moduleLabel:    moduleViews[i].label,
                 liclass:        liclass,
-                moduleFunction: moduleViews[i].functionName
+                moduleFunction: moduleViews[i].functionName,
+                functionParams: ""
             });
         }
         navigation += "</ul>";
@@ -451,7 +452,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
     addModuleView:function(moduleViews, label, functionName, activeTab) {
         // Summary:
-        //    Adds a specific view to the moduleViews array 
+        //    Adds a specific view to the moduleViews array
         var i                          = moduleViews.length;
         moduleViews[i]                 = new Array();
         moduleViews[i]['label']        = label;
@@ -469,5 +470,5 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
 
         return answer;
-    } 
+    }
 });

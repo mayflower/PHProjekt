@@ -91,7 +91,9 @@ class Calendar_IndexController extends IndexController
 
         if ($id > 0) {
             $record = $this->getModelObject()->find($id);
-            $data   = array('data' => $record->getAllParticipants());
+            if (isset($record->id)) {
+                $data = array('data' => $record->getAllParticipants());
+            }
         }
 
         Phprojekt_Converter_Json::echoConvert($data);
