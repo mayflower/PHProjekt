@@ -135,9 +135,8 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
     },
 
     processActionFromUrlHash:function(data) {
-        switch (data[0]) {
-            default:
-                this.loadSubModule(data[0]);
+        if (data[0]) {
+            this.loadSubModule(data[0]);
         }
     },
 
