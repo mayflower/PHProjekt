@@ -46,64 +46,10 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        var subModuleUrl = phpr.webpath + 'index.php/Administration/index/jsonGetModules';
-        var self = this;
-        phpr.DataStore.addStore({url: subModuleUrl});
-        phpr.DataStore.requestData({
-            url: subModuleUrl,
-            processData: dojo.hitch(this, function() {
-                var modules = new Array();
-                modules.push({
-                    "name":           "Module",
-                    "label":          phpr.nls.get("Module"),
-                    "moduleFunction": "reload",
-                    "module":         "Module"});
-                modules.push({
-                    "name":           "Tab",
-                    "label":          phpr.nls.get("Tab"),
-                    "moduleFunction": "reload",
-                    "module":         "Tab"});
-                modules.push({
-                    "name":           "User",
-                    "label":          phpr.nls.get("User"),
-                    "moduleFunction": "reload",
-                    "module":         "User"});
-                modules.push({
-                    "name":           "Role",
-                    "label":          phpr.nls.get("Role"),
-                    "moduleFunction": "reload",
-                    "module":         "Role"});
-                tmp = phpr.DataStore.getData({url: subModuleUrl});
-                for (var i = 0; i < tmp.length; i++) {
-                    modules.push({
-                        "name":           tmp[i].name,
-                        "label":          tmp[i].label,
-                        "moduleFunction": "loadSubModule",
-                        "module":         "Administration"});
-                }
-                var navigation ='<ul id="nav_main">';
-                for (var i = 0; i < modules.length; i++) {
-                    var liclass        = '';
-                    var moduleName     = modules[i].name;
-                    var moduleLabel    = modules[i].label;
-                    var moduleFunction = modules[i].moduleFunction;
-                    var module         = modules[i].module;
-                    if (moduleName == phpr.submodule) {
-                        liclass   = 'class = active';
-                    }
-                    navigation += self.render(["phpr.Administration.template", "navigation.html"], null, {
-                        moduleName :    moduleName,
-                        moduleLabel:    moduleLabel,
-                        module:         module,
-                        liclass:        liclass,
-                        moduleFunction: moduleFunction
-                    });
-                }
-                navigation += "</ul>";
-                dojo.byId("subModuleNavigation").innerHTML = navigation;
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
-                this.customSetSubmoduleNavigation();
-            })
-        })
+        dojo.publish("Administration.setSubGlobalModulesNavigation", [currentModule]);
+    },
+
+    processActionFromUrlHash:function(data) {
+        dojo.publish("Administration.processActionFromUrlHash", [data]);
     }
 });
