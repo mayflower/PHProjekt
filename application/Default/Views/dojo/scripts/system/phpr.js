@@ -179,14 +179,15 @@ dojo.require("dojox.layout.ExpandoPane");
 dojo.require("dojox.layout.ScrollPane");
 dojo.require("dojox.widget.Toaster");
 
-// global vars
-var module = null;
-var webpath = null;
+// Global vars
+var module           = null;
+var webpath          = null;
 var currentProjectId = null;
-var rootProjectId = null;
-var userTags = null;
-var currentTags = null;
-var serverFeedback = null;
+var rootProjectId    = null;
+var userTags         = null;
+var currentTags      = null;
+var serverFeedback   = null;
+
 phpr.initWidgets = function(el) {
     // This parses the given node and inits the widgets found in there.
     if (dojo.isString(el)) {
@@ -502,14 +503,13 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // description:
     //    Request to the server and return an array with
     //    data and metadata values
-    requestMethod:"post",
-    doClientPaging:false,
+    requestMethod: "post",
+    doClientPaging: false,
 
     _assertIsItem:function(item) {
     },
 
     _filterResponse:function(data) {
-
         // 500 is the error code for logut
         if (data.code && data.code == 500) {
             location = phpr.webpath + "index.php/Login/logout";
@@ -519,6 +519,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         if (typeof data.data == 'undefined') {
             data.data = new Array();
         }
+
         if (data.data.length == 0 && typeof data.metadata == 'undefined') {
             var retData     = data;
             var retMetaData = new Array();
@@ -526,11 +527,13 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
             var retData     = data.data;
             var retMetaData = data.metadata;
         }
+
         ret = {
             items: [
                 {"data":     retData},
                 {"metadata": retMetaData}]
         }
+
         return ret;
     }
 });
