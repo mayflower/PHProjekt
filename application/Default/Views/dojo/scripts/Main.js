@@ -118,8 +118,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     for (var i = 0; i < modules.length; i++) {
                         var moduleName     = modules[i].name;
                         var moduleFunction = modules[i].moduleFunction || null;
+                        var functionParams = modules[i].functionParams;
                         if (modules[i].rights.read) {
-                            if (moduleName == this.module && moduleFunction != "basicData") {
+                            if (moduleName == this.module && functionParams !="'Project', null, ['basicData']") {
                                 usefirstModule = false;
                                 currentModule  = moduleName;
                             }
@@ -169,16 +170,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
-        phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
+        phpr.DataStore.requestData({
+            url:         this._langUrl,
+            processData: dojo.hitch(this, function() {
                 // Load the components, tree, list and details.
-                phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+                phpr.nls      = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
                 var globalUrl = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
                 phpr.DataStore.addStore({url: globalUrl});
-                phpr.DataStore.requestData({url: globalUrl, processData: dojo.hitch(this, function() {
-                    this.setGlobalModulesNavigation();
-                    this.processUrlHash(window.location.hash);
-                })});
-          })
+                phpr.DataStore.requestData({
+                    url:         globalUrl,
+                    processData: dojo.hitch(this, function() {
+                        this.setGlobalModulesNavigation();
+                        this.processUrlHash(window.location.hash);
+                    })
+                });
+            })
         });
     },
 
@@ -485,7 +491,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Normal modules use the project as second parameter
         if (data[0] && !this._isGlobalModule(module)) {
-            phpr.currentProjectId = data.shift();
+            var projectId = data.shift();
+            if (projectId < 1) {
+                projectId = 1;
+            }
+            phpr.currentProjectId = projectId;
         }
 
         // The second paremater (for global)
