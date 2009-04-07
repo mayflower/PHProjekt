@@ -598,7 +598,7 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Helpdesk', 'solvedDate', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'contactId', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
 
-(0, 'Minutes', 'projectId', 1, 'Select', 'hidden', 0, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'projectId', 1, 'Select', 'hidden', 1, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, '', '', 4, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'meetingDate', 1, 'Date of Meeting', 'date', 4, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
