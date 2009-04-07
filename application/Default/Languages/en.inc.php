@@ -142,6 +142,7 @@ $lang["The module was deleted correctly"] = "The module was deleted correctly";
 $lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "YOU MUST REFRESH THE PAGE TO WORK WITH "
     . "THE NEW MODULE";
 $lang["No help available"] = "No help available";
+$lang["You do not have access for do this action"] = "You do not have access for do this action";
 
 // System Modules
 $lang["Administration"] = "Administration";

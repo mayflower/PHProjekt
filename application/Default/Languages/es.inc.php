@@ -142,6 +142,7 @@ $lang["The module was deleted correctly"] = "El módulo fue borrado correctament
 $lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "USTED DEBE REFRESCAR LA PAGINA EN SU NAVEGADOR PARA "
     . "TRABAJAR CON EL MÓDULO NUEVO";
 $lang["No help available"] = "No hay ayuda disponible";
+$lang["You do not have access for do this action"] = "Usted no tiene acceso para realizar esta acción";
 
 // System Modules
 $lang["Administration"] = "Administración";
