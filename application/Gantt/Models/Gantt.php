@@ -34,11 +34,14 @@
 class Gantt_Models_Gantt
 {
     /**
-     * Needed for delete projects
+     * Implement fetchAll for delete projects
      *
-     * @return void
+     * @param string $where The SQL where
+     *
+     * @return array
      */
-    public function fetchAll($projectId)
+    public function fetchAll($where)
     {
+        return array();
     }
 }

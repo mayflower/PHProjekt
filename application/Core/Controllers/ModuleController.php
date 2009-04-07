@@ -141,7 +141,7 @@ class Core_ModuleController extends Core_IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $databaseModel   = Phprojekt_Loader::getModel($model->name, $model->name);
             $databaseManager = new Phprojekt_DatabaseManager($databaseModel);
-            $tmpModule       = $model->delete();
+            $tmpModule       = Default_Helpers_Delete::delete($model);
             $tmpDatabase     = $databaseManager->deleteModule();
 
             if ($tmpModule === false || $tmpDatabase === false) {

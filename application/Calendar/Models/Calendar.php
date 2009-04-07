@@ -278,11 +278,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
             $records = $this->fetchAll($where);
             foreach ($records as $record) {
-                $record->delete();
+                Default_Helpers_Delete::delete($record);
             }
         } else {
             if (null === $this->rrule) {
-                $this->delete();
+                Default_Helpers_Delete::delete($this);
             } else {
                 $this->softDeleteEvent();
             }

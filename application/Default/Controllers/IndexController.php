@@ -196,14 +196,20 @@ class IndexController extends Zend_Controller_Action
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
-        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
-        $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => $model->id);
+            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
-        Phprojekt_Converter_Json::echoConvert($return);
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $model->id);
+
+            Phprojekt_Converter_Json::echoConvert($return);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
     }
 
     /**
@@ -261,7 +267,7 @@ class IndexController extends Zend_Controller_Action
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $tmp = $model->delete();
+            $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
             } else {

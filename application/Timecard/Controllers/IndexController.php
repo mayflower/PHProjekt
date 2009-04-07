@@ -193,18 +193,22 @@ class Timecard_IndexController extends IndexController
         $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj')->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $tmp = $model->delete();
-            if ($tmp === false) {
-                $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
-            } else {
-                $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
-            }
-            $return = array('type'    => 'success',
-                            'message' => $message,
-                            'code'    => 0,
-                            'id'      => $id);
+            if ($model->ownerId == Phprojekt_Auth::getUserId()) {
+                $tmp = Default_Helpers_Delete::delete($model);
+                if ($tmp === false) {
+                    $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
+                } else {
+                    $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
+                }
+                $return = array('type'    => 'success',
+                                'message' => $message,
+                                'code'    => 0,
+                                'id'      => $id);
 
-            Phprojekt_Converter_Json::echoConvert($return);
+                Phprojekt_Converter_Json::echoConvert($return);
+            } else {
+                throw new Phprojekt_PublishedException('You do not have access to do this action');
+            }
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
