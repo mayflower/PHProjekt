@@ -83,12 +83,10 @@ final class Default_Helpers_Save
         if (!$node->getActiveRecord()->recordValidate()) {
             $error = array_pop($node->getActiveRecord()->getError());
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkAccess($projectId)) {
-            throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(1, $projectId)) {
             throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
-        } else if (!$newItem && !self::_checkItemRights($node->getActiveRecord(), 'Project')) {
-            throw new Phprojekt_PublishedException('You do not have access to edit this item');
+        } else if (!self::_checkItemRights($node->getActiveRecord(), 'Project')) {
+            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             if (null === $node->id || $node->id == 0) {
                 $parentNode->appendNode($node);
@@ -168,12 +166,10 @@ final class Default_Helpers_Save
         if (!$model->recordValidate()) {
             $error = array_pop($model->getError());
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkAccess($projectId)) {
-            throw new Phprojekt_PublishedException('You do not have write access into the parent project');
         } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
-        } else if (!$newItem && !self::_checkItemRights($model, $moduleName)) {
-            throw new Phprojekt_PublishedException('You do not have access to edit this item');
+        } else if (!self::_checkItemRights($model, $moduleName)) {
+            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             $model->save();
 
@@ -251,32 +247,6 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Check if the user has write access to the parent project
-     *
-     * @param integer $projectId The project Id to check
-     *
-     * @return boolean
-     */
-    private function _checkAccess($projectId)
-    {
-        if ($projectId > 0) {
-            $parentNode = Phprojekt_Loader::getModel('Project', 'Project')->find($projectId);
-            $itemRights = $parentNode->getRights();
-
-            if (!$itemRights['currentUser']['write']  &&
-                !$itemRights['currentUser']['create'] &&
-                !$itemRights['currentUser']['copy']   &&
-                !$itemRights['currentUser']['admin']) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Check if the parent project has this module enabled
      *
      * @param integer $projectId The project Id to check
@@ -320,7 +290,9 @@ final class Default_Helpers_Save
     {
         $canWrite = false;
 
-        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($moduleName) == 0)) {
+        if ($moduleName == 'Core') {
+            return Phprojekt_Auth::isAdminUser();
+        } else if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($moduleName)) == 0) {
             $itemRights = $model->getRights();
 
             if (isset($itemRights['currentUser'])) {

@@ -163,7 +163,7 @@ class Phprojekt_Module
 
         foreach ($modules as $data) {
             if ($data['id'] == $id) {
-                return $data['saveType'];
+                return intval($data['saveType']);
             }
         }
 
