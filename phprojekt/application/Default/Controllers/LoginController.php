@@ -35,7 +35,7 @@
 class LoginController extends Zend_Controller_Action
 {
     /**
-     * Default error action
+     * Default action
      *
      * @return void
      */
@@ -47,14 +47,13 @@ class LoginController extends Zend_Controller_Action
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
-        $this->render('login');
+        $this->render('index');
     }
 
     /**
      * Executes the login using the username and password provided on login form
      * If it works fine you will be redirect to homepage
-     *
-     * @todo redirect to the correct page
+     * Keep the hash for redirect
      *
      * @return void
      */
@@ -62,6 +61,7 @@ class LoginController extends Zend_Controller_Action
     {
         $username = (string) $this->getRequest()->getParam('username', null);
         $password = (string) $this->getRequest()->getParam('password', null);
+        $hash     = (string) $this->getRequest()->getParam('hash', null);
 
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
@@ -70,19 +70,21 @@ class LoginController extends Zend_Controller_Action
             $success = Phprojekt_Auth::login($username, $password);
             if ($success === true) {
                 $config = Phprojekt::getInstance()->getConfig();
-                $this->_redirect($config->webpath.'index.php');
+                $this->_redirect($config->webpath . 'index.php' . $hash);
                 die();
             }
         } catch (Phprojekt_Auth_Exception $error) {
             $this->view->message  = $error->getMessage();
             $this->view->username = $username;
+            $this->view->hash     = $hash;
+
+            $this->render('index');
         }
     }
 
     /**
      * Executes the login by json using the username and password
      * If it works fine, json returns success
-     *
      *
      * @return void
      */
@@ -117,7 +119,7 @@ class LoginController extends Zend_Controller_Action
     {
         Phprojekt_Auth::logout();
         $config = Phprojekt::getInstance()->getConfig();
-        $this->_redirect($config->webpath.'index.php/login/index');
+        $this->_redirect($config->webpath . 'index.php');
         die();
     }
 }
