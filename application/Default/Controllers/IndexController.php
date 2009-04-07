@@ -62,23 +62,23 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
+        $isLoggedIn = true;
         try {
             Phprojekt_Auth::isLoggedIn();
         } catch (Phprojekt_Auth_UserNotLoggedInException $error) {
             // User not logged in, display login page
-            // If is a GET, show the loguin page
+            // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
-            if ($this->getFrontController()->getRequest()->isGet()) {
-                $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/index');
-                exit;
-            } else {
+            if (!$this->getFrontController()->getRequest()->isGet()) {
                 throw new Phprojekt_PublishedException($error->message, 500);
             }
+            $isLoggedIn = false;
         }
 
         // This is a work around as we cannot set this in the front
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
+        $this->view->isLoggedIn = $isLoggedIn;
     }
 
     /**

@@ -41,16 +41,35 @@
             dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
             dijit.byId('completeContent').resize();
 
-            dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 55) + "px");
-            dijit.byId('completeCenterContent').resize();
+            if (dojo.byId('completeCenterContent')) {
+                dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 55) + "px");
+                dijit.byId('completeCenterContent').resize();
+            }
         }
 
-        dojo.addOnLoad(function(){
+        dojo.addOnLoad(function() {
+            <?php
+            if (true === $this->isLoggedIn) {
+            ?>
             if (!window.location.hash) {
                 window.location.hash = "Project";
             }
             recentHash = window.location.hash;
             setInterval(initialiseStateFromUrl, 500);
+            <?php
+            } else {
+            ?>
+                dojo.parser.parse();
+                dojo.byId('hash').value = <?php
+                if ($this->hash) {
+                    echo '"' . $this->hash . '"';
+                } else {
+                    echo 'window.location.hash';
+                }
+                ?>;
+            <?php
+            }
+            ?>
             init();
         });
 
@@ -60,11 +79,19 @@
     </script>
 </head>
 <body class="phprojekt">
+    <?php
+    if (true === $this->isLoggedIn) {
+    ?>
     <script type="text/javascript">
         phpr.Url   = new phpr.Url();
         var module = phpr.Url.getModule();
         var main   = new phpr.Main("<?php echo $this->webpath; ?>", module, 1, '<?php echo $this->language; ?>');
     </script>
+    <?php
+    } else {
+        include ("login.phtml");
+    }
+    ?>
 </body>
 </html>
 <!-- template: index.phml -->
