@@ -118,7 +118,7 @@ class Gantt_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $projects = (array) $this->getRequest()->getParam('projects', array());
+        $projects     = (array) $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         foreach ($projects as $project) {
             list($id, $startDate, $endDate) = split(",", $project);
