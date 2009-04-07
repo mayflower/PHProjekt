@@ -163,7 +163,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __set($varname, $value)
     {
         $info = $this->info();
-
         if (isset($info['metadata'][$varname])) {
 
             $type = $info['metadata'][$varname]['DATA_TYPE'];
@@ -210,6 +209,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Cleaner::sanitize('timestamp', $value);
                     break;
                 case 'text':
+                    if (is_array($value)) {
+                        // if given value for a text field is an array, it's from a MultiSelect field
+                        $value = implode(',', $value);
+                    }
                     // Run html sanitize only if the text contain some html code
                     if (preg_match("/([\<])([^\>]{1,})*([\>])/i", $value)) {
                         $value = Cleaner::sanitize('html', $value);
@@ -257,7 +260,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __get($varname)
     {
         $info = $this->info();
-
         $value = parent::__get($varname);
 
         if (true == isset($info['metadata'][$varname])) {
