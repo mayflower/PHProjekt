@@ -207,7 +207,7 @@ class Timecard_IndexController extends IndexController
 
                 Phprojekt_Converter_Json::echoConvert($return);
             } else {
-                throw new Phprojekt_PublishedException('You do not have access to do this action');
+                throw new Phprojekt_PublishedException('You do not have access for do this action');
             }
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
