@@ -91,15 +91,20 @@ class Helpdesk_IndexController extends IndexController
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             $newItem = false;
         }
-        $params = $this->_setParams($this->getRequest()->getParams(), $model, $newItem);
-        Default_Helpers_Save::save($model, $params);
 
-        $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => $model->id);
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $params = $this->_setParams($this->getRequest()->getParams(), $model, $newItem);
+            Default_Helpers_Save::save($model, $params);
 
-        Phprojekt_Converter_Json::echoConvert($return);
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $model->id);
+
+            Phprojekt_Converter_Json::echoConvert($return);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
     }
 
     /**

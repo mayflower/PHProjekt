@@ -57,25 +57,28 @@ class Project_IndexController extends IndexController
             $model   = $this->getModelObject()->find($id);
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
-        $node    = new Phprojekt_Tree_Node_Database($model, $id);
-        $newNode = Default_Helpers_Save::save($node,
-                                              $this->getRequest()->getParams(),
-                                              (int) $this->getRequest()->getParam('projectId', null));
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $node    = new Phprojekt_Tree_Node_Database($model, $id);
+            $newNode = Default_Helpers_Save::save($node, $this->getRequest()->getParams(),
+                (int) $this->getRequest()->getParam('projectId', null));
 
-        // Set the id since the Tree save
-        // return differents values from insert and update
-        if (empty($id)) {
-            $showId = $newNode->id;
+            // Set the id since the Tree save
+            // return differents values from insert and update
+            if (empty($id)) {
+                $showId = $newNode->id;
+            } else {
+                $showId = $id;
+            }
+
+            $return    = array('type'    => 'success',
+                               'message' => $message,
+                               'code'    => 0,
+                               'id'      => $showId);
+
+            Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            $showId = $id;
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
-
-        $return    = array('type'    => 'success',
-                           'message' => $message,
-                           'code'    => 0,
-                           'id'      => $showId);
-
-        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**

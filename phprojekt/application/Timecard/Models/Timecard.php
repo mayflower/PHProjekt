@@ -333,4 +333,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
         return $hoursDiff.':'.$minutesDiff;
     }
+
+    public function delete()
+    {
+        if ($this->ownerId == Phprojekt_Auth::getUserId()) {
+            return parent::delete();
+        } else {
+            return false;
+        }
+    }
 }
