@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS `Filemanager`;
 DROP TABLE IF EXISTS `Contact`;
 DROP TABLE IF EXISTS `Helpdesk`;
 DROP TABLE IF EXISTS `Minutes`;
+DROP TABLE IF EXISTS `MinutesItem`;
 
 --
 -- Table structure for table `DatabaseManager`
@@ -522,6 +523,24 @@ CREATE TABLE IF NOT EXISTS `Minutes` (
   `participantsExcused` text,
   `recipients` text,
   `itemStatus` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+--
+-- Table structure for table `MinutesItem`
+--
+CREATE TABLE `MinutesItem` (
+  `id` int(11) NOT NULL auto_increment,
+  `ownerId` int(11) NOT NULL,
+  `projectId` int(11) NOT NULL,
+  `minutesId` int(11) NOT NULL,
+  `topicId` int(11) NOT NULL,
+  `topicType` int(11) NOT NULL,
+  `sortOrder` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `comment` text NOT NULL,
+  `topicDate` date default NULL,
+  `userId` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
