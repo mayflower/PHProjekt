@@ -548,8 +548,15 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the favorites projects
         // description:
         //    Save the favorites projects
-        this.sendData = new Array();
-        this.sendData['favorites[]'] = dojo.byId('selectedProjectFavorites').value.split(",");
+        this.sendData                = new Array();
+        this.sendData['favorites[]'] = new Array();
+        var favorites = dojo.byId('selectedProjectFavorites').value.split(",");
+        for (var i in favorites) {
+            var value = parseInt(favorites[i]);
+            if (value > 0) {
+                this.sendData['favorites[]'].push(value);
+            }
+        }
 
         phpr.send({
             url:       phpr.webpath + 'index.php/Timecard/index/jsonFavortiesSave',
