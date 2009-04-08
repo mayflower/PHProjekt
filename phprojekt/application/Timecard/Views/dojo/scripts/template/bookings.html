@@ -21,12 +21,12 @@
             <input type="text" id="amount_{{id}}"  name="amount" dojoType="dijit.form.TextBox"
             constraints=" {formatLength: 'short', timePattern: 'HHmm'}" value="{{amount}}"
             style="width: 55px" />
-            <button dojoType="dijit.form.Button" baseClass="positive" id="saveBookingButton_{{id}}" type="submit"
+            <button dojoType="dijit.form.Button" baseClass="positive" id="saveBookingButton_{{id}}" type="button"
             iconClass="tick">
                 {{saveText}}
             </button>
             &nbsp;
-            <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton_{{id}}" type="submit"
+            <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton_{{id}}" type="button"
             iconClass="cross">
                 {{deleteText}}
             </button>

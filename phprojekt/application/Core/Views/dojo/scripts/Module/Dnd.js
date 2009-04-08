@@ -262,7 +262,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsTable += '<label for="moduleDesignerSubmitButtonTable">&nbsp;</label>';
     fieldsTable += '</td><td>';
     fieldsTable += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonTable" baseClass="positive"';
-    fieldsTable += ' type="submit" iconClass="tick"></button>';
+    fieldsTable += ' type="button" iconClass="tick"></button>';
     fieldsTable += '</td></tr>';
 
     // Form
@@ -282,7 +282,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsForm += '<label for="moduleDesignerSubmitButtonForm">&nbsp;</label>';
     fieldsForm += '</td><td>';
     fieldsForm += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonForm" baseClass="positive"';
-    fieldsForm += ' type="submit" iconClass="tick"></button>';
+    fieldsForm += ' type="button" iconClass="tick"></button>';
     fieldsForm += '</td></tr>';
 
     // List
@@ -292,7 +292,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsList += '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>';
     fieldsList += '</td><td>';
     fieldsList += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonList" baseClass="positive"';
-    fieldsList += ' type="submit" iconClass="tick"></button>';
+    fieldsList += ' type="button" iconClass="tick"></button>';
     fieldsList += '</td></tr>';
 
     // General
@@ -311,7 +311,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsGeneral += '<label for="moduleDesignerSubmitButtonGeneral">&nbsp;</label>';
     fieldsGeneral += '</td><td>';
     fieldsGeneral += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonGeneral"';
-    fieldsGeneral += ' baseClass="positive" type="submit" iconClass="tick"></button>';
+    fieldsGeneral += ' baseClass="positive" type="button" iconClass="tick"></button>';
     fieldsGeneral += '</td></tr>';
 
     var formId = 'formTable' + '_' + nodeId;
