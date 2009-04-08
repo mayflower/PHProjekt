@@ -499,7 +499,46 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for the select field')));
                     break;
+                } else {
+                    switch ($field['selectType']) {
+                        case 'project':
+                        case 'user':
+                        case 'contact':
+                            list($module, $key, $value) = explode('#', $field['formRange']);
+                            if (!$module || !$key || !$value) {
+                                $valid = false;
+                                $this->_error->addError(array(
+                                    'field'   => 'Module Designer',
+                                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                    'message' => Phprojekt::getInstance()->translate('Invalid form Range for '
+                                        .'the select field 1')));
+                            }
+                            break;
+                        default:
+                            if (!strstr($field['formRange'], '|')) {
+                                $valid = false;
+                                $this->_error->addError(array(
+                                    'field'   => 'Module Designer',
+                                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                    'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
+                                        'the select field 2')));
+                            } else {
+                                foreach (explode('|', $field['formRange']) as $range) {
+                                    list($key, $value) = explode('#', $range);
+                                    if (!$key || !$value) {
+                                        $valid = false;
+                                        $this->_error->addError(array(
+                                            'field'   => 'Module Designer',
+                                            'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                            'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
+                                                'the select field 3')));
+                                    }
+                                }
+                            }
+                            break;
+                    }
                 }
+
                 if ($field['tableField'] == 'projectId') {
                     $foundProjectId = true;
                 }
