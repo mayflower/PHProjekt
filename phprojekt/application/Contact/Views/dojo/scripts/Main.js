@@ -27,5 +27,9 @@ dojo.declare("phpr.Contact.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Contact.Grid;
         this.formWidget = phpr.Contact.Form;
         this.treeWidget = phpr.Contact.Tree;
+    },
+
+    updateCacheData:function() {
+        phpr.DataStore.deleteAllCache();
     }
 });
