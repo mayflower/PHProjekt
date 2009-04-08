@@ -4,11 +4,11 @@
     <div dojoType="dijit.layout.ContentPane" region="top" id="changeView" class="prepend-24"
     style="width: 100%; height: 6%; overflow: hidden;">
         &nbsp;
-        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="start"
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="start"
         alt="{{startWorkingTimeText}}" onClick="dojo.publish('Timecard.Workingtimes.start');">
         </button>
         &nbsp;
-        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="stop"
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="stop"
         alt="{{stopWorkingTimeText}}" onClick="dojo.publish('Timecard.Workingtimes.stop');">
         </button>
         &nbsp;
@@ -27,7 +27,7 @@
         constraints="{datePattern: 'yyyy-MM-dd', strict: true}"
         style="width: 90px;" />
         &nbsp;
-        <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
             onClick="
             if (dijit.byId('selectDate').attr('value') != null) {
                 dojo.publish('Timecard.changeDate', [dijit.byId('selectDate').attr('value')]);
