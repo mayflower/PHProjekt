@@ -29,8 +29,10 @@
         <img class="left" src="{{webpath}}img/logo.png" alt="PHProjekt 6"
         onClick='phpr.currentProjectId = 1; dojo.publish("Project.setUrlHash", ["Project"])' />
         <form dojoType="dijit.form.Form" id="searchform" name="searchform"
-        onsubmit='dojo.publish("{{currentModule}}.showSearchResults", [{{currentModule}}, null, [dojo.byId("searchfield").value]]);
-            return false;'
+        onsubmit='
+        dojo.publish("{{currentModule}}.setUrlHash",
+            ["{{currentModule}}", null, ["Search", dojo.byId("searchfield").value]]);
+        return false;'
         style="display: inline">
         <div id="search-bar" class="last right align-right">
             <input id="searchfield" name="searchfield"
