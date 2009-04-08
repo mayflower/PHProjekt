@@ -65,7 +65,7 @@ class Phprojekt_Model_Validate
      */
     public function recordValidate($class, $data, $fields)
     {
-        $validated = true;
+        $valid = true;
 
         foreach ($data as $varname => $value) {
             if (isset($class->$varname)) {
@@ -77,7 +77,7 @@ class Phprojekt_Model_Validate
                         if (true === $validations['required']) {
                             $error = $this->validateIsRequired($value);
                             if (null !== $error) {
-                                $validated = false;
+                                $valid = false;
                                 $this->error->addError(array(
                                     'field'   => $varname,
                                     'label'   => Phprojekt::getInstance()->translate($field['label']),
@@ -88,7 +88,7 @@ class Phprojekt_Model_Validate
 
                         $error = $this->validateValue($class, $varname, $value);
                         if (false === $error) {
-                            $validated = false;
+                            $valid = false;
                             $this->error->addError(array(
                                 'field'   => $varname,
                                 'label'   => Phprojekt::getInstance()->translate($field['label']),
@@ -99,12 +99,12 @@ class Phprojekt_Model_Validate
                 }
 
                 /* Validate an special fieldName */
-                $validater  = 'validate' . ucfirst($varname);
-                if ($validater != 'validateIsRequired') {
-                    if (in_array($validater, get_class_methods($class))) {
-                        $error = call_user_func(array($class, $validater), $value);
+                $validator  = 'validate' . ucfirst($varname);
+                if ($validator != 'validateIsRequired') {
+                    if (in_array($validator, get_class_methods($class))) {
+                        $error = call_user_func(array($class, $validator), $value);
                         if (null !== $error) {
-                            $validated = false;
+                            $valid = false;
                             $this->error->addError(array(
                                 'field'   => $varname,
                                 'label'   => Phprojekt::getInstance()->translate($field['label']),
@@ -114,7 +114,7 @@ class Phprojekt_Model_Validate
                 }
             }
         }
-        return $validated;
+        return $valid;
     }
 
     /**
