@@ -763,9 +763,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Clean the navigation and forms buttons
         this.cleanPage();
-
         phpr.TreeContent.fadeIn();
         this.hideSuggest();
+        this.setSearchForm();
+        if (!this.tree) {
+            this.tree = new this.treeWidget(this);
+        }
 
         phpr.send({
             url:       getDataUrl,
