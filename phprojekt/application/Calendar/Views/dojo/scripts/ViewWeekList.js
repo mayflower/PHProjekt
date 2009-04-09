@@ -102,7 +102,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     setWeekDays:function() {
         // Summary:
         //    Fills the weekDays array with all the dates of the selected week in string format.
-        var selectedDate = dijit.byId('selectDate').attr('value');
+        var selectedDate = this.stringToDate();
         var dayTemp;
 
         for (var i = 0; i < 7; i ++) {

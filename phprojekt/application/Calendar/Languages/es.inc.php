@@ -27,6 +27,7 @@ $lang["Select users for the group view"] = "Elija los usuarios para la vista gru
 $lang["You have to select at least one user!"] = "Debe elegir al menos un usuario!";
 $lang["User selection"] = "Selección de usuario";
 $lang["place"] = "Lugar";
+$lang["Calendar week"] = "Calendario semanal";
 
 $lang["January"] = "Enero";
 $lang["February"] = "Febrero";
