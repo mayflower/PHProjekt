@@ -148,13 +148,13 @@ class Cleaner_Sanitizer
         $format = 'Y-m-d';
 
         if (is_int($value)) {
-            return date($format, $value);
+            return gmdate($format, $value);
         } else {
             $time = strtotime($value);
             if ($time === false) {
                 return null;
             }
-            return date($format, $time);
+            return gmdate($format, $time);
         }
     }
 
