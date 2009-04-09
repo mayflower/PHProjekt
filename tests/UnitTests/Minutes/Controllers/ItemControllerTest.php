@@ -29,13 +29,15 @@ require_once 'PHPUnit/Framework.php';
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
-class Minutes_IndexController_Test extends FrontInit
+class Minutes_ItemController_Test extends FrontInit
 {
     /**
-     * Test the empty Minutes list
+     * Test the Minutes list
      */
     public function testJsonListActionBeforeAll()
     {
+        $this->markTestIncomplete('Not yet implemented');
+        return;
         $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
@@ -43,27 +45,11 @@ class Minutes_IndexController_Test extends FrontInit
     }
 
     /**
-     * Request empty form
-     */
-    public function testJsonDetailActionGetEmptyForm()
-    {
-        $this->setRequestUrl('Minutes/index/jsonDetail/id/0');
-        $this->request->setParam('start',0);
-        $response = $this->getResponse();
-        
-        $this->assertTrue(strpos($response, '{"metadata":[{"key":"projectId","label":"Select","type":"hidden",') > 0, "Response was: " . $response);
-        $this->assertTrue(strpos($response, ',"data":[{"id":null,"projectId":"","rights":{"currentUser":{"moduleId":"11","itemId":null') > 0);
-    }
-    /**
      * Test of json save Minutes
      */
-    public function testJsonSaveActionSaveFirstMinutes()
+    public function testJsonSave()
     {
         $this->markTestIncomplete('Not yet implemented');
-        $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
-        $this->request->setParam('start', 0);
-        $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '{"metadata":[]}') > 0);
     }
 
     /**
