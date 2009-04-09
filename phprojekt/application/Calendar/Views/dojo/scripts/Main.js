@@ -105,7 +105,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         this.setSubmoduleNavigation();
-        this.scheduleBar(false, false);
+        this.setScheduleBar(false, false);
     },
 
     loadDayListSelf:function() {
@@ -117,7 +117,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dateString       = this.dateToString();
         this.dayListSelf = new this.dayListSelfWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
-        this.scheduleBar(true, true);
+        this.setScheduleBar(true, true);
     },
 
     loadDayListSelect:function() {
@@ -129,7 +129,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dateString         = this.dateToString();
         this.dayListSelect = new this.dayListSelectWidget(this, phpr.currentProjectId, dateString, this._usersSelected);
         this.setSubmoduleNavigation();
-        this.scheduleBar(true, true);
+        this.setScheduleBar(true, true);
     },
 
     loadWeekList:function() {
@@ -141,7 +141,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dateString    = this.dateToString();
         this.weekList = new this.weekListWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
-        this.scheduleBar(true, false);
+        this.setScheduleBar(true, false);
     },
 
     loadMonthList:function() {
@@ -153,7 +153,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dateString     = this.dateToString();
         this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
-        this.scheduleBar(true, false);
+        this.setScheduleBar(true, false);
     },
 
     showFormFromList:function(rowID) {
@@ -468,17 +468,17 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         return answer;
     },
 
-    scheduleBar:function(mainBar, selectionTab) {
+    setScheduleBar:function(mainBar, selectionTab) {
         // Summary
         //    Shows / hide and configures the Buttons bar
         if (mainBar) {
-            if (!dijit.byId('buttonsBar')) {
-                buttonsBar = new dijit.layout.ContentPane({id: 'buttonsBar', region:'top',
-                                                           style:'height: 6%; overflow: hidden;'});
-                // This should be here, and not in the buttonsBar definition, to avoid a bug on IE
-                buttonsBar.attr('class', 'prepend-0 append-0');
+            if (!dijit.byId('scheduleBar')) {
+                var scheduleBar = new dijit.layout.ContentPane({id: 'scheduleBar', region:'top',
+                                                                style:'height: 6%; overflow: hidden;'});
+                // This should be here, and not in the scheduleBar definition, to avoid a bug on IE
+                scheduleBar.attr('class', 'prepend-0 append-0');
             } else {
-                var buttonsBox = dijit.byId('buttonsBar');
+                var scheduleBar = dijit.byId('scheduleBar');
             }
 
             if (this.isListActive('dayList')) {
@@ -490,16 +490,16 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 var dateDescrip = this.dateDescripMonth() + ', ' + this._date.getFullYear();
             }
 
-            content = this.render(["phpr.Calendar.template", "buttonsBar.html"], null, {
+            content = this.render(["phpr.Calendar.template", "scheduleBar.html"], null, {
                 date:  dateDescrip,
                 today: phpr.nls.get('Today')
             });
-            buttonsBar.attr('content', content);
-            dijit.byId('calendarMain').addChild(buttonsBar);
+            scheduleBar.attr('content', content);
+            dijit.byId('calendarMain').addChild(scheduleBar);
             dijit.byId('calendarMain').resize();
         } else {
-            if (dojo.byId('buttonsBar')) {
-                dijit.byId('calendarMain').removeChild(dijit.byId('buttonsBar'));
+            if (dojo.byId('scheduleBar')) {
+                dijit.byId('calendarMain').removeChild(dijit.byId('scheduleBar'));
                 dijit.byId('calendarMain').resize();
             }
         }
