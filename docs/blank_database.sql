@@ -626,10 +626,10 @@ INSERT INTO `DatabaseManager` (`id`, `tableName`, `tableField`, `formTab`, `form
 (0, 'Minutes', 'endTime', 1, 'End Time', 'time', 6, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, '', '', 5, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participantsInvited', 1, 'Invited', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participantsAttending', 1, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participantsExcused', 1, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'recipients', 1, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsInvited', 2, 'Invited', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsAttending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participantsExcused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'itemStatus', 1, 'Status', 'selectValues', 13, 1, NULL, '1# PLANNED | 2# CREATED | 3# PREVIEW | 4 #FINAL', '0', 6, 'center', 1, 0, '1', 0, 0, 0);
 
 
@@ -752,6 +752,7 @@ INSERT INTO `ProjectModulePermissions` (`moduleId`, `projectId`) VALUES
 (6, 3);
 
 INSERT INTO `Tab` (`id`, `label` ) VALUES
-(1, 'Basic Data');
+(1, 'Basic Data'),
+(2, 'People');
 
 COMMIT;
