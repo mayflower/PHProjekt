@@ -498,7 +498,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             dijit.byId('calendarMain').addChild(buttonsBar);
             dijit.byId('calendarMain').resize();
         } else {
-            if (dijit.byId('buttonsBar')) {
+            if (dojo.byId('buttonsBar')) {
                 dijit.byId('calendarMain').removeChild(dijit.byId('buttonsBar'));
                 dijit.byId('calendarMain').resize();
             }
