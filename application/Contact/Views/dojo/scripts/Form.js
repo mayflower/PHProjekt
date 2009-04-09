@@ -25,18 +25,11 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
-
-        // History data
-        if (this.id > 0) {
-            this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
-                + "/itemId/" + this.id
-            this._initData.push({'url': this._historyUrl, 'noCache': true});
-        }
     },
 
     addModuleTabs:function(data) {
         if (this.id > 0) {
-            this.addTab(this.getHistoryData(), 'tabHistory', 'History');
+            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
         }
     },
 

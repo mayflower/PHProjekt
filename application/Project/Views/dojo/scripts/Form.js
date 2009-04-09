@@ -37,13 +37,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
             + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
-
-        // History data
-        if (this.id > 0) {
-            this._historyUrl = phpr.webpath+"index.php/Core/history/jsonList/moduleName/" + phpr.module
-                + "/itemId/" + this.id
-            this._initData.push({'url': this._historyUrl, 'noCache': true});
-        }
     },
 
     addModuleTab:function(data) {
@@ -126,7 +119,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.addRoleTab(data);
         this.addNotificationTab(data);
         if (this.id > 0) {
-            this.addTab(this.getHistoryData(), 'tabHistory', 'History');
+            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
         }
     },
 

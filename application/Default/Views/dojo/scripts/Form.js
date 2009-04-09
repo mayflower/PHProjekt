@@ -141,13 +141,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
             + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
-
-        // History data
-        if (this.id > 0) {
-            this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
-                + "/itemId/" + this.id
-            this._initData.push({'url': this._historyUrl, 'noCache': true});
-        }
     },
 
     addAccessTab:function(data) {
@@ -422,6 +415,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 phpr.DataStore.deleteData({url: this._url});
             }
 
+            if (this.id > 0 && dijit.byId('tabHistory')) {
+                dojo.connect(dijit.byId("tabHistory"), "onShow", dojo.hitch(this, "showHistory"));
+            }
+
             this.postRenderForm();
         }
     },
@@ -456,7 +453,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.addAccessTab(data);
         this.addNotificationTab(data);
         if (this.id > 0) {
-            this.addTab(this.getHistoryData(), 'tabHistory', 'History');
+            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
         }
     },
 
@@ -725,26 +722,37 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, false, false);
     },
 
-    getHistoryData:function() {
+    showHistory:function() {
         // summary:
         //    This function renders the history data
         // description:
-        //    This function processes the form data which is stored in a phpr.DataStore and
-        //    renders the actual form according to the received data
+        //    This function renders the history data
+        if (this.id > 0) {
+            this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
+                + "/itemId/" + this.id
+            phpr.DataStore.addStore({'url': this._historyUrl, 'noCache': true});
+            phpr.DataStore.requestData({'url': this._historyUrl, 'processData': dojo.hitch(this, function() {
+                var content = this.render(["phpr.Default.template.history", "data.html"], dojo.byId('historyContent'), {
+                    dateTxt:     phpr.nls.get('Date'),
+                    userTxt:     phpr.nls.get('User'),
+                    fieldTxt:    phpr.nls.get('Field'),
+                    oldValueTxt: phpr.nls.get('Old value'),
+                    data:        this.getHistoryData()
+                });
+            })});
+        }
+    },
+
+    getHistoryData:function() {
+        // summary:
+        //    This function collect and process the history data
+        // description:
+        //    This function collect and process the history data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
         var userList    = this.userStore.getList();
-        var historyData = '<tr><td colspan="3"><table id="historyTable" style="position: relative; left: 75px">';
+        var historyData = new Array();
         var userNames   = new Array();
         var row         = 0;
-
-        if (history.length > 0) {
-            historyData += '<tr>';
-            historyData += '<th><label>' + phpr.nls.get('Date') + '</label></th>';
-            historyData += '<th><label>' + phpr.nls.get('User') + '</label></th>';
-            historyData += '<th><label>' + phpr.nls.get('Field') + '</label></th>';
-            historyData += '<th><label>' + phpr.nls.get('Old value') + '</label></td>';
-            historyData += '</tr>';
-        }
 
         for (var i = 0; i < history.length; i++) {
             // Search for the user name
@@ -775,16 +783,16 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var trClass = 'white';
             }
 
-            historyData += '<tr class="' + trClass + '">';
-            historyData += '<td>' + historyDate + '</td>';
-            historyData += '<td>' + historyUser + '</td>';
-            historyData += '<td>' + historyField + '</td>';
-            historyData += '<td>' + historyOldValue + '</td>';
-            historyData += '</tr>';
+            historyData.push({
+                trClass:  trClass,
+                date:     historyDate,
+                user:     historyUser,
+                field:    historyField,
+                oldValue: historyOldValue
+            });
 
             row++;
         }
-        historyData += '</table></td></tr>';
 
         return historyData;
     },
