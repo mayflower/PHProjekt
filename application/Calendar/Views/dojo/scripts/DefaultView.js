@@ -67,7 +67,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         this.main  = main;
         this.id    = id;
         this.url   = null;
-        this._date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        this._date = date;
 
         this.beforeConstructor();
 
@@ -395,5 +395,14 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
 
         return description;
+    },
+
+    stringToDate:function() {
+        var temp  = this._date.split('-');
+        var year  = parseInt(temp[0], 10);
+        var month = parseInt(temp[1], 10);
+        var day   = parseInt(temp[2], 10);
+        var date  = new Date(year, month - 1, day);
+        return date;
     }
 });

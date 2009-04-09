@@ -80,7 +80,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     exportData:function() {
         // Summary:
         //    Opens a new window in CSV mode
-        var dateTemp = dijit.byId('selectDate').attr('value');
+        var dateTemp = this.stringToDate();
         dateTemp.setDate(1);
         var firstDayMonth = this.formatDate(dateTemp.getFullYear() + '-' + (dateTemp.getMonth() + 1) + '-'
             + dateTemp.getDate());
@@ -101,7 +101,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         // It includes not only the days of this month but the necessary days of the previous and next month in
         // order to fill 4 or 6 week rows, from Monday to Sunday.
 
-        var dateTemp    = dijit.byId('selectDate').attr('value');
+        var dateTemp    = this.stringToDate();
         var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(1);
         var firstDayDiff = dateTemp.getDay() - 1;
