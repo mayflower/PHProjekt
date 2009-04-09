@@ -211,15 +211,15 @@
 
 .phprojekt #calendarSchedule  a:link,
 .phprojekt #calendarSchedule  a:visited,
-.phprojekt #calendarButtonBar a:link,
-.phprojekt #calendarButtonBar a:visited {
+.phprojekt #calendarMain a:link,
+.phprojekt #calendarMain a:visited {
     text-decoration: none;
 }
 
 .phprojekt #calendarSchedule  a:hover,
 .phprojekt #calendarSchedule  a:active,
-.phprojekt #calendarButtonBar a:hover,
-.phprojekt #calendarButtonBar a:active {
+.phprojekt #calendarMain a:hover,
+.phprojekt #calendarMain a:active {
     text-decoration: underline;
 }
 
