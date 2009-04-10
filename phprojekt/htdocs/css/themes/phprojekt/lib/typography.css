@@ -197,7 +197,9 @@ tt {
     vertical-align: top;
 }
 
-.phprojekt .form th,td {
+.phprojekt .form th,
+.phprojekt .form td,
+.phprojekt #statisticsTable td {
     padding: 4px 0px 4px 5px;
 }
 
