@@ -472,6 +472,10 @@ h1,h2,h3,h4,h5,h6 {
     overflow: hidden;
 }
 
+.phprojekt .greyContainer td {
+    padding: 4px 0px 4px 5px;
+}
+
 /* History Table */
 .phprojekt #historyTable th {
     background: #E9E9E9 url(images/titleBar.png) repeat-x scroll center top;

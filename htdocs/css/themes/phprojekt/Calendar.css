@@ -227,6 +227,10 @@
     border-collapse: collapse;
 }
 
+.phprojekt #calendarSchedule td {
+    padding: 4px 0px 4px 5px;
+}
+
 .phprojekt #calendarGroupSelection #instructions {
     text-align: center;
     font-weight: bold;
