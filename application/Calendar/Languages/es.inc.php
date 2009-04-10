@@ -77,13 +77,13 @@ $lang["Content Help"]["Evento"] = "<br/>
                     presiona este botón para grabar los cambios hechos.<br/>
                 <li><b>Exportar:</b> exporta a un archivo CSV los resultados y ofrece descargarlo.<br/>
             </ul>
-        <li><b>Botonera Lista / Día:</b> hay dos tipos de listados que se activan por medio de estos botones.<br/>
+        <li><b>Solapas de Vistas:</b> hay cuatro tipos de listados que se activan por medio de estas solapas.<br/>
             <ul>
                 <li><b>Lista:</b> una grilla con todos los eventos para el usuario logueado.<br/>
                 <li><b>Día:</b> una agenda desde las 8:00 hasta las 20:00 hs. donde se muestran todos los eventos de un
                     día determinado.<br/>
-                    <u>Tiene dos subtipos</u> que son elegidos a través de los botones <b>Propio</b> y <b>Selección</b>
-                    que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> esta activo:
+                    <u>Tiene dos subtipos</u> que son elegidos a través de las solapas <b>Propio</b> y <b>Selección</b>
+                    que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> está activo:
                     <ul>
                         <li><b>Propio:</b> se muestran los eventos del día elegido, para el usuario activo.
                         <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece permitiendo
@@ -95,12 +95,9 @@ $lang["Content Help"]["Evento"] = "<br/>
                 <li><b>Mes:</b> una agenda mensual que expone en un formato claro de calendario todos los días del mes,
                     más los días necesarios del mes anterior y siguiente para completar todas las semanas mostradas.
             </ul>
-            Cuando Día, Semana o Mes son la vista activa, otros elementos aparecen en esta botonera. Son un <i>campo de
-            fecha</i> para elegir la agenda de un día / semana / mes específico, y los botones <i>previo</i>,
-            <i>hoy</i> y <i>siguiente</i>, para cambiar el día / semana / mes secuencialmente.<br/>
-            Aparte de esto, cuando <b>Día</b> es el modo elegido, una sección llamada <i>Usuario</i> es mostrada en la
-            misma barra con dos modos disponibles para elegir para el listado: <b>Propio</b> y <b>Selección</b>. Ellos
-            están explicados previamente arriba de este párrafo.<br/>
+            Cuando Día, Semana o Mes son la vista activa, aparece una barra adicional sobre los listados. Esta tiene
+            los vínculos <i>previo</i>, <i>hoy</i> y <i>siguiente</i>, para cambiar el día / semana / mes
+            secuencialmente. Además muestra la fecha del período seleccionado.<br/>
             <br/>
         <li><b>Grilla / Lista:</b> aquí se muestra la lista de ítems o la agenda de un día determinado, según la vista
             elegida.<br/>
