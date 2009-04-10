@@ -77,16 +77,16 @@ $lang["Content Help"]["Calendar"] = "<br/>
                     this button to save the changes made.<br/>
                 <li><b>Export:</b> exports to a CSV file the results and offers you to download it.<br/>
             </ul>
-        <li><b>List Mode button bar:</b> there are three types of listings that are activated through <b>List</b>,
-            <b>Day</b> and <b>Week</b> buttons.<br/>
+        <li><b>View tabs:</b> there are four types of listings that are activated through <b>List</b>,
+            <b>Day</b>, <b>Week</b> and <b>Month</b> tabs.<br/>
             <ul>
                 <li><b>List:</b> a grid with all the events for the current user.<br/>
                 <li><b>Day:</b> a schedule from 8:00 to 20:00 where all the events of a specific day are shown.<br/>
-                    <u>It has two subtypes</u> that are chosen through the <b>Self</b> and <b>Selection</b> buttons
-                    that appear at the right of the same bar, when <b>Day</b> mode is active:
+                    <u>It has two subtypes</u> that are chosen through the <b>Self</b> and <b>Selection</b> tab
+                    tabs appear at the right of the same bar, when <b>Day</b> mode is active:
                     <ul>
                         <li><b>Self:</b> the events of the chosen day, for the current user are shown.
-                        <li><b>Selection:</b> when this button is pressed, a pop-up window appears letting the user
+                        <li><b>Selection:</b> when this tab is pressed, a pop-up window appears letting the user
                             select a small group of people so that the list of events will have as many columns as
                             users selected; there will be seen a group schedule for the active day.
                     </ul>
@@ -95,12 +95,9 @@ $lang["Content Help"]["Calendar"] = "<br/>
                 <li><b>Month:</b> a monthly schedule, shows in a clear calendar table all the days of the month, and
                     the necessary days of previous and next months in order to complety all the weeks shown.
             </ul>
-            When the Day, Week or Month view are active, another things appear on this button bar. They are a <i>date
-            field</i> to select the schedule of a specific day / week / month and <i>previous</i>, <i>today</i> and
-            <i>next</i> buttons to change the day / week / month in sequence.<br/>
-            In addition to this, when <b>Day</b> is the selected mode, a section called <i>User</i> is shown in the
-            same button bar with two modes available to choose for the listing: <b>Self</b> and <b>Selection</b>. They
-            are explained previously up this paragraph.<br/>
+            When the Day, Week or Month view are active, it appears a schedule bar over the listings.
+            It has the <i>previous</i>, <i>today</i> and <i>next</i> links to change the day / week / month in
+            sequence. Also it shows the date of the selected period.<br/>
             <br/>
         <li><b>Grid / List:</b> here are shown the list of items or a determined day's schedule, depending on the
             selected view.<br/>
