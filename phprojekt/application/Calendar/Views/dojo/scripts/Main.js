@@ -378,18 +378,14 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Description:
         //    This function is responsible for displaying the Navigation top bar of the Calendar
         //    Current submodules are: List, Day and Week.
-        var moduleViews   = new Array();
-
+        var moduleViews = new Array();
         this.addModuleView(moduleViews, phpr.nls.get('List'), 'listViewClick', this.isListActive(this.grid));
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
 
-        var navigation ='<div id="filesList">'
-                          + '<table>'
-                              + '<tr>'
-                                  + '<td>'
-                                      + '<ul id="nav_main">';
+        navigation = '<div id="nav_main" class="left" style="width: 300px;">'
+                       + '<ul>';
 
         for (var i = 0; i < moduleViews.length; i++) {
             var liclass = '';
@@ -405,20 +401,19 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             });
         }
 
-        var moduleViews   = new Array();
+        navigation += '   </ul>'
+                   + '</div>'
+                   + '<div id="nav_sub">'
+                       + '<ul>';
 
-        navigation += '                  </ul>'
-                                  + '</td>'
-                                  + '<td style="width:40px;"></td>'
-                                  + '<td>'
-                                      + '<ul id="nav_main">';
-
+        var moduleViews = new Array();
         if (!this.isListActive('dayList')) {
             this.addModuleView(moduleViews, phpr.nls.get('Self'), 'userSelfClick', true);
         } else {
             this.addModuleView(moduleViews, phpr.nls.get('Self'), 'userSelfClick', !this._usersSelectionMode);
             this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
         }
+
         for (var i = 0; i < moduleViews.length; i++) {
             var liclass = '';
             if (moduleViews[i].activeTab) {
@@ -433,11 +428,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             });
         }
 
-        navigation += '                  </ul>'
-                                  + '</td>'
-                              + '</tr>'
-                          + '</table>'
-                      + '</div>';
+        navigation += '   </ul>'
+                   + '</div>';
 
         dojo.byId("subModuleNavigation").innerHTML = navigation;
         phpr.initWidgets(dojo.byId("subModuleNavigation"));
