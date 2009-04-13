@@ -238,7 +238,7 @@ class Phprojekt {
 
         Zend_Loader::registerAutoload('Phprojekt_Loader');
 
-        /* Read the config file, but only the production setting */
+        // Read the config file, but only the production setting
         try {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
@@ -254,7 +254,10 @@ class Phprojekt {
 
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
 
-        /* Start zend session to handle all session stuff */
+        // Set the timezone to UTC
+        date_default_timezone_set('UTC');
+
+        // Start zend session to handle all session stuff
         Zend_Session::start();
 
         // Set a metadata cache and clean it
