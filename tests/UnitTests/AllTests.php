@@ -115,9 +115,9 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         // add here additional test suites
         $suite->addTest(Minutes_AllTests::suite());
-        
+
         $suite->addTest(Default_AllTests::suite());
-       //$suite->addTestSuite(Selenium_AllTests::suite());
+        //$suite->addTestSuite(Selenium_AllTests::suite());
 
         return $suite;
     }
