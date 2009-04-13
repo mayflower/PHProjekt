@@ -210,7 +210,10 @@ function installPhprojekt() {
     "User",
     "DatabaseManager",
     "Calendar",
-    "Filemanager");
+    "Filemanager",
+    "Helpdesk",
+    "Minutes",
+    "MinutesItem");
 
     $tableManager = new Phprojekt_Table($db);
 
@@ -694,13 +697,15 @@ function installPhprojekt() {
     'ownerId' => array(
     'type' => 'int', 'length' => 11, 'null' => true),
     'projectId' => array(
-    'type' => 'int', 'length' => 11, 'null' => true),
+    'type' => 'int', 'length' => 11, 'null' => false),
     'title' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'place' => array(
     'type' => 'varchar', 'length' => 255, 'null' => true),
     'notes' => array(
     'type' => 'text', 'null' => true),
     'uid' => array(
-    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'type' => 'varchar', 'length' => 255, 'null' => false),
     'startDate' => array(
     'type' => 'date', 'null' => true),
     'startTime' => array(
@@ -736,7 +741,7 @@ function installPhprojekt() {
     'deleted' => array(
     'type' => 'int', 'length' => 1, 'null' => true),
     'participantId' => array(
-    'type' => 'int', 'length' => 11, 'null' => true),
+    'type' => 'int', 'length' => 11, 'null' => false),
     ),
     array('primary key' => array('id')));
     if (!$result) {
@@ -801,6 +806,112 @@ function installPhprojekt() {
     if (!$result) {
         die("Error creating the table Filemanager");
     }
+    
+    $result = $tableManager->createTable('Helpdesk',
+    array('id' => array (
+    'type' => 'auto_increment', 'null' => false),
+    'ownerId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'title' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'assigned' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'date' => array(
+    'type' => 'date', 'null' => true),
+    'projectId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'priority' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'attachments' => array(
+    'type' => 'text', 'null' => true),
+    'description' => array(
+    'type' => 'text', 'null' => true),
+    'Status' => array(
+    'type' => 'varchar', 'length' => 50, 'null' => true),
+    'dueDate' => array(
+    'type' => 'date', 'null' => true),
+    'author' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'resolvedBy' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'solvedDate' => array(
+    'type' => 'date', 'null' => true),
+    'contactId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('primary key' => array('id')));
+    if (!$result) {
+        die("Error creating the table Helpdesk");
+    }
+    
+    $result = $tableManager->createTable('Minutes',
+    array('id' => array (
+    'type' => 'auto_increment', 'null' => false),
+    'ownerId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'title' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'description' => array(
+    'type' => 'text', 'null' => true),
+    'meetingDate' => array(
+    'type' => 'date', 'null' => true),
+    'startTime' => array(
+    'type' => 'time', 'null' => true),
+    'endTime' => array(
+    'type' => 'time', 'null' => true),
+    'place' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'moderator' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'participantsInvited' => array(
+    'type' => 'text', 'null' => true),
+    'participantsAttending' => array(
+    'type' => 'text', 'null' => true),
+    'participantsExcused' => array(
+    'type' => 'text', 'null' => true),
+    'recipients' => array(
+    'type' => 'text', 'null' => true),
+    'itemStatus' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+        
+    array('primary key' => array('id')));
+    if (!$result) {
+        die("Error creating the table Minutes");
+    }
+    
+    $result = $tableManager->createTable('MinutesItem',
+    array('id' => array (
+    'type' => 'auto_increment', 'null' => false),
+    'ownerId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'projectId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'minutesId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'topicId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'topicType' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'sortOrder' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    'title' => array(
+    'type' => 'varchar', 'length' => 255, 'null' => true),
+    'comment' => array(
+    'type' => 'text', 'null' => true),
+    'topicDate' => array(
+    'type' => 'date', 'null' => true),
+    'userId' => array(
+    'type' => 'int', 'length' => 11, 'null' => true),
+    ),
+    array('primary key' => array('id')));
+    if (!$result) {
+        die("Error creating the table MinutesItem");
+    }
+    
+    // Default information
 
     $db->insert('Module', array(
     'id' => 1,
@@ -865,6 +976,30 @@ function installPhprojekt() {
     'saveType' => 0,
     'active' => 1
     ));
+    
+    $db->insert('Module', array(
+    'id' => 9,
+    'name' => 'Contact',
+    'label' => 'Contact',
+    'saveType' => 1,
+    'active' => 1
+    ));
+    
+    $db->insert('Module', array(
+    'id' => 10,
+    'name' => 'Helpdesk',
+    'label' => 'Helpdesk',
+    'saveType' => 0,
+    'active' => 1
+    ));
+    
+    $db->insert('Module', array(
+    'id' => 11,
+    'name' => 'Minutes',
+    'label' => 'Minutes',
+    'saveType' => 0,
+    'active' => 1
+    ));
 
     $db->insert('DatabaseManager', array(
     'id' => 1,
@@ -875,7 +1010,7 @@ function installPhprojekt() {
     'formType' => 'text',
     'formPosition' => 1,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 1,
@@ -897,7 +1032,7 @@ function installPhprojekt() {
     'formType' => 'textarea',
     'formPosition' => 2,
     'formColumns' => 2,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -919,7 +1054,7 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 3,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => 'Project#id#title',
     'defaultValue' => '1',
     'listPosition' => 0,
@@ -928,7 +1063,7 @@ function installPhprojekt() {
     'altPosition' => 1,
     'status' => '1',
     'isInteger' => 1,
-    'isRequired' => 0,
+    'isRequired' => 1,
     'isUnique' => 0
     ));
 
@@ -941,7 +1076,7 @@ function installPhprojekt() {
     'formType' => 'date',
     'formPosition' => 4,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 3,
@@ -963,7 +1098,7 @@ function installPhprojekt() {
     'formType' => 'date',
     'formPosition' => 5,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 4,
@@ -985,7 +1120,7 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 6,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10',
     'defaultValue' => '5',
     'listPosition' => 5,
@@ -1007,7 +1142,7 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 7,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting',
     'defaultValue' => '1',
     'listPosition' => 6,
@@ -1029,7 +1164,7 @@ function installPhprojekt() {
     'formType' => 'percentage',
     'formPosition' => 8,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 7,
@@ -1051,7 +1186,7 @@ function installPhprojekt() {
     'formType' => 'text',
     'formPosition' => 9,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1063,17 +1198,17 @@ function installPhprojekt() {
     'isRequired' => 0,
     'isUnique' => 0
     ));
-    
+
     $db->insert('DatabaseManager', array(
-    'id' => 35,
-    'tableName' => 'Todo',
+    'id' => 10,
+    'tableName' => 'Project',
     'tableField' => 'contactId',
     'formTab' => 1,
     'formLabel' => 'Contact',
     'formType' => 'selectValues',
     'formPosition' => 10,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => 'Contact#id#name',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1087,7 +1222,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 10,
+    'id' => 11,
     'tableName' => 'Todo',
     'tableField' => 'title',
     'formTab' => 1,
@@ -1095,7 +1230,7 @@ function installPhprojekt() {
     'formType' => 'text',
     'formPosition' => 1,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 1,
@@ -1109,7 +1244,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 11,
+    'id' => 12,
     'tableName' => 'Todo',
     'tableField' => 'notes',
     'formTab' => 1,
@@ -1117,7 +1252,7 @@ function installPhprojekt() {
     'formType' => 'textarea',
     'formPosition' => 2,
     'formColumns' => 2,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1131,7 +1266,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 12,
+    'id' => 13,
     'tableName' => 'Todo',
     'tableField' => 'startDate',
     'formTab' => 1,
@@ -1139,7 +1274,7 @@ function installPhprojekt() {
     'formType' => 'date',
     'formPosition' => 4,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 3,
@@ -1153,7 +1288,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 13,
+    'id' => 14,
     'tableName' => 'Todo',
     'tableField' => 'endDate',
     'formTab' => 1,
@@ -1161,7 +1296,7 @@ function installPhprojekt() {
     'formType' => 'date',
     'formPosition' => 5,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 4,
@@ -1175,7 +1310,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 14,
+    'id' => 15,
     'tableName' => 'Todo',
     'tableField' => 'priority',
     'formTab' => 1,
@@ -1183,7 +1318,7 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 6,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10',
     'defaultValue' => '5',
     'listPosition' => 5,
@@ -1197,7 +1332,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 15,
+    'id' => 16,
     'tableName' => 'Todo',
     'tableField' => 'currentStatus',
     'formTab' => 1,
@@ -1205,10 +1340,10 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 7,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting',
     'defaultValue' => '1',
-    'listPosition' => 6,
+    'listPosition' => 7,
     'listAlign' => 'center',
     'listUseFilter' => 1,
     'altPosition' => 6,
@@ -1219,7 +1354,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 16,
+    'id' => 17,
     'tableName' => 'Todo',
     'tableField' => 'projectId',
     'formTab' => 1,
@@ -1227,7 +1362,7 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 3,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => 'Project#id#title',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1236,12 +1371,12 @@ function installPhprojekt() {
     'altPosition' => 1,
     'status' => '1',
     'isInteger' => 1,
-    'isRequired' => 0,
+    'isRequired' => 1,
     'isUnique' => 0
     ));
-    
-     $db->insert('DatabaseManager', array(
-    'id' => 34,
+
+    $db->insert('DatabaseManager', array(
+    'id' => 18,
     'tableName' => 'Todo',
     'tableField' => 'userId',
     'formTab' => 1,
@@ -1249,11 +1384,11 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 8,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => 'User#id#lastname',
     'defaultValue' => '',
-    'listPosition' => 0,
-    'listAlign' => '',
+    'listPosition' => 6,
+    'listAlign' => 'left',
     'listUseFilter' => 1,
     'altPosition' => 1,
     'status' => '1',
@@ -1263,7 +1398,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 17,
+    'id' => 19,
     'tableName' => 'Note',
     'tableField' => 'projectId',
     'formTab' => 1,
@@ -1271,7 +1406,7 @@ function installPhprojekt() {
     'formType' => 'selectValues',
     'formPosition' => 3,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => 'Project#id#title',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1285,81 +1420,15 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 18,
-    'tableName' => 'Note',
-    'tableField' => 'title',
-    'formTab' => 1,
-    'formLabel' => 'title',
-    'formType' => 'text',
-    'formPosition' => 1,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 1,
-    'listAlign' => 'left',
-    'listUseFilter' => 1,
-    'altPosition' => 2,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 0,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 19,
-    'tableName' => 'Note',
-    'tableField' => 'comments',
-    'formTab' => 1,
-    'formLabel' => 'comments',
-    'formType' => 'textarea',
-    'formPosition' => 2,
-    'formColumns' => 2,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 0,
-    'listAlign' => '',
-    'listUseFilter' => 1,
-    'altPosition' => 0,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 0,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
     'id' => 20,
     'tableName' => 'Note',
-    'tableField' => 'category',
-    'formTab' => 1,
-    'formLabel' => 'category',
-    'formType' => 'text',
-    'formPosition' => 4,
-    'formColumns' => 2,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 3,
-    'listAlign' => 'center',
-    'listUseFilter' => 1,
-    'altPosition' => 3,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 0,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 21,
-    'tableName' => 'Calendar',
     'tableField' => 'title',
     'formTab' => 1,
     'formLabel' => 'title',
     'formType' => 'text',
     'formPosition' => 1,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 1,
@@ -1373,21 +1442,43 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 22,
-    'tableName' => 'Calendar',
-    'tableField' => 'notes',
+    'id' => 21,
+    'tableName' => 'Note',
+    'tableField' => 'comments',
     'formTab' => 1,
-    'formLabel' => 'notes',
+    'formLabel' => 'comments',
     'formType' => 'textarea',
     'formPosition' => 2,
     'formColumns' => 2,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
     'listAlign' => '',
     'listUseFilter' => 1,
     'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 22,
+    'tableName' => 'Note',
+    'tableField' => 'category',
+    'formTab' => 1,
+    'formLabel' => 'category',
+    'formType' => 'text',
+    'formPosition' => 4,
+    'formColumns' => 2,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 3,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 3,
     'status' => '1',
     'isInteger' => 0,
     'isRequired' => 0,
@@ -1397,16 +1488,82 @@ function installPhprojekt() {
     $db->insert('DatabaseManager', array(
     'id' => 23,
     'tableName' => 'Calendar',
+    'tableField' => 'title',
+    'formTab' => 1,
+    'formLabel' => 'title',
+    'formType' => 'text',
+    'formPosition' => 1,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 1,
+    'listAlign' => 'left',
+    'listUseFilter' => 1,
+    'altPosition' => 2,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 24,
+    'tableName' => 'Calendar',
+    'tableField' => 'place',
+    'formTab' => 1,
+    'formLabel' => 'place',
+    'formType' => 'text',
+    'formPosition' => 2,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 25,
+    'tableName' => 'Calendar',
+    'tableField' => 'notes',
+    'formTab' => 1,
+    'formLabel' => 'notes',
+    'formType' => 'textarea',
+    'formPosition' => 3,
+    'formColumns' => 2,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 26,
+    'tableName' => 'Calendar',
     'tableField' => 'startDate',
     'formTab' => 1,
     'formLabel' => 'startDate',
     'formType' => 'date',
-    'formPosition' => 3,
+    'formPosition' => 4,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
-    'listPosition' => 3,
+    'listPosition' => 2,
     'listAlign' => 'center',
     'listUseFilter' => 1,
     'altPosition' => 3,
@@ -1417,15 +1574,37 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 24,
+    'id' => 27,
     'tableName' => 'Calendar',
     'tableField' => 'startTime',
     'formTab' => 1,
     'formLabel' => 'startTime',
     'formType' => 'time',
-    'formPosition' => 4,
+    'formPosition' => 5,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 3,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 28,
+    'tableName' => 'Calendar',
+    'tableField' => 'endDate',
+    'formTab' => 1,
+    'formLabel' => 'endDate',
+    'formType' => 'date',
+    'formPosition' => 6,
+    'formColumns' => 1,
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 4,
@@ -1439,15 +1618,15 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 25,
+    'id' => 29,
     'tableName' => 'Calendar',
-    'tableField' => 'endDate',
+    'tableField' => 'endTime',
     'formTab' => 1,
-    'formLabel' => 'endDate',
-    'formType' => 'date',
-    'formPosition' => 5,
+    'formLabel' => 'endTime',
+    'formType' => 'time',
+    'formPosition' => 7,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 5,
@@ -1461,37 +1640,15 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 26,
-    'tableName' => 'Calendar',
-    'tableField' => 'endTime',
-    'formTab' => 1,
-    'formLabel' => 'endTime',
-    'formType' => 'time',
-    'formPosition' => 6,
-    'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => '',
-    'defaultValue' => '',
-    'listPosition' => 6,
-    'listAlign' => 'center',
-    'listUseFilter' => 1,
-    'altPosition' => 0,
-    'status' => '1',
-    'isInteger' => 0,
-    'isRequired' => 1,
-    'isUnique' => 0
-    ));
-
-    $db->insert('DatabaseManager', array(
-    'id' => 27,
+    'id' => 30,
     'tableName' => 'Calendar',
     'tableField' => 'participantId',
     'formTab' => 1,
     'formLabel' => 'participantId',
     'formType' => 'hidden',
-    'formPosition' => 7,
+    'formPosition' => 8,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1505,7 +1662,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 28,
+    'id' => 31,
     'tableName' => 'Calendar',
     'tableField' => 'rrule',
     'formTab' => 1,
@@ -1513,7 +1670,7 @@ function installPhprojekt() {
     'formType' => 'hidden',
     'formPosition' => 9,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
@@ -1526,17 +1683,16 @@ function installPhprojekt() {
     'isUnique' => 0
     ));
 
-
     $db->insert('DatabaseManager', array(
-    'id' => 29,
+    'id' => 32,
     'tableName' => 'Filemanager',
-    'tableField' => 'Title',
+    'tableField' => 'title',
     'formTab' => 1,
     'formLabel' => 'Title',
     'formType' => 'text',
     'formPosition' => 1,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 1,
@@ -1549,21 +1705,20 @@ function installPhprojekt() {
     'isUnique' => 0
     ));
 
-
     $db->insert('DatabaseManager', array(
-    'id' => 30,
+    'id' => 33,
     'tableName' => 'Filemanager',
-    'tableField' => 'Comments',
+    'tableField' => 'comments',
     'formTab' => 1,
     'formLabel' => 'Comments',
     'formType' => 'textarea',
     'formPosition' => 2,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 0,
-    'listAlign' => 'centar',
+    'listAlign' => 'center',
     'listUseFilter' => 1,
     'altPosition' => 0,
     'status' => '1',
@@ -1573,16 +1728,16 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 31,
+    'id' => 34,
     'tableName' => 'Filemanager',
-    'tableField' => 'ProjectId',
+    'tableField' => 'projectId',
     'formTab' => 1,
     'formLabel' => 'Project',
     'formType' => 'selectValues',
     'formPosition' => 3,
     'formColumns' => 1,
-    'formRegexp' => '',
-    'formRange' => 'Project#id#title',
+    'formRegexp' => null,
+    'formRange' => 'Project # id # title',
     'defaultValue' => '1',
     'listPosition' => 0,
     'listAlign' => 'center',
@@ -1595,15 +1750,15 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 32,
+    'id' => 35,
     'tableName' => 'Filemanager',
     'tableField' => 'category',
     'formTab' => 1,
-    'formLabel' => 'category',
+    'formLabel' => 'Category',
     'formType' => 'text',
     'formPosition' => 4,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 2,
@@ -1617,7 +1772,7 @@ function installPhprojekt() {
     ));
 
     $db->insert('DatabaseManager', array(
-    'id' => 33,
+    'id' => 36,
     'tableName' => 'Filemanager',
     'tableField' => 'files',
     'formTab' => 1,
@@ -1625,7 +1780,7 @@ function installPhprojekt() {
     'formType' => 'upload',
     'formPosition' => 5,
     'formColumns' => 1,
-    'formRegexp' => '',
+    'formRegexp' => null,
     'formRange' => '',
     'defaultValue' => '',
     'listPosition' => 3,
@@ -1638,6 +1793,841 @@ function installPhprojekt() {
     'isUnique' => 0
     ));
 
+    $db->insert('DatabaseManager', array(
+    'id' => 37,
+    'tableName' => 'Contact',
+    'tableField' => 'name',
+    'formTab' => 1,
+    'formLabel' => 'Name',
+    'formType' => 'text',
+    'formPosition' => 1,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 1,
+    'listAlign' => 'left',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 38,
+    'tableName' => 'Contact',
+    'tableField' => 'email',
+    'formTab' => 1,
+    'formLabel' => 'E-Mail',
+    'formType' => 'text',
+    'formPosition' => 2,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 2,
+    'listAlign' => 'left',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 39,
+    'tableName' => 'Contact',
+    'tableField' => 'company',
+    'formTab' => 1,
+    'formLabel' => 'Company',
+    'formType' => 'text',
+    'formPosition' => 3,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 40,
+    'tableName' => 'Contact',
+    'tableField' => 'firstphone',
+    'formTab' => 1,
+    'formLabel' => 'First phone',
+    'formType' => 'text',
+    'formPosition' => 4,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 3,
+    'listAlign' => 'left',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 41,
+    'tableName' => 'Contact',
+    'tableField' => 'secondphone',
+    'formTab' => 1,
+    'formLabel' => 'Second phone',
+    'formType' => 'text',
+    'formPosition' => 5,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 42,
+    'tableName' => 'Contact',
+    'tableField' => 'mobilephone',
+    'formTab' => 1,
+    'formLabel' => 'Mobile phone',
+    'formType' => 'text',
+    'formPosition' => 6,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 43,
+    'tableName' => 'Contact',
+    'tableField' => 'street',
+    'formTab' => 1,
+    'formLabel' => 'Street',
+    'formType' => 'text',
+    'formPosition' => 7,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 4,
+    'listAlign' => 'left',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 44,
+    'tableName' => 'Contact',
+    'tableField' => 'city',
+    'formTab' => 1,
+    'formLabel' => 'City',
+    'formType' => 'text',
+    'formPosition' => 8,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 45,
+    'tableName' => 'Contact',
+    'tableField' => 'zipcode',
+    'formTab' => 1,
+    'formLabel' => 'Zip Code',
+    'formType' => 'text',
+    'formPosition' => 9,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 46,
+    'tableName' => 'Contact',
+    'tableField' => 'country',
+    'formTab' => 1,
+    'formLabel' => 'Country',
+    'formType' => 'text',
+    'formPosition' => 10,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 47,
+    'tableName' => 'Contact',
+    'tableField' => 'comment',
+    'formTab' => 1,
+    'formLabel' => 'Comment',
+    'formType' => 'textarea',
+    'formPosition' => 11,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 48,
+    'tableName' => 'Contact',
+    'tableField' => 'private',
+    'formTab' => 1,
+    'formLabel' => 'Private',
+    'formType' => 'selectValues',
+    'formPosition' => 12,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '0#No|1#Yes',
+    'defaultValue' => '0',
+    'listPosition' => 5,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 49,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'title',
+    'formTab' => 1,
+    'formLabel' => 'title',
+    'formType' => 'text',
+    'formPosition' => 1,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 1,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 50,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'assigned',
+    'formTab' => 1,
+    'formLabel' => 'Assigned',
+    'formType' => 'selectValues',
+    'formPosition' => 3,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#lastname',
+    'defaultValue' => '',
+    'listPosition' => 4,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 51,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'date',
+    'formTab' => 1,
+    'formLabel' => 'Date',
+    'formType' => 'display',
+    'formPosition' => 4,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 2,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 52,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'projectId',
+    'formTab' => 1,
+    'formLabel' => 'Project',
+    'formType' => 'selectValues',
+    'formPosition' => 6,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'Project # id # title',
+    'defaultValue' => '1',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 53,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'priority',
+    'formTab' => 1,
+    'formLabel' => 'Priority',
+    'formType' => 'selectValues',
+    'formPosition' => 7,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10',
+    'defaultValue' => '',
+    'listPosition' => 5,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 54,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'attachments',
+    'formTab' => 1,
+    'formLabel' => 'Attachments',
+    'formType' => 'upload',
+    'formPosition' => 8,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 55,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'description',
+    'formTab' => 1,
+    'formLabel' => 'Description',
+    'formType' => 'textarea',
+    'formPosition' => 11,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 56,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'status',
+    'formTab' => 1,
+    'formLabel' => 'Status',
+    'formType' => 'selectValues',
+    'formPosition' => 12,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '1#Open|2#Assigned|3#Solved|4#Verified|5#Closed',
+    'defaultValue' => '1',
+    'listPosition' => 6,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 57,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'dueDate',
+    'formTab' => 1,
+    'formLabel' => 'Due date',
+    'formType' => 'date',
+    'formPosition' => 5,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 58,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'author',
+    'formTab' => 1,
+    'formLabel' => 'author',
+    'formType' => 'display',
+    'formPosition' => 2,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#lastname',
+    'defaultValue' => '',
+    'listPosition' => 3,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 59,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'solvedBy',
+    'formTab' => 1,
+    'formLabel' => 'Solved by',
+    'formType' => 'display',
+    'formPosition' => 9,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#lastname',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 60,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'solvedDate',
+    'formTab' => 1,
+    'formLabel' => 'Solved date',
+    'formType' => 'display',
+    'formPosition' => 10,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 61,
+    'tableName' => 'Helpdesk',
+    'tableField' => 'contactId',
+    'formTab' => 1,
+    'formLabel' => 'Contact',
+    'formType' => 'selectValues',
+    'formPosition' => 13,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'Contact#id#name',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => '',
+    'listUseFilter' => 1,
+    'altPosition' => 1,
+    'status' => '1',
+    'isInteger' => 1,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 62,
+    'tableName' => 'Minutes',
+    'tableField' => 'projectId',
+    'formTab' => 1,
+    'formLabel' => 'Select',
+    'formType' => 'hidden',
+    'formPosition' => 1,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 63,
+    'tableName' => 'Minutes',
+    'tableField' => 'title',
+    'formTab' => 1,
+    'formLabel' => 'Title',
+    'formType' => 'text',
+    'formPosition' => 2,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 3,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 64,
+    'tableName' => 'Minutes',
+    'tableField' => 'description',
+    'formTab' => 1,
+    'formLabel' => 'Description',
+    'formType' => 'textarea',
+    'formPosition' => 3,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 4,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 65,
+    'tableName' => 'Minutes',
+    'tableField' => 'meetingDate',
+    'formTab' => 1,
+    'formLabel' => 'Date of Meeting',
+    'formType' => 'date',
+    'formPosition' => 4,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 1,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 1,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 66,
+    'tableName' => 'Minutes',
+    'tableField' => 'startTime',
+    'formTab' => 1,
+    'formLabel' => 'Start Time',
+    'formType' => 'time',
+    'formPosition' => 5,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 2,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 67,
+    'tableName' => 'Minutes',
+    'tableField' => 'endTime',
+    'formTab' => 1,
+    'formLabel' => 'End Time',
+    'formType' => 'time',
+    'formPosition' => 6,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 68,
+    'tableName' => 'Minutes',
+    'tableField' => 'place',
+    'formTab' => 1,
+    'formLabel' => 'Place',
+    'formType' => 'text',
+    'formPosition' => 7,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 5,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 69,
+    'tableName' => 'Minutes',
+    'tableField' => 'moderator',
+    'formTab' => 1,
+    'formLabel' => 'Moderator',
+    'formType' => 'text',
+    'formPosition' => 8,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 70,
+    'tableName' => 'Minutes',
+    'tableField' => 'participantsInvited',
+    'formTab' => 2,
+    'formLabel' => 'Invited',
+    'formType' => 'multipleSelectValues',
+    'formPosition' => 9,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#username',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 71,
+    'tableName' => 'Minutes',
+    'tableField' => 'participantsAttending',
+    'formTab' => 2,
+    'formLabel' => 'Attending',
+    'formType' => 'multipleSelectValues',
+    'formPosition' => 10,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#username',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 72,
+    'tableName' => 'Minutes',
+    'tableField' => 'participantsExcused',
+    'formTab' => 2,
+    'formLabel' => 'Excused',
+    'formType' => 'multipleSelectValues',
+    'formPosition' => 11,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#username',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 73,
+    'tableName' => 'Minutes',
+    'tableField' => 'recipients',
+    'formTab' => 2,
+    'formLabel' => 'recipients',
+    'formType' => 'multipleSelectValues',
+    'formPosition' => 12,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => 'User#id#username',
+    'defaultValue' => '',
+    'listPosition' => 0,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
+
+    $db->insert('DatabaseManager', array(
+    'id' => 74,
+    'tableName' => 'Minutes',
+    'tableField' => 'itemStatus',
+    'formTab' => 1,
+    'formLabel' => 'Status',
+    'formType' => 'selectValues',
+    'formPosition' => 13,
+    'formColumns' => 1,
+    'formRegexp' => null,
+    'formRange' => '1# PLANNED | 2# CREATED | 3# PREVIEW | 4 #FINAL',
+    'defaultValue' => '0',
+    'listPosition' => 6,
+    'listAlign' => 'center',
+    'listUseFilter' => 1,
+    'altPosition' => 0,
+    'status' => '1',
+    'isInteger' => 0,
+    'isRequired' => 0,
+    'isUnique' => 0
+    ));
 
     $db->insert('User', array('id' => 1,
     'username' => 'admin',
@@ -1793,7 +2783,18 @@ function installPhprojekt() {
     'moduleId' => 8,
     'access' => 139
     ));
-
+    
+    $db->insert('RoleModulePermissions', array(
+    'roleId' => 1,
+    'moduleId' => 10,
+    'access' => 139
+    ));
+    
+    $db->insert('RoleModulePermissions', array(
+    'roleId' => 1,
+    'moduleId' => 11,
+    'access' => 139
+    ));
 
     $db->insert('ItemRights', array(
     'moduleId' => 1,
@@ -1841,10 +2842,30 @@ function installPhprojekt() {
     'moduleId' => 8,
     'projectId' => 1
     ));
+    
+    $db->insert('ProjectModulePermissions', array(
+    'moduleId' => 9,
+    'projectId' => 1
+    ));
+    
+    $db->insert('ProjectModulePermissions', array(
+    'moduleId' => 10,
+    'projectId' => 1
+    ));
+    
+    $db->insert('ProjectModulePermissions', array(
+    'moduleId' => 11,
+    'projectId' => 1
+    ));
 
     $db->insert('Tab', array(
     'id' => 1,
     'label' => 'Basic Data'
+    ));
+    
+    $db->insert('Tab', array(
+    'id' => 2,
+    'label' => 'People'
     ));
 
     // creating log folders
@@ -2256,6 +3277,18 @@ useCacheForClasses   = true;
             $db->insert('ProjectModulePermissions', array(
             'moduleId' => 8,
             'projectId' => $project["ID"]));
+            
+            $db->insert('ProjectModulePermissions', array(
+            'moduleId' => 9,
+            'projectId' => $project["ID"]));
+            
+            $db->insert('ProjectModulePermissions', array(
+            'moduleId' => 10,
+            'projectId' => $project["ID"]));
+            
+            $db->insert('ProjectModulePermissions', array(
+            'moduleId' => 11,
+            'projectId' => $project["ID"]));
 
         }
 
@@ -2375,6 +3408,7 @@ useCacheForClasses   = true;
             "ownerId" => $calendar["von"],
             "projectId" => $calendar["projekt"],
             "title" => $calendar["event"],
+            "place" => $calendar["ort"],
             "notes" => $calendar["remark"],
             "uid" => $calendar["serie_id"],
             "startDate" => $calendar["datum"],
