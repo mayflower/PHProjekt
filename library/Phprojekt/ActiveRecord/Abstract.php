@@ -654,7 +654,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             */
             if (array_key_exists($key, $this->_data)) {
                 foreach ($this->_data[$key] as $instance) {
-                    $instance->_data[$columnName] = $newId;
+                    if (is_object($instance)) {
+                        $instance->_data[$columnName] = $newId;
+                    }
                 }
             }
         }
