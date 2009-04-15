@@ -53,10 +53,10 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             $roles['data'][$role->id]['name']  = $role->name;
             $roles['data'][$role->id]['users'] = array();
         }
-        $where  = ' ProjectRoleUserPermissions.projectId = ' . $projectId;
-        $order  = ' ProjectRoleUserPermissions.userId ASC';
-        $select = ' User.username ';
-        $join   = ' LEFT JOIN User ON User.id = ProjectRoleUserPermissions.userId ';
+        $where  = ' project_role_user_permissions.project_id = ' . $projectId;
+        $order  = ' project_role_user_permissions.user_id ASC';
+        $select = ' user.username ';
+        $join   = ' LEFT JOIN user ON user.id = project_role_user_permissions.user_id ';
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $roles['data'][$right->roleId]['users'][] = array('id'   => $right->userId,
                                                               'name' => $right->username);
@@ -75,7 +75,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
      */
     public function saveRelation($roles, $users, $projectId)
     {
-        $where   = ' projectId = ' . $projectId;
+        $where   = ' project_id = ' . $projectId;
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }
@@ -111,8 +111,8 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             if (isset($roleNamespace->role)) {
                 $role = $roleNamespace->role;
             } else {
-                $where = ' projectId = '. (int) $projectId;
-                $where .= ' AND userId = '. (int) $userId;
+                $where = ' project_id = '. (int) $projectId;
+                $where .= ' AND user_id = '. (int) $userId;
                 $row = $this->fetchall($where);
                 if (!empty($row)) {
                     $role = $row[0]->roleId;

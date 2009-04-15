@@ -35,18 +35,18 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 {
     /**
      * The Minutes object this item is related to
-     * 
-     * @var Phprojekt_Item_Abstract 
+     *
+     * @var Phprojekt_Item_Abstract
      */
     protected $_minutes;
-    
+
     /**
      * The Id of the minutes this Item belongs to
-     * 
+     *
      * @var integer
      */
-    protected $_minutesId; 
-    
+    protected $_minutesId;
+
     /**
      * The standard information manager with hardcoded
      * field definitions
@@ -61,7 +61,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
-        
+
     /**
      * Initialize new minutes item
      *
@@ -91,17 +91,17 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         $this->_informationManager = Phprojekt_Loader::getModel('Minutes', 'MinutesItemInformation');
     }
-    
+
     /**
      * Return the information manager
-     * 
+     *
      * @return Phprojekt_ModelInformation_Interface
      */
     public function getInformation()
     {
         return $this->_informationManager;
     }
-    
+
     /**
      * Validate the current record
      *
@@ -111,7 +111,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     {
         $data   = $this->_data;
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        
+
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 
@@ -129,12 +129,13 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
             $rights = $this->_minutes->_data;//getRights();
             Phprojekt::getInstance()->getLog()->debug('Minutes rights: '.print_r($rights, true));
         }
+
         return $this->_minutes->getRights();
     }
-    
+
     /**
      * Initialize the related minutes object
-     * 
+     *
      * @param integer $minutesId
      * @return void
      */
@@ -142,6 +143,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     {
         $this->_minutes   = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $this->_minutesId = $minutesId;
+
         return $this;
     }
 
@@ -156,8 +158,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * @param string       $join   The join statements
      *
      * @return Zend_Db_Table_Rowset
-     * 
-     * @todo mock function 
+     *
+     * @todo mock function
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
@@ -166,12 +168,12 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= sprintf('(%s.minutesId = %d )', $this->getTableName(), $this->_minutesId);
+        $where .= sprintf('(%s.minutes_id = %d )', $this->getTableName(), $this->_minutesId);
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
-        
+
         return $result;
     }
-    
+
 
     /**
      * @todo mock function

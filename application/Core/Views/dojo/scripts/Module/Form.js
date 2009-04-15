@@ -52,7 +52,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             designerData[0]['altPosition']   = 0;
             designerData[0]['isInteger']     = 0;
             designerData[0]['isUnique']      = 0;
-            designerData[0]['tableField']    = 'projectId';
+            designerData[0]['tableField']    = 'project_id';
             designerData[0]['selectType']    = 'project';
             designerData[0]['tableType']     = 'int';
             designerData[0]['tableLength']   = 11;

@@ -116,9 +116,9 @@ class Timecard_Models_TimecardSetting
                     if (($key == 'favorites')) {
                         $value = serialize($value);
                     }
-                    $record = $setting->fetchAll("userId = ". Phprojekt_Auth::getUserId() .
-                                                 " AND keyValue = ". $setting->_db->quote($key) .
-                                                 " AND moduleId = ". Phprojekt_Module::getId('Timecard'));
+                    $record = $setting->fetchAll("user_id = ". Phprojekt_Auth::getUserId() .
+                                                 " AND key_value = ". $setting->_db->quote($key) .
+                                                 " AND module_id = ". Phprojekt_Module::getId('Timecard'));
                     if (isset($record[0])) {
                         $record[0]->keyValue = $key;
                         $record[0]->value    = $value;

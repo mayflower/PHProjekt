@@ -91,7 +91,7 @@ class Timecard_IndexController extends IndexController
             $dateFilter = array();
 
             $dateFilter[] = 'date = "'.date("Y-m-d").'"';
-            $dateFilter[] = '(endTime = "" OR endTime is null)';
+            $dateFilter[] = '(end_time = "" OR end_time is null)';
             $dateFilter = implode($dateFilter, " AND ");
 
             $records = $this->getModelObject()->fetchAll($dateFilter, null, 1);
@@ -142,7 +142,7 @@ class Timecard_IndexController extends IndexController
     {
         $date = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
 
-        $where = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $where = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
 
         $records = $this->getModelObject()->fetchAll($where);
 
@@ -250,7 +250,7 @@ class Timecard_IndexController extends IndexController
         $dateFilter = array();
 
         $dateFilter[] = 'date = "'.date("Y-m-d").'"';
-        $dateFilter[] = '(endTime = "" OR endTime is null)';
+        $dateFilter[] = '(end_time = "" OR end_time is null)';
         $dateFilter = implode($dateFilter, " AND ");
 
         $this->getRequest()->setParam('endTime', date("H:i:s"));
@@ -361,7 +361,7 @@ class Timecard_IndexController extends IndexController
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where = sprintf('(ownerId = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
+        $where = sprintf('(owner_id = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
 
         $records = $this->getModelObject()->fetchAll($where);
 
@@ -384,7 +384,7 @@ class Timecard_IndexController extends IndexController
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where   = sprintf('(ownerId = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
+        $where   = sprintf('(owner_id = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
         $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         $records = $model->fetchAll($where);
 

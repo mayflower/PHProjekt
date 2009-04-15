@@ -142,9 +142,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
 
         $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
         if (!isset($settingNamespace->$settingName)) {
-            $record = $this->fetchAll("userId = ". (int) $userId .
-                                      " AND keyValue = ".$this->_db->quote($settingName) .
-                                      " AND moduleId = ".$this->_db->quote($this->_moduleId));
+            $record = $this->fetchAll("user_id = ". (int) $userId .
+                                      " AND key_value = ".$this->_db->quote($settingName) .
+                                      " AND module_id = ".$this->_db->quote($this->_moduleId));
             if (!empty($record)) {
                 $toReturn = $record[0]->value;
             }
@@ -170,7 +170,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         if ($userId == null) {
             $userId = (int) Phprojekt_Auth::getUserId();
         }
-        $record    = $this->fetchAll(sprintf('moduleId = %d AND userId = %d', $moduleId, $userId));
+        $record    = $this->fetchAll(sprintf('module_id = %d AND user_id = %d', $moduleId, $userId));
         $functions = get_class_methods($this->_object);
 
         $data = array();
@@ -233,9 +233,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
-                        $record = $this->fetchAll("userId = ". $userId .
-                                                  " AND keyValue = ".$this->_db->quote($key) .
-                                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+                        $record = $this->fetchAll("user_id = ". $userId .
+                                                  " AND key_value = ".$this->_db->quote($key) .
+                                                  " AND module_id = ".$this->_db->quote($this->_moduleId));
                         if (isset($record[0])) {
                             $record[0]->keyValue = $key;
                             $record[0]->value    = $value;

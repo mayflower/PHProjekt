@@ -123,8 +123,8 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getAdministration($configName)
     {
         $toReturn = null;
-        $record = $this->fetchAll("keyValue = ".$this->_db->quote($configName) .
-                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+        $record = $this->fetchAll("key_value = ".$this->_db->quote($configName) .
+                                  " AND module_id = ".$this->_db->quote($this->_moduleId));
         if (!empty($record)) {
             $toReturn = $record[0]->value;
         }
@@ -142,7 +142,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getList($moduleId, $metadata)
     {
         $configurations  = array();
-        $record    = $this->fetchAll('moduleId = '.$moduleId);
+        $record    = $this->fetchAll('module_id = '.$moduleId);
         $functions = get_class_methods($this->_object);
 
         $data = array();
@@ -197,17 +197,17 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
-                        $record = $this->fetchAll("keyValue = ".$this->_db->quote($key) .
-                                                  " AND moduleId = ".$this->_db->quote($this->_moduleId));
+                        $record = $this->fetchAll("key_value = ".$this->_db->quote($key) .
+                                                  " AND module_id = ".$this->_db->quote($this->_moduleId));
                         if (isset($record[0])) {
                             $record[0]->keyValue = $key;
                             $record[0]->value    = $value;
                             $record[0]->save();
                         } else {
-                            $clone             = clone $this;
-                            $clone->moduleId   = (int) $this->_moduleId;
-                            $clone->keyValue   = $key;
-                            $clone->value      = $value;
+                            $clone            = clone $this;
+                            $clone->moduleId  = (int) $this->_moduleId;
+                            $clone->keyValue  = $key;
+                            $clone->value     = $value;
                             $clone->save();
                         }
                         break;

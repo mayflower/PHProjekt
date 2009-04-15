@@ -58,7 +58,7 @@ final class Default_Helpers_Delete
             foreach ($modules['data'] as $moduleData) {
                 if ($moduleData['inProject']) {
                     $module  = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
-                    $records = $module->fetchAll('projectId = ' . $id);
+                    $records = $module->fetchAll('project_id = ' . $id);
                     if (is_array($records)) {
                         foreach ($records as $record) {
                             $record->delete();
@@ -68,7 +68,7 @@ final class Default_Helpers_Delete
             }
 
             // Delete module-project relaton
-            $records = $relations->fetchAll('projectId = ' . $id);
+            $records = $relations->fetchAll('project_id = ' . $id);
             if (is_array($records)) {
                 foreach ($records as $record) {
                     $record->delete();
@@ -77,7 +77,7 @@ final class Default_Helpers_Delete
 
             // Delete user-role-projetc relation
             $relations = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-            $records   = $relations->fetchAll('projectId = ' . $id);
+            $records   = $relations->fetchAll('project_id = ' . $id);
             if (is_array($records)) {
                 foreach ($records as $record) {
                     $record->delete();
@@ -127,7 +127,7 @@ final class Default_Helpers_Delete
         }
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            if ($model->getTableName() == 'Project') {
+            if ($model->getModelName() == 'Project') {
                 return self::_deleteTree($model);
             } else {
                 return self::_deleteModel($model);

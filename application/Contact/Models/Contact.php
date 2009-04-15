@@ -52,7 +52,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= sprintf('((%s.ownerId = %d) OR (%s.private = 0))', $this->getTableName(),
+        $where .= sprintf('((%s.owner_id = %d) OR (%s.private = 0))', $this->getTableName(),
             Phprojekt_Auth::getUserId(), $this->getTableName());
 
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
@@ -66,7 +66,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     public function recordValidate()
     {
         // one is the unique value available because is a global module
-        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_name)) >= 1) {
+        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName())) >= 1) {
             $this->projectId = 1;
         }
         return true;
@@ -116,7 +116,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     {
         if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
 
-            $moduleId = Phprojekt_Module::getId($this->getTableName());
+            $moduleId = Phprojekt_Module::getId($this->getModelName());
 
             // Is there is any upload file, -> delete the files from the server
             $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,

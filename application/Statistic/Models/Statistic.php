@@ -67,7 +67,7 @@ class Statistic_Models_Statistic
 
         // Get TimeProj
         $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-        $records = $model->fetchAll(sprintf('(date >= "%s" AND date <= "%s") AND projectId IN (%s)',
+        $records = $model->fetchAll(sprintf('(date >= "%s" AND date <= "%s") AND project_id IN (%s)',
             $startDate, $endDate, implode(",", $projectsId)));
 
         $users = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');

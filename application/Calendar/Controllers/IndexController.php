@@ -56,9 +56,14 @@ class Calendar_IndexController extends IndexController
         $id             = (int) $this->getRequest()->getParam('id');
         $startDate      = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
         $endDate        = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
+        $startTime      = Cleaner::sanitize('time', $this->getRequest()->getParam('startTime', date("H-i-s")));
+        $endTime        = Cleaner::sanitize('time', $this->getRequest()->getParam('endTime', date("H-i-s")));
         $rrule          = (string) $this->getRequest()->getParam('rrule', null);
         $participants   = (array) $this->getRequest()->getParam('dataParticipant');
         $multipleEvents = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
+
+        $this->getRequest()->setParam('endTime', $endTime);
+        $this->getRequest()->setParam('startTime', $startTime);
 
         if (!empty($id)) {
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
@@ -156,7 +161,7 @@ class Calendar_IndexController extends IndexController
         if (!empty($itemId)) {
             $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
         } else {
-            $where   = 'deleted is NULL AND participantId = ' . PHprojekt_Auth::getUserId();
+            $where   = 'deleted is NULL AND participant_id = ' . PHprojekt_Auth::getUserId();
             $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
         }
 
@@ -183,8 +188,8 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $userId  = PHprojekt_Auth::getUserId();
-        $where   = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate <= "' . $date . '"'
-            . ' AND endDate >= "' . $date . '"';
+        $where   = 'deleted is NULL AND participant_id = ' . $userId . ' AND start_date <= "' . $date . '"'
+            . ' AND end_date >= "' . $date . '"';
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
@@ -238,9 +243,9 @@ class Calendar_IndexController extends IndexController
         $dateStart = Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d")));
         $dateEnd   = Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d")));
         $userId    = PHprojekt_Auth::getUserId();
-        $where     = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate <= "' . $dateEnd
-            . '" AND endDate >= "' . $dateStart . '"';
-        $records   = $this->getModelObject()->fetchAll($where, "startDate", $count, $offset);
+        $where     = 'deleted is NULL AND participant_id = ' . $userId . ' AND start_date <= "' . $dateEnd
+            . '" AND end_date >= "' . $dateStart . '"';
+        $records   = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -256,8 +261,8 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $userId  = PHprojekt_Auth::getUserId();
-        $where   = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate <= "' . $date . '"'
-            . ' AND endDate >= "' . $date . '"';
+        $where   = 'deleted is NULL AND participant_id = ' . $userId . ' AND start_date <= "' . $date . '"'
+            . ' AND end_date >= "' . $date . '"';
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -276,8 +281,8 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $usersId = $this->getRequest()->getParam('users', null);
-        $where   = 'deleted is NULL AND participantId IN (' . $usersId . ') AND startDate <= "' . $date . '"'
-            . ' AND endDate >= "' . $date . '"';
+        $where   = 'deleted is NULL AND participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
+            . ' AND end_date >= "' . $date . '"';
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
@@ -297,9 +302,9 @@ class Calendar_IndexController extends IndexController
         $dateStart = Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d")));
         $dateEnd   = Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d")));
         $userId    = PHprojekt_Auth::getUserId();
-        $where     = 'deleted is NULL AND participantId = ' . $userId . ' AND startDate <= "' . $dateEnd
-            . '" AND endDate >= "' . $dateStart . '"';
-        $records   = $this->getModelObject()->fetchAll($where, "startDate", $count, $offset);
+        $where     = 'deleted is NULL AND participant_id = ' . $userId . ' AND start_date <= "' . $dateEnd
+            . '" AND end_date >= "' . $dateStart . '"';
+        $records   = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
