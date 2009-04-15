@@ -71,7 +71,7 @@ class Phprojekt_Module
         if (!isset($moduleNamespace->modules)) {
             $db     = Phprojekt::getInstance()->getDb();
             $select = $db->select()
-                         ->from('Module');
+                         ->from('module');
             $stmt = $db->query($select);
             $rows = $stmt->fetchAll();
 
