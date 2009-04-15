@@ -44,9 +44,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             // no placeholders used atm.
         });
         
-        this.addTab(itemsData, 'tabItems', 'Items', 'itemsFormTab');
-        
-        console.debug('my id is: ' + this.id);
+        this.addTab(itemsData, 'tabItems', 'Items', 'itemsFormTab');        
     },
     
     postRenderForm: function() {
@@ -57,29 +55,20 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    processed. Neccessary because the datagrid won't render
         //    unless dimensions of all surrounding elements are known.
         // I used this for testing purposes. Also renders only in gridBox
-        try {
-            console.debug('postRenderForm is called');
-            var tabs = this.form; //dijit.byId('tabItems');
-            dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
-                try {
-                    console.debug("a tab was selected: " + child.id + ' / ' + child);
-                    if (child.id == 'tabItems') {
-                        dojo.byId('minutesDetailsRight').style.display = 'inline';
-                        dojo.byId('itemsFormTab').style.display = 'none';
-                        console.debug('Items tab is shown, getting grid data...');
-                        this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
-                        phpr.DataStore.addStore({"url": this.url});
-                        phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
-                    } else {
-                        dojo.byId('minutesDetailsRight').style.display = 'none';
-                    }
-                } catch (ex) {
-                    console.debug(ex);
-                }
-            })); 
-        } catch(ex) {
-            console.debug('Datastore: ' + ex);
-        }
+
+        var tabs = this.form; //dijit.byId('tabItems');
+        dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
+            if (child.id == 'tabItems') {
+                dojo.byId('minutesDetailsRight').style.display = 'inline';
+                dojo.byId('itemsFormTab').style.display = 'none';
+                this.loadSubForm();
+                this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
+                phpr.DataStore.addStore({"url": this.url});
+                phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
+            } else {
+                dojo.byId('minutesDetailsRight').style.display = 'none';
+            }
+        })); 
     },
     
     url: null,
@@ -113,46 +102,53 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                         values:     ['Topic','Comment']
             }
         ];
-        try {
-            var content = dojo.clone(phpr.DataStore.getData({"url": this.url}));
-        } catch(ex) {
-            console.debug('Content: ' + ex);
+        
+        var content = dojo.clone(phpr.DataStore.getData({"url": this.url}));
+        var gridData = { items: new Array() };
+        for (var i in content) {
+            gridData.items.push(content[i]);
         }
-        try {
-            var gridData = { items: new Array() };
-            for (var i in content) {
-                gridData.items.push(content[i]);
-            }
-        } catch(ex) {
-            console.debug('Array: ' + ex);
-        }
-        try {
-            var store = new dojo.data.ItemFileWriteStore({data: gridData});
-        } catch(ex) {
-            console.debug('Store: ' + ex);
-        }
-        try {
-            var grid = new dojox.grid.DataGrid({
-                store: store,
-                structure: [{
-                            defaultCell: {
-                                type:     dojox.grid.cells.Input,
-                                styles:   'text-align: left;'
-                            },
-                            rows: [schema]
-                }]
-            }, document.createElement('div'));
-        } catch(ex) {
-            console.debug('Grid: ' + ex);
-        }
-        try {
-            dojo.byId('tabItems').appendChild(grid.domNode);
-            console.debug('Appending child to: ' + dojo.byId('tabItems'));
-            grid.startup();
-        } catch(ex) {
-            console.debug('Append: ' + ex);
-        }
-    }
-   
-});
 
+        var store = new dojo.data.ItemFileWriteStore({data: gridData});
+        
+        var grid = new dojox.grid.DataGrid({
+            store: store,
+            structure: [{
+                        defaultCell: {
+                            type:     dojox.grid.cells.Input,
+                            styles:   'text-align: left;'
+                        },
+                        rows: [schema]
+            }]
+        }, document.createElement('div'));
+    
+        dojo.byId('tabItems').appendChild(grid.domNode);
+        grid.startup();
+    },
+    
+    loadSubForm: function() {
+    	console.debug('Loading subform...');
+    	// @todo Request data from server
+    	var fakeData     = {
+    			id: 1,
+    			ownerId:    2,
+    			minutesId:    1,
+    			projectId:    1,
+    			topicId:    1,
+    			users:      [{id:1,name:'test1'},{id:2,name:'test2'}]
+    	};
+    	// @todo Add server data to placeholder object
+    	var placeholders = {
+    			lblTitle:   'Title',
+    			lblComment: 'Comment',
+    			lblOwnerId: 'Owner'
+    	};
+    	placeholders = dojo.mixin(placeholders, fakeData);
+    	// @todo Render the template  
+    	var subForm = this.render(["phpr.Minutes.template", "minutesItemForm.html"], 
+    			                  dojo.byId('minutesDetailsRight'), placeholders);
+    	// @todo Attach to minutesItemForm's onsubmit event
+    	// @todo Implement writing data back to server
+    	// @todo Attach to general save button's onclick event, submit minutesItemsForm as well when triggered
+    }
+});
