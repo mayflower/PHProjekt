@@ -40,7 +40,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      *
      * @var string
      */
-    protected $_name = 'SearchDisplay';
+    protected $_name = 'search_display';
 
     /**
     /**
@@ -68,8 +68,8 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     public function getDisplay($moduleId, $itemId)
     {
         $where   = array();
-        $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
+        $where[] = 'module_id = '. $this->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = '. $this->getAdapter()->quote($itemId);
 
         $tmpResult = $this->fetchAll($where)->toArray();
 
@@ -79,9 +79,9 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
                             'moduleId'      => $moduleId,
                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
                             'moduleLabel'   => $moduleLabel,
-                            'firstDisplay'  => $tmpResult[0]['firstDisplay'],
-                            'secondDisplay' => $tmpResult[0]['secondDisplay'],
-                            'projectId'     => $tmpResult[0]['projectId']);
+                            'firstDisplay'  => $tmpResult[0]['first_display'],
+                            'secondDisplay' => $tmpResult[0]['second_display'],
+                            'projectId'     => $tmpResult[0]['project_id']);
         } else {
             $result = array('id'            => $itemId,
                             'moduleId'      => $moduleId,
@@ -136,8 +136,8 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
         $where = array();
         $clone = clone($this);
 
-        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+        $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
 
@@ -169,11 +169,11 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     private function _save($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay)
     {
-        $data['moduleId']       = $moduleId;
-        $data['itemId']         = $itemId;
-        $data['firstDisplay']   = $firstDisplay;
-        $data['secondDisplay']  = $secondDisplay;
-        $data['projectId']      = $projectId;
+        $data['module_id']      = $moduleId;
+        $data['item_id']        = $itemId;
+        $data['first_display']  = $firstDisplay;
+        $data['second_display'] = $secondDisplay;
+        $data['project_id']     = $projectId;
         $this->insert($data);
     }
 
@@ -192,13 +192,13 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     private function _update($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay)
     {
-        $data['firstDisplay']   = $firstDisplay;
-        $data['secondDisplay']  = $secondDisplay;
-        $data['projectId']      = $projectId;
+        $data['first_display']  = $firstDisplay;
+        $data['second_display'] = $secondDisplay;
+        $data['project_id']     = $projectId;
 
         $where   = array();
-        $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
+        $where[] = 'module_id = '. $this->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = '. $this->getAdapter()->quote($itemId);
 
         $this->update($data, $where);
     }

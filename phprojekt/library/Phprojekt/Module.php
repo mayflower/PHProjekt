@@ -78,7 +78,7 @@ class Phprojekt_Module
             foreach ($rows as $row) {
                 self::$_cache[$row['name']] = array('id'       => $row['id'],
                                                     'label'    => $row['label'],
-                                                    'saveType' => $row['saveType']);
+                                                    'saveType' => $row['save_type']);
             }
             $moduleNamespace->modules = self::$_cache;
         } else {

@@ -41,7 +41,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      *
      * @var string
      */
-    protected $_name = 'TagsUsers';
+    protected $_name = 'tags_users';
 
     /**
      * User ID, Use the current userId
@@ -72,13 +72,13 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     public function saveTags($tagId)
     {
         $where = array();
-        $where[] = 'userId = '. $this->getAdapter()->quote($this->_user);
-        $where[] = 'tagId  = '. $this->getAdapter()->quote($tagId);
+        $where[] = 'user_id = '. $this->getAdapter()->quote($this->_user);
+        $where[] = 'tag_id  = '. $this->getAdapter()->quote($tagId);
 
         $record = $this->fetchAll($where);
         if ($record->count() == 0) {
-            $data['userId'] = $this->_user;
-            $data['tagId']  = $tagId;
+            $data['user_id'] = $this->_user;
+            $data['tag_id']  = $tagId;
             return $this->insert($data);
         } else {
             $record = array_shift(current((array) $record));
@@ -103,19 +103,19 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
         if ($userId == 0) {
             $userId = $this->_user;
         }
-        $where = 'userId = '. $this->getAdapter()->quote($userId);
+        $where = 'user_id = '. $this->getAdapter()->quote($userId);
         if ($tagId > 0) {
-            $where .= ' AND tagId = '. $this->getAdapter()->quote($tagId);
+            $where .= ' AND tag_id = '. $this->getAdapter()->quote($tagId);
         }
         $select = $this->select();
-        $select->from($this->_name, array('id', 'tagId'))
+        $select->from($this->_name, array('id', 'tag_id'))
                ->where($where);
         $tmpResult = $this->fetchAll($select)->toArray();
 
         // Convert result to array
         $foundResults = array();
         foreach ($tmpResult as $data) {
-            $foundResults[$data['id']] = $data['tagId'];
+            $foundResults[$data['id']] = $data['tag_id'];
         }
 
         return $foundResults;
@@ -131,7 +131,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     public function isFromUser($id)
     {
         $record = array_shift(current($this->find($id)));
-        return ($record['userId'] == $this->_user);
+        return ($record['user_id'] == $this->_user);
     }
 
     /**
@@ -144,7 +144,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     public function getTagId($id)
     {
         $record = array_shift(current($this->find($id)));
-        return $record['tagId'];
+        return $record['tag_id'];
     }
 
     /**
@@ -158,7 +158,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     {
         $clone   = clone($this);
         $where   = array();
-        $where[] = 'userId = '. $clone->getAdapter()->quote($userId);
+        $where[] = 'user_id = '. $clone->getAdapter()->quote($userId);
         $clone->delete($where);
     }
 }

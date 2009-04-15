@@ -162,10 +162,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function __set($varname, $value)
     {
-        $info = $this->info();
-        if (isset($info['metadata'][$varname])) {
+        $varForInfo = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
+        $info       = $this->info();
 
-            $type = $info['metadata'][$varname]['DATA_TYPE'];
+        if (isset($info['metadata'][$varForInfo])) {
+
+            $type = $info['metadata'][$varForInfo]['DATA_TYPE'];
 
             switch ($type) {
                 case 'int':
@@ -259,11 +261,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function __get($varname)
     {
-        $info = $this->info();
-        $value = parent::__get($varname);
+        $info       = $this->info();
+        $value      = parent::__get($varname);
+        $varForInfo = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
 
-        if (true == isset($info['metadata'][$varname])) {
-            $type = $info['metadata'][$varname]['DATA_TYPE'];
+        if (true == isset($info['metadata'][$varForInfo])) {
+            $type = $info['metadata'][$varForInfo]['DATA_TYPE'];
             switch ($type) {
                 case 'float':
                     $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
@@ -343,7 +346,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function delete()
     {
-        $moduleId = Phprojekt_Module::getId($this->getTableName());
+        $moduleId = Phprojekt_Module::getId($this->getModelName());
 
         // Is there is any upload file, -> delete the files from the server
         $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
@@ -388,9 +391,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function getFieldsForFilter()
     {
         return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST,
-        Phprojekt_DatabaseManager::COLUMN_NAME);
+            Phprojekt_DatabaseManager::COLUMN_NAME);
     }
-
 
     /**
      * Rewrites parent fetchAll, so that only records with read access are shown
@@ -407,19 +409,19 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         // only fetch records with read access
-        $join .= sprintf(' INNER JOIN ItemRights ON (ItemRights.itemId = %s
-                         AND ItemRights.moduleId = %d AND ItemRights.userId = %d) ',
+        $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
+                         AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
                          $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-                         Phprojekt_Module::getId($this->getTableName()),
+                         Phprojekt_Module::getId($this->getModelName()),
                          Phprojekt_Auth::getUserId());
 
         // Set where
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= ' (' . sprintf('(%s.ownerId = %d OR %s.ownerId is NULL)', $this->getTableName(),
+        $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id is NULL)', $this->getTableName(),
             Phprojekt_Auth::getUserId(), $this->getTableName());
-        $where .= ' OR (ItemRights.access > 0)) ';
+        $where .= ' OR (item_rights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
@@ -431,11 +433,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getRights()
     {
-        $rights   = $this->_rights->getRights(Phprojekt_Module::getId($this->getTableName()), $this->id);
-        $saveType = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getTableName()));
+        $rights   = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+        $saveType = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName()));
         switch ($saveType) {
             case 0:
-                $moduleId        = Phprojekt_Module::getId($this->getTableName());
+                $moduleId        = Phprojekt_Module::getId($this->getModelName());
                 $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
                 $roleRightRead   = $roleRights->hasRight('read');
                 $roleRightWrite  = $roleRights->hasRight('write');
@@ -503,6 +505,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function saveRights($rights)
     {
-        $this->_rights->_save(Phprojekt_Module::getId($this->getTableName()), $this->id, $rights);
+        $this->_rights->_save(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
     }
 }

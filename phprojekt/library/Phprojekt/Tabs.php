@@ -62,11 +62,11 @@ class Phprojekt_Tabs
 
         $db     = Phprojekt::getInstance()->getDb();
         $select = $db->select()
-                     ->from(array('t' => 'Tab'))
-                     ->joinInner(array('rel' => 'ModuleTabRelation'),
+                     ->from(array('t' => 'tab'))
+                     ->joinInner(array('rel' => 'module_tab_relation'),
                                  sprintf("%s = %s", $db->quoteIdentifier("t.id"),
-                                 $db->quoteIdentifier("rel.tabId")))
-                     ->where($db->quoteInto('rel.moduleId = ?', $moduleId));
+                                 $db->quoteIdentifier("rel.tab_id")))
+                     ->where($db->quoteInto('rel.module_id = ?', $moduleId));
         $stmt = $db->query($select);
         $rows = $stmt->fetchAll();
 
@@ -103,7 +103,7 @@ class Phprojekt_Tabs
     {
         $db     = Phprojekt::getInstance()->getDb();
         $select = $db->select()
-                     ->from('Tab');
+                     ->from('tab');
         $stmt = $db->query($select);
         return $stmt->fetchAll();
     }
@@ -121,11 +121,11 @@ class Phprojekt_Tabs
         $db = Phprojekt::getInstance()->getDb();
         if ($id > 0) {
             $data['label'] = $label;
-            $db->update('Tab', $data, 'id = ' . (int) $id);
+            $db->update('tab', $data, 'id = ' . (int) $id);
             return $id;
         } else {
             $data['label'] = $label;
-            $db->insert('Tab', $data);
+            $db->insert('tab', $data);
             return $db->lastInsertId();
         }
     }
@@ -141,14 +141,14 @@ class Phprojekt_Tabs
     public function saveModuleTabRelation($tabIds, $moduleId)
     {
         $db = Phprojekt::getInstance()->getDb();
-        $db->delete('ModuleTabRelation', $db->quoteInto('moduleId = ?', $moduleId));
+        $db->delete('module_tab_relation', $db->quoteInto('module_id = ?', $moduleId));
         if (!is_array($tabIds)) {
             $tabIds = array($tabIds);
         }
         foreach ($tabIds as $tabId) {
-            $data['tabId']    = (int) $tabId;
-            $data['moduleId'] = (int) $moduleId;
-            $db->insert('ModuleTabRelation', $data);
+            $data['tab_id']    = (int) $tabId;
+            $data['module_id'] = (int) $moduleId;
+            $db->insert('module_tab_relation', $data);
         }
     }
 }

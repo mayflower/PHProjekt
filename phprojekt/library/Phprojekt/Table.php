@@ -81,7 +81,7 @@ class Phprojekt_Table
      */
     public function createTable($tableName, $fields, $keys = array())
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "CREATE TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " (";
 
         if (is_array($fields) && !empty($fields)) {
@@ -142,7 +142,7 @@ class Phprojekt_Table
      */
     public function addField($tableName, $fieldDefinition, $position = null)
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " ADD ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
@@ -189,7 +189,7 @@ class Phprojekt_Table
      */
     public function changeField($tableName, $fieldDefinition, $position = null)
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " CHANGE ";
         $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['oldName']) . ' ';
 
@@ -234,7 +234,7 @@ class Phprojekt_Table
      */
     public function modifyField($tableName, $fieldDefinition, $position = null)
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " MODIFY ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
@@ -280,7 +280,7 @@ class Phprojekt_Table
      */
     public function deleteField($tableName, $fieldDefinition)
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " DROP ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
@@ -374,7 +374,7 @@ class Phprojekt_Table
             return $tableFields;
         } catch (Exception $error) {
             $error->getMessage();
-            $tableName = ucfirst($tableName);
+            $tableName = strtolower($tableName);
             $this->createTable($tableName, $fields, $keys);
             $tableFields = $this->_db->describeTable($tableName);
             return $tableFields;
@@ -390,7 +390,7 @@ class Phprojekt_Table
      */
     public function dropTable($tableName)
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "DROP TABLE " . $this->_db->quoteIdentifier((string) $tableName);
 
         try {
@@ -411,7 +411,7 @@ class Phprojekt_Table
      */
     public function tableExists($tableName)
     {
-        $tableName = ucfirst($tableName);
+        $tableName = strtolower($tableName);
         $sqlString = "SELECT COUNT(*) FROM " . $this->_db->quoteIdentifier((string) $tableName);
 
         try {
