@@ -41,7 +41,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      *
      * @var string
      */
-    protected $_name = 'TagsModules';
+    protected $_name = 'tags_modules';
 
     /**
      * Constructs a Phprojekt_Tags_Modules
@@ -70,9 +70,9 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     public function saveTags($moduleId, $itemId, $tagUserId)
     {
         if ($this->find($moduleId, $itemId, $tagUserId)->count() == 0) {
-            $data['moduleId']   = $moduleId;
-            $data['itemId']     = $itemId;
-            $data['tagUserId']  = $tagUserId;
+            $data['module_id']   = $moduleId;
+            $data['item_id']     = $itemId;
+            $data['tag_user_id'] = $tagUserId;
             $this->insert($data);
         }
     }
@@ -91,13 +91,13 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
 
-        $where[] = 'tagUserId  = '. $this->getAdapter()->quote($tagUserId);
+        $where[] = 'tag_user_id  = '. $this->getAdapter()->quote($tagUserId);
 
-        $modules = $this->fetchAll($where, 'itemId DESC');
+        $modules = $this->fetchAll($where, 'item_id DESC');
         foreach ($modules as $moduleData) {
-            if ($rights->getItemRight($moduleData->moduleId, $moduleData->itemId, $userId) > 0) {
-                $foundResults[] = array('itemId'     => $moduleData->itemId,
-                                        'moduleId'   => $moduleData->moduleId);
+            if ($rights->getItemRight($moduleData->module_id, $moduleData->item_id, $userId) > 0) {
+                $foundResults[] = array('itemId'     => $moduleData->item_id,
+                                        'moduleId'   => $moduleData->module_id);
             }
         }
 
@@ -117,13 +117,13 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $where        = array();
         $foundResults = array();
 
-        $where[] = 'moduleId  = '. $this->getAdapter()->quote($moduleId);
-        $where[] = 'itemId  = '. $this->getAdapter()->quote($itemId);
+        $where[] = 'module_id  = '. $this->getAdapter()->quote($moduleId);
+        $where[] = 'item_id  = '. $this->getAdapter()->quote($itemId);
 
         $modules = $this->fetchAll($where);
         if (!empty($modules)) {
             foreach ($modules as $moduleData) {
-                $foundResults[] = $moduleData->tagUserId;
+                $foundResults[] = $moduleData->tag_user_id;
             }
         }
 
@@ -144,9 +144,9 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $clone = clone($this);
         foreach ($tagUserIds as $tagUserId) {
             $where = array();
-            $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
-            $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
-            $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
+            $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
+            $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
+            $where[] = 'tag_user_id = '. $clone->getAdapter()->quote($tagUserId);
             $clone->delete($where);
         }
     }
@@ -163,8 +163,8 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     {
         $clone = clone($this);
         $where = array();
-        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+        $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
 
@@ -180,7 +180,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $clone = clone($this);
         foreach ($tagUserIds as $tagUserId) {
             $where = array();
-            $where[] = 'tagUserId = '. $clone->getAdapter()->quote($tagUserId);
+            $where[] = 'tag_user_id = '. $clone->getAdapter()->quote($tagUserId);
             $clone->delete($where);
         }
     }

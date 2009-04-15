@@ -63,14 +63,14 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             $differences = $this->_getDifferences($object, $action);
 
             foreach ($differences as $fieldName => $difference) {
-                $history               = clone($this);
-                $history->userId       = Phprojekt_Auth::getUserId();
-                $history->moduleId     = Phprojekt_Module::getId($object->getTableName());
-                $history->itemId       = $object->id;
-                $history->field        = $fieldName;
-                $history->oldValue     = $difference['oldValue'];
-                $history->newValue     = $difference['newValue'];
-                $history->action       = $action;
+                $history           = clone($this);
+                $history->userId   = Phprojekt_Auth::getUserId();
+                $history->moduleId = Phprojekt_Module::getId($object->getModelName());
+                $history->itemId   = $object->id;
+                $history->field    = $fieldName;
+                $history->oldValue = $difference['oldValue'];
+                $history->newValue = $difference['newValue'];
+                $history->action   = $action;
                 $history->save();
             }
         } else {
@@ -165,10 +165,10 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                                    $startDate = null, $endDate = null, $userId = null)
     {
         if (!isset($moduleId)) {
-            $moduleId = Phprojekt_Module::getId($object->getTableName());
+            $moduleId = Phprojekt_Module::getId($object->getModelName());
         }
-        $where  = $this->getAdapter()->quoteInto('moduleId = ?', (int) $moduleId);
-        $where .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
+        $where  = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId);
+        $where .= $this->getAdapter()->quoteInto(' AND item_id = ?', $itemId);
 
         if (!empty($startDate)) {
             $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
@@ -177,7 +177,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             $where .= $this->getAdapter()->quoteInto(' AND datetime <= ?', $endDate);
         }
         if (!empty($userId)) {
-            $where .= $this->getAdapter()->quoteInto(' AND userId = ?', $userId);
+            $where .= $this->getAdapter()->quoteInto(' AND user_id = ?', $userId);
         }
 
         $result = array();
@@ -208,10 +208,10 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     public function getLastHistoryData($object)
     {
         $result   = array();
-        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
-        $where    = $this->getAdapter()->quoteInto('moduleId = ?', (int) $moduleId);
-        $where   .= $this->getAdapter()->quoteInto(' AND itemId = ?', $itemId);
+        $where    = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId);
+        $where   .= $this->getAdapter()->quoteInto(' AND item_id = ?', $itemId);
 
         $datetime = null;
         $action   = null;

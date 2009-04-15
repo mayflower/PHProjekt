@@ -41,7 +41,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      *
      * @var string
      */
-    protected $_name = 'Tags';
+    protected $_name = 'tags';
 
     /**
      * Constructs a Phprojekt_Tags_Tags

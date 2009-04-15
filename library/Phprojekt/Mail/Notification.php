@@ -123,7 +123,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         if (empty($this->_changes)) {
             return;
         }
-        $this->_tableName = trim($this->_model->getTableName());
+        $this->_tableName = trim($this->_model->getModelName());
         if (!isset($this->_customFrom)) {
             $this->_setFromUserLogued();
         }

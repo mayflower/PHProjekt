@@ -41,7 +41,7 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
      *
      * @var string
      */
-    protected $_name = 'SearchWordModule';
+    protected $_name = 'search_word_module';
 
     /**
      * Chaneg the tablename for use with the Zend db class
@@ -90,11 +90,11 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     {
         $where   = array();
         $ids     = array();
-        $where[] = 'moduleId = '. $this->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $this->getAdapter()->quote($itemId);
+        $where[] = 'module_id = '. $this->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = '. $this->getAdapter()->quote($itemId);
         $result = $this->fetchAll($where);
         foreach ($result as $data) {
-            $ids[] = $data->wordId;
+            $ids[] = $data->word_id;
         }
         $clone = clone($this);
         $clone->delete($where);
@@ -113,8 +113,8 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     public function searchModuleByWordId($wordId, $count = null, $offset = null)
     {
         $where   = array();
-        $where[] = 'wordId = '. $this->getAdapter()->quote($wordId);
-        return $this->fetchAll($where, 'itemId DESC', $count, $offset)->toArray();
+        $where[] = 'word_id = '. $this->getAdapter()->quote($wordId);
+        return $this->fetchAll($where, 'item_id DESC', $count, $offset)->toArray();
     }
 
     /**
@@ -144,9 +144,9 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
      */
     private function _save($moduleId, $itemId, $wordId)
     {
-        $data['moduleId'] = $moduleId;
-        $data['itemId']   = $itemId;
-        $data['wordId']   = $wordId;
+        $data['module_id'] = $moduleId;
+        $data['item_id']   = $itemId;
+        $data['word_id']   = $wordId;
         $this->insert($data);
     }
 }

@@ -106,7 +106,7 @@ class Phprojekt_Search_Default
      */
     public function indexObjectItem($object)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
 
         $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
@@ -135,7 +135,7 @@ class Phprojekt_Search_Default
      */
     public function deleteObjectItem($object)
     {
-        $moduleId = Phprojekt_Module::getId($object->getTableName());
+        $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
 
         $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
@@ -178,8 +178,8 @@ class Phprojekt_Search_Default
                 foreach ($tmpResult as $data) {
                     $found = false;
                     foreach ($tmpFoundResults as $values) {
-                        if (($data['moduleId'] == $values['moduleId']) &&
-                            ($data['itemId']   == $values['itemId'])) {
+                        if (($data['module_id'] == $values['module_id']) &&
+                            ($data['item_id']   == $values['item_id'])) {
                             $found = true;
                             break;
                         }
@@ -196,11 +196,11 @@ class Phprojekt_Search_Default
             $results = array();
             $limitedFoundResults = array();
             foreach ($tmpFoundResults as $moduleData) {
-                if (!isset($results[$moduleData['moduleId']])) {
-                    $results[$moduleData['moduleId']] = 0;
+                if (!isset($results[$moduleData['module_id']])) {
+                    $results[$moduleData['module_id']] = 0;
                 }
-                $results[$moduleData['moduleId']]++;
-                if ($results[$moduleData['moduleId']] <= $count) {
+                $results[$moduleData['module_id']]++;
+                if ($results[$moduleData['module_id']] <= $count) {
                     if (count($limitedFoundResults) < 10) {
                         $limitedFoundResults[] = $moduleData;
                     }
@@ -211,8 +211,8 @@ class Phprojekt_Search_Default
         }
 
         foreach ($limitedFoundResults as $moduleData) {
-            if ($rights->getItemRight($moduleData['moduleId'], $moduleData['itemId'], $userId) > 0) {
-                $foundResults[] = $this->_display->getDisplay($moduleData['moduleId'], $moduleData['itemId']);
+            if ($rights->getItemRight($moduleData['module_id'], $moduleData['item_id'], $userId) > 0) {
+                $foundResults[] = $this->_display->getDisplay($moduleData['module_id'], $moduleData['item_id']);
             }
         }
         return $foundResults;
@@ -239,6 +239,7 @@ class Phprojekt_Search_Default
         $metaData = $object->_metadata;
         foreach ($metaData as $field => $fieldInfo) {
             if (in_array($fieldInfo['DATA_TYPE'], $allow)) {
+                $field        = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
                 $data[$field] = $object->$field;
             }
         }

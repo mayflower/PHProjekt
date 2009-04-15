@@ -90,8 +90,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected $_error = null;
 
-    const COLUMN_NAME  = 'tableField';
-    const COLUMN_TITLE = 'formLabel';
+    const COLUMN_NAME  = 'table_field';
+    const COLUMN_TITLE = 'form_label';
 
     /**
      * We have to do the mapping, cause the constants that are passed
@@ -99,9 +99,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      *
      * @var array
      */
-    private $_mapping = array (Phprojekt_ModelInformation_Default::ORDERING_FORM   => 'formPosition',
-                               Phprojekt_ModelInformation_Default::ORDERING_LIST   => 'listPosition',
-                               Phprojekt_ModelInformation_Default::ORDERING_FILTER => 'listUseFilter');
+    private $_mapping = array (Phprojekt_ModelInformation_Default::ORDERING_FORM   => 'form_position',
+                               Phprojekt_ModelInformation_Default::ORDERING_LIST   => 'list_position',
+                               Phprojekt_ModelInformation_Default::ORDERING_FILTER => 'list_use_filter');
 
     /**
      * Initialize a new Database Manager and configure it with a model
@@ -149,10 +149,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $result = $this->_dbFields[$order];
         } else {
             if (null !== $this->_model) {
-                $table = $this->_model->getTableName();
+                $table = $this->_model->getModelName();
 
                 if (in_array($order, $this->_mapping)) {
-                    $where  = $this->getAdapter()->quoteInto('tableName = ? AND '.$order.' > 0', $table);
+                    $where  = $this->getAdapter()->quoteInto('table_name = ? AND '.$order.' > 0', $table);
                     $result = $this->fetchAll($where, $order);
                     $this->_dbFields[$order] = $result;
                 }
@@ -171,10 +171,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function find()
     {
         $fieldname = func_get_arg(0);
-        $table     = $this->_model->getTableName();
-        return parent::fetchRow($this->_db->quoteInto('tableName = ?', $table)
+        $table     = $this->_model->getModelName();
+        return parent::fetchRow($this->_db->quoteInto('table_name = ?', $table)
                                 . ' AND '
-                                . $this->_db->quoteInto('tableField = ?', $fieldname));
+                                . $this->_db->quoteInto('table_field = ?', $fieldname));
     }
 
     /**
@@ -261,11 +261,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
         $converted = array();
+        $key       = $index = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
 
-        $converted['key']      = $field->tableField;
+        $converted['key']      = $key;
         $converted['label']    = Phprojekt::getInstance()->translate($field->formLabel);
         $converted['type']     = $field->formType;
-        $converted['hint']     = Phprojekt::getInstance()->getTooltip($field->tableField);
+        $converted['hint']     = Phprojekt::getInstance()->getTooltip($key);
         $converted['order']    = 0;
         $converted['position'] = (int) $field->formPosition;
         $converted['fieldset'] = '';
@@ -291,6 +292,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getInfo($order, $column)
     {
+        $column = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($column);
         $fields = $this->_getFields($this->_mapping[$order]);
         $result = array();
         foreach ($fields as $field) {
@@ -327,7 +329,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function getTypes($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
-            $this->_fieldTypes[$field->tableField] = $field->formType;
+            $index = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
+            $this->_fieldTypes[$index] = $field->formType;
         }
     }
 
@@ -500,46 +503,48 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for the select field')));
                     break;
                 } else {
-                    switch ($field['selectType']) {
-                        case 'project':
-                        case 'user':
-                        case 'contact':
-                            list($module, $key, $value) = explode('#', $field['formRange']);
-                            if (!$module || !$key || !$value) {
-                                $valid = false;
-                                $this->_error->addError(array(
-                                    'field'   => 'Module Designer',
-                                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
-                                    'message' => Phprojekt::getInstance()->translate('Invalid form Range for '
-                                        .'the select field 1')));
-                            }
-                            break;
-                        default:
-                            if (!strstr($field['formRange'], '|')) {
-                                $valid = false;
-                                $this->_error->addError(array(
-                                    'field'   => 'Module Designer',
-                                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
-                                    'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
-                                        'the select field 2')));
-                            } else {
-                                foreach (explode('|', $field['formRange']) as $range) {
-                                    list($key, $value) = explode('#', $range);
-                                    if (!$key || !$value) {
-                                        $valid = false;
-                                        $this->_error->addError(array(
-                                            'field'   => 'Module Designer',
-                                            'label'   => Phprojekt::getInstance()->translate('Module Designer'),
-                                            'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
-                                                'the select field 3')));
+                    if (isset($field['selectType'])) {
+                        switch ($field['selectType']) {
+                            case 'project':
+                            case 'user':
+                            case 'contact':
+                                list($module, $key, $value) = explode('#', $field['formRange']);
+                                if (!$module || !$key || !$value) {
+                                    $valid = false;
+                                    $this->_error->addError(array(
+                                        'field'   => 'Module Designer',
+                                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                        'message' => Phprojekt::getInstance()->translate('Invalid form Range for '
+                                            .'the select field 1')));
+                                }
+                                break;
+                            default:
+                                if (!strstr($field['formRange'], '|')) {
+                                    $valid = false;
+                                    $this->_error->addError(array(
+                                        'field'   => 'Module Designer',
+                                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                        'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
+                                            'the select field 2')));
+                                } else {
+                                    foreach (explode('|', $field['formRange']) as $range) {
+                                        list($key, $value) = explode('#', $range);
+                                        if (!$key || !$value) {
+                                            $valid = false;
+                                            $this->_error->addError(array(
+                                                'field'   => 'Module Designer',
+                                                'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                                'message' => Phprojekt::getInstance()->translate('Invalid form Range '.
+                                                    'for the select field 3')));
+                                        }
                                     }
                                 }
-                            }
-                            break;
+                                break;
+                        }
                     }
                 }
 
-                if ($field['tableField'] == 'projectId') {
+                if ($field['tableField'] == 'project_id') {
                     $foundProjectId = true;
                 }
             }
@@ -577,7 +582,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function saveData($table, $data)
     {
-        $where  = $this->getAdapter()->quoteInto('tableName = ?', $table);
+        $where  = $this->getAdapter()->quoteInto('table_name = ?', $table);
         $result = $this->fetchAll($where);
         foreach ($result as $row) {
             $row->delete();
@@ -604,22 +609,34 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getDataDefinition()
     {
-        $fields = $this->_getFields('formPosition');
+        $fields = $this->_getFields('form_position');
         $data   = array();
         $i      = 0;
         if (null !== $this->_model) {
             $info   = $this->_model->info();
             foreach ($fields as $field) {
-                $data[$i]['tableName'] = $info['name'];
+                $data[$i]['tableName'] = ucfirst($info['name']);
                 while ($field->valid()) {
-                    $key = $field->key();
+                    $key = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->key());
                     if ($key != 'tableName') {
                         $data[$i][$key] = $field->$key;
                     }
                     $field->next();
                 }
-                $data[$i]['tableType']   = $info['metadata'][$field->tableField]['DATA_TYPE'];
-                $data[$i]['tableLength'] = $info['metadata'][$field->tableField]['LENGTH'];
+                $index = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field->tableField);
+                $data[$i]['tableType']   = $info['metadata'][$index]['DATA_TYPE'];
+                if (null == $info['metadata'][$index]['LENGTH']) {
+                    switch ($info['metadata'][$index]['DATA_TYPE']) {
+                        case 'int':
+                            $data[$i]['tableLength'] = 11;
+                            break;
+                        default:
+                            $data[$i]['tableLength'] = 255;
+                            break;
+                    }
+                } else {
+                    $data[$i]['tableLength'] = $info['metadata'][$index]['LENGTH'];
+                }
                 $i++;
             }
         }
@@ -646,9 +663,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $oldFields = $this->getDataDefinition();
         $tableDataForCreate['id'] = array('type'   => 'auto_increment',
                                           'length' => 11);
-        $tableDataForCreate['ownerId'] = array('type'   => 'int',
-                                               'length' => 11);
+        $tableDataForCreate['owner_id'] = array('type'   => 'int',
+                                                'length' => 11);
         array_merge($tableDataForCreate, $tableData);
+        $tableName   = strtolower($tableName);
         $tableFields = $tableManager->getTableFields($tableName, $tableDataForCreate);
 
         // Search for Modify and Delete
@@ -704,7 +722,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function deleteModule()
     {
-        $table  = $this->_model->getTableName();
+        $table  = $this->_model->getModelName();
         $where  = $this->getAdapter()->quoteInto(' tableName = ? ', $table);
         $result = $this->fetchAll($where);
         foreach ($result as $record) {

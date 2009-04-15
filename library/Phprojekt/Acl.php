@@ -105,7 +105,7 @@ class Phprojekt_Acl extends Zend_Acl
     {
         $role   = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
         $rights = array();
-        foreach ($role->fetchAll(null, 'roleId ASC') as $right) {
+        foreach ($role->fetchAll(null, 'role_id ASC') as $right) {
             $access = Phprojekt_Acl::convertBitmaskToArray($right->access);
             foreach ($access as $name => $value) {
                 if ($value) {

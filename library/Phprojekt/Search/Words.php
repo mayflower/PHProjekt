@@ -41,7 +41,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      *
      * @var string
      */
-    protected $_name = 'SearchWords';
+    protected $_name = 'search_words';
 
     /**
      * Chaneg the tablename for use with the Zend db class

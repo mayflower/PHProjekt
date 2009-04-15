@@ -45,12 +45,12 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     public function getRoleModulePermissionsById($roleId)
     {
         $modules = array();
-        $where   = ' RoleModulePermissions.roleId = ' . (int) $roleId;
-        $where  .= ' OR RoleModulePermissions.roleId is null ';
-        $where  .= ' AND (Module.saveType = 0 OR Module.saveType = 2) ';
-        $order   = ' Module.name ASC';
-        $select  = ' Module.id as moduleId ';
-        $join    = ' RIGHT JOIN Module ON Module.id = RoleModulePermissions.moduleId ';
+        $where   = ' role_module_permissions.role_id = ' . (int) $roleId;
+        $where  .= ' OR role_module_permissions.role_id is null ';
+        $where  .= ' AND (module.save_type = 0 OR module.save_type = 2) ';
+        $order   = ' module.name ASC';
+        $select  = ' module.id as module_id ';
+        $join    = ' RIGHT JOIN module ON module.id = role_module_permissions.module_id ';
 
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $modules['data'][$right->moduleId] = array();
@@ -67,7 +67,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
 
         if (empty($modules)) {
             $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-            foreach ($model->fetchAll(' (saveType = 0 OR saveType = 2) ', ' name ASC ') as $module) {
+            foreach ($model->fetchAll(' (save_type = 0 OR save_type = 2) ', ' name ASC ') as $module) {
                 $modules['data'][$module->id] = array();
 
                 $modules['data'][$module->id]['id']    = $module->id;

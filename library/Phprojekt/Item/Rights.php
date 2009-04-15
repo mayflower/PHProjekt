@@ -36,7 +36,12 @@
  */
 class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'ItemRights';
+    /**
+     * Name of the table
+     *
+     * @var string
+     */
+    protected $_name = 'item_rights';
 
     /**
      * Change the tablename for use with the Zend db class
@@ -92,10 +97,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     private function _saveRight($moduleId, $itemId, $userId, $access)
     {
-        $data['moduleId'] = (int) $moduleId;
-        $data['itemId']   = (int) $itemId;
-        $data['userId']   = (int) $userId;
-        $data['access']   = (int) $access;
+        $data['module_id'] = (int) $moduleId;
+        $data['item_id']   = (int) $itemId;
+        $data['user_id']   = (int) $userId;
+        $data['access']    = (int) $access;
         $this->insert($data);
     }
 
@@ -112,8 +117,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $where = array();
         $clone = clone($this);
 
-        $where[] = 'moduleId = '. $clone->getAdapter()->quote($moduleId);
-        $where[] = 'itemId = '. $clone->getAdapter()->quote($itemId);
+        $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
 
@@ -168,11 +173,15 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $access                            = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
             $values['currentUser']             = array_merge($values['currentUser'], $access);
 
-            $where[] = 'moduleId = '. (int) $moduleId;
-            $where[] = 'itemId = '. (int) $itemId;
+            $where[] = 'module_id = '. (int) $moduleId;
+            $where[] = 'item_id = '. (int) $itemId;
             $where   = implode(' AND ', $where);
             $rows    = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
+                // Convert index
+                foreach ($row as $k => $v) {
+                    $row[Phprojekt_ActiveRecord_Abstract::convertVarFromSql($k)] = $v;
+                }
                 $row = array_merge($row, Phprojekt_Acl::convertBitmaskToArray($row['access']));
                 if (Phprojekt_Auth::getUserId() == $row['userId']) {
                     $values['currentUser'] = $row;
@@ -195,10 +204,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function saveDefaultRights($userId)
     {
         $data             = array();
-        $data['moduleId'] = Phprojekt_Module::getId('Project');
-        $data['itemId']   = 1;
-        $data['userId']   = (int) $userId;
-        $data['access']   = (int) Phprojekt_Acl::WRITE;
+        $data['module_id'] = Phprojekt_Module::getId('Project');
+        $data['item_id']   = 1;
+        $data['user_id']   = (int) $userId;
+        $data['access']    = (int) Phprojekt_Acl::WRITE;
         $this->insert($data);
     }
 }
