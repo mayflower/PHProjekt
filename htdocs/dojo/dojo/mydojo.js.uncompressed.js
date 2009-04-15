@@ -469,6 +469,232 @@ dojo.cldr.supplemental.getWeekend = function(/*String?*/locale){
 
 }
 
+if(!dojo._hasResource["dojo.colors"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojo.colors"] = true;
+dojo.provide("dojo.colors");
+
+//TODO: this module appears to break naming conventions
+
+/*=====
+dojo.colors = {
+	// summary: Color utilities
+}
+=====*/
+
+(function(){
+	// this is a standard conversion prescribed by the CSS3 Color Module
+	var hue2rgb = function(m1, m2, h){
+		if(h < 0){ ++h; }
+		if(h > 1){ --h; }
+		var h6 = 6 * h;
+		if(h6 < 1){ return m1 + (m2 - m1) * h6; }
+		if(2 * h < 1){ return m2; }
+		if(3 * h < 2){ return m1 + (m2 - m1) * (2 / 3 - h) * 6; }
+		return m1;
+	};
+	
+	dojo.colorFromRgb = function(/*String*/ color, /*dojo.Color?*/ obj){
+		// summary:
+		//		get rgb(a) array from css-style color declarations
+		// description:
+		//		this function can handle all 4 CSS3 Color Module formats: rgb,
+		//		rgba, hsl, hsla, including rgb(a) with percentage values.
+		var m = color.toLowerCase().match(/^(rgba?|hsla?)\(([\s\.\-,%0-9]+)\)/);
+		if(m){
+			var c = m[2].split(/\s*,\s*/), l = c.length, t = m[1];
+			if((t == "rgb" && l == 3) || (t == "rgba" && l == 4)){
+				var r = c[0];
+				if(r.charAt(r.length - 1) == "%"){
+					// 3 rgb percentage values
+					var a = dojo.map(c, function(x){
+						return parseFloat(x) * 2.56;
+					});
+					if(l == 4){ a[3] = c[3]; }
+					return dojo.colorFromArray(a, obj);	// dojo.Color
+				}
+				return dojo.colorFromArray(c, obj);	// dojo.Color
+			}
+			if((t == "hsl" && l == 3) || (t == "hsla" && l == 4)){
+				// normalize hsl values
+				var H = ((parseFloat(c[0]) % 360) + 360) % 360 / 360,
+					S = parseFloat(c[1]) / 100,
+					L = parseFloat(c[2]) / 100,
+					// calculate rgb according to the algorithm 
+					// recommended by the CSS3 Color Module 
+					m2 = L <= 0.5 ? L * (S + 1) : L + S - L * S, 
+					m1 = 2 * L - m2,
+					a = [hue2rgb(m1, m2, H + 1 / 3) * 256,
+						hue2rgb(m1, m2, H) * 256, hue2rgb(m1, m2, H - 1 / 3) * 256, 1];
+				if(l == 4){ a[3] = c[3]; }
+				return dojo.colorFromArray(a, obj);	// dojo.Color
+			}
+		}
+		return null;	// dojo.Color
+	};
+	
+	var confine = function(c, low, high){
+		// summary:
+		//		sanitize a color component by making sure it is a number,
+		//		and clamping it to valid values
+		c = Number(c);
+		return isNaN(c) ? high : c < low ? low : c > high ? high : c;	// Number
+	};
+	
+	dojo.Color.prototype.sanitize = function(){
+		// summary: makes sure that the object has correct attributes
+		var t = this;
+		t.r = Math.round(confine(t.r, 0, 255));
+		t.g = Math.round(confine(t.g, 0, 255));
+		t.b = Math.round(confine(t.b, 0, 255));
+		t.a = confine(t.a, 0, 1);
+		return this;	// dojo.Color
+	};
+})();
+
+
+dojo.colors.makeGrey = function(/*Number*/ g, /*Number?*/ a){
+	// summary: creates a greyscale color with an optional alpha
+	return dojo.colorFromArray([g, g, g, a]);
+};
+
+// mixin all CSS3 named colors not already in _base, along with SVG 1.0 variant spellings
+dojo.Color.named = dojo.mixin({
+	aliceblue:	[240,248,255],
+	antiquewhite:	[250,235,215],
+	aquamarine:	[127,255,212],
+	azure:	[240,255,255],
+	beige:	[245,245,220],
+	bisque:	[255,228,196],
+	blanchedalmond:	[255,235,205],
+	blueviolet:	[138,43,226],
+	brown:	[165,42,42],
+	burlywood:	[222,184,135],
+	cadetblue:	[95,158,160],
+	chartreuse:	[127,255,0],
+	chocolate:	[210,105,30],
+	coral:	[255,127,80],
+	cornflowerblue:	[100,149,237],
+	cornsilk:	[255,248,220],
+	crimson:	[220,20,60],
+	cyan:	[0,255,255],
+	darkblue:	[0,0,139],
+	darkcyan:	[0,139,139],
+	darkgoldenrod:	[184,134,11],
+	darkgray:	[169,169,169],
+	darkgreen:	[0,100,0],
+	darkgrey:	[169,169,169],
+	darkkhaki:	[189,183,107],
+	darkmagenta:	[139,0,139],
+	darkolivegreen:	[85,107,47],
+	darkorange:	[255,140,0],
+	darkorchid:	[153,50,204],
+	darkred:	[139,0,0],
+	darksalmon:	[233,150,122],
+	darkseagreen:	[143,188,143],
+	darkslateblue:	[72,61,139],
+	darkslategray:	[47,79,79],
+	darkslategrey:	[47,79,79],
+	darkturquoise:	[0,206,209],
+	darkviolet:	[148,0,211],
+	deeppink:	[255,20,147],
+	deepskyblue:	[0,191,255],
+	dimgray:	[105,105,105],
+	dimgrey:	[105,105,105],
+	dodgerblue:	[30,144,255],
+	firebrick:	[178,34,34],
+	floralwhite:	[255,250,240],
+	forestgreen:	[34,139,34],
+	gainsboro:	[220,220,220],
+	ghostwhite:	[248,248,255],
+	gold:	[255,215,0],
+	goldenrod:	[218,165,32],
+	greenyellow:	[173,255,47],
+	grey:	[128,128,128],
+	honeydew:	[240,255,240],
+	hotpink:	[255,105,180],
+	indianred:	[205,92,92],
+	indigo:	[75,0,130],
+	ivory:	[255,255,240],
+	khaki:	[240,230,140],
+	lavender:	[230,230,250],
+	lavenderblush:	[255,240,245],
+	lawngreen:	[124,252,0],
+	lemonchiffon:	[255,250,205],
+	lightblue:	[173,216,230],
+	lightcoral:	[240,128,128],
+	lightcyan:	[224,255,255],
+	lightgoldenrodyellow:	[250,250,210],
+	lightgray:	[211,211,211],
+	lightgreen:	[144,238,144],
+	lightgrey:	[211,211,211],
+	lightpink:	[255,182,193],
+	lightsalmon:	[255,160,122],
+	lightseagreen:	[32,178,170],
+	lightskyblue:	[135,206,250],
+	lightslategray:	[119,136,153],
+	lightslategrey:	[119,136,153],
+	lightsteelblue:	[176,196,222],
+	lightyellow:	[255,255,224],
+	limegreen:	[50,205,50],
+	linen:	[250,240,230],
+	magenta:	[255,0,255],
+	mediumaquamarine:	[102,205,170],
+	mediumblue:	[0,0,205],
+	mediumorchid:	[186,85,211],
+	mediumpurple:	[147,112,219],
+	mediumseagreen:	[60,179,113],
+	mediumslateblue:	[123,104,238],
+	mediumspringgreen:	[0,250,154],
+	mediumturquoise:	[72,209,204],
+	mediumvioletred:	[199,21,133],
+	midnightblue:	[25,25,112],
+	mintcream:	[245,255,250],
+	mistyrose:	[255,228,225],
+	moccasin:	[255,228,181],
+	navajowhite:	[255,222,173],
+	oldlace:	[253,245,230],
+	olivedrab:	[107,142,35],
+	orange:	[255,165,0],
+	orangered:	[255,69,0],
+	orchid:	[218,112,214],
+	palegoldenrod:	[238,232,170],
+	palegreen:	[152,251,152],
+	paleturquoise:	[175,238,238],
+	palevioletred:	[219,112,147],
+	papayawhip:	[255,239,213],
+	peachpuff:	[255,218,185],
+	peru:	[205,133,63],
+	pink:	[255,192,203],
+	plum:	[221,160,221],
+	powderblue:	[176,224,230],
+	rosybrown:	[188,143,143],
+	royalblue:	[65,105,225],
+	saddlebrown:	[139,69,19],
+	salmon:	[250,128,114],
+	sandybrown:	[244,164,96],
+	seagreen:	[46,139,87],
+	seashell:	[255,245,238],
+	sienna:	[160,82,45],
+	skyblue:	[135,206,235],
+	slateblue:	[106,90,205],
+	slategray:	[112,128,144],
+	slategrey:	[112,128,144],
+	snow:	[255,250,250],
+	springgreen:	[0,255,127],
+	steelblue:	[70,130,180],
+	tan:	[210,180,140],
+	thistle:	[216,191,216],
+	tomato:	[255,99,71],
+	transparent: [0, 0, 0, 0],
+	turquoise:	[64,224,208],
+	violet:	[238,130,238],
+	wheat:	[245,222,179],
+	whitesmoke:	[245,245,245],
+	yellowgreen:	[154,205,50]
+}, dojo.Color.named);
+
+}
+
 if(!dojo._hasResource["dojo.regexp"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojo.regexp"] = true;
 dojo.provide("dojo.regexp");
@@ -21588,6 +21814,309 @@ dojo.declare(
 
 }
 
+if(!dojo._hasResource["dijit.ColorPalette"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.ColorPalette"] = true;
+dojo.provide("dijit.ColorPalette");
+
+
+
+
+
+
+
+dojo.declare("dijit.ColorPalette",
+	[dijit._Widget, dijit._Templated],
+	{
+	// summary: A keyboard accessible color-picking widget
+	// description:
+	//	Grid showing various colors, so the user can pick a certain color
+	//	Can be used standalone, or as a popup.
+	//
+	// example:
+	// |	<div dojoType="dijit.ColorPalette"></div>
+	//
+	// example:
+	// |    var picker = new dijit.ColorPalette({ },srcNode);
+	// |	picker.startup();
+	//
+	// defaultTimeout: Number
+	//		number of milliseconds before a held key or button becomes typematic
+	defaultTimeout: 500,
+
+	// timeoutChangeRate: Number
+	//		fraction of time used to change the typematic timer between events
+	//		1.0 means that each typematic event fires at defaultTimeout intervals
+	//		< 1.0 means that each typematic event fires at an increasing faster rate
+	timeoutChangeRate: 0.90,
+
+	// palette: String
+	//		Size of grid, either "7x10" or "3x4".
+	palette: "7x10",
+
+	//_value: String
+	//		The value of the selected color.
+	value: null,
+
+	//_currentFocus: Integer
+	//		Index of the currently focused color.
+	_currentFocus: 0,
+
+	// _xDim: Integer
+	//		This is the number of colors horizontally across.
+	_xDim: null,
+
+	// _yDim: Integer
+	///		This is the number of colors vertically down.
+	_yDim: null,
+
+	// _palettes: Map
+	// 		This represents the value of the colors.
+	//		The first level is a hashmap of the different arrays available
+	//		The next two dimensions represent the columns and rows of colors.
+	_palettes: {
+
+		"7x10":	[["white", "seashell", "cornsilk", "lemonchiffon","lightyellow", "palegreen", "paleturquoise", "lightcyan",	"lavender", "plum"],
+				["lightgray", "pink", "bisque", "moccasin", "khaki", "lightgreen", "lightseagreen", "lightskyblue", "cornflowerblue", "violet"],
+				["silver", "lightcoral", "sandybrown", "orange", "palegoldenrod", "chartreuse", "mediumturquoise", 	"skyblue", "mediumslateblue","orchid"],
+				["gray", "red", "orangered", "darkorange", "yellow", "limegreen", 	"darkseagreen", "royalblue", "slateblue", "mediumorchid"],
+				["dimgray", "crimson", 	"chocolate", "coral", "gold", "forestgreen", "seagreen", "blue", "blueviolet", "darkorchid"],
+				["darkslategray","firebrick","saddlebrown", "sienna", "olive", "green", "darkcyan", "mediumblue","darkslateblue", "darkmagenta" ],
+				["black", "darkred", "maroon", "brown", "darkolivegreen", "darkgreen", "midnightblue", "navy", "indigo", 	"purple"]],
+
+		"3x4": [["white", "lime", "green", "blue"],
+			["silver", "yellow", "fuchsia", "navy"],
+			["gray", "red", "purple", "black"]]	
+
+	},
+
+	// _imagePaths: Map
+	//		This is stores the path to the palette images
+	_imagePaths: {
+		"7x10": dojo.moduleUrl("dijit.themes", "a11y/colors7x10.png"),
+		"3x4": dojo.moduleUrl("dijit.themes", "a11y/colors3x4.png")
+	},
+
+	// _paletteCoords: Map
+	//		This is a map that is used to calculate the coordinates of the
+	//		images that make up the palette.
+	_paletteCoords: {
+		"leftOffset": 3, "topOffset": 3,
+		"cWidth": 20, "cHeight": 20
+		
+	},
+
+	// templatePath: String
+	//		Path to the template of this widget.
+	templateString:"<div class=\"dijitInline dijitColorPalette\">\r\n\t<div class=\"dijitColorPaletteInner\" dojoAttachPoint=\"divNode\" waiRole=\"grid\" tabIndex=\"${tabIndex}\">\r\n\t\t<img class=\"dijitColorPaletteUnder\" dojoAttachPoint=\"imageNode\" waiRole=\"presentation\">\r\n\t</div>\t\r\n</div>\r\n",
+
+	// _paletteDims: Object
+	//		Size of the supported palettes for alignment purposes.
+	_paletteDims: {
+		"7x10": {"width": "206px", "height": "145px"},
+		"3x4": {"width": "86px", "height": "64px"}
+	},
+
+	// tabIndex: String
+	//		Widget tabindex.
+	tabIndex: "0",
+
+	postCreate: function(){
+		// A name has to be given to the colorMap, this needs to be unique per Palette.
+		dojo.mixin(this.divNode.style, this._paletteDims[this.palette]);
+		this.imageNode.setAttribute("src", this._imagePaths[this.palette]);
+		var choices = this._palettes[this.palette];	
+		this.domNode.style.position = "relative";
+		this._cellNodes = [];	
+		this.colorNames = dojo.i18n.getLocalization("dojo", "colors", this.lang);
+		var url = this._blankGif,
+            colorObject = new dojo.Color(),
+		    coords = this._paletteCoords;
+		for(var row=0; row < choices.length; row++){
+			for(var col=0; col < choices[row].length; col++) {
+                var imgNode = dojo.doc.createElement("img");
+                imgNode.src = url;
+                dojo.addClass(imgNode, "dijitPaletteImg");
+                var color = choices[row][col],
+                        colorValue = colorObject.setColor(dojo.Color.named[color]);
+                imgNode.alt = this.colorNames[color];
+                imgNode.color = colorValue.toHex();
+                var imgStyle = imgNode.style;
+                imgStyle.color = imgStyle.backgroundColor = imgNode.color;
+                var cellNode = dojo.doc.createElement("span");
+                cellNode.appendChild(imgNode);
+                dojo.forEach(["Dijitclick", "MouseEnter", "Focus", "Blur"], function(handler) {
+                    this.connect(cellNode, "on" + handler.toLowerCase(), "_onCell" + handler);
+                }, this);
+                this.divNode.appendChild(cellNode);
+                var cellStyle = cellNode.style;
+                cellStyle.top = coords.topOffset + (row * coords.cHeight) + "px";
+                cellStyle.left = coords.leftOffset + (col * coords.cWidth) + "px";
+                dojo.attr(cellNode, "tabindex", "-1");
+                cellNode.title = this.colorNames[color];
+                dojo.addClass(cellNode, "dijitPaletteCell");
+                dijit.setWaiRole(cellNode, "gridcell");
+                cellNode.index = this._cellNodes.length;
+                this._cellNodes.push(cellNode);
+            }
+		}
+		this._xDim = choices[0].length;
+		this._yDim = choices.length;
+		this.connect(this.divNode, "onfocus", "_onDivNodeFocus");
+
+		// Now set all events
+		// The palette itself is navigated to with the tab key on the keyboard
+		// Keyboard navigation within the Palette is with the arrow keys
+		// Spacebar selects the color.
+		// For the up key the index is changed by negative the x dimension.		
+
+		var keyIncrementMap = {
+			UP_ARROW: -this._xDim,
+			// The down key the index is increase by the x dimension.	
+			DOWN_ARROW: this._xDim,
+			// Right and left move the index by 1.
+			RIGHT_ARROW: 1,
+			LEFT_ARROW: -1
+		};
+		for(var key in keyIncrementMap){
+			this._connects.push(dijit.typematic.addKeyListener(this.domNode,
+				{charOrCode:dojo.keys[key], ctrlKey:false, altKey:false, shiftKey:false},
+				this,
+				function(){
+					var increment = keyIncrementMap[key];
+					return function(count){ this._navigateByKey(increment, count); };
+				}(),
+				this.timeoutChangeRate, this.defaultTimeout));
+		}
+	},
+
+	focus: function(){
+		// summary:
+		//		Focus this ColorPalette.  Puts focus on the first swatch.
+		this._focusFirst();
+	},
+
+	onChange: function(color){
+		// summary:
+		//		Callback when a color is selected.
+		// color: String
+		//		Hex value corresponding to color.
+//		console.debug("Color selected is: "+color);
+	},
+
+	_focusFirst: function(){
+		this._currentFocus = 0;
+		var cellNode = this._cellNodes[this._currentFocus];
+		window.setTimeout(function(){dijit.focus(cellNode)}, 0);
+	},
+
+	_onDivNodeFocus: function(evt){
+		// focus bubbles on Firefox 2, so just make sure that focus has really
+		// gone to the container
+		if(evt.target === this.divNode){
+			this._focusFirst();
+		}
+	},
+
+	_onFocus: function(){
+		// while focus is on the palette, set its tabindex to -1 so that on a
+		// shift-tab from a cell, the container is not in the tab order
+		dojo.attr(this.divNode, "tabindex", "-1");
+	},
+
+	_onBlur: function(){
+		this._removeCellHighlight(this._currentFocus);
+		// when focus leaves the palette, restore its tabindex, since it was
+		// modified by _onFocus().
+		dojo.attr(this.divNode, "tabindex", this.tabIndex);
+	},
+
+	_onCellDijitclick: function(/*Event*/ evt){
+		// summary:
+		//		Handler for click, enter key & space key. Selects the color.
+		// evt:
+		//		The event.
+		var target = evt.currentTarget;
+		if (this._currentFocus != target.index){
+			this._currentFocus = target.index;
+			window.setTimeout(function(){dijit.focus(target)}, 0);
+		}
+		this._selectColor(target);
+		dojo.stopEvent(evt);
+	},
+
+	_onCellMouseEnter: function(/*Event*/ evt){
+		// summary:
+		//		Handler for onMouseOver. Put focus on the color under the mouse.
+		// evt:
+		//		The mouse event.
+		var target = evt.currentTarget;
+		this._setCurrent(target);	// redundant, but needed per safari bug where onCellFocus never called
+		window.setTimeout(function(){dijit.focus(target)}, 0);
+	},
+
+	_onCellFocus: function(/*Event*/ evt){
+		// summary:
+		//		Handler for onFocus. Removes highlight of
+		//		the color that just lost focus, and highlights
+		//		the new color.
+		// evt:
+		//		The focus event.
+		this._setCurrent(evt.currentTarget);
+	},
+
+	_setCurrent: function(/*Node*/ node){
+		// summary:
+		//		Called when color is hovered or focused.
+		// description:
+		//		Removes highlight of the old color, and highlights
+		//		the new color.
+		this._removeCellHighlight(this._currentFocus);
+		this._currentFocus = node.index;
+		dojo.addClass(node, "dijitPaletteCellHighlight");		
+	},
+
+	_onCellBlur: function(/*Event*/ evt){
+		// summary:
+		//		needed for Firefox 2 on Mac OS X
+		this._removeCellHighlight(this._currentFocus);
+	},
+
+	_removeCellHighlight: function(index){
+		dojo.removeClass(this._cellNodes[index], "dijitPaletteCellHighlight");
+	},
+
+	_selectColor: function(selectNode){	
+		// summary:
+		// 		This selects a color. It triggers the onChange event
+		// area:
+		//		The area node that covers the color being selected.
+		var img = selectNode.getElementsByTagName("img")[0];
+		this.onChange(this.value = img.color);
+	},
+
+	_navigateByKey: function(increment, typeCount){
+		// summary:
+		// 	  	This is the callback for typematic.
+		// 		It changes the focus and the highlighed color.
+		// increment:
+		// 		How much the key is navigated.
+		// typeCount:
+		//		How many times typematic has fired.
+
+		// typecount == -1 means the key is released.
+		if(typeCount == -1){ return; }
+
+		var newFocusIndex = this._currentFocus + increment;
+		if(newFocusIndex < this._cellNodes.length && newFocusIndex > -1)
+		{
+			var focusNode = this._cellNodes[newFocusIndex];
+			focusNode.focus();
+		}
+	}
+});
+
+}
+
 if(!dojo._hasResource["dijit._editor.selection"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._editor.selection"] = true;
 dojo.provide("dijit._editor.selection");
@@ -25288,6 +25817,353 @@ dojo.declare("dijit._editor._Plugin", null, {
 			toolbar.addChild(this.button);
 		}
 		// console.debug("adding", this.button, "to:", toolbar);
+	}
+});
+
+}
+
+if(!dojo._hasResource["dijit._editor.plugins.FontChoice"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.FontChoice"] = true;
+dojo.provide("dijit._editor.plugins.FontChoice");
+
+
+
+
+
+
+
+
+dojo.declare("dijit._editor.plugins.FontChoice",
+	dijit._editor._Plugin,
+	{
+		//	summary:
+		//		This plugin provides three dropdowns for setting font information in the editor
+		//
+		//	description:
+		//		The commands provided by this plugin are:
+		//
+		//		* fontName
+		//	|		Provides a dropdown to select from a list of generic font names
+		//		* fontSize
+		//	|		Provides a dropdown to select from a list of pre-defined font sizes
+		//		* formatBlock
+		//	|		Provides a dropdown to select from a list of styles
+		//  |
+		//
+		//		which can easily be added to an editor by including one or more of the above commands
+		//		in the `plugins` attribute as follows:
+		//
+		//	|	plugins="['fontName','fontSize',...]"
+		//
+		//		It is possible to override the default dropdown list by providing an Array for the `custom` property when
+		//		instantiating this plugin, e.g.
+		//
+		//	|	plugins="[{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond']},...]"
+		//
+		//		Alternatively, for `fontName` only, `generic:true` may be specified to provide a dropdown with
+		//		[CSS generic font families](http://www.w3.org/TR/REC-CSS2/fonts.html#generic-font-families)
+		//
+		//		Note that the editor is often unable to properly handle font styling information defined outside
+		//		the context of the current editor instance, such as pre-populated HTML.
+
+		_uniqueId: 0,
+
+		buttonClass: dijit.form.FilteringSelect,
+		useDefaultCommand: false,
+
+		_initButton: function(){
+			//TODO: would be nice to be able to handle comma-separated font lists and search within them
+			var cmd = this.command;
+			var names = this.custom ||
+			{
+				fontName: this.generic ? ["serif", "sans-serif", "monospace", "cursive", "fantasy"] : // CSS font-family generics
+					["Arial", "Times New Roman", "Comic Sans MS", "Courier New"],
+				fontSize: [1,2,3,4,5,6,7], // sizes according to the old HTML FONT SIZE
+				formatBlock: ["p", "h1", "h2", "h3", "pre"]
+			}[cmd];
+			this._availableValues = names; //store all possible values
+			var strings = dojo.i18n.getLocalization("dijit._editor", "FontChoice");
+			var items = dojo.map(names, function(value){
+				var name = strings[value] || value;
+				var label = name;
+				switch(cmd){
+				case "fontName":
+					label = "<div style='font-family: "+value+"'>" + name + "</div>";
+					break;
+				case "fontSize":
+					// we're stuck using the deprecated FONT tag to correspond with the size measurements used by the editor
+					label = "<font size="+value+"'>"+name+"</font>";
+					break;
+				case "formatBlock":
+					label = "<" + value + ">" + name + "</" + value + ">";
+				}
+				return { label: label, name: name, value: value };
+			});
+			//items.push({label: "", name:"", value:""}); // FilteringSelect doesn't like unmatched blank strings
+
+			this.inherited(arguments,[{required:false, labelType: "html", labelAttr: "label", searchAttr: "name", store: new dojo.data.ItemFileReadStore(
+					{ data: { identifier: "value", items: items } })}]);
+
+			this.button.attr("value", "");
+
+			this.connect(this.button, "onChange", function(choice){
+				if(this.updating){ return; }
+				if(dojo.isIE || !this._focusHandle){
+					this.editor.focus();
+				}else{
+					dijit.focus(this._focusHandle);
+				}
+				if(this.command == "fontName" && choice.indexOf(" ") != -1){ choice = "'" + choice + "'"; }
+				this.editor.execCommand(this.editor._normalizeCommand(this.command), choice);
+			});
+		},
+
+		updateState: function(){
+			this.inherited(arguments);
+			var _e = this.editor;
+			var _c = this.command;
+			if(!_e || !_e.isLoaded || !_c.length){ return; }
+			if(this.button){
+				var value;
+				try{
+					value = _e.queryCommandValue(_c) || "";
+				}catch(e){
+					//Firefox may throw error above if the editor is just loaded, ignore it
+					value = "";
+				}
+				// strip off single quotes, if any
+				var quoted = dojo.isString(value) && value.match(/'([^']*)'/);
+				if(quoted){ value = quoted[1]; }
+
+				if(this.generic && _c == "fontName"){
+					var map = {
+						"Arial": "sans-serif",
+						"Helvetica": "sans-serif",
+						"Myriad": "sans-serif",
+						"Times": "serif",
+						"Times New Roman": "serif",
+						"Comic Sans MS": "cursive",
+						"Apple Chancery": "cursive",
+						"Courier": "monospace",
+						"Courier New": "monospace",
+						"Papyrus": "fantasy"
+// 						,"????": "fantasy" TODO: IE doesn't map fantasy font-family?
+					};
+
+					value = map[value] || value;
+				}else if(_c == "fontSize" && value.indexOf && value.indexOf("px") != -1){
+					var pixels = parseInt(value);
+					value = {10:1, 13:2, 16:3, 18:4, 24:5, 32:6, 48:7}[pixels] || value;
+				}
+
+				this.updating = true;
+				//if the value is not a permitted value, just set empty string to prevent
+				//showing the warning icon
+				this.button.attr('value', dojo.indexOf(this._availableValues,value)<0?"":value);
+				delete this.updating;
+			}
+
+			if(this.editor.iframe){
+				this._focusHandle = dijit.getFocus(this.editor.iframe);
+			}
+		},
+
+		setToolbar: function(){
+			this.inherited(arguments);
+
+			var forRef = this.button;
+			if(!forRef.id){ forRef.id = dijit._scopeName+"EditorButton-"+this.command+(this._uniqueId++); } //TODO: is this necessary?  FilteringSelects always seem to have an id?
+			var label = dojo.doc.createElement("label");
+			dojo.addClass(label, "dijit dijitReset dijitLeft dijitInline");
+			label.setAttribute("for", forRef.id);
+			var strings = dojo.i18n.getLocalization("dijit._editor", "FontChoice");
+			label.appendChild(dojo.doc.createTextNode(strings[this.command]));
+			dojo.place(label, this.button.domNode, "before");
+		}
+	}
+);
+
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	switch(o.args.name){
+	case "fontName": case "fontSize": case "formatBlock":
+		o.plugin = new dijit._editor.plugins.FontChoice({command: o.args.name});
+	}
+});
+
+}
+
+if(!dojo._hasResource["dijit._editor.plugins.LinkDialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.LinkDialog"] = true;
+dojo.provide("dijit._editor.plugins.LinkDialog");
+
+
+
+
+
+
+
+
+
+
+
+dojo.declare("dijit._editor.plugins.LinkDialog",
+	dijit._editor._Plugin,
+	{
+		//	summary:
+		//		This plugin provides dialogs for inserting links and images into the editor
+		//
+		//	description:
+		//		The commands provided by this plugin are:
+		//		* createLink
+		//		* insertImage
+
+		buttonClass: dijit.form.DropDownButton,
+		useDefaultCommand: false,
+		urlRegExp: "((https?|ftps?)\\://|)(([0-9a-zA-Z]([-0-9a-zA-Z]{0,61}[0-9a-zA-Z])?\\.)+(arpa|aero|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|xxx|jobs|mobi|post|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|eu|es|et|fi|fj|fk|fm|fo|fr|ga|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sk|sl|sm|sn|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:(0|[1-9]\\d*))?(/([^?#\\s/]+/)*)?([^?#\\s/]+(\\?[^?#\\s/]*)?(#[A-Za-z][\\w.:-]*)?)?",
+		linkDialogTemplate: [
+			"<table><tr><td>",
+			"<label for='${id}_urlInput'>${url}</label>",
+			"</td><td>",
+			"<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' required='true' id='${id}_urlInput' name='urlInput'>",
+			"</td></tr><tr><td>",
+			"<label for='${id}_textInput'>${text}</label>",
+			"</td><td>",
+			"<input dojoType='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' name='textInput'>",
+			"</td></tr><tr><td colspan='2'>",
+			"<button dojoType='dijit.form.Button' type='submit'>${set}</button>",
+			"</td></tr></table>"
+		].join(""),
+
+		_initButton: function(){
+			var _this = this;
+			this.tag = this.command == 'insertImage' ? 'img' : 'a';
+			var messages = dojo.i18n.getLocalization("dijit._editor", "LinkDialog", this.lang);
+			var dropDown = (this.dropDown = new dijit.TooltipDialog({
+				title: messages[this.command + "Title"],
+				execute: dojo.hitch(this, "setValue"),
+				onOpen: function(){
+					_this._onOpenDialog();
+					dijit.TooltipDialog.prototype.onOpen.apply(this, arguments);
+				},
+				onCancel: function(){
+					setTimeout(dojo.hitch(_this, "_onCloseDialog"),0);
+				},
+				onClose: dojo.hitch(this, "_onCloseDialog")
+			}));
+			messages.urlRegExp = this.urlRegExp;
+			messages.id = dijit.getUniqueId(this.editor.id);
+			this._setContent(dropDown.title + "<div style='border-bottom: 1px black solid;padding-bottom:2pt;margin-bottom:4pt'></div>" + dojo.string.substitute(this.linkDialogTemplate, messages));
+			dropDown.startup();
+
+			this.inherited(arguments);
+		},
+
+		_setContent: function(staticPanel){
+			this.dropDown.attr('content', staticPanel);
+		},
+
+		setValue: function(args){
+			// summary: callback from the dialog when user hits "set" button
+			//TODO: prevent closing popup if the text is empty
+			this._onCloseDialog();
+			if(dojo.isIE){ //see #4151
+				var a = dojo.withGlobal(this.editor.window, "getAncestorElement", dijit._editor.selection, [this.tag]);
+				if(a){
+					dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a]);
+				}
+			}
+			args.tag = this.tag;
+			args.refAttr = this.tag == 'img' ? 'src' : 'href';
+			//TODO: textInput should be formatted by escapeXml
+			var template = "<${tag} ${refAttr}='${urlInput}' _djrealurl='${urlInput}'" +
+				(args.tag == 'img' ? " alt='${textInput}'>" : ">${textInput}") +
+				"</${tag}>";
+			this.editor.execCommand('inserthtml', dojo.string.substitute(template, args));
+ 		},
+
+		_onCloseDialog: function(){
+			this.editor.focus();
+		},
+
+		_onOpenDialog: function(){
+			var a = dojo.withGlobal(this.editor.window, "getAncestorElement", dijit._editor.selection, [this.tag]);
+			var url, text;
+			if(a){
+				url = a.getAttribute('_djrealurl');
+				text = this.tag == 'img' ? a.getAttribute('alt') : a.textContent || a.innerText;
+				dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a, true]);
+			}else{
+				text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
+			}
+
+			this.dropDown.reset();
+			this.dropDown.setValues({urlInput: url || '', textInput: text || ''});
+			//dijit.focus(this.urlInput);
+		}/*,
+
+//TODO we don't show this state anymore
+		updateState: function(){
+			// summary: change shading on button if we are over a link (or not)
+
+			var _e = this.editor;
+			if(!_e || !_e.isLoaded){ return; }
+			if(this.button){
+				// display button differently if there is an existing link associated with the current selection
+				var hasA = dojo.withGlobal(this.editor.window, "hasAncestorElement", dijit._editor.selection, [this.tag]);
+				this.button.attr('checked', hasA);
+			}
+		}
+*/
+	}
+);
+
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	switch(o.args.name){
+	case "createLink": case "insertImage":
+		o.plugin = new dijit._editor.plugins.LinkDialog({command: o.args.name});
+	}
+});
+
+}
+
+if(!dojo._hasResource["dijit._editor.plugins.TextColor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.TextColor"] = true;
+dojo.provide("dijit._editor.plugins.TextColor");
+
+
+
+
+dojo.declare("dijit._editor.plugins.TextColor",
+	dijit._editor._Plugin,
+	{
+		//	summary:
+		//		This plugin provides dropdown color pickers for setting text color and background color
+		//
+		//	description:
+		//		The commands provided by this plugin are:
+		//		* foreColor - sets the text color
+		//		* hiliteColor - sets the background color
+
+		buttonClass: dijit.form.DropDownButton,
+
+//TODO: set initial focus/selection state?
+
+		constructor: function(){
+			this.dropDown = new dijit.ColorPalette();
+			this.connect(this.dropDown, "onChange", function(color){
+				this.editor.execCommand(this.command, color);
+			});
+		}
+	}
+);
+
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	switch(o.args.name){
+	case "foreColor": case "hiliteColor":
+		o.plugin = new dijit._editor.plugins.TextColor({command: o.args.name});
 	}
 });
 
