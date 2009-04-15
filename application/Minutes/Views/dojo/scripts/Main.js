@@ -27,5 +27,34 @@ dojo.declare("phpr.Minutes.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Minutes.Grid;
         this.formWidget = phpr.Minutes.Form;
         this.treeWidget = phpr.Minutes.Tree;
-    }
+        console.debug('In Minutes constructor');
+    },
+    
+    reload:function() {
+        // summary:
+        //    This function reloads the current module
+        // description:
+        //    This function initializes a module that might have been called before.
+        //    It only reloads those parts of the page which might change during a PHProjekt session
+
+        // important set the global phpr.module to the module which is currently loaded!!!
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
+        this.render(["phpr.Minutes.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        this.cleanPage();
+        if (this._isGlobalModule(this.module)) {
+            phpr.TreeContent.fadeOut();
+            this.setSubGlobalModulesNavigation();
+        } else {
+            phpr.TreeContent.fadeIn();
+            this.setSubmoduleNavigation();
+        }
+        this.hideSuggest();
+        this.setSearchForm();
+        this.tree     = new this.treeWidget(this);
+        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
+            + phpr.currentProjectId;
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+    },
 });
