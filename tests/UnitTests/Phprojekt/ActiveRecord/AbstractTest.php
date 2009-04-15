@@ -55,11 +55,11 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $this->assertNull($project->title);
 
             $projects = $project->fetchAll(null, null, null, null, null,
-               'RIGHT JOIN ProjectRoleUserPermissions ON ProjectRoleUserPermissions.projectId = Project.id');
+               'RIGHT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
             $this->assertEquals(1, count($projects));
 
-            $projects = $project->fetchAll(null, null, null, null, "ProjectRoleUserPermissions.roleId",
-               'LEFT JOIN ProjectRoleUserPermissions ON ProjectRoleUserPermissions.projectId = Project.id');
+            $projects = $project->fetchAll(null, null, null, null, "project_role_user_permissions.role_id",
+               'LEFT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
 
             $this->assertEquals(6, count($projects));
 
@@ -121,7 +121,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testGetTableName()
     {
        $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
-       $this->assertEquals('ModuleInstance', $instance->getTableName());
+       $this->assertEquals('module_instance', $instance->getTableName());
     }
 
     /*

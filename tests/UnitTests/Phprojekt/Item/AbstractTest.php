@@ -242,6 +242,15 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
             'currentStatus'   => $this->_formResult['currentStatus'],
             'completePercent' => $this->_formResult['completePercent']
         );
+
+        $this->_filterResult = array(
+            'title'            => $this->_formResult['title'],
+            'start_date'       => $this->_formResult['startDate'],
+            'end_date'         => $this->_formResult['endDate'],
+            'priority'         => $this->_formResult['priority'],
+            'current_status'   => $this->_formResult['currentStatus'],
+            'complete_percent' => $this->_formResult['completePercent']
+        );
     }
 
     /**
@@ -260,6 +269,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     public function testRequiredFieldSet()
     {
         $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item->projectId = 1;
         $item->title = '';
         $item->notes = 'TEST';
         $item->startDate = '1981-05-12';
@@ -293,6 +303,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->getError();
         $this->assertEquals(array(), $item->getError());
 
+        $item->projectId = 1;
         $item->title = '';
         $item->notes = 'TEST';
         $item->startDate = '20-';
@@ -311,6 +322,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->title = '';
         $this->assertFalse($item->recordValidate());
 
+        $item->projectId = 1;
         $item->title = 'TEST';
         $item->notes = 'TEST';
         $item->startDate = '1981-05-12';
@@ -319,6 +331,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($item->recordValidate());
 
         $item = new Customized_Project(array('db' => $this->sharedFixture));
+        $item->projectId = 1;
         $item->title = 'TEST';
         $item->notes = 'TEST';
         $item->startDate = '1981-05-12';
@@ -368,7 +381,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     {
         $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
         $array  = $module->getFieldsForFilter();
-        $this->assertEquals(array_keys($this->_listResult), $array);
+        $this->assertEquals(array_keys($this->_filterResult), $array);
     }
 
     /**
