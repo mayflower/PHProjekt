@@ -1,0 +1,57 @@
+<form id="minutesItemForm" action="javascript:;">
+	<input type="hidden" name="id" value="{{id}}" />
+	<input type="hidden" name="minutesId" value="{{minutesId}}" />
+	<input type="hidden" name="projectId" value="{{projectId}}" />
+	<input type="hidden" name="topicId" value="{{topicId}}" />
+	<!-- 
+	id        | int(11)
+	ownerId   | int(11)
+	projectId | int(11)
+	minutesId | int(11)
+	topicId   | int(11)
+	topicType | int(11)
+	sortOrder | int(11)
+	title     | varchar(255)
+	comment   | text
+	topicDate | date
+	userId    | int(11)
+	-->
+    <table id="minutesItemFormTable">
+    <tr>
+        <td>
+            <label>{{lblTitle}}</label>
+        </td>
+        <td>
+            <input id="minutesItemFormTitle" name="title" dojoType="dijit.form.TextBox"
+                    required="true" value="" invalidMessage="" />
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <label>{{lblComment}}</label>
+        </td>
+        <td>
+            <input id="minutesItemFormComment" name="comment" dojoType="dijit.form.TextBox"
+                   value="" invalidMessage="" />
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <label>{{lblOwnerId}}</label>
+        </td>
+        <td>
+            <select id="minutesItemFormOwnerId" name="ownerId" dojoType="dijit.form.FilteringSelect"
+                    required="true" autocomplete="true" value="" invalidMessage="" >
+                {% for user in users %}
+                <option value="{{user.id}}" {% ifequal ownerId user.id %}selected="selected"{% endifequal %}>
+                  {{user.name}}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+    
+    </table>
+</form>
