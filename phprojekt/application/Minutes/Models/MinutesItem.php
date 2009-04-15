@@ -123,6 +123,12 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     public function getRights()
     {
         // The rights of the related minutes also apply to its items.
+        if (is_null($this->_minutesId)) {
+            Phprojekt::getInstance()->getLog()->debug('Minutes not initialized when checking rights');
+        } else {
+            $rights = $this->_minutes->_data;//getRights();
+            Phprojekt::getInstance()->getLog()->debug('Minutes rights: '.print_r($rights, true));
+        }
         return $this->_minutes->getRights();
     }
     
@@ -136,6 +142,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     {
         $this->_minutes   = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $this->_minutesId = $minutesId;
+        return $this;
     }
 
     /**
@@ -159,7 +166,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= sprintf('(`%s`.minutesId = %d )', $this->getTableName(), $this->_minutesId);
+        $where .= sprintf('(%s.minutesId = %d )', $this->getTableName(), $this->_minutesId);
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
         
         return $result;

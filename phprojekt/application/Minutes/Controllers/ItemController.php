@@ -91,5 +91,56 @@ class Minutes_ItemController extends IndexController
         
         Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
+
+    /**
+     * Saves the current minutesitem
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException
+     * If not, the return is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
+     *
+     * @requestparam integer id         The id of the item.
+     * @requestparam integer minutesId  The id of the minutes.
+     *
+     * @return void
+     */
+    
+    public function jsonSaveAction()
+    {
+        $minutesId = (int) $this->getRequest()->getParam('minutesId');
+        
+        $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
+        $minutes->find($minutesId);
+        
+        Phprojekt::getInstance()->getLog()->debug('Minutes is: '.print_r($minutes->_data, true));
+        if (empty($minutes->id)) {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+        
+        $id = (int) $this->getRequest()->getParam('id');
+        
+        if (empty($id)) {
+            $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId);
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+        } else {
+            $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+        }
+        
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            
+            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $model->id);
+            
+            Phprojekt_Converter_Json::echoConvert($return);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+    }
     
 }
