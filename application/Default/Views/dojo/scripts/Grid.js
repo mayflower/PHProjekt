@@ -102,7 +102,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Create the layout using the different field types
         // description:
         //    Create the layout using the different field types
-        var porcent = (100 / meta.length) + '%';
+        var percent = (100 / meta.length) + '%';
 
         if (this.useIdInGrid()) {
             this.gridLayout.push({
@@ -130,7 +130,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         field:    meta[i]["key"],
                         styles:   "text-align: center;",
                         type:     phpr.grid.cells.Select,
-                        width:    porcent,
+                        width:    percent,
                         options:  opts,
                         values:   vals,
                         editable: meta[i]['readOnly'] ? false : true
@@ -139,7 +139,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'date':
                     this.gridLayout.push({
-                        width:         porcent,
+                        width:         percent,
                         name:          meta[i]["label"],
                         field:         meta[i]["key"],
                         styles:        "text-align: center;",
@@ -152,7 +152,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'percentage':
                     this.gridLayout.push({
-                        width:       porcent,
+                        width:       percent,
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
                         styles:      "text-align: center;",
@@ -165,7 +165,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'time':
                     this.gridLayout.push({
-                        width:      porcent,
+                        width:      percent,
                         name:       meta[i]["label"],
                         field:      meta[i]["key"],
                         styles:     "text-align: center;",
@@ -177,7 +177,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'upload':
                     this.gridLayout.push({
-                        width:       porcent,
+                        width:       percent,
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
                         styles:      "text-align: center;",
@@ -205,7 +205,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                             field:    meta[i]["key"],
                             styles:   "text-align: center;",
                             type:     phpr.grid.cells.Select,
-                            width:    porcent,
+                            width:    percent,
                             options:  opts,
                             values:   vals,
                             editable: false
@@ -213,7 +213,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     } else {
                         // No
                         this.gridLayout.push({
-                            width:     porcent,
+                            width:     percent,
                             name:      meta[i]["label"],
                             field:     meta[i]["key"],
                             type:      dojox.grid.cells.Input,
@@ -226,7 +226,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'text':
                     this.gridLayout.push({
-                        width:     porcent,
+                        width:     percent,
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
                         type:      dojox.grid.cells.Input,
@@ -238,7 +238,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 default:
                     this.gridLayout.push({
-                        width:     porcent,
+                        width:     percent,
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
                         type:      dojox.grid.cells.Input,
