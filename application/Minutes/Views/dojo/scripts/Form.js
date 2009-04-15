@@ -60,23 +60,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         try {
             console.debug('postRenderForm is called');
             var tabs = this.form; //dijit.byId('tabItems');
-            /*
-            dojo.connect(tabs,'onShow',dojo.hitch(this, function() {
-                // create a new grid:
-                //var url  = phpr.webpath + "index.php/Minutes/index/jsonGetMinuteItems/id/" + this.id;
-                //var url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
-                //var grid = new phpr.Minutes.ItemGrid(url, phpr.Default.Main, this.id);
-                console.debug('Items tab is shown, getting grid data...');
-                this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
-                phpr.DataStore.addStore({"url": this.url});
-                phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
-            }));
-             */
             dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
                 try {
                     console.debug("a tab was selected: " + child.id + ' / ' + child);
                     if (child.id == 'tabItems') {
                         dojo.byId('minutesDetailsRight').style.display = 'inline';
+                        dojo.byId('itemsFormTab').style.display = 'none';
                         console.debug('Items tab is shown, getting grid data...');
                         this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
                         phpr.DataStore.addStore({"url": this.url});
@@ -157,18 +146,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             console.debug('Grid: ' + ex);
         }
         try {
-            //dojo.byId('minuteItems').appendChild(grid.domNode);
-            /*
-            // if I use a content pane, I must provide absolute dimensions
-            // or the grid won't render. If I don't use a content pane, the grid
-            // does render at full width (which is desired), but has a weird
-            // top and bottom margin so I have to scroll down to see it.
-            // WTF???
-            var pane = new dijit.layout.ContentPane({
-                title:   'minutesItemsContentPane'
-            });
-            pane.domNode.appendChild(grid.domNode)
-             */
             dojo.byId('tabItems').appendChild(grid.domNode);
             console.debug('Appending child to: ' + dojo.byId('tabItems'));
             grid.startup();
