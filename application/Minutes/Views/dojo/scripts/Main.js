@@ -29,7 +29,7 @@ dojo.declare("phpr.Minutes.Main", phpr.Default.Main, {
         this.treeWidget = phpr.Minutes.Tree;
         console.debug('In Minutes constructor');
     },
-    
+
     reload:function() {
         // summary:
         //    This function reloads the current module
@@ -56,5 +56,5 @@ dojo.declare("phpr.Minutes.Main", phpr.Default.Main, {
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-    },
+    }
 });
