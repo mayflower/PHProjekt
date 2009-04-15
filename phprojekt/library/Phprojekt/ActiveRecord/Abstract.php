@@ -78,7 +78,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Default is :tableName_id
      *
      */
-    const FOREIGN_KEY_FORMAT = ':tableNameId';
+    const FOREIGN_KEY_FORMAT = ':tableName_id';
 
     /**
      * Models where this element does belong to,
@@ -176,9 +176,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __construct($config = null)
     {
-        //if (Zend_Registry::isRegistered('log')) {
-        //    $this->_log = Phprojekt::getInstance()->getLog();
-        //}
+        //$this->_log = Phprojekt::getInstance()->getLog();
 
         if (null === $config) {
             $config = array('db' => Phprojekt::getInstance()->getDb());
@@ -288,7 +286,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         * a column exists on the activerecord
         */
         foreach ($this->_colInfo as $col) {
-            $this->_data[$col] = null;
+            $this->_data[self::convertVarFromSql($col)] = null;
         }
     }
 
@@ -442,15 +440,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $select->joinInner(array('my' => $myTable),
             sprintf("%s = %s",
             $adapter->quoteIdentifier("my.id"),
-            $adapter->quoteIdentifier("rel." . $myKeyName)));
+            $adapter->quoteIdentifier("rel." . self::convertVarToSql($myKeyName))));
 
         $select->joinInner(array('foreign' => $foreignTable),
             sprintf("%s = %s",
             $adapter->quoteIdentifier("foreign.id"),
-            $adapter->quoteIdentifier("rel." . $foreignKeyName)));
+            $adapter->quoteIdentifier("rel." . self::convertVarToSql($foreignKeyName))));
         if (isset($classId)) {
             $select->where(sprintf("%s = ?",
-                $adapter->quoteIdentifier("rel." . $myKeyName)), $classId);
+                $adapter->quoteIdentifier("rel." . self::convertVarToSql($myKeyName))), $classId);
         }
         /*
         * somewhat special, we might have a better solution here once.
@@ -633,7 +631,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $className = $this->_getClassNameForRelationship($key, $this->hasMany);
 
             $im         = new $className($this->getAdapter());
-            $tableName  = $im->getTableName(); // fassNameToTable($className);
+            $tableName  = $im->getTableName();
             $columnName = $this->_translateKeyFormat(get_class($this));
 
             $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
@@ -775,7 +773,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _translateKeyFormat($className)
     {
         $im        = new $className($this->getAdapter());
-        $tableName = $im->getTableName(); // $this->_translateClassNameToTable($className, false);
+        $tableName = $im->getTableName();
         $keyName   = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
         $keyName{0}= strtolower($keyName{0});
         if (null !== $this->_log) {
@@ -810,7 +808,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         sort($tableNames);
         reset($tableNames);
 
-        $tableName = sprintf('%sRelation', implode('', $tableNames));
+        $tableName = sprintf('%s_relation', implode('_', $tableNames));
 
         return $tableName;
     }
@@ -850,6 +848,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $data = array();
 
         foreach ($this->_data as $k => $v) {
+            $k = self::convertVarToSql($k);
             if (in_array($k, $this->_colInfo) && is_scalar($v)) {
                 $data[$k] = $v;
             }
@@ -993,7 +992,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $data = $row;
             }
             foreach ($data as $k => $v) {
-                $instance->_data[$k] = $v;
+                $instance->_data[self::convertVarFromSql($k)] = $v;
             }
 
             $instance->_storedId = $instance->_data['id'];
@@ -1028,7 +1027,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $this->_data     = array();
         $this->_storedId = null;
 
-        $this->_data = (array) $find->_data;
+        foreach ((array) $find->_data as $col => $value) {
+            $this->_data[self::convertVarFromSql($col)] = $value;
+        }
         unset($find);
 
         if (!array_key_exists('id', $this->_data)) {
@@ -1058,6 +1059,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * @return string
      */
     public function getTableName()
+    {
+        return self::convertVarToSql(self::getModelName());
+    }
+
+    /**
+     * Returns the name of the class of the active record
+     *
+     * @return string
+     */
+    public function getModelName()
     {
         return $this->_translateClassNameToTable(get_class($this));
     }
@@ -1116,10 +1127,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $statement = explode("FROM", $sqlStr);
 
         if (null == $select) {
-            $sqlStr  = "SELECT ";
-            $columns = array();
+            $sqlStr    = "SELECT ";
+            $columns   = array();
+            $tableName = $this->getTableName();
             foreach ($this->_cols as $column) {
-                $columns[] = $this->getAdapter()->quoteIdentifier($this->getTableName().'.'.$column);
+                $columns[] = $this->getAdapter()->quoteIdentifier($tableName . '.' . $column);
             }
             $sqlStr .= implode(",", $columns);
             $sqlStr .= " FROM " . $statement[1];
@@ -1158,5 +1170,41 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         Zend_Loader::loadClass($this->_rowsetClass);
         return new $this->_rowsetClass($data);
+    }
+
+    /**
+     * Convert a Camel case var into SQL format
+     * varName   => var_name
+     * TableName => table_name
+     * Tablename => tablename
+     *
+     * @param string $varName The var to convert
+     *
+     * @return string
+     */
+    public function convertVarToSql($varName)
+    {
+        if (preg_match("/^[A-Z]{1}/", $varName)) {
+            $varName = preg_replace("/^([A-Z]){1}/e", "strtolower('\\1')", $varName);
+            $varName = preg_replace("/([A-Z])/e", "'_'.strtolower('\\1')", $varName);
+        } else {
+            $varName = preg_replace("/([A-Z])/e", "'_'.strtolower('\\1')", $varName);
+        }
+
+        return $varName;
+    }
+
+    /**
+     * Convert from SQl to Camel case
+     * var_name   => varName
+     * table_name => TableName
+     *
+     * @param string $varName The var to convert
+     *
+     * @return string
+     */
+    public function convertVarFromSql($varName)
+    {
+        return preg_replace("/_([a-z])/e", "strtoupper('\\1')", $varName);
     }
 }
