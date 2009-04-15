@@ -45,8 +45,8 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
                         'contactId');
 
         $this->_formLabelResult = array(
-                        'title','notes','parent','startDate','endDate',
-                        'priority','currentStatus','completePercent','budget',
+                        'Title','Notes','Parent','Start date','End date',
+                        'Priority','Current status','Complete percent','Budget',
                         'Contact');
 
         $this->_listResult = array(
@@ -54,8 +54,8 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
                         'currentStatus','completePercent');
 
         $this->_listLabelResult = array(
-                        'title','startDate','endDate','priority',
-                        'currentStatus','completePercent');
+                        'Title','Start date','End date','Priority',
+                        'Current status','Complete percent');
     }
 
     /**
