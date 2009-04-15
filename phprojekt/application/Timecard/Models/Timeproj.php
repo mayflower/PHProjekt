@@ -158,7 +158,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getRecords($date)
     {
-        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $where  = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
         $order  = ' id ASC ';
         $models = $this->fetchAll($where, $order);
 
@@ -185,8 +185,8 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             $datas['timeproj'][] = $data;
         }
 
-        $where  = sprintf('(ownerId = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
-        $order  = 'startTime ASC';
+        $where  = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $order  = 'start_time ASC';
         $timecard = Phprojekt_Loader::getModel('Timecard', 'Timecard');
         $timecardRecords = $timecard->fetchall($where, $order);
 

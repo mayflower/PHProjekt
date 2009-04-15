@@ -219,13 +219,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
         switch ($view) {
             case 'today':
-                $where   = sprintf('(ownerId = %d AND date = "%s")', $userId, date("Y-m-d"));
+                $where   = sprintf('(owner_id = %d AND date = "%s")', $userId, date("Y-m-d"));
                 $order   = ' date ASC';
                 $records = $this->fetchAll($where, $order, $count, $offset);
                 $data= $records;
                 break;
             case 'month':
-                $where = sprintf('(ownerId = %d AND date LIKE "%s")', $userId, $year.'-'.$month.'-%');
+                $where = sprintf('(owner_id = %d AND date LIKE "%s")', $userId, $year.'-'.$month.'-%');
                 $order = ' date ASC';
 
                 $records       = $this->fetchAll($where, $order, $count, $offset);

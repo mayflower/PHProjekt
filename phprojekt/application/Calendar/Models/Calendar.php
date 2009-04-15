@@ -186,7 +186,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     public function recordValidate()
     {
         // one is the unique value available because calendar is a global module
-        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_name)) >= 1) {
+        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName())) >= 1) {
             $this->projectId = 1;
         }
 
@@ -205,7 +205,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!empty($this->id)) {
             $rootEventId  = self::getRootEventId($this);
-            $where        = " parentId = " . (int) $rootEventId . " AND deleted is NULL";
+            $where        = " parent_id = " . (int) $rootEventId . " AND deleted is NULL";
             $records      = $this->fetchAll($where);
             foreach ($records as $record) {
                 if (null === $record->rrule) {
@@ -236,9 +236,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $model = Phprojekt_Loader::getModel('Calendar', 'Calendar');
         $model->find($id);
 
-        $where   = ' parentId = ' . (int) $model->parentId. ' AND participantId = ' . (int) $model->participantId
+        $where   = ' parent_id = ' . (int) $model->parentId. ' AND participant_id = ' . (int) $model->participantId
             . ' AND deleted is NULL';
-        $records = $model->fetchAll($where, 'startDate ASC');
+        $records = $model->fetchAll($where, 'start_date ASC');
 
         if (self::_isOwner($model)) {
             // Only use the new startDate if the user is owner
@@ -270,10 +270,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     {
         if ($multipleEvents) {
             if (!self::_isOwner($this)) {
-                $where = ' parentId = ' . (int) $this->parentId
-                    . ' AND participantId = ' . (int) $this->participantId;
+                $where = ' parent_id = ' . (int) $this->parentId
+                    . ' AND participant_id = ' . (int) $this->participantId;
             } else {
-                $where = ' parentId = ' . (int) $this->parentId;
+                $where = ' parent_id = ' . (int) $this->parentId;
             }
 
             $records = $this->fetchAll($where);
@@ -302,8 +302,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function getUserSelectionRecords($usersId, $date, $count, $offset)
     {
-        $where = 'deleted is NULL AND participantId IN (' . $usersId . ') AND startDate <= "' . $date . '"'
-            . ' AND endDate >= "' . $date . '"';
+        $where = 'deleted is NULL AND participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
+            . ' AND end_date >= "' . $date . '"';
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
     }
 
@@ -391,11 +391,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!self::_isOwner($model)) {
             // Save only the own events under the parentId
-            $where = ' parentId = ' . (int) $model->parentId
-                . ' AND participantId = ' . (int) $model->participantId;
+            $where = ' parent_id = ' . (int) $model->parentId
+                . ' AND participant_id = ' . (int) $model->participantId;
         } else {
             // Save all the events under the parentId
-            $where = ' parentId = ' . (int) $model->parentId;
+            $where = ' parent_id = ' . (int) $model->parentId;
         }
 
         $currentParticipants = array();
@@ -464,8 +464,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 if (!$found) {
                     // Delete old participant
                     $removeModel = clone($clone);
-                    $where       = ' parentId = '. (int) self::getRootEventId($model)
-                        . ' AND participantId = '. (int) $currentParticipantId;
+                    $where       = ' parent_id = '. (int) self::getRootEventId($model)
+                        . ' AND participant_id = '. (int) $currentParticipantId;
                     $records = $removeModel->fetchAll($where);
                     foreach ($records as $record) {
                         $record->softDeleteEvent();
@@ -527,11 +527,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!self::_isOwner($model)) {
             // Save only the own events under the parentId
-            $where = ' parentId = ' . (int) $model->parentId
-                . ' AND participantId = ' . (int) $model->participantId;
+            $where = ' parent_id = ' . (int) $model->parentId
+                . ' AND participant_id = ' . (int) $model->participantId;
         } else {
             // Save all the events under the parentId
-            $where = ' parentId = ' . (int) $model->parentId;
+            $where = ' parent_id = ' . (int) $model->parentId;
         }
 
         $currentParticipants = array();
@@ -552,9 +552,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             if (!$found) {
                 // Delete old participant
                 $removeModel = clone($clone);
-                $where       = ' parentId = '. (int) self::getRootEventId($model)
-                    . ' AND participantId = '. (int) $currentParticipantId
-                    . ' AND startDate = "' . date("Y-m-d", $oneDate->get()) . '"';
+                $where       = ' parent_id = '. (int) self::getRootEventId($model)
+                    . ' AND participant_id = '. (int) $currentParticipantId
+                    . ' AND start_date = "' . date("Y-m-d", $oneDate->get()) . '"';
                 $records = $removeModel->fetchAll($where);
                 foreach ($records as $record) {
                     $record->softDeleteEvent();

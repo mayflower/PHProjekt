@@ -235,9 +235,9 @@ class Core_Models_UserSetting
                     if (($key == 'password')) {
                         $value = $password;
                     }
-                    $record = $setting->fetchAll("userId = ". (int) $userId .
-                                                 " AND keyValue = ". $setting->_db->quote($key) .
-                                                 " AND moduleId = 0");
+                    $record = $setting->fetchAll("user_id = ". (int) $userId .
+                                                 " AND key_value = ". $setting->_db->quote($key) .
+                                                 " AND module_id = 0");
                     if (isset($record[0])) {
                         $record[0]->keyValue = $key;
                         $record[0]->value    = $value;
