@@ -53,7 +53,6 @@ require_once 'Todo/AllTests.php';
 require_once 'Tab/AllTests.php';
 require_once 'Module/AllTests.php';
 require_once 'Project/AllTests.php';
-require_once 'Minutes/AllTests.php';
 
 // require_once 'Selenium/AllTests.php';
 
@@ -114,7 +113,6 @@ class AllTests extends PHPUnit_Framework_TestSuite
         //$suite->addTest(Module_AllTests::suite());
 
         // add here additional test suites
-        $suite->addTest(Minutes_AllTests::suite());
 
         $suite->addTest(Default_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());

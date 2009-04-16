@@ -42,8 +42,6 @@ DROP TABLE IF EXISTS `calendar`;
 DROP TABLE IF EXISTS `filemanager`;
 DROP TABLE IF EXISTS `contact`;
 DROP TABLE IF EXISTS `helpdesk`;
-DROP TABLE IF EXISTS `minutes`;
-DROP TABLE IF EXISTS `minutes_item`;
 
 --
 -- Table structure for table `database_manager`
@@ -489,46 +487,6 @@ CREATE TABLE `helpdesk` (
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
--- Table structure for table `minutes`
---
-CREATE TABLE IF NOT EXISTS `minutes` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner_id` int(11) default NULL,
-  `project_id` int(11) default NULL,
-  `title` varchar(255) default NULL,
-  `description` text,
-  `meeting_date` date default NULL,
-  `start_time` time default NULL,
-  `end_time` time default NULL,
-  `place` varchar(255) default NULL,
-  `moderator` varchar(255) default NULL,
-  `participants_invited` text,
-  `participants_attending` text,
-  `participants_excused` text,
-  `recipients` text,
-  `item_status` int(11) default NULL,
-  PRIMARY KEY  (`id`)
-) CHARACTER SET utf8 COLLATE utf8_general_ci;
-
---
--- Table structure for table `minutes_item`
---
-CREATE TABLE `minutes_item` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `minutes_id` int(11) NOT NULL,
-  `topic_id` int(11) NOT NULL,
-  `topic_type` int(11) NOT NULL,
-  `sort_order` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `comment` text NOT NULL,
-  `topic_date` date default NULL,
-  `user_id` int(11) default NULL,
-  PRIMARY KEY  (`id`)
-) CHARACTER SET utf8 COLLATE utf8_general_ci;
-
---
 -- Table structure for table `module_instance`
 --
 CREATE TABLE `module_instance` (
@@ -553,8 +511,7 @@ INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `active`) VALUES
 (7, 'Filemanager', 'Filemanager', 0, 1),
 (8, 'Statistic', 'Statistic', 0, 1),
 (9, 'Contact', 'Contact', 1, 1),
-(10, 'Helpdesk', 'Helpdesk', 0, 1),
-(11, 'Minutes','Minutes', 0, 1);
+(10, 'Helpdesk', 'Helpdesk', 0, 1);
 
 INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `form_label`, `form_type`, `form_position`, `form_columns`, `form_regexp`, `form_range`, `default_value`, `list_position`, `list_align`, `list_use_filter`, `alt_position`, `status`, `is_integer`, `is_required`, `is_unique`) VALUES
 (0, 'Project', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
@@ -623,28 +580,12 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Helpdesk', 'author', 1, 'Author', 'display', 2, 1, NULL, 'User#id#lastname', '', 3, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Helpdesk', 'solved_by', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'solved_date', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
-
-(0, 'Minutes', 'project_id', 1, 'Select', 'hidden', 1, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, '', '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'meeting_date', 1, 'Date of Meeting', 'date', 4, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'start_time', 1, 'Start Time', 'time', 5, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'end_time', 1, 'End Time', 'time', 6, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, '', '', 5, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_invited', 2, 'Invited', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'itemStatus', 1, 'Status', 'selectValues', 13, 1, NULL, '1# PLANNED | 2# CREATED | 3# PREVIEW | 4 #FINAL', '0', 6, 'center', 1, 0, '1', 0, 0, 0);
-
+(0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0);
 
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES
 (1,'david', NULL, NULL, 'A', 1),
 (2,'gus', NULL, NULL, 'A', 0),
 (3,'inactive', NULL, NULL, 'I', 0);
-
 
 INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `identifier`) VALUES
 (1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
@@ -683,21 +624,14 @@ INSERT INTO `groups_user_relation` (`id`, `groups_id`, `user_id`) VALUES
 (2, 2, 2),
 (3, 3, 1);
 
-
 INSERT INTO `project_role_user_permissions` (`project_id`, `user_id`, `role_id`) VALUES
 (1, 1, 1);
-
-
 
 INSERT INTO `role_module_permissions` (`role_id`, `module_id`, `access`) VALUES
 (1, 1, 139),
 (1, 2, 139),
 (1, 3, 139),
-(1, 5, 139),
-(1, 11, 139);
-
-
-
+(1, 5, 139);
 
 INSERT INTO `item_rights` (`module_id`, `item_id`, `user_id`, `access`) VALUES
 (1, 1, 1, 255),
@@ -784,8 +718,7 @@ INSERT INTO `project_module_permissions` (`module_id`, `project_id`) VALUES
 (2,7),
 (3,7),
 (4,7),
-(5,7),
-(11,1);
+(5,7);
 
 INSERT INTO `search_words` (`id`, `word`, `count`) VALUES
 (1, 'NOTE', 1);
