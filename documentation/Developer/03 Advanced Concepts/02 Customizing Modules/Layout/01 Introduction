@@ -1,0 +1,44 @@
+If you want to produce a customized layout that is not
+based on the default tree, list, form layout, that PHProjekt
+provides by default you need to modify the rendering mechanism
+of PHProjekt.
+
+The default rendering mechanism of PHProjekt can be found
+in the _generateOutput method of the IndexController that 
+is called by the postDispatch method, after any call
+to the controller actions was done.
+
+The default mechanism renders the index.tpl from the
+modules template directory or the default index.tpl 
+in case that you don't provide a module specific 
+index.tpl. The default index.tpl includes
+the renderer templates for trees (tree.tpl),
+forms (form.tpl) and list (list.tpl). If you need
+to overwrite just one of those, don't overwrite the
+index.tpl but instead, overwrite the template itself.
+
+To customize the output write your own index.tpl and 
+put it into the template directory.
+In your modules IndexController overwrite the
+_generateOutput method. You can use the
+API provided by the zend framework to set and
+render the template. 
+
+Please read the Zend Framework Manual for more 
+information about the view component.
+
+e.g:
+[code]
+class FooIndexController extends IndexController
+{
+	/*
+	...... actions, etc
+	*/
+
+	public function _generateOutput()
+	{
+		$this->view->myVarName = 'test';
+		$this->render('index');
+	}
+}
+[/code]

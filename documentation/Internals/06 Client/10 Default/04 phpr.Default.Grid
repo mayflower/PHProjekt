@@ -1,0 +1,58 @@
+The phpr.Default.Grid class is a Component as well.
+
+This class is responsible for rendering the Grid within the div with the id "gridBox".
+
+For rendering the grid we receive the data for the Elements which are supposed to be displayed from the server and
+store them in a phpr.DataStore.
+
+We use the variable meta which is set within that Store to determine the type of the fields which are to be displayed
+within our Grid. Depending on that grid we set the Structure of the grid with the help of the setStructure method
+of the dojox.grid widget.
+
+That way dojo knows how to render the header and the data of the grid and which kind of inline editor we require
+for the different fields.
+
+Each change in the grid is temporally saved, when we click the "Save Changes" Buttonl, the saveChanges method is called and all changes in the grid are converted into an url-formatted format and are posted to the server.
+
+The class are divide into many functions for make easy the extention.
+
+
+- setUrl:function()
+Set the url for request the data.
+
+- setNode:function()
+Set the div where the grid is showed.
+
+- showTags:function()
+Show tags routine.
+
+- useIdInGrid: function()
+True if the ID of the item is showed in the grid.
+
+- setGridLayout:function(meta)
+Return the layout of all the fields, deppend on the meta data type of each field
+
+- setClickEdit:function()
+Set if the edit is set with one click or two.
+
+- setExport:function(meta)
+Draw the export button.
+
+- showForm:function(e)
+Call the routines for show the from apply when the user click on the ID.
+
+- canEdit:function(inRowIndex)
+Return if is possible to edit the current item.
+
+- checkCanEdit:function(inCell, inRowIndex)
+Return if is possible to edit the current field in the current item.
+
+- cellEdited:function(inValue, inRowIndex, inFieldIndex)
+Called after edit some value in the grid.
+The new data is stored for save it later.
+
+- saveChanges:function()
+Routine for save the data.
+
+- updateData:function()
+Call it after the save, must refresh all the cached stores.

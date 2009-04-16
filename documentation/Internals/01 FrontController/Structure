@@ -1,0 +1,52 @@
+Front controller – Index.php
+
+The front controller is divided into various parts.
+
+
+[emph]Path definition section[/emph]
+Here will be defined all paths used by PHProjekt 6.
+Nowhere else can be defined a path.
+
+_ PHPR_ROOT_PATH is the path to the whole application.
+_ PHPR_CORE_PATH is for the application directory
+_ PHPR_LIBRARY_CLASS is for library directory
+_ PHPR_CONFIG_FILE is the name of the config file (e.g. /www/config.ini)
+_ PHPR_TEMP_PATH is the path to temporary files.
+
+Any other path constant definition needs to be defined here.
+
+
+[emph]Loader inclusion[/emph]
+The loader is the only one file that will be required on PHProjekt 6.
+All other files and class needs to be included automatically by the loader. 
+
+If there is used require_once or
+include_once into any other script probably there is an error.
+
+
+[emph]Initialization[/emph]
+Next step is the initialization of the Zend_Session,
+load of configuration file and creation of the db connection.
+
+Some objects are registered using Zend_Registry to be used on PHProjekt:
+_ config with the configuration file content
+_ db with the database connection 
+_ log object
+_ view object an Smarty helper
+
+
+[emph]Translation[/emph]
+The translation is made using the PHProjekt_Language class.
+
+Currently it is using the configuration file to determine which language will be used.
+On the future needs to be changes to a selection based on:
+_ User language preference
+_ User browser language setting 
+_ Application configuration.
+
+[emph]Front controller stuff[/emph]
+After initialization there is the front controllers main stuff.
+
+There is a scandir to find the available modules. 
+
+At least the action is dispatched.

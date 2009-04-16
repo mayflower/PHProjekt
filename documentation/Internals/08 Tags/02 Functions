@@ -1,0 +1,52 @@
+The Tags folder contain 4 scripts
+
+- Default - Contain the class used for manage all the tags.
+- Tags    - Manage Tags table.
+- Users   - Manage TagUsers table.
+- Modules - Manage TagModules table.
+
+The Default class will process all the words and call the different classes,
+for save each data in the correct place.
+
+Before the tags are saved for one module-item,
+all the ocurrences for these module-item and the current user, are deleted.
+This is for delete the old tags that are not anymore for these item.
+You can´t delete the tag, since can be used by other users.
+You can´t delete the relation user-tag since can be used by other items.
+So you only delete the relations for the item and the current user.
+
+Each class (Tags, Users, Modules) are extencion of the Zend_Table,
+and manage their own table.
+
+The Default will call all of these classes for save and get the tags.
+
+The functions are:
+
+- saveTags($module, $itemId, $data)
+Will parse the $data string, separate all the words by spaces,
+and delete the stange characters (only is permited [0-9a-z]+).
+The words are stored in lowercase and must contain more than 2 characters.
+
+- getTags($limit = 0)
+Get an array with all the tags for the current user
+sorted by the number of ocurrences.
+The $limit parameter is for get only this number of tags.
+
+- getModulesByTag($tag, $limit = 0)
+Get an array with all the modules
+that are tagged with $tag by the current user.
+The array contain per each module, the name of the module and the item Id.
+The $limit parameter is for get only this number of modules.
+
+- getTagsByModule($module, $itemId, $limit = 0)
+Get an array with all the tags
+that have the $module-$itemId for the current user.
+The $limit parameter is for get only this number of tags.
+
+- getFieldDefinition()
+Return the field definitions for the return values of the tags.
+
+- getModuleFieldDefinition()
+Return the field definitions for the return values of the module-tags.
+This function used the getFieldDefinition() defined on the Module class.
+So each class return their array and their definition of them.

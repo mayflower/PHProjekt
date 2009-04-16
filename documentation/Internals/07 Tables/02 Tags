@@ -1,0 +1,22 @@
+For manage tags there is 3 tables:
+
+- Tags
+- TagsUsers
+- TagsModules
+
+The Tags table contain the tag itself.
+ - id    = Id of the tag.
+ - word  = The word of the tag.
+ - crc32 = The crc32 converted integer of the word.
+           This is for incress the search.
+
+The TagsUsers table contain the relation between the user and the tags.
+ - id     = Id of the relation user-tag.
+ - userId = The Id of the user.
+ - tagId  = The Id of the tag. (See Tags table).
+
+The TagsModules table contain the relation
+between the module-itemId and the user-tag relation.
+ - module = Module name.
+ - itemId = Id of the item.
+ - tagUserId = Id of the relation user-tag. (See TagsUsers table).

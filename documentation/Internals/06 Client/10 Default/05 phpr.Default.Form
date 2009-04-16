@@ -1,0 +1,51 @@
+Being a Component the phpr.Default.Form class extends the phpr.Component class.
+
+On construction this class receives all the Details which are needed for rendering the form from the Server and stores
+them in a phpr.DataStore.
+
+On fetching the content of this store the phpr.Default.Form class automatically renders the data in the right format.
+
+In order to do so it starts with rendering the content of the different tabs provided in our store. It relies on the type
+which is given in the metadata of the store to determine which kind of field is rendered at a time. Depending on
+the current fields type the corresponding html template is rendered by using the render function of the phpr.Component
+class.
+
+After rendering all fields within a tab the tab itself is rendered with the help of the render function and finally
+all tabs are rendered within the "detailsBox" div.
+
+In addition to rendering the Form template the phpr.Default.Form class is also responsible for sending the data of the
+form to the server.
+In order to do so the Form connects the onClick event of the submitForm Button to phpr.Default.Form.submitForm method which automatically
+receives all changed data from the form and sends them via post to the Server.
+
+The class are divide into many functions for make easy the extention.
+
+- setUrl:function()
+Set the url for request the data.
+
+- setNode:function()
+Set the div where the form is showed.
+
+- initData: function()
+Get other data than the default, for secundaries tabs.
+
+- setPermissions:function (data)
+Return the read/write/access permission for the current item.
+
+- addModuleTabs:function(data)
+Add aditional tabs.
+
+- addBasicFields:function()
+Add additional fields for the basic data that are not in the database.
+
+- submitForm: function()
+Routines for the save action
+
+- deleteForm: function()
+Routines for the delete action
+
+- displayTagInput: function()
+Tag routines for show the tags of the item
+
+- updateData:function()
+Call it after the save, must refresh all the cached stores.

@@ -1,0 +1,15 @@
+Migration notes
+
+It is possible to migrate the database from PHProjekt 5.x to PHProjekt 6 providing the real path to the PHProjekt 5.x config.inc.php (e.g. /var/www/html/config.inc.php or C:\www\phprojekt\config.inc.php). The config.inc.php needs to be on the same server where you are installing PHProjekt 6.
+
+The migration could take several minutes depending on the number of projects to be migrated.
+
+Important: User passwords will not be migrated. All migrated users will have the same username and password.
+
+Root user will not be migrated, because it is replaced by 'admin' user on PHProjekt6.
+
+The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Timecard and Filemanager.
+
+Customized module fields will not be migrated.
+
+If Filemanager files does not work after migration please try moving manually the uploaded files (e.g. move the files on /phprojekt5.x/uploads to /phprojekt6/uploads).

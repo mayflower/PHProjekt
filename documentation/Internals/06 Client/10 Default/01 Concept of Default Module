@@ -1,0 +1,8 @@
+The phpr.Default Module is a template for all standard PHProjekt Modules.
+Please notice that their won't be a Module called 'Default' in PHProjekt, instead the Default Module provides all 
+functionality needed for the other standardised modules in PHProjekt.
+
+All standardised PHProjekt Modules like Projects and Todo will extend the Default.Main Class.
+
+The Default Module itself is separated in the Main.js, Grid.js, Form.js and Tree.js
+

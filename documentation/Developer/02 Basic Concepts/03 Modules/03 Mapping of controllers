@@ -1,0 +1,31 @@
+The decision, which controller and which method of this controller is called,
+is made by the Zend Dispatcher.
+This class maps a url e.g. http://example.com/index/list/1 to an controller. 
+If you want to know, how the dispatcher works, and which mappings it provides,
+please read the Zend Framework Documentation on http://framework.zend.com.
+PHProjekt uses a special way of mapping.
+
+As an example, the url: http://myphprojekt.com/index.php/Projects/index/list
+is mapped to the IndexController of the Project module.
+The class will be instantiated by the dispatcher
+and then the listAction() method will be called.
+Therefore the first part, after the index.php,
+in this case Projects is the name of the module thats called.
+The second part of the url, is the controller name.
+The index will refer to a IndexController class, as foo would refer to FooController.
+As you can see, the suffix Controller is appended.
+The last part is the name of the method thats called.
+The string “Action” is appended to the given name.
+In our case not the method list() is called, but the method listAction() is called.
+Every additional part, seperated by an /,
+would be mapped into the post variables array
+and therefore can be access through $_POST or (better) the Zend_Request object. 
+
+So the url http://myprojekt.com/index.php/Projects/index/list/id/2/
+will be have the request array 
+
+[code]
+array(
+     "id" => 2
+     )
+[/code]

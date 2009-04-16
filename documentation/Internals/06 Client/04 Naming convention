@@ -1,0 +1,14 @@
+The Naming Convention in our own dojo classes are the result of trying to make the client as similar to the Server as 
+possible and trying to consider the dojo naming conventions.
+
+As a result we have the following Naming Conventions used within our dojo classes:
+
+module	      	lowercase	                (e.g. phpr)
+class	      	CamelCase	                (e.g. Default)
+public method 	mixedCase					(e.g  phpr.initWidgets)
+public var	  	mixedCase					(e.g. availableModules)	
+constant	  	CamelCase or UPPER_CASE
+private method	_mixedCase					
+private var		_mixedCase					(e.g. _node)
+method args		_mixedCase, mixedCase       (e.g. _filterResponse)
+local vars		_mixedCase, mixedCase

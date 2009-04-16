@@ -1,0 +1,16 @@
+The model part receives data from a datasource.
+Usually the datasource is a database connection.
+The model part must take care that the data
+from the database is received and mapped into an PHP object (an instance of a class).
+In the application all data is manipulated using this objects.
+No direct SQL statements are executed outside the model part
+(Except for the core API. Core classes are also allowed to do a query themself).
+
+A model might also map other data into objects.
+For example a web service
+
+Every model in PHProjekt is derived from Phprojekt_Model_Interface
+and must implement the required methods
+(Please look at the API documentation for detailed information).
+If the model should provide a database access,
+instead of implementing the interface directly you should better 

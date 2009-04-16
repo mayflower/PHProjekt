@@ -1,0 +1,49 @@
+The Default.Main Class provides all functionality we need for rendering the Outline of the page, and calling the
+different Components.
+
+The Default.Main.load method should be called, when rendering the PHProjekt page the first time. Within that method
+the Navigation, the submodule navigation, the tree and the grid are instantiated and rendered.
+
+When switching from one Module to another, you should use the Default.Main.reload function instead to avoid
+registering widgets with the same Id.
+
+The Main always shows the corresponding Subelements, depending on the current Project id and the Module.
+
+The class are divide into many functions for make easy the extention.
+
+- loadFunctions:function(module)
+Is called for each module.Main that are extended from the Default.Main.
+The function will subscribe all the Main functions to the module.Main.
+
+- openForm:function(id, module)
+Call the routine for draw the form.
+
+- loadSubElements:function(project)
+Is called when some project is clicked on the Tree,
+the current project var is changed and the reload is called.
+
+- load:function()
+Draw all the views.
+
+- reload:function()
+Reload all the views.
+
+- setSubmoduleNavigation:function()
+Draw the submodules availables for the project.
+
+- newEntry:function()
+Call the routine for a new entry (Open a blank form)
+
+- updateCacheData:function()
+Called after each form is finish for clear the cache and clean the data.
+
+- setSearchForm:function()
+- waitForSubmitSearchForm:function(event)
+- showSearchSuggest:function ()
+- showSearchResults:function(id, moduleName, words)
+- submitSearchForm:function(words)
+Search routines for show the results
+
+- drawTagsBox:function(/*Array*/data) {
+- showTagsResults:function(/*String*/tag) {
+Tags routines for show the results

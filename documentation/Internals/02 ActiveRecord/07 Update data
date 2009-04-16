@@ -1,0 +1,18 @@
+To update data,
+just use the find method to find a particular row,
+overwrite the attributes and save it.
+
+[code]
+$test= new Phprojekt_Test(array('db'=>$zend_adapter));
+$test->find(1); // FIND THE HELLO WORLD ROW
+$test->name = 'Foo';
+$test->save();
+[/code]
+
+    test table
+
+ ------------------
+ |id | name        |
+ ------------------
+ | 1 | Foo         |
+ ------------------

@@ -1,0 +1,17 @@
+The SaveTags action will save all the tags for one module and itemId.
+
+The function espect as parameters the id and the strings for save.
+
+The strings is a post that contain all the words separated by spaces.
+This parameter must be by POST
+for work fine with spaces and strange characters.
+
+An example is:
+
+POST /Module/jsonSaveTagsAction
+With
+$_POST['id'] = 1;
+$_POST['string'] = 'This is a test for save tags';
+
+The function return an execption is the id is null or empty
+and void on sucess.

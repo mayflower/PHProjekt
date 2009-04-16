@@ -1,0 +1,14 @@
+ActiveRecord takes the last part of the class name
+after the underscore like Phprojekt_Test
+is mapped to the database table name test.
+
+Upercase characters are translates to a underscore.
+
+The table name is always lowercase.
+So Phprojekt_TestInstance is mapped to the database table
+test_instance as well as Projects_Model_TestInstance would do. 
+
+Foreign keys, like a project that has many todos
+must be the name of the table in lowercase concated with „_id“.
+E.g. if Phproject_Project has many Phprojekt_Todo
+in the todo table the must be a column called project_id. 

@@ -1,0 +1,35 @@
+[emph]Exception Handling[/emph]
+
+PHProjekt uses PHP5 exception handling to notify other levels in the callstack
+about an error. Every level might catch an exception if necessary.
+
+When an exception is not caught at all, at least the Zend Framework dispatcher
+catches it and forwards it to the Default/Controllers/ErrorController.
+The ErrorController than logs the error and might show an appropriate error message.
+
+The ErrorController distinguishs between two types of Exceptions. Exceptions that 
+extend the PHProjekt_PublishedException or any class that inherits this exception are
+converted into an JSON stream and return to the Dojo client. Unlike with usualy exceptions,
+you cannot receive the strack trace from published exceptions. Exceptions that don't inherit
+PHProjekt_PublishedException are not fordwared or shown at all, but just logged.
+
+[emph]Why two types of exceptions[/emph]
+It is preferable to be able to notify the dojo client about an error. This notification should be
+possible from every level and not only from the higher level methds in the controller, but
+also from the core itself. Exception handling is a good mechanism to provide such
+a functionallity. 
+
+As exceptions are often thrown in cases where it is not desirable that they are forwarded
+to the client, we need a way to distinguish between those exceptions that can be
+fordwarded, and those who dont. 
+
+Forwading all exception is not an option at all, as exceptions such as SQL errors or 
+file system errors contains sensitive data that can be used to inject code (information disclosure).
+
+Therefore published exceptions must only contain [bold]non senitive data[/bold].
+
+[emph]Format[/emph]
+The frontend receives exceptions in the following format:
+[code]
+{__class: "ExceptionName", code: 0, message: "Exception Message" }
+[/code]

@@ -1,0 +1,39 @@
+The phpr.Default.Tree class is a Component and therefore extends the phpr.Component class.
+The Tree class is responsible for rendering the Project tree, and for publishing the Project.tree.nodeClick Topic.
+
+We use the render function to render the tree within the div with the id "treeBox". The render function is inherited
+from the phpr.Component class.
+
+We use the dojo.tree widget for creating the Project tree. The dojo tree only needs to know where to get the json Data for
+the tree and than automatically stores this data in a Store and generates the tree output.
+
+The tree needs to know in which module we are at a time, so that it can publish the right module
+with the Project.tree.nodeClick Topic. For automatically publishing this topic we connect the click of a tree node
+with the custom onItemClick function, where we publish the Topic "Project.tree.nodeClick" with the tree node that
+was clicked and the module we are in at this time.
+
+The class are divide into many functions for make easy the extention.
+
+- getStore:function()
+Return the data of the Tree
+
+- getModel:function(store)
+Return the model of the Tree
+
+- getTree:function(model)
+Return the tree widget
+
+- setUrl:function()
+Set the url for get the data
+
+- setNode:function()
+Div where the tree is show
+
+- setId:function()
+Id of the Tree Widget
+
+- updateData:function()
+Refresh the tree data cached.
+
+- onItemClick: function(item)
+Function on click one item  in the tree.

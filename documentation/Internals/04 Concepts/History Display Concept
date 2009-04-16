@@ -1,0 +1,64 @@
+[emph]History display concept[/emph]
+
+The history needs to provide the user the ability to show the changes
+made on an item in a easy and clear way without producing innumerable
+rows and information.
+
+[emph]Item History tab[/emph]
+
+Every item will have avalable a fixed tab named 'History' where last changes 
+will be loaded. The content of the tab will be requested to server when user
+enters th tab, minimizing the size of the original request of the item detail.
+
+This tab has to be enabled enabled on the configuration file.
+
+The history tab will have all the changes produced on the last 30 days
+(by default, configurable) on all fields of an item. The information
+will be included into the json answer array (jsonDetail action) with
+the key 'history'.
+
+On 'History' tab the user will be able to get all history referred to
+that specific item. The json request will be:
+
+[code]
+/History/jsonList/moduleId/<ModuleId>/itemId/<itemId>/
+[/code]
+
+Additional filters could be added:
+
+startDate and endDate to limit the start and end date of the report.
+
+FieldName to filter the report for only one field.
+
+UserName to show the changes made for one specific user.
+
+The information to be shown on the report will be:
+username, modification datetime, field name, new value.
+
+The count and offset values will be also applied on this report to
+enable further pagination.
+
+
+[emph]Each field changes[/emph]
+
+On the item detail form it could be possible to get all changes for an
+item asking for the field history on the context menu. The json
+message to get the field changes history will be:
+
+[code]
+/History/jsonList/moduleId/<moduleId>/itemId/<itemId>/fieldName/<fieldName>
+[/code]
+
+
+[emph]Configuration values for history[/emph]
+
+The configuration file will have the following values related to
+history log and display:
+
+history.enabled boolean: Will enable and disable the history log of
+item changes.
+
+history.show boolean: will determine if the history tab will be
+displayed or not.
+
+history.days integer: Number of days shown by default on history tab.

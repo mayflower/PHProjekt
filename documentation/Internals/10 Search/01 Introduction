@@ -1,0 +1,66 @@
+Abstract
+
+Searching is a key feature of applications dealing with
+large amount of data. It is necessary that searching is
+fast. Usually it is desireable that people are able
+to search for substrings and can combine search strings.
+
+Database layout
+Search is based on three tables. On is a table that only
+contains a list of words and the count of ocurrences,
+other contains the relationship between the wordId and the model.
+A third table contains the display fields for the model.
+
+Table: SearchWords
++----+-------+-------+
+| id | word  | count |
++----+-------+-------+
+| 1  | foo   |   1   |
++----+-------+-------+
+| 2  | test  |   2   |
++----+-------+-------+
+
+Table: SearchWordModule
++-----+-------+--------+--------+
+| moduleId  | itemId   | wordId |
++-----------+----------+--------+
+| 1         | 1        |    1   |
++-----------+----------+--------+
+| 1         | 2        |    1   |
++-----------+----------+--------+
+| 1         | 2        |    2   |
++-----------+----------+--------+
+
+Table: SearchDisplay
++-----+-------+--------+---------------+------------------+
+| moduleId  | itemId   | firstDisplay  | secondDisplay    |
++-----------+----------+---------------+------------------+
+| 1         | 1        | foo title     | text descripcion |
++-----------+----------+---------------+------------------+
+| 1         | 2        | test title    | other test       |
++-----------+----------+---------------+------------------+
+
+Application Interface
+The serch is divded into two parts:
+Indexing data and the actual search.
+
+For index data, the itme class will call the search index function
+in each save call.
+The index function takes a model as an argument and inserts or updates
+the three tables with the found words.
+To determine what is a word, the class uses heuristics.
+It can be enhanced by adding additional heurstics.
+
+For the search, the class returns a set of founded entries.
+Only is returned the items where the user have read access.
+The search can used with many words.
+Pero now, only work the "OR" operator.
+
+Heuristics
+To figure out what are words in a string, PHProjekt implements a set of
+heuristics.
+Thw words allowed must have more than 3 characteres
+and all the non-usual characters are ommited.
+Characters between two stop characters are taken as words.
+Stop characters are all non word characters in PCRE.
+In addition there is a file stopwords.txt where are all the banned words.

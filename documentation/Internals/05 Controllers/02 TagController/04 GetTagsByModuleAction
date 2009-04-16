@@ -1,0 +1,44 @@
+The GetTagsByModuleAction action return all the tags for one module
+and their itemId.
+
+The function espect as parameters the id.
+
+The returned value is a json format data like:
+metadata => All the field definition.
+data     => All the tags for the itemeId-module.
+numRows  => Number of results.
+
+An example is:
+
+Module/Tag/jsonGetTagsByModule/id/1
+
+/*
+{"metadata":[
+{"key":"string","label":"Tag"},
+{"key":"count","label":"Count"}],
+"data":[
+{"string":"this","count":1},
+{"string":"tag","count":1},
+{"string":"test","count":1},
+{"string":"for","count":1},
+{"string":"project","count":1}],
+"numRows":5}
+*/
+
+If the parameter "limit" is set,
+the array will contain only "limit" number of items
+
+An example is:
+Module/Tag/jsonGetTagsByModule/id/1/limit/2
+
+/*
+{"metadata":[
+{"key":"string","label":"Tag"},
+{"key":"count","label":"Count"}],
+"data":[
+{"string":"this","count":1},
+{"string":"tag","count":1}],
+"numRows":2}
+*/
+
+The function return an execption is the id is null or empty.

@@ -1,0 +1,17 @@
+On the client, there is a text input for search.
+
+On any keyup, if the text have more than 2 letters,
+the "suggestion" box is displayed.
+This box contain the most popular words with the input as a substring.
+This box only show a number of results, now setted on 10.
+
+If you click on one result,
+all the results are displayed in the place where are the grid,
+and in the detail view you will see the item itself.
+
+The other way for search is just type something and press enter,
+and the results will be displayed in the place where are the grid.
+
+There is a delay between you write a letter and the search run.
+This is for prevent a query per character if you write
+the entire word directly.

@@ -1,0 +1,36 @@
+The GetModulesByTag action return all the modules and their itemId
+that contain the tag parsed as parameter.
+
+The returned value is a json format data like:
+metadata => All the field definition.
+data     => All the modules and their id.
+numRows  => Number of results.
+
+An example is:
+
+Module/Tag/jsonGetModulesByTag/tag/this
+
+/*
+{"metadata":[
+{"key":"module","label":"Module"}],
+"data":[
+{"id":"1","module":"Project"},
+{"id":"2","module":"Project"},
+{"id":"1","module":"Todo"}],
+"numRows":3}
+*/
+
+If the parameter "limit" is set,
+the array will contain only "limit" number of items
+
+An example is:
+Module/Tag/jsonGetModulesByTag/tag/this/limit/2
+
+/*
+{"metadata":[
+{"key":"module","label":"Module"}],
+"data":[
+{"id":"1","module":"Project"},
+{"id":"2","module":"Project"}],
+"numRows":2}
+*/

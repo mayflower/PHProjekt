@@ -1,0 +1,97 @@
+[emph]1. Overview of PHProjekt 6 rights structure[/emph]
+
+[emph]RBAC[/emph]
+The Role based access Rights in Phprojekt 6 are based on the Zend Acls.
+The Zend Acls consist of Resources and Roles.
+
+In the terms of Zend this means:
+
+- a Resource is an object to which access is controlled.
+- a Role is an object that may request access to a Resource.
+For Phprojekt the Resources are the modules and the Role determines
+whether one can read or write this module or not.
+In Zend_Acl and therefore in Phprojekt 6, a Role may inherit from one or more Roles.
+This is to support inheritance of rules among Roles.
+For example, a user Role, such as "superuser", may belong to one or more parent Roles,
+such as "editor" and "administrator".
+The developer can assign rules to "editor" and "administrator" separately,
+and "superuser" would inherit such rules from both,
+without having to assign rules directly to "superuser".
+
+In addition to that roles in Phprojekt always are assigned to a project.
+If a user has no role assigned in a project he automatically inherits the role
+he has in its parent project.
+If a user has no role in a root project this means that he isn't allowed to enter
+the whole branch of the tree beneath that project.
+That way Phprojekt 6 still supports Multitenancy,
+as a project for which a user has no role and all items within that project
+are completely invisible to this user
+
+[emph]Item based rights[/emph]
+In addition to the Role based access rights,
+Phprojekt 6 also supports discretionary access control (or item based access control).
+This means that a user with owner/admin(we still have to agree on the best name for that right)
+Privileges on a Phprojekt item can determine who is allowed to read,
+write or administrate this item.
+
+[emph]Combination of Item based rights and Role rights[/emph]
+In the end the combination of the role based and item based rights will determine
+the right of a user for a Phprojekt item. The right for every single item
+is calculated as the intersection of role and item base rights.
+
+[emph]2.How to use Phprojekt Acls[/emph]
+
+[emph]Role rights[/emph]
+In order to find out which role right a user has within a project or item
+you can use the class Phprojekt_RoleRights.
+All roles and rights within Phprojekt are stored in the Zend Acls.
+The Zend Acls are constructed in the Singleton class Phprojekt_Acl.
+Therefore the Class Phprojekt_RoleRights gets the current Acls on construction,
+and you can find out e.g. if a user is allowed to create new todos within
+a certain project by using its hasRight() method.
+
+[emph]Item based rights[/emph]
+There is a table itemsRights where is stored each rigth per user, per item.
+Every module table must contain the field 'owenerID'
+which contains the userId of the owner.
+You can assign per user a read/write/admin privileges for each Phprojekt items.
+When you call the items, the system will return only the items that are owned by you,
+or the items where you have read/write or admin privileges.
+This is working with an internal JOIN between the item table and the itemsRights.
+
+[emph]Combination of both[/emph]
+Whenever you need to know which privilege a user has for a certain action
+or item in Phprojekt you will always need to know
+the result of the combination of item based and role rights.
+Therefore Phprojekt 6 already provides a class which calculates the current privilege
+by retrieving the current role and item right and calculating its intersection.
+This method is called  getRights() and is stored within the class Phprojekt_Item_Abstract.
+That way you can access this method for every Phprojekt Item and it automatically returns it rights.
+
+[emph]Permission bitmap[/emph]
+The user permission over an item or module will be returned as a bitmap of his permission.
+
+The constants for the different permission are defined on Phproject_Acl class and the names are:
+
+Phprojet_Acl::NONE (default value 0)
+Phprojet_Acl::READ (default value 1 or 1st bit)
+Phprojet_Acl::WRITE (default value 2 or 2st bit)
+Phprojet_Acl::ACCESS (default value 4 or 3st bit)
+Phprojet_Acl::CREATE (default value 8 or 4st bit)
+Phprojet_Acl::COPY (default value 16 or 5st bit)
+Phprojet_Acl::DELETE (default value 32 or 6st bit)
+Phprojet_Acl::DOWNLOAD (default value 64 or 7st bit)
+Phprojet_Acl::ADMIN (default value 128 or 8st bit)
+Phprojet_Acl::ALL (default value 255 or 9st bit)
+
+The permission bitmap will be the sum of each permision.
+So, an user with access,
+read and write permission will have permission 7:
+(Phprojet_Acl::ACCESS | Phprojet_Acl::READ | Phprojet_Acl::WRITE).
+
+It is possible to check a permission using the & operator:
+[code]
+if ($returnedPermission & Phprojet_Acl::ACCESS == Phprojet_Acl::ACCESS) {
+    // user has access permission
+}
+[/code]

@@ -1,0 +1,10 @@
+This class extends dojox.grid class and changes some methods so that the dojo Grid is adapted to fit the requirements
+of PHProjekt.
+
+It provides an own phpr.grid.Model and phpr.grid.ReadStore, which extend the corresponding classes of the dojo grid,
+so that it can  handle the json Data which the PHprojekt grid receives from the server.
+
+In addition to that it provides some methods which allows us to customize the format of specific fields within a grid:
+
+phpr.grid.formatDate:     formatter for Date fields
+phpr.grid.formatDateTime: formatter for DateTime fields

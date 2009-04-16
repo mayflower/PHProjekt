@@ -1,0 +1,38 @@
+In the dojo understanding we only provide one customized dojo Module within our Client which is called phpr.
+Using a dojo Module for our Client source code allows us to keep our code separated from the dojo code.
+A Dojo Module provides us with our own Namespace for the PHProjekt specific scripts and we don't need
+to worry about overwriting existing dojo classes.
+
+All PHProjekt Modules like Project, Todo etc. are what dojo would call submodules.
+
+The Main purpose of the phpr.js is to initialize the new Module phpr and to register the path to this Module relative
+to the dojo.js Script.
+
+This is done by dojo.registerModulePath("phpr", "../../phpr");
+
+Besides that the phpr Script provides some Basic methods which we will need within most of the submodules.
+
+[emph]phpr.initWidgets[/emph]
+This method automatically parses our new widgets.
+Everytime you render your own widgets make sure to call this method, so that you don't need to parse the new
+widget manually.
+
+[emph]phpr.destroyWidgets[/emph]
+This method destroy all widgets underneath a certain DomNode.
+That function is needed when you need to reload certain widgets, because you can only
+load each widget ID once. So make sure you destroy a widget before rendering it again.
+
+[emph]phpr.send[/emph]
+This method sends a given Object to the server.
+It allows you to specify the content to be send, the server url,
+and customized functions which are called after the content was successfully send or an error occured while sending.
+
+[emph]phpr.getData[/emph]
+This methods receives data from the server and allows you to process the data in a custom callback function
+
+[emph]phpr.DataStore[/emph]
+This function work with the dojox.data.QueryReadStore.
+There is an internal array for save each data request to the server.
+The "key" used is the url of the request, so each time that the same data is needed,
+the function return the internal cache.
+There are also a function deleteData for reset the cache for the url given.

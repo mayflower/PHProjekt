@@ -1,0 +1,14 @@
+To receive data instatiate the ActiveRecord class
+and call either fetchAll() or find().
+You will get a list of objects of the ActiveRecord
+(e.g. Phprojekt_Test) back.
+
+[code]
+$test = new Phprojekt_Test(array('db'=>$zend_adapter));
+$test->find(1);
+print $test->name; // WILL OUTPUT „Hello World“
+
+foreach ($test->fetchAll() as $row) {
+    print $row->name; // FETCH EACH ROW AND PRINT IT
+}
+[/code]

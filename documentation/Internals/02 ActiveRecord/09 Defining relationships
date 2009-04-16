@@ -1,0 +1,102 @@
+[emph]1.hasMany relationship[/emph]
+
+    One of the most powerful features of ActiveRecord
+    is the ability to easily define relationships
+    between objects that are mapped to the database.
+
+    To define relationships you should use the hasMany and hasManyAndBelongsToMany attributes.
+    To define a 1..n relationship between two objects, just add the objectname to the hasMany.
+
+    E.g:
+    [code]
+    class Phprojekt_Project extends Phprojekt_ActiveRecord_Abstract 
+    {
+        public $hasMany = array('todos' => array('classname' => Phprojekt_Todo'));
+    }
+
+    class Phprojekt_Todo extends Phprojekt_ActiveRecord_Abstract 
+    {
+    }
+    [/code]
+
+    Lets have a look at the [code]array('todos' => array('classname' => 'Phprojekt_Todo'));[/code] line.
+    The key todo defines the name of the attributes which is used to access the relationship.
+
+    The classname of the inner array defines the name of the class that represents the related table.
+    So in this case one project can have several modules.
+    Therefore the todo table needs at least one foreign key called project_id.
+		
+          table project                         table todo
+
+          ---------------                -------------------------------
+          |id   | title |                |id | project_id | title      |
+          ---------------                -------------------------------
+          | 40  | Test  |        ->      | 1 | 40         | my 1. todo |
+          ---------------                | 2 | 40         | my 2. todo |
+                                         -------------------------------
+
+    To receive the related objects you just have to call the fetchAll method
+    on the relationship attribute. E.g.
+
+    [code]
+    $project = new Phprojekt_Project(array('db'=>$zend_db_adapter));
+    $todos   = $project->todos->fetchAll();
+    [/code]
+
+    You can also use the todos attribute to find a specific todo.
+    [code]
+    $project = new Phprojekt_Project(array('db'=>$zend_db_adapter));
+    $firstTodo = $project->find(1);
+    [/code]
+
+[emph]2.hasManyAndBelongsToMany relationship[/emph]
+
+    The other way to define relationship is the n...m relationship
+    that is mapped using the has many and belongs to many relationship.
+    To define a hasManyAndBelongsToMany relationship we add a
+    similar relationship to the hasManyAndBelongsToMany attribute
+    as we do for the hasMany relationship.
+
+    [code]
+    class Phprojekt_User extend Phprojekt_ActiveRecord_Abstract 
+    {
+        public $hasManyAndBelongsToMany = array('roles'=>array('classname'=>'Phprojekt_Role'));
+    }
+    [/code]
+
+    The mapping of n...m (hasManyAndBelongsToMany) to the database is done
+    using a relation table.
+    The table is called {TABLE1}_{TABLE2}_rel. E.g. role_user_rel.
+    While the table names of the related objects are sorted alphabetic,
+    so the table cannot have the name user_role_rel. 
+
+    The table consists of at least two columns with the foreign key
+    (see Naming chapter) names of the related tables.
+
+        table role_user_rel
+
+        ---------------------
+        | role_id | user_id |
+        ---------------------
+        | 1       | 4       |
+        | 2       | 4       |
+        | 1       | 5       |
+        ---------------------
+
+    Receiving related data from the database is done in the same way as using hasMany.
+
+[emph]3.Adding data to a relationship[/emph]
+    
+    To add a new todo to the project module,
+    we have to create the new todo from the project module.
+    Thats done by the create() method of the relationship attribute.
+
+    [code]
+    $project = new Phprojekt_Project(array('db'=>$zend_db_adapter));
+    $project->find(40); // WE HAVE TO FIND IT FIRST!!!!
+
+    // CREATE A NEW TODO RELATED TO PROJECT
+    $todo        = $project->todos->create(); 
+    $todo->title = 'Test Todo related to Test Project';
+    $todo->save();
+    [/code]

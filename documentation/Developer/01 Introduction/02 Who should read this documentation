@@ -1,0 +1,16 @@
+PHProjekt 6.0 aims to provide a simple to use rapid development framework
+that makes it easy to extend PHProjekt with your self-written code.
+Furthermore, the application features several ways to extend it without writing any code.
+
+The following documentation is written for developers
+who want to have full access to the provided API.
+It's written for PHP developers who want to extend PHProjekt with self-written code.
+Therefore it gives you an depth introduction about the concepts used in PHProjekt 6.0. 
+
+If you want to customize the PHProjekt internals yourself,
+please consider to take a look at the PHProjekt Internals Documentation.
+
+To extend PHProjekt 6.0 with self-written code,
+you should know object oriented concepts as well as database design.
+You should furthermore know the basic concepts of Zend Framework,
+but we will try to provide most of the needed information.

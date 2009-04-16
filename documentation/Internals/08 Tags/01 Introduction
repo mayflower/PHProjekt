@@ -1,0 +1,39 @@
+The tags are sorted per user,
+so each user can be have theirs tags per item.
+
+Each tag is stored alone,
+because the same tag can be used for various items and various users.
+
+There is a relation n<->1 between users and tags, stored in the TagUser table.
+
+When you save a tag for one item, is stored in the TagModules table
+with the relation n<->1 of the user and tag.
+
+Examples:
+
+You as user 1 save for the Project 1 the tags "this" and "test"
+You as user 1 save for the Project 2 the tags "other" and "test"
+You as user 2 save for the Project 1 the tags "this" and "table"
+
+So there is 4 tags:
+Tag 1 -> this
+Tag 2 -> test
+Tag 3 -> other
+Tag 4 -> table
+
+The relations are:
+
+Relation 1 - User 1 -> Tag 1
+Relation 2 - User 1 -> Tag 2
+Relation 3 - User 1 -> Tag 3
+Relation 4 - User 2 -> Tag 1
+Relation 5 - User 2 -> Tag 4
+
+And the modules table are:
+
+Project -> Item 1 -> Relation 1
+Project -> Item 1 -> Relation 2
+Project -> Item 2 -> Relation 3
+Project -> Item 2 -> Relation 2
+Project -> Item 1 -> Relation 4
+Project -> Item 1 -> Relation 5

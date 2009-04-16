@@ -1,0 +1,19 @@
+PHProjekt offers a JSON interface to interact between a JSON enabled client and PHProjekt.
+Data can be received calling json actions and can be saved using a usual POST to the server.
+
+The data send from the server is a json representation of the server side models that implement
+the Phprojekt_Models_Interface. In addtion to that, while quering the server for data, you 
+get the meta information about the data, which is provided by the Phprojekt_ModelInformation_Interface.
+Usualle the default model for a controller can be received using the jsonList or jsonForm action depending on which
+sorting you want to have (see the sorting chapter for more information). 
+
+A detailed information about the exchange format can be found in the [emph]Data cExchange Format[/emph] section.
+
+[emph]Sorting[/emph]
+Since the first days of PHProjekt's Module Designer, the module designer offered the possiblity to sort
+list columns in a other order than the formular data. To make a migration possible PHProjekt 6 supports
+this attemp by providing two different calls to get data from the server. 
+If you want to get the list sorting you usually call jsonList (which is implemented in the jsonListAction() method), 
+while getting the data using a form sorting can be done by jsonForm. The metadata send to you is exactly the same
+just with different ordering. In addition to that, the jsonList call will return a complete set of available data,
+while the jsonForm call will always return exactly one record from the database.

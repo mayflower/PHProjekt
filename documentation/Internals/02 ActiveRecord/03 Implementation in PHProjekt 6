@@ -1,0 +1,7 @@
+PHProjekt 6 provide the ActiveRecord pattern
+through the class Phprojekt_ActiveRecord_Abstract
+which resides in the /application/Phprojekt/ActiveRecord/Abstract.php file.
+
+To use the functionallity you have to extend the class.
+The ActiveRecord base class automaticly maps the last
+part of the extended class to the database using a simple name convention.

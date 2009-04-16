@@ -1,0 +1,42 @@
+Index:
+
+The index is doit by the Item Phprojekt_Item_Abstract class on the save().
+
+The class will find all the words in the text fields.
+If any field is a file, the class will read the file and get all the words in it.
+
+Search:
+
+The search is doit on the front, using the jsonSearchAction like that:
+
+Default/Search/jsonSearch/words/$words/count/$count
+
+Where $words are some words for search separated by spaces,
+and $count the number of results.
+
+The class will search the most popular words,
+and then will return the last items inserted with these words.
+
+(Is used for limit, the same value from words and items,
+so if you limit to 4 results,
+you will search the four most popular words
+and then the 4 last inserted items with these words)
+
+The return value for the search, will be an array like that:
+
+array('moduleId'      => 1,
+      'moduleName'    => 'Project',
+      'id'            => 2,
+      'firstDisplay'  => 'title string',
+      'secondDisplay' => 'note string');
+
+One row per found result.
+The id is the itemId, and the firstDisplay and secondDisplay
+are some data of the item.
+For define which data of the item will show the seach, there are 2 vars:
+
+public $searchFirstDisplayField
+public $searchSecondDisplayField
+
+By default the Phprojekt_Item_Abstract have the vars setted to 'title' and 'notes'.
+But each model can rewrite it if have other fields or want to show other data.

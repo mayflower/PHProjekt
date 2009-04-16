@@ -1,0 +1,11 @@
+The Index Controller provides a save action to create or update a model.
+
+The jsonSave action requires the id of the record that should be updated
+to be given. If the id is 0 or not given at all a new item is created.
+
+Every additional given parameter is mapped to the equal colum name of the
+item. Before adding or updating the item, the data is validated. If an error occurs
+an PublishedException is thrown, which can be caught by the Dojo clinet.
+
+The structure of such a json serialized exception is described in the Interals/Concepts/Exceptions
+chapter of the documentation.

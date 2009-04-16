@@ -1,0 +1,37 @@
+Documentation of the detailed data exchange definition
+
+[emph]Model information[/emph]
+
+key: 		the name (feldname: interne name der zum submit benutzt wird),
+label:		associates a label with a form control
+type: 		values from the field type definition,
+hint:	 	the message that will be shown if an element is requried but not ,
+order: 	    defines the order in which the elements should be displayed,
+position: 	defines the position of the elements,
+fieldset:	defines wether elements are arranged to groups or not (e.g. nested fieldsets/ layers),
+range:      aditional values for the field (like for selectbox or make a tree)
+            For each value, the format is:
+            id: real value
+            name: associated label for the value
+required:   true if is a required field
+readyonly:  specifies whether the control may be modified by the user
+
+[emph]Field type definition[/emph]
+
+textfield: 	    a single row text field,
+textarea:  	    a multiple row textfeld,
+selectbox: 	    a dropdown box to select exactly one record,
+checkbox: 	    a box the select a value
+date: 		    a date without a time in the format YYYY-MM-DD,
+time: 		    a time in the format HH:MM:SS,  the time is stored on PHProjekt_Item class as UTC timezone. It
+                is converted and restored from UTC to client date time.
+timestamp:      a date and time in the format YYYY-MM-DD HH:MM:SS stored on PHProjekt_Item as UTC timezone.
+file: 		    just a simple file. Client: Select a file from the file system and send it to the server
+multipleselect: a list that allows more selections
+label: 		    label of a form or fieldset
+fieldset: 	    a form control group in the format of a nested array (JSON)
+
+[emph]Data from the server[/emph]
+
+id:		    the id of the entry
+projectId: 	the projectId

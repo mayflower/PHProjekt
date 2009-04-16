@@ -1,0 +1,30 @@
+Every module is a directory located in the application/ directory.
+The directory name is usually the module name, but must not.
+The module directory has three subdirectories.
+The Views/ directory, the Models/ directory and the Controllers/ directory.
+Please notice that directory names are case-sensitiv. 
+
+[code]
+/application
+  /MyModule
+    /Controllers
+    /Models
+    /Views
+[/code]
+
+The controller classes, derived from the IndexController class,
+are located in the Controller/ directory.
+They start with a name and end with the suffix Controller.
+A valid controller name would be e.g.: IndexController or FormController.
+If nothing else is specified, the dispatcher class will always call the IndexController.
+See chapter the section called “Mapping of controllers” for further details about calling controllers. 
+
+The model classes are located in Models/.
+They must have the format Modulename_Models_Modelname.
+A valid model name would be e.g.: WorkingHours_Models_WorkingHour or Files_Models_Directory.
+Every model must inherite the Phprojekt_Model_Interface class.
+
+In the Views/ diretory you can place PHP files that render output.
+Usually you are layouting the JavaScript components there,
+but the developer is free and responsable to do what ever he wants there,
+as long as there is no business logic there.
