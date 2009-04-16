@@ -42,6 +42,7 @@ class Minutes_IndexController_Test extends FrontInit
         
         $this->assertTrue(strpos($response, '{"metadata":[]}') > 0);
     }
+    
     /**
      * Request empty form
      */
@@ -52,10 +53,21 @@ class Minutes_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         
         $this->assertTrue(strpos($response, '{"metadata":[{"key":"projectId","label":"Select","type":"hidden",') > 0,
-            "Response was: " . $response);
+            "Response was: '$response'");
         $this->assertTrue(strpos($response, ',"data":[{"id":null,"projectId":"","rights":' 
-            . '{"currentUser":{"moduleId":"11","itemId":null') > 0);
+            . '{"currentUser":{"moduleId":"11","itemId":null') > 0, "Response was: '$response'");
     }
+    
+    /*
+     * Test getting the user list from nonexistant minutes
+     */
+    public function testJsonListUserActionFromNonExistingMinutes() {
+        $this->setRequestUrl('Minutes/index/jsonListUser/id/1');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, Minutes_IndexController::NOT_FOUND) > 0, "Response was: '$response'");
+        // This action should return the list of users selected as participantsInvited only from existing minutes.
+    }
+    
     /**
      * Test of json save Minutes
      */
@@ -97,6 +109,13 @@ class Minutes_IndexController_Test extends FrontInit
         $this->assertTrue(strpos($response, Minutes_IndexController::ADD_TRUE_TEXT) > 0, "Response was: '$response'");
     }
 
+    /*
+     * Test getting the user list
+     */
+    public function testJsonListUserActionFromExistingMinutes() {
+        $this->markTestIncomplete('Not yet implemented');
+        // This action should return the list of users selected as participantsInvited from existing minutes.
+    }
     /**
      * Test the Minutes event detail
      */
