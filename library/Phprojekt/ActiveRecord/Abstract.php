@@ -1104,7 +1104,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             // is $key an int?
             if (is_int($key)) {
                 // $val is the full condition
-                $selectObj->where($val);
+                $selectObj->where($this->_quoteTableAndFieldName($val));
             } else {
                 // $key is the condition with placeholder,
                 // and $val is quoted into the condition
@@ -1140,13 +1140,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $columns    = explode(",", trim($select));
 
             foreach ($columns as $column) {
-                $selectStmt .= " " . $column . " ";
+                $selectStmt .= " " . $this->_quoteTableAndFieldName($column) . " ";
             }
 
             $selectStmt .= " FROM ";
             $sqlStr      = $selectStmt . $statement[1];
         }
 
+        $join = $this->_quoteTableAndFieldName($join);
         if (preg_match('/WHERE/i', $sqlStr)) {
             $joinPart = ' ' . $join . ' WHERE ';
             $sqlStr   = preg_replace('/WHERE/i', $joinPart, $sqlStr);
@@ -1170,6 +1171,38 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         Zend_Loader::loadClass($this->_rowsetClass);
         return new $this->_rowsetClass($data);
+    }
+
+    /**
+     * Quote all the table.field and table.field_name
+     * that are not already quoted
+     *
+     * @param string $string The string to be quoted
+     *
+     * @return string
+     */
+    private function _quoteTableAndFieldName($string)
+    {
+        // Quote value.value
+        $string = preg_replace_callback("/([a-z0-9_]+\.[a-z0-9_]+)/", create_function(
+            '$string', 'return Phprojekt::getInstance()->getDb()->quoteIdentifier($string[0]);'), $string);
+
+        // Put some common words in uppercase
+        $string = preg_replace("/\sand\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\sor\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\sas\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\sin\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\son\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\snull\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\snot\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\sjoin\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\sleft\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\srigth\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\sinner\s/e", "strtoupper('\\1')", $string);
+
+        // Quote the single table or fields in lowercase
+        return preg_replace_callback("/(\s[a-z_]+\s)/", create_function(
+            '$string', 'return " " . Phprojekt::getInstance()->getDb()->quoteIdentifier(trim($string[0])) . " ";'), $string);
     }
 
     /**
