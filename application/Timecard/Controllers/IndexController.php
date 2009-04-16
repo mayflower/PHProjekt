@@ -91,7 +91,7 @@ class Timecard_IndexController extends IndexController
             $dateFilter = array();
 
             $dateFilter[] = 'date = "'.date("Y-m-d").'"';
-            $dateFilter[] = '(end_time = "" OR end_time is null)';
+            $dateFilter[] = '(end_time = "" OR end_time IS NULL)';
             $dateFilter = implode($dateFilter, " AND ");
 
             $records = $this->getModelObject()->fetchAll($dateFilter, null, 1);
@@ -250,7 +250,7 @@ class Timecard_IndexController extends IndexController
         $dateFilter = array();
 
         $dateFilter[] = 'date = "'.date("Y-m-d").'"';
-        $dateFilter[] = '(end_time = "" OR end_time is null)';
+        $dateFilter[] = '(end_time = "" OR end_time IS NULL)';
         $dateFilter = implode($dateFilter, " AND ");
 
         $this->getRequest()->setParam('endTime', date("H:i:s"));

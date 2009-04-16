@@ -419,7 +419,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id is NULL)', $this->getTableName(),
+        $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
             Phprojekt_Auth::getUserId(), $this->getTableName());
         $where .= ' OR (item_rights.access > 0)) ';
 
