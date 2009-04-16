@@ -294,7 +294,7 @@ $lang["Content Help"]["General"] = "<br/>
             una caja de búsqueda.<br/>
         <br/>
         <ol>
-            <li>El <b>logo</b> es un vínculo al módulo Proyecto que una vez abierto mostrará todos los proyectos en 
+            <li>El <b>logo</b> es un vínculo al módulo Proyecto que una vez abierto mostrará todos los proyectos en
                 el árbol de la izquierda y también en la grilla en el centro de la pantalla.<br/>
             <li>La sección superior derecha contiene <b>varios</b> vínculos a módulos que no están directamente
                 asociados a un proyecto en particular. Para ver la ayuda de cada módulo, cierre esta ventana emergente,
