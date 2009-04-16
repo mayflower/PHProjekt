@@ -506,7 +506,7 @@ CREATE TABLE IF NOT EXISTS `minutes` (
   `participants_attending` text,
   `participants_excused` text,
   `recipients` text,
-  `itemStatus` int(11) default NULL,
+  `item_status` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
