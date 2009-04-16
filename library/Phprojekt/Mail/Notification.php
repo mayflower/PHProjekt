@@ -47,6 +47,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
     private $_customFrom;
     private $_customTo = Array();
     private $_customSubject;
+    private $_url;
     private $_bodyMode;
     private $_view;
     private $_model;
@@ -129,6 +130,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
         $this->_setTo();
         $this->_setCustomSubject();
+        $this->_setUrl();
         $this->_setCustomBody();
         $this->_mailNotifSend();
     }
@@ -347,6 +349,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
             . Phprojekt::getInstance()->translate(' item has been ')
             . Phprojekt::getInstance()->translate($actionLabel);
 
+        $this->_view->url = $this->_url;
         $this->_view->translate = Phprojekt::getInstance()->getTranslate();
 
         if ($this->_bodyMode == self::MODE_TEXT) {
@@ -437,5 +440,20 @@ class Phprojekt_Mail_Notification extends Zend_Mail
         }
 
         return $smtpTransport;
+    }
+
+    /**
+     * Sets the url link to access to the created/modified item.
+     *
+     * @return void
+     */
+    private function _setUrl()
+    {
+        $this->_url = Phprojekt::getInstance()->getConfig()->webpath . "index.php#" . $this->_model->getModelName();
+        $saveType   = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_model->getModelName()));
+        if ($saveType == 0) {
+            $this->_url .= "," . $this->_model->projectId;
+        }
+        $this->_url .= ",id," . $this->_model->id;
     }
 }
