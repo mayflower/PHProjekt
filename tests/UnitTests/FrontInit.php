@@ -31,12 +31,13 @@ require_once 'PHPUnit/Framework.php';
  */
 class FrontInit extends PHPUnit_Framework_TestCase
 {
-    public $request  = null;
-    public $response = null;
-    public $front    = null;
-    public $config   = null;
-    public $content  = null;
-    public $error    = null;
+    public $request      = null;
+    public $response     = null;
+    public $front        = null;
+    public $config       = null;
+    public $content      = null;
+    public $error        = null;
+    public $errormessage = null;
 
     /**
      * Init the front for test it
@@ -119,11 +120,13 @@ class FrontInit extends PHPUnit_Framework_TestCase
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
-            unset($error);
             $this->error = true;
+            $this->errormessage = $error->getMessage();
+            unset($error);
         }
         $this->content = ob_get_contents();
         ob_end_clean();
+        
 
         $params = $this->request->getParams();
         foreach ($params as $key => $value) {
