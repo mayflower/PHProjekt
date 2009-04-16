@@ -33,4 +33,24 @@
  */
 class Minutes_IndexController extends IndexController
 {
+    /*
+     * Get a user list in JSON
+     * 
+     * Produces a list of users that should be selectable in the frontend.
+     * First implementation returns the list of users invited to the meeting.
+     * 
+     * @return void
+     */
+    public function jsonListUserAction () {
+        $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
+        $minutes->find($this->getRequest()->getParam('id'));
+        
+        if (!empty($minutes->id)) {
+            $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $userList = $user->fetchAll(sprintf('id in (%s)', $minutes->participantsInvited));
+            Phprojekt_Converter_Json::echoConvert($userList);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+    }
 }
