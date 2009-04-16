@@ -205,7 +205,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!empty($this->id)) {
             $rootEventId  = self::getRootEventId($this);
-            $where        = " parent_id = " . (int) $rootEventId . " AND deleted is NULL";
+            $where        = " parent_id = " . (int) $rootEventId . " AND deleted IS NULL";
             $records      = $this->fetchAll($where);
             foreach ($records as $record) {
                 if (null === $record->rrule) {
@@ -237,7 +237,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $model->find($id);
 
         $where   = ' parent_id = ' . (int) $model->parentId. ' AND participant_id = ' . (int) $model->participantId
-            . ' AND deleted is NULL';
+            . ' AND deleted IS NULL';
         $records = $model->fetchAll($where, 'start_date ASC');
 
         if (self::_isOwner($model)) {
@@ -302,7 +302,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function getUserSelectionRecords($usersId, $date, $count, $offset)
     {
-        $where = 'deleted is NULL AND participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
+        $where = 'deleted IS NULL AND participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
             . ' AND end_date >= "' . $date . '"';
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
     }

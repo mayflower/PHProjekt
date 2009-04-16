@@ -46,10 +46,10 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     {
         $modules = array();
         $where   = ' role_module_permissions.role_id = ' . (int) $roleId;
-        $where  .= ' OR role_module_permissions.role_id is null ';
+        $where  .= ' OR role_module_permissions.role_id IS NULL ';
         $where  .= ' AND (module.save_type = 0 OR module.save_type = 2) ';
         $order   = ' module.name ASC';
-        $select  = ' module.id as module_id ';
+        $select  = ' module.id AS module_id ';
         $join    = ' RIGHT JOIN module ON module.id = role_module_permissions.module_id ';
 
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {

@@ -56,7 +56,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
         $where  = ' project_module_permissions.project_id = ' . $projectId;
         $where .= ' AND module.active = 1 ';
         $order  = ' module.name ASC';
-        $select = ' module.id as module_id ';
+        $select = ' module.id AS module_id ';
         $join   = ' RIGHT JOIN module ON ( module.id = project_module_permissions.module_id ';
         $join  .= ' AND (module.save_type = 0 OR module.save_type = 2) )';
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
