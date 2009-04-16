@@ -151,7 +151,7 @@ class Phprojekt_RoleRights
      */
     private function _setProject($project)
     {
-        if ($this->getId() > 0 and $this->getmodule() == 'Project') {
+        if ($this->getId() > 0 && $this->getmodule() == 'Project') {
             $this->_project = $this->getId();
         } else {
             $this->_project = $project;
