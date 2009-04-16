@@ -693,7 +693,8 @@ INSERT INTO `role_module_permissions` (`role_id`, `module_id`, `access`) VALUES
 (1, 1, 139),
 (1, 2, 139),
 (1, 3, 139),
-(1, 5, 139);
+(1, 5, 139),
+(1, 11, 139);
 
 
 
@@ -783,7 +784,8 @@ INSERT INTO `project_module_permissions` (`module_id`, `project_id`) VALUES
 (2,7),
 (3,7),
 (4,7),
-(5,7);
+(5,7),
+(11,1);
 
 INSERT INTO `search_words` (`id`, `word`, `count`) VALUES
 (1, 'NOTE', 1);
