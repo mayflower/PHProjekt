@@ -146,11 +146,11 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $this->assertTrue($modulePermissions->save());
 
             $this->assertNotNull($role->id);
-            $this->assertEquals(5, $role->modulePermissions->count());
+            $this->assertEquals(6, $role->modulePermissions->count());
 
             $role->delete();
 
-            $this->assertEquals(4, $role->modulePermissions->count());
+            $this->assertEquals(5, $role->modulePermissions->count());
             $this->assertNull($role->id);
 
         } catch (Exception $e) {
