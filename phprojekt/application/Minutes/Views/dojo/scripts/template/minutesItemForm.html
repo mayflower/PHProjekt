@@ -1,8 +1,11 @@
-<form id="minutesItemForm" action="javascript:;">
+<form id="minutesItemForm" action="javascript:;" dojoType="dijit.form.Form">
 	<input type="hidden" name="id" value="{{id}}" />
 	<input type="hidden" name="minutesId" value="{{minutesId}}" />
 	<input type="hidden" name="projectId" value="{{projectId}}" />
 	<input type="hidden" name="topicId" value="{{topicId}}" />
+	<input type="hidden" name="sortOrder" value="{{sortOrder}}" />
+	<input type="hidden" name="userId" value="{{userId}}" />
+	
 	<!-- 
 	id        | int(11)
 	ownerId   | int(11)
@@ -23,17 +26,36 @@
         </td>
         <td>
             <input id="minutesItemFormTitle" name="title" dojoType="dijit.form.TextBox"
-                    required="true" value="" invalidMessage="" />
+                    required="true" value="{{title}}" invalidMessage="" />
         </td>
     </tr>
+    
+    <tr>
+        <td>
+            <label>{{lblTopicType}}</label>
+        </td>
+        <td>
+            <select id="minutesItemFormTopicType" name="topicType" dojoType="dijit.form.FilteringSelect"
+                    required="true" autocomplete="true" value="{{topicType}}" invalidMessage="" >
+                <option value=""></option>
+                {% for type in types %}
+                <option value="{{type.id}}">
+                  {{type.name}}
+                </option>
+                <!-- {% ifequal topicType type.id %}selected="selected"{% endifequal %} -->
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+    
     
     <tr>
         <td>
             <label>{{lblComment}}</label>
         </td>
         <td>
-            <input id="minutesItemFormComment" name="comment" dojoType="dijit.form.TextBox"
-                   value="" invalidMessage="" />
+            <textarea id="minutesItemFormComment" name="comment" dojoType="dijit.form.Textarea"
+                   value="{{comment}}" invalidMessage="" style="width: 300px"></textarea>
         </td>
     </tr>
     
@@ -43,15 +65,28 @@
         </td>
         <td>
             <select id="minutesItemFormOwnerId" name="ownerId" dojoType="dijit.form.FilteringSelect"
-                    required="true" autocomplete="true" value="" invalidMessage="" >
+                    required="true" autocomplete="true" value="{{ownerId}}" invalidMessage="" >
+                <option value=""></option>
                 {% for user in users %}
-                <option value="{{user.id}}" {% ifequal ownerId user.id %}selected="selected"{% endifequal %}>
-                  {{user.name}}
+                <option value="{{user.id}}">
+                  {{user.username}}
                 </option>
+                <!-- {% ifequal ownerId user.id %}selected="selected"{% endifequal %} -->
                 {% endfor %}
             </select>
         </td>
     </tr>
+    
+    <tr>
+        <td>
+            <label>{{lblTopicDate}}</label>
+        </td>
+        <td>
+			<input id="topicDate" name="topicDate" type="text" dojoType="dijit.form.DateTextBox"
+			       constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" />
+        </td>
+    </tr>
+    
     
     </table>
 </form>
