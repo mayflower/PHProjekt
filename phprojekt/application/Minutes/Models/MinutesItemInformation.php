@@ -148,6 +148,24 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
 
                 $converted[] = $data;
                 
+                // sortOrder
+                $data = array();
+                $data['key']      = 'sortOrder';
+                $data['label']    = Phprojekt::getInstance()->translate('sortOrder');
+                $data['type']     = 'integer';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('sortOrder');
+                $data['order']    = 0;
+                $data['position'] = 6;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = false;
+                $data['tab']      = 1;
+
+                $converted[] = $data;
+                
+                                
                 // title
                 $data = array();
                 $data['key']      = 'title';
@@ -182,6 +200,46 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
 
                 $converted[] = $data;
                 
+                // topicDate
+                $data = array();
+                $data['key']      = 'topicDate';
+                $data['label']    = Phprojekt::getInstance()->translate('topicDate');
+                $data['type']     = 'date';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('topicDate');
+                $data['order']    = 0;
+                $data['position'] = 8;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = true;
+                $data['tab']      = 1;
+
+                $converted[] = $data;
+
+                // userId
+                $data = array();
+                $data['key']      = 'userId';
+                $data['label']    = Phprojekt::getInstance()->translate('userId');
+                $data['type']     = 'selectbox';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('userId');
+                $data['order']    = 0;
+                $data['position'] = 9;
+                $data['fieldset'] = '';
+                $data['range']    = array();
+                
+                $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+                $users = $user->fetchAll();
+                foreach ($users as $node) {
+                    $data['range'][] = array('id'   => $node->id,
+                                             'name' => $node->userName);
+                }
+                
+                $data['required'] = true;
+                $data['readOnly'] = true;
+                $data['tab']      = 1;
+                
+                $converted[] = $data;
                 break;
         }
         return $converted;
