@@ -79,7 +79,7 @@ class Phprojekt_Converter_Csv
         header("Pragma: no-cache");
         header('Content-Length: ' . strlen($outputString));
         header("Content-Disposition: attachment; filename=\"export.csv\"");
-        header('Content-Type: text/csv');
+        header("Content-type: application/octet-stream");
 
         echo $outputString;
     }
