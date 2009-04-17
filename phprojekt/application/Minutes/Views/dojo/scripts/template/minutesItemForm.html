@@ -4,21 +4,8 @@
 	<input type="hidden" name="projectId" value="{{projectId}}" />
 	<input type="hidden" name="topicId" value="{{topicId}}" />
 	<input type="hidden" name="sortOrder" value="{{sortOrder}}" />
-	<input type="hidden" name="userId" value="{{userId}}" />
+	<!-- ownerId is handled internally by the backend -->
 	
-	<!-- 
-	id        | int(11)
-	ownerId   | int(11)
-	projectId | int(11)
-	minutesId | int(11)
-	topicId   | int(11)
-	topicType | int(11)
-	sortOrder | int(11)
-	title     | varchar(255)
-	comment   | text
-	topicDate | date
-	userId    | int(11)
-	-->
     <table id="minutesItemFormTable">
     <tr>
         <td>
@@ -61,11 +48,11 @@
     
     <tr>
         <td>
-            <label>{{lblOwnerId}}</label>
+            <label>{{lblUserId}}</label>
         </td>
         <td>
-            <select id="minutesItemFormOwnerId" name="ownerId" dojoType="dijit.form.FilteringSelect"
-                    required="true" autocomplete="true" value="{{ownerId}}" invalidMessage="" >
+            <select id="minutesItemFormUserId" name="userId" dojoType="dijit.form.FilteringSelect"
+                    required="true" autocomplete="true" value="{{userId}}" invalidMessage="" >
                 <option value=""></option>
                 {% for user in users %}
                 <option value="{{user.id}}">
@@ -87,6 +74,12 @@
         </td>
     </tr>
     
+    <tr>
+    	<td>&nbsp;</td>
+    	<td>
+    		<button dojoType="dijit.form.Button" id="minutesItemFormSubmit">{{lblSubmit}}</button>
+    	</td>
+    </tr>
     
     </table>
 </form>
