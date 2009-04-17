@@ -34,6 +34,27 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt {
+
+    /**
+     * The first part of the version number
+     */
+    const VERSION_MAJOR = 6;
+
+    /**
+     * The second part of the version number
+     */
+    const VERSION_MINOR = 0;
+
+    /**
+     * The third part of the version number
+     */
+    const VERSION_RELEASE = 0;
+
+    /**
+     * The extra part of the version number
+     */
+    const VERSION_EXTRA = "DR2";
+
     /**
      * Singleton instance
      *
@@ -75,6 +96,59 @@ class Phprojekt {
      * @var Zend_View
      */
     protected $_view;
+
+    /**
+     * Returns the current version of PHProjekt
+     *
+     * @return string the version
+     */
+    public static function getVersion()
+    {
+        return sprintf("%d.%d.%d-%s", self::VERSION_MAJOR, self::VERSION_MINOR,
+            self::VERSION_RELEASE, self::VERSION_EXTRA);
+    }
+
+    /**
+     * Compares two PHProjekt version strings. Returns 1 if the first
+     * version is higher than the second one, 0 if they are equal and
+     * -1 if the second version is higher.
+     *
+     * @return int
+     */
+    public static function compareVersion($version1, $version2)
+    {
+        if (preg_match("@^([0-9])\.([0-9])\.([0-9]+)(-[a-zA-Z0-9]+)?$@i", $version1, $matches)) {
+            $v1elements = array_slice($matches, 1);
+        } else {
+            throw InvalidArgumentException();
+        }
+
+        if (preg_match("@^([0-9])\.([0-9])\.([0-9]+)(-[a-zA-Z0-9]+)?$@i", $version2, $matches)) {
+            $v2elements = array_slice($matches, 1);
+        } else {
+            throw InvalidArgumentException();
+        }
+
+        for ($i = 0; $i < 3; $i++) {
+            if ((int) $v1elements[$i] >  (int) $v2elements[$i]) {
+                return 1;
+            }
+
+            if ((int) $v1elements[$i] <  (int) $v2elements[$i]) {
+                return -1;
+            }
+        }
+
+        if (count($v1elements) < count($v2elements)) {
+            return 1;
+        }
+
+        if (count($v1elements) > count($v2elements)) {
+            return -1;
+        }
+
+        return strcmp($v1elements[3], $v2elements[3]);
+    }
 
     /**
      * Return this class only one time

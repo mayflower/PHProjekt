@@ -51,6 +51,7 @@ require_once 'Filter/ParseTreeTest.php';
 require_once 'Search/DefaultTest.php';
 require_once 'ModuleTest.php';
 require_once 'TabsTest.php';
+require_once 'PhprojektTest.php';
 
 /**
  * Test suite for the default module
@@ -106,6 +107,7 @@ class Phprojekt_AllTests
         //$suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
         $suite->addTestSuite('Phprojekt_Search_DefaultTest');
         $suite->addTestSuite('Phprojekt_TabsTest');
+        $suite->addTestSuite('Phprojekt_PhprojektTest');
 
         return $suite;
     }
