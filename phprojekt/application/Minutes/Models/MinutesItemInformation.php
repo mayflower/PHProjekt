@@ -52,23 +52,6 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
 
         switch ($ordering) {
             default:
-                // ownerId
-                $data = array();
-                $data['key']      = 'ownerId';
-                $data['label']    = Phprojekt::getInstance()->translate('ownerId');
-                $data['type']     = 'display';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('ownerId');
-                $data['order']    = 0;
-                $data['position'] = 1;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = true;
-                $data['readOnly'] = true;
-                $data['tab']      = 1;
-
-                $converted[] = $data;
-
                 // projectId
                 $data = array();
                 $data['key']      = 'projectId';

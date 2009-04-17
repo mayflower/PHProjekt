@@ -146,7 +146,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         // No code here as the rights are managed by the parent minutes model.
     }
     
-	/**
+    /**
      * Initialize the related minutes object
      *
      * @param integer $minutesId
@@ -171,13 +171,10 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * @param string       $join   The join statements
      *
      * @return Zend_Db_Table_Rowset
-     *
-     * @todo mock function
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         $minutes = $this->_minutes->find($this->_minutesId);
-        //$result = $foobar->fetchAll($where, $order, $count, $offset, $select, $join);
         if (null !== $where) {
             $where .= ' AND ';
         }
@@ -189,13 +186,12 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 
 
     /**
-     * @todo mock function
+     * Save is handled by parent.
      *
      * @return void
      */
     public function save()
     {
-        //Phprojekt::getInstance()->getLog()->debug(print_r($this, TRUE));
         return parent::save();
     }
 }
