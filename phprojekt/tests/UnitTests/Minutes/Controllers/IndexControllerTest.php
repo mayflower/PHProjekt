@@ -106,7 +106,6 @@ class Minutes_IndexController_Test extends FrontInit
         $this->assertContains('{"id":"1","username":', $response);
         $this->assertContains('{"id":"2","username":', $response);
         $this->assertContains('"numRows":2})', $response);
-        //$this->assertTrue(strpos($response, Minutes_IndexController::NOT_FOUND) > 0, "Response was: '$response'");
         // This action should return the list of users selected as participantsInvited only from existing minutes.
     }
     /**
@@ -114,16 +113,17 @@ class Minutes_IndexController_Test extends FrontInit
      */
     public function testJsonDetailAction()
     {
-        $this->markTestIncomplete('Not yet implemented');
+        $this->setRequestUrl('Minutes/index/jsonDetail/id/1');
+        $response = $this->getResponse();
+        $this->assertContains('TestTitle', $response);
     }
 
     public function testJsonListAction()
     {
-        $this->markTestIncomplete('Not yet implemented');
-/*        $this->setRequestUrl('Minutes/index/jsonList/');
+        $this->setRequestUrl('Minutes/index/jsonList/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":0}') > 0);*/
+        $this->assertContains('"numRows":1}', $response);
     }
 
     /**
