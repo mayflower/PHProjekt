@@ -232,7 +232,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $users = $user->fetchAll();
                 foreach ($users as $node) {
                     $data['range'][] = array('id'   => $node->id,
-                                             'name' => $node->userName);
+                                             'name' => $node->username);
                 }
                 
                 $data['required'] = true;
