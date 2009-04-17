@@ -145,4 +145,45 @@ class Minutes_ItemController extends IndexController
         }
     }
     
+    /*
+     * Deletes the minutes item
+     * 
+     * @requestparam integer minutesId   ID of the minutes being worked on.
+     * @requestparam integer id          ID of the item to be deleted.
+     * 
+     * @return void
+     */
+    public function jsonDeleteAction()
+    {
+        $minutesId = (int) $this->getRequest()->getParam('minutesId');
+        
+        if (empty($minutesId)) {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+        
+        $id = (int) $this->getRequest()->getParam('id');
+        
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+        
+        $model = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
+        
+        if ($model instanceof Phprojekt_Model_Interface) {
+            $tmp = Default_Helpers_Delete::delete($model);
+            if ($tmp === false) {
+                $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
+            } else {
+                $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
+            }
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $id);
+
+            Phprojekt_Converter_Json::echoConvert($return);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+    }
 }

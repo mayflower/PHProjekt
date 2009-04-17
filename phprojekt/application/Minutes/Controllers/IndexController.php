@@ -41,7 +41,8 @@ class Minutes_IndexController extends IndexController
      *
      * @return void
      */
-    public function jsonListUserAction () {
+    public function jsonListUserAction ()
+    {
         $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $minutes->find($this->getRequest()->getParam('id'));
 
@@ -49,6 +50,50 @@ class Minutes_IndexController extends IndexController
             $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $userList = $user->fetchAll(sprintf('id IN (%s)', $minutes->participantsInvited));
             Phprojekt_Converter_Json::echoConvert($userList);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+    }
+    
+    /*
+     * Deleting minutes also deletes all minutes items belonging to this minutes.
+     * 
+     * @return void
+     */
+    public function jsonDeleteAction () 
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+
+        $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes')->find($id);
+        $minutesItems = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($id)->fetchAll();
+        
+        $success = true;
+        
+        if ($minutes instanceof Phprojekt_Model_Interface) {
+            foreach ($minutesItems as $item) {
+                Phprojekt::getInstance()->getLog()->debug('Deleting minutesItem' . $item->id);
+                $success = $success && (false !== Default_Helpers_Delete::delete($item));
+                Phprojekt::getInstance()->getLog()->debug('Deletion was successful:' . ($success?'yes':'no'));
+            }
+            $success = $success && (false !== Default_Helpers_Delete::delete($minutes));
+            Phprojekt::getInstance()->getLog()->debug('Main Deletion was successful:' . ($success?'yes':'no'));
+            
+            
+            if ($success === false) {
+                $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
+            } else {
+                $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
+            }
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $id);
+            
+            Phprojekt_Converter_Json::echoConvert($return);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
