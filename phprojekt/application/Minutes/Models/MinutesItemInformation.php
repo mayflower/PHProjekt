@@ -123,7 +123,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['range']    = array('id'   => '',
                                           'name' => '');
                 $data['required'] = true;
-                $data['readOnly'] = true;
+                $data['readOnly'] = false;
                 $data['tab']      = 1;
 
                 $converted[] = $data;
@@ -143,7 +143,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                                                  'name' => 'Comment'),
                                           );
                 $data['required'] = true;
-                $data['readOnly'] = true;
+                $data['readOnly'] = false;
                 $data['tab']      = 1;
 
                 $converted[] = $data;
@@ -194,7 +194,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
-                $data['required'] = true;
+                $data['required'] = false;
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
 
@@ -211,7 +211,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
-                $data['required'] = true;
+                $data['required'] = false;
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
 
@@ -235,7 +235,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                                              'name' => $node->username);
                 }
                 
-                $data['required'] = true;
+                $data['required'] = false;
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 

@@ -114,6 +114,14 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
+    
+    /*
+     * Get error message from model
+     */
+    public function getError()
+    {
+        return (array) $this->_validate->error->getError();
+    }
 
     /**
      * Get the rights.
@@ -122,18 +130,23 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      */
     public function getRights()
     {
-        // The rights of the related minutes also apply to its items.
-        if (is_null($this->_minutesId)) {
-            Phprojekt::getInstance()->getLog()->debug('Minutes not initialized when checking rights');
-        } else {
-            $rights = $this->_minutes->_data;//getRights();
-            Phprojekt::getInstance()->getLog()->debug('Minutes rights: '.print_r($rights, true));
-        }
-
         return $this->_minutes->getRights();
     }
 
     /**
+     * Save the rights for the current item
+     * The users are a POST array with userIds
+     *
+     * @param array $rights - Array of usersId with the bitmask access
+     *
+     * @return void
+     */
+    public function saveRights($rights)
+    {
+        // No code here as the rights are managed by the parent minutes model.
+    }
+    
+	/**
      * Initialize the related minutes object
      *
      * @param integer $minutesId

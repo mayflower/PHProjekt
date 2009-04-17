@@ -113,33 +113,35 @@ class Minutes_ItemController extends IndexController
         $minutes->find($minutesId);
         
         Phprojekt::getInstance()->getLog()->debug('Minutes is: '.print_r($minutes->_data, true));
+        
         if (empty($minutes->id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        }
-        
-        $id = (int) $this->getRequest()->getParam('id');
-        
-        if (empty($id)) {
-            $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId);
-            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
-            $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
-            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
-        }
-        
-        if ($model instanceof Phprojekt_Model_Interface) {
-            $tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
             
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            $id = (int) $this->getRequest()->getParam('id');
             
-            $return = array('type'    => 'success',
-                            'message' => $message,
-                            'code'    => 0,
-                            'id'      => $model->id);
+            if (empty($id)) {
+                $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId);
+                $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+            } else {
+                $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
+                $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            }
             
-            Phprojekt_Converter_Json::echoConvert($return);
-        } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            if ($model instanceof Phprojekt_Model_Interface) {
+                $tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+                
+                Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+                
+                $return = array('type'    => 'success',
+                                'message' => $message,
+                                'code'    => 0,
+                                'id'      => $model->id);
+                
+                Phprojekt_Converter_Json::echoConvert($return);
+            } else {
+                throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            }
         }
     }
     
