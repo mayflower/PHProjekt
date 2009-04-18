@@ -203,9 +203,7 @@ function installPhprojekt()
         "database_manager",
         "calendar",
         "filemanager",
-        "helpdesk",
-        "minutes",
-        "minutes_item");
+        "helpdesk");
 
     $tableManager = new Phprojekt_Table($db);
 
@@ -630,46 +628,6 @@ function installPhprojekt()
         die("Error creating the table helpdesk");
     }
 
-    $result = $tableManager->createTable('minutes',
-        array(
-            'id'                     => array('type' => 'auto_increment', 'null' => false),
-            'owner_id'               => array('type' => 'int', 'length' => 11, 'null' => true),
-            'project_id'             => array('type' => 'int', 'length' => 11, 'null' => true),
-            'title'                  => array('type' => 'varchar', 'length' => 255, 'null' => true),
-            'description'            => array('type' => 'text', 'null' => true),
-            'meeting_date'           => array('type' => 'date', 'null' => true),
-            'start_time'             => array('type' => 'time', 'null' => true),
-            'end_time'               => array('type' => 'time', 'null' => true),
-            'place'                  => array('type' => 'varchar', 'length' => 255, 'null' => true),
-            'moderator'              => array('type' => 'varchar', 'length' => 255, 'null' => true),
-            'participants_Invited'   => array('type' => 'text', 'null' => true),
-            'participants_attending' => array('type' => 'text', 'null' => true),
-            'participants_excused'   => array('type' => 'text', 'null' => true),
-            'recipients'             => array('type' => 'text', 'null' => true),
-            'item_status'            => array('type' => 'int', 'length' => 11, 'null' => true),
-        ), array('primary key' => array('id')));
-    if (!$result) {
-        die("Error creating the table minutes");
-    }
-
-    $result = $tableManager->createTable('minutes_item',
-        array(
-            'id'         => array('type' => 'auto_increment', 'null' => false),
-            'owner_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
-            'project_id' => array('type' => 'int', 'length' => 11, 'null' => true),
-            'minutes_id' => array('type' => 'int', 'length' => 11, 'null' => true),
-            'topic_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
-            'topic_type' => array('type' => 'int', 'length' => 11, 'null' => true),
-            'sort_order' => array('type' => 'int', 'length' => 11, 'null' => true),
-            'title'      => array('type' => 'varchar', 'length' => 255, 'null' => true),
-            'comment'    => array('type' => 'text', 'null' => true),
-            'topic_date' => array('type' => 'date', 'null' => true),
-            'user_id'    => array('type' => 'int', 'length' => 11, 'null' => true),
-        ), array('primary key' => array('id')));
-    if (!$result) {
-        die("Error creating the table minutes_item");
-    }
-
     // Default information
 
     $db->insert('module', array(
@@ -748,14 +706,6 @@ function installPhprojekt()
         'id'        => 10,
         'name'      => 'Helpdesk',
         'label'     => 'Helpdesk',
-        'save_type' => 0,
-        'active'    => 1
-    ));
-
-    $db->insert('module', array(
-        'id'        => 11,
-        'name'      => 'Minutes',
-        'label'     => 'Minutes',
         'save_type' => 0,
         'active'    => 1
     ));
@@ -2102,292 +2052,6 @@ function installPhprojekt()
         'is_unique'       => 0
     ));
 
-    $db->insert('database_manager', array(
-        'id'              => 62,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'project_id',
-        'form_tab'        => 1,
-        'form_label'      => 'Select',
-        'form_type'       => 'hidden',
-        'form_position'   => 1,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 63,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'title',
-        'form_tab'        => 1,
-        'form_label'      => 'Title',
-        'form_type'       => 'text',
-        'form_position'   => 2,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 3,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 1,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 64,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'description',
-        'form_tab'        => 1,
-        'form_label'      => 'Description',
-        'form_type'       => 'textarea',
-        'form_position'   => 3,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 4,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 65,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'meeting_date',
-        'form_tab'        => 1,
-        'form_label'      => 'Date of Meeting',
-        'form_type'       => 'date',
-        'form_position'   => 4,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 1,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 1,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 66,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'start_time',
-        'form_tab'        => 1,
-        'form_label'      => 'Start Time',
-        'form_type'       => 'time',
-        'form_position'   => 5,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 2,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 67,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'end_time',
-        'form_tab'        => 1,
-        'form_label'      => 'End Time',
-        'form_type'       => 'time',
-        'form_position'   => 6,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 68,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'place',
-        'form_tab'        => 1,
-        'form_label'      => 'Place',
-        'form_type'       => 'text',
-        'form_position'   => 7,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 5,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 69,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'moderator',
-        'form_tab'        => 1,
-        'form_label'      => 'Moderator',
-        'form_type'       => 'text',
-        'form_position'   => 8,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 70,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'participants_invited',
-        'form_tab'        => 2,
-        'form_label'      => 'Invited',
-        'form_type'       => 'multipleSelectValues',
-        'form_position'   => 9,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => 'User#id#username',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 71,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'participants_attending',
-        'form_tab'        => 2,
-        'form_label'      => 'Attending',
-        'form_type'       => 'multipleSelectValues',
-        'form_position'   => 10,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => 'User#id#username',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 72,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'participants_excused',
-        'form_tab'        => 2,
-        'form_label'      => 'Excused',
-        'form_type'       => 'multipleSelectValues',
-        'form_position'   => 11,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => 'User#id#username',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 73,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'recipients',
-        'form_tab'        => 2,
-        'form_label'      => 'recipients',
-        'form_type'       => 'multipleSelectValues',
-        'form_position'   => 12,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => 'User#id#username',
-        'default_value'   => '',
-        'list_position'   => 0,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
-    $db->insert('database_manager', array(
-        'id'              => 74,
-        'table_name'      => 'Minutes',
-        'table_field'     => 'item_status',
-        'form_tab'        => 1,
-        'form_label'      => 'Status',
-        'form_type'       => 'selectValues',
-        'form_position'   => 13,
-        'form_columns'    => 1,
-        'form_regexp'     => null,
-        'form_range'      => '1# PLANNED | 2# CREATED | 3# PREVIEW | 4 #FINAL',
-        'default_value'   => '0',
-        'list_position'   => 6,
-        'list_align'      => 'center',
-        'list_use_filter' => 1,
-        'alt_position'    => 0,
-        'status'          => '1',
-        'is_integer'      => 0,
-        'is_required'     => 0,
-        'is_unique'       => 0
-    ));
-
     $db->insert('user', array(
         'id'        => 1,
         'username'  => 'admin',
@@ -2574,12 +2238,6 @@ function installPhprojekt()
         'access'    => 139
     ));
 
-    $db->insert('role_module_permissions', array(
-        'role_id'   => 1,
-        'module_id' => 11,
-        'access'    => 139
-    ));
-
     $db->insert('item_rights', array(
         'module_id' => 1,
         'item_id'   => 1,
@@ -2634,11 +2292,6 @@ function installPhprojekt()
 
     $db->insert('project_module_permissions', array(
         'module_id'  => 10,
-        'project_id' => 1
-    ));
-
-    $db->insert('project_module_permissions', array(
-        'module_id'  => 11,
         'project_id' => 1
     ));
 
@@ -3069,11 +2722,6 @@ useCacheForClasses   = true;
 
             $db->insert('project_module_permissions', array(
                 'module_id'  => 10,
-                'project_id' => $project["ID"]
-            ));
-
-            $db->insert('project_module_permissions', array(
-                'module_id'  => 11,
                 'project_id' => $project["ID"]
             ));
         }
