@@ -209,10 +209,8 @@ function installPhprojekt()
 
     foreach ($tableList as $oneTable) {
         if ($tableManager->tableExists($oneTable)) {
-            // fix for Zend Framework 1.7.2 and Windows operating system
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $db->closeConnection();
-            }
+            // Fix for Zend Framework 1.7.2
+            $db->closeConnection();
             $tableManager->dropTable($oneTable);
         }
     }
