@@ -42,13 +42,13 @@ function displaySetupForm()
                             // "pdo_sqlite" => "SQLite"
     );
 
-    $serverType      = (empty($_REQUEST['server_type'])?"pdo_mysql":$_REQUEST['server_type']);
-    $serverHost      = (empty($_REQUEST['server_host'])?"localhost":$_REQUEST['server_host']);
-    $serverUser      = (empty($_REQUEST['server_user'])?"root":$_REQUEST['server_user']);
-    $serverPass      = (empty($_REQUEST['server_pass'])?"":$_REQUEST['server_pass']);
-    $serverDatabase  = (empty($_REQUEST['server_database'])?"phprojekt6":$_REQUEST['server_database']);
-    $migrationConfig = (empty($_REQUEST['migration_config'])?"":$_REQUEST['migration_config']);
-    $errorMessage    = (empty($_SESSION['error_message'])?"":$_SESSION['error_message']);
+    $serverType      = (empty($_REQUEST['server_type'])      ? "pdo_mysql" :$_REQUEST['server_type']);
+    $serverHost      = (empty($_REQUEST['server_host'])      ? "localhost" :$_REQUEST['server_host']);
+    $serverUser      = (empty($_REQUEST['server_user'])      ? "root"      :$_REQUEST['server_user']);
+    $serverPass      = (empty($_REQUEST['server_pass'])      ? ""          :$_REQUEST['server_pass']);
+    $serverDatabase  = (empty($_REQUEST['server_database'])  ? "phprojekt" :$_REQUEST['server_database']);
+    $migrationConfig = (empty($_REQUEST['migration_config']) ? ""          :$_REQUEST['migration_config']);
+    $errorMessage    = (empty($_SESSION['error_message'])    ? ""          :$_SESSION['error_message']);
     unset($_SESSION['error_message']);
 
     $formContent = file_get_contents("setupForm.php");
