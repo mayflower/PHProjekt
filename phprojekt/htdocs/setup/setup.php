@@ -13,7 +13,7 @@
 */
 
 define("SETUP_ROUTINE", true);
-
+error_reporting(0);
 session_start();
 
 ini_set('max_execution_time', 0);

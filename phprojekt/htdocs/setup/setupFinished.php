@@ -8,21 +8,15 @@
         @import "../css/themes/phprojekt/phprojektCssCompiler.php";
     </style>
     <script type="text/javascript">
-        var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
+        var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
+                        locale: 'en', useCommentedJson: true};
     </script>
     <script type="text/javascript" src="../dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="../dojo/dojo/mydojo.js"></script>
     <script type="text/javascript">
-        dojo.require("dojo.parser");
-        dojo.require("dijit.form.Form");
-        dojo.require("dijit.form.Button");
-        dojo.require("dijit.form.Textarea");
-        dojo.require("dijit.form.TextBox");
-        dojo.require("dijit.layout.BorderContainer");
-        dojo.require("dijit.layout.ContentPane");
-    </script>
+        function getMaxHeight() {
+            var availHeight = 0;
 
-    <script type="text/javascript">
-        function init() {
             if (document.layers) {
                 availHeight = window.innerHeight + window.pageYOffset;
             } else if (document.all) {
@@ -30,69 +24,82 @@
             } else if (document.getElementById) {
                 availHeight = window.innerHeight + window.pageYOffset;
             }
-            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
+
+            return availHeight;
         }
-        dojo.addOnLoad(init);
+
+        function init() {
+            availHeight = getMaxHeight();
+
+            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
+            dijit.byId('completeContent').resize();
+        }
+
+        dojo.addOnLoad(function() {
+            dojo.parser.parse();
+            init();
+        });
+
         window.onresize = function() {
             init();
         };
     </script>
 </head>
-    <body class="phprojekt">
-        <div dojoType="dijit.layout.BorderContainer" id="completeContent">
-            <div id="header" region="top" class="block" style="height:55px;" >
-                <img class="left" src="../img/logo.png" alt="PHProjekt 6" />
-            </div>
+<body class="phprojekt">
 
-            <!-- Border Container which splits page in navigation and form/list view: -->
-            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"
-            style="margin-top: 55px;">
-            <!-- navigation panel -->
-
-            <div dojoType="dijit.layout.ContentPane" duration="200" minSize="20" region="leading"
-            class="column span-5 left" style="background: #294064;" id="navigation-container">
-                <div id="subheader" class="block">
-                    <div id="navigation-container-titel">
-                    </div>
+<div id="completeContent" dojoType="dijit.layout.ContentPane"
+    style="width: 100%; height: 1000px; overflow: hidden;">
+    <!-- Top Bar menu -->
+    <div dojoType="dijit.layout.ContentPane" id="header" region="top" splitter="false"
+    style="height:55px;">
+        <img class="left" src="../img/logo.png" alt="PHProjekt 6" />
+        <div id="mainNavigation" class="right align-right">
+        </div>
+    </div>
+    <!-- Left Content -->
+    <div id="navigation-container"
+    style="width:15%; height: 100%">
+        <div dojoType="dijit.layout.ContentPane">
+            <div id="subheader" class="block">
+                <div id="navigation-container-titel">
                 </div>
-             </div>
-               <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center"
-                style="width:80%; background-color:#FFFFFF" id="centerContent" >
-                <!-- Submodule navigation: -->
-                <div class="block">
-
-                    <div class="column">
-                        <img src="../img/subheaderborder.png" alt="" />
-                    </div>
-                    <div class="column left span-17 append-1 align-left" id="subModuleNavigation">
-                    Thanks for using PHProjek6!
-                    </div>
-                 </div>
-                 <!-- spaces -->
-                <hr class="space"/>
-                <hr />
-                <hr class="space"/>
+            </div>
+            <!-- Tree menu -->
+            <div id="tree-navigation" dojoType="dijit.layout.ContentPane">
+                <div dojoType="dijit.layout.ContentPane" id="treeBox">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Center Content -->
+    <div dojoType="dijit.layout.ContentPane"
+    style="position: absolute; top: 55px; left: 16%; width: 100%;">
+        <div dojoType="dijit.layout.ContentPane" design="sidebar"
+        style="width: 84%; height: 100%;">
+            <!-- Second Top Bar -->
+            <div dojoType="dijit.layout.ContentPane" region="top" class="block"
+            style="height: 7%;" splitter="false">
                 <!-- Exception Form -->
-                <div id="serverFeedback" class="prepend-24"><%ERROR_MESSAGE%>
-                                </div>
-                <form name="frm" action="setup.php" method="POST">
-                     <table width="100%" align="center" class="form">
-                     <col class="col1" />
-                        <tr>
-                            <td class="label"></td>
-
-                            <td>
-                                Installation done!. Please login at <a href="<%SERVER_URL%>index.php"><%SERVER_URL%>index.php</a>
-                            </td>
-                        </tr>
-
-
-                    </table>
-
-                </form>
-             </div>
+                <br />
+                <div id="serverFeedback" class="prepend-24">
+                    Thanks for using PHProjek6!
+                </div>
+            </div>
+            <!-- Main Content -->
+            <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
+                <br /><br /><br /><br /><br /><br /><br />
+                <table width="100%" align="center" class="form">
+                <col class="col1" />
+                    <tr>
+                        <td class="label"></td>
+                        <td>
+                            Installation done!. Please login at <a href="<%SERVER_URL%>index.php"><%SERVER_URL%>index.php</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        </div>
-
-    </body>
+    </div>
+</div>
+</body>
 </html>
