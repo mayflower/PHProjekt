@@ -13,7 +13,7 @@
 */
 
 define("SETUP_ROUTINE", true);
-
+error_reporting(0);
 session_start();
 
 ini_set('max_execution_time', 0);
@@ -24,10 +24,8 @@ define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
 
-set_include_path('.' . PATH_SEPARATOR
-. PHPR_LIBRARY_PATH . PATH_SEPARATOR
-. PHPR_CORE_PATH . PATH_SEPARATOR
-. get_include_path());
+set_include_path('.' . PATH_SEPARATOR . PHPR_LIBRARY_PATH . PATH_SEPARATOR
+    . PHPR_CORE_PATH . PATH_SEPARATOR . get_include_path());
 
 require_once 'Zend/Loader.php';
 require_once 'Phprojekt/Loader.php';
@@ -41,19 +39,13 @@ checkServer();
 if (empty($_REQUEST['server_host'])) {
     // draw first page
     displaySetupForm();
-
 } else {
     if (preInstallChecks()) {
-
         // process installation
         installPhprojekt();
-
         // installation finished, let's show the final page
         displayFinished();
-
     } else {
         displaySetupForm();
     }
-
-
 }
