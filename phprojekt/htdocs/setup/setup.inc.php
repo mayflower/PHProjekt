@@ -209,10 +209,8 @@ function installPhprojekt()
 
     foreach ($tableList as $oneTable) {
         if ($tableManager->tableExists($oneTable)) {
-            // fix for Zend Framework 1.7.2 and Windows operating system
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $db->closeConnection();
-            }
+            // Fix for Zend Framework 1.7.2
+            $db->closeConnection();
             $tableManager->dropTable($oneTable);
         }
     }
@@ -261,8 +259,8 @@ function installPhprojekt()
             'id'        => array('type' => 'auto_increment', 'null' => false),
             'name'      => array('type' => 'varchar', 'length' => 255, 'null' => true),
             'label'     => array('type' => 'varchar', 'length' => 255, 'null' => true),
-            'save_type' => array('type' => 'int', 'length' => 1, 'null' => false, 'default' => '0'),
-            'active'    => array('type' => 'int', 'length' => 1, 'null' => false, 'default' => '1'),
+            'save_type' => array('type' => 'int', 'length' => 1, 'null' => false, 'default' => 0),
+            'active'    => array('type' => 'int', 'length' => 1, 'null' => false, 'default' => 1),
         ), array('primary key' => array('id')));
     if (!$result) {
         die("Error creating the table module");
