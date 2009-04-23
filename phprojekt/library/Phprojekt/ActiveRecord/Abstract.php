@@ -176,8 +176,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __construct($config = null)
     {
-        //$this->_log = Phprojekt::getInstance()->getLog();
-
         if (null === $config) {
             $config = array('db' => Phprojekt::getInstance()->getDb());
         }
@@ -570,7 +568,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->hasMany);
 
             $instance = new $className(array('db' => $this->getAdapter()));
-            /* @var Phprojekt_ActiveRecord $instance */
 
             /*
             * $instance->_relations['simple'] = );
