@@ -76,18 +76,25 @@ class Phprojekt_Date_Collection
      * Adds a date to the Collection. If the date is higher/lower than
      * maxDate/minDate it will not be added.
      *
-     * @param Zend_Date|Array $element      A(n array of) Zend_Date object(s)
+     * @param Zend_Date $element      A Zend_Date object
      */
-    public function add($element)
+    public function add(Zend_Date $element)
     {
-        if (is_array($element)) {
-            foreach ($element as $e) {
-                $this->add($e);
-            }
-        } else {
-            if (!isset($this->_elements[$element->get()])) {
-                $this->_elements[$element->get()] = $element;
-            }
+        if (!isset($this->_elements[$element->get()])) {
+            $this->_elements[$element->get()] = $element;
+        }
+    }
+
+    /**
+     * Adds a date to the Collection. If the date is higher/lower than
+     * maxDate/minDate it will not be added.
+     *
+     * @param array $elements      An array of Zend_Date objects
+     */
+    public function addArray(array $elements)
+    {
+        foreach ($elements as $e) {
+            $this->add($e);
         }
     }
 
@@ -127,13 +134,13 @@ class Phprojekt_Date_Collection
         $date = $this->_minDate;
 
         $dates = $this->_rruleByXXX($rules, $date);
-        $this->add($dates);
+        $this->addArray($dates);
         while ($date < $rules['UNTIL']) {
             $date = $date->$method($rules['INTERVAL']);
             if ($date < $rules['UNTIL']) {
                 $dates = $this->_rruleByXXX($rules, $date);
             }
-            $this->add($dates);
+            $this->addArray($dates);
         }
 
         return true;
@@ -264,5 +271,4 @@ class Phprojekt_Date_Collection
             }
         }
     }
-
 }
