@@ -61,9 +61,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
     setUrl:function() {
         // summary:
-        //    Set the url for get the data
+        //    Set the url for getting the data
         // description:
-        //    Set the url for get the data
+        //    Set the url for getting the data
         this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + this.id;
     },
 
@@ -389,7 +389,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // summary:
         //    Check the access of the item for the user
         // description:
-        //    Return true if have write or admin accees
+        //    Return true if has write or admin accees
         var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
         var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
         if (writePermissions == 'false' && adminPermissions == 'false') {
@@ -445,7 +445,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Apply the changes into the server
         // description:
         //    Get all the new values into the _newRowValues
-        //    and sent it to the server
+        //    and send them to the server
         this.grid.edit.apply();
 
         // Get all the IDs for the data sets.
@@ -481,9 +481,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
     exportData:function() {
         // summary:
-        //    Open a new widnows in CVS mode
+        //    Open a new window in CSV mode
         // description:
-        //    Open a new widnows in CVS mode
+        //    Open a new window in CSV mode
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList/nodeId/" + this.id);
         return false;
     },
