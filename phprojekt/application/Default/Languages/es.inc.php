@@ -280,8 +280,8 @@ $lang["Waiting"] = "Esperando";
 $lang["Accepted"] = "Aceptado";
 
 // Tooltip Help
-$lang["Check this box to send an email notification to the people involved"] = "Active este casillero para enviar un "
-    . "correo electrónico notificando a la gente relacionada";
+$lang["Notification Help"] = "Active este casillero para enviar un correo electrónico notificando a la gente "
+    . "relacionada";
 
 // Help
 $lang["Content Help"]["General"] = "<br/>

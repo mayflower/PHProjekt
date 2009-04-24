@@ -814,7 +814,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    or modified. It has a "Send Notification" checkbox.
         // Add field
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '',
-                phpr.nls.get('Check this box to send an email notification to the people involved'));
+                phpr.nls.get('Notification Help'));
         // Add the tab to the form
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
     },
