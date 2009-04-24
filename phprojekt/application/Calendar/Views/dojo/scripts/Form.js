@@ -66,7 +66,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             return false;
         }
 
-        // check if rule for reccurrence is set
+        // check if rule for recurrence is set
         if (this.id > 0 && false === this._multipleEvents) {
             this.sendData.rrule = null;
         } else if (this.sendData.rruleFreq) {
@@ -124,7 +124,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             this.addParticipantsTab(data);
         }
 
-        this.addReccurrenceTab(data);
+        this.addRecurrenceTab(data);
         this.addNotificationTab(data);
         if (this.id > 0) {
             this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
@@ -253,12 +253,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         parent.removeChild(e);
     },
 
-    addReccurrenceTab:function(data) {
+    addRecurrenceTab:function(data) {
         // summary:
-        //    Adds a tab for reccurrence
+        //    Adds a tab for recurrence
         // description:
         //    Adds a tab to configure the rules if/when the event will reoccure
-        var reccurrenceTab = '';
+        var recurrenceTab = '';
 
         // Preset values
         var values = {
@@ -312,17 +312,17 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         } else {
             var disabled = false;
         }
-        reccurrenceTab += this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
+        recurrenceTab += this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
             false, disabled);
-        reccurrenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
+        recurrenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
             values.INTERVAL, false, disabled);
-        reccurrenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
+        recurrenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
             disabled);
-        reccurrenceTab += this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
+        recurrenceTab += this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
             values.BYDAY, false, disabled, 7, true);
 
         // Add the tab to the form
-        this.addTab(reccurrenceTab, 'tabReccurrence', 'Recurrence', 'reccurrenceTab');
+        this.addTab(recurrenceTab, 'tabRecurrence', 'Recurrence', 'recurrenceTab');
     },
 
     deleteForm:function() {
