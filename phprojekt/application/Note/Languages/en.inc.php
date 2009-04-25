@@ -1,5 +1,5 @@
 <?php
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Note"] = "<br/>
     This is the <b>General Help of Note module</b><br/>

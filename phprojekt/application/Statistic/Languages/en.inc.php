@@ -2,7 +2,7 @@
 // General
 $lang["Selected Statistic Period"] = "Selected Statistic Period";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Statistic"] = "<br/>
     <b>Statistic tab</b><br/>
@@ -17,5 +17,5 @@ $lang["Content Help"]["Statistic"] = "<br/>
     <br/>
     <br/>";
 
-// General Tooltip buttons Help
+// Tooltip Help
 $lang["Selected Period Help"] = "Choose here the period for the statistics to be calculated.";

@@ -2,7 +2,7 @@
 // Tooltip help
 $lang["Tooltip"]["files"] = "Puede subir tantos archivos como desee";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Archivos"] = "<br/>
     Esta es la <b>Ayuda General del módulo Archivos</b><br/>

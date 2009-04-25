@@ -2,7 +2,7 @@
 // Tooltip Help
 $lang["Tooltip"]["private"] = "No: all users can see it - Yes: only the creator can see it";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Contacts"] = "<br/>
     This is the <b>General Help of Contacts module</b><br/>

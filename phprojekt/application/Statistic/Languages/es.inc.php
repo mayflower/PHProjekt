@@ -2,7 +2,7 @@
 // General
 $lang["Selected Statistic Period"] = "Período de Estadísticas Seleccionado";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Estadísticas"] = "<br/>
     <b>Solapa Estadísticas</b><br/>
@@ -17,5 +17,5 @@ $lang["Content Help"]["Estadísticas"] = "<br/>
     <br/>
     <br/>";
 
-// General Tooltip buttons Help
+// Tooltip Help
 $lang["Selected Period Help"] = "Elija aquí el período que quiere que abarque la estadística.";

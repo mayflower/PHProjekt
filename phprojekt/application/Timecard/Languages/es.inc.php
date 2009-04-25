@@ -14,7 +14,13 @@ $lang["Amount [hhmm]"] = "Cantidad [hhmm]";
 $lang["Total"] = "Total";
 $lang["The amount is invalid"] = "La cantidad es inválida (De 30 a 1300)";
 
-// Help
+// Tooltip Help
+$lang["Start Stop Buttons Help"] = "Estos botones Comienzan y Finalizan las horas de trabajo automáticamente.";
+$lang["Working Times Help"] = "Aquí puede agregar todas las horas trabajadas del día elegido.";
+$lang["Hours Help"] = "El formato de las horas puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
+$lang["Project Times Help"] = "Dentro de este panel puede Arrastrar y Soltar proyectos dentro de las horas trabajadas.";
+
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Asistencia"] = "<br/>
     Esta es la <b>Ayuda General del módulo Asistencia</b><br/>
@@ -209,9 +215,3 @@ $lang["Content Help"]["Paso a paso"] = "<br/>
     </ol>
     <br/>
     <br/>";
-
-// General Tooltip buttons Help
-$lang["Start Stop Buttons Help"] = "Estos botones Comienzan y Finalizan las horas de trabajo automáticamente.";
-$lang["Working Times Help"] = "Aquí puede agregar todas las horas trabajadas del día elegido.";
-$lang["Hours Help"] = "El formato de las horas puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
-$lang["Project Times Help"] = "Dentro de este panel puede Arrastrar y Soltar proyectos dentro de las horas trabajadas.";

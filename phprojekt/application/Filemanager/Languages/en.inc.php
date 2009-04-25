@@ -2,7 +2,7 @@
 // Tooltip help
 $lang["Tooltip"]["files"] = "You can upload as many files as you want";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Filemanager"] = "<br/>
     This is the <b>General Help of Filemanager module</b><br/>

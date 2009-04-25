@@ -20,7 +20,7 @@ $lang["Click \"OK\" to adjust sub-project to new start date"] = "Click \"OK\" to
 $lang["Click \"Reset\" to reset current project"] = "Click \"Reset\" to reset current project";
 $lang["Click \"x\" or \"ESC\" to do nothing"] = "Click \"x\" or \"ESC\" to do nothing";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Gantt"] = "<br/>
     This is the <b>General Help of Gantt module</b><br/>

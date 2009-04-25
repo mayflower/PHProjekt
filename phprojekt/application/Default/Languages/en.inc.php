@@ -282,7 +282,7 @@ $lang["Accepted"] = "Accepted";
 // Tooltip Help
 $lang["Notification Help"] = "Check this box to send an email notification to the participants";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "<br/>
     This is the <b>General Help</b><br/>
     <br/>

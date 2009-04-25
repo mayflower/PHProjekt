@@ -2,7 +2,7 @@
 // Tooltip Help
 $lang["Tooltip"]["projectId"] = "The parent project, if none then select PHProjekt.";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Project"] = "<br/>
     This is the <b>General Help of Project module</b><br/>

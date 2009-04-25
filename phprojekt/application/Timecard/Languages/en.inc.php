@@ -13,7 +13,13 @@ $lang["Amount [hhmm]"] = "Amount [hhmm]";
 $lang["Total"] = "Total";
 $lang["The amount is invalid"] = "The amount is invalid (From 30 to 1300)";
 
-// Help
+// Tooltip Help
+$lang["Start Stop Buttons Help"] = "This buttons Start and Stop working time automatically.";
+$lang["Working Times Help"] = "Here you should add the all the worked hours of the selected day.";
+$lang["Hours Help"] = "The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.";
+$lang["Project Times Help"] = "Inside this panel you can Drag & Drop Projects into the worked hours.";
+
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Timecard"] = "<br/>
     This is the <b>General Help for Timecard</b><br/>
@@ -203,9 +209,3 @@ $lang["Content Help"]["Step by step"] = "<br/>
     </ol>
     <br/>
     <br/>";
-
-// General Tooltip buttons Help
-$lang["Start Stop Buttons Help"] = "This buttons Start and Stop working time automatically.";
-$lang["Working Times Help"] = "Here you should add the all the worked hours of the selected day.";
-$lang["Hours Help"] = "The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.";
-$lang["Project Times Help"] = "Inside this panel you can Drag & Drop Projects into the worked hours.";

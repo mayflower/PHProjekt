@@ -282,7 +282,7 @@ $lang["Accepted"] = "Aceptado";
 // Tooltip Help
 $lang["Notification Help"] = "Active este casillero para enviar un correo electrónico notificando a los participantes";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "<br/>
     Esta es la <b>Ayuda General</b><br/>
     <br/>

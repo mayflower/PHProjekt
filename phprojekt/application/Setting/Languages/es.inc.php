@@ -18,7 +18,7 @@ $lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos
 // Tooltip Help
 $lang["Tooltip"]["amount"] = "Proyectos que serán vistos en Asistencia y estarán listos para Arrastrar y Soltar";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Configuración"] = "<br/>
     Esta es la <b>Ayuda General del módulo Configuración</b><br />

@@ -41,7 +41,7 @@ $lang["Invalid form Range for the select field"] = "Invalid form Range for the s
 $lang["The module must have a project selector called projectId"] = "The module must have a project selector called "
     . "projectId";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Administration"] = "<br/>
     This is the <b>General Help of Administration module</b><br/>

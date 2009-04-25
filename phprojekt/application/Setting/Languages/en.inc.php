@@ -18,7 +18,7 @@ $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 // Tooltip Help
 $lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Setting"] = "<br/>
     This is the <b>General Help of Setting module</b><br />

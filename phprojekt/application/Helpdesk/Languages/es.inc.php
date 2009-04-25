@@ -12,7 +12,7 @@ $lang["Description"] = "Descripción";
 // Tooltip Help
 $lang["Tooltip"]["projectId"] = "El proyecto padre, si no tiene padre elegir PHProjekt.";
 
-// Help
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Incidencias"] = "<br/>
     Esta es la <b>Ayuda General del módulo Incidencias</b><br/>
