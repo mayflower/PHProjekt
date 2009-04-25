@@ -5,7 +5,7 @@
     <tr>
         <td width="{{widthHourColumn}}%" class="hours">{{row.hour}} &nbsp;
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-                onClick="dojo.publish('Calendar.openForm', [null, null, null, '{{row.hour}}']);">
+                onClick="dojo.publish('Calendar.openForm', [null, null, '{{date}}', '{{row.hour}}']);">
             </button>
         </td>
         {% for column in row.columns %}

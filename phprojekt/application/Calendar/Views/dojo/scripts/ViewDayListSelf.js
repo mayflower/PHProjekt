@@ -67,6 +67,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         this.render(["phpr.Calendar.template", "dayListSelf.html"], dojo.byId('gridBox'), {
             widthTable:           this._widthTable,
             widthHourColumn:      this._widthHourColumn,
+            date:                 this.formatDate(this._date),
             schedule:             this._schedule,
             furtherEvents:        this._furtherEvents,
             furtherEventsMessage: phpr.nls.get('Further events')
