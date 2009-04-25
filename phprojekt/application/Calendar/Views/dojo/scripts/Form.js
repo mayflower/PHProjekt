@@ -315,9 +315,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         recurrenceTab += this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
             false, disabled);
         recurrenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
-            values.INTERVAL, false, disabled);
+            values.INTERVAL, false, disabled, phpr.nls.get('Interval Help'));
         recurrenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
-            disabled);
+            disabled, phpr.nls.get('Until Help'));
         recurrenceTab += this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
             values.BYDAY, false, disabled, 7, true);
 

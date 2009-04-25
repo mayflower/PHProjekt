@@ -57,7 +57,13 @@ $lang["Fr"] = "Vi";
 $lang["Sa"] = "Sa";
 $lang["Su"] = "Do";
 
-// Help
+// Tooltip Help
+$lang["Interval Help"] = "El intervalo para la opción seleccionada en Repeticiones. <br>Ej.: Repeticiones Semanal - "
+    . "Intervalo 2, se creará un evento cada 2 semanas.";
+$lang["Until Help"] = "El día en que la recurrencia terminará. <br>El día del último evento puede no coincidir con "
+    . "este día.";
+
+// General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Evento"] = "<br/>
     Esta es la <b>Ayuda General del módulo Evento</b><br/>

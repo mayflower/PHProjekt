@@ -280,7 +280,7 @@ $lang["Waiting"] = "Waiting";
 $lang["Accepted"] = "Accepted";
 
 // Tooltip Help
-$lang["Notification Help"] = "Check this box to send an email notification to the people involved";
+$lang["Notification Help"] = "Check this box to send an email notification to the participants";
 
 // Help
 $lang["Content Help"]["General"] = "<br/>
