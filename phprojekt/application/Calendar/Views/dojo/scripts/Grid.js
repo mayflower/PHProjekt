@@ -20,9 +20,4 @@
 dojo.provide("phpr.Calendar.Grid");
 
 dojo.declare("phpr.Calendar.Grid", phpr.Default.Grid, {
-    onLoaded:function(dataContent) {
-        this.inherited(arguments);
-        // Because of existing many views, don't cache the list contents
-        this.updateData();
-    }
 });
