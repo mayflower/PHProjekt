@@ -24,6 +24,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _participantUrl: null,
     _multipleEvents: null,
     _owner:          null,
+    _currentDate:    null,
+    _currentTime:    null,
 
     initData:function() {
         // Get all the active users
@@ -128,6 +130,47 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         this.addNotificationTab(data);
         if (this.id > 0) {
             this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
+        }
+    },
+
+    postRenderForm:function() {
+        // Summary:
+        //    User functions after render the form
+        // Description:
+        //    Apply for special events on the fields
+        this._currentDate = dijit.byId('startDate').value;
+        this._currentTime = dijit.byId('startTime').value;
+        dojo.connect(dojo.byId('startDate'), "onblur", this, 'startDateBlur');
+        dojo.connect(dojo.byId('startTime'), "onblur", this, 'startTimeBlur');
+    },
+
+    startDateBlur:function() {
+        // Summary:
+        //    Checks whether to change the End date according to the modification of Start date
+        // Description:
+        //   If it has changed to a valid date, then add or substract the difference between previous and current value
+        // to the End date
+        if (this._currentDate != dijit.byId('startDate').value) {
+            if (dijit.byId('startDate').isValid()) {
+                diff = dojo.date.difference(this._currentDate, dijit.byId('startDate').value, 'day');
+                dijit.byId('endDate').setValue(dojo.date.add(dijit.byId('endDate').value, 'day', diff));
+                this._currentDate = dijit.byId('startDate').value;
+            }
+        }
+    },
+
+    startTimeBlur:function() {
+        // Summary:
+        //    Checks whether to change the End time according to the modification of Start time
+        // Description:
+        //    If it has changed to a valid time, then add or substract the difference between previous and current value
+        // to the End time
+        if (this._currentTime != dijit.byId('startTime').value) {
+            if (dijit.byId('startTime').isValid()) {
+                diff = dojo.date.difference(this._currentTime, dijit.byId('startTime').value, 'minute');
+                dijit.byId('endTime').setValue(dojo.date.add(dijit.byId('endTime').value, 'minute', diff));
+                this._currentTime = dijit.byId('startTime').value;
+            }
         }
     },
 
