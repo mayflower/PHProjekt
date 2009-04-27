@@ -860,31 +860,54 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         var helpData = phpr.nls.get('Content Help', currentModule);
         if (typeof(helpData) == 'object') {
-            var container = new dijit.layout.TabContainer({
-                style: 'height:100%;',
-                id:    'helpContent'
-            }, document.createElement('div'));
-
-            for (i in helpData) {
-                var text = helpData[i];
-                // Check if the tab have DEFAULT text
-                if (text == 'DEFAULT') {
-                    var defaultHelpData = phpr.nls.get('Content Help', 'Default');
-                    if (typeof(defaultHelpData) == 'object' && defaultHelpData[i]) {
-                        text = defaultHelpData[i];
-                    }
-                }
-                container.addChild(new dijit.layout.ContentPane({
-                    title:   i,
-                    content: text
-                }));
-            }
-
-            dijit.byId('helpContainer').attr("content", container);
-            container.startup();
+            this.showHelp_part2(helpData, phpr.nls);
         } else {
-            dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available', currentModule));
+            // If help is not available in current language, the default language is English
+            var defLangUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/en";
+            phpr.DataStore.addStore({url: defLangUrl});
+            phpr.DataStore.requestData({
+                url:         defLangUrl,
+                processData: dojo.hitch(this, function() {
+                    // Load the components, tree, list and details.
+                    nlsSource = new phpr.translator(phpr.DataStore.getData({url: defLangUrl}));
+                    helpData  = nlsSource.get('Content Help', currentModule);
+                    if (typeof(helpData) == 'object') {
+                        this.showHelp_part2(helpData, nlsSource);
+                    } else {
+                        dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available', currentModule));
+                        dijit.byId('helpDialog').show();
+                    }
+                })
+            });
         }
+    },
+
+    showHelp_part2:function(helpData, nlsSource) {
+        // Summary:
+        //    Continuation of showHelp function
+
+        var container = new dijit.layout.TabContainer({
+            style: 'height:100%;',
+            id:    'helpContent'
+        }, document.createElement('div'));
+
+        for (i in helpData) {
+            var text = helpData[i];
+            // Check if the tab have DEFAULT text
+            if (text == 'DEFAULT') {
+                var defaultHelpData = nlsSource.get('Content Help', 'Default');
+                if (typeof(defaultHelpData) == 'object' && defaultHelpData[i]) {
+                    text = defaultHelpData[i];
+                }
+            }
+            container.addChild(new dijit.layout.ContentPane({
+                title:   i,
+                content: text
+            }));
+        }
+
+        dijit.byId('helpContainer').attr("content", container);
+        container.startup();
         dijit.byId('helpDialog').show();
     },
 
