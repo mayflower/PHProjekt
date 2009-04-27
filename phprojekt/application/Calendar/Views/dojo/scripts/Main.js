@@ -579,5 +579,20 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    Capitalizes the first letter of a string
         result = str.slice(0,1).toUpperCase() + str.slice(1);
         return result;
+    },
+
+    updateCacheData:function() {
+        // Summary:
+        //    Forces every widget of the page to update its data, by deleting its cache.
+
+        // As the 'grid' object may not exist, it is not called updateData function but deleted the cache manually
+        var gridUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + phpr.currentProjectId;
+        var tagUrl  = phpr.webpath + "index.php/Default/Tag/jsonGetTags";
+        phpr.DataStore.deleteData({url: gridUrl});
+        phpr.DataStore.deleteData({url: tagUrl});
+
+        if (this.form) {
+            this.form.updateData();
+        }
     }
 });
