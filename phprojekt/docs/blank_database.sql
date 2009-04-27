@@ -436,7 +436,6 @@ CREATE TABLE `filemanager` (
   `title` varchar(50) NOT NULL,
   `comments` text default NULL,
   `project_id` int(11) NOT NULL,
-  `category` varchar(50) default NULL,
   `files` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -584,7 +583,6 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Filemanager', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Filemanager', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 0, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Filemanager', 'category', 1, 'Category', 'text', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Filemanager', 'files', 1, 'Upload', 'upload', 5, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
 
 (0, 'Contact', 'name', 1, 'Name', 'text', 1, 1, NULL, '', '', 1, 'left', 1, 0, '1', 0, 1, 0),
