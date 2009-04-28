@@ -33,8 +33,8 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt {
-
+class Phprojekt
+{
     /**
      * The first part of the version number
      */
@@ -104,14 +104,21 @@ class Phprojekt {
      */
     public static function getVersion()
     {
-        return sprintf("%d.%d.%d-%s", self::VERSION_MAJOR, self::VERSION_MINOR,
-            self::VERSION_RELEASE, self::VERSION_EXTRA);
+        if (null !== self::VERSION_EXTRA) {
+            return sprintf("%d.%d.%d-%s", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE,
+                self::VERSION_EXTRA);
+        } else {
+            return sprintf("%d.%d.%d", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE);
+        }
     }
 
     /**
      * Compares two PHProjekt version strings. Returns 1 if the first
      * version is higher than the second one, 0 if they are equal and
      * -1 if the second version is higher.
+     *
+     * @param string $version1 The first string to check
+     * @param string $version2 The second string to check
      *
      * @return int
      */
@@ -130,11 +137,11 @@ class Phprojekt {
         }
 
         for ($i = 0; $i < 3; $i++) {
-            if ((int) $v1elements[$i] >  (int) $v2elements[$i]) {
+            if ((int) $v1elements[$i] > (int) $v2elements[$i]) {
                 return 1;
             }
 
-            if ((int) $v1elements[$i] <  (int) $v2elements[$i]) {
+            if ((int) $v1elements[$i] < (int) $v2elements[$i]) {
                 return -1;
             }
         }
@@ -147,7 +154,15 @@ class Phprojekt {
             return -1;
         }
 
-        return strcmp($v1elements[3], $v2elements[3]);
+        if (isset($v1elements[3]) && isset($v2elements[3])) {
+            return strcmp($v1elements[3], $v2elements[3]);
+        } else if (!isset($v1elements[3]) && isset($v2elements[3])) {
+            return 1;
+        } else if (isset($v1elements[3]) && !isset($v2elements[3])) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
     /**
