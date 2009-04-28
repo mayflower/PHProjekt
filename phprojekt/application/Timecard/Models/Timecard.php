@@ -133,7 +133,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
-                    'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
+                    'message' => Phprojekt::getInstance()->translate('Start time has to be between 8:00 and 21:00')));
                 return false;
             }
         }
@@ -178,7 +178,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $this->_validate->error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Hours'),
                         'label'   => Phprojekt::getInstance()->translate('Hours'),
-                        'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
+                        'message' => Phprojekt::getInstance()->translate('Start time has to be between 8:00 and '
+                                                                         . '21:00')));
                     return false;
                 }
             }

@@ -12,6 +12,7 @@ $lang["Manage project list"] = "Manage project list";
 $lang["Amount [hhmm]"] = "Amount [hhmm]";
 $lang["Total"] = "Total";
 $lang["The amount is invalid"] = "The amount is invalid (From 30 to 1300)";
+$lang["Start time has to be between 8:00 and 21:00"] = "Start time has to be between 8:00 and 21:00";
 
 // Tooltip Help
 $lang["Start Stop Buttons Help"] = "This buttons Start and Stop working time automatically.";

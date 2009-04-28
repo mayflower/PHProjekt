@@ -13,6 +13,7 @@ $lang["Manage project list"] = "Admin. lista de proyectos";
 $lang["Amount [hhmm]"] = "Cantidad [hhmm]";
 $lang["Total"] = "Total";
 $lang["The amount is invalid"] = "La cantidad es inválida (De 30 a 1300)";
+$lang["Start time has to be between 8:00 and 21:00"] = "La hora de inicio tiene que ser entre 8:00 y 21:00";
 
 // Tooltip Help
 $lang["Start Stop Buttons Help"] = "Estos botones Comienzan y Finalizan las horas de trabajo automáticamente.";
