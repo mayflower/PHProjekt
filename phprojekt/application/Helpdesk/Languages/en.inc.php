@@ -1,6 +1,6 @@
 <?php
 // General
-$lang["author"] = "Author";
+$lang["Author"] = "Author";
 $lang["Assigned"] = "Assigned";
 $lang["Due date"] = "Due date";
 $lang["Priority"] = "Priority";

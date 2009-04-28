@@ -1,6 +1,6 @@
 <?php
 // General
-$lang["author"] = "Autor";
+$lang["Author"] = "Autor";
 $lang["Assigned"] = "Asignado";
 $lang["Due date"] = "Fecha límite";
 $lang["Priority"] = "Prioridad";
