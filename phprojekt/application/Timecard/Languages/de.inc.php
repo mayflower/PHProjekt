@@ -12,3 +12,4 @@ $lang["Manage project list"] = "Projektliste verwalten";
 $lang["Amount [hhmm]"] = "Zeit [hhmm]";
 $lang["Total"] = "Gesamt";
 $lang["The amount is invalid"] = "Der Betrag ist ungültig (Von 30 bis 1300)";
+$lang["Start time has to be between 8:00 and 21:00"] = "Startzeit muss zwischen 8:00 und 21:00 liegen";
