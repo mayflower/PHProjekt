@@ -153,7 +153,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var data       = phpr.DataStore.getData({url: this._hourUrl});
 
         for (var i = 0; i < data.length; i++) {
-            totalHours += this.getDiffTime(data[i].endTime, data[i].startTime);
+            diffTime = this.getDiffTime(data[i].endTime, data[i].startTime);
+            if (diffTime > 0) {
+                totalHours += diffTime;
+            }
             hoursdata += this.render(["phpr.Timecard.template", "hours.html"], null, {
                 hoursDiff: phpr.Date.convertTime(this.getDiffTime(data[i].endTime, data[i].startTime)),
                 start:     data[i].startTime.substr(0, 5),
