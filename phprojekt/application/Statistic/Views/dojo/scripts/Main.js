@@ -24,8 +24,6 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         this.module = "Statistic";
         this.loadFunctions(this.module);
 
-        this.gridWidget = phpr.Statistic.Grid;
-        this.formWidget = phpr.Statistic.Form;
         this.treeWidget = phpr.Statistic.Tree;
 
         dojo.subscribe("Statistic.changeDate", this, "changeDate");
@@ -142,10 +140,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         });
     },
 
-    setNewEntry:function() {
-    },
-
-    exportData:function() {
+     exportData:function() {
         var start = dijit.byId("startDate").attr('value');
         var end   = dijit.byId("endDate").attr('value');
 
@@ -154,8 +149,5 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             + "/startDate/" + phpr.Date.getIsoDate(start)
             + "/endDate/" + phpr.Date.getIsoDate(end));
         return false;
-    },
-
-    openForm:function(id, module) {
     }
-});
+ });

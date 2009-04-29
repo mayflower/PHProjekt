@@ -27,8 +27,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.module = 'Gantt';
         this.loadFunctions(this.module);
 
-        this.gridWidget = phpr.Gantt.Grid;
-        this.formWidget = phpr.Gantt.Form;
         this.treeWidget = phpr.Gantt.Tree;
 
         dojo.subscribe("Gantt.dialogCallback", this, "dialogCallback");
@@ -62,9 +60,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this._url = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
-    },
-
-    setNewEntry:function() {
     },
 
     prepareData:function(items, request) {
@@ -454,8 +449,5 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var formUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + ids[i];
             phpr.DataStore.deleteData({url: formUrl});
         }
-    },
-
-    openForm:function(id, module) {
     }
 });
