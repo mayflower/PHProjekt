@@ -25,6 +25,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.loadFunctions(this.module);
 
         this.gridWidget = phpr.Core.Grid;
+        this.formWidget = phpr.Core.Form;
         this.treeWidget = phpr.Core.Tree;
     },
 

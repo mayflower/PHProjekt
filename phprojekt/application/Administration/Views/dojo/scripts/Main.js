@@ -24,6 +24,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         this.module = "Administration";
         this.loadFunctions(this.module);
 
+        this.gridWidget = phpr.Administration.Grid;
         this.formWidget = phpr.Administration.Form;
         this.treeWidget = phpr.Administration.Tree;
 
