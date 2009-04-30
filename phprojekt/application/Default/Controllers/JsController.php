@@ -62,14 +62,14 @@ class JsController extends IndexController
         echo 'dojo.registerModulePath("phpr.Core", "../../../application/Core/Views/dojo/scripts");';
 
         // System files, must be parsed in this order
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/phpr.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Component.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/grid.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/roundedContentPane.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Store.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Date.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Gfx.js');
-        echo file_get_contents(PHPR_CORE_PATH.'/Default/Views/dojo/scripts/system/Url.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/grid.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/roundedContentPane.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Gfx.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
 
         // Default Folder
         echo $this->_getDefaultScripts();
@@ -81,21 +81,21 @@ class JsController extends IndexController
         $this->_getTemplates(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/template/', 'Default');
 
         // Load all modules and make and array of it
-        $files   = scandir(PHPR_CORE_PATH);
+        $files = scandir(PHPR_CORE_PATH);
         foreach ($files as $file) {
             if ($file != '.'  &&
                 $file != '..' &&
                 $file != '.svn' &&
                 $file != 'Default') {
-                if (is_dir(PHPR_CORE_PATH.'/'.$file.'/Views/dojo/scripts/')) {
-                    $scripts = scandir(PHPR_CORE_PATH.'/'.$file.'/Views/dojo/scripts/');
+                if (is_dir(PHPR_CORE_PATH . '/' . $file . '/Views/dojo/scripts/')) {
+                    $scripts = scandir(PHPR_CORE_PATH . '/' . $file . '/Views/dojo/scripts/');
                 } else {
                     $scripts = array();
                 }
                 $this->_modules[] = $file;
                 if ($file != 'Core') {
                     echo 'dojo.registerModulePath'
-                    . '("phpr.'.$file.'", "../../../application/'.$file.'/Views/dojo/scripts");';
+                    . '("phpr.' . $file . '", "../../../application/' . $file . '/Views/dojo/scripts");';
                     echo $this->_getModuleScripts($scripts, $file);
                 } else {
                     echo $this->_getCoreModuleScripts($scripts);
