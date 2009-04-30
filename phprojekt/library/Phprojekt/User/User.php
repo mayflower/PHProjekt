@@ -232,7 +232,20 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         $data   = $this->_data;
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        return $this->_validate->recordValidate($this, $data, $fields);
+        $result = $this->_validate->recordValidate($this, $data, $fields);
+        if ($result) {
+            // Username repeated?
+            $where = " username = '" . $this->username . "' and id != " . $this->id;
+            $records = $this->fetchAll($where);
+            if (count($records) > 0) {
+                $this->_validate->error->addError(array(
+                    'field'   => Phprojekt::getInstance()->translate('Username'),
+                    'label'   => Phprojekt::getInstance()->translate('Username'),
+                    'message' => Phprojekt::getInstance()->translate('Already exists, choose another one please')));
+                $result = false;
+            }
+        }
+        return $result;
     }
 
     /**

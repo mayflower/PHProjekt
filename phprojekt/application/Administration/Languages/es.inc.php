@@ -40,6 +40,9 @@ $lang["Invalid form Range for the select field"] = "Rango invalido para el campo
 $lang["The module must have a project selector called projectId"] = "El módulo debe tener un selector de proyecto "
     . "llamado projectId";
 
+// User submodule
+$lang["Already exists, choose another one please"] = "Ya existente, elija otro por favor";
+
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Administración"] = "<br/>
