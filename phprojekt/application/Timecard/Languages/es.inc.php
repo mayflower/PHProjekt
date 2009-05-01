@@ -13,7 +13,14 @@ $lang["Manage project list"] = "Admin. lista de proyectos";
 $lang["Amount [hhmm]"] = "Cantidad [hhmm]";
 $lang["Total"] = "Total";
 $lang["The amount is invalid"] = "La cantidad es inválida (De 30 a 1300)";
+$lang["Time period"] = "Período de tiempo";
 $lang["Start time has to be between 8:00 and 21:00"] = "La hora de inicio tiene que ser entre 8:00 y 21:00";
+$lang["Can not save it because it overlaps existing one"] = "No puede grabarse porque se superpone con un período "
+    . "existente";
+$lang["Can not Start Working Time because this moment is occupied by an existing period."] = "No se puede Empezar "
+    . "Tiempo de Trabajo porque este momento está ocupado por un período existente.";
+$lang["Can not End Working Time because this moment is occupied by an existing period."] = "No se puede Terminar "
+    . "Tiempo de Trabajo porque este momento está ocupado por un período existente.";
 
 // Tooltip Help
 $lang["Start Stop Buttons Help"] = "Estos botones Comienzan y Finalizan las horas de trabajo automáticamente.";
