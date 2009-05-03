@@ -140,11 +140,11 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $date = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-
+        $date  = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
         $where = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $order = "start_time";
 
-        $records = $this->getModelObject()->fetchAll($where);
+        $records = $this->getModelObject()->fetchAll($where, $order);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
