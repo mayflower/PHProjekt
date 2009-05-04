@@ -33,9 +33,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     _manFavBoxesHeight: 18,
 
     constructor:function(main, id, module, date) {
-        // summary:
+        // Summary:
         //    render the form on construction
-        // description:
+        // Description:
         //    this function receives the form data from the server and renders the corresponding form
         //    If the module is a param, is setted
         this.main = main;
@@ -77,9 +77,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     setDate:function(date) {
-        // summary:
+        // Summary:
         //    Set the date for use in the form
-        // description:
+        // Description:
         //    Set the date for use in the form
         if (undefined == date) {
             this.dateObject = new Date();
@@ -90,9 +90,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     loadView:function() {
-        // summary:
+        // Summary:
         //    Load all the views
-        // description:
+        // Description:
         //    Load all the views
         this.setHourUrl();
         this.setBookUrl();
@@ -100,26 +100,26 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     setHourUrl:function() {
-        // summary:
+        // Summary:
         //    Set the url for get the data
-        // description:
+        // Description:
         //    Set the url for get the data
         this._hourUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/date/" + this._date
     },
 
     setBookUrl:function() {
-        // summary:
+        // Summary:
         //    Set the url for get the data
-        // description:
+        // Description:
         //    Set the url for get the data
         this._bookUrl      = phpr.webpath + "index.php/" + phpr.module + "/index/jsonBookingDetail/date/" + this._date
         this._favoritesUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetFavoritesProjects";
     },
 
     getFormData:function(hours, date, books) {
-        // summary:
+        // Summary:
         //    Reload only the views that are needed
-        // description:
+        // Description:
         //    Reload only the views that are needed
         if (date) {
             this.reloadDateView();
@@ -145,9 +145,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     reloadHoursView:function() {
-        // summary:
+        // Summary:
         //    Reload the Hours view
-        // description:
+        // Description:
         //    Reload the Hours view with the form and all the hours saved for the current day
         var hoursdata  = "";
         var totalHours = 0;
@@ -187,9 +187,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     reloadDateView:function() {
-        // summary:
+        // Summary:
         //    Reload the Date view
-        // description:
+        // Description:
         //    Reload the HDate picker div with the current date
         var month   = this.dateObject.getMonth();
         var year    = this.dateObject.getFullYear();
@@ -215,9 +215,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     reloadBookingView:function() {
-        // summary:
+        // Summary:
         //    Reload the Booking view
-        // description:
+        // Description:
         //    Reload the Booking view with the form and all the Bookings saved for the current day
         var meta         = phpr.DataStore.getMetaData({url: this._bookUrl});
         var data         = phpr.DataStore.getData({url: this._bookUrl});
@@ -375,9 +375,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     showBookingForm:function(timeprojData, range) {
-        // summary:
+        // Summary:
         //    Render the booking form
-        // description:
+        // Description:
         //    Render the booking form for all the projects saved and a empty one for add
         var bookingdata  = '';
 
@@ -443,9 +443,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     showProjectsSources:function(values) {
-        // summary:
+        // Summary:
         //    Render the projects for drag and drop
-        // description:
+        // Description:
         //    Render the projects for drag and drop
         //    Destroy the oldest first
         for (i in values) {
@@ -460,9 +460,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     createFavoritesDialog:function(allProjects, favoritesList) {
-        // summary:
+        // Summary:
         //    Render the dialog for manage favorites
-        // description:
+        // Description:
         //    Render the dialog for manage favorites
         for (i in allProjects) {
             phpr.destroyWidget('favoritesTarget-' + allProjects[i].id);
@@ -477,9 +477,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     prepareSubmission:function() {
-        // summary:
+        // Summary:
         //    Correct some data before send it to the server
-        // description:
+        // Description:
         //    Correct some data before send it to the server
         if (this.sendData.endTime) {
             this.sendData.endTime = phpr.Date.getIsoTime(this.sendData.endTime);
@@ -494,9 +494,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     submitForm:function() {
-        // summary:
+        // Summary:
         //    Save the hours form
-        // description:
+        // Description:
         //    Save the hours form and reload only the grid and the hours form
         this.sendData = new Array();
         this.sendData = dojo.mixin(this.sendData, dijit.byId('hoursForm').attr('value'));
@@ -522,9 +522,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     submitBookingForm:function(id) {
-        // summary:
+        // Summary:
         //    Save the booking form
-        // description:
+        // Description:
         //    Save the booking form and reload only the grid and the booking form
         this.sendData = new Array();
         this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm_' + id).attr('value'));
@@ -549,9 +549,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     submitFavoritesForm:function() {
-        // summary:
+        // Summary:
         //    Save the favorites projects
-        // description:
+        // Description:
         //    Save the favorites projects
         this.sendData                = new Array();
         this.sendData['favorites[]'] = new Array();
@@ -576,9 +576,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     deleteForm:function(id) {
-        // summary:
+        // Summary:
         //    Delete an hour saved
-        // description:
+        // Description:
         //    Delete an hour saved and reload only the grid and the hours form
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + id,
@@ -597,9 +597,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     deleteBookingForm:function(id) {
-        // summary:
+        // Summary:
         //    Delete an booking saved
-        // description:
+        // Description:
         //    Delete an booking saved and reload only the grid and the booking form
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonBookingDelete/id/' + id,
@@ -617,17 +617,17 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     },
 
     updateData:function() {
-        // summary:
+        // Summary:
         //    Delete the cache for this form
-        // description:
+        // Description:
         //    Delete the cache for this form
     },
 
     getDiffTime:function(end, start) {
-        // summary:
-        //    Ger the diff in minutes between two times
-        // description:
-        //    Ger the diff in minutes between two times
+        // Summary:
+        //    Get the diff in minutes between two times
+        // Description:
+        //    Get the diff in minutes between two times
         var hoursEnd     = end.substr(0, 2);
         var minutesEnd   = end.substr(3, 2);
         var hoursStart   = start.substr(0, 2);
