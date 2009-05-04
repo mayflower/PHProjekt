@@ -269,8 +269,8 @@ phpr.send = function(/*Object*/paramsIn) {
                     phpr.loading.hide();
                 }
             } catch(e) {
-                var response = {};
-                response.type ='error';
+                var response     = {};
+                response.type    = 'error';
                 response.message = e;
                 new phpr.handleResponse('serverFeedback', response);
             }
@@ -281,13 +281,14 @@ phpr.send = function(/*Object*/paramsIn) {
             _onEnd();
         };
     }
+
     dojo.xhrPost({
-        url        :    params.url,
-        content    :    params.content,
-        handleAs:   params.handleAs,
-        sync    :   params.sync,
-        error    :    _onError,
-        load    :    _onSuccess
+        url:      params.url,
+        content:  params.content,
+        handleAs: params.handleAs,
+        sync:     params.sync,
+        error:    _onError,
+        load:     _onSuccess
     });
 };
 
@@ -513,6 +514,12 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         // 500 is the error code for logut
         if (data.code && data.code == 500) {
             location = phpr.webpath + "index.php/Login/logout";
+            return;
+        } else if (data.type && data.type == "error") {
+            var response     = {};
+            response.type    = 'error';
+            response.message = data.message
+            new phpr.handleResponse('serverFeedback', response);
             return;
         }
 
