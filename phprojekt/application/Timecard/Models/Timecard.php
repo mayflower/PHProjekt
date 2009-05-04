@@ -128,27 +128,33 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             if (strlen($startTime) == 6) {
                 $startTime = substr($startTime, 0, 4);
             }
-            $startTime = intval($startTime);
+            $startTime = (int) $startTime;
             if (($startTime > 2100) || ($startTime < 800)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('Start time has to be between 8:00 and 21:00')));
                 return false;
+            } else {
+                $startMinutes = substr($startTime, strlen($startTime) - 2, 2);
+                if ($startMinutes > 59 || $startMinutes < 0) {
+                    $this->_validate->error->addError(array(
+                        'field'   => Phprojekt::getInstance()->translate('Hours'),
+                        'label'   => Phprojekt::getInstance()->translate('Hours'),
+                        'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
+                    return false;
+                }
             }
 
             if (!isset($data['endTime'])) {
                 // Start Hours button pressed - Check if new start time overlaps any existing period
-                $where = " owner_id = " . Phprojekt_Auth::getUserId() . " AND date = '" . $data['date']
-                    . "' and start_time < '" . $data['startTime'] . "' AND end_time > '" . $data['startTime'] . "'";
-                $records = $this->fetchAll($where);
+                $records = $this->fetchAll($this->_getWhereForTimes());
                 if (count($records) > 0) {
                     $this->_validate->error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Time period'),
                         'label'   => Phprojekt::getInstance()->translate('Time period'),
                         'message' => Phprojekt::getInstance()->translate('Can not Start Working Time because this '
-                                                                         . 'moment is occupied by an existing period.'
-                                                                         )));
+                            . 'moment is occupied by an existing period.')));
                     return false;
                 }
             }
@@ -167,13 +173,22 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             if (strlen($endTime) == 6) {
                 $endTime = substr($endTime, 0, 4);
             }
-            $endTime = intval($endTime);
+            $endTime = (int) $endTime;
             if (($endTime > 2100) || ($endTime < 800)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
-                    'message' => Phprojekt::getInstance()->translate('The end time is invalid')));
+                    'message' => Phprojekt::getInstance()->translate('End time has to be between 8:00 and 21:00')));
                 return false;
+            } else {
+                $endMinutes = substr($endTime, strlen($endTime) - 2, 2);
+                if ($endMinutes > 59 || $endMinutes < 0) {
+                    $this->_validate->error->addError(array(
+                        'field'   => Phprojekt::getInstance()->translate('Hours'),
+                        'label'   => Phprojekt::getInstance()->translate('Hours'),
+                        'message' => Phprojekt::getInstance()->translate('The end time is invalid')));
+                    return false;
+                }
             }
 
             if (empty($data['startTime']) || $data['startTime'] == ':') {
@@ -189,48 +204,67 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 if (strlen($startTime) == 6) {
                     $startTime = substr($startTime, 0, 4);
                 }
-                $startTime = intval($startTime);
+                $startTime = (int) $startTime;
                 if (($startTime > 2100) || ($startTime < 800)) {
                     $this->_validate->error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Hours'),
                         'label'   => Phprojekt::getInstance()->translate('Hours'),
                         'message' => Phprojekt::getInstance()->translate('Start time has to be between 8:00 and '
-                                                                         . '21:00')));
+                            . '21:00')));
                     return false;
                 }
 
                 if ($this->id != 0) {
                     // End Hours button pressed - Check if end time overlaps any existing period
-                    $where = " owner_id = " . Phprojekt_Auth::getUserId() . " AND date = '" . $data['date']
-                        . "' and start_time < '" . $data['endTime'] . "' AND end_time > '" . $data['endTime'] . "'";
-                    $records = $this->fetchAll($where);
+                    $records = $this->fetchAll($this->_getWhereForTimes());
                     if (count($records) > 0) {
                         $this->_validate->error->addError(array(
                             'field'   => Phprojekt::getInstance()->translate('Time period'),
                             'label'   => Phprojekt::getInstance()->translate('Time period'),
                             'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this '
-                                                                             . 'moment is occupied by an existing '
-                                                                             . 'period.')));
+                                . 'moment is occupied by an existing period.')));
                         return false;
                     }
                 }
 
                 // Check if new period overlaps any existing one
-                $where = " owner_id = " . Phprojekt_Auth::getUserId() . " AND date = '" . $data['date']
-                    . "' and start_time < '" . $data['endTime'] . "' AND end_time > '" . $data['startTime'] . "'";
-                $records = $this->fetchAll($where);
+                $records = $this->fetchAll($this->_getWhereForTimes());
                 if (count($records) > 0) {
                     $this->_validate->error->addError(array(
                         'field'   => Phprojekt::getInstance()->translate('Time period'),
                         'label'   => Phprojekt::getInstance()->translate('Time period'),
                         'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps existing '
-                                                                         . 'one')));
+                            . 'one')));
                     return false;
                 }
             }
         }
 
         return $this->_validate->recordValidate($this, $data, $fields);
+    }
+
+    /**
+     * Make the where for check date and times
+     *
+     * @return string
+     */
+    private function _getWhereForTimes()
+    {
+        $startTime = $this->getAdapter()->quote($this->startTime);
+        $date      = $this->getAdapter()->quote($this->date);
+        if (null !== $this->endTime) {
+            $endTime   = $this->getAdapter()->quote($this->endTime);
+            $where = sprintf(" owner_id = %d AND date = %s AND "
+                . " ((start_time <= %s AND end_time > %s) OR (start_time < %s AND end_time >= %s) "
+                . " OR (start_time <= %s AND end_time >= %s) OR (start_time >= %s AND end_time <= %s) ) ",
+                Phprojekt_Auth::getUserId(), $date,
+                $startTime, $startTime, $endTime, $endTime, $startTime, $endTime, $startTime, $endTime);
+        } else {
+            $where = sprintf(" owner_id = %d AND date = %s AND (start_time <= %s AND end_time > %s)",
+                Phprojekt_Auth::getUserId(), $date, $startTime, $startTime);
+        }
+
+        return $where;
     }
 
     /**
@@ -265,18 +299,19 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
         switch ($view) {
             case 'today':
-                $where   = sprintf('(owner_id = %d AND date = "%s")', $userId, date("Y-m-d"));
+                $where   = sprintf('(owner_id = %d AND date = %s)', $userId, $this->getAdapter()->quote(date("Y-m-d")));
                 $order   = ' date ASC';
                 $records = $this->fetchAll($where, $order, $count, $offset);
-                $data= $records;
+                $data    = $records;
                 break;
             case 'month':
-                $where = sprintf('(owner_id = %d AND date LIKE "%s")', $userId, $year.'-'.$month.'-%');
+                $where = sprintf('(owner_id = %d AND date LIKE %s)', $userId,
+                    $this->getAdapter()->quote($year . '-' . $month . '-%'));
                 $order = ' date ASC';
 
-                $records       = $this->fetchAll($where, $order, $count, $offset);
-                $sortRecords   = array();
-                $timeproj      = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
+                $records     = $this->fetchAll($where, $order, $count, $offset);
+                $sortRecords = array();
+                $timeproj    = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
 
                 $information     = $this->getInformation($order);
                 $fieldDefinition = $information->getFieldDefinition($view);

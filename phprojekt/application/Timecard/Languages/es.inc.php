@@ -14,6 +14,7 @@ $lang["Amount [hhmm]"] = "Cantidad [hhmm]";
 $lang["Total"] = "Total";
 $lang["The amount is invalid"] = "La cantidad es inválida (De 30 a 1300)";
 $lang["Start time has to be between 8:00 and 21:00"] = "La hora de inicio tiene que ser entre 8:00 y 21:00";
+$lang["End time has to be between 8:00 and 21:00"] = "La hora final tiene que ser entre 8:00 y 21:00";
 $lang["Time period"] = "Período de tiempo";
 $lang["Can not save it because it overlaps existing one"] = "No puede grabarse porque se superpone con un período "
     . "existente";

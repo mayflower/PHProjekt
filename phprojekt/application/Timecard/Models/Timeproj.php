@@ -127,7 +127,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         if (strlen($amount) == 6) {
             $amount = substr($amount, 0, 4);
         }
-        $amount = intval($amount);
+        $amount = (int) $amount;
         if (($amount > 1300) || ($amount < 30)) {
             $this->_validate->error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Amount'),
@@ -158,7 +158,8 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getRecords($date)
     {
-        $where  = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $db     = Phprojekt::getInstance()->getDb();
+        $where  = sprintf('(owner_id = %d AND date = %s)', Phprojekt_Auth::getUserId(), $db->quote($date));
         $order  = ' id ASC ';
         $models = $this->fetchAll($where, $order);
 
@@ -185,12 +186,13 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             $datas['timeproj'][] = $data;
         }
 
-        $where  = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $where  = sprintf('(owner_id = %d AND date = %s)', Phprojekt_Auth::getUserId(), $db->quote($date));
         $order  = 'start_time ASC';
-        $timecard = Phprojekt_Loader::getModel('Timecard', 'Timecard');
-        $timecardRecords = $timecard->fetchall($where, $order);
 
+        $timecard        = Phprojekt_Loader::getModel('Timecard', 'Timecard');
+        $timecardRecords = $timecard->fetchall($where, $order);
         $information     = $timecard->getInformation($order);
+
         $timeCardfieldDefinition = $information->getFieldDefinition($order);
 
         foreach ($timecardRecords as $cmodel) {
@@ -209,9 +211,9 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $numRows = count($datas);
-        $data = array('metadata' => $fieldDefinition,
-                      'data'     => $datas,
-                      'numRows'  => (int) $numRows);
+        $data    = array('metadata' => $fieldDefinition,
+                         'data'     => $datas,
+                         'numRows'  => (int) $numRows);
 
         return $data;
     }

@@ -140,8 +140,9 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $date  = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $where = sprintf('(owner_id = %d AND date = "%s")', Phprojekt_Auth::getUserId(), $date);
+        $db    = Phprojekt::getInstance()->getDb();
+        $date  = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $where = sprintf('(owner_id = %d AND date = %s)', Phprojekt_Auth::getUserId(), $date);
         $order = "start_time";
 
         $records = $this->getModelObject()->fetchAll($where, $order);
@@ -355,13 +356,14 @@ class Timecard_IndexController extends IndexController
      */
     public function csvHourListAction()
     {
+        $db     = Phprojekt::getInstance()->getDb();
         $userId = Phprojekt_Auth::getUserId();
         $year   = (int) $this->getRequest()->getParam('year', date("Y"));
         $month  = (int) $this->getRequest()->getParam('month', date("m"));
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where = sprintf('(owner_id = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
+        $where = sprintf('(owner_id = %d AND date LIKE %s)', $userId, $db->quote($year . '-' . $month . '-%'));
 
         $records = $this->getModelObject()->fetchAll($where);
 
@@ -378,13 +380,14 @@ class Timecard_IndexController extends IndexController
      */
     public function csvBookingListAction()
     {
+        $db     = Phprojekt::getInstance()->getDb();
         $userId = Phprojekt_Auth::getUserId();
         $year   = (int) $this->getRequest()->getParam('year', date("Y"));
         $month  = (int) $this->getRequest()->getParam('month', date("m"));
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where   = sprintf('(owner_id = %d AND date LIKE "%s")', $userId, $year . '-' . $month . '-%');
+        $where   = sprintf('(owner_id = %d AND date LIKE %s)', $userId, $db->quote($year . '-' . $month . '-%'));
         $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         $records = $model->fetchAll($where);
 
