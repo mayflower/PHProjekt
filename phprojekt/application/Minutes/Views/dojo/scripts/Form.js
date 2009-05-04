@@ -72,32 +72,48 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             }
         }));
         dojo.byId('itemsFormTab').style.display = 'none';
-        var minutesBox = new dijit.layout.ContentPane({
-									region: 'center',
-									id: 'minutesBox'
-					         }, 
-					    	 dojo.doc.createElement('div'));
-        var minutesLayout = new dijit.layout.BorderContainer({
-					            	design: 'sidebar',
-					            	id: 'minutesLayout'
-					        	}, 
-					        	dojo.doc.createElement('div'));
-        var minutesGridBox = new dijit.layout.ContentPane({
-						        	region: 'center',
-						        	id: 'minutesGridBox'
-						     }, 
-    	                     dojo.doc.createElement('div'));
-        var minutesDetailsRight = new dijit.layout.ContentPane({
-						        	region: 'right',
-						        	id: 'minutesDetailsRight',
-						        	style: 'width: 50%;'
-						     }, 
-						     dojo.doc.createElement('div'));
+        if (undefined == dijit.byId('minutesBox')) {
+            var minutesBox = new dijit.layout.ContentPane({
+                                     region: 'center',
+                                     id: 'minutesBox'
+                             }, 
+                             dojo.doc.createElement('div'));
+        } else {
+            var minutesBox = dijit.byId('minutesBox');
+        }
+        if (undefined == dijit.byId('minutesLayout')) {
+            var minutesLayout = new dijit.layout.BorderContainer({
+                                        design: 'sidebar',
+                                        id: 'minutesLayout'
+                                }, 
+                                dojo.doc.createElement('div'));
+        } else {
+            var minutesLayout = dijit.byId('minutesLayout');
+        }
+        if (undefined == dijit.byId('minutesGridBox')) {
+            var minutesGridBox = new dijit.layout.ContentPane({
+                                        region: 'center',
+                                        id: 'minutesGridBox'
+                                 }, 
+                                 dojo.doc.createElement('div'));
+        } else {
+            var minutesGridBox = dijit.byId('minutesGridBox');
+        }
+        if (undefined == dijit.byId('minutesDetailsRight')) {
+            var minutesDetailsRight = new dijit.layout.ContentPane({
+                                        region: 'right',
+                                        id: 'minutesDetailsRight',
+                                        style: 'width: 50%;'
+                                 }, 
+                                 dojo.doc.createElement('div'));
+        } else {
+            var minutesDetailsRight = dijit.byId('minutesDetailsRight');
+        }
         minutesLayout.addChild(minutesGridBox);
         minutesLayout.addChild(minutesDetailsRight);
         //minutesBox.addChild(minutesLayout);
         minutesBox.attr("content", minutesLayout.domNode);
-        dijit.byId('tabItems').attr('content', minutesBox.domNode);        
+        dijit.byId('tabItems').attr('content', minutesBox.domNode);
     },
     
     url: null,
