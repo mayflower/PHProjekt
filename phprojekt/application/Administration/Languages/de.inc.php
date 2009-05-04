@@ -25,3 +25,6 @@ $lang["Required Field"] = "Pflichtfeld";
 // Search
 $lang["View all"] = "Zeige Alle";
 $lang["There are no Results"] = "Es sind keine Results vorhanden";
+
+// User submodule
+$lang["Already exists, choose another one please"] = "Username existiert bereits, bitte einen anderen wählen";
