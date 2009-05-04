@@ -48,9 +48,14 @@ class Statistic_IndexController extends IndexController
         $endDate   = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
 
-        $data = $this->getModelObject()->getStatistics($startDate, $endDate, $projectId);
-
-        Phprojekt_Converter_Json::echoConvert($data);
+        if ($startDate <= $endDate) {
+            $data = $this->getModelObject()->getStatistics($startDate, $endDate, $projectId);
+            Phprojekt_Converter_Json::echoConvert($data);
+        } else {
+            $messageTitle = Phprojekt::getInstance()->translate('Period');
+            $messageDesc  = Phprojekt::getInstance()->translate('End time can not be before Start time');
+            throw new Phprojekt_PublishedException($messageTitle . ': ' . $messageDesc);
+        }
     }
 
     /**

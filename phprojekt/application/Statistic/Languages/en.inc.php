@@ -1,6 +1,8 @@
 <?php
 // General
 $lang["Selected Statistic Period"] = "Selected Statistic Period";
+$lang["Period"] = "Period";
+$lang["End time can not be before Start time"] = "End time can not be before Start time";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
