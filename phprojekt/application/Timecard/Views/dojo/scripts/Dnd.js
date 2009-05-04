@@ -117,17 +117,32 @@ dojo.declare("phpr.Timecard.ContentBar", null, {
 });
 
 dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
+    MIN_HEIGHT: 18,
+
     onDrop:function(source, nodes, copy) {
         if (this != source) {
             this.onDropExternal(source, nodes, copy);
             if (source.node.id == 'projectFavoritesSource') {
+                // If there are no projects in the box, don't let it reduce its height so much
+                if (projectFavoritesSource.getAllNodes().length == 0) {
+                    dojo.style('projectFavoritesSource', 'height', this.MIN_HEIGHT + 'px');
+                }
+                dojo.style('projectFavoritesTarget', 'height', '');
+
                 // Add a item
                 var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
                 dojo.byId('selectedProjectFavorites').value += id + ",";
                 dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
                     + 'style="cursor: move;" id="' + id + '">' + nodes[0].innerHTML + '</div><br />';
                 projectBookingSource.sync();
+
             } else if (source.node.id == 'projectFavoritesTarget') {
+                // If there are no projects in the box, don't let it reduce its height so much
+                if (projectFavoritesTarget.getAllNodes().length == 0) {
+                    dojo.style('projectFavoritesTarget', 'height', this.MIN_HEIGHT + 'px');
+                }
+                dojo.style('projectFavoritesSource', 'height', '');
+
                 // Delete a items
                 var tmp = '';
                 dojo.byId('projectBookingSource').innerHTML = '';

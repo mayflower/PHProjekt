@@ -20,16 +20,17 @@
 dojo.provide("phpr.Timecard.Form");
 
 dojo.declare("phpr.Timecard.Form", phpr.Component, {
-    sendData:      new Array(),
-    formdata:      new Array(),
-    dateObject:    null,
-    _hourUrl:      null,
-    _bookUrl:      null,
-    _favoritesUrl: null,
-    _formNode:     null,
-    _date:         null,
-    _contentBar:   null,
-    _surface:      null,
+    sendData:           new Array(),
+    formdata:           new Array(),
+    dateObject:         null,
+    _hourUrl:           null,
+    _bookUrl:           null,
+    _favoritesUrl:      null,
+    _formNode:          null,
+    _date:              null,
+    _contentBar:        null,
+    _surface:           null,
+    _manFavBoxesHeight: 18,
 
     constructor:function(main, id, module, date) {
         // summary:
@@ -65,6 +66,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             manageFavoritesText:      phpr.nls.get('Manage project list')
         });
         dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
+        dojo.connect(dojo.byId('buttonManageFavorites'), "click",  dojo.hitch(this, "openManageFavorites"));
 
         this._contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
 
@@ -632,5 +634,25 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var minutesStart = start.substr(3, 2);
 
         return ((hoursEnd - hoursStart)*60) + (minutesEnd - minutesStart);
+    },
+
+    openManageFavorites:function() {
+        // Summary:
+        //    Function called on manageFavorites button click, to regulate the popup project's boxes height, and then
+        // open the Manage Favorites dialog
+
+        dijit.byId('manageFavorites').show();
+
+        // If there are no projects in any of the boxes, don't let it reduce its height so much
+        if (projectFavoritesSource.getAllNodes().length == 0) {
+            dojo.style('projectFavoritesSource', 'height', this._manFavBoxesHeight + 'px');
+        } else {
+            dojo.style('projectFavoritesSource', 'height', '');
+        }
+        if (projectFavoritesTarget.getAllNodes().length == 0) {
+            dojo.style('projectFavoritesTarget', 'height', this._manFavBoxesHeight + 'px');
+        } else {
+            dojo.style('projectFavoritesTarget', 'height', '');
+        }
     }
 });
