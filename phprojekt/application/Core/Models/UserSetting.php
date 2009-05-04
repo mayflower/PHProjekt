@@ -188,8 +188,10 @@ class Core_Models_UserSetting
         $newPassValue     = $params['password'];
         $currentPassValue = $setting->getSetting('password');
 
-        if (!empty($newPassValue) && $newPassValue != $confirmPassValue) {
-            $message = Phprojekt::getInstance()->translate("The password and confirmation are different or empty");
+        if ((!empty($newPassValue) && $newPassValue != $confirmPassValue)
+            || (empty($newPassValue) && !empty($confirmPassValue))) {
+            $message = Phprojekt::getInstance()->translate("The password and confirmation are different or one of them "
+                . "is empty");
         } else if (!empty($newPassValue) && $currentPassValue != Phprojekt_Auth::cryptString($oldPassValue)) {
             $message = Phprojekt::getInstance()->translate("The old password provided is invalid");
         }

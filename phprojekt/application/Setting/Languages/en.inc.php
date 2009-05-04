@@ -3,7 +3,8 @@
 $lang["Please, log out and log in again to the application to apply the changes."] = "Please, "
     . "log out and log in again to the application to apply the changes.";
 $lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
-$lang["The password and confirmation are different or empty"] = "The password and confirmation are different or empty";
+$lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
+    . "different or one of them is empty";
 $lang["The old password provided is invalid"] = "The old password provided is invalid";
 $lang["keyValue"] = "Configuration";
 $lang["value"] = "value";
