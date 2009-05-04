@@ -127,7 +127,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         /* @var $db Zend_Db_Adapter_Abstract */
 
         try {
-            $users  = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
+            $users = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
 
             if (!isset($users[0]) || !isset($users[0]->id)) {
                 return false;
@@ -235,7 +235,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         $result = $this->_validate->recordValidate($this, $data, $fields);
         if ($result) {
             // Username repeated?
-            $where = " username = '" . $this->username . "' and id != " . $this->id;
+            $db      = Phprojekt::getInstance()->getDb();
+            $where   = $db->quoteInto("username = ? and id != ?", $this->username, $this->id);
             $records = $this->fetchAll($where);
             if (count($records) > 0) {
                 $this->_validate->error->addError(array(
