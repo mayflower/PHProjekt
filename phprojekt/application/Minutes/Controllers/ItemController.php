@@ -129,9 +129,13 @@ class Minutes_ItemController extends IndexController
             }
             
             if ($model instanceof Phprojekt_Model_Interface) {
-                $tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+                //$tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+                $params = $this->getRequest()->getParams();
                 
-                Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+                $params['projectId'] = $minutes->projectId;
+                $params['ownerId']   = $minutes->ownerId;
+                
+                Default_Helpers_Save::save($model, $params);
                 
                 $return = array('type'    => 'success',
                                 'message' => $message,

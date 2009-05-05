@@ -1,11 +1,11 @@
 <form id="minutesItemForm" action="javascript:;" dojoType="dijit.form.Form">
-	<input type="hidden" name="id" value="{{id}}" />
-	<input type="hidden" name="minutesId" value="{{minutesId}}" />
-	<input type="hidden" name="projectId" value="{{projectId}}" />
-	<input type="hidden" name="topicId" value="{{topicId}}" />
-	<input type="hidden" name="sortOrder" value="{{sortOrder}}" />
-	<!-- ownerId is handled internally by the backend -->
-	
+    <input type="hidden" name="id" value="{{id}}" />
+    <input type="hidden" name="minutesId" value="{{minutesId}}" />
+    <input type="hidden" name="projectId" value="{{projectId}}" />
+    <input type="hidden" name="topicId" value="{{topicId}}" />
+    <input type="hidden" name="sortOrder" value="{{sortOrder}}" />
+    <!-- ownerId is handled internally by the backend -->
+    
     <table id="minutesItemFormTable">
     <tr>
         <td>
@@ -69,16 +69,16 @@
             <label>{{lblTopicDate}}</label>
         </td>
         <td>
-			<input id="topicDate" name="topicDate" type="text" dojoType="dijit.form.DateTextBox"
-			       constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" />
+            <input id="topicDate" name="topicDate" type="text" dojoType="dijit.form.DateTextBox"
+                   constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" />
         </td>
     </tr>
     
     <tr>
-    	<td>&nbsp;</td>
-    	<td>
-    		<button dojoType="dijit.form.Button" id="minutesItemFormSubmit">{{lblSubmit}}</button>
-    	</td>
+        <td>&nbsp;</td>
+        <td>
+            <button dojoType="dijit.form.Button" id="minutesItemFormSubmit">{{lblSubmit}}</button>
+        </td>
     </tr>
     
     </table>

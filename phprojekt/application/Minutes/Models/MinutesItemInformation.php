@@ -105,7 +105,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
-                $data['required'] = true;
+                $data['required'] = false;
                 $data['readOnly'] = false;
                 $data['tab']      = 1;
 
@@ -142,7 +142,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
-                $data['required'] = true;
+                $data['required'] = false;
                 $data['readOnly'] = false;
                 $data['tab']      = 1;
 
