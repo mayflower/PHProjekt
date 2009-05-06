@@ -86,21 +86,20 @@ class Phprojekt_Table
 
         if (is_array($fields) && !empty($fields)) {
             foreach ($fields as $fieldName => $fieldDefinition) {
-                if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
+                if (!isset($fieldDefinition['length'])) {
                     $fieldDefinition['length'] = "";
                 }
-                if (!isset($fieldDefinition['null']) || empty($fieldDefinition['null'])) {
+                if (!isset($fieldDefinition['null'])) {
                     $fieldDefinition['null'] = true;
                 }
-                if (!isset($fieldDefinition['default']) || empty($fieldDefinition['default'])) {
+                if (!isset($fieldDefinition['default'])) {
                     $fieldDefinition['default'] = "";
                 }
-                if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
+                if (!isset($fieldDefinition['default_no_quote'])) {
                     $fieldDefinition['default_no_quote'] = false;
                 }
                 $sqlString .= $fieldName;
-                $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                    $fieldDefinition['null'], $fieldDefinition['default'], $fieldDefinition['default_no_quote']) . ", ";
+                $sqlString .= $this->_getTypeDefinition($fieldDefinition) . ", ";
             }
         } else {
             return false;
@@ -108,7 +107,7 @@ class Phprojekt_Table
 
         if (isset($keys)) {
             foreach ($keys as $keyName => $keyFields) {
-                $sqlString .= $keyName." (";
+                $sqlString .= $keyName . " (";
                 foreach ($keyFields as $oneKey) {
                    $sqlString .= $oneKey . ", ";
                 }
@@ -123,6 +122,8 @@ class Phprojekt_Table
 
         try {
             $this->_db->getConnection()->exec($sqlString);
+            // Fix for Zend Framework 1.7.2
+            $this->_db->closeConnection();
             return true;
         } catch (Exception $error) {
             Phprojekt::getInstance()->getLog()->debug($error->getMessage());
@@ -146,21 +147,20 @@ class Phprojekt_Table
         $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " ADD ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
+            if (!isset($fieldDefinition['length'])) {
                 $fieldDefinition['length'] = "";
             }
-            if (!isset($fieldDefinition['null']) || empty($fieldDefinition['null'])) {
+            if (!isset($fieldDefinition['null'])) {
                 $fieldDefinition['null'] = true;
             }
-            if (!isset($fieldDefinition['default']) || empty($fieldDefinition['default'])) {
+            if (!isset($fieldDefinition['default'])) {
                 $fieldDefinition['default'] = "";
             }
-            if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
+            if (!isset($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
             }
             $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
-            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                $fieldDefinition['null'], $fieldDefinition['default'], $fieldDefinition['default_no_quote']);
+            $sqlString .= $this->_getTypeDefinition($fieldDefinition);
         } else {
             return false;
         }
@@ -194,22 +194,21 @@ class Phprojekt_Table
         $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['oldName']) . ' ';
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
+            if (!isset($fieldDefinition['length'])) {
                 $fieldDefinition['length'] = "";
             }
-            if (!isset($fieldDefinition['null']) || empty($fieldDefinition['null'])) {
+            if (!isset($fieldDefinition['null'])) {
                 $fieldDefinition['null'] = true;
             }
-            if (!isset($fieldDefinition['default']) || empty($fieldDefinition['default'])) {
+            if (!isset($fieldDefinition['default'])) {
                 $fieldDefinition['default'] = "";
             }
-            if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
+            if (!isset($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
             }
 
             $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
-            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                $fieldDefinition['null'], $fieldDefinition['default'], $fieldDefinition['default_no_quote']);
+            $sqlString .= $this->_getTypeDefinition($fieldDefinition);
         } else {
             return false;
         }
@@ -238,24 +237,23 @@ class Phprojekt_Table
         $sqlString = "ALTER TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " MODIFY ";
 
         if (is_array($fieldDefinition) && !empty($fieldDefinition)) {
-            if (!isset($fieldDefinition['length']) || empty($fieldDefinition['length'])) {
+            if (!isset($fieldDefinition['length'])) {
                 $fieldDefinition['length'] = "";
             }
-            if (!isset($fieldDefinition['null']) || empty($fieldDefinition['null'])) {
+            if (!isset($fieldDefinition['null'])) {
                 $fieldDefinition['null'] = true;
             }
-            if (!isset($fieldDefinition['default']) || empty($fieldDefinition['default'])) {
+            if (!isset($fieldDefinition['default'])) {
                 $fieldDefinition['default'] = "";
             }
-            if (!isset($fieldDefinition['default_no_quote']) || empty($fieldDefinition['default_no_quote'])) {
+            if (!isset($fieldDefinition['default_no_quote'])) {
                 $fieldDefinition['default_no_quote'] = false;
             }
             if (isset($fieldDefinition['oldName'])) {
                 $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['oldName']) . ' ';
             }
             $sqlString .= $this->_db->quoteIdentifier((string) $fieldDefinition['name']);
-            $sqlString .= $this->_getTypeDefinition($fieldDefinition['type'], $fieldDefinition['length'],
-                $fieldDefinition['null'], $fieldDefinition['default'], $fieldDefinition['default_no_quote']);
+            $sqlString .= $this->_getTypeDefinition($fieldDefinition);
         } else {
             return false;
         }
@@ -301,15 +299,42 @@ class Phprojekt_Table
     /**
      * Return an string with the field definition for each table type.
      *
-     * @param string  $fieldType   Regular field type names
-     * @param int     $fieldLength Field length
-     * @param boolean $allowNull
-     * @param string  $default     Default value
+     * @param array $fieldDefinition Definitions for the field
      *
      * @return string
      */
-    private function _getTypeDefinition($fieldType, $fieldLength = null, $allowNull = true, $default = null, $defaultNoQuotes = false)
+    private function _getTypeDefinition($fieldDefinition)
     {
+        if (isset($fieldDefinition['type'])) {
+            $fieldType = $fieldDefinition['type'];
+        } else {
+            $fieldType = null;
+        }
+
+        if (isset($fieldDefinition['length'])) {
+            $fieldLength = $fieldDefinition['length'];
+        } else {
+            $fieldLength = null;
+        }
+
+        if (isset($fieldDefinition['null'])) {
+            $allowNull = $fieldDefinition['null'];
+        } else {
+            $allowNull = true;
+        }
+
+        if (isset($fieldDefinition['default'])) {
+            $default = $fieldDefinition['default'];
+        } else {
+            $default = null;
+        }
+
+        if (isset($fieldDefinition['default_no_quote'])) {
+            $defaultNoQuotes = $fieldDefinition['default_no_quote'];
+        } else {
+            $defaultNoQuotes = false;
+        }
+
         switch ($this->_dbType) {
             case 'sqlite':
             case 'sqlite2':
@@ -333,28 +358,32 @@ class Phprojekt_Table
                 break;
         }
 
-        $fieldDefinition = " " . $fieldType;
+        $sqlString = " " . $fieldType;
         if (!empty($fieldLength)) {
             if (($fieldType == 'int') || ($fieldType == 'varchar')) {
-                $fieldDefinition .= "(" . (int) $fieldLength . ") ";
+                $sqlString .= "(" . (int) $fieldLength . ") ";
             }
+        }
+
+        if (isset($fieldDefinition['unsigned'])) {
+            $sqlString .= " UNSIGNED ";
         }
 
         if (!$allowNull) {
-            $fieldDefinition .= " NOT NULL ";
+            $sqlString .= " NOT NULL ";
         }
 
-        if (!empty($default)) {
+        if (!empty($default) || $default == "0") {
             if (empty($defaultNoQuotes)) {
-                $fieldDefinition .= " DEFAULT '" . (string) $default ."'";
+                $sqlString .= " DEFAULT '" . (string) $default ."'";
             } else {
-                $fieldDefinition .= " DEFAULT " . (string) $default;
+                $sqlString .= " DEFAULT " . (string) $default;
             }
         } else if ($allowNull) {
-            $fieldDefinition .= " DEFAULT NULL";
+            $sqlString .= " DEFAULT NULL";
         }
 
-        return $fieldDefinition;
+        return $sqlString;
     }
 
     /**
@@ -367,7 +396,7 @@ class Phprojekt_Table
      *
      * @return array
      */
-    public function getTableFields($tableName, $fields, $keys = array('primary key' => array('id')))
+    public function getTableFields($tableName, $fields = array(), $keys = array('primary key' => array('id')))
     {
         try {
             $tableFields = $this->_db->describeTable($tableName);
@@ -416,8 +445,68 @@ class Phprojekt_Table
 
         try {
             $this->_db->getConnection()->exec($sqlString);
+            // Fix for Zend Framework 1.7.2
+            $this->_db->closeConnection();
             return true;
         } catch (Exception $error) {
+            return false;
+        }
+    }
+
+    /**
+     * Make an insert
+     *
+     * @param string $tableName The name of the table
+     * @param array  $data      Array with key => value data
+     *
+     * @return int
+     */
+    public function insertRow($tableName, $data)
+    {
+        try {
+            $this->_db->insert($tableName, $data);
+            return $this->_db->lastInsertId($tableName, 'id');
+        } catch (Exception $error) {
+            echo $error.'<br>';
+            return 0;
+        }
+    }
+
+    /**
+     * Make an update
+     *
+     * @param string $tableName The name of the table
+     * @param array  $data      Array with key => value data
+     * @param string $where     Sql where
+     *
+     * @return boolean
+     */
+    public function updateRows($tableName, $data, $where)
+    {
+        try {
+            $this->_db->update($tableName, $data, $where);
+            return true;
+        } catch (Exception $error) {
+            echo $error.'<br>';
+            return false;
+        }
+    }
+
+    /**
+     * Make a delete
+     *
+     * @param string $tableName The name of the table
+     * @param string $where     Sql where
+     *
+     * @return boolean
+     */
+    public function deleteRows($tableName, $where)
+    {
+        try {
+            $this->_db->delete($tableName, $where);
+            return true;
+        } catch (Exception $error) {
+            echo $error.'<br>';
             return false;
         }
     }
