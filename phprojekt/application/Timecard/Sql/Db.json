@@ -1,0 +1,50 @@
+{
+
+"6.0.0-DR2":
+{
+    "structure":
+    {
+        "timecard":
+        {
+            "create":
+            {
+                "id":         "default",
+                "owner_id":   {"type": "int"},
+                "date":       {"type": "date"},
+                "start_time": {"type": "time"},
+                "end_time":   {"type": "time"}
+            }
+        },
+
+        "timeproj":
+        {
+            "create":
+            {
+                "id":         "default",
+                "notes":      {"type": "text"},
+                "owner_id":   {"type": "int"},
+                "project_id": {"type": "int"},
+                "date":       {"type": "date"},
+                "amount":     {"type": "time"}
+            }
+        }
+    },
+
+    "initialData":
+    {
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":      "Timecard",
+                    "label":     "Timecard",
+                    "save_type": "1",
+                    "active":    "1"
+                }
+            ]
+        }
+    }
+}
+
+}

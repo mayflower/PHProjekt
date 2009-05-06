@@ -1,0 +1,375 @@
+{
+
+"6.0.0-DR2":
+{
+    "structure":
+    {
+        "todo":
+        {
+            "create":
+            {
+                "id":             "default",
+                "title":          {"type": "varchar", "notNull": "true"},
+                "notes":          {"type": "text"},
+                "owner_id":       {"type": "int"},
+                "project_id":     {"type": "int", "notNull": "true"},
+                "start_date":     {"type": "date"},
+                "end_date":       {"type": "date"},
+                "priority":       {"type": "int"},
+                "current_status": {"type": "int", "length": "1", "notNull": "true", "default": "2"},
+                "user_id":        {"type": "int"}
+            }
+        }
+    },
+
+    "initialData":
+    {
+        "database_manager":
+        {
+            "insert":
+            [
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "title",
+                    "form_tab":        "1",
+                    "form_label":      "Title",
+                    "form_type":       "text",
+                    "form_position":   "1",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "1",
+                    "list_align":      "left",
+                    "list_use_filter": "1",
+                    "alt_position":    "2",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "1",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "notes",
+                    "form_tab":        "1",
+                    "form_label":      "Notes",
+                    "form_type":       "textarea",
+                    "form_position":   "2",
+                    "form_columns":    "2",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "0",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "start_date",
+                    "form_tab":        "1",
+                    "form_label":      "Start date",
+                    "form_type":       "date",
+                    "form_position":   "4",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "3",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "3",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "end_date",
+                    "form_tab":        "1",
+                    "form_label":      "End date",
+                    "form_type":       "date",
+                    "form_position":   "5",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "4",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "4",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "priority",
+                    "form_tab":        "1",
+                    "form_label":      "Priority",
+                    "form_type":       "selectValues",
+                    "form_position":   "6",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10",
+                    "default_value":   "5",
+                    "list_position":   "5",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "5",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "current_status",
+                    "form_tab":        "1",
+                    "form_label":      "Current status",
+                    "form_type":       "selectValues",
+                    "form_position":   "7",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting",
+                    "default_value":   "1",
+                    "list_position":   "7",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "6",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "project_id",
+                    "form_tab":        "1",
+                    "form_label":      "Project",
+                    "form_type":       "selectValues",
+                    "form_position":   "3",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "Project#id#title",
+                    "default_value":   "NULL",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "1",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "1",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "user_id",
+                    "form_tab":        "1",
+                    "form_label":      "User",
+                    "form_type":       "selectValues",
+                    "form_position":   "8",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "User#id#lastname",
+                    "default_value":   "NULL",
+                    "list_position":   "6",
+                    "list_align":      "left",
+                    "list_use_filter": "1",
+                    "alt_position":    "1",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                }
+            ]
+        },
+
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "Todo",
+                    "label":      "Todo",
+                    "save_type":  "0",
+                    "active":     "1",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##id##",
+                                    "project_id": "all"
+                                }
+                            ]
+                        },
+
+                        "role_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##id##",
+                                    "role_id":   "all",
+                                    "access":    "139"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+},
+
+"6.0.0-RC1":
+{
+    "initialData":
+    {
+        "database_manager":
+        {
+            "insert":
+            [
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "title2",
+                    "form_tab":        "1",
+                    "form_label":      "Title",
+                    "form_type":       "text",
+                    "form_position":   "1",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "1",
+                    "list_align":      "left",
+                    "list_use_filter": "1",
+                    "alt_position":    "2",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "1",
+                    "is_unique":       "0"
+                }
+            ]
+        }
+    }
+},
+
+"6.0.0-RC6":
+{
+    "structure":
+    {
+        "todo":
+        {
+            "drop":
+            {
+            },
+
+            "add":
+            {
+                "user_id2":    {"type": "int"},
+                "project_id2": {"type": "int", "notNull": "true"}
+            },
+
+            "update":
+            {
+                "priority":       {"type": "int", "notNull": "true", "default": "2"},
+                "current_status": {"type": "int", "length": "1", "notNull": "true", "default": "2", "newName": "pepe"}
+            },
+
+            "delete":
+            {
+                "user_id": {}
+            }
+        }
+    },
+
+    "initialData":
+    {
+        "database_manager":
+        {
+            "insert":
+            [
+                {
+                    "table_name":      "Todo",
+                    "table_field":     "title2",
+                    "form_tab":        "1",
+                    "form_label":      "Title",
+                    "form_type":       "text",
+                    "form_position":   "1",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "1",
+                    "list_align":      "left",
+                    "list_use_filter": "1",
+                    "alt_position":    "2",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "1",
+                    "is_unique":       "0"
+                }
+            ]
+        },
+
+        "todo":
+        {
+            "update":
+            [
+                {
+                    "notes":     "default todo",
+                    "_sqlWhere": "id = 1"
+                },
+
+                {
+                    "title":     "default title",
+                    "_sqlWhere": ""
+                },
+
+                {
+                    "owner_id":   "4",
+                    "project_id": "2",
+                    "_sqlWhere":  "start_date = '2000-01-01' AND end_date = '2000-01-01'"
+                }
+            ]
+        }
+    }
+},
+
+
+"6.0.0-RC7":
+{
+    "initialData":
+    {
+        "todo":
+        {
+            "delete":
+            [
+                {
+                    "_sqlWhere": "id = 1",
+                    "_sqlWhere": "",
+                    "_sqlWhere": "start_date = '2000-01-01' AND end_date = '2000-01-01'"
+                }
+            ]
+        }
+    }
+}
+
+}

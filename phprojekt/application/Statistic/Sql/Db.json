@@ -1,0 +1,51 @@
+{
+
+"6.0.0-DR2":
+{
+    "structure":
+    {
+    },
+
+    "initialData":
+    {
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "Statistic",
+                    "label":      "Statistic",
+                    "save_type":  "0",
+                    "active":     "1",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##id##",
+                                    "project_id": "all"
+                                }
+                            ]
+                        },
+
+                        "role_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##id##",
+                                    "role_id":   "all",
+                                    "access":    "139"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+
+}

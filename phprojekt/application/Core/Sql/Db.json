@@ -1,0 +1,864 @@
+{
+
+"6.0.0-DR2":
+{
+    "structure":
+    {
+        "configuration":
+        {
+            "create":
+            {
+                "id":        "default",
+                "module_id": {"type": "int", "notNull": "true"},
+                "key_value": {"type": "varchar", "notNull": "true"},
+                "value":     {"type": "text"}
+            }
+        },
+
+        "database_manager":
+        {
+            "create":
+            {
+                "id":              "default",
+                "table_name":      {"type": "varchar", "length": "50"},
+                "table_field":     {"type": "varchar", "length": "60"},
+                "form_tab":        {"type": "int"},
+                "form_label":      {"type": "varchar"},
+                "form_type":       {"type": "varchar", "length": "50"},
+                "form_position":   {"type": "int"},
+                "form_columns":    {"type": "int"},
+                "form_regexp":     {"type": "varchar"},
+                "form_range":      {"type": "text"},
+                "default_value":   {"type": "varchar"},
+                "list_position":   {"type": "int"},
+                "list_align":      {"type": "varchar", "length": "20"},
+                "list_use_filter": {"type": "int", "length": "4"},
+                "alt_position":    {"type": "int"},
+                "status":          {"type": "varchar", "length": "20"},
+                "is_integer":      {"type": "int", "length": "4"},
+                "is_required":     {"type": "int", "length": "4"},
+                "is_unique":       {"type": "int"}
+            }
+        },
+
+        "groups":
+        {
+            "create":
+            {
+                "id":   "default",
+                "name": {"type": "varchar"}
+            }
+        },
+
+        "groups_user_relation":
+        {
+            "create":
+            {
+                "id":        "default",
+                "groups_id": {"type": "int", "notNull": "true"},
+                "user_id":   {"type": "int", "notNull": "true"}
+            }
+        },
+
+        "history":
+        {
+            "create":
+            {
+                "id":        "default",
+                "module_id": {"type": "int", "notNull": "true"},
+                "user_id":   {"type": "int", "notNull": "true"},
+                "item_id":   {"type": "int", "notNull": "true"},
+                "field":     {"type": "varchar", "notNull": "true"},
+                "old_value": {"type": "text"},
+                "new_value": {"type": "text"},
+                "action":    {"type": "varchar", "length": "50", "notNull": "true"},
+                "datetime":  {"type": "timestamp", "notNull": "true", "default": "CURRENT_TIMESTAMP",
+                              "noQuoteDefaultValue": "true"}
+            }
+        },
+
+        "item_rights":
+        {
+            "create":
+            {
+                "module_id": {"type": "int", "notNull": "true", "primary": "true"},
+                "item_id":   {"type": "int", "notNull": "true", "primary": "true"},
+                "user_id":   {"type": "int", "notNull": "true", "primary": "true"},
+                "access":    {"type": "int", "length": "3", "notNull": "true"}
+            }
+        },
+
+        "module":
+        {
+            "create":
+            {
+                "id":        "default",
+                "name":      {"type": "varchar", "notNull": "true"},
+                "label":     {"type": "varchar", "notNull": "true"},
+                "save_type": {"type": "int", "length": "1", "notNull": "true", "default": "0"},
+                "version":   {"type": "varchar", "length": "20"},
+                "active":    {"type": "int", "length": "1", "notNull": "true", "default": "1"}
+            }
+        },
+
+        "project":
+        {
+            "create":
+            {
+                "id":               "default",
+                "project_id":       {"type": "int"},
+                "path":             {"type": "varchar", "length": "25", "notNull": "true", "default": "/"},
+                "title":            {"type": "varchar", "notNull": "true"},
+                "notes":            {"type": "text"},
+                "owner_id":         {"type": "int"},
+                "start_date":       {"type": "date"},
+                "end_date":         {"type": "date"},
+                "priority":         {"type": "int"},
+                "current_status":   {"type": "int", "length": "1", "notNull": "true", "default": "3"},
+                "complete_percent": {"type": "varchar", "length": "4"},
+                "hourly_wage_rate": {"type": "varchar", "length": "10"},
+                "budget":           {"type": "varchar", "length": "10"},
+                "contact_id":       {"type": "int"}
+            }
+        },
+
+        "project_module_permissions":
+        {
+            "create":
+            {
+                "id":         "default",
+                "module_id":  {"type": "int", "notNull": "true"},
+                "project_id": {"type": "int", "notNull": "true"}
+            }
+        },
+
+        "project_role_user_permissions":
+        {
+            "create":
+            {
+                "id":         "default",
+                "project_id": {"type": "int", "notNull": "true"},
+                "user_id":    {"type": "int", "notNull": "true"},
+                "role_id":    {"type": "int", "notNull": "true"}
+            }
+        },
+
+        "role":
+        {
+            "create":
+            {
+                "id":     "default",
+                "name":   {"type": "varchar", "notNull": "true"},
+                "parent": {"type": "int"}
+            }
+        },
+
+        "role_module_permissions":
+        {
+            "create":
+            {
+                "id":        "default",
+                "role_id":   {"type": "int", "notNull": "true"},
+                "module_id": {"type": "int", "notNull": "true"},
+                "access":    {"type": "int", "length": "3", "notNull": "true"}
+            }
+        },
+
+        "search_display":
+        {
+            "create":
+            {
+                "item_id":        {"type": "int", "notNull": "true", "primary": "true"},
+                "module_id":      {"type": "int", "notNull": "true", "primary": "true"},
+                "project_id":     {"type": "int", "notNull": "true"},
+                "first_display":  {"type": "text"},
+                "second_display": {"type": "text"}
+            }
+        },
+
+        "search_words":
+        {
+            "create":
+            {
+                "id":    "default",
+                "word":  {"type": "varchar", "notNull": "true"},
+                "count": {"type": "int", "notNull": "true"}
+            }
+        },
+
+        "search_word_module":
+        {
+            "create":
+            {
+                "module_id": {"type": "int", "notNull": "true", "primary": "true"},
+                "item_id":   {"type": "int", "notNull": "true", "primary": "true"},
+                "word_id":   {"type": "int", "notNull": "true", "primary": "true"}
+            }
+        },
+
+        "setting":
+        {
+            "create":
+            {
+                "id":         "default",
+                "user_id":    {"type": "int", "notNull": "true"},
+                "module_id":  {"type": "int", "notNull": "true"},
+                "key_value":  {"type": "varchar", "notNull": "true"},
+                "value":      {"type": "text"},
+                "identifier": {"type": "varchar", "length": "50", "notNull": "true"}
+            }
+        },
+
+        "tab":
+        {
+            "create":
+            {
+                "id":    "default",
+                "label": {"type": "varchar", "notNull": "true"}
+            }
+        },
+
+        "tags":
+        {
+            "create":
+            {
+                "id":    "default",
+                "word":  {"type": "varchar", "notNull": "true"},
+                "crc32": {"type": "bigint", "notNull": "true"}
+            }
+        },
+
+        "tags_modules":
+        {
+            "create":
+            {
+                "module_id":   {"type": "int", "notNull": "true", "primary": "true"},
+                "item_id":     {"type": "int", "notNull": "true", "primary": "true"},
+                "tag_user_id": {"type": "int", "notNull": "true", "primary": "true"}
+            }
+        },
+
+        "tags_users":
+        {
+            "create":
+            {
+                "id":      "default",
+                "user_id": {"type": "int", "notNull": "true"},
+                "tag_id":  {"type": "int", "notNull": "true"}
+            }
+        },
+
+        "user":
+        {
+            "create":
+            {
+                "id":        "default",
+                "username":  {"type": "varchar", "notNull": "true", "unique": "true"},
+                "firstname": {"type": "varchar"},
+                "lastname":  {"type": "varchar"},
+                "status":    {"type": "varchar", "length": "1", "default": "A"},
+                "admin":     {"type": "int", "length": "1", "notNull": "true", "default": "0"}
+            }
+        }
+    },
+
+    "initialData":
+    {
+        "database_manager":
+        {
+            "insert":
+            [
+                {
+                    "table_name":      "Project",
+                    "table_field":     "title",
+                    "form_tab":        "1",
+                    "form_label":      "Title",
+                    "form_type":       "text",
+                    "form_position":   "1",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "1",
+                    "list_align":      "left",
+                    "list_use_filter": "1",
+                    "alt_position":    "2",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "1",
+                    "is_unique":       "1"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "notes",
+                    "form_tab":        "1",
+                    "form_label":      "Notes",
+                    "form_type":       "textarea",
+                    "form_position":   "2",
+                    "form_columns":    "2",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "0",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "project_id",
+                    "form_tab":        "1",
+                    "form_label":      "Parent",
+                    "form_type":       "selectValues",
+                    "form_position":   "3",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "Project#id#title",
+                    "default_value":   "1",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "1",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "1",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "start_date",
+                    "form_tab":        "1",
+                    "form_label":      "Start date",
+                    "form_type":       "date",
+                    "form_position":   "4",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "3",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "3",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "end_date",
+                    "form_tab":        "1",
+                    "form_label":      "End date",
+                    "form_type":       "date",
+                    "form_position":   "5",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "4",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "4",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "priority",
+                    "form_tab":        "1",
+                    "form_label":      "Priority",
+                    "form_type":       "selectValues",
+                    "form_position":   "6",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10",
+                    "default_value":   "5",
+                    "list_position":   "5",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "5",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "current_status",
+                    "form_tab":        "1",
+                    "form_label":      "Current status",
+                    "form_type":       "selectValues",
+                    "form_position":   "7",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting",
+                    "default_value":   "1",
+                    "list_position":   "6",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "6",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "complete_percent",
+                    "form_tab":        "1",
+                    "form_label":      "Complete percent",
+                    "form_type":       "percentage",
+                    "form_position":   "8",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "7",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "7",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "budget",
+                    "form_tab":        "1",
+                    "form_label":      "Budget",
+                    "form_type":       "text",
+                    "form_position":   "9",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "8",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Project",
+                    "table_field":     "contact_id",
+                    "form_tab":        "1",
+                    "form_label":      "Contact",
+                    "form_type":       "selectValues",
+                    "form_position":   "10",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "Contact#id#name",
+                    "default_value":   "NULL",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "9",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                }
+            ]
+        },
+
+        "groups":
+        {
+            "insert":
+            [
+                {
+                    "id":   "1",
+                    "name": "Default"
+                }
+            ]
+        },
+
+        "role":
+        {
+            "insert":
+            [
+                {
+                    "id":     "1",
+                    "name":   "Admin in All"
+                }
+            ]
+        },
+
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "Project",
+                    "label":      "Project",
+                    "save_type":  "0",
+                    "active":     "1",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##id##",
+                                    "project_id": "all"
+                                }
+                            ]
+                        },
+
+                        "role_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##id##",
+                                    "role_id":   "all",
+                                    "access":    "139"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+
+        "project":
+        {
+            "insert":
+            [
+                {
+                    "path":             "/",
+                    "title":            "PHProjekt",
+                    "notes":            "Test",
+                    "owner_id":         "1",
+                    "start_date":       "2009-05-12",
+                    "end_date":         "2009-07-28",
+                    "priority":         "1",
+                    "current_status":   "1",
+                    "complete_percent": "0",
+                    "hourly_wage_rate": "NULL",
+                    "budget":           "NULL",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##Project_moduleId##",
+                                    "project_id": "##id##"
+                                }
+                            ]
+                        },
+
+                        "project_role_user_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "project_id": "##id##",
+                                    "user_id":    "all",
+                                    "role_id":    "1"
+                                }
+                            ]
+                        },
+
+                        "item_rights":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##Project_moduleId##",
+                                    "item_id":   "##id##",
+                                    "user_id":   "all",
+                                    "access":    "255"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+
+        "tab":
+        {
+            "insert":
+            [
+                {
+                    "id":    "1",
+                    "label": "Basic Data"
+                },
+
+                {
+                    "id":    "2",
+                    "label": "People"
+                }
+            ]
+        },
+
+        "user":
+        {
+            "insert":
+            [
+                {
+                    "username":   "admin",
+                    "firstname":  "Admin",
+                    "lastname":   "Admin",
+                    "status":     "A",
+                    "admin":      "1",
+                    "_relations":
+                    {
+                        "groups_user_relation":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "groups_id": "all",
+                                    "user_id":   "##id##"
+                                }
+                            ]
+                        },
+
+                        "setting":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "password",
+                                    "value":      "156c3239dbfa5c5222b51514e9d12948",
+                                    "identifier": "Core"
+                                },
+
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "email",
+                                    "value":      "admin@admin.com",
+                                    "identifier": "Core"
+                                },
+
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "language",
+                                    "value":      "en",
+                                    "identifier": "Core"
+                                },
+
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "timeZone",
+                                    "value":      "0",
+                                    "identifier": "Core"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+
+    "extraData":
+    {
+        "user":
+        {
+            "insert":
+            [
+                {
+                    "username":   "test",
+                    "firstname":  "Test",
+                    "lastname":   "Test",
+                    "status":     "A",
+                    "admin":      "0",
+                    "_relations":
+                    {
+                        "groups_user_relation":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "groups_id": "all",
+                                    "user_id":   "##id##"
+                                }
+                            ]
+                        },
+
+                        "setting":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "password",
+                                    "value":      "156c3239dbfa5c5222b51514e9d12948",
+                                    "identifier": "Core"
+                                },
+
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "email",
+                                    "value":      "test@test.com",
+                                    "identifier": "Core"
+                                },
+
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "language",
+                                    "value":      "en",
+                                    "identifier": "Core"
+                                },
+
+                                {
+                                    "user_id":    "##id##",
+                                    "module_id":  "0",
+                                    "key_value":  "timeZone",
+                                    "value":      "0",
+                                    "identifier": "Core"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+
+        "project":
+        {
+            "insert":
+            [
+                {
+                    "project_id":       "1",
+                    "path":             "/1/",
+                    "title":            "Project 1",
+                    "notes":            "Test",
+                    "owner_id":         "1",
+                    "start_date":       "2009-05-02",
+                    "end_date":         "2009-07-02",
+                    "priority":         "2",
+                    "current_status":   "1",
+                    "complete_percent": "0",
+                    "hourly_wage_rate": "NULL",
+                    "budget":           "NULL",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "all",
+                                    "project_id": "##id##"
+                                }
+                            ]
+                        },
+
+                        "project_role_user_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "project_id": "##id##",
+                                    "user_id":    "all",
+                                    "role_id":    "1"
+                                }
+                            ]
+                        },
+
+                        "item_rights":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##Project_moduleId##",
+                                    "item_id":   "##id##",
+                                    "user_id":   "all",
+                                    "access":    "255"
+                                }
+                            ]
+                        }
+                    }
+                },
+
+                {
+                    "project_id":       "2",
+                    "path":             "/1/2/",
+                    "title":            "Sub Project",
+                    "notes":            "Test",
+                    "owner_id":         "1",
+                    "start_date":       "2009-05-02",
+                    "end_date":         "2009-07-02",
+                    "priority":         "2",
+                    "current_status":   "1",
+                    "complete_percent": "0",
+                    "hourly_wage_rate": "NULL",
+                    "budget":           "NULL",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "all",
+                                    "project_id": "##id##"
+                                }
+                            ]
+                        },
+
+                        "project_role_user_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "project_id": "##id##",
+                                    "user_id":    "all",
+                                    "role_id":    "1"
+                                }
+                            ]
+                        },
+
+                        "item_rights":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##Project_moduleId##",
+                                    "item_id":   "##id##",
+                                    "user_id":   "all",
+                                    "access":    "255"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+
+}
