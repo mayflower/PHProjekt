@@ -1,4 +1,4 @@
-<form id="minutesItemForm" action="javascript:;" dojoType="dijit.form.Form">
+<form id="minutesItemForm" action="javascript:;" dojoType="dijit.form.Form" class="form">
     <input type="hidden" name="id" value="{{id}}" />
     <input type="hidden" name="minutesId" value="{{minutesId}}" />
     <input type="hidden" name="projectId" value="{{projectId}}" />
@@ -8,18 +8,19 @@
     
     <table id="minutesItemFormTable">
     <tr>
-        <td>
-            <label>{{lblTitle}}</label>
+        <td class="label">
+            <label for="minutesItemFormTitle">{{lblTitle}} (*)</label>
         </td>
         <td>
-            <input id="minutesItemFormTitle" name="title" dojoType="dijit.form.TextBox"
+            <input type="text" id="minutesItemFormTitle" name="title" dojoType="dijit.form.TextBox"
                     required="true" value="{{title}}" invalidMessage="" />
         </td>
+        <td><!-- Tooltip --></td>
     </tr>
     
     <tr>
-        <td>
-            <label>{{lblTopicType}}</label>
+        <td class="label">
+            <label>{{lblTopicType}} (*)</label>
         </td>
         <td>
             <select id="minutesItemFormTopicType" name="topicType" dojoType="dijit.form.FilteringSelect"
@@ -33,21 +34,22 @@
                 {% endfor %}
             </select>
         </td>
+        <td><!-- Tooltip --></td>
     </tr>
     
-    
     <tr>
-        <td>
+        <td class="label">
             <label>{{lblComment}}</label>
         </td>
         <td>
             <textarea id="minutesItemFormComment" name="comment" dojoType="dijit.form.Textarea"
                    value="{{comment}}" invalidMessage="" style="width: 300px"></textarea>
         </td>
+        <td><!-- Tooltip --></td>
     </tr>
     
     <tr>
-        <td>
+        <td class="label">
             <label>{{lblUserId}}</label>
         </td>
         <td>
@@ -62,24 +64,30 @@
                 {% endfor %}
             </select>
         </td>
+        <td><!-- Tooltip --></td>
     </tr>
     
     <tr>
-        <td>
+        <td class="label">
             <label>{{lblTopicDate}}</label>
         </td>
         <td>
             <input id="topicDate" name="topicDate" type="text" dojoType="dijit.form.DateTextBox"
                    constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" />
         </td>
+        <td><!-- Tooltip --></td>
     </tr>
     
     <tr>
-        <td>&nbsp;</td>
+        <td class="label">
+            &nbsp;
+        </td>
         <td>
             <button dojoType="dijit.form.Button" id="minutesItemFormSubmit">{{lblSubmit}}</button>
+            &nbsp;
+            <button dojoType="dijit.form.Button" id="minutesItemFormDelete">{{lblDelete}}</button>
         </td>
+        <td><!-- Tooltip --></td>
     </tr>
-    
     </table>
 </form>

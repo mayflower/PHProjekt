@@ -119,45 +119,54 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     url: null,
     
     _buildGrid: function() {
-        var schema = [{
-                name:     'Topic',
-                field:    'topicId',
-                styles:   "text-align: center;",
-                width:    '30px'
-            },
-            {
-                name:     'Title',
-                field:    'title',
-                styles:   "text-align: left;",
-                width:    '100px'
-            },
-            {
-                name:     'Comment',
-                field:    'comment',
-                styles:   "text-align: left;",
-                width:    '270px'
-            },
-            {
-                name:     'Type',
-                field:    'topicType',
-                styles:   "text-align: center;",
-                width:    '50px',
-                options:    [1,2],
-                values:     ['Topic','Comment']
-            }
-        ];
+        var layout = [{
+            cells: [[
+                     {
+                         name:     'Topic',
+                         field:    'topicId',
+                         styles:   "text-align: center;",
+                         width:    '30px',
+                         rowSpan:  2
+                     },
+                     {
+                         name:     'Title',
+                         field:    'title',
+                         styles:   "text-align: left;",
+                         width:    '270px'
+                     },
+                     {
+                         name:     'Type',
+                         field:    'topicType',
+                         styles:   "text-align: center;",
+                         width:    '50px',
+                         type:     dojox.grid.cells.Select,
+                         options:  [1,2],
+                         values:   ['Topic','Comment']
+                         
+                     }
+                 ],[
+                     {
+                         name:     'Comment',
+                         field:    'comment',
+                         styles:   "text-align: left;",
+                         width:    '320px',
+                         colSpan:   3
+                     }
+                 ]]
+            }];
         
         var store = this._getItemGridStore();
         
         var grid = new dojox.grid.DataGrid({
             store: store,
-            structure: [{
+            structure: layout
+            /*[{
                         defaultCell: {
                             type:     dojox.grid.cells.Input,
                             styles:   'text-align: left;'
                         },
-                        rows: [schema]
-            }]
+                        cells: [schema]
+            }]*/
         }, document.createElement('div'));
         
         dojo.connect(grid, 'onRowDblClick', dojo.hitch(this, function(e) {
@@ -187,13 +196,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     
     _itemGrid:     null,
     _itemFormData: null,
-    _invitedList:  [{id:1,name:'test1'},{id:2,name:'test2'}],
+    _invitedList:  [],
     
     saveSubFormData: function() {
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemFormData = null;
             this.loadSubForm();
-            //this._buildGrid();
             this.updateGrid();
             return responseObject;
         });
@@ -204,6 +212,26 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             load: responseHandler,
             error: function(e) {
                 console.debug('saveSubFormData() has encountered an error: ' + e);
+            },
+            form: "minutesItemForm"
+        });
+    },
+    
+    deleteSubFormData: function() {
+        var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
+            this._itemFormData = null;
+            this.loadSubForm();
+            //this._buildGrid();
+            this.updateGrid();
+            return responseObject;
+        });
+        dojo.xhrPost({
+            // The following URL must match that used to test the server.
+            url: "index.php/Minutes/item/jsonDelete/",
+            handleAs: "text",
+            load: responseHandler,
+            error: function(e) {
+                console.debug('deleteSubFormData() has encountered an error: ' + e);
             },
             form: "minutesItemForm"
         });
@@ -266,8 +294,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             lblTopicType: 'Type',
             lblTopicDate: 'Date',
             lblSubmit:    'Save',
+            lblDelete:    'Delete',
             users:        this._invitedList,
-            types:        [{id:1,name:'Topic'},{id:2,name:'Task'}]
+            types:        [{id:1,name:'Topic'},{id:2,name:'Comment'}]
         };
         placeholders = dojo.mixin(placeholders, this._itemFormData);
         
@@ -276,5 +305,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                      dojo.byId('minutesDetailsRight'), placeholders);
         dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', 
                      dojo.hitch(this, this.saveSubFormData));
+        dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', 
+                dojo.hitch(this, this.deleteSubFormData));
     }
 });
