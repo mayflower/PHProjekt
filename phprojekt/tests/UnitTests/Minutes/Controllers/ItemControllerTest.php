@@ -131,6 +131,15 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertContains(',"numRows":1}', $response);
     }
 
+    public function testJsonDetailsWithNoItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3');
+        
+        $response = $this->getResponse();
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+    }
+    
     /**
      * Add second minutes item
      */
@@ -166,14 +175,35 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertContains(',"numRows":2}', $response);
     }
     
+    /**
+     * Test editing one item
+     */
+    public function testJsonSaveActionWithEditedData()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', '2');
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', '');
+        $this->request->setParam('sortOrder', '1');
+        $this->request->setParam('title', 'SecondTitleSecondSave');
+        $this->request->setParam('comment', "Some lines of new comment\nSome lines of new comment");
+        $this->request->setParam('topicType', '2');
+        $this->request->setParam('topicDate', '2009-05-01');
+        $this->request->setParam('userId', '1');
+        $this->request->setParam('topicId', '');
+        
+        $response = $this->getResponse();
+        $this->assertContains(Minutes_ItemController::EDIT_TRUE_TEXT, $response);
+    }
+    
     public function testJsonDetailActionWithSecondItem()
     {
         $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3/id/2');
         
         $response = $this->getResponse();
         $this->assertContains(',"numRows":1}', $response);
-        $this->assertContains('"SecondTitle"', $response);
-        $this->assertContains('"Some lines of comment\\nSome lines of comment"', $response);
+        $this->assertContains('"SecondTitleSecondSave"', $response);
+        $this->assertContains('"Some lines of new comment\\nSome lines of new comment"', $response);
     }
     
     /**
@@ -198,8 +228,8 @@ class Minutes_ItemController_Test extends FrontInit
         
         $response = $this->getResponse();
         $this->assertNotContains('"DerTitel"', $response);
-        $this->assertContains('"SecondTitle"', $response);
-        $this->assertContains('"Some lines of comment\\nSome lines of comment"', $response);
+        $this->assertContains('"SecondTitleSecondSave"', $response);
+        $this->assertContains('"Some lines of new comment\\nSome lines of new comment"', $response);
         $this->assertContains(',"numRows":1}', $response);
     }
     

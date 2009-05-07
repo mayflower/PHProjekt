@@ -64,7 +64,7 @@ class Minutes_ItemController extends IndexController
         $id = (int) $this->getRequest()->getParam('id');
         
         if (empty($id)) {
-            $record = NULL;
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
         } else {
             $record = $itemModel->find($id);
         }
