@@ -180,7 +180,7 @@ class Minutes_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+        $this->assertContains(Minutes_IndexController::NOT_FOUND, $this->errormessage);
     }
 
     /**
@@ -192,7 +192,7 @@ class Minutes_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::ID_REQUIRED_TEXT, $this->errormessage);
+        $this->assertContains(Minutes_IndexController::ID_REQUIRED_TEXT, $this->errormessage);
     }
     
     
@@ -204,7 +204,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonDelete/id/1');
         
         $response = $this->getResponse();
-        $this->assertContains(Minutes_ItemController::DELETE_TRUE_TEXT, $response, "Response was: '$response'");
+        $this->assertContains(Minutes_IndexController::DELETE_TRUE_TEXT, $response, "Response was: '$response'");
     }
 
     public function testJsonDeleteId2Action()
@@ -212,7 +212,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonDelete/id/2');
         
         $response = $this->getResponse();
-        $this->assertContains(Minutes_ItemController::DELETE_TRUE_TEXT, $response, "Response was: '$response'");
+        $this->assertContains(Minutes_IndexController::DELETE_TRUE_TEXT, $response, "Response was: '$response'");
     }
 
     

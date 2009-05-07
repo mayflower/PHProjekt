@@ -118,40 +118,144 @@ class Minutes_ItemController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
     }
+
     /**
-     * Test the Minutes event detail
+     * Test the Minutes item list 
      */
-    public function testJsonDetailAction()
+    public function testJsonListActionAfterFirstItem()
     {
-        $this->markTestIncomplete('Not yet implemented');
+        $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
+        
+        $response = $this->getResponse();
+        $this->assertContains('DerTitel', $response);
+        $this->assertContains(',"numRows":1}', $response);
     }
 
-    public function testJsonListAction()
+    /**
+     * Add second minutes item
+     */
+    public function testJsonSaveSecondItem()
     {
-        $this->markTestIncomplete('Not yet implemented');
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', '');
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', '');
+        $this->request->setParam('sortOrder', '1');
+        $this->request->setParam('title', 'SecondTitle');
+        $this->request->setParam('comment',"Some lines of comment\nSome lines of comment");
+        $this->request->setParam('topicType', '2');
+        $this->request->setParam('topicDate','2009-05-01');
+        $this->request->setParam('userId', '1');
+        $this->request->setParam('topicId', '');
+        
+        $response = $this->getResponse();
+        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
     }
-
+    
+    /**
+     * Test the Minutes item list 
+     */
+    public function testJsonListActionAfterSecondItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
+        
+        $response = $this->getResponse();
+        $this->assertContains('"DerTitel"', $response);
+        $this->assertContains('"SecondTitle"', $response);
+        $this->assertContains('"Some lines of comment\\nSome lines of comment"', $response);
+        $this->assertContains(',"numRows":2}', $response);
+    }
+    
+    public function testJsonDetailActionWithSecondItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3/id/2');
+        
+        $response = $this->getResponse();
+        $this->assertContains(',"numRows":1}', $response);
+        $this->assertContains('"SecondTitle"', $response);
+        $this->assertContains('"Some lines of comment\\nSome lines of comment"', $response);
+    }
+    
     /**
      * Test the Minutes deletion
      */
     public function testJsonDeleteAction()
     {
-        $this->markTestIncomplete('Not yet implemented');
+        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->request->setParam('id','1');
+        $this->request->setParam('minutesId','3');
+        
+        $response = $this->getResponse();
+        $this->assertContains(Minutes_ItemController::DELETE_TRUE_TEXT, $response);
+    }
+
+    /**
+     * Test the Minutes item list 
+     */
+    public function testJsonListActionAfterDeleteItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
+        
+        $response = $this->getResponse();
+        $this->assertNotContains('"DerTitel"', $response);
+        $this->assertContains('"SecondTitle"', $response);
+        $this->assertContains('"Some lines of comment\\nSome lines of comment"', $response);
+        $this->assertContains(',"numRows":1}', $response);
+    }
+    
+    /**
+     * Test the Minutes deletion with errors
+     */
+    public function testJsonDeleteActionWrongItemId()
+    {
+        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->request->setParam('id','12');
+        $this->request->setParam('minutesId','3');
+        
+        $response = $this->getResponse();
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
     }
 
     /**
      * Test the Minutes deletion with errors
      */
-    public function testJsonDeleteActionWrongId()
+    public function testJsonDeleteActionNoItemId()
     {
-        $this->markTestIncomplete('Not yet implemented');
+        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->request->setParam('minutesId','3');
+        $response = $this->getResponse();
+        
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_ItemController::ID_REQUIRED_TEXT, $this->errormessage);
     }
 
     /**
      * Test the Minutes deletion with errors
      */
-    public function testJsonDeleteActionNoId()
+    public function testJsonDeleteActionNoMinutesId()
     {
-        $this->markTestIncomplete('Not yet implemented');
+        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->request->setParam('id','1');
+        $response = $this->getResponse();
+        
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+    }
+    
+    public function testJsonDeleteWholeMinutes()
+    {
+        $this->setRequestUrl('Minutes/index/jsonDelete/id/3');
+        $response = $this->getResponse();
+        
+        $this->assertContains(Minutes_IndexController::DELETE_TRUE_TEXT, $response);
+    }
+    
+    public function testJsonDetailActionDeletedItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3/id/2');
+        $response = $this->getResponse();
+        
+        $this->assertContains('{"metadata":[]}', $response, "Response was: '$response'");
     }
 }
