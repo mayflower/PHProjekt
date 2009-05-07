@@ -352,6 +352,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
             Phprojekt_DatabaseManager::COLUMN_NAME);
         foreach ($fields as $field) {
+            $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
             if ($this->getInformation()->getType($field) == 'upload') {
                 $filesField = $this->$field;
                 $files = split('\|\|', $filesField);
@@ -369,16 +370,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_search->deleteObjectItem($this);
         $this->_rights->_save($moduleId, $this->id, array());
         parent::delete();
-    }
-
-    /**
-     * Return wich submodules use this module
-     *
-     * @return array
-     */
-    public function getSubModules()
-    {
-        return array();
     }
 
     /**

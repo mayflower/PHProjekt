@@ -268,12 +268,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testRequiredFieldSet()
     {
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item            = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->projectId = 1;
-        $item->title = '';
-        $item->notes = 'TEST';
+        $item->title     = '';
+        $item->notes     = 'TEST';
         $item->startDate = '1981-05-12';
-        $item->priority = 1;
+        $item->priority  = 1;
         $item->recordValidate();
         $this->assertEquals(1, count($item->getError()));
     }
@@ -283,9 +283,10 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testIntegerFieldSet()
     {
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item           = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->priority = 'AA';
         $this->assertEquals(0, $item->priority);
+
         $item->priority = 7;
         $this->assertEquals(7, $item->priority);
     }
@@ -295,7 +296,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetError()
     {
-        $result= array();
+        $result   = array();
         $result[] = array('field'    => 'title',
                           'label'    => 'Title',
                           'message'  => 'Is a required field');
@@ -304,11 +305,11 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $item->getError());
 
         $item->projectId = 1;
-        $item->title = '';
-        $item->notes = 'TEST';
+        $item->title     = '';
+        $item->notes     = 'TEST';
         $item->startDate = '20-';
-        $item->endDate = '1981-05-12';
-        $item->priority = 1;
+        $item->endDate   = '1981-05-12';
+        $item->priority  = 1;
         $item->recordValidate();
         $this->assertEquals($result, $item->getError());
     }
@@ -318,25 +319,25 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testRecordValidate()
     {
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item        = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->title = '';
         $this->assertFalse($item->recordValidate());
 
         $item->projectId = 1;
-        $item->title = 'TEST';
-        $item->notes = 'TEST';
+        $item->title     = 'TEST';
+        $item->notes     = 'TEST';
         $item->startDate = '1981-05-12';
-        $item->endDate = '1981-05-12';
-        $item->priority = 1;
+        $item->endDate   = '1981-05-12';
+        $item->priority  = 1;
         $this->assertTrue($item->recordValidate());
 
         $item = new Customized_Project(array('db' => $this->sharedFixture));
         $item->projectId = 1;
-        $item->title = 'TEST';
-        $item->notes = 'TEST';
+        $item->title     = 'TEST';
+        $item->notes     = 'TEST';
         $item->startDate = '1981-05-12';
-        $item->endDate = '1981-05-12';
-        $item->priority = 0;
+        $item->endDate   = '1981-05-12';
+        $item->priority  = 0;
         $this->assertFalse($item->recordValidate());
     }
 
@@ -345,7 +346,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testDate()
     {
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item            = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->startDate = 'aaaaaaaaaa';
         $this->assertEquals($item->startDate, null);
 
@@ -359,7 +360,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     public function testFloat()
     {
         Zend_Locale::setLocale('es_AR');
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item         = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1000,30';
         $item->budget;
     }
@@ -370,8 +371,41 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     public function testEmptyFloat()
     {
         Zend_Locale::setLocale('es_AR');
-        $item = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item         = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '';
+    }
+
+    /**
+     * Test time
+     */
+    public function testTime()
+    {
+        $item            = new Calendar_Models_Calendar(array('db' => $this->sharedFixture));
+        $item->startTime = '12:00:00';
+        $this->assertEquals(array(), $item->getError());
+        $this->assertEquals('12:00:00', $item->startTime);
+    }
+
+    /**
+     * Test html
+     */
+    public function testHtml()
+    {
+        $item           = new Note_Models_Note(array('db' => $this->sharedFixture));
+        $item->comments = '<b>HELLO</b>';
+        $this->assertEquals(array(), $item->getError());
+        $this->assertEquals('<b>HELLO</b>', $item->comments);
+    }
+
+    /**
+     * Test multipleValues
+     */
+    public function testArray()
+    {
+        $item                      = new Minutes_Models_Minutes(array('db' => $this->sharedFixture));
+        $item->participantsInvited = array(1,2,3);
+        $this->assertEquals(array(), $item->getError());
+        $this->assertEquals('1,2,3', $item->participantsInvited);
     }
 
     /**
@@ -401,5 +435,43 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
         $module = Phprojekt_Loader::getModel('Timecard', 'Timecard', array('db' => $this->sharedFixture));
         $this->assertEquals(array(), $module->getRights());
+    }
+
+    /**
+     * test delete function (with upload file)
+     */
+    public function testDelete()
+    {
+        $model              = new Helpdesk_Models_Helpdesk(array('db' => $this->sharedFixture));
+        $model->title       = 'test';
+        $model->projectId   = 1;
+        $model->ownerId     = 1;
+        $model->attachments = '3bc3369dd33d3ab9c03bd76262cff633|LICENSE';
+        $model->status      = 3;
+        $model->author      = 1;
+        $model->save();
+        $this->assertNotNull($model->id);
+
+        $id = $model->id;
+        $model->delete();
+        $model->find($id);
+        $this->assertNull($model->title);
+    }
+
+    public function testSaveRights()
+    {
+        $model = new Helpdesk_Models_Helpdesk(array('db' => $this->sharedFixture));
+        $model->title       = 'test';
+        $model->projectId   = 1;
+        $model->ownerId     = 1;
+        $model->attachments = '3bc3369dd33d3ab9c03bd76262cff633|LICENSE';
+        $model->status      = 3;
+        $model->author      = 1;
+        $model->save();
+        $model->saveRights(array(1 => 255));
+        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->assertEquals(255, $getRights = $rights->getItemRight(10, $model->id, 1));
+
+        $this->assertEquals(0, $getRights = $rights->getItemRight(10, $model->id, 10));
     }
 }
