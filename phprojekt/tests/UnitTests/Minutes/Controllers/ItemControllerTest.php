@@ -142,9 +142,9 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('projectId', '');
         $this->request->setParam('sortOrder', '1');
         $this->request->setParam('title', 'SecondTitle');
-        $this->request->setParam('comment',"Some lines of comment\nSome lines of comment");
+        $this->request->setParam('comment', "Some lines of comment\nSome lines of comment");
         $this->request->setParam('topicType', '2');
-        $this->request->setParam('topicDate','2009-05-01');
+        $this->request->setParam('topicDate', '2009-05-01');
         $this->request->setParam('userId', '1');
         $this->request->setParam('topicId', '');
         
@@ -182,8 +182,8 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonDeleteAction()
     {
         $this->setRequestUrl('Minutes/item/jsonDelete/');
-        $this->request->setParam('id','1');
-        $this->request->setParam('minutesId','3');
+        $this->request->setParam('id', '1');
+        $this->request->setParam('minutesId', '3');
         
         $response = $this->getResponse();
         $this->assertContains(Minutes_ItemController::DELETE_TRUE_TEXT, $response);
@@ -209,8 +209,8 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonDeleteActionWrongItemId()
     {
         $this->setRequestUrl('Minutes/item/jsonDelete/');
-        $this->request->setParam('id','12');
-        $this->request->setParam('minutesId','3');
+        $this->request->setParam('id', '12');
+        $this->request->setParam('minutesId', '3');
         
         $response = $this->getResponse();
         $this->assertTrue($this->error);
@@ -223,7 +223,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonDeleteActionNoItemId()
     {
         $this->setRequestUrl('Minutes/item/jsonDelete/');
-        $this->request->setParam('minutesId','3');
+        $this->request->setParam('minutesId', '3');
         $response = $this->getResponse();
         
         $this->assertTrue($this->error);
@@ -236,7 +236,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonDeleteActionNoMinutesId()
     {
         $this->setRequestUrl('Minutes/item/jsonDelete/');
-        $this->request->setParam('id','1');
+        $this->request->setParam('id', '1');
         $response = $this->getResponse();
         
         $this->assertTrue($this->error);
