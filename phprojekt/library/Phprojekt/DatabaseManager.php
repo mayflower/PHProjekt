@@ -326,7 +326,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      *
      * @return array
      */
-    public function getTypes($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function getTypes($ordering = Phprojekt_ModelInformation_Default::ORDERING_FORM)
     {
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
             $index = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
