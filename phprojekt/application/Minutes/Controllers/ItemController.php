@@ -34,6 +34,17 @@
 class Minutes_ItemController extends IndexController
 {
     /**
+     * Get the model object
+     * This function must be redefined in each module
+     *
+     * @return Phprojekt_Model_Interface
+     */
+    public function getModelObject()
+    {
+        return Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
+    }
+    
+    /**
      * This Action currently acts as a mockup
      * 
      * @todo implement this action
