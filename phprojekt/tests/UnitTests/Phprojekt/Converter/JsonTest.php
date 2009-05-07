@@ -29,48 +29,38 @@ require_once 'PHPUnit/Framework.php';
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_JsonTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test json converter
-     *
      */
     public function testConvert()
     {
         $converted = substr('{}&&({"metadata":[{"key":"title","label":"Title","type":', 0, 23);
+        $object    = Phprojekt_Loader::getModel('Project', 'Project');
+        $records   = $object->fetchAll();
+        $result    = Phprojekt_Converter_Json::convert($records);
+        $this->assertEquals($converted, substr($result, 0, strlen($converted)));
 
-        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-        $authNamespace->userId = 1;
-
-        $object  = Phprojekt_Loader::getModel('Project', 'Project');
-        $records = $object->fetchAll(null, null, 20, 0);
-        $data    = Phprojekt_Converter_Json::convert($records);
-
-        $this->assertEquals($converted, substr($data, 0, 23));
+        $result = Phprojekt_Converter_Json::convert($object->find(1));
+        $this->assertEquals($converted, substr($result, 0, strlen($converted)));
     }
 
     /**
      * Test json convert tree
-     *
      */
     public function testConvertTree()
     {
-        $converted = substr('{}&&({"identifier":"id","label":"name","items":[{"name"', 0, 23);
-
-        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-        $authNamespace->userId = 1;
-
-        $object = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree   = new Phprojekt_Tree_Node_Database($object, 1);
+        $converted = '{}&&({"identifier":"id","label":"name","items":[{"name"';
+        $object    = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree      = new Phprojekt_Tree_Node_Database($object, 1);
         $tree->setup();
-        $data = Phprojekt_Converter_Json::convert($tree);
-
-        $this->assertEquals($converted, substr($data, 0, 23));
+        $result = Phprojekt_Converter_Json::convert($tree);
+        $this->assertEquals($converted, substr($result, 0, strlen($converted)));
     }
 
     /**
      * Test json convertion of single value
-     *
      */
     public function testConvertValue()
     {
@@ -83,5 +73,22 @@ class Phprojekt_ConverterTest extends PHPUnit_Framework_TestCase
         $converted = '{}&&(["This is a test of convetion"])';
         $result    = Phprojekt_Converter_Json::convert($data);
         $this->assertEquals($converted, $result);
+
+        $result    = Phprojekt_Converter_Json::convert(array());
+        $converted = '{}&&({"metadata":[]})';
+        $this->assertEquals($converted, $result);
+    }
+
+    /**
+     * Test json convertion of tags
+     */
+    public function testConvertTags()
+    {
+        $tagObj    = Phprojekt_Tags_Default::getInstance();
+        $tags      = $tagObj->getTags(1);
+        $fields    = $tagObj->getFieldDefinition();
+        $result    = Phprojekt_Converter_Json::convert($tags, $fields);
+        $converted = '{}&&({"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],"data":[{"';
+        $this->assertEquals($converted, substr($result, 0, strlen($converted)));
     }
 }
