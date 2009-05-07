@@ -62,7 +62,28 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      */
     protected function _calcStatus(Phprojekt_Item_Abstract &$item)
     {
-        $item->itemStatus = ($item->itemStatus == 0) ? 2 : $item->itemStatus;
+        $when = new Zend_Date($item->meetingDate);
+        $now = new Zend_Date();
+        
+        $status = 0;
+        if ($when->compare($now) > 0) {
+            $status = 1;
+        } else {
+            $status = 2;
+            // @todo count how many minutes items are existing for this item.
+            // demo implementation ;)
+            $count = 1;
+            if ($count > 0) {
+                $status = 3;
+            }
+        }
+        
+        if (4 != $item->itemStatus) {
+            $item->itemStatus = $status;
+        } else {
+            $item->itemStatus = 4;
+        }
+        
         return $item;
     }
 
@@ -73,8 +94,10 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      */
     public function save()
     {
-        // Forced
-        $this->itemStatus = 0;
+        // Force status=0 if not status==4 (FINAL)
+        if (4 != $this->itemStatus) {
+            $this->itemStatus = 0;
+        }
         return parent::save();
     }
 }
