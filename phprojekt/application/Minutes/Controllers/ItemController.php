@@ -34,37 +34,6 @@
 class Minutes_ItemController extends IndexController
 {
     /**
-     * Get the model object
-     * This function must be redefined in each module
-     *
-     * @return Phprojekt_Model_Interface
-     */
-    public function getModelObject()
-    {
-        return Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
-    }
-    
-    /**
-     * This Action currently acts as a mockup
-     * 
-     * @todo implement this action
-     * 
-     * @return void
-     */
-    public function indexAction()
-    {
-        $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
-        $itemModel->init($this->getRequest()->getParam('minutesId', null));
-        
-        $result = $itemModel->fetchAll();
-        
-        echo get_class($this) . " indexAction was here!<br><pre>";
-        echo "<hr>";
-        Phprojekt_Converter_Json::echoConvert($result);
-        echo "</pre>";
-    }
-    
-    /**
      * Returns list of minutes items referenced by a minutesId
      * 
      * @requestparam integer minutesId The id of the minutes this list belongs to.
@@ -73,7 +42,7 @@ class Minutes_ItemController extends IndexController
     public function jsonListAction()
     {
         $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
-        $itemModel->init($this->getRequest()->getParam('minutesId', null));
+        $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
         
         $result = $itemModel->fetchAll();
         Phprojekt_Converter_Json::echoConvert($result, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -90,7 +59,7 @@ class Minutes_ItemController extends IndexController
     public function jsonDetailAction()
     {
         $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
-        $itemModel->init((int) $this->getRequest()->getParam('minutesId', null));
+        $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
         
         $id = (int) $this->getRequest()->getParam('id');
         
