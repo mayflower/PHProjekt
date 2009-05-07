@@ -31,38 +31,104 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
 {
+    private $_defaultForm = array (
+            0 => array (
+                'key'      => '',
+                'label'    => '',
+                'type'     => 'string',
+                'hint'     => '',
+                'order'    => 0,
+                'position' => 0,
+                'fieldset' => null,
+                'range'    => '',
+                'required' => false,
+                'right'    => 'write',
+                'readOnly' => false),
+        );
+
+    private $_testForm = array (
+            0 => array (
+                'key'      => 'test',
+                'label'    => '',
+                'type'     => 'string',
+                'hint'     => '',
+                'order'    => 0,
+                'position' => 0,
+                'fieldset' => null,
+                'range'    => '',
+                'required' => false,
+                'right'    => 'write',
+                'readOnly' => false),
+        );
+
+    private $_testList = array (
+            0 => array (
+                'key'      => 'test list',
+                'label'    => '',
+                'type'     => 'string',
+                'hint'     => '',
+                'order'    => 0,
+                'position' => 0,
+                'fieldset' => null,
+                'range'    => '',
+                'required' => false,
+                'right'    => 'write',
+                'readOnly' => false),
+        );
+
     /**
      * Test get field definition
-     *
      */
     public function testGetFieldDefinition()
     {
-        // empty values
-        $defaultForm = array (0 => array (
-                                'key'      => '',
-                                'label'    => '',
-                                'type'     => 'string',
-                                'hint'     => '',
-                                'order'    => 0,
-                                'position' => 0,
-                                'fieldset' => null,
-                                'range'    => '',
-                                'required' => false,
-                                'right'    => 'write',
-                                'readOnly' => false),
-                                );
-
         $object  = new Phprojekt_ModelInformation_Default();
         $records = $object->getFormFields();
-        $this->assertEquals($records, $defaultForm);
+        $this->assertEquals($records, $this->_defaultForm);
 
         $records = $object->getListFields();
-        $this->assertEquals($records, $defaultForm);
+        $this->assertEquals($records, $this->_defaultForm);
 
         $records = $object->getTitles();
         $this->assertEquals($records[0], '');
 
         $records = $object->getTitles(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $this->assertEquals($records[0], '');
+    }
+
+    /**
+     * Test fieldDefinition function
+     */
+    public function testFieldDefinition()
+    {
+        $object  = new Phprojekt_ModelInformation_Default();
+        $records = $object->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        $this->assertEquals($records, $this->_defaultForm);
+
+        $records = $object->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $this->assertEquals($records, $this->_defaultForm);
+    }
+
+    public function testConstuct()
+    {
+        $object  = new Phprojekt_ModelInformation_Default($this->_testList);
+        $records = $object->getListFields();
+        $this->assertEquals($records, $this->_testList);
+
+        $records = $object->getFormFields();
+        $this->assertEquals($records, $this->_testList);
+
+        $object  = new Phprojekt_ModelInformation_Default(null, $this->_testForm);
+        $records = $object->getListFields();
+        $this->assertEquals($records, $this->_testForm);
+
+        $records = $object->getFormFields();
+        $this->assertEquals($records, $this->_testForm);
+
+        $object  = new Phprojekt_ModelInformation_Default($this->_testList, $this->_testForm);
+        $records = $object->getListFields();
+        $this->assertEquals($records, $this->_testList);
+
+        $records = $object->getFormFields();
+        $this->assertEquals($records, $this->_testForm);
     }
 }
