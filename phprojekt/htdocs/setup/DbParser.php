@@ -475,16 +475,16 @@ class DbParser
         $keys = array();
 
         foreach ($fields as $key => $content) {
-        	if ($key == 'id' && $content == 'default') {
-        	    $keys['primary key'][] = 'id';
-        	} else {
-        	    if (isset($content['primary'])) {
-        	       $keys['primary key'][] = $key;
-        	    }
-        	    if (isset($content['unique'])) {
-        	       $keys['unique'][] = $key;
-        	    }
-        	}
+            if ($key == 'id' && $content == 'default') {
+                $keys['primary key'][] = 'id';
+            } else {
+                if (isset($content['primary'])) {
+                   $keys['primary key'][] = $key;
+                }
+                if (isset($content['unique'])) {
+                   $keys['unique'][] = $key;
+                }
+            }
         }
 
         return $keys;
