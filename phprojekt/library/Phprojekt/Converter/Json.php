@@ -107,20 +107,10 @@ class Phprojekt_Converter_Json
      */
     private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        if (null === $models) {
-            return self::_makeJsonString(array('metadata' => array()));
-        }
-
-        if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
+        if (!is_array($models)) {
             $model = $models;
-        } else if (is_array($models) && !empty($models)) {
-            $model = current((array) $models);
         } else {
-            return self::_makeJsonString(array('metadata' => array()));
-        }
-
-        if (!$model instanceof Phprojekt_Model_Interface) {
-            throw new InvalidArgumentException();
+            $model = current((array) $models);
         }
 
         $information     = $model->getInformation($order);

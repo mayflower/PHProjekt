@@ -100,22 +100,7 @@ class Phprojekt_Converter_Csv
     {
         $datas = array();
         $data  = array();
-
-        if (null === $models) {
-            return self::_writeFile(array('metadata' => array()));
-        }
-
-        if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
-            $model = $models;
-        } else if (is_array($models) && !empty($models)) {
-            $model = current((array) $models);
-        } else {
-            return self::_writeFile(array('metadata' => array()));
-        }
-
-        if (!$model instanceof Phprojekt_Model_Interface) {
-            throw new InvalidArgumentException();
-        }
+        $model = current((array) $models);
 
         $information = $model->getInformation($order);
 
@@ -172,13 +157,15 @@ class Phprojekt_Converter_Csv
                 if ($rowNbr > 0) {
                     $outputString .= "\"\n";
                 }
-                foreach ($oneRow as $colNbr => $oneData) {
-                    if ($colNbr > 0) {
-                        $outputString .= '","';
-                    } else {
-                        $outputString .= '"';
+                if (is_array($oneRow)) {
+                    foreach ($oneRow as $colNbr => $oneData) {
+                        if ($colNbr > 0) {
+                            $outputString .= '","';
+                        } else {
+                            $outputString .= '"';
+                        }
+                        $outputString .= str_replace('"', '""', $oneData);
                     }
-                    $outputString .= str_replace('"', '""', $oneData);
                 }
             }
             $outputString .= "\"\n";
