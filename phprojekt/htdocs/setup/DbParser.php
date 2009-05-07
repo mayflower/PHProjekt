@@ -502,16 +502,16 @@ class DbParser
         $data = array();
 
         foreach ($fields as $key => $content) {
-        	if ($key == 'id' && $content == 'default') {
-        	    $data['id'] = array('type' => 'auto_increment', 'length' => 11);
-        	} else {
-        	    if (isset($content['type'])) {
-        	        $data[$key]['type'] = $content['type'];
-        	    }
+            if ($key == 'id' && $content == 'default') {
+                $data['id'] = array('type' => 'auto_increment', 'length' => 11);
+            } else {
+                if (isset($content['type'])) {
+                    $data[$key]['type'] = $content['type'];
+                }
 
-        	    if (isset($content['length'])) {
-        	        $data[$key]['length'] = (int) $content['length'];
-        	    } else {
+                if (isset($content['length'])) {
+                    $data[$key]['length'] = (int) $content['length'];
+                } else {
                     if (isset($content['type'])) {
                         switch ($content['type']) {
                             case 'varchar':
@@ -522,33 +522,33 @@ class DbParser
                                 break;
                         }
                     }
-        	    }
+                }
 
-        	    if (isset($content['notNull'])) {
-        	        $data[$key]['null'] = false;
-        	    }
+                if (isset($content['notNull'])) {
+                    $data[$key]['null'] = false;
+                }
 
-        	    if (isset($content['default'])) {
-        	        $data[$key]['default'] = $content['default'];
-        	    }
+                if (isset($content['default'])) {
+                    $data[$key]['default'] = $content['default'];
+                }
 
-        	    if (isset($content['noQuoteDefaultValue'])) {
-        	        $data[$key]['default_no_quote'] = true;
-        	    }
+                if (isset($content['noQuoteDefaultValue'])) {
+                    $data[$key]['default_no_quote'] = true;
+                }
 
-        	    if (isset($content['unsigned'])) {
-        	        $data[$key]['unsigned'] = true;
-        	    }
+                if (isset($content['unsigned'])) {
+                    $data[$key]['unsigned'] = true;
+                }
 
-        	    if (isset($content['newName'])) {
-        	        $data[$key]['newName'] = $content['newName'];
+                if (isset($content['newName'])) {
+                    $data[$key]['newName'] = $content['newName'];
                     $data[$key]['name']    = $content['newName'];
                     $data[$key]['oldName'] = $key;
-        	    } else {
+                } else {
                     $data[$key]['name']    = $key;
                     $data[$key]['oldName'] = $key;
-        	    }
-        	}
+                }
+            }
         }
 
         return $data;
