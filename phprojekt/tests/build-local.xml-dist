@@ -20,7 +20,7 @@
     <!-- Where does Zend_Cache put its files? -->
     <property name="project.zendcache.dir" location="/tmp" />
 
-     <!-- How to connect to the mysql database? -->   
+    <!-- How to connect to the mysql database? -->   
     <property name="database.params.host" value="localhost" />
     <property name="database.params.dbname" value="SET_DATABASE_HERE" />
     <property name="database.params.username" value="SET_USERNAME_HERE" />
@@ -88,7 +88,15 @@ itemsPerPage         = 3;
         </delete>
     </target>
     
-    <target name="dbupdate" depends="config-check" description="Set up the test db">
+    <target name="dbclean" depends="config-check" description="Drops and inits new database">
+    	<exec executable="/usr/bin/mysql">
+            <arg line="--user=${database.params.username}" />
+            <arg line="--password=${database.params.password}" />
+            <arg line="--execute=&quot;DROP DATABASE IF EXISTS `${database.params.dbname}`; CREATE DATABASE `${database.params.dbname}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;&quot;" />
+    	</exec>
+    </target>
+
+    <target name="dbupdate" depends="config-check, dbclean" description="Set up the test db">
         <exec executable="/usr/bin/mysql">
             <arg line="--user=${database.params.username}" />
             <arg line="--password=${database.params.password}" />
@@ -96,11 +104,11 @@ itemsPerPage         = 3;
             <redirector input="${database.testdatafile}" />
         </exec>
     </target>
-    
+
     <target name="phpdoc-prepare">
         <mkdir dir="${doc.dir}" />
         <copy todir="${doc.dir}/media/images">
-            <fileset dir="/usr/share/php5/PEAR/data/PhpDocumentor/phpDocumentor/Converters/HTML/frames/templates/earthli/templates/media/images" />  
+            <fileset dir="${doc.dir.imagesource}" />  
         </copy>
     </target>
 
@@ -292,7 +300,7 @@ itemsPerPage         = 3;
         </exec>
     </target>
     <target name="build"
-        depends="prepare,configure,dbupdate,test,phpdoc,cs"
+        depends="prepare,configure,dbupdate,cs,test,phpdoc"
         description="Build the whole project" />
 
 </project>
