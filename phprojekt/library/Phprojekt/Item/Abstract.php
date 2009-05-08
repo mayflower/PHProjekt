@@ -368,7 +368,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
         $this->_history->saveFields($this, 'delete');
         $this->_search->deleteObjectItem($this);
-        $this->_rights->_save($moduleId, $this->id, array());
+        $this->_rights->saveRights($moduleId, $this->id, array());
         parent::delete();
     }
 
@@ -496,6 +496,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function saveRights($rights)
     {
-        $this->_rights->_save(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
+        $this->_rights->saveRights(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
     }
 }

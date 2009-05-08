@@ -65,7 +65,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * @return void
      */
-    public function _save($moduleId, $itemId, $rights)
+    public function saveRights($moduleId, $itemId, $rights)
     {
         // Delete the entries for this moduleId-itemId and re-inserted the changes
         $this->_delete($moduleId, $itemId);
