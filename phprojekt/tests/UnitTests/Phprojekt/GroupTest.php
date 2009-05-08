@@ -32,20 +32,20 @@ require_once 'PHPUnit/Framework.php';
 class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * set user
+     * Set user
      */
     public function testSetUser()
     {
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-        $user = $authNamespace->userId;
+        $user          = $authNamespace->userId;
 
-        $group = new Phprojekt_Groups_Groups($this->sharedFixture);
+        $group     = new Phprojekt_Groups_Groups($this->sharedFixture);
         $groupUser = $group->getUserId();
         $this->assertEquals($user, $groupUser);
     }
 
     /**
-     * is user in a group
+     * Is user in a group
      */
     public function testIsUserInGroup()
     {
@@ -55,7 +55,7 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * groups for one user
+     * Groups for one user
      */
     public function testGetUserGroups()
     {
@@ -63,11 +63,51 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($group->getUserGroups()));
 
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-        $keepUser = $authNamespace->userId;
+        $keepUser      = $authNamespace->userId;
 
         $authNamespace->userId = 3;
-        $group = new Phprojekt_Groups_Groups($this->sharedFixture);
+        $group                 = new Phprojekt_Groups_Groups($this->sharedFixture);
         $this->assertEquals(0, count($group->getUserGroups()));
         $authNamespace->userId = $keepUser;
+    }
+
+    /**
+     * Test for getInformation
+     */
+    public function testGetInformation()
+    {
+        $group     = new Phprojekt_Groups_Groups($this->sharedFixture);
+        $converted = array();
+
+        $data             = array();
+        $data['key']      = 'name';
+        $data['label']    = Phprojekt::getInstance()->translate('Name');
+        $data['type']     = 'text';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('name');
+        $data['order']    = 0;
+        $data['position'] = 1;
+        $data['fieldset'] = '';
+        $data['range']    = array('id'   => '',
+                                  'name' => '');
+        $data['required'] = true;
+        $data['readOnly'] = false;
+        $data['tab']      = 1;
+
+        $converted[] = $data;
+
+        $this->assertEquals($converted, $group->getInformation()->getFieldDefinition());
+    }
+
+    /**
+     * Test for mock function
+     */
+    public function testMocks()
+    {
+        $group = new Phprojekt_Groups_Groups($this->sharedFixture);
+        $this->assertEquals(array(), $group->getRights());
+
+        $this->assertTrue($group->recordValidate());
+
+        $this->assertEquals(array(), $group->getInformation()->getTitles());
     }
 }
