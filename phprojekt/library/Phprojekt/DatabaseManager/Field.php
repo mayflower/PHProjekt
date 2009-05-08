@@ -38,9 +38,18 @@
  */
 class Phprojekt_DatabaseManager_Field
 {
-    protected $_dbManager;
+    /**
+     * Class contain the db information
+     *
+     * @var Phprojekt_DatabaseManager
+     */
     protected $_metadata = array();
-    public $right='';
+
+    /**
+     * Field value
+     *
+     * @var mix
+     */
     public $value;
 
     /**

@@ -147,7 +147,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function current()
     {
-        return new Phprojekt_DatabaseManager_Field($this->getInformation(), $this->key(), parent::current());
+        $key = $this->convertVarFromSql($this->key());
+        return new Phprojekt_DatabaseManager_Field($this->getInformation(), $key, parent::current());
     }
 
     /**

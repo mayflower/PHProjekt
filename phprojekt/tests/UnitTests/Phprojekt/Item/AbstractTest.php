@@ -45,7 +45,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 {
     /**
      * setUp method for PHPUnit. We use a shared db connection
-     *
      */
     public function setUp()
     {
@@ -331,7 +330,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->priority  = 1;
         $this->assertTrue($item->recordValidate());
 
-        $item = new Customized_Project(array('db' => $this->sharedFixture));
+        $item            = new Customized_Project(array('db' => $this->sharedFixture));
         $item->projectId = 1;
         $item->title     = 'TEST';
         $item->notes     = 'TEST';
@@ -409,21 +408,21 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test filters data
+     * Test filters data
      */
     public function testGetFieldsForFilter()
     {
-        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+        $module = new Project_Models_Project(array('db' => $this->sharedFixture));
         $array  = $module->getFieldsForFilter();
         $this->assertEquals(array_keys($this->_filterResult), $array);
     }
 
     /**
-     * test getrights function
+     * Test getRights function
      */
     public function testGetRights()
     {
-        $module = Phprojekt_Loader::getModel('Project', 'Project', array('db' => $this->sharedFixture));
+        $module = new Project_Models_Project(array('db' => $this->sharedFixture));
         $module->find(2);
 
         $getRights = $module->getRights();
@@ -433,12 +432,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($getRights[3]['itemId'], 2);
         $this->assertEquals($getRights[3]['write'], true);
 
-        $module = Phprojekt_Loader::getModel('Timecard', 'Timecard', array('db' => $this->sharedFixture));
+        $module = new Timecard_Models_Timecard(array('db' => $this->sharedFixture));
         $this->assertEquals(array(), $module->getRights());
     }
 
     /**
-     * test delete function (with upload file)
+     * Test delete function (with upload file)
      */
     public function testDelete()
     {
@@ -473,5 +472,22 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(255, $getRights = $rights->getItemRight(10, $model->id, 1));
 
         $this->assertEquals(0, $getRights = $rights->getItemRight(10, $model->id, 10));
+    }
+
+    /**
+     * Test the current function
+     */
+    public function testCurrent()
+    {
+        $model = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $model->find(1);
+        foreach ($model as $key => $field) {
+            if ($key == 'id') {
+                $this->assertEquals('1', $field->value);
+            }
+            if ($key == 'title') {
+                $this->assertEquals('Invisible Root', $field->value);
+            }
+        }
     }
 }

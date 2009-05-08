@@ -215,7 +215,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function current()
     {
-        return $this->_data[$this->key()];
+        return $this->_data[self::convertVarFromSql($this->key())];
     }
 
     /**
