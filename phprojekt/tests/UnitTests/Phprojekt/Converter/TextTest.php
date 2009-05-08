@@ -34,7 +34,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
     /**
      * Test text converter
      */
-    public function testConvert_part1()
+    public function testConvertPart1()
     {
         $model           = Phprojekt_Loader::getModel('Project', 'Project');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
@@ -73,7 +73,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
     /**
      * Test text converter
      */
-    public function testConvert_part2()
+    public function testConvertPart2()
     {
         $model           = Phprojekt_Loader::getModel('Calendar', 'Calendar');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
@@ -100,7 +100,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
     /**
      * Test text converter
      */
-    public function testConvert_part3()
+    public function testConvertPart3()
     {
         $model           = Phprojekt_Loader::getModel('Helpdesk', 'Helpdesk');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
