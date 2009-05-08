@@ -41,6 +41,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'test');
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDate', '2008-06-02');
+        $this->request->setParam('endDate', '2008-06-02');
         $this->request->setParam('startTime', strtotime('09:00'));
         $this->request->setParam('endTime', strtotime('10:00'));
         $this->request->setParam('dataParticipant', 1);
@@ -53,6 +54,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'test');
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDate', '2008-06-02');
+        $this->request->setParam('endDate', '2008-06-02');
         $this->request->setParam('startTime', strtotime('09:00'));
         $this->request->setParam('endTime', strtotime('10:00'));
         $this->request->setParam('dataParticipant', 1);
@@ -63,6 +65,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonSave/');
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081202T040000Z;INTERVAL=1');
         $this->request->setParam('startDate', '2008-12-01');
+        $this->request->setParam('endDate', '2008-12-01');
         $this->request->setParam('startTime', strtotime('02:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('title', 'Multiple');
@@ -75,6 +78,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('id', 4);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081202T040000Z;INTERVAL=1');
         $this->request->setParam('startDate', '2008-12-01');
+        $this->request->setParam('endDate', '2008-12-01');
         $this->request->setParam('startTime', strtotime('02:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('title', 'Multiple');
@@ -113,6 +117,52 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertTrue(strpos($response, '"numRows":1}') > 0);
+    }
+
+    /**
+     * Test the calendar day list self
+     */
+    public function testJsonDayListSelfAction()
+    {
+        $this->setRequestUrl('Calendar/index/jsonDayListSelf/');
+        $this->request->setParam('date', '2008-12-01');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":1}') > 0);
+    }
+
+    /**
+     * Test the calendar day list select
+     */
+    public function testJsonDayListSelectAction()
+    {
+        $this->setRequestUrl('Calendar/index/jsonDayListSelect/');
+        $this->request->setParam('date', '2008-12-01');
+        $this->request->setParam('users', '1,2');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
+    }
+
+    /**
+     * Test the calendar period list
+     */
+    public function testJsonPeriodListAction()
+    {
+        $this->setRequestUrl('Calendar/index/jsonPeriodList/');
+        $this->request->setParam('dateStart', '2008-12-01');
+        $this->request->setParam('dateEnd', '2008-12-31');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
+    }
+
+    /**
+     * Test the calendar participants getting
+     */
+    public function testGetParticipantsAction()
+    {
+        $this->setRequestUrl('Calendar/index/jsonGetParticipants/');
+        $this->request->setParam('id', 4);
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"data":"1,2"') > 0);
     }
 
     /**
@@ -165,5 +215,16 @@ class Calendar_IndexController_Test extends FrontInit
         }
 
         $this->fail('Error on Delete without Id');
+    }
+
+    /**
+     * Test the calendar specific users getting
+     */
+    public function testGetSpecificUsersAction()
+    {
+        $this->setRequestUrl('Calendar/index/jsonGetSpecificUsers/');
+        $this->request->setParam('users', '1,2');
+        $response = $this->getResponse();
+        $this->assertTrue(strpos($response, '"numRows":2') > 0);
     }
 }
