@@ -230,8 +230,9 @@ class IndexController extends Zend_Controller_Action
         $data    = (array) $this->getRequest()->getParam('data');
         $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId  = array();
+        $model   = $this->getModelObject();
         foreach ($data as $id => $fields) {
-            $model = $this->getModelObject()->find((int) $id);
+            $model->find((int) $id);
             Default_Helpers_Save::save($model, $fields);
             $showId[] = $id;
         }
@@ -285,20 +286,16 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Get the model object
-     * This function must be redefined in each module
+     * Get the model object, or the default if none exists.
      *
      * @return Phprojekt_Model_Interface
      */
     public function getModelObject()
     {
-        static $object = null;
+        $moduleName = $this->getRequest()->getModuleName();
+        $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
         if (null === $object) {
-            $moduleName = $this->getRequest()->getModuleName();
-            $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
-            if (null === $object) {
-                $object = Phprojekt_Loader::getModel('Default', 'Default');
-            }
+            $object = Phprojekt_Loader::getModel('Default', 'Default');
         }
         return $object;
     }

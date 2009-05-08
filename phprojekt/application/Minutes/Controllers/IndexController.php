@@ -33,17 +33,6 @@
  */
 class Minutes_IndexController extends IndexController
 {
-    /**
-     * Get the model object
-     * This function must be redefined in each module
-     *
-     * @return Phprojekt_Model_Interface
-     */
-    public function getModelObject()
-    {
-        return Phprojekt_Loader::getModel('Minutes', 'Minutes');
-    }
-    
     /*
      * Get a user list in JSON
      *
