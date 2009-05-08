@@ -223,7 +223,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $group->find(1);
         $users = $group->users->fetchAll();
         $this->assertEquals('david', $users[0]->username);
-        $this->assertEquals(4, $group->users->count());
+        $this->assertEquals(5, $group->users->count());
     }
 
     /**

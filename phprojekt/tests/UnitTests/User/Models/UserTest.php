@@ -34,18 +34,70 @@ class User_User_Test extends PHPUnit_Framework_TestCase
     /**
      * Test valid method
      */
-    public function testUserModelsUser()
+    public function testSave()
     {
-        $userModel = new Phprojekt_User_User();
-        $userModel->find(1);
-        $this->assertEquals($userModel->saveRights(), null);
-        $this->assertEquals($userModel->recordValidate(), false);
-        $this->assertEquals($userModel->getError(),
-            array(0 => array('field'   => 'firstname',
-                             'label'   => 'First Name',
-                             'message' => 'Is a required field'),
-                  1 => array('field'   => 'lastname',
-                             'label'   => 'Last Name',
-                             'message' => 'Is a required field')));
+        $user = new Phprojekt_User_User();
+        $user->find(1);
+        $this->assertEquals($user->saveRights(), null);
+        $this->assertEquals($user->recordValidate(), false);
+        $error = $user->getError();
+        $this->assertEquals('firstname', $error[0]['field']);
+        $this->assertEquals('Is a required field', $error[0]['message']);
+        $this->assertEquals('lastname', $error[1]['field']);
+    }
+
+    /**
+     * Test save function
+     */
+    public function testUserNamecheck()
+    {
+        $user            = new Phprojekt_User_User();
+        $user->username  = 'david';
+        $user->firstname = 'testuser';
+        $user->lastname  = 'testuser';
+        $user->status    = 1;
+        $this->assertEquals(false, $user->recordValidate());
+        $error = $user->getError();
+        $this->assertEquals('Already exists, choose another one please', $error[0]['message']);
+    }
+
+    /**
+     * Test save function
+     */
+    public function testUpdate()
+    {
+        $user = new Phprojekt_User_User();
+        $user->username  = 'testuser';
+        $user->username  = 'testuser';
+        $user->firstname = 'testuser';
+        $user->lastname  = 'testuser';
+        $user->status    = 1;
+        $user->save();
+
+        $user->username = 'testuserchanged';
+        $user->save();
+        $this->assertEquals('testuserchanged', $user->username);
+    }
+
+    /**
+     * Test delete
+     */
+    public function testDelete()
+    {
+        $user = new Phprojekt_User_User();
+        $user->find(1);
+        $this->setExpectedException('Phprojekt_User_Exception');
+        $user->delete();
+    }
+
+    /**
+     * Test for mock function
+     */
+    public function testMocks()
+    {
+        $user = new Phprojekt_User_User();
+        $this->assertEquals(array(), $user->getRights());
+
+        $this->assertEquals(array(), $user->getInformation()->getTitles());
     }
 }

@@ -175,10 +175,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                 return true;
             }
         } else {
-            parent::save();
+            return parent::save();
         }
-
-        return false;
     }
 
     /**
