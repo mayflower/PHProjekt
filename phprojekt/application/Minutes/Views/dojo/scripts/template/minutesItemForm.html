@@ -12,8 +12,8 @@
             <label for="minutesItemFormTitle">{{lblTitle}} (*)</label>
         </td>
         <td>
-            <input type="text" id="minutesItemFormTitle" name="title" dojoType="dijit.form.TextBox"
-                    required="true" value="{{title}}" invalidMessage="" />
+            <input type="text" id="minutesItemFormTitle" name="title" dojoType="dijit.form.ValidationTextBox"
+                    required="true" value="{{title}}" invalidMessage="Title must not be empty" trim="true" />
         </td>
         <td><!-- Tooltip --></td>
     </tr>
@@ -24,8 +24,7 @@
         </td>
         <td>
             <select id="minutesItemFormTopicType" name="topicType" dojoType="dijit.form.FilteringSelect"
-                    required="true" autocomplete="true" value="{{topicType}}" invalidMessage="" >
-                <option value=""></option>
+                    required="true" autocomplete="true" value="{{topicType}}" invalidMessage="Please choose a type for this item" >
                 {% for type in types %}
                 <option value="{{type.id}}">
                   {{type.name}}
@@ -43,18 +42,18 @@
         </td>
         <td>
             <textarea id="minutesItemFormComment" name="comment" dojoType="dijit.form.Textarea"
-                   value="{{comment}}" invalidMessage="" style="width: 300px"></textarea>
+                   value="{{comment}}" style="width: 300px"></textarea>
         </td>
         <td><!-- Tooltip --></td>
     </tr>
     
-    <tr>
+    <tr id="minutesItemFormRowUser" style="visibility: collapse">
         <td class="label">
             <label>{{lblUserId}}</label>
         </td>
         <td>
             <select id="minutesItemFormUserId" name="userId" dojoType="dijit.form.FilteringSelect"
-                    required="true" autocomplete="true" value="{{userId}}" invalidMessage="" >
+                    required="true" autocomplete="true" value="{{userId}}" invalidMessage="Please choose a user name" >
                 <option value=""></option>
                 {% for user in users %}
                 <option value="{{user.id}}">
@@ -67,13 +66,14 @@
         <td><!-- Tooltip --></td>
     </tr>
     
-    <tr>
+    <tr id="minutesItemFormRowDate" style="visibility: collapse">
         <td class="label">
             <label>{{lblTopicDate}}</label>
         </td>
         <td>
             <input id="topicDate" name="topicDate" type="text" dojoType="dijit.form.DateTextBox"
-                   constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" />
+                   constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" 
+                   invalidMessage="No date given or date format is not valid (must be YYYY-MM-DD)" />
         </td>
         <td><!-- Tooltip --></td>
     </tr>
@@ -83,7 +83,7 @@
             &nbsp;
         </td>
         <td>
-            <button dojoType="dijit.form.Button" id="minutesItemFormSubmit">{{lblSubmit}}</button>
+            <button dojoType="dijit.form.Button" id="minutesItemFormSubmit" disabled="true">{{lblSubmit}}</button>
             &nbsp;
             <button dojoType="dijit.form.Button" id="minutesItemFormDelete">{{lblDelete}}</button>
         </td>

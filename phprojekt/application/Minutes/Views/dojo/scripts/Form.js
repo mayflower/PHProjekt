@@ -56,7 +56,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Render the datagrid after the rest of the form has been 
         //    processed. Neccessary because the datagrid won't render
         //    unless dimensions of all surrounding elements are known.
-        // I used this for testing purposes. Also renders only in gridBox
         
         var tabs = this.form;
         dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
@@ -67,8 +66,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 phpr.DataStore.addStore({"url": this.url});
                 phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
                 //dojo.connect(dijit.byId('submitButton'), 'onClick', this.saveSubFormData);
-            } else {
-                //dojo.byId('minutesDetailsRight').style.display = 'none';
             }
         }));
         dojo.byId('itemsFormTab').style.display = 'none';
@@ -119,6 +116,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     url: null,
     
     _buildGrid: function() {
+    	var me = this; // variable scope workaround, needed for formatter
         var layout = [{
             cells: [[
                      {
@@ -140,17 +138,45 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          styles:   "text-align: center;",
                          width:    '50px',
                          type:     dojox.grid.cells.Select,
-                         options:  [1,2],
-                         values:   ['Topic','Comment']
-                         
-                     }
+                         formatter:function(value) {
+                    	 	var typeList = me.getItemTypes();
+                    	 	for(var i=0; i < typeList.length; i++) {
+                    	 		if (typeList[i].id && typeList[i].id == value) {
+                    	 			return typeList[i].name;
+                    	 		}
+                    	 	}
+                    	 	return value;
+                      	 }
+                     },
+                     {
+                         name:     'Date',
+                         field:    'topicDate',
+                         styles:   "text-align: center;",
+                         width:    '65px'
+                     },
+                     {
+                         name:     'Who',
+                         field:    'userId',
+                         styles:   "text-align: center;",
+                         width:    '50px',
+                         formatter:function(value) {
+                     	 	var userList = me._invitedList;
+                     	 	for(var i=0; i < userList.length; i++) {
+                     	 		if (userList[i].id && userList[i].id == value) {
+                     	 			return userList[i].username;
+                     	 		}
+                     	 	}
+                     	 	console.log('Investigate! Value not in user array: ' + value);
+                     	 	return '';
+                       	 }
+                     },
                  ],[
                      {
                          name:     'Comment',
                          field:    'comment',
                          styles:   "text-align: left;",
-                         width:    '320px',
-                         colSpan:   3
+                         width:    '465px',
+                         colSpan:  4
                      }
                  ]]
             }];
@@ -268,6 +294,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         });
     },
     
+    _itemTypes: [],
+    getItemTypes: function() {
+		if (this._itemTypes.length == 0) {
+			// @todo request these from server, needs thinking about asynchronous behaviour
+    		this._itemTypes = [{id:1,name:'Topic'},{id:2,name:'Statement'},{id:3,name:'TODO'},{id:4,name:'Decision'},{id:5,name:'Date'}]; 
+    	}
+    	return this._itemTypes;
+    },
+    
     loadSubForm: function() {
         if (!this._itemFormData) {
             // Use default empty dataset
@@ -278,12 +313,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 minutesId:  this.id,
                 projectId:  '',
                 topicId:    '',
-                topicType:  '',
+                topicType:  '1',
                 userId:     '',
                 sortOrder:  '1',
                 title:      '',
                 comment:	'',
-                topicDate:  '2009-05-01'
+                topicDate:  ''
             };
         }
         // @todo Add server data to placeholder object
@@ -296,16 +331,61 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             lblSubmit:    'Save',
             lblDelete:    'Delete',
             users:        this._invitedList,
-            types:        [{id:1,name:'Topic'},{id:2,name:'Comment'}]
+            types:        this.getItemTypes()
         };
         placeholders = dojo.mixin(placeholders, this._itemFormData);
         
         // Render the template
         this.render(["phpr.Minutes.template", "minutesItemForm.html"], 
                      dojo.byId('minutesDetailsRight'), placeholders);
+        
+        // connect save/delete events to buttons
         dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', 
                      dojo.hitch(this, this.saveSubFormData));
         dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', 
                 dojo.hitch(this, this.deleteSubFormData));
+        
+        // have delete button disabled when creating a new item,
+        // and save button enabled by default when updating a new one
+        if (!placeholders.id) {
+        	dijit.byId('minutesItemFormDelete').attr("disabled", true);
+        } else {
+        	dijit.byId('minutesItemFormSubmit').attr("disabled", false);
+        }
+        
+        // disable/enable submit button according to form validation state 
+        dojo.connect(dijit.byId('minutesItemForm'), "onValidStateChange", 
+    		function(state) {
+        		console.log('Handling onValidStateChange for the form');
+				console.dir(state);
+				console.debug(this);
+				dijit.byId('minutesItemFormSubmit').attr("disabled", !state);
+			}
+        );
+        
+        // have the appropriate input fields appear for each type
+        this._switchItemFormFields(placeholders.topicType); // defaults
+        dojo.connect(dijit.byId('minutesItemFormTopicType'), 'onChange',
+        		dojo.hitch(this, this._switchItemFormFields));
+        
+        // set cursor to title field when all is done
+        dojo.byId("minutesItemFormTitle").focus();
+    },
+    
+    _switchItemFormFields: function(typeValue) {
+    	// 1='Topic', 2='Statement',3='TODO',4='Decision',5='Date'
+    	switch(typeValue) {
+    		case "3":
+    			dojo.byId('minutesItemFormRowUser').style.visibility = 'visible';
+    			dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
+    			break;
+    		case "5":
+    			dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
+    			dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
+    			break;
+    		default:
+    			dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
+    			dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
+    	}
     }
 });
