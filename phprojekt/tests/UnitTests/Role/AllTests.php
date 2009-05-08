@@ -26,6 +26,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
+require_once 'Models/RoleTest.php';
 require_once 'Models/RoleModulePermissionsTest.php';
 
 /**
@@ -60,6 +61,7 @@ class Role_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Role Controller');
 
         $suite->addTestSuite('Role_IndexController_Test');
+        $suite->addTestSuite('Phprojekt_Role_Test');
         $suite->addTestSuite('Phprojekt_RoleModelsRoleModulePermissions_Test');
 
         return $suite;

@@ -153,7 +153,7 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function getError()
     {
-        return (array) $this->_validate->_error->getError();
+        return (array) $this->_validate->error->getError();
     }
 
     /**

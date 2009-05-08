@@ -50,7 +50,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
         $where  .= ' AND (module.save_type = 0 OR module.save_type = 2) ';
         $order   = ' module.name ASC';
         $select  = ' module.id AS module_id ';
-        $join    = ' RIGHT JOIN module ON module.id = role_module_permissions.module_id ';
+        $join    = ' INNER JOIN module ON module.id = role_module_permissions.module_id ';
 
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $modules['data'][$right->moduleId] = array();
@@ -107,7 +107,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
      */
     public function deleteModuleRelation($moduleId)
     {
-        $where = $this->getAdapter()->quoteInto(' moduleId = ? ', (int) $moduleId);
+        $where = $this->getAdapter()->quoteInto(' module_id = ? ', (int) $moduleId);
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }
