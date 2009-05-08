@@ -55,7 +55,7 @@ class User_User_Test extends PHPUnit_Framework_TestCase
         $user->username  = 'david';
         $user->firstname = 'testuser';
         $user->lastname  = 'testuser';
-        $user->status    = 1;
+        $user->status    = 'A';
         $this->assertEquals(false, $user->recordValidate());
         $error = $user->getError();
         $this->assertEquals('Already exists, choose another one please', $error[0]['message']);
@@ -71,7 +71,7 @@ class User_User_Test extends PHPUnit_Framework_TestCase
         $user->username  = 'testuser';
         $user->firstname = 'testuser';
         $user->lastname  = 'testuser';
-        $user->status    = 1;
+        $user->status    = 'A';
         $user->save();
 
         $user->username = 'testuserchanged';
