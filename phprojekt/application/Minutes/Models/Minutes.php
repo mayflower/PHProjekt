@@ -62,17 +62,18 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      */
     protected function _calcStatus(Phprojekt_Item_Abstract &$item)
     {
-        $when = new Zend_Date($item->meetingDate);
+        $meetingDate = new Zend_Date($item->meetingDate);
         $now = new Zend_Date();
         
         $status = 0;
-        if ($when->compare($now) > 0) {
+        if ($meetingDate->isLater($now)) {
             $status = 1;
         } else {
             $status = 2;
             // @todo count how many minutes items are existing for this item.
             // demo implementation ;)
-            $count = 1;
+            $count = $item->id % 2;
+            // The count is based on the minutes id being odd or even.
             if ($count > 0) {
                 $status = 3;
             }

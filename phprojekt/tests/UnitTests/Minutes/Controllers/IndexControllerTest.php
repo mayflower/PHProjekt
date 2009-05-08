@@ -76,10 +76,11 @@ class Minutes_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         
+        $meetDate = new Zend_Date();
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'TestTitle');
         $this->request->setParam('description', 'TestDescription');
-        $this->request->setParam('meetingDate', 'Thu Apr 09 2009 00:00:00 GMT+0200');
+        $this->request->setParam('meetingDate', $meetDate->toString("EEE MMM dd yyyy '00:00:00 GMT'ZZZ"));
         $this->request->setParam('startTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
         $this->request->setParam('endTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
         $this->request->setParam('place', 'TestPlace');
@@ -88,13 +89,15 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('participantsAttending', array());
         $this->request->setParam('participantsExcused', array());
         $this->request->setParam('recipients', array());
-        $this->request->setParam('itemStatus', 1);
+        $this->request->setParam('itemStatus', 4);
         $this->request->setParam('string', '');
         $this->request->setParam('requiredField1', '(*) Required Field');
         
         $response = $this->getResponse();
+        $this->assertFalse($this->error, "Exception was: ".$this->errormessage);
         $this->assertContains(Minutes_IndexController::ADD_TRUE_TEXT, $response, "Response was: '$response'");
         $this->assertContains('"id":"1"', $response, "ID created was not numbered 1.");
+
     }
 
     public function testJsonListActionAfterFirstInsertion()
