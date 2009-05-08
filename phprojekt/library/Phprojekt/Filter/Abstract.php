@@ -44,13 +44,6 @@ abstract class Phprojekt_Filter_Abstract
     const MODULESETTINGS_IDENTIFIER = 'Filter';
 
     /**
-     * The next filter in chain
-     *
-     * @var Phprojekt_Filter_UserFilter
-     */
-    protected $_next = null;
-
-    /**
      * Database adapter. This is needed to quote columns.
      *
      * @var Zend_Db_Adapter_Abstract
@@ -69,23 +62,6 @@ abstract class Phprojekt_Filter_Abstract
     }
 
     /**
-     * Adds a filter to the chain. Every filter in the chain is applied
-     * if the filter() method is called.
-     *
-     * @param Phprojekt_Filter_Interface $filter filter to be added
-     *
-     * @return void
-     */
-    public function addFilter($filter)
-    {
-        if (null == $this->_next) {
-            $this->_next = $filter;
-        }
-
-        $this->_next->addFilter($filter);
-    }
-
-    /**
      * Saves the current filter chain to backing store, aka database
      * (so why is it called "backing store", and not "database" ;-) )
      *
@@ -100,23 +76,19 @@ abstract class Phprojekt_Filter_Abstract
         $pairs  = array();
         $entry  = $this;
 
-        while (null !== $entry) {
-            $pairs = $entry->_getBackingStorePair();
+        $pairs = $entry->_getBackingStorePair();
 
-            if (false === array_key_exists('key', $pairs)
-             || false === array_key_exists('value', $pairs)) {
-                throw Exception('No valid backing store pair given');
-            }
-
-            $record             = $user->settings->create();
-            $record->moduleId   = $moduleId;
-            $record->keyValue   = $pairs['key'];
-            $record->value      = $pairs['value'];
-            $record->identifier = self::MODULESETTINGS_IDENTIFIER;
-            $record->save();
-
-            $entry = $entry->_next;
+        if (false === array_key_exists('key', $pairs)
+            || false === array_key_exists('value', $pairs)) {
+            throw new Exception('No valid backing store pair given');
         }
+
+        $record             = $user->settings->create();
+        $record->moduleId   = $moduleId;
+        $record->keyValue   = $pairs['key'];
+        $record->value      = $pairs['value'];
+        $record->identifier = self::MODULESETTINGS_IDENTIFIER;
+        $record->save();
     }
 
     /**

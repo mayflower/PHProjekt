@@ -63,8 +63,9 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
         $info = $record->info();
         $cols = $info['cols'];
 
-        if (array_key_exists($identifier, $cols)) {
-            throw new Exception('Identifier not found');
+        $identifier = Phprojekt_ActiveRecord_Abstract::convertVarToSql($identifier);
+        if (!in_array($identifier, $cols)) {
+            throw new InvalidArgumentException('Identifier not found');
         }
 
         $this->_identifier = $identifier;
@@ -95,13 +96,8 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
      */
     public function filter(Zend_Db_Select $select)
     {
-        $select->where(sprintf('%s = %s',
-                    $this->_adapter->quote($this->_identifier),
-                    $this->_adapter->quote($this->_value)));
-
-        if ($this->_next) {
-            $this->_next->filter($select);
-        }
+        $select->where(sprintf('%s = %s', $this->_adapter->quote($this->_identifier),
+            $this->_adapter->quote($this->_value)));
     }
 
     /**

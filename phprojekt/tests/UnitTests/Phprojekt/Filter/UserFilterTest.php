@@ -33,20 +33,36 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test the filtering
-     *
      */
-    public function testFilter ()
+    public function testFilter()
     {
-        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-        $authNamespace->userId = 1;
-
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisible Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree->setup($filter);
         $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
+
+        $this->setExpectedException('InvalidArgumentException');
+        $filter = new Phprojekt_Filter_UserFilter($record, 'NONE', 'Invisible Root');
     }
 
+    /**
+     * Test setValue function
+     */
+    public function testSetValue()
+    {
+        $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'NONE');
+
+        $filter->setValue('Invisible Root');
+        $tree   = new Phprojekt_Tree_Node_Database($record, 1);
+        $tree->setup($filter);
+        $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
+    }
+
+    /**
+     * Test saveToBackingStore function
+     */
     public function testSaveToFilter()
     {
         $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));

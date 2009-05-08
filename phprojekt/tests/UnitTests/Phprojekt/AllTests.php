@@ -108,7 +108,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Converter_TextTest');
         $suite->addTestSuite('Phprojekt_ModelInformation_DefaultTest');
         $suite->addTestSuite('Phprojekt_Tags_DefaultTest');
-        //$suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
+        $suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
         $suite->addTestSuite('Phprojekt_Search_DefaultTest');
         $suite->addTestSuite('Phprojekt_TabsTest');
         $suite->addTestSuite('Phprojekt_PhprojektTest');
