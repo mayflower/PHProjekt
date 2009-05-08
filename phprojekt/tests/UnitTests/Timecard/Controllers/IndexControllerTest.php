@@ -41,27 +41,27 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('month', '04');
         $this->request->setParam('view', 'month');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":'.date("t").'}') > 0);
+        $this->assertContains('"numRows":'.date("t").'}', $response);
     }
 
     public function testJsonStartAction()
     {
         $this->setRequestUrl('Timecard/index/jsonStart');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Timecard_IndexController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     public function testJsonStopAction()
     {
         $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Timecard_IndexController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     public function testJsonStopActionNoRecordOpen()
     {
         $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Timecard_IndexController::NOT_FOUND) > 0);
+        $this->assertContains(Timecard_IndexController::NOT_FOUND, $response);
     }
 }

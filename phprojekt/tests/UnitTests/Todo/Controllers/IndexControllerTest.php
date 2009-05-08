@@ -38,6 +38,6 @@ class Todo_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Todo/index/jsonList');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":1') > 0);
+        $this->assertContains('"numRows":1', $response);
     }
 }

@@ -42,7 +42,7 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Note_IndexController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -54,7 +54,7 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $this->request->setParam('data[1][comments]', 'test save multiple');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Note_IndexController::EDIT_MULTIPLE_TRUE_TEXT) > 0);
+        $this->assertContains(Note_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
     }
 
     /**
@@ -65,6 +65,6 @@ class Note_IndexController_Test extends FrontInit
         $this->setRequestUrl('Note/index/jsonDelete/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Note_IndexController::DELETE_TRUE_TEXT) > 0);
+        $this->assertContains(Note_IndexController::DELETE_TRUE_TEXT, $response);
     }
 }

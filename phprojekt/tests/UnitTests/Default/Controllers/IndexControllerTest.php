@@ -38,8 +38,8 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('index/index');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, "PHProjekt") > 0);
-        $this->assertTrue(strpos($response, "<!-- template: index.phml -->") > 0);
+        $this->assertContains("PHProjekt", $response);
+        $this->assertContains("<!-- template: index.phml -->", $response);
     }
 
     /**
@@ -50,7 +50,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonList/');
         $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":4}') > 0);
+        $this->assertContains('"numRows":4}', $response);
     }
 
     /**
@@ -61,7 +61,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonList/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
+        $this->assertContains('"numRows":2}', $response);
     }
 
     /**
@@ -72,9 +72,9 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response),
-            strtolower('{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1')) > 0);
-        $this->assertTrue(strpos($response, '"numRows":1}') > 0);
+        $this->assertContains('{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1', 
+                              $response);
+        $this->assertContains('"numRows":1}', $response);
     }
 
     /**
@@ -84,8 +84,8 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonDetail');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '[{"id":"1","name":"Invisible Root"}') > 0);
-        $this->assertTrue(strpos($response, '{"id":"2","name":"....Project 1"}') > 0);
+        $this->assertContains('[{"id":"1","name":"Invisible Root"}', $response);
+        $this->assertContains('{"id":"2","name":"....Project 1"}', $response);
     }
 
     /**
@@ -95,9 +95,8 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonTree');
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response),
-            strtolower('"identifier":"id","label":"name","items":[{"name":"Invisible Root"')) > 0);
-        $this->assertTrue(strpos($response, '"parent":"1","path":"/1/","children":[]}]}') > 0);
+        $this->assertContains('"identifier":"id","label":"name","items":[{"name":"Invisible Root"', $response);
+        $this->assertContains('"parent":"1","path":"/1/","children":[]}]}', $response);
     }
 
     /**
@@ -108,12 +107,9 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response,
-            '"name":"Note","label":"Note","inProject":true,"rights":{"none":false,') > 0);
-        $this->assertTrue(strpos($response,
-            '"name":"Project","label":"Project","inProject":true,"rights":{"none":false,') > 0);
-        $this->assertTrue(strpos($response,
-            '"name":"Todo","label":"Todo","inProject":true,"rights":{"none":false,') > 0);
+        $this->assertContains('"name":"Note","label":"Note","inProject":true,"rights":{"none":false,', $response);
+        $this->assertContains('"name":"Project","label":"Project","inProject":true,"rights":{"none":false,', $response);
+        $this->assertContains('"name":"Todo","label":"Todo","inProject":true,"rights":{"none":false,', $response);
     }
 
     /**
@@ -124,7 +120,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
         $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '&&({"metadata":[]})') > 0);
+        $this->assertContains('&&({"metadata":[]})', $response);
     }
 
     /**

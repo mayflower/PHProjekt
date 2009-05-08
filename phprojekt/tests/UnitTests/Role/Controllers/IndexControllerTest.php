@@ -38,8 +38,7 @@ class Role_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/role/jsonList');
         $response = $this->getResponse();
-        $this->assertTrue(strpos(strtolower($response),
-            strtolower('{"id":"1","name":"admin","rights":[]}],"numRows":1}')) > 0);
+        $this->assertContains('{"id":"1","name":"admin","rights":[]}],"numRows":1}', $response);
     }
 
     /**
@@ -50,6 +49,6 @@ class Role_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/role/jsonSave/');
         $this->request->setParam('name', 'test');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Core_RoleController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Core_RoleController::ADD_TRUE_TEXT, $response);
     }
 }

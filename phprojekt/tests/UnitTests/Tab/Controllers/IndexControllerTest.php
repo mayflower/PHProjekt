@@ -38,6 +38,6 @@ class Tab_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/tab/jsonList');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":3}') > 0);
+        $this->assertContains('"numRows":3}', $response);
     }
 }

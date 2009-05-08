@@ -46,7 +46,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', strtotime('10:00'));
         $this->request->setParam('dataParticipant', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Calendar_IndexController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
         $this->setRequestUrl('Calendar/index/jsonSave/');
         $this->request->setParam('id', 1);
@@ -59,7 +59,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', strtotime('10:00'));
         $this->request->setParam('dataParticipant', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Calendar_IndexController::EDIT_TRUE_TEXT) > 0);
+        $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Multiple Events
         $this->setRequestUrl('Calendar/index/jsonSave/');
@@ -72,7 +72,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('dataParticipant', array(1,2));
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Calendar_IndexController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
         $this->setRequestUrl('Calendar/index/jsonSave/');
         $this->request->setParam('id', 4);
@@ -86,7 +86,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dataParticipant', array(1,2));
         $this->request->setParam('multipleEvents', true);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Calendar_IndexController::EDIT_TRUE_TEXT) > 0);
+        $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
     }
 
     /**
@@ -96,12 +96,12 @@ class Calendar_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":1') > 0);
+        $this->assertContains('"numRows":1', $response);
 
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":1') > 0);
+        $this->assertContains('"numRows":1', $response);
     }
 
     /**
@@ -111,12 +111,12 @@ class Calendar_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Calendar/index/jsonList/');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
+        $this->assertContains('"numRows":2}', $response);
 
         $this->setRequestUrl('Calendar/index/jsonList/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":1}') > 0);
+        $this->assertContains('"numRows":1}', $response);
     }
 
     /**
@@ -127,7 +127,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonDayListSelf/');
         $this->request->setParam('date', '2008-12-01');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":1}') > 0);
+        $this->assertContains('"numRows":1}', $response);
     }
 
     /**
@@ -139,7 +139,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2008-12-01');
         $this->request->setParam('users', '1,2');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
+        $this->assertContains('"numRows":2}', $response);
     }
 
     /**
@@ -151,7 +151,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dateStart', '2008-12-01');
         $this->request->setParam('dateEnd', '2008-12-31');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":2}') > 0);
+        $this->assertContains('"numRows":2}', $response);
     }
 
     /**
@@ -162,7 +162,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonGetParticipants/');
         $this->request->setParam('id', 4);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"data":"1,2"') > 0);
+        $this->assertContains('"data":"1,2"', $response);
     }
 
     /**
@@ -174,14 +174,14 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
+        $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
 
         // Multiple Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 3);
         $this->request->setParam('multipleEvents', true);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Calendar_IndexController::DELETE_TRUE_TEXT) > 0);
+        $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
     }
 
     /**
@@ -225,6 +225,6 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonGetSpecificUsers/');
         $this->request->setParam('users', '1,2');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"numRows":2') > 0);
+        $this->assertContains('"numRows":2', $response);
     }
 }

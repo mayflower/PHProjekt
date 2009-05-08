@@ -41,7 +41,7 @@ class Phprojekt_LoginController_Test extends FrontInit
         $this->request->setPathInfo('Login/index');
         $this->request->setRequestUri('/Login/index');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, "function init()") > 0);
+        $this->assertContains("function init()", $response);
     }
 
     /**

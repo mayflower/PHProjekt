@@ -44,7 +44,7 @@ class Project_IndexController_Test extends FrontInit
         $this->request->setParam('priority', 2);
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Project_IndexController::ADD_TRUE_TEXT) > 0);
+        $this->assertContains(Project_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -55,7 +55,7 @@ class Project_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonSaveMultiple/');
         $this->request->setParam('data[1][notes]', 'test');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, Project_IndexController::EDIT_MULTIPLE_TRUE_TEXT) > 0);
+        $this->assertContains(Project_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
     }
 
     /**
@@ -66,7 +66,7 @@ class Project_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesProjectRelation/');
         $this->request->setParam('id', 2);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"2":{"id":"2","name":"Todo","label":"Todo","inProject":true}') > 0);
+        $this->assertContains('"2":{"id":"2","name":"Todo","label":"Todo","inProject":true}', $response);
     }
 
     /**
@@ -77,6 +77,6 @@ class Project_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetProjectRoleUserRelation/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '{"1":{"id":"1","name":"admin",') > 0);
+        $this->assertContains('{"1":{"id":"1","name":"admin",', $response);
     }
 }

@@ -42,7 +42,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
         $this->request->setRequestUri('/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was added correctly') > 0);
+        $this->assertContains('The Item was added correctly', $response);
     }
 
     /**
@@ -55,7 +55,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Core/module/jsonDelete/id/6');
         $this->request->setRequestUri('/Core/module/jsonDelete/id/6');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, 'The Item was deleted correctly') > 0);
+        $this->assertContains('The Item was deleted correctly', $response);
     }
 
     /**
@@ -68,6 +68,6 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setPathInfo('/Core/module/jsonDetail/id/1');
         $this->request->setRequestUri('/Core/module/jsonDetail/id/1');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response, '"name":"Project"') > 0);
+        $this->assertContains('"name":"Project"', $response);
     }
 }

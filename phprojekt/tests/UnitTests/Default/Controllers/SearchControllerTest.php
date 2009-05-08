@@ -39,7 +39,7 @@ class Phprojekt_SearchController_Test extends FrontInit
         $this->setRequestUrl('Default/Search/jsonSearch/');
         $this->request->setParam('words', 'note');
         $response = $this->getResponse();
-        $this->assertTrue(strpos($response,
-            '"id":"1","moduleId":"1","moduleName":"Project","moduleLabel":"Project","firstDisplay":"test"') > 0);
+        $this->assertContains('"id":"1","moduleId":"1","moduleName":"Project","moduleLabel":"Project",'
+                              . '"firstDisplay":"test"', $response);
     }
 }
