@@ -77,6 +77,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         
         $meetDate = new Zend_Date();
+        $meetDate->sub(1, Zend_Date::DAY);
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'TestTitle');
         $this->request->setParam('description', 'TestDescription');
