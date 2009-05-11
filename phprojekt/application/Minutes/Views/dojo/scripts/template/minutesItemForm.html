@@ -80,12 +80,30 @@
     
     <tr>
         <td class="label">
+            <label>{{lblParentOrder}}</label>
+        </td>
+        <td>
+            <select id="minutesItemFormParentOrder" name="parentOrder" dojoType="dijit.form.FilteringSelect"
+                    required="false" autocomplete="true" value="{{parentOrder}}">
+                <option value=""></option>
+                {% for item in items %}
+                <option value="{{item.id}}">
+                  {{item.title}}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><!-- Tooltip --></td>
+    </tr>
+    
+    <tr>
+        <td class="label">
             &nbsp;
         </td>
         <td>
-            <button dojoType="dijit.form.Button" id="minutesItemFormSubmit" disabled="true">{{lblSubmit}}</button>
-            &nbsp;
-            <button dojoType="dijit.form.Button" id="minutesItemFormDelete">{{lblDelete}}</button>
+            <button dojoType="dijit.form.Button" id="minutesItemFormSubmit" disabled="true" style="float: left">{{lblSubmit}}</button>
+            <button dojoType="dijit.form.Button" id="minutesItemFormDelete" style="float: left">{{lblDelete}}</button>
+            <button dojoType="dijit.form.Button" id="minutesItemFormClear" style="float: right">{{lblClear}}</button>
         </td>
         <td><!-- Tooltip --></td>
     </tr>
