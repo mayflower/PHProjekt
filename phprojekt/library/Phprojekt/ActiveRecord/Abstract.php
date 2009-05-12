@@ -231,8 +231,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Moves the internal iterator pointer one forward, befor
-     * recieving the element with current()
+     * Moves the internal iterator pointer one forward, before
+     * receiving the element with current()
      *
      * @see Iterator::next()
      *
