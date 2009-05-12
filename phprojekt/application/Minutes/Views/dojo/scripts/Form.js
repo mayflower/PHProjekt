@@ -367,7 +367,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     	//    instead of their ID.
     	//    Calls optional callback hook if provided.
     	var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
-            this._itemList = responseObject.data;
+            this._itemList = responseObject;
             if (callback) {
             	callback();
             }
@@ -403,7 +403,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 topicId:    '',
                 topicType:  '1',
                 userId:     '',
-                sortOrder:  '1',
+                sortOrder:  '',
                 title:      '',
                 comment:	'',
                 topicDate:  ''
@@ -420,7 +420,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             lblSubmit:      'Save',
             lblDelete:      'Delete',
             lblClear:	    'Clear',
-            parentOrder:    this._itemFormData.sortOrder - 1 >= 0 ? this._itemFormData.sortOrder - 1 : 0,
+            parentOrder:    this._itemFormData.sortOrder - 1 >= 0 ? this._itemFormData.sortOrder - 1 : '',
             users:          this._invitedList,
             items:			this._itemList,
             types:          this.getItemTypes()
@@ -442,12 +442,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         	this._itemFormData = null; // reset data
         	this.loadSubForm();
         }));
-        
-        // connect sort order function with corresponding buttons
-        dojo.connect(dijit.byId('minutesItemFormSortUp'), 'onClick', 
-        	dojo.hitch(this, this.itemSortUp));
-        dojo.connect(dijit.byId('minutesItemFormSortDown'), 'onClick', 
-            	dojo.hitch(this, this.itemSortDown));
         
         // have delete button disabled when creating a new item,
         // and save button enabled by default when updating a new one

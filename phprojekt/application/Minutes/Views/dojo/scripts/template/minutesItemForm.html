@@ -87,7 +87,7 @@
                     required="false" autocomplete="true" value="{{parentOrder}}">
                 <option value=""></option>
                 {% for item in items %}
-                <option value="{{item.id}}">
+                <option value="{{item.sortOrder}}">
                   {{item.title}}
                 </option>
                 {% endfor %}

@@ -174,14 +174,11 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
-        if (!is_null($this->_minutesId)) {
-            $minutes = $this->_minutes->find($this->_minutesId);
-        
-            if (null !== $where) {
-                $where .= ' AND ';
-            }
-            $where .= sprintf('(%s.minutes_id = %d )', $this->getTableName(), $this->_minutesId);
+        $minutes = $this->_minutes->find($this->_minutesId);
+        if (null !== $where) {
+            $where .= ' AND ';
         }
+        $where .= sprintf('(%s.minutes_id = %d )', $this->getTableName(), $this->_minutesId);
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
         return $result;
@@ -195,6 +192,23 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      */
     public function save()
     {
+        Phprojekt::getInstance()->getLog()->debug('SORT ORDER = ' . print_r($this->sortOrder,true));
+
+        if (trim($this->sortOrder) == '' || is_null($this->sortOrder) || !$this->sortOrder) {
+            $db      = $this->getAdapter();
+            $sql     = 'SELECT MAX(sort_order) FROM ' . $this->getTableName() . ' WHERE minutes_id = ?';
+            $result  = $db->fetchCol($sql, $this->_minutesId);
+            $maxSort = $result[0];
+        
+            Phprojekt::getInstance()->getLog()->debug('MAX_SORT: ' . print_r($maxSort,true));
+            if (!$maxSort || $maxSort < 0) {
+                $maxSort = 0;
+            }
+            $this->sortOrder = $maxSort + 1;
+            Phprojekt::getInstance()->getLog()->debug('NEW INITIAL SORT ORDER: ' . $maxSort);
+        } elseif ($this->sortOrder > 0) {
+            Phprojekt::getInstance()->getLog()->debug('SORT EVERYTHING ABOVE: ' . print_r($this->sortOrder,true));
+        }
         return parent::save();
     }
 }
