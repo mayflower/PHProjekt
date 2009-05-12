@@ -263,7 +263,7 @@ class Minutes_ItemController_Test extends FrontInit
         $response = $this->getResponse();
         
         $this->assertTrue($this->error);
-        $this->assertContains('Title: Is a required field',$this->errormessage);
+        $this->assertContains('Title: Is a required field', $this->errormessage);
     }
 
     public function testJsonSaveWithNotopicType()
@@ -284,7 +284,7 @@ class Minutes_ItemController_Test extends FrontInit
         $response = $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains('topicType: Is a required field',$this->errormessage);
+        $this->assertContains('topicType: Is a required field', $this->errormessage);
     }
     /**
      * Test the Minutes deletion with errors
