@@ -378,7 +378,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             this._itemList = []; // reset values
         });
         dojo.xhrGet( {
-            url: "index.php/Minutes/index/jsonListItemSortOrder/id/"+this.id,
+            url: "index.php/Minutes/item/jsonListItemSortOrder/minutesId/"+this.id,
             handleAs: "json",
             load: responseHandler,
             error: errorHandler

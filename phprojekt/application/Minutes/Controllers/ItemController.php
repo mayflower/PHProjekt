@@ -196,4 +196,19 @@ class Minutes_ItemController extends IndexController
         
         $this->render('table');
     }
+    
+    /**
+     * Provide list of items for sort orderung
+     */
+    public function jsonListItemSortOrderAction()
+    {
+        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init((int) $this->getRequest()->getParam('minutesId', 0))->fetchAll();
+        
+        $return = array();
+        foreach ($items as $item) {
+            $return[] = $item->title;
+        }
+        
+        Phprojekt_Converter_Json::echoConvert($return);
+    }
 }
