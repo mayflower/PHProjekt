@@ -174,11 +174,14 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
-        $minutes = $this->_minutes->find($this->_minutesId);
-        if (null !== $where) {
-            $where .= ' AND ';
+        if (!is_null($this->_minutesId)) {
+            $minutes = $this->_minutes->find($this->_minutesId);
+        
+            if (null !== $where) {
+                $where .= ' AND ';
+            }
+            $where .= sprintf('(%s.minutes_id = %d )', $this->getTableName(), $this->_minutesId);
         }
-        $where .= sprintf('(%s.minutes_id = %d )', $this->getTableName(), $this->_minutesId);
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
         return $result;

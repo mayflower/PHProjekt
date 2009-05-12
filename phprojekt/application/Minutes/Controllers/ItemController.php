@@ -202,7 +202,9 @@ class Minutes_ItemController extends IndexController
      */
     public function jsonListItemSortOrderAction()
     {
-        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init((int) $this->getRequest()->getParam('minutesId', 0))->fetchAll();
+        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')
+                    ->init((int) $this->getRequest()->getParam('minutesId', 0))
+                    ->fetchAll();
         
         $return = array();
         foreach ($items as $item) {

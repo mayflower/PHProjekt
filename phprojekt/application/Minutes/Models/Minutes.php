@@ -34,6 +34,13 @@
 class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 {
     /**
+     * Relation to Items
+     * 
+     * @var array hasMany
+     */
+    public $hasMany = array('items' => array('classname' => 'Minutes_Models_MinutesItem'));
+    
+    /**
      * Customized version to calculate the status of a minutes item regardless of its saved database entry.
      *
      * @param string|array $where  Where clause
@@ -60,9 +67,9 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      *
      * @return Phproject_Item_Abstract
      */
-    protected function _calcStatus(Phprojekt_Item_Abstract &$item)
+    protected function _calcStatus(Phprojekt_Item_Abstract &$minutes)
     {
-        $meetingDate = new Zend_Date($item->meetingDate);
+        $meetingDate = new Zend_Date($minutes->meetingDate);
         $now = new Zend_Date();
         
         $status = 0;
@@ -70,22 +77,21 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
             $status = 1;
         } else {
             $status = 2;
-            // @todo count how many minutes items are existing for this item.
-            // demo implementation ;)
-            $count = $item->id % 2;
-            // The count is based on the minutes id being odd or even.
+            
+            $count = count($minutes->items->fetchAll());
+            
             if ($count > 0) {
                 $status = 3;
             }
         }
         
-        if (4 != $item->itemStatus) {
-            $item->itemStatus = $status;
+        if (4 != $minutes->itemStatus) {
+            $minutes->itemStatus = $status;
         } else {
-            $item->itemStatus = 4;
+            $minutes->itemStatus = 4;
         }
         
-        return $item;
+        return $minutes;
     }
 
     /**
