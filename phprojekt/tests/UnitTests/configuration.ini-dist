@@ -19,3 +19,25 @@ applicationDir       = "/home/dsp/public_html/phprojekt-mvc"
 log.debug.filename   = "/home/dsp/public_html/phprojekt-mvc/logs/debug.log"
 
 itemsPerPage         = 3;
+
+;;;;;;;;;;;;;;;;;;;;;
+; MAIL NOTIFICATION ;
+;;;;;;;;;;;;;;;;;;;;;
+
+; Inside many modules, when adding or editing an item, there is a tab
+; "Notification" that allows the user to send an email notification to the
+; people involved in that item, telling them about the creation or modification
+; of it.
+
+; If the email is configured to be sent in Text mode, whether to use \r\n or \n
+; for the end of line.
+; (0 = \r\n  1 = \n)
+mailEndOfLine = 0;
+
+; Name or IP address of the SMTP server to be used to send that notifications.
+smtpServer = "localhost"
+
+; If the SMTP server requires authentication, remove the semicolons ';' and
+; write inside the inverted commas "" the appropriate username and password.
+;smtpUser     = ""
+;smtpPassword = ""
