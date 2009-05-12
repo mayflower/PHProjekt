@@ -1,0 +1,26 @@
+
+
+<table border="1">
+<thead>
+<tr>
+  <th rowspan="2">Topic</th>
+  <th>Title</th>
+  <th>Type</th>
+</tr>
+<tr>
+  <th colspan="2">Comment</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($this->items as $index => $item): ?>
+<tr>
+    <td rowspan="2"><?php echo $this->escape($index) . '-' . $this->escape($item['topicId']); ?></td>
+    <td><?php echo $this->escape($item['title']); ?></td>
+    <td><?php echo $this->escape($item['topicType']); ?></td>
+</tr>
+<tr>
+    <td colspan="2"><?php echo $this->escape($item['comment']); ?></td>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>

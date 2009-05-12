@@ -233,6 +233,59 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertContains(',"numRows":1}', $response);
     }
     
+    public function testHtmlListAction()
+    {
+        $this->setRequestUrl('Minutes/item/htmlList/minutesId/3');
+        $response = $this->getResponse();
+        
+        $this->assertFalse($this->error, 'Exception was: '. $this->errormessage);
+        $this->assertContains('<table', $response, 'Response was: '. $response);
+    }
+    
+    /**
+     * Test sending forms with errors
+     */
+    public function testJsonSaveWithNoTitle()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', '0');
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', '');
+        $this->request->setParam('sortOrder', '1');
+        // missing title leads to error
+        $this->request->setParam('title', '');
+        $this->request->setParam('comment', "Some lines of new comment\nSome lines of new comment");
+        $this->request->setParam('topicType', '2');
+        $this->request->setParam('topicDate', '2009-05-01');
+        $this->request->setParam('userId', '1');
+        $this->request->setParam('topicId', '');
+        
+        $response = $this->getResponse();
+        
+        $this->assertTrue($this->error);
+        $this->assertContains('Title: Is a required field',$this->errormessage);
+    }
+
+    public function testJsonSaveWithNotopicType()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', '0');
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', '');
+        $this->request->setParam('sortOrder', '1');
+        $this->request->setParam('title', 'Title');
+        $this->request->setParam('comment', "Some lines of new comment\nSome lines of new comment");
+        // missing title leads to error
+        $this->request->setParam('topicType', '');
+        $this->request->setParam('topicDate', '2009-05-01');
+        $this->request->setParam('userId', '1');
+        $this->request->setParam('topicId', '');
+        
+        $response = $this->getResponse();
+
+        $this->assertTrue($this->error);
+        $this->assertContains('topicType: Is a required field',$this->errormessage);
+    }
     /**
      * Test the Minutes deletion with errors
      */

@@ -170,4 +170,30 @@ class Minutes_ItemController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
+    
+    /**
+     * Action to provide an HTML table of the whole minutes.
+     */
+    public function htmlListAction()
+    {
+        $this->view->addScriptPath(PHPR_CORE_PATH . '/Minutes/Views/dojo/');
+        
+        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')
+                             ->init((int) $this->getRequest()->getParam('minutesId', 0))
+                             ->fetchAll();
+                             
+        $newitem = array();
+        foreach ($items as $item) {
+            $content = array();
+            $content['topicId'] = $item->topicId;
+            $content['title']   = $item->title;
+            $content['topicType'] = $item->topicType;
+            $content['comment'] = $item->comment;
+            $newitem[] = $content;
+        }
+        
+        $this->view->items = $newitem; 
+        
+        $this->render('table');
+    }
 }
