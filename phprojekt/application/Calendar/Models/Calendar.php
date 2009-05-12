@@ -83,6 +83,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $userId           = Phprojekt_Auth::getUserId();
         $participantsList = array();
         $daysDuration     = (strtotime($endDate) - strtotime($startDate)) / (24*60*60);
+        $parentId         = null;
 
         // Getting requested dates for the serial meeting (if it is serial)
         if (!empty($rrule)) {
@@ -96,18 +97,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $eventDates = array(new Zend_Date(strtotime($startDate)));
         }
 
-        if (is_array($participants)) {
-            // We will put the owner id first, just to make it clear
-            if (!in_array($userId, $participants)) {
-                $participantsList[$userId] = $userId;
-            }
-            foreach ($participants as $oneParticipant) {
-                $participantsList[(int) $oneParticipant] = (int) $oneParticipant;
-            }
-        } else {
+        // We will put the owner id first, just to make it clear
+        if (!in_array($userId, $participants)) {
             $participantsList[$userId] = $userId;
         }
-
+        foreach ($participants as $oneParticipant) {
+            $participantsList[(int) $oneParticipant] = (int) $oneParticipant;
+        }
         if ($id == 0) {
             $sendNotification = false;
             if (array_key_exists('sendNotification', $request)) {
@@ -129,10 +125,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 } else {
                     $lastParticipant = false;
                 }
-                $returnId = self::_saveNewEvent($request, $eventDates, $daysDuration, $participantId, $lastParticipant,
-                                                $sendNotification, $participantsList);
+
+                $parentId = self::_saveNewEvent($request, $eventDates, $daysDuration, $participantId, $lastParticipant,
+                                                $sendNotification, $participantsList, $parentId);
                 if ($id == 0) {
-                    $id = $returnId;
+                    $id = $parentId;
                 }
             }
         } else {
@@ -336,10 +333,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * @return integer
      */
     private function _saveNewEvent($request, $eventDates, $daysDuration, $participantId, $lastParticipant,
-                                   $sendNotification, $participantsList)
+                                   $sendNotification, $participantsList, $parentId)
     {
-        static $parentId = null;
-
         $model                     = Phprojekt_Loader::getModel('Calendar', 'Calendar');
         $model->_startDate         = $request['startDate'];
         $model->_notifParticipants = implode(",", $participantsList);
