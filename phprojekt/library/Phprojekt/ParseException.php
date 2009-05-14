@@ -46,7 +46,7 @@ class Phprojekt_ParseException extends Exception
     public function __construct($message, $code = null, $parsedString = null)
     {
         parent::__construct($message, $code);
-        if (null === $parsedString) {
+        if (null !== $parsedString) {
             $this->_parsedString = $parsedString;
         }
     }

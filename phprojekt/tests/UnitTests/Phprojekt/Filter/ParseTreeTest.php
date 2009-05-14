@@ -50,4 +50,18 @@ class Phprojekt_Filter_ParseTreeTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('Phprojekt_ParseException');
         $tree->stringToTree('(name = "Muster\"man" and id = 3) or id != 5');
     }
+
+    /**
+     * Test Exception
+     */
+    public function testException()
+    {
+        $tree = new Phprojekt_Filter_ParseTree();
+
+        try {
+            $tree->stringToTree('(name = "Muster\"man" and id = 3) or id != 5');
+        } catch (Exception $e) {
+            $this->assertEquals('(name = "Muster\"man" and id = 3) or id != 5', $e->getParsedString());
+        }
+    }
 }
