@@ -26,6 +26,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
+require_once 'Models/CalendarTest.php';
 
 /**
  * Test suite for the default module
@@ -59,6 +60,7 @@ class Calendar_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Calendar Controller');
 
         $suite->addTestSuite('Calendar_IndexController_Test');
+        $suite->addTestSuite('Calendar_Models_Calendar_Test');
 
         return $suite;
     }
