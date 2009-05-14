@@ -723,7 +723,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function deleteModule()
     {
         $table  = $this->_model->getModelName();
-        $where  = $this->getAdapter()->quoteInto(' tableName = ? ', $table);
+        $where  = $this->getAdapter()->quoteInto(' table_name = ? ', $table);
         $result = $this->fetchAll($where);
         foreach ($result as $record) {
             $record->delete();
