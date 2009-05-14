@@ -36,37 +36,47 @@ class Module_IndexController_Test extends FrontInit
      */
     public function testJsonSave()
     {
-        $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Module'));
-        $this->request->setBaseUrl($this->config->webpath
-            . 'index.php/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
-        $this->request->setPathInfo('/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
-        $this->request->setRequestUri('/Core/module/jsonSave/id/null/name/test/saveType/0/active/1');
+        $designerData = '{"0":{"id":0,"tableName":"Aa","formPosition":1,"formTab":1,"formColumns":1,"formRegexp":null,'
+            . '"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,"isUnique":0,"tableField":'
+            . '"project_id","selectType":"project","tableType":"int","tableLength":11,"formLabel":"Project","formType"'
+            . ':"selectValues","formRange":"Project # id # title","defaultValue":1,"listPosition":0,"status":1,'
+            . '"isRequired":1}}';
+        $this->setRequestUrl('Core/moduledesigner/jsonSave');
+        $this->request->setParam('id', null);
+        $this->request->setParam('designerData', $designerData);
+        $this->request->setParam('name', 'test');
+        $this->request->setParam('label', 'test');
         $response = $this->getResponse();
-        $this->assertContains('The Item was added correctly', $response);
+        $this->assertContains('The table module was created correctly', $response);
+
+        $this->setRequestUrl('Core/module/jsonSave');
+        $this->request->setParam('id', null);
+        $this->request->setParam('name', 'test');
+        $this->request->setParam('label', 'test');
+        $this->request->setParam('saveType', 0);
+        $this->request->setParam('active', 1);
+        $response = $this->getResponse();
+        $this->assertContains('The module was added correctly', $response);
     }
 
     /**
-     * Test of json delete Module -in fact, default json save
+     * Test of json delete Module
      */
     public function testJsonDelete()
     {
-        $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Module'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/module/jsonDelete/id/6');
-        $this->request->setPathInfo('/Core/module/jsonDelete/id/6');
-        $this->request->setRequestUri('/Core/module/jsonDelete/id/6');
+        $this->setRequestUrl('Core/module/jsonDelete');
+        $this->request->setParam('id', 12);
         $response = $this->getResponse();
-        $this->assertContains('The Item was deleted correctly', $response);
+        $this->assertContains('The module was deleted correctly', $response);
     }
 
     /**
-     * Test of json detail Module -in fact, default json save
+     * Test of json detail Module
      */
     public function testJsonDetail()
     {
-        $this->request->setParams(array('action' => 'jsonSave', 'controller' => 'index', 'module' => 'Module'));
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/Core/module/jsonDetail/id/1');
-        $this->request->setPathInfo('/Core/module/jsonDetail/id/1');
-        $this->request->setRequestUri('/Core/module/jsonDetail/id/1');
+        $this->setRequestUrl('Core/module/jsonDetail');
+        $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertContains('"name":"Project"', $response);
     }

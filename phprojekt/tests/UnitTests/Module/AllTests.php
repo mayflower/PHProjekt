@@ -25,10 +25,8 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
-// require_once 'Controllers/BaseTest.php';
 require_once 'Controllers/IndexControllerTest.php';
 require_once 'Models/ModuleTest.php';
-require_once 'Models/InformationTest.php';
 
 /**
  * Test suite for the Module module
@@ -63,7 +61,6 @@ class Module_AllTests
 
         $suite->addTestSuite('Module_IndexController_Test');
         $suite->addTestSuite('Phprojekt_ModuleModelModule_Test');
-        $suite->addTestSuite('Phprojekt_ModuleModelInformation_Test');
 
         return $suite;
     }
