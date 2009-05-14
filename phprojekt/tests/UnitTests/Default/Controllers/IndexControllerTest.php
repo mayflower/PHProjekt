@@ -72,7 +72,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertContains('{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1', 
+        $this->assertContains('{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1',
                               $response);
         $this->assertContains('"numRows":1}', $response);
     }
@@ -131,5 +131,16 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonDelete');
         $this->getResponse();
         $this->assertTrue($this->error);
+    }
+
+    /**
+     * Test the get all translated strings
+     */
+    public function testGetTranslatedStrings()
+    {
+        $this->setRequestUrl('Project/index/getTranslatedStrings');
+        $response = $this->getResponse();
+        $this->assertContains('project":"Project', $response);
+        $this->assertContains('username":"Username', $response);
     }
 }
