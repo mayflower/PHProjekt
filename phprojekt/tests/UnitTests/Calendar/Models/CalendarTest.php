@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -33,7 +33,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
 {
     /**
      * Test softDeleteEvent method
-     *
      */
     public function testSoftDeleteEvent()
     {
@@ -42,13 +41,11 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $before = $calendarModel->deleted;
         $calendarModel->softDeleteEvent();
         $after = $calendarModel->deleted;
-
         $this->assertTrue($before != $after);;
     }
 
     /**
      * Test getRootEvent method
-     *
      */
     public function testGetRootEventId()
     {
@@ -60,7 +57,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
 
     /**
      * Test recordValidate method
-     *
      */
     public function testRecordValidate()
     {
@@ -78,7 +74,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
 
     /**
      * Test getAllParticipants method
-     *
      */
     public function testGetAllParticipants()
     {
@@ -87,7 +82,7 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $return = $calendarModel->getAllParticipants();
         $this->assertEquals('1,2', $return);
 
-        //No existing id
+        // No existing id
         $calendarModel = new Calendar_Models_Calendar();
         $calendarModel->find(50);
         $return   = $calendarModel->getAllParticipants();
@@ -97,7 +92,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
 
     /**
      * Test getRecursionStartDate method
-     *
      */
     public function testGetRecursionStartDate()
     {
@@ -108,7 +102,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
 
     /**
      * Test deleteEvents method
-     *
      */
     public function testDeleteEvents()
     {
@@ -117,7 +110,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel->find(18);
         $calendarModel->deleteEvents(true);
         $after = count($calendarModel->fetchAll());
-
         $this->assertEquals($before - 8, $after);
 
         $where  = " deleted IS NULL ";
@@ -125,13 +117,11 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel->find(5);
         $calendarModel->deleteEvents(false);
         $after = count($calendarModel->fetchAll($where));
-
         $this->assertEquals($before - 1, $after);
     }
 
     /**
      * Test deleteEvents method with no existing id
-     *
      */
     public function testDeleteEventsWrongId()
     {
@@ -140,7 +130,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel->find(50);
         $calendarModel->deleteEvents(true);
         $after = count($calendarModel->fetchAll());
-
         $this->assertEquals($before, $after);
     }
 }
