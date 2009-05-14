@@ -21,6 +21,9 @@
  * @since      File available since Release 6.0
  */
 
+/** Zend_Pdf */
+require_once 'Zend/Pdf.php';
+
 /**
  * Phprojekt Class for PFD creation
  *
