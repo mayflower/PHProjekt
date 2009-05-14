@@ -32,16 +32,7 @@ require_once 'PHPUnit/Framework.php';
 class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * setUp method for PHPUnit. We use a shared db connection
-     *
-     */
-    public function setUp()
-    {
-    }
-
-    /**
      * Test the loadClass functionality
-     *
      */
     public function testLoadClass()
     {
@@ -51,7 +42,6 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test the getModel functionality
-     *
      */
     public function testGetModel()
     {
@@ -63,7 +53,6 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test GetViewClassname
-     *
      */
     public function testGetViewClassname()
     {
@@ -72,11 +61,29 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test getModelFromObject
-     *
      */
     public function testGetModelFromObject()
     {
         $object = Phprojekt_Loader::getModel('Todo', 'Todo');
         $this->assertEquals('Todo', Phprojekt_Loader::getModelFromObject($object));
+    }
+
+    /**
+     * Test getModuleFromObject
+     */
+    public function testGetModuleFromObject()
+    {
+        $object = Phprojekt_Loader::getModel('Todo', 'Todo');
+        $this->assertEquals('Todo', Phprojekt_Loader::getModuleFromObject($object));
+    }
+
+    /**
+     * Test tryToLoadClass
+     */
+    public function testTryToLoadClass()
+    {
+        $this->assertTrue(Phprojekt_Loader::tryToLoadClass('Timecard_Models_TimecardSetting'));
+
+        $this->assertFalse(Phprojekt_Loader::tryToLoadClass('Timecard_Models_None'));
     }
 }
