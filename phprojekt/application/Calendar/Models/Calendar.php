@@ -700,7 +700,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             }
 
             // Recurrence
-            if ($changes[$i]['field'] == 'rrule') {
+            if (strtolower($changes[$i]['field']) == 'rrule') {
                 $oldRruleEmpty = false;
                 $newRruleEmpty = false;
                 if ($changes[$i]['oldValue'] != null) {
