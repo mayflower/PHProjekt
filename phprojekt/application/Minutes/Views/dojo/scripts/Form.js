@@ -394,7 +394,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     	//    event listeners for various detail form behaviours.
         if (!this._itemFormData) {
             // Use default empty dataset
-            // @todo FIXME
             this._itemFormData = {
                 id:         '',
                 ownerId:    '',
@@ -409,7 +408,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 topicDate:  ''
             };
         }
-        // @todo Add server data to placeholder object
+        
         var placeholders = {
             lblTitle:       'Title',
             lblComment:     'Comment',
