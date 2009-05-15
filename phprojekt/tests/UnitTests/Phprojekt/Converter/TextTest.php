@@ -126,7 +126,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
             // Display
             if ($info['key'] == 'author') {
                 $value = Phprojekt_Converter_Text::convert($model, $info);
-                $this->assertEquals(', ', $value);
+                $this->assertEquals('', $value);
 
                 $model->author = 100;
                 $value = Phprojekt_Converter_Text::convert($model, $info);

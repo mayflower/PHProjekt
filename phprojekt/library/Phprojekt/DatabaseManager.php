@@ -377,31 +377,17 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
             case 'User':
-                if (!$field->isRequired) {
-                    $options[] = array('id'   => 0,
-                                       'name' => '');
-                }
                 $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
                 $result       = $activeRecord->fetchAll("status = 'A'");
-                foreach ($result as $oneUser) {
-                    $options[] = array('id'   => $oneUser->$key,
-                                       'name' => $oneUser->$value . ", " . $oneUser->firstname);
-                }
+                $options      = $this->_setRangeValues($field, $result, $key, $value);
                 break;
             default:
                 $activeRecord = Phprojekt_Loader::getModel($module, $module);
                 if (in_array('getRangeFromModel', get_class_methods($activeRecord))) {
                     $options = call_user_func(array($activeRecord, 'getRangeFromModel'), $field);
                 } else {
-                    if (!$field->isRequired) {
-                        $options[] = array('id'   => 0,
-                                           'name' => '');
-                    }
-                    $result = $activeRecord->fetchAll();
-                    foreach ($result as $item) {
-                        $options[] = array('id'   => $item->$key,
-                                           'name' => $item->$value);
-                    }
+                    $result  = $activeRecord->fetchAll();
+                    $options = $this->_setRangeValues($field, $result, $key, $value);
                 }
                 break;
         }
@@ -750,5 +736,45 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
         $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
         return $tableManager->dropTable($table);
+    }
+
+    /**
+     * Process the Range value and return the options as array
+     *
+     * @param Object $field  Field information
+     * @param Object $result Result set of items
+     * @param string $key    Field key for the select (id by default)
+     * @param string $value  Fields for show in the select
+     *
+     * @return array
+     */
+    private function _setRangeValues($field, $result, $key, $value)
+    {
+        $options = array();
+
+        if (!$field->isRequired) {
+            $options[] = array('id'   => 0,
+                               'name' => '');
+        }
+
+        if (preg_match_all("/([a-zA-z_]+)/", $value, $values)) {
+            $values = $values[1];
+        } else {
+            $values = $value;
+        }
+
+        foreach ($result as $item) {
+            $showValue = array();
+            foreach ($values as $value) {
+                if (isset($item->$value)) {
+                    $showValue[] = $item->$value;
+                }
+            }
+            $showValue = implode(", ", $showValue);
+            $options[] = array('id'   => $item->$key,
+                               'name' => $showValue);
+        }
+
+        return $options;
     }
 }
