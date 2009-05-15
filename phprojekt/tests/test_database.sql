@@ -44,6 +44,7 @@ DROP TABLE IF EXISTS `contact`;
 DROP TABLE IF EXISTS `helpdesk`;
 DROP TABLE IF EXISTS `minutes`;
 DROP TABLE IF EXISTS `minutes_item`;
+DROP TABLE IF EXISTS `test`;
 
 --
 -- Table structure for table `database_manager`
