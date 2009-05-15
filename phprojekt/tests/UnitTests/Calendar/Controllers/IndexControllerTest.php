@@ -32,6 +32,7 @@ require_once 'PHPUnit/Framework.php';
 class Calendar_IndexController_Test extends FrontInit
 {
     private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
+
     /**
      * Test of json save calendar for single events
      */
