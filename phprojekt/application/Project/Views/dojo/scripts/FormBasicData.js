@@ -45,14 +45,16 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
                             + '/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
+                            if (this.sendData['string']) {
+                                new phpr.handleResponse('serverFeedback', data);
+                            }
                             if (data.type =='success') {
                                 this.publish("updateCacheData");
                                 this.publish("changeProject", [this.id]);
                             }
                         })
                     });
-               }
+                }
             })
         });
     }
