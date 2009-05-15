@@ -601,15 +601,14 @@ class Calendar_IndexController_Test extends FrontInit
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals(0, $error->getCode());
+            // Check total amount of rows
+            $calendarModel = new Calendar_Models_Calendar();
+            $rowsAfter     = count($calendarModel->fetchAll());
+            $this->assertEquals($rowsBefore, $rowsAfter);
             return;
         }
 
         $this->fail('Error on Delete with Wrong Id');
-
-        // Check total amount of rows
-        $calendarModel = new Calendar_Models_Calendar();
-        $rowsAfter     = count($calendarModel->fetchAll());
-        $this->assertEquals($rowsBefore, $rowsAfter);
     }
 
     /**
@@ -626,15 +625,14 @@ class Calendar_IndexController_Test extends FrontInit
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals(0, $error->getCode());
+            // Check total amount of rows
+            $calendarModel = new Calendar_Models_Calendar();
+            $rowsAfter     = count($calendarModel->fetchAll());
+            $this->assertEquals($rowsBefore, $rowsAfter);
             return;
         }
 
         $this->fail('Error on Delete without Id');
-
-        // Check total amount of rows
-        $calendarModel = new Calendar_Models_Calendar();
-        $rowsAfter     = count($calendarModel->fetchAll());
-        $this->assertEquals($rowsBefore, $rowsAfter);
     }
 
     /**
