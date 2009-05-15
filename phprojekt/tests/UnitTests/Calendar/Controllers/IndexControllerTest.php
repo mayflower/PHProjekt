@@ -548,13 +548,29 @@ class Calendar_IndexController_Test extends FrontInit
     /**
      * Test the calendar deletion
      */
-    public function testJsonDeleteAction()
+    public function testJsonDeleteActionSingle()
     {
+        // Store current amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsBefore    = count($calendarModel->fetchAll());
+
         // Single Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsAfter     = count($calendarModel->fetchAll());
+        $this->assertEquals($rowsBefore - 1, $rowsAfter);
+    }
+
+    public function testJsonDeleteActionMultiple()
+    {
+        // Store current amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsBefore    = count($calendarModel->fetchAll());
 
         // Multiple Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
@@ -562,6 +578,11 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('multipleEvents', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsAfter     = count($calendarModel->fetchAll());
+        $this->assertEquals($rowsBefore - 2, $rowsAfter);
     }
 
     /**
@@ -569,6 +590,10 @@ class Calendar_IndexController_Test extends FrontInit
      */
     public function testJsonDeleteActionWrongId()
     {
+        // Store current amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsBefore    = count($calendarModel->fetchAll());
+
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 111);
         try {
@@ -579,6 +604,11 @@ class Calendar_IndexController_Test extends FrontInit
         }
 
         $this->fail('Error on Delete with Wrong Id');
+
+        // Check total amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsAfter     = count($calendarModel->fetchAll());
+        $this->assertEquals($rowsBefore, $rowsAfter);
     }
 
     /**
@@ -586,6 +616,10 @@ class Calendar_IndexController_Test extends FrontInit
      */
     public function testJsonDeleteActionNoId()
     {
+        // Store current amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsBefore    = count($calendarModel->fetchAll());
+
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         try {
             $this->front->dispatch($this->request, $this->response);
@@ -595,6 +629,11 @@ class Calendar_IndexController_Test extends FrontInit
         }
 
         $this->fail('Error on Delete without Id');
+
+        // Check total amount of rows
+        $calendarModel = new Calendar_Models_Calendar();
+        $rowsAfter     = count($calendarModel->fetchAll());
+        $this->assertEquals($rowsBefore, $rowsAfter);
     }
 
     /**
