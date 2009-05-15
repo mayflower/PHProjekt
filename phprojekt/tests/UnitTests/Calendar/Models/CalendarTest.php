@@ -112,7 +112,7 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $after = count($calendarModel->fetchAll());
         $this->assertEquals($before - 8, $after);
 
-        $where  = " deleted IS NULL ";
+        $where  = "deleted IS NULL";
         $before = count($calendarModel->fetchAll($where));
         $calendarModel->find(5);
         $calendarModel->deleteEvents(false);
