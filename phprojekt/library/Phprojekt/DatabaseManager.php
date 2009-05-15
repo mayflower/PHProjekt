@@ -411,12 +411,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Validate the fields definitions per each field
      *
-     * @param string $module The module table name
-     * @param array  $data   The field definition
+     * @param array $data The field definition
      *
      * @return boolean
      */
-    public function recordValidate($module, $data)
+    public function recordValidate($data)
     {
         $valid        = true;
         $this->_error = new Phprojekt_Error();
@@ -448,7 +447,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $foundFields    = array();
         $foundProjectId = false;
         foreach ($data as $field) {
-            $field['tableLength'] = intval($field['tableLength']);
+            if ($valid && (!isset($field['tableLength']) || !isset($field['tableField']) ||
+                !isset($field['tableType']) || !isset($field['formType']))) {
+                $valid = false;
+                $this->_error->addError(array(
+                    'field'   => 'Module Designer',
+                    'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                    'message' => Phprojekt::getInstance()->translate('Invalid parameteres')));
+            }
+
+            if ($valid) {
+                $field['tableLength'] = intval($field['tableLength']);
+            }
+
             if ($valid && empty($field['tableField'])) {
                 $valid = false;
                 $this->_error->addError(array(
@@ -465,7 +476,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         'message' => Phprojekt::getInstance()->translate('There are two fields with the same '
                             . 'Field Name')));
                     break;
-                } else {
+                } else if ($valid) {
                     $foundFields[] = $field['tableField'];
                 }
             }
@@ -495,7 +506,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             }
 
             if ($valid && $field['formType'] == 'selectValues') {
-                if (!strstr($field['formRange'], '#')) {
+                if ($valid && !isset($field['formRange'])) {
                     $valid = false;
                     $this->_error->addError(array(
                         'field'   => 'Module Designer',
@@ -503,39 +514,48 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for the select field')));
                     break;
                 } else {
-                    if (isset($field['selectType'])) {
+                    $field['formRange'] = trim($field['formRange']);
+                }
+
+                if ($valid && !strstr($field['formRange'], '#')) {
+                    $valid = false;
+                    $this->_error->addError(array(
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('Invalid form Range for the select field')));
+                    break;
+                } else {
+                    if ($valid && isset($field['selectType'])) {
                         switch ($field['selectType']) {
                             case 'project':
                             case 'user':
                             case 'contact':
-                                list($module, $key, $value) = explode('#', $field['formRange']);
-                                if (!$module || !$key || !$value) {
+                                if ($valid && (count(explode('#', $field['formRange'])) != 3)) {
                                     $valid = false;
                                     $this->_error->addError(array(
                                         'field'   => 'Module Designer',
                                         'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for '
-                                            .'the select field 1')));
+                                            .'the select field')));
                                 }
                                 break;
                             default:
-                                if (!strstr($field['formRange'], '|')) {
+                                if ($valid && !strstr($field['formRange'], '|')) {
                                     $valid = false;
                                     $this->_error->addError(array(
                                         'field'   => 'Module Designer',
                                         'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
-                                            'the select field 2')));
+                                            'the select field')));
                                 } else {
                                     foreach (explode('|', $field['formRange']) as $range) {
-                                        list($key, $value) = explode('#', $range);
-                                        if (!$key || !$value) {
+                                        if ($valid && (count(explode('#', trim($range))) != 2)) {
                                             $valid = false;
                                             $this->_error->addError(array(
                                                 'field'   => 'Module Designer',
                                                 'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                                                 'message' => Phprojekt::getInstance()->translate('Invalid form Range '.
-                                                    'for the select field 3')));
+                                                    'for the select field')));
                                         }
                                     }
                                 }

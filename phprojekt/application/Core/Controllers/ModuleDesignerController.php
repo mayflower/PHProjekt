@@ -90,7 +90,7 @@ class Core_ModuleDesignerController extends Core_IndexController
             $data            = Zend_Json_Decoder::decode(stripslashes($data));
 
             // Validate
-            if ($databaseManager->recordValidate($module, $data)) {
+            if ($databaseManager->recordValidate($data)) {
                 // Update Table Structure
                 $tableData = $this->_getTableData($data);
                 if (!$databaseManager->syncTable($data, $module, $tableData)) {
