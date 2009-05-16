@@ -54,7 +54,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('userId', '2');
         $this->request->setParam('string', 'My todo tag');
         $response = $this->getResponse();
-        $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check that there is one more row
         $rowsAfter = count($todoModel->fetchAll());
@@ -73,7 +73,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('string', 'My todo tag2');
         $this->request->setParam('sendNotification', 'on');
         $response = $this->getResponse();
-        $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check that there is another new row
         $rowsAfter = count($todoModel->fetchAll());
@@ -98,7 +98,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('userId', '1');
         $this->request->setParam('sendNotification', 'on');
         $response = $this->getResponse();
-        $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check saved data
         $todoModel = new Todo_Models_Todo();
@@ -151,7 +151,7 @@ class Todo_IndexController_Test extends FrontInit
                                   'currentStatus' => 4));
         $this->request->setParam('data', $items);
         $response = $this->getResponse();
-        $this->assertContains(Calendar_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
         // Check saved data
         $todoModel = new Todo_Models_Todo();
