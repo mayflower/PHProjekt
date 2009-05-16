@@ -44,23 +44,6 @@ class Timecard_Models_TimecardSetting
     {
         $converted = array();
 
-        // Amount
-        $data = array();
-        $data['key']      = 'amount';
-        $data['label']    = Phprojekt::getInstance()->translate('Max Number of favorites projects');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('amount');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-
-        $converted[] = $data;
-
         // Favorites
         $data = array();
         $data['key']      = 'favorites';
