@@ -45,37 +45,22 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     public function getRoleModulePermissionsById($roleId)
     {
         $modules = array();
-        $where   = ' role_module_permissions.role_id = ' . (int) $roleId;
-        $where  .= ' OR role_module_permissions.role_id IS NULL ';
-        $where  .= ' AND (module.save_type = 0 OR module.save_type = 2) ';
-        $order   = ' module.name ASC';
-        $select  = ' module.id AS module_id ';
-        $join    = ' INNER JOIN module ON module.id = role_module_permissions.module_id ';
 
-        foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
-            $modules['data'][$right->moduleId] = array();
-
-            $modules['data'][$right->moduleId]['id']    = $right->moduleId;
-            $modules['data'][$right->moduleId]['name']  = Phprojekt_Module::getModuleName($right->moduleId);
-            $label                                      = Phprojekt_Module::getModuleLabel($right->moduleId);
-            $modules['data'][$right->moduleId]['label'] = Phprojekt::getInstance()->translate($label);
-
-
-            $modules['data'][$right->moduleId] = array_merge($modules['data'][$right->moduleId],
-                Phprojekt_Acl::convertBitmaskToArray($right->access));
+        $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
+        foreach ($model->fetchAll(' (save_type = 0 OR save_type = 2) ', ' name ASC ') as $module) {
+            $modules['data'][$module->id] = array();
+            $modules['data'][$module->id]['id']    = $module->id;
+            $modules['data'][$module->id]['name']  = $module->name;
+            $modules['data'][$module->id]['label'] = Phprojekt::getInstance()->translate($module->label);
+            $modules['data'][$module->id]          = array_merge($modules['data'][$module->id],
+                Phprojekt_Acl::convertBitmaskToArray(0));
         }
 
-        if (empty($modules)) {
-            $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-            foreach ($model->fetchAll(' (save_type = 0 OR save_type = 2) ', ' name ASC ') as $module) {
-                $modules['data'][$module->id] = array();
-
-                $modules['data'][$module->id]['id']    = $module->id;
-                $modules['data'][$module->id]['name']  = $module->name;
-                $modules['data'][$module->id]['label'] = Phprojekt::getInstance()->translate($module->label);
-
-                $modules['data'][$module->id] = array_merge($modules['data'][$module->id],
-                    Phprojekt_Acl::convertBitmaskToArray(0));
+        $where = ' role_module_permissions.role_id = ' . (int) $roleId;
+        foreach ($this->fetchAll($where) as $right) {
+            if (isset($modules['data'][$right->moduleId])) {
+                $modules['data'][$right->moduleId] = array_merge($modules['data'][$right->moduleId],
+                    Phprojekt_Acl::convertBitmaskToArray($right->access));
             }
         }
 
