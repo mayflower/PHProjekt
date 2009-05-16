@@ -27,6 +27,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
+require_once 'Models/TodoTest.php';
 
 /**
  * Test suite for the todo module
@@ -60,6 +61,7 @@ class Todo_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Todo Controller');
 
         $suite->addTestSuite('Todo_IndexController_Test');
+        $suite->addTestSuite('Todo_Models_Todo_Test');
 
         return $suite;
     }
