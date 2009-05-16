@@ -229,12 +229,12 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         $data   = $this->_data;
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
         $result = $this->_validate->recordValidate($this, $data, $fields);
+
         if ($result) {
             // Username repeated?
             $db      = Phprojekt::getInstance()->getDb();
-            $where   = $db->quoteInto("username = ? and id != ?", $this->username, $this->id);
+            $where   = sprintf("username = %s AND id != %d", $db->quote($this->username), $this->id);
             $records = $this->fetchAll($where);
             if (count($records) > 0) {
                 $this->_validate->error->addError(array(
@@ -244,6 +244,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                 $result = false;
             }
         }
+
         return $result;
     }
 
