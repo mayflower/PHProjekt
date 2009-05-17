@@ -31,40 +31,164 @@ require_once 'PHPUnit/Framework.php';
  */
 class Note_IndexController_Test extends FrontInit
 {
+    private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
+
     /**
      * Test of json save Note -in fact, default json save
      */
-    public function testJsonSave()
+    public function testJsonSavePart1()
     {
+        // INSERT
         $this->setRequestUrl('Note/index/jsonSave/');
-        $this->request->setParam('id', null);
-        $this->request->setParam('comments', 'test');
         $this->request->setParam('projectId', 1);
-        $this->request->setParam('title', 'test');
+        $this->request->setParam('title', 'test title');
+        $this->request->setParam('comments', 'comment test');
+        $this->request->setParam('category', 'my category');
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
+
+        // Check that there is one more row
+        $noteModel  = new Note_Models_Note();
+        $rowsAfter = count($noteModel->fetchAll());
+        $this->assertEquals(1, $rowsAfter);
+
+        // INSERT
+        $this->setRequestUrl('Note/index/jsonSave/');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('title', 'test title 2');
+        $this->request->setParam('comments', 'comment test 2');
+        $this->request->setParam('category', 'my category 2');
+        $response = $this->getResponse();
+        $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
+
+        // Check that there are two rows total
+        $rowsAfter = count($noteModel->fetchAll());
+        $this->assertEquals(2, $rowsAfter);
     }
 
     /**
-     * Test of json save  multiple Note
+     * Test of json save Note -in fact, default json save
+     */
+    public function testJsonSavePart2()
+    {
+        // EDIT
+        $this->setRequestUrl('Note/index/jsonSave/');
+        $this->request->setParam('id', 1);
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('title', 'test title MODIFIED');
+        $this->request->setParam('comments', 'comment test MODIFIED');
+        $this->request->setParam('category', 'my category MODIFIED');
+        $response = $this->getResponse();
+        $this->assertContains(Note_IndexController::EDIT_TRUE_TEXT, $response);
+
+        // Check saved data
+        $noteModel = new Note_Models_Note();
+        $noteModel->find(1);
+        $this->assertEquals('test title MODIFIED', $noteModel->title);
+        $this->assertEquals('comment test MODIFIED', $noteModel->comments);
+        $this->assertEquals('my category MODIFIED', $noteModel->category);
+    }
+
+    /**
+     * Test of json save multiple Note -in fact, default jsonSaveMultipleAction
      */
     public function testJsonSaveMultiple()
     {
         $this->setRequestUrl('Note/index/jsonSaveMultiple/');
-        $this->request->setParam('nodeId', 1);
-        $this->request->setParam('data[1][comments]', 'test save multiple');
+        $items = array(1 => array('title' => 'test title MODIFIED AGAIN',
+                                  'comments' => 'comment test MODIFIED AGAIN'),
+                       2 => array('title' => 'test title 2 MODIFIED',
+                                  'comments' => 'comment test 2 MODIFIED'));
+        $this->request->setParam('data', $items);
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
+
+        // Check saved data
+        $noteModel = new Note_Models_Note();
+        $noteModel->find(1);
+        $this->assertEquals('test title MODIFIED AGAIN', $noteModel->title);
+        $this->assertEquals('comment test MODIFIED AGAIN', $noteModel->comments);
+        $noteModel->find(2);
+        $this->assertEquals('test title 2 MODIFIED', $noteModel->title);
+        $this->assertEquals('comment test 2 MODIFIED', $noteModel->comments);
     }
 
     /**
-     * Test the note deletion
+     * Test of json list Note -in fact, default json list
+     */
+    public function testJsonList()
+    {
+        $this->setRequestUrl('Note/index/jsonList');
+        $response = $this->getResponse();
+        $this->assertContains($this->_listingExpectedString, $response);
+        $this->assertContains('"numRows":2', $response);
+
+        $this->setRequestUrl('Note/index/jsonList');
+        $this->request->setParam('id', 1);
+        $response = $this->getResponse();
+        $this->assertContains($this->_listingExpectedString, $response);
+        $this->assertContains('"numRows":1', $response);
+    }
+
+    /**
+     * Test of json list Note -in fact, default json detail
+     */
+    public function testJsonDetailAction()
+    {
+        // New item data request
+        $this->setRequestUrl('Note/index/jsonDetail/');
+        $response = $this->getResponse();
+        $expectedContent = '"data":[{"id":null,"title":"","rights":{"currentUser":{"moduleId":"3","itemId":null,"userId'
+            . '":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"downloa'
+            . 'd":true,"admin":true}},"comments":"","projectId":"","category":""}],"numRows":1})';
+        $this->assertContains($expectedContent, $response);
+
+        // Existing item
+        $this->setRequestUrl('Note/index/jsonDetail/');
+        $this->request->setParam('id', 1);
+        $response = $this->getResponse();
+        $expectedContent = '"data":[{"id":"1","title":"test title MODIFIED AGAIN","rights":{"currentUser":{"module_id":'
+            . '"3","item_id":"1","user_id":"1","access":true,"moduleId":"3","itemId":"1","userId":"1","none":false,"rea'
+            . 'd":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"comments":"'
+            . 'comment test MODIFIED AGAIN","projectId":"1","category":"my category MODIFIED"}],"numRows":1})';
+        $this->assertContains($expectedContent, $response);
+    }
+
+    /**
+     * Test the note deletion -in fact, default jsonDeleteAction
      */
     public function testJsonDeleteAction()
     {
+        // Store current amount of rows
+        $noteModel = new Note_Models_Note();
+        $rowsBefore = count($noteModel->fetchAll());
+
         $this->setRequestUrl('Note/index/jsonDelete/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::DELETE_TRUE_TEXT, $response);
+
+        // Check that there is one less row
+        $rowsAfter = count($noteModel->fetchAll());
+        $this->assertEquals($rowsBefore - 1, $rowsAfter);
+    }
+
+    /**
+     * Test the note deletion -in fact, default jsonDeleteAction
+     */
+    public function testJsonDeleteActionWrongId()
+    {
+        $this->setRequestUrl('Note/index/jsonDelete/');
+        $this->request->setParam('id', 50);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $expectedErrorMsg = Phprojekt::getInstance()->translate(Note_IndexController::NOT_FOUND);
+            $this->assertEquals(0, $error->getCode());
+            $this->assertEquals($expectedErrorMsg, $error->message);
+            return;
+        }
+
+        $this->fail('Error on Delete with wrong Id');
     }
 }

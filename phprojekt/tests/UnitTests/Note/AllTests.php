@@ -27,6 +27,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
+require_once 'Models/NoteTest.php';
 
 /**
  * Test suite for the note module
@@ -60,7 +61,7 @@ class Note_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Note Controller');
 
         $suite->addTestSuite('Note_IndexController_Test');
-
+        $suite->addTestSuite('Note_Models_Note_Test');
         return $suite;
     }
 }
