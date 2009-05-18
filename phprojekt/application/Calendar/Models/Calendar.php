@@ -94,7 +94,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $dateCollection->applyRrule($rrule);
             $eventDates = $dateCollection->getValues();
         } else {
-            $eventDates = array(new Zend_Date(strtotime($startDate)));
+            $eventDates = array(strtotime($startDate));
         }
 
         // We will put the owner id first, just to make it clear
@@ -398,7 +398,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $currentParticipants[$record->participantId] = $record->participantId;
             }
             foreach ($eventDates as $oneDate) {
-                $date = date("Y-m-d", $oneDate->get());
+                $date = date("Y-m-d", $oneDate);
                 if (!$found && $date == $record->startDate) {
                     // Update old entry of recurrence
                     self::_saveEvent($request, $record, $oneDate, $daysDuration, $record->participantId,
@@ -423,7 +423,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             // Add the new entry of recurrence
             foreach ($eventDates as $oneDate) {
                 $newEntry = true;
-                $date = date("Y-m-d", $oneDate->get());
+                $date = date("Y-m-d", $oneDate);
                 foreach ($records as $record) {
                     if ($date == $record->startDate) {
                         $newEntry = false;
@@ -546,7 +546,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $removeModel = clone($clone);
                 $where       = ' parent_id = '. (int) self::getRootEventId($model)
                     . ' AND participant_id = '. (int) $currentParticipantId
-                    . ' AND start_date = "' . date("Y-m-d", $oneDate->get()) . '"';
+                    . ' AND start_date = "' . date("Y-m-d", $oneDate) . '"';
                 $records = $removeModel->fetchAll($where);
                 foreach ($records as $record) {
                     $record->softDeleteEvent();
@@ -585,7 +585,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     private function _saveEvent($request, $model, $oneDate, $daysDuration, $participantId, $parentId)
     {
-        $date                     = date("Y-m-d", $oneDate->get());
+        $date                     = date("Y-m-d", $oneDate);
         $request['startDate']     = $date;
         $request['endDate']       = date("Y-m-d", strtotime($date) + ($daysDuration * 24*60*60));
         $request['participantId'] = $participantId;

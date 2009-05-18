@@ -35,61 +35,74 @@
 class Phprojekt_Date_Collection
 {
     /**
-     * Array holding the elements of the collection. Each Element
-     * is stored as a Zend_Date object.
+     * Array holding the elements of the collection.
+     * Each Element is a timestamp
      *
      * @var array
      */
     private $_elements = array();
 
     /**
-     * The highest value that should be allowed. If a higher value is added
-     * it will be dropped.
+     * The highest value that should be allowed.
+     * If a higher value is added it will be dropped.
      *
-     * @var Zend_Date
+     * @var int
      */
     private $_maxDate = null;
 
     /**
-     * The lowest value that should be allowed. If a lower value is added
-     * it will be dropped.
+     * The lowest value that should be allowed.
+     * If a lower value is added it will be dropped.
      *
-     * @var Zend_Date
+     * @var int
      */
     private $_minDate = null;
 
     /**
+     * Zend_Date class
+     *
+     * @var Zend_Date
+     */
+    private $_date = null;
+
+    /**
      * Create a new collection of dates.
      *
-     * @param Zend_Date $startDate      The lowsest allowed value
-     * @param Zend_Date $endDate        The highest allowed valueed
+     * @param string $minDate The lowsest allowed value
+     * @param string $maxDate The highest allowed value
      */
     public function __construct($minDate, $maxDate = null)
     {
-        $this->_minDate = new Zend_Date(strtotime($minDate));
+        $this->_date    = new Zend_Date();
+
+        $this->_minDate = $this->_getDate(strtotime($minDate));
         if (null != $maxDate) {
-            $this->_maxDate = new Zend_Date(strtotime($maxDate));
+            $this->_maxDate = $this->_getDate(strtotime($maxDate));
         }
     }
 
     /**
-     * Adds a date to the Collection. If the date is higher/lower than
-     * maxDate/minDate it will not be added.
+     * Adds a date to the Collection.
+     * If the date is higher/lower than maxDate/minDate it will not be added.
      *
-     * @param Zend_Date $element      A Zend_Date object
+     * @param int $element A timestamp date
+     *
+     * @return void
      */
-    public function add(Zend_Date $element)
+    public function add($element)
     {
-        if (!isset($this->_elements[$element->get()])) {
-            $this->_elements[$element->get()] = $element;
+        if (!isset($this->_elements[$element])) {
+            $this->_elements[$element] = $element;
         }
     }
 
     /**
-     * Adds a date to the Collection. If the date is higher/lower than
-     * maxDate/minDate it will not be added.
+     * Adds a date to the Collection.
+     * If the date is higher/lower than maxDate/minDate it will not be added.
      *
-     * @param array $elements      An array of Zend_Date objects
+     * @param array $elements An array of timestamp strings
+     *
+     * @return void
      */
     public function addArray(array $elements)
     {
@@ -99,13 +112,12 @@ class Phprojekt_Date_Collection
     }
 
     /**
-     * Fill the collection with all dates that can be calculated from rrule
-     * starting with minDate.
+     * Fill the collection with all dates that can be calculated from rrule starting with minDate.
      * If there already are elements in the collection they will be dropped.
      *
-     * @param String $rrule     The rrule that should be parsed
-     * @return boolean          TRUE if parsing was successfull,
-     *                          FALSE otherwise
+     * @param string $rrule The rrule that should be parsed
+     *
+     * @return boolean TRUE if parsing was successfull, FALSE otherwise
      */
     public function applyRrule($rrule)
     {
@@ -116,7 +128,8 @@ class Phprojekt_Date_Collection
         // Detect mathod to use for increment
         switch ($rules['FREQ']) {
             case 'YEARLY':
-               $method = 'addYear';
+                $method = 'addYear';
+                break;
             case 'MONTHLY':
                 $method = 'addMonth';
                 break;
@@ -131,13 +144,15 @@ class Phprojekt_Date_Collection
                 $method = null;
                 return false;
         }
-        $date = $this->_minDate;
+        $date  = $this->_minDate;
+        $until = $this->_getDate($rules['UNTIL']);
 
         $dates = $this->_rruleByXXX($rules, $date);
         $this->addArray($dates);
-        while ($date < $rules['UNTIL']) {
-            $date = $date->$method($rules['INTERVAL']);
-            if ($date < $rules['UNTIL']) {
+
+        while ($date < $until) {
+            $date = $this->_applyMethod($method, $rules['INTERVAL'], $date);
+            if ($date < $until) {
                 $dates = $this->_rruleByXXX($rules, $date);
             }
             $this->addArray($dates);
@@ -149,8 +164,9 @@ class Phprojekt_Date_Collection
     /**
      * Parse the RRULE of an iCal-file
      *
-     * @param String $rrule     RRULE to parse
-     * @return Array            Array containing the parsed rule
+     * @param string $rrule RRULE to parse
+     *
+     * @return array Array containing the parsed rule
      */
     private function _parseRrule($rrule)
     {
@@ -207,24 +223,25 @@ class Phprojekt_Date_Collection
     /**
      * Calculate all Dates generated by a 'BYXXX' rule.
      *
-     * @param array $rules          rrule as generated by _parseRrule
-     * @param Zend_Date $date       The date to start from
-     * @return array                Array with all generated Zend_Date objects
+     * @param array $rules Rrule as generated by _parseRrule
+     * @param int   $date  Timestamp value of the date
+     *
+     * @return array Array with all the timestamp
      */
     private function _rruleByXXX($rules, $date)
     {
         $bys = array(
-            'BYMONTH' => 'setMonth',
-            'BYWEEKNO' => 'setWeek',
-            'BYYEARDAY' => 'setDayOfYear',
+            'BYMONTH'    => 'setMonth',
+            'BYWEEKNO'   => 'setWeek',
+            'BYYEARDAY'  => 'setDayOfYear',
             'BYMONTHDAY' => 'setDay',
-            'BYDAY' => 'setWeekday',
-            'BYHOUR' => 'setHour',
-            'BYMINUTE' => 'setMinute',
-            'BYSECOND' => 'setSecond'
+            'BYDAY'      => 'setWeekday',
+            'BYHOUR'     => 'setHour',
+            'BYMINUTE'   => 'setMinute',
+            'BYSECOND'   => 'setSecond'
         );
 
-        $dates = array(new Zend_Date($date));
+        $dates = array($this->_getDate($date));
 
         foreach ($bys as $by => $setter) {
             if (isset($rules[$by])) {
@@ -232,7 +249,7 @@ class Phprojekt_Date_Collection
                 foreach ($rules[$by] as $value) {
                     foreach ($dates as $date) {
                         $date->$setter($value);
-                        $res[] = new Zend_Date($date);
+                        $res[] = $this->_getDate($date);
                     }
                 }
                 $dates[] = $res;
@@ -245,7 +262,7 @@ class Phprojekt_Date_Collection
     /**
      * Get the elements of the collection
      *
-     * @return Array    Returns all dates (Zend_Date) of the collection as an array
+     * @return array Returns all the timestamp in an array
      */
     public function getValues()
     {
@@ -257,8 +274,7 @@ class Phprojekt_Date_Collection
     /**
      * Removes a series of dates from the collection
      *
-     * @param Array $exclude        Array with Zend_Dates that should be removed from
-     *                              the collection
+     * @param array $exclude Array with Zend_Dates that should be removed from the collection
      */
     public function filter($exclude)
     {
@@ -270,5 +286,36 @@ class Phprojekt_Date_Collection
                 }
             }
         }
+    }
+
+    /**
+     * Set the date in the Zend_Date and return it in date format
+     *
+     * @param int $date Timestamp of the date
+     *
+     * @return int The new timestamp
+     */
+    private function _getDate($date)
+    {
+        $this->_date->set($date);
+
+        return $this->_date->get();
+    }
+
+    /**
+     * Apply the rule method to one date
+     *
+     * @param string $method   The method name
+     * @param int    $interval The interval
+     * @param int    $date     Timestamp of the date
+     *
+     * @return int The new timestamp
+     */
+    private function _applyMethod($method, $interval, $date)
+    {
+        $this->_date->set($date);
+        $this->_date->$method($interval);
+
+        return $this->_date->get();
     }
 }
