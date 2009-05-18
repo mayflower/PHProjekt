@@ -384,13 +384,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $addParticipants = true;
         $model->find($id);
 
+        $where = ' parent_id = ' . (int) $model->parentId;
         if (!self::_isOwner($model)) {
             // Save only the own events under the parentId
-            $where = ' parent_id = ' . (int) $model->parentId
-                . ' AND participant_id = ' . (int) $model->participantId;
-        } else {
-            // Save all the events under the parentId
-            $where = ' parent_id = ' . (int) $model->parentId;
+            $where .= ' AND participant_id = ' . (int) $model->participantId;
         }
 
         $currentParticipants = array();
