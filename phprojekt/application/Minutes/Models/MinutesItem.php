@@ -192,7 +192,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      */
     public function save()
     {
-        Phprojekt::getInstance()->getLog()->debug('SORT ORDER = ' . print_r($this->sortOrder,true));
+        Phprojekt::getInstance()->getLog()->debug('SORT ORDER = ' . print_r($this->sortOrder, true));
 
         if (trim($this->sortOrder) == '' || is_null($this->sortOrder) || !$this->sortOrder) {
             $db      = $this->getAdapter();
@@ -200,14 +200,14 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
             $result  = $db->fetchCol($sql, $this->_minutesId);
             $maxSort = $result[0];
         
-            Phprojekt::getInstance()->getLog()->debug('MAX_SORT: ' . print_r($maxSort,true));
+            Phprojekt::getInstance()->getLog()->debug('MAX_SORT: ' . print_r($maxSort, true));
             if (!$maxSort || $maxSort < 0) {
                 $maxSort = 0;
             }
             $this->sortOrder = $maxSort + 1;
             Phprojekt::getInstance()->getLog()->debug('NEW INITIAL SORT ORDER: ' . $maxSort);
         } elseif ($this->sortOrder > 0) {
-            Phprojekt::getInstance()->getLog()->debug('SORT EVERYTHING ABOVE: ' . print_r($this->sortOrder,true));
+            Phprojekt::getInstance()->getLog()->debug('SORT EVERYTHING ABOVE: ' . print_r($this->sortOrder, true));
         }
         return parent::save();
     }
