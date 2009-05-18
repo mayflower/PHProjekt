@@ -112,7 +112,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('month', '05');
         $this->request->setParam('view', 'month');
         $response = $this->getResponse();
-        $this->assertContains('"numRows":'.date("t").'}', $response);
+        $this->assertContains('"numRows":' . date("t") . '}', $response);
     }
 
     /**

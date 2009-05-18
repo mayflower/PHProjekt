@@ -31,22 +31,32 @@ require_once 'PHPUnit/Framework.php';
  */
 class Note_Models_Note_Test extends PHPUnit_Framework_TestCase
 {
+    private $_model = null;
+
+    /**
+     * setUp method for PHPUnit
+     */
+    public function setUp()
+    {
+        $this->_model = new Note_Models_Note();
+    }
+
     /**
      * Test creating a item -in fact via via default model
      */
     public function testCreatingItem()
     {
-        $noteModel            = new Note_Models_Note();
-        $noteModel->title     = 'Title 3';
-        $noteModel->comments  = 'Comments 3';
-        $noteModel->projectId = 1;
-        $noteModel->category  = 'category 3';
-        $noteModel->save();
+        $model = clone($this->_model);
+        $model->title     = 'Title 3';
+        $model->comments  = 'Comments 3';
+        $model->projectId = 1;
+        $model->category  = 'category 3';
+        $model->save();
 
-        $this->assertEquals("Title 3", $noteModel->title);
-        $this->assertEquals("Comments 3", $noteModel->comments);
-        $this->assertEquals(1, $noteModel->projectId);
-        $this->assertEquals("category 3", $noteModel->category);
+        $this->assertEquals("Title 3", $model->title);
+        $this->assertEquals("Comments 3", $model->comments);
+        $this->assertEquals(1, $model->projectId);
+        $this->assertEquals("category 3", $model->category);
     }
 
     /**
@@ -54,17 +64,17 @@ class Note_Models_Note_Test extends PHPUnit_Framework_TestCase
      */
     public function testEditingItem()
     {
-        $noteModel = new Note_Models_Note();
-        $noteModel->find(3);
-        $noteModel->title     = 'Title 3 modified';
-        $noteModel->comments  = 'Comments 3 modified';
-        $noteModel->projectId = 1;
-        $noteModel->category  = 'category 3 modified';
-        $noteModel->save();
+        $model = clone($this->_model);
+        $model->find(3);
+        $model->title     = 'Title 3 modified';
+        $model->comments  = 'Comments 3 modified';
+        $model->projectId = 1;
+        $model->category  = 'category 3 modified';
+        $model->save();
 
-        $this->assertEquals("Title 3 modified", $noteModel->title);
-        $this->assertEquals("Comments 3 modified", $noteModel->comments);
-        $this->assertEquals("category 3 modified", $noteModel->category);
+        $this->assertEquals("Title 3 modified", $model->title);
+        $this->assertEquals("Comments 3 modified", $model->comments);
+        $this->assertEquals("category 3 modified", $model->category);
     }
 
     /**
@@ -72,11 +82,11 @@ class Note_Models_Note_Test extends PHPUnit_Framework_TestCase
      */
     public function testDeletingItem()
     {
-        $noteModel  = new Note_Models_Note();
-        $rowsBefore = count($noteModel->fetchAll());
-        $noteModel->find(2);
-        $noteModel->delete();
-        $rowsAfter = count($noteModel->fetchAll());
+        $rowsBefore = count($this->_model->fetchAll());
+        $model = clone($this->_model);
+        $model->find(2);
+        $model->delete();
+        $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore - 1, $rowsAfter);
     }
 }

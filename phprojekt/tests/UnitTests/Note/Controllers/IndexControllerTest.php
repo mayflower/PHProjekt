@@ -33,6 +33,16 @@ class Note_IndexController_Test extends FrontInit
 {
     private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
 
+    private $_model = null;
+
+    /**
+     * setUp method for PHPUnit
+     */
+    public function setUp()
+    {
+        $this->_model = new Note_Models_Note();
+    }
+
     /**
      * Test of json save Note -in fact, default json save
      */
@@ -47,11 +57,6 @@ class Note_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
 
-        // Check that there is one more row
-        $noteModel  = new Note_Models_Note();
-        $rowsAfter = count($noteModel->fetchAll());
-        $this->assertEquals(1, $rowsAfter);
-
         // INSERT
         $this->setRequestUrl('Note/index/jsonSave/');
         $this->request->setParam('projectId', 1);
@@ -62,7 +67,7 @@ class Note_IndexController_Test extends FrontInit
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check that there are two rows total
-        $rowsAfter = count($noteModel->fetchAll());
+        $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals(2, $rowsAfter);
     }
 
@@ -82,11 +87,11 @@ class Note_IndexController_Test extends FrontInit
         $this->assertContains(Note_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check saved data
-        $noteModel = new Note_Models_Note();
-        $noteModel->find(1);
-        $this->assertEquals('test title MODIFIED', $noteModel->title);
-        $this->assertEquals('comment test MODIFIED', $noteModel->comments);
-        $this->assertEquals('my category MODIFIED', $noteModel->category);
+        $model = clone($this->_model);
+        $model->find(1);
+        $this->assertEquals('test title MODIFIED', $model->title);
+        $this->assertEquals('comment test MODIFIED', $model->comments);
+        $this->assertEquals('my category MODIFIED', $model->category);
     }
 
     /**
@@ -104,13 +109,14 @@ class Note_IndexController_Test extends FrontInit
         $this->assertContains(Note_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
         // Check saved data
-        $noteModel = new Note_Models_Note();
-        $noteModel->find(1);
-        $this->assertEquals('test title MODIFIED AGAIN', $noteModel->title);
-        $this->assertEquals('comment test MODIFIED AGAIN', $noteModel->comments);
-        $noteModel->find(2);
-        $this->assertEquals('test title 2 MODIFIED', $noteModel->title);
-        $this->assertEquals('comment test 2 MODIFIED', $noteModel->comments);
+        $model = clone($this->_model);
+        $model->find(1);
+        $this->assertEquals('test title MODIFIED AGAIN', $model->title);
+        $this->assertEquals('comment test MODIFIED AGAIN', $model->comments);
+        $model = clone($this->_model);
+        $model->find(2);
+        $this->assertEquals('test title 2 MODIFIED', $model->title);
+        $this->assertEquals('comment test 2 MODIFIED', $model->comments);
     }
 
     /**
@@ -160,8 +166,7 @@ class Note_IndexController_Test extends FrontInit
     public function testJsonDeleteAction()
     {
         // Store current amount of rows
-        $noteModel = new Note_Models_Note();
-        $rowsBefore = count($noteModel->fetchAll());
+        $rowsBefore = count($this->_model->fetchAll());
 
         $this->setRequestUrl('Note/index/jsonDelete/');
         $this->request->setParam('id', 1);
@@ -169,7 +174,7 @@ class Note_IndexController_Test extends FrontInit
         $this->assertContains(Note_IndexController::DELETE_TRUE_TEXT, $response);
 
         // Check that there is one less row
-        $rowsAfter = count($noteModel->fetchAll());
+        $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore - 1, $rowsAfter);
     }
 

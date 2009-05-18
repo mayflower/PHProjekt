@@ -33,15 +33,21 @@ class Todo_IndexController_Test extends FrontInit
 {
     private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
 
+    private $_model = null;
+
+    /**
+     * setUp method for PHPUnit
+     */
+    public function setUp()
+    {
+        $this->_model = new Todo_Models_Todo();
+    }
+
     /**
      * Test of json save Todo
      */
     public function testJsonSavePart1()
     {
-        // Store current amount of rows
-        $todoModel  = new Todo_Models_Todo();
-        $rowsBefore = count($todoModel->fetchAll());
-
         // INSERT
         $this->setRequestUrl('Todo/index/jsonSave/');
         $this->request->setParam('title', 'My todo task');
@@ -55,10 +61,6 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('string', 'My todo tag');
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
-
-        // Check that there is one more row
-        $rowsAfter = count($todoModel->fetchAll());
-        $this->assertEquals($rowsBefore + 1, $rowsAfter);
 
         // INSERT. Send notification
         $this->setRequestUrl('Todo/index/jsonSave/');
@@ -74,10 +76,6 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('sendNotification', 'on');
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
-
-        // Check that there is another new row
-        $rowsAfter = count($todoModel->fetchAll());
-        $this->assertEquals($rowsBefore + 2, $rowsAfter);
     }
 
     /**
@@ -101,16 +99,16 @@ class Todo_IndexController_Test extends FrontInit
         $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check saved data
-        $todoModel = new Todo_Models_Todo();
-        $todoModel->find(2);
-        $this->assertEquals('My todo task MODIFIED', $todoModel->title);
-        $this->assertEquals('My note', $todoModel->notes);
-        $this->assertEquals(3, $todoModel->projectId);
-        $this->assertEquals('2009-05-16', $todoModel->startDate);
-        $this->assertEquals('2009-05-17', $todoModel->endDate);
-        $this->assertEquals(7, $todoModel->priority);
-        $this->assertEquals(2, $todoModel->currentStatus);
-        $this->assertEquals(1, $todoModel->userId);
+        $model = clone($this->_model);
+        $model->find(2);
+        $this->assertEquals('My todo task MODIFIED', $model->title);
+        $this->assertEquals('My note', $model->notes);
+        $this->assertEquals(3, $model->projectId);
+        $this->assertEquals('2009-05-16', $model->startDate);
+        $this->assertEquals('2009-05-17', $model->endDate);
+        $this->assertEquals(7, $model->priority);
+        $this->assertEquals(2, $model->currentStatus);
+        $this->assertEquals(1, $model->userId);
     }
 
     /**
@@ -154,13 +152,14 @@ class Todo_IndexController_Test extends FrontInit
         $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
         // Check saved data
-        $todoModel = new Todo_Models_Todo();
-        $todoModel->find(2);
-        $this->assertEquals('My todo task CHANGED', $todoModel->title);
-        $this->assertEquals(3, $todoModel->currentStatus);
-        $todoModel->find(3);
-        $this->assertEquals('My todo task 2 CHANGED', $todoModel->title);
-        $this->assertEquals(4, $todoModel->currentStatus);
+        $model = clone($this->_model);
+        $model->find(2);
+        $this->assertEquals('My todo task CHANGED', $model->title);
+        $this->assertEquals(3, $model->currentStatus);
+        $model = clone($this->_model);
+        $model->find(3);
+        $this->assertEquals('My todo task 2 CHANGED', $model->title);
+        $this->assertEquals(4, $model->currentStatus);
     }
 
     /**

@@ -90,7 +90,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
         }
 
         Zend_Registry::set('view', $view);
-        $view->webPath  = $this->config->webpath;
+        $view->webPath = $this->config->webpath;
 
         $this->front->setModuleControllerDirectoryName('Controllers');
         $this->front->addModuleDirectory(PHPR_CORE_PATH);
@@ -120,13 +120,12 @@ class FrontInit extends PHPUnit_Framework_TestCase
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
-            $this->error = true;
+            $this->error        = true;
             $this->errormessage = $error->getMessage();
             unset($error);
         }
         $this->content = ob_get_contents();
         ob_end_clean();
-        
 
         $params = $this->request->getParams();
         foreach ($params as $key => $value) {

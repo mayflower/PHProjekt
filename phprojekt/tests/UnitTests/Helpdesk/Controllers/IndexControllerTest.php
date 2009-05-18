@@ -33,15 +33,21 @@ class Helpdesk_IndexController_Test extends FrontInit
 {
     private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
 
+    private $_model = null;
+
+    /**
+     * setUp method for PHPUnit
+     */
+    public function setUp()
+    {
+        $this->_model = new Helpdesk_Models_Helpdesk();
+    }
+
     /**
      * Test of json save Helpdesk
      */
     public function testJsonSavePart1()
     {
-        // Store current amount of rows
-        $helpdeskModel  = new Helpdesk_Models_Helpdesk();
-        $rowsBefore = count($helpdeskModel->fetchAll());
-
         // INSERT
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('title', 'My Helpdesk task');
@@ -55,10 +61,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('status', '1');
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
-
-        // Check that there is one more row
-        $rowsAfter = count($helpdeskModel->fetchAll());
-        $this->assertEquals($rowsBefore + 1, $rowsAfter);
 
         // INSERT. Send notification
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
@@ -77,8 +79,8 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check that there is another new row
-        $rowsAfter = count($helpdeskModel->fetchAll());
-        $this->assertEquals($rowsBefore + 2, $rowsAfter);
+        $rowsAfter = count($this->_model->fetchAll());
+        $this->assertEquals(2, $rowsAfter);
     }
 
     /**
@@ -103,14 +105,14 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check saved data - Solved user and date should have been autocompleted
-        $helpdeskModel = new Helpdesk_Models_Helpdesk();
-        $helpdeskModel->find(1);
-        $this->assertEquals('My Helpdesk task MODIFIED', $helpdeskModel->title);
-        $this->assertEquals('This is the description MODIFIED', $helpdeskModel->description);
-        $this->assertEquals(2, $helpdeskModel->priority);
-        $this->assertEquals(1, $helpdeskModel->solvedBy);
-        $this->assertEquals(date("Y-m-d"), $helpdeskModel->solvedDate);
-        $this->assertEquals(3, $helpdeskModel->status);
+        $model = clone($this->_model);
+        $model->find(1);
+        $this->assertEquals('My Helpdesk task MODIFIED', $model->title);
+        $this->assertEquals('This is the description MODIFIED', $model->description);
+        $this->assertEquals(2, $model->priority);
+        $this->assertEquals(1, $model->solvedBy);
+        $this->assertEquals(date("Y-m-d"), $model->solvedDate);
+        $this->assertEquals(3, $model->status);
 
         // EDIT: First inserted item. This call, similar to the previous one will cover another line of the Controller
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
@@ -150,10 +152,10 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check saved data - Solved user and date should have been emptied
-        $helpdeskModel = new Helpdesk_Models_Helpdesk();
-        $helpdeskModel->find(1);
-        $this->assertEquals('', $helpdeskModel->solvedBy);
-        $this->assertEquals(4, $helpdeskModel->status);
+        $model = clone($this->_model);
+        $model->find(1);
+        $this->assertEquals('', $model->solvedBy);
+        $this->assertEquals(4, $model->status);
     }
 
     /**
@@ -200,14 +202,15 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertContains(Helpdesk_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
         // Check saved data
-        $helpdeskModel = new Helpdesk_Models_Helpdesk();
-        $helpdeskModel->find(1);
-        $this->assertEquals('My completely new title', $helpdeskModel->title);
-        $this->assertEquals(3, $helpdeskModel->status);
-        $this->assertEquals(1, $helpdeskModel->solvedBy);
-        $helpdeskModel->find(2);
-        $this->assertEquals('My completely new title 2', $helpdeskModel->title);
-        $this->assertEquals(4, $helpdeskModel->status);
+        $model = clone($this->_model);
+        $model->find(1);
+        $this->assertEquals('My completely new title', $model->title);
+        $this->assertEquals(3, $model->status);
+        $this->assertEquals(1, $model->solvedBy);
+        $model = clone($this->_model);
+        $model->find(2);
+        $this->assertEquals('My completely new title 2', $model->title);
+        $this->assertEquals(4, $model->status);
     }
 
     /**
@@ -247,8 +250,8 @@ class Helpdesk_IndexController_Test extends FrontInit
             . '10","item_id":"1","user_id":"1","access":true,"moduleId":"10","itemId":"1","userId":"1","none":false,"re'
             . 'ad":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"author":"1'
             . '","assigned":"1","date":"' . date("Y-m-d") . '","dueDate":"2009-05-30","projectId":"1","priority":"2","a'
-            . 'ttachments":"","solvedBy":"1","solvedDate":"' . date("Y-m-d") . '","description":"This is the description MODIFIED'
-            . '","status":"3","contactId":"0"}],"numRows":1}';
+            . 'ttachments":"","solvedBy":"1","solvedDate":"' . date("Y-m-d") . '","description":'
+            . '"This is the description MODIFIED","status":"3","contactId":"0"}],"numRows":1}';
         $this->assertContains($expectedContent, $response);
 
         // Existing item
