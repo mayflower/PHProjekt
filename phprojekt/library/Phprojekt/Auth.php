@@ -79,7 +79,7 @@ class Phprojekt_Auth extends Zend_Auth
             $setting->setModule('User');
 
             // The password does not match with password provided
-            if (!Phprojekt_Auth::_compareStringWithPassword((string) $password, (string) $setting->getSetting("password", $userId))) {
+            if (!Phprojekt_Auth::_compareStringWithPassword($password, $setting->getSetting("password", $userId))) {
                 throw new Phprojekt_Auth_Exception('Invalid user or password', 2);
             }
         } catch (Exception $error) {
@@ -152,10 +152,10 @@ class Phprojekt_Auth extends Zend_Auth
     private function _compareStringWithPassword($string, $password)
     {
         // One of the methods to check the password
-        $defaultMethod = 'phprojektmd5'.$string;
+        $defaultMethod = 'phprojektmd5' . (string) $string;
         $defaultMethod = Phprojekt_Auth::_cryptPassword($defaultMethod);
 
-        if ($defaultMethod == $password) {
+        if ($defaultMethod == (string) $password) {
             return true;
         }
 
