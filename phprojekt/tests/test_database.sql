@@ -695,6 +695,7 @@ INSERT INTO `role_module_permissions` (`role_id`, `module_id`, `access`) VALUES
 (1, 2, 139),
 (1, 3, 139),
 (1, 5, 139),
+(1, 10, 139),
 (1, 11, 139);
 
 
@@ -756,6 +757,7 @@ INSERT INTO `project_module_permissions` (`module_id`, `project_id`) VALUES
 (3,1),
 (4,1),
 (5,1),
+(10,1),
 (1,2),
 (2,2),
 (3,2),
