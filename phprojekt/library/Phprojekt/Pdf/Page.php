@@ -305,7 +305,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     {
         $y        = $this->getHeight() - $y;
         $fontSize = $this->getFontSize();
-        foreach($lines as $i => $line) {
+        foreach ($lines as $i => $line) {
             $this->drawText($line, $x + 2, $y - ($fontSize * self::RATE_FONT_IN_PIX * $i));
         }
         $this->freeLineY = $this->getHeight() - $y + ($fontSize * self::RATE_FONT_IN_PIX * count($lines));
@@ -332,10 +332,10 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         $wordsLength = array();
         $em          = $font->getUnitsPerEm();
         $spaceSize   = array_sum($font->widthsForGlyphs(array(ord(' ')))) / $em * $fontSize;
-        foreach($words as $i => $word) {
+        foreach ($words as $i => $word) {
             $word  .= ' ';
             $glyphs = array();
-            foreach(range(0, strlen($word)-1) as $i) {
+            foreach (range(0, strlen($word)-1) as $i) {
                 if (isset($str[$i])) {
                     $glyphs[] = ord($str[$i]);
                 }
@@ -350,14 +350,14 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         $line      = array();
         $i         = 0;
         $maxLength = count($words);
-        while($i < $maxLength) {
+        while ($i < $maxLength) {
             // 10 - code of new line
-            $wordsInside = explode(chr(10),$words[$i]);
+            $wordsInside = explode(chr(10), $words[$i]);
             if (count($wordsInside) > 1) {
                 // Add first word
                 $firstWord        = array_shift($wordsInside);
                 $currentWordLenth = $wordsLength[$i] * strlen($firstWord) / strlen($words[$i]);
-                if(($xInc + $currentWordLenth) > $maxWidth) {
+                if (($xInc + $currentWordLenth) > $maxWidth) {
                     $lines[] = array($line, $x, $yInc);
                     $yInc   -= $fontSize;
                     $xInc    = $currentWordLenth + $spaceSize;
@@ -408,10 +408,10 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     public function drawVariableText($str, $x, $y, $maxWidth, $align = 'left')
     {
         $text = $this->getVariableText($str, $x, $y, $maxWidth);
-        foreach($text['lines'] as $line) {
+        foreach ($text['lines'] as $line) {
             list($str, $x, $y) = $line;
             $xPos              = $x;
-            if($align == 'right') {
+            if ($align == 'right') {
                 $length = $this->_calculateTextWidth(implode(' ', $str));
                 $xPos  += $maxWidth - $length - $this->getFontSize() / 2;
             } else if ($align == 'center') {
@@ -440,7 +440,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         // Find out each word's width
         $em     = $font->getUnitsPerEm();
         $glyphs = array();
-        foreach(range(0, strlen($str)-1) as $i) {
+        foreach (range(0, strlen($str)-1) as $i) {
             $glyphs[] = ord($str[$i]);
         }
 

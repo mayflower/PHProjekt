@@ -127,9 +127,9 @@ class Phprojekt_Pdf_Table_Column
      */
     public function setAlignment($align)
     {
-    	if (!is_null($align)) {
-        	$this->_align = $align;
-    	}
+        if (!is_null($align)) {
+            $this->_align = $align;
+        }
     }
 
     /**

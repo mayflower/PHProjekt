@@ -81,10 +81,10 @@ class Phprojekt_Pdf_Table_Row
     {
         $tmpX      = $x;
         $maxHeight = 0;
-        foreach($this->_cols as $col) {
+        foreach ($this->_cols as $col) {
             $col->render($page, $x, $y);
             $height = $col->getHeight();
-            if($height > $maxHeight) {
+            if ($height > $maxHeight) {
                 $maxHeight = $height;
             }
             $x += $col->getWidth();
@@ -106,7 +106,7 @@ class Phprojekt_Pdf_Table_Row
     public function testRender($page, $x, $y)
     {
         $this->_height = 0;
-        foreach($this->_cols as $col) {
+        foreach ($this->_cols as $col) {
             $col->testRender($page, $x, $y);
             $height = $col->getHeight();
             if ($height > $this->_height) {
@@ -129,7 +129,7 @@ class Phprojekt_Pdf_Table_Row
      */
     public function renderBorder($page, $x, $y)
     {
-        foreach($this->_cols as $col) {
+        foreach ($this->_cols as $col) {
             $col->renderBorder($page, $x, $y, $this->_height);
             $x += $col->getWidth();
         }
