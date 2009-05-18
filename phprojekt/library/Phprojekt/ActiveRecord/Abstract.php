@@ -1171,6 +1171,29 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
+     * Callback function for _quoteTableAndFieldName
+     * 
+     * @param string
+     * 
+     * return string
+     */
+    private function _callbackQuoteIdentifier1($string)
+    {
+        return Phprojekt::getInstance()->getDb()->quoteIdentifier($string[0]);
+    }
+    
+    /**
+     * Callback function for _quoteTableAndFieldName
+     * 
+     * @param string
+     * 
+     * @return string
+     */
+    private function _callbackQuoteIdentifier2($string)
+    {
+        return " " . Phprojekt::getInstance()->getDb()->quoteIdentifier(trim($string[0])) . " ";
+    }
+    /**
      * Quote all the table.field and table.field_name
      * that are not already quoted
      *
@@ -1181,8 +1204,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     private function _quoteTableAndFieldName($string)
     {
         // Quote value.value
-        $string = preg_replace_callback("/([a-z0-9_]+\.[a-z0-9_]+)/", create_function(
-            '$string', 'return Phprojekt::getInstance()->getDb()->quoteIdentifier($string[0]);'), $string);
+        $string = preg_replace_callback("/([a-z0-9_]+\.[a-z0-9_]+)/", 
+            array($this, '_callbackQuoteIdentifier1'),
+            $string);
 
         // Put some common words in uppercase
         $string = preg_replace("/\sand\s/e", "strtoupper('\\1')", $string);
@@ -1198,8 +1222,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $string = preg_replace("/\sinner\s/e", "strtoupper('\\1')", $string);
 
         // Quote the single table or fields in lowercase
-        return preg_replace_callback("/(\s[a-z_]+\s)/", create_function(
-            '$string', 'return " " . Phprojekt::getInstance()->getDb()->quoteIdentifier(trim($string[0])) . " ";'), $string);
+        return preg_replace_callback("/(\s[a-z_]+\s)/",
+            array($this, '_callbackQuoteIdentifier2'), 
+            $string);
     }
 
     /**
