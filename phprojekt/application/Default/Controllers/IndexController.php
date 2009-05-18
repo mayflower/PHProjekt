@@ -197,8 +197,6 @@ class IndexController extends Zend_Controller_Action
         }
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
             Default_Helpers_Save::save($model, $this->getRequest()->getParams());
 
             $return = array('type'    => 'success',
