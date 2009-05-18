@@ -47,7 +47,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'My Helpdesk task');
         $this->request->setParam('assigned', '2');
         $this->request->setParam('contactId', '0');
-        $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('dueDate', '2009-05-30');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('priority', '5');
@@ -66,7 +65,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'My Helpdesk task 2');
         $this->request->setParam('assigned', '0');
         $this->request->setParam('contactId', '0');
-        $this->request->setParam('date', '2009-05-17');
         $this->request->setParam('dueDate', '2009-05-17');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('priority', '5');
@@ -94,7 +92,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
         $this->request->setParam('assigned', '2');
         $this->request->setParam('contactId', '0');
-        $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('dueDate', '2009-05-30');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('priority', '2');
@@ -121,7 +118,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
         $this->request->setParam('assigned', '2');
         $this->request->setParam('contactId', '0');
-        $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('dueDate', '2009-05-30');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('priority', '2');
@@ -143,7 +139,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
         $this->request->setParam('assigned', '1');
         $this->request->setParam('contactId', '0');
-        $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('dueDate', '2009-05-30');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('priority', '2');
@@ -172,7 +167,6 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
         $this->request->setParam('assigned', '2');
         $this->request->setParam('contactId', '0');
-        $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('dueDate', '2009-05-30');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('priority', '2');
@@ -252,7 +246,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $expectedContent = '"data":[{"id":"1","title":"My completely new title","rights":{"currentUser":{"module_id":"'
             . '10","item_id":"1","user_id":"1","access":true,"moduleId":"10","itemId":"1","userId":"1","none":false,"re'
             . 'ad":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"author":"1'
-            . '","assigned":"1","date":"2009-05-16","dueDate":"2009-05-30","projectId":"1","priority":"2","a'
+            . '","assigned":"1","date":"' . date("Y-m-d") . '","dueDate":"2009-05-30","projectId":"1","priority":"2","a'
             . 'ttachments":"","solvedBy":"1","solvedDate":"' . date("Y-m-d") . '","description":"This is the description MODIFIED'
             . '","status":"3","contactId":"0"}],"numRows":1}';
         $this->assertContains($expectedContent, $response);
@@ -264,7 +258,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $expectedContent = '"data":[{"id":"2","title":"My completely new title 2","rights":{"currentUser":{"module_id":'
             . '"10","item_id":"2","user_id":"1","access":true,"moduleId":"10","itemId":"2","userId":"1","none":false,"'
             . 'read":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"auth'
-            . 'or":"1","assigned":"0","date":"2009-05-16","dueDate":"2009-05-17","projectId":"1","priority":'
+            . 'or":"1","assigned":"0","date":"' . date("Y-m-d") . '","dueDate":"2009-05-17","projectId":"1","priority":'
             . '"5","attachments":"","solvedBy":"","solvedDate":"","description":"This is the description 2","status":"4'
             . '","contactId":"0"}],"numRows":1}';
         $this->assertContains($expectedContent, $response);
