@@ -42,19 +42,6 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test softDeleteEvent method
-     */
-    public function testSoftDeleteEvent()
-    {
-        $calendarModel = clone($this->_model);
-        $calendarModel->find(7);
-        $before = $calendarModel->deleted;
-        $calendarModel->softDeleteEvent();
-        $after = $calendarModel->deleted;
-        $this->assertTrue($before != $after);;
-    }
-
-    /**
      * Test getRootEvent method
      */
     public function testGetRootEventId()
@@ -121,11 +108,10 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals($before - 8, $after);
 
         $calendarModel = clone($this->_model);
-        $where         = "deleted IS NULL";
-        $before        = count($calendarModel->fetchAll($where));
-        $calendarModel->find(5);
+        $before        = count($calendarModel->fetchAll());
+        $calendarModel->find(7);
         $calendarModel->deleteEvents(false);
-        $after = count($calendarModel->fetchAll($where));
+        $after = count($calendarModel->fetchAll());
         $this->assertEquals($before - 1, $after);
     }
 

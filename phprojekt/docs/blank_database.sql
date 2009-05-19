@@ -420,7 +420,6 @@ CREATE TABLE `calendar` (
   `transparent` int(1)  default NULL,
   `rrule` text default NULL,
   `properties` text default NULL,
-  `deleted` int(1) default NULL,
   `participant_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uid` (`uid`)

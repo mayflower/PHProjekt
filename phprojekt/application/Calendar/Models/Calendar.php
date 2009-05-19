@@ -145,17 +145,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Use soft delete for keep the events changed or deleted
-     *
-     * @return void
-     */
-    public function softDeleteEvent()
-    {
-        $this->deleted = 1;
-        $this->save();
-    }
-
-    /**
      * Returns the id of the root event of the current record
      *
      * @param Phprojekt_Model_Interface $model The model to check
@@ -202,8 +191,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!empty($this->id)) {
             $rootEventId  = $this->getRootEventId($this);
-            $where        = " (parent_id = " . (int) $rootEventId . " OR id = " . (int) $rootEventId . ") "
-                . "AND deleted IS NULL";
+            $where        = " parent_id = " . (int) $rootEventId . " OR id = " . (int) $rootEventId . " ";
             $records      = $this->fetchAll($where);
             foreach ($records as $record) {
                 if (null === $record->rrule) {
@@ -236,8 +224,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         $rootEventId = $this->getRootEventId($model);
         $where       = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ') '
-            . ' AND participant_id = ' . (int) $model->participantId
-            . ' AND deleted IS NULL';
+            . ' AND participant_id = ' . (int) $model->participantId;
         $records = $model->fetchAll($where, 'start_date ASC');
 
         if ($this->_isOwner($model)) {
@@ -285,7 +272,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             if (null === $this->rrule) {
                 Default_Helpers_Delete::delete($this);
             } else {
-                $this->softDeleteEvent();
+                Default_Helpers_Delete::delete($this);
             }
         }
     }
@@ -303,7 +290,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function getUserSelectionRecords($usersId, $date, $count, $offset)
     {
-        $where = 'deleted IS NULL AND participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
+        $where = 'participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
             . ' AND end_date >= "' . $date . '"';
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
     }
@@ -395,7 +382,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $records             = $this->fetchAll($where);
         foreach ($records as $record) {
             $found = false;
-            if (null === $record->deleted && null !== $record->rrule) {
+            if (null !== $record->rrule) {
                 $currentParticipants[$record->participantId] = $record->participantId;
             }
             foreach ($eventDates as $oneDate) {
@@ -415,7 +402,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
             if (!$found) {
                 // Delete old entry of recurrence
-                $record->softDeleteEvent();
+                Default_Helpers_Delete::delete($record);
             }
         }
 
@@ -462,7 +449,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                         . ' AND participant_id = '. (int) $currentParticipantId;
                     $records = $removeModel->fetchAll($where);
                     foreach ($records as $record) {
-                        $record->softDeleteEvent();
+                        Default_Helpers_Delete::delete($record);
                     }
                 }
             }
@@ -550,7 +537,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     . ' AND start_date = "' . date("Y-m-d", $oneDate) . '"';
                 $records = $removeModel->fetchAll($where);
                 foreach ($records as $record) {
-                    $record->softDeleteEvent();
+                    Default_Helpers_Delete::delete($record);
                 }
             }
         }

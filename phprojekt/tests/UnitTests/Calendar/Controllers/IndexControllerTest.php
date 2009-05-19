@@ -127,8 +127,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveSinglePart4()
     {
         // Store current amount of rows
-        $where      = "deleted IS NULL";
-        $rowsBefore = count($this->_model->fetchAll($where));
+        $rowsBefore = count($this->_model->fetchAll());
 
         // EDIT: Last Event - take out participant
         $this->setRequestUrl('Calendar/index/jsonSave/');
@@ -145,7 +144,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check total amount of rows
-        $rowsAfter = count($this->_model->fetchAll($where));
+        $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore - 1, $rowsAfter);
     }
 
@@ -155,8 +154,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart1()
     {
         // Store current amount of rows
-        $where      = "deleted IS NULL";
-        $rowsBefore = count($this->_model->fetchAll($where));
+        $rowsBefore = count($this->_model->fetchAll());
 
         // INSERT: Multiple Events - Two days long - One participant
         $this->setRequestUrl('Calendar/index/jsonSave/');
@@ -174,7 +172,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check total amount of rows
-        $rowsAfter = count($this->_model->fetchAll($where));
+        $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore + 2, $rowsAfter);
     }
 
@@ -184,8 +182,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart2()
     {
         // Store current amount of rows
-        $where      = "deleted IS NULL";
-        $rowsBefore = count($this->_model->fetchAll($where));
+        $rowsBefore = count($this->_model->fetchAll());
 
         // INSERT: Multiple Events - Two participants
         $this->setRequestUrl('Calendar/index/jsonSave/');
@@ -202,7 +199,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check total amount of rows
-        $rowsAfter = count($this->_model->fetchAll($where));
+        $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore + 4, $rowsAfter);
     }
 
@@ -212,7 +209,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart3()
     {
         // Store current amount of rows
-        $where      = "(parent_id = 6 OR id = 6) AND deleted IS NULL";
+        $where      = "parent_id = 6 OR id = 6";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: last inserted events adding it another two recurrence days. Also send notification
@@ -243,7 +240,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart4()
     {
         // Store current amount of rows
-        $where      = "(parent_id = 6 OR id = 6) AND deleted IS NULL";
+        $where      = "parent_id = 6 OR id = 6";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: again the same events taking it out the last recurrence
@@ -337,7 +334,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart7()
     {
         // Store current amount of rows
-        $where      = "(parent_id = 14 OR id = 14) AND deleted IS NULL";
+        $where      = "parent_id = 14 OR id = 14";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: last event, take out participant
@@ -394,7 +391,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart9()
     {
         // Store current amount of rows
-        $where      = "(parent_id = 18 OR id = 18) AND deleted IS NULL";
+        $where      = "parent_id = 18 OR id = 18";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: Last events - Add one participant
@@ -560,7 +557,7 @@ class Calendar_IndexController_Test extends FrontInit
 
         // Multiple Event
         $this->setRequestUrl('Calendar/index/jsonDelete/');
-        $this->request->setParam('id', 3);
+        $this->request->setParam('id', 4);
         $this->request->setParam('multipleEvents', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
