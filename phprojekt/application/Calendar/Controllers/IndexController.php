@@ -69,9 +69,9 @@ class Calendar_IndexController extends IndexController
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
-        $record  = $this->getModelObject();
+        $model   = $this->getModelObject();
         $request = $this->getRequest()->getParams();
-        $id      = $record->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents);
+        $id      = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents);
 
         $return = array('type'    => 'success',
                         'message' => $message,

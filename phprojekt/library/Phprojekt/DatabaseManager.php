@@ -145,6 +145,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     protected function _getFields($order)
     {
         $result = array();
+
         if (!empty($this->_dbFields[$order])) {
             $result = $this->_dbFields[$order];
         } else {
@@ -152,14 +153,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $table = $this->_model->getModelName();
 
                 if (in_array($order, $this->_mapping)) {
-                    $where  = $this->getAdapter()->quoteInto('table_name = ? AND '.$order.' > 0', $table);
+                    $where  = $this->getAdapter()->quoteInto('table_name = ? AND ' . $order . ' > 0', $table);
                     $result = $this->fetchAll($where, $order);
+
                     $this->_dbFields[$order] = $result;
                 }
             } else {
                 $this->_dbFields[$order] = array();
             }
         }
+
         return $result;
     }
 
@@ -172,6 +175,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $fieldname = func_get_arg(0);
         $table     = $this->_model->getModelName();
+
         return parent::fetchRow($this->_db->quoteInto('table_name = ?', $table)
                                 . ' AND '
                                 . $this->_db->quoteInto('table_field = ?', $fieldname));
@@ -188,7 +192,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $converted = array();
         $fields    = $this->_getFields($this->_mapping[$ordering]);
-        /* the db manager handles field different than the encoder/output layer expect */
+
+        // The db manager handles field different than the encoder/output layer expect
         foreach ($fields as $field) {
             switch ($field->formType) {
                 case 'selectValues':
@@ -222,6 +227,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     break;
             }
         }
+
         return $converted;
     }
 
@@ -237,6 +243,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
+
         if (strpos($field->formRange, "|") > 0) {
             foreach (explode('|', $field->formRange) as $range) {
                 list($key, $value) = explode('#', $range);
@@ -295,11 +302,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $column = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($column);
         $fields = $this->_getFields($this->_mapping[$order]);
         $result = array();
+
         foreach ($fields as $field) {
             if (isset($field->$column)) {
                 $result[] = $field->$column;
             }
         }
+
         return $result;
     }
 
@@ -313,9 +322,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $result = array();
+
         foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
             $result[] = $field->formLabel;
         }
+
         return $result;
     }
 
@@ -344,9 +355,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function getType($fieldName)
     {
         $return = null;
+
         if (isset($this->_fieldTypes[$fieldName])) {
             $return = $this->_fieldTypes[$fieldName];
         }
+
         return $return;
     }
 
@@ -359,11 +372,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getRangeFromModel(Phprojekt_ModelInformation_Interface $field)
     {
-        $options = array();
+        $options                    = array();
         list($module, $key, $value) = explode('#', $field->formRange);
-        $module = trim($module);
-        $key    = trim($key);
-        $value  = trim($value);
+        $module                     = trim($module);
+        $key                        = trim($key);
+        $value                      = trim($value);
+
         switch ($module) {
             case 'Project':
                 $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
@@ -391,6 +405,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
         }
+
         return $options;
     }
 
@@ -731,9 +746,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $table  = $this->_model->getModelName();
         $where  = $this->getAdapter()->quoteInto(' table_name = ? ', $table);
         $result = $this->fetchAll($where);
+
         foreach ($result as $record) {
             $record->delete();
         }
+
         $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
         return $tableManager->dropTable($table);
     }

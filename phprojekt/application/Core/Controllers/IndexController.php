@@ -33,7 +33,6 @@
  */
 class Core_IndexController extends IndexController
 {
-
     /**
      * Add Check for see if the current user is an admin
      * If not, go to the login page
