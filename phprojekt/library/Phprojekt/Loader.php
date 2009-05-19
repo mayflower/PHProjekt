@@ -311,7 +311,11 @@ class Phprojekt_Loader extends Zend_Loader
         $match = null;
         $pattern = str_replace('_', '', self::CLASS_PATTERN);
         if (preg_match("@^(" . $pattern . ")_@", get_class($object), $match)) {
-            return $match[1];
+            if ($match[1] == 'Phprojekt') {
+                return 'Core';
+            } else {
+                return $match[1];
+            }
         }
 
         return false;

@@ -162,7 +162,7 @@ final class Default_Helpers_Save
         }
 
         // Checks
-        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         if (!$model->recordValidate()) {
             $error = array_pop($model->getError());
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
