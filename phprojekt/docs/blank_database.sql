@@ -397,7 +397,7 @@ CREATE TABLE `timeproj` (
 --
 CREATE TABLE `calendar` (
   `id` int(11) NOT NULL auto_increment,
-  `parent_id` int(11) default NULL,
+  `parent_id` int(11) default 0,
   `owner_id` int(11) default NULL,
   `project_id` int(11) NOT NULL,
   `title` varchar(255) default NULL,

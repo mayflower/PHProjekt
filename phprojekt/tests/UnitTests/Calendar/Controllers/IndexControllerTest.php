@@ -212,7 +212,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart3()
     {
         // Store current amount of rows
-        $where      = "parent_id = 6 AND deleted IS NULL";
+        $where      = "(parent_id = 6 OR id = 6) AND deleted IS NULL";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: last inserted events adding it another two recurrence days. Also send notification
@@ -243,7 +243,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart4()
     {
         // Store current amount of rows
-        $where      = "parent_id = 6 AND deleted IS NULL";
+        $where      = "(parent_id = 6 OR id = 6) AND deleted IS NULL";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: again the same events taking it out the last recurrence
@@ -337,7 +337,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart7()
     {
         // Store current amount of rows
-        $where      = "parent_id = 14 AND deleted IS NULL";
+        $where      = "(parent_id = 14 OR id = 14) AND deleted IS NULL";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: last event, take out participant
@@ -394,7 +394,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonSaveMultiplePart9()
     {
         // Store current amount of rows
-        $where      = "parent_id = 18 AND deleted IS NULL";
+        $where      = "(parent_id = 18 OR id = 18) AND deleted IS NULL";
         $rowsBefore = count($this->_model->fetchAll($where));
 
         // EDIT: Last events - Add one participant

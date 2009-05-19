@@ -127,11 +127,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->content = ob_get_contents();
         ob_end_clean();
 
-        $params = $this->request->getParams();
-        foreach ($params as $key => $value) {
-            $value = null;
-            $this->request->setParam($key, $value);
-        }
+        $this->request->setParams(array());
 
         return $this->content;
     }
