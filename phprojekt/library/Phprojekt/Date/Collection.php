@@ -245,14 +245,11 @@ class Phprojekt_Date_Collection
 
         foreach ($bys as $by => $setter) {
             if (isset($rules[$by])) {
-                $res = array();
                 foreach ($rules[$by] as $value) {
                     foreach ($dates as $date) {
-                        $date->$setter($value);
-                        $res[] = $this->_getDate($date);
+                        $dates[] = $this->_applyMethod($setter, $value, $date);
                     }
                 }
-                $dates[] = $res;
             }
         }
 
@@ -305,16 +302,16 @@ class Phprojekt_Date_Collection
     /**
      * Apply the rule method to one date
      *
-     * @param string $method   The method name
-     * @param int    $interval The interval
-     * @param int    $date     Timestamp of the date
+     * @param string $method The method name
+     * @param mix    $value  Parameter for the method
+     * @param int    $date   Timestamp of the date
      *
      * @return int The new timestamp
      */
-    private function _applyMethod($method, $interval, $date)
+    private function _applyMethod($method, $value, $date)
     {
         $this->_date->set($date);
-        $this->_date->$method($interval);
+        $this->_date->$method($value);
 
         return $this->_date->get();
     }
