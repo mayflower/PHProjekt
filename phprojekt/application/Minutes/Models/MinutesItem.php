@@ -221,7 +221,6 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      */
     public function save()
     {
-        Phprojekt::getInstance()->getLog()->debug('SORT ORDER = ' . print_r($this->sortOrder, true));
         $db = $this->getAdapter();
         
         if (trim($this->sortOrder) == '' || is_null($this->sortOrder) || !$this->sortOrder) {
@@ -232,19 +231,16 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
             $result  = $db->fetchCol($sql, $this->_minutesId);
             $maxSort = $result[0];
         
-            //Phprojekt::getInstance()->getLog()->debug('MAX_SORT: ' . print_r($maxSort, true));
             if (!$maxSort || $maxSort < 0) {
                 $maxSort = 0;
             }
             $this->sortOrder = $maxSort + 1;
-            Phprojekt::getInstance()->getLog()->debug('NEW INITIAL SORT ORDER: ' . $maxSort);
         } elseif (is_numeric($this->sortOrder) && $this->sortOrder > 0 && 
                   isset($this->_history['sortOrder']) && $this->_history['sortOrder'] != $this->sortOrder) {
             // A sort order was given and differs from the initial value. We need to increment
             // all sort order values equal or above the new value by one, and then update this
             // record with the new value. That should ensure order value consistency.
             
-            //Phprojekt::getInstance()->getLog()->debug('SORT EVERYTHING ABOVE: ' . print_r($this->sortOrder, true));
             $sql     = 'UPDATE ' . $this->getTableName() . ' SET sort_order = sort_order+1 ' . 
                        'WHERE minutes_id = ? AND sort_order >= ?';
             $db->query($sql, array($this->_minutesId,$this->sortOrder));

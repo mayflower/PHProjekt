@@ -107,7 +107,6 @@ class Minutes_ItemController extends IndexController
             }
             
             if ($model instanceof Phprojekt_Model_Interface) {
-                //$tmp = Default_Helpers_Save::save($model, $this->getRequest()->getParams());
                 $params = $this->getRequest()->getParams();
                 
                 $params['projectId'] = $minutes->projectId;
@@ -116,7 +115,6 @@ class Minutes_ItemController extends IndexController
                 if (isset($params['parentOrder']) && 
                     is_numeric($params['parentOrder']) && 
                     $params['parentOrder'] > 0) {
-                    Phprojekt::getInstance()->getLog()->debug('parentOrder detected: '.print_r($params['parentOrder'], true));
                     // this item is supposed to be sorted after the given order
                     $params['sortOrder'] = $params['parentOrder'] + 1;
                     unset($params['parentOrder']);
