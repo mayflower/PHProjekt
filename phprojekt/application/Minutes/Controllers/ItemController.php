@@ -92,8 +92,6 @@ class Minutes_ItemController extends IndexController
         $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $minutes->find($minutesId);
         
-        Phprojekt::getInstance()->getLog()->debug('Minutes is: '.print_r($minutes->_data, true));
-        
         if (empty($minutes->id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         } else {
@@ -114,6 +112,17 @@ class Minutes_ItemController extends IndexController
                 
                 $params['projectId'] = $minutes->projectId;
                 $params['ownerId']   = $minutes->ownerId;
+                
+                if (isset($params['parentOrder']) && 
+                    is_numeric($params['parentOrder']) && 
+                    $params['parentOrder'] > 0) {
+                    Phprojekt::getInstance()->getLog()->debug('parentOrder detected: '.print_r($params['parentOrder'], true));
+                    // this item is supposed to be sorted after the given order
+                    $params['sortOrder'] = $params['parentOrder'] + 1;
+                    unset($params['parentOrder']);
+                }
+                
+                Phprojekt::getInstance()->getLog()->debug('Saving Item model with params: '.print_r($params, true));
                 
                 Default_Helpers_Save::save($model, $params);
                 
@@ -198,7 +207,7 @@ class Minutes_ItemController extends IndexController
     }
     
     /**
-     * Provide list of items for sort orderung
+     * Provide list of items for sort ordering
      */
     public function jsonListItemSortOrderAction()
     {
