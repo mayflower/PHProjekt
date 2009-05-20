@@ -106,6 +106,7 @@ class Phprojekt_Search_Default
      */
     public function indexObjectItem($object)
     {
+        $words    = array();
         $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
 
@@ -117,13 +118,23 @@ class Phprojekt_Search_Default
         $this->_display->saveDisplay($object, $moduleId, $itemId);
 
         foreach ($data as $key => $value) {
-            $type = $object->getInformation()->find($key);
-            if (isset($type->formType) && $type->formType == 'file') {
-                $value = $this->_files->getWordsFromFile($value);
+            $type = $object->getInformation()->getType($key);
+            if (null !== $type) {
+                if ($type == 'upload') {
+                    $field = array('type' => $type,
+                                   'key'  => $key);
+                    $files = Phprojekt_Converter_Text::convert($object, $field);
+                    $value = $this->_files->getWordsFromFile($files);
+                }
+
+                if ($type != 'hidden') {
+                    $words[] = $value;
+                }
             }
-            $wordsId = $this->_words->indexWords($value);
-            $this->_wordModule->indexWords($moduleId, $itemId, $wordsId);
         }
+
+        $wordsId = $this->_words->indexWords(implode(" ", $words));
+        $this->_wordModule->indexWords($moduleId, $itemId, $wordsId);
     }
 
     /**
@@ -162,13 +173,12 @@ class Phprojekt_Search_Default
      */
     public function search($words, $count = null, $offset = null)
     {
-        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $result = $this->_words->searchWords($words, $count, $offset);
-        // Convert result to array and add the display data
-        // only fetch records with read access
+        $rights          = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $result          = $this->_words->searchWords($words, $count, $offset);
         $foundResults    = array();
         $userId          = Phprojekt_Auth::getUserId();
         $tmpFoundResults = array();
+
         foreach ($result as $wordData) {
             $tmpResult = $this->_wordModule->searchModuleByWordId($wordData['id'], $count, $offset);
             // Prevent the same moduleId-itemId twise
@@ -210,11 +220,14 @@ class Phprojekt_Search_Default
             $limitedFoundResults = $tmpFoundResults;
         }
 
+        // Convert result to array and add the display data
+        // only fetch records with read access
         foreach ($limitedFoundResults as $moduleData) {
             if ($rights->getItemRight($moduleData['module_id'], $moduleData['item_id'], $userId) > 0) {
                 $foundResults[] = $this->_display->getDisplay($moduleData['module_id'], $moduleData['item_id']);
             }
         }
+
         return $foundResults;
     }
 
@@ -229,20 +242,21 @@ class Phprojekt_Search_Default
      */
     private function _getObjectDataToIndex($object)
     {
-        $allow = array();
-        $allow[] = 'varchar';
-        $allow[] = 'text';
-        $allow[] = 'tinytext';
-        $allow[] = 'longtext';
-        $data  = array();
-
+        $allow    = array();
+        $allow[]  = 'varchar';
+        $allow[]  = 'text';
+        $allow[]  = 'tinytext';
+        $allow[]  = 'longtext';
+        $data     = array();
         $metaData = $object->_metadata;
+
         foreach ($metaData as $field => $fieldInfo) {
             if (in_array($fieldInfo['DATA_TYPE'], $allow)) {
                 $field        = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
                 $data[$field] = $object->$field;
             }
         }
+
         return $data;
     }
 }

@@ -72,6 +72,6 @@ class Phprojekt_Search_Files
      * @return string
      */
     private function _getFileType($filename) {
-        return(strtoupper(array_pop(explode(".", $filename))));
+        return (strtoupper(array_pop(explode(".", $filename))));
     }
 }

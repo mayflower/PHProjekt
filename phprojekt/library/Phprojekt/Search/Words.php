@@ -70,11 +70,8 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function indexWords($data)
     {
-        $ids = array();
-        $array = $this->_getWordsFromText($data);
-        foreach ($array as $word) {
-            $ids[] = $this->_save($word);
-        }
+        $words = $this->_getWordsFromText($data);
+        $ids   = $this->_save($words);
 
         return $ids;
     }
@@ -92,12 +89,14 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function searchWords($words, $count = null, $offset = null)
     {
-        $words     = $this->_getWordsFromText($words);
-        $where     = array();
+        $words = $this->_getWordsFromText($words);
+        $where = array();
+
         foreach ($words as $word) {
             $where[] = '(word LIKE '. $this->getAdapter()->quote('%'.$word.'%').')';
         }
         $where = implode('OR', $where);
+
         return $this->fetchAll($where, 'count DESC', $count, $offset)->toArray();
     }
 
@@ -106,28 +105,42 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      *
      * This function use the Zend_DB insert/update
      *
-     * @param string $word The word string
+     * @param array $words Array with the words string
      *
-     * @return integer
+     * @return array
      */
-    private function _save($word)
+    private function _save($words)
     {
-        $data = array();
-        $where = array('word = '. $this->getAdapter()->quote($word));
-        $result = $this->fetchAll($where);
-        $clone = clone($this);
-        if ($result->count() > 0) {
-            $result = $result->current();
-            $data['count'] = $result->count + 1;
-            $where = array('id = '. $this->getAdapter()->quote($result->id));
-            $clone->update($data, $where);
-            $id = $result->id;
-        } else {
-            $data['word']  = $word;
-            $data['count'] = 1;
-            $id = $clone->insert($data);
+        $ids         = array();
+        $foundWords  = array();
+        $quotedWords = array();
+
+        foreach ($words as $word) {
+            $quotedWords[] = $this->getAdapter()->quote($word);
         }
-        return $id;
+
+        if (!empty($quotedWords)) {
+            $where  = array('word IN ('. implode(', ', $quotedWords) .')');
+            $result = $this->fetchAll($where);
+            foreach ($result as $row) {
+                $data  = array('count' => $row->count + 1);
+                $where = $this->getAdapter()->quoteInto('id = ?', (int) $row->id);
+                $this->update($data, $where);
+                $foundWords[] = $row->word;
+                $ids[]        = $row->id;
+            }
+        }
+
+        foreach ($words as $word) {
+            if (!in_array($word, $foundWords)) {
+                $data          = array();
+                $data['word']  = $word;
+                $data['count'] = 1;
+                $ids[]         = $this->insert($data);
+            }
+        }
+
+        return $ids;
     }
 
    /**
@@ -141,20 +154,21 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function decreaseWords($words)
     {
+        $ids = array();
         foreach ($words as $id) {
-            $clone = clone($this);
-            $data = array();
-            $where = array('id = '. $this->getAdapter()->quote($id));
+            $ids[] = (int) $id;
+        }
+
+        if (!empty($ids)) {
+            $where  = array('id IN ('. implode(', ', $ids) .')');
             $result = $this->fetchAll($where);
-            if ($result->count() > 0) {
-                $result = $result->current();
-                if ($result->count == 1) {
-                    $where = array('id = '. $this->getAdapter()->quote($result->id));
-                    $clone->delete($where);
+            foreach ($result as $row) {
+                $where = array('id = '. (int) $row->id);
+                if ($row->count == 1) {
+                    $this->delete($where);
                 } else {
-                    $data['count'] = $result->count - 1;
-                    $where = array('id = '. $this->getAdapter()->quote($result->id));
-                    $clone->update($data, $where);
+                    $data = array('count' => $row->count - 1);
+                    $this->update($data, $where);
                 }
             }
         }
@@ -179,15 +193,19 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      *
      * @return array
      */
-    private function _stringToArray($string) {
+    private function _stringToArray($string)
+    {
         // Clean up the string
         $string = $this->_cleanupstring($string);
         // Split the string into an array
         $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
-        // strip off short words
+        // Strip off short words
         $tempArray = array_filter($tempArray, array($this, "_stripShortsWords"));
-        // strip off stop words
+        // Strip off stop words
         $tempArray = array_filter($tempArray, array($this, "_stripStops"));
+        // Remove duplicate entries
+        $tempArray = array_unique($tempArray);
+
         return $tempArray;
     }
 
@@ -225,6 +243,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
                           chr(223), " ", " ", " ", " ");
         $string = preg_replace($search, $replace, strip_tags($string));
         $string = utf8_encode($string);
+
         return $string;
     }
 
@@ -237,7 +256,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     private function _stripShortsWords($string)
     {
-        return(strlen($string) > 2);
+        return (strlen($string) > 2);
     }
 
     /**
@@ -251,16 +270,19 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     private function _stripStops($string)
     {
         $searchStopWords = array();
+
         $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
                 . 'Phprojekt' . DIRECTORY_SEPARATOR
                 . 'stopwords.txt';
+
         if (file_exists($file)) {
-            $_temp = file($file);
+            $tmp             = file($file);
             $searchStopWords = array();
-            if (!empty($_temp[0])) {
-                $searchStopWords = explode(" ", $_temp[0]);
+            if (!empty($tmp[0])) {
+                $searchStopWords = explode(" ", $tmp[0]);
             }
         }
-        return(!in_array(strtoupper($string), $searchStopWords));
+
+        return (!in_array(strtoupper($string), $searchStopWords));
     }
 }

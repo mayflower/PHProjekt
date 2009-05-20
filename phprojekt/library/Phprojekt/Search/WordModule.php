@@ -72,9 +72,7 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     public function indexWords($moduleId, $itemId, $wordsId)
     {
         foreach ($wordsId as $wordId) {
-            if (!$this->_exists($moduleId, $itemId, $wordId)) {
-                $this->_save($moduleId, $itemId, $wordId);
-            }
+            $this->_save($moduleId, $itemId, $wordId);
         }
     }
 
@@ -90,14 +88,15 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     {
         $where   = array();
         $ids     = array();
-        $where[] = 'module_id = '. $this->getAdapter()->quote($moduleId);
-        $where[] = 'item_id = '. $this->getAdapter()->quote($itemId);
+        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId);
+        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId);
+
         $result = $this->fetchAll($where);
         foreach ($result as $data) {
             $ids[] = $data->word_id;
         }
-        $clone = clone($this);
-        $clone->delete($where);
+        $this->delete($where);
+
         return $ids;
     }
 
@@ -113,22 +112,9 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     public function searchModuleByWordId($wordId, $count = null, $offset = null)
     {
         $where   = array();
-        $where[] = 'word_id = '. $this->getAdapter()->quote($wordId);
-        return $this->fetchAll($where, 'item_id DESC', $count, $offset)->toArray();
-    }
+        $where[] = $this->getAdapter()->quoteInto('word_id = ?', (int) $wordId);
 
-    /**
-     * Check if the moduleId-itemId-wordId pair was already inserted
-     *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id to store
-     * @param integer $wordId   The wordId
-     *
-     * @return boolean
-     */
-    private function _exists($moduleId, $itemId, $wordId)
-    {
-        return ($this->find($moduleId, $itemId, $wordId)->count() > 0);
+        return $this->fetchAll($where, 'item_id DESC', $count, $offset)->toArray();
     }
 
     /**
@@ -144,9 +130,9 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
      */
     private function _save($moduleId, $itemId, $wordId)
     {
-        $data['module_id'] = $moduleId;
-        $data['item_id']   = $itemId;
-        $data['word_id']   = $wordId;
+        $data['module_id'] = (int) $moduleId;
+        $data['item_id']   = (int) $itemId;
+        $data['word_id']   = (int) $wordId;
         $this->insert($data);
     }
 }
