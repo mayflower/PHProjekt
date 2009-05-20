@@ -2,7 +2,9 @@
     background: #E6EFC2;
     color: #529214;
     border-color: #C6D880;
-    width: 500px;
+    width: 35em;
+    text-align: left;
+    padding-left: 1em;
 }
 
 .dijitToasterMessage,
