@@ -27,6 +27,10 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _currentDate:    null,
     _currentTime:    null,
 
+    _FRMWIDG_BASICDATA:  0,
+    _FRMWIDG_PARTICIP:   1,
+    _FRMWIDG_RECURRENCE: 2,
+
     initData:function() {
         // Get all the active users
         this.userStore = new phpr.Store.User();
@@ -374,7 +378,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // description:
         //    This function calls jsonDeleteAction
 
-        if (this.id > 0 && null === this._multipleEvents) {
+        var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].attr('value')['rruleFreq'];
+        if (this.id > 0 && rruleFreq && null === this._multipleEvents) {
             this.showEventSelector('Delete', "deleteForm");
             return false;
         }
