@@ -71,19 +71,22 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function saveTags($tagId)
     {
-        $where = array();
-        $where[] = 'user_id = '. $this->getAdapter()->quote($this->_user);
-        $where[] = 'tag_id  = '. $this->getAdapter()->quote($tagId);
+        $id      = 0;
+        $where   = array();
+        $where[] = $this->getAdapter()->quoteInto('user_id = ?', (int) $this->_user, 'INTEGER');
+        $where[] = $this->getAdapter()->quoteInto('tag_id  = ?', (int) $tagId, 'INTEGER');
 
         $record = $this->fetchAll($where);
         if ($record->count() == 0) {
             $data['user_id'] = $this->_user;
             $data['tag_id']  = $tagId;
-            return $this->insert($data);
+            $id = $this->insert($data);
         } else {
             $record = array_shift(current((array) $record));
-            return $record['id'];
+            $id = $record['id'];
         }
+
+        return $id;
     }
 
     /**
@@ -103,9 +106,10 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
         if ($userId == 0) {
             $userId = $this->_user;
         }
-        $where = 'user_id = '. $this->getAdapter()->quote($userId);
+
+        $where = $this->getAdapter()->quoteInto('user_id = ?', (int) $userId, 'INTEGER');
         if ($tagId > 0) {
-            $where .= ' AND tag_id = '. $this->getAdapter()->quote($tagId);
+            $where .= $this->getAdapter()->quoteInto(' AND tag_id = ?', (int) $tagId, 'INTEGER');
         }
         $select = $this->select();
         $select->from($this->_name, array('id', 'tag_id'))
@@ -131,6 +135,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     public function isFromUser($id)
     {
         $record = array_shift(current($this->find($id)));
+
         return ($record['user_id'] == $this->_user);
     }
 
@@ -144,6 +149,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     public function getTagId($id)
     {
         $record = array_shift(current($this->find($id)));
+
         return $record['tag_id'];
     }
 
@@ -156,9 +162,8 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function deleteUserTags($userId)
     {
-        $clone   = clone($this);
         $where   = array();
-        $where[] = 'user_id = '. $clone->getAdapter()->quote($userId);
-        $clone->delete($where);
+        $where[] = $this->getAdapter()->quoteInto('user_id = ?', (int) $userId, 'INTEGER');
+        $this->delete($where);
     }
 }

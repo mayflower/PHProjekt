@@ -199,10 +199,12 @@ class Phprojekt_Tags_Default
 
             if ($tagId > 0) {
                 // Get The user-tags relations
-                $tagUserId = $this->_tagsUsers->getUserTagIds(0, $tagId);
+                $tagUserIds = $this->_tagsUsers->getUserTagIds(0, $tagId);
 
                 // Get The modules data
-                $foundResults = $this->_tagsModules->getModulesByRelationId($tagUserId);
+                foreach ($tagUserIds as $tagUserId => $tagId) {
+                    $foundResults = array_merge($foundResults, $this->_tagsModules->getModulesByRelationId($tagUserId));
+                }
 
                 // Return the $limit tags
                 if ($limit > 0) {
@@ -271,7 +273,8 @@ class Phprojekt_Tags_Default
      * @param integer $moduleId The module Id to delete
      * @param integer $itemId   The item Id
      */
-    public function deleteTagsByItem($moduleId, $itemId) {
+    public function deleteTagsByItem($moduleId, $itemId)
+    {
         $this->_tagsModules->deleteRelationsByItem($moduleId, $itemId);
     }
 
@@ -280,7 +283,8 @@ class Phprojekt_Tags_Default
      *
      * @param integer $itemId     The item Id
      */
-    public function deleteTagsByUser($userId) {
+    public function deleteTagsByUser($userId)
+    {
         // Get all the user-tags relations
         $tagUserRelations = $this->_tagsUsers->getUserTagIds($userId);
 
@@ -365,13 +369,15 @@ class Phprojekt_Tags_Default
      *
      * @return array
      */
-    private function _stringToArray($string) {
+    private function _stringToArray($string)
+    {
         // Clean up the string
         $string = $this->_cleanupstring($string);
         // Split the string into an array
         $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
-        // strip off short words
+        // Strip off short words
         $tempArray = array_filter($tempArray, array($this, "_stripShortsWords"));
+
         return $tempArray;
     }
 
@@ -409,6 +415,7 @@ class Phprojekt_Tags_Default
                           chr(223), " ", " ", " ", " ");
         $string = preg_replace($search, $replace, strip_tags($string));
         $string = utf8_encode($string);
+
         return $string;
     }
 
@@ -421,7 +428,7 @@ class Phprojekt_Tags_Default
      */
     private function _stripShortsWords($var)
     {
-        return(strlen($var) > 2);
+        return (strlen($var) > 2);
     }
 
     /**

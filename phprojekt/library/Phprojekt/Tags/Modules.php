@@ -86,18 +86,17 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      */
     public function getModulesByRelationId($tagUserId)
     {
-        $where        = array();
         $foundResults = array();
         $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
 
-        $where[] = 'tag_user_id  = '. $this->getAdapter()->quote($tagUserId);
-
+        $where   = $this->getAdapter()->quoteInto('tag_user_id = ?', (int) $tagUserId, 'INTEGER');
         $modules = $this->fetchAll($where, 'item_id DESC');
+
         foreach ($modules as $moduleData) {
             if ($rights->getItemRight($moduleData->module_id, $moduleData->item_id, $userId) > 0) {
-                $foundResults[] = array('itemId'     => $moduleData->item_id,
-                                        'moduleId'   => $moduleData->module_id);
+                $foundResults[] = array('itemId'   => $moduleData->item_id,
+                                        'moduleId' => $moduleData->module_id);
             }
         }
 
@@ -117,10 +116,10 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $where        = array();
         $foundResults = array();
 
-        $where[] = 'module_id  = '. $this->getAdapter()->quote($moduleId);
-        $where[] = 'item_id  = '. $this->getAdapter()->quote($itemId);
-
+        $where[] = $this->getAdapter()->quoteInto('module_id  = ?', (int) $moduleId, 'INTEGER');
+        $where[] = $this->getAdapter()->quoteInto('item_id  = ?', (int) $itemId, 'INTEGER');
         $modules = $this->fetchAll($where);
+
         if (!empty($modules)) {
             foreach ($modules as $moduleData) {
                 $foundResults[] = $moduleData->tag_user_id;
@@ -141,13 +140,17 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      */
     public function deleteRelations($moduleId, $itemId, $tagUserIds)
     {
-        $clone = clone($this);
-        foreach ($tagUserIds as $tagUserId) {
-            $where = array();
-            $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
-            $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
-            $where[] = 'tag_user_id = '. $clone->getAdapter()->quote($tagUserId);
-            $clone->delete($where);
+        $ids = array();
+        foreach ($tagUserIds as $id) {
+            $ids[] = (int) $id;
+        }
+
+        if (!empty($ids)) {
+            $where   = array();
+            $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+            $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+            $where[] = 'tag_user_id IN ('. implode(', ', $ids) .')';
+            $this->delete($where);
         }
     }
 
@@ -161,11 +164,10 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      */
     public function deleteRelationsByItem($moduleId, $itemId)
     {
-        $clone = clone($this);
-        $where = array();
-        $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
-        $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
-        $clone->delete($where);
+        $where   = array();
+        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+        $this->delete($where);
     }
 
     /**
@@ -177,11 +179,15 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      */
     public function deleteRelationsByUser($tagUserIds)
     {
-        $clone = clone($this);
-        foreach ($tagUserIds as $tagUserId) {
-            $where = array();
-            $where[] = 'tag_user_id = '. $clone->getAdapter()->quote($tagUserId);
-            $clone->delete($where);
+        $ids = array();
+        foreach ($tagUserIds as $id) {
+            $ids[] = (int) $id;
+        }
+
+        if (!empty($ids)) {
+            $where   = array();
+            $where[] = 'tag_user_id IN ('. implode(', ', $ids) .')';
+            $this->delete($where);
         }
     }
 }

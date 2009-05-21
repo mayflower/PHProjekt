@@ -65,19 +65,22 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      */
     public function saveTags($crc32, $word)
     {
-        $where = array();
-        $where[] = 'crc32 = '. $this->getAdapter()->quote($crc32);
-        $where[] = 'word  = '. $this->getAdapter()->quote($word);
+        $id      = 0;
+        $where   = array();
+        $where[] = $this->getAdapter()->quoteInto('crc32 = ?', $crc32);
+        $where[] = $this->getAdapter()->quoteInto('word  = ?', $word);
 
         $record = $this->fetchAll($where);
         if ($record->count() == 0) {
             $data['crc32'] = $crc32;
             $data['word']  = $word;
-            return $this->insert($data);
+            $id = $this->insert($data);
         } else {
             $record = array_shift(current((array) $record));
-            return $record['id'];
+            $id     = $record['id'];
         }
+
+        return $id;
     }
 
     /**
@@ -89,7 +92,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      */
     public function getTagId($word)
     {
-        $where = array();
+        $where   = array();
         $where[] = 'crc32 = '. $this->getAdapter()->quote(crc32($word));
 
         $record = $this->fetchAll($where);
@@ -97,6 +100,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
             $record = array_shift(current((array) $record));
             return $record['id'];
         }
+
         return 0;
     }
 
@@ -110,6 +114,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
     public function getTagName($tagId)
     {
         $record = array_shift(current($this->find($tagId)));
+
         return $record['word'];
     }
 }
