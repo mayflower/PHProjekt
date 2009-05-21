@@ -114,7 +114,13 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 
         $result          = array($currentPage);
         $additionalPages = $table->render();
-        return !empty($additionalPages) ? $result + $additionalPages : $result;
+        if (!empty($additionalPages)) {
+            foreach ($additionalPages as $page) {
+                $result[] = $page;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -161,49 +167,6 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Function inserts info box into page
-     *
-     * @param array $infoboxInfo specifies info box for the PDF
-     *            E.g. array( 'type' =>'infoBox',
-     *                         'startX'=> 35,
-     *                         'startY'=> 100,
-     *                         'lines' => array('line1', 'line2'),
-     *                         'width' => 100,
-     *                         'height' => 100,
-     *                         'lineWidth' => (optional) 0.5,
-     *                         'fontSize' => 10,
-     *                         'header' => 'Header'),
-     *
-     * @return Phprojekt_Pdf_Page
-     */
-    public function addInfoBox($infoboxInfo, $currentPage)
-    {
-        if (!isset($infoboxInfo['lines'])) {
-            throw new Exception("Missing data");
-        }
-
-        // Change font size
-        if (isset($infoboxInfo['fontSize'])) {
-            $tmp = $infoboxInfo['fontSize'] - $currentPage->getFontSize();
-
-            $currentPage->freeLineY += $tmp * self::RATE_FONT_IN_PIX;
-            $currentPage->setFont($this->getFont(), $infoboxInfo['fontSize']);
-        }
-
-        $startX = isset($infoboxInfo['startX']) ? $infoboxInfo['startX'] : $this->freeLineX;
-        $startY = isset($infoboxInfo['startY']) ? $infoboxInfo['startY'] : $this->freeLineY;
-
-        if (isset($infoboxInfo['lineWidth'])) {
-            $currentPage->setLineWidth($infoboxInfo['lineWidth']);
-        }
-
-        $currentPage->drawInfoBox($infoboxInfo['header'], $infoboxInfo['lines'], $startX, $startY,
-            $infoboxInfo['width'], $infoboxInfo['height']);
-
-        return $currentPage;
-    }
-
-    /**
      * Function apply prototype of page (list of pdf tables and text lines)
      *
      * @param array $prototype specifies form of elements in the PDF page
@@ -235,7 +198,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *
      * @return array of Phprojekt_Pdf_Page
      */
-    public function applyPrototype($prototype)
+    public function parseTemplate($prototype)
     {
         $pages       = array($this);
         $currentPage = $this;
@@ -256,9 +219,6 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
                     break;
                 case 'freetext':
                     $this->addFreetext($element, $currentPage);
-                    break;
-                case 'infobox':
-                    $this->addInfoBox($element, $currentPage);
                     break;
             }
         }
@@ -348,7 +308,6 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         $xInc      = 0;
         $lines     = array();
         $line      = array();
-        $i         = 0;
         $maxLength = count($words);
         while ($i < $maxLength) {
             // 10 - code of new line
@@ -367,6 +326,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
                 // Add other, each from new line
                 foreach ($wordsInside as $word) {
                     $currentWordLenth = $wordsLength[$i] * strlen($word) / strlen($words[$i]);
+
                     $lines[] = array($line, $x, $yInc);
                     $xInc    = $currentWordLenth + $spaceSize;
                     $yInc   -= $fontSize;
@@ -386,11 +346,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             }
             $i++;
         }
+
         unset($wordsLength);
         $lines[] = array($line, $x, $yInc);
 
         return array('width'  => $maxWidth,
-                     'height' =>($fontSize * count($lines)),
+                     'height' => ($fontSize * count($lines)),
                      'lines'  => $lines);
     }
 

@@ -136,17 +136,17 @@ class Phprojekt_Pdf_Table_Column
      * Insert column in the page
      *
      * @param Phprojekt_Pdf_Page $page
-     * @param int                $x   Start position x
-     * @param int                $y   Start position y
+     * @param int                $x    Start position x
+     * @param int                $y    Start position y
      *
      * @return void
      */
     public function render($page, $x, $y)
     {
         $fontSize = $page->getFontSize();
-        $size     = $page->drawVariableText($this->_text, $x+$this->_padding, $page->getHeight() - $y + $fontSize,
+        $size     = $page->drawVariableText($this->_text, $x + $this->_padding, $page->getHeight() - $y + $fontSize,
             $this->_width - $this->_padding, $this->_align);
-        $this->_height = $size['height']+$this->_padding;
+        $this->_height = $size['height'] + $this->_padding;
         $this->_width  = $this->_width + $this->_padding;
     }
 
@@ -163,7 +163,7 @@ class Phprojekt_Pdf_Table_Column
     public function testRender($page, $x, $y)
     {
         $fontSize = $page->getFontSize();
-        $size     = $page->getVariableText($this->_text, $x+$this->_padding, $page->getHeight() - $y + $fontSize,
+        $size     = $page->getVariableText($this->_text, $x + $this->_padding, $page->getHeight() - $y + $fontSize,
             $this->_width - $this->_padding);
         $this->_height = $size['height'] + $this->_padding;
         $this->_width  = $this->_width + $this->_padding;

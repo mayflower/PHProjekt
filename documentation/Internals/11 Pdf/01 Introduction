@@ -1,24 +1,27 @@
-Php library for creating PDF documents with tables. Library use Zend framework functionality for PDF documents,
-providing with additional not implemeted function in Zend for drawing tables.
+Project's aims are to extend Zend Framework with new PDF functionality.
+PHProjekt_Pdf is a library for creating PDF documents with tables.
+Library uses Zend framework functionality for PDF documents and
+provides with additional not implemeted functions for drawing tables together with free text.
+User can choose the position of the element and add some additional properties to the text and table decoration.
 
 Autor: Alesia Khizhko <alesia.khizhko@mayflower.de>
 
-Document contain more detailed information about Phprojekt_Pdf_Page usage, particulary applyPrototype() function.
+Document contain more detailed information about Phprojekt_Pdf_Page usage, particulary parseTemplate() function.
 
 Content.
-1. Param of the function Phprojekt_Pdf_Page::applyPrototype() .
+1. Param of the function Phprojekt_Pdf_Page::parseTemplate() .
 1.1. Specification of table element.
 1.2. Specification of Free text  element.
-1.3. Specification of Info box  element.
+
 2. Example of usage.
+3. Known bugs.
 
 
+1. Param of the function Phprojekt_Pdf_Page::parseTemplate() .
 
-1. Param of the function Phprojekt_Pdf_Page::applyPrototype() .
+Template has a form of array, where some fields have specific form.
 
-Prototype has a form of array, where some fields have specific form.
-
-Obligation fields are:
+Fields are:
 1.font –(optional)  type of string, contain the name of the font
 2.fontSize – (optional) type of int, contain font size
 3.Elements to parse.
@@ -32,26 +35,27 @@ array(
         …
 );
 
-Each element for parsing is an array. There are 3 type of elements.
+Each element for parsing is an array. There are 2 types of elements.
 
-1.1. Specification of table in $prototype.
+1.1. Specification of table in $template.
 
 Array of element should contain following keys:
-type - with value 'table', which defines a type of the element,
 
-startX and startY  - (optional) values of type int, define coordinates of left top corner of the table
-
+type - with value 'table', which defines a type of the element
 rows – value is an array, where every row contain array of columns
 
+Optional parameters are:
+startX and startY  - (optional) values of type int, define coordinates of left top corner of the table.
+                     By default element would be added to the next free line in the document.
 fontSize – (optional) change font size for the free text
 lineWidth – (optional) change width of lines for the free text
 
 For example:
 
-array( 'type' =>'table',
-       'startX'=> 35,
-       'startY'=> 160,
-       'rows'  => array(
+array( 'type'   =>'table',
+       'startX' => 35,
+       'startY' => 160,
+       'rows'   => array(
            array(...array of columns...),
            array(...array of columns...))
 )
@@ -61,63 +65,33 @@ Column has type of array with following rows:
 2.width – type of int, width of the column
 3.alignment (optional) – type of string, left is by default
 
+Text would be parsed according to the cell width, keeping all passed paragraphs
+
 For example:
 array('text' => 'Datum', 'width' => 50);
 
-1.2. Specification of Free text in $prototype.
+1.2. Specification of Free text in $template.
 
 Array of element should contain following keys:
 type -  with a value  'freetext',which defines a type of the element,
-
-startX and startY -  (optional) values of type int, define coordinates of left top corner of the Free text block
-
 lines – value is array of strings, where every string would be inserted from the new line
 
+Optional parameters are:
+startX and startY - (optional) values of type int, define coordinates of left top corner of the Free text block
+                     By default element would be added to the next free line in the document.
 fontSize – (optional) change font size for the free text
 lineWidth – (optional) change width of lines for the free text
 
 For example:
 
 array(
-     'type' => 'freetext',
-     'startX'=> 35,
-     'startY'=> 140,
+     'type'      => 'freetext',
+     'startX'    => 35,
+     'startY'    => 140,
      'lineWidth' => 0.5,
-     'fontSize' => 12,
-     'lines' => array('First line free text', 'Second line free text')
-),
-
-1.3. Specification of Info box in $prototype.
-
-Info box is acually a simple table with one column and two rows, which can be processed quicker.
-Infobox doesn't check if textline would fit inside.
-
-Array of element should contain following keys:
-type - with value 'infobox', which defines a type of the element,
-
-startX and startY - (optional) values of type int, define coordinates of left top corner of the Info box
-width and height  values of type int – define size of the Info box
-
-header – type of string, define header
-lines – array of strings, where every string would be inserted from the new line
-
-fontSize – (optional) change font size for the free text
-lineWidth – (optional) change width of lines for the free text
-
-For example:
-
-array(
-      'type' => 'infobox',
-      'startX'=> 300,
-      'startY'=> 140,
-      'lineWidth' => 0.5,
-      'fontSize' => 10,
-      'width' => 200,
-      'height' => 50,
-      'header' => 'Info box header',
-      'lines' => array('First line info box', 'Second line info box')
-),
-
+     'fontSize'  => 12,
+     'lines'     => array('First line free text', 'Second line free text')
+)
 
 2. Example of usage.
 
@@ -125,7 +99,7 @@ array(
 $pdf  = new Zend_Pdf();
 $page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_LETTER);
 
-$prototype = array(
+$template = array(
     'font'     => 'Helvetica',
     'fontSize' => 10,
     0 => array(
@@ -163,19 +137,10 @@ $prototype = array(
         'lineWidth' => 0.5,
         'fontSize'  => 12,
         'lines'     => array('First line free text', 'Second line free text')
-    ),
-    3 => array(
-        'type'      => 'infobox',
-        'lineWidth' => 0.5,
-        'fontSize'  => 10,
-        'width'     => 200,
-        'height'    => 50,
-        'header'    => 'Info box header',
-        'lines'     => array('First line info box', 'Second line info box')
-    )
+     )
 );
 
-$pages = $page->applyPrototype($prototype);
+$pages = $page->parseTemplate($template);
 
 $pdf->pages[] = $page;
 foreach($pages as $page) {
@@ -186,4 +151,13 @@ $pdf->save('Testname.pdf');
 ?>
 
 
-This code would create test pdf file with 2 tables, free text with 2 lines and info box.
+This code would create test pdf file with 2 tables, free text with 2 lines.
+
+
+3. Known bugs
+
+- Library works incorrect in case one of the cells has an inner text which after parsing can't in current page fit.
+- Library don't care about overlapping of elements and width of elements. For example when the user passed to prototype
+free text element with fixed coordinates, library wouldn't check if element would fit to the page with width.
+In case element is bigger than the page, it would be printed as long as it's possible.
+In case given position of the element is not free, elements will overlap.

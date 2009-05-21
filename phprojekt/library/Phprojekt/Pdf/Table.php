@@ -93,9 +93,9 @@ class Phprojekt_Pdf_Table
      */
     function __construct($page, $x, $y)
     {
-        $this->page  = $page;
-        $this->x     = $x;
-        $this->y     = $y;
+        $this->page = $page;
+        $this->x    = $x;
+        $this->y    = $y;
     }
 
     /**
@@ -107,7 +107,10 @@ class Phprojekt_Pdf_Table
      */
     public function addRow(Phprojekt_Pdf_Table_Row $row)
     {
-        $this->_rows[] = $row;
+        $result = $this->checkAndSplitRow($row);
+        foreach ($result as $item) {
+            $this->_rows[] = $item;
+        }
     }
 
     /**
@@ -122,19 +125,38 @@ class Phprojekt_Pdf_Table
             if ($y - $row->testRender($this->page, $this->x, $y) < 0) {
                 $font     = $this->page->getFont();
                 $fontSize = $this->page->getFontSize();
-                //$linewidth = $this->page->getLineWidth();
+
                 $this->page = new Phprojekt_Pdf_Page($this->page);
                 $this->page->setFont($font, $fontSize);
                 $this->page->setLineWidth($this->border);
                 $this->_pages[] = $this->page;
                 $y              = $this->page->getHeight();
             }
+
             $row->render($this->page, $this->x, $y);
             $y -= $row->getHeight();
         }
-        $tmp = $this->page->getHeight() - $y + $this->page->getFontSize();
-        $this->page->freeLineY = $tmp * Phprojekt_Pdf_Page::RATE_FONT_IN_PIX;
+
+        $tmpHeight             = $this->page->getHeight() - $y;
+        $this->page->freeLineY = $tmpHeight + $this->page->getFontSize() * Phprojekt_Pdf_Page::RATE_FONT_IN_PIX;
 
         return $this->_pages;
+    }
+
+    /**
+     * Enter description here...
+     *
+     * @param Phprojekt_Pdf_Table_Row $row
+     *
+     * @return array
+     */
+    public function checkAndSplitRow(Phprojekt_Pdf_Table_Row $row)
+    {
+        $availablePlace = $this->page->getHeight() - $this->page->freeLineY;
+        if ($row->getHeight() < $availablePlace) {
+            return array($row);
+        } else {
+            return array();
+        }
     }
 }
