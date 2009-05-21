@@ -51,7 +51,7 @@ class SearchController extends IndexController
         $count  = (int) $this->getRequest()->getParam('count', null);
         $offset = (int) $this->getRequest()->getParam('start', null);
 
-        $search  = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Default');
+        $search  = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
         $results = $search->search($words, $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($results);

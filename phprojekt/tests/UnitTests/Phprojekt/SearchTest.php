@@ -29,7 +29,7 @@ require_once 'PHPUnit/Framework.php';
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
+class Phprojekt_SearchTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test index
@@ -45,7 +45,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $project->saveRights(array(1 => 255, 2 => 255));
         Zend_Registry::set('searchInsertedId', $project->id);
 
-        $search = new Phprojekt_Search_Default();
+        $search = new Phprojekt_Search();
         $result = $search->search('CCCC');
         $this->assertEquals(1, count($result));
 
@@ -58,7 +58,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
      */
     public function testSearch()
     {
-        $search = new Phprojekt_Search_Default();
+        $search = new Phprojekt_Search();
         $result = (array)$search->search('CCCC DDDD');
         $this->assertEquals(1, count($result));
 
@@ -75,7 +75,7 @@ class Phprojekt_Search_DefaultTest extends PHPUnit_Framework_TestCase
         $project->find(Zend_Registry::get('searchInsertedId'));
         $project->delete();
 
-        $search = new Phprojekt_Search_Default();
+        $search = new Phprojekt_Search();
         $result = (array)$search->search('CCCC DDDD TTTT');
         $this->assertEquals(0, count($result));
     }

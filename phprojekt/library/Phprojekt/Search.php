@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_Search_Default
+class Phprojekt_Search
 {
     /**
      * Class for manage the words
@@ -166,7 +166,7 @@ class Phprojekt_Search_Default
      *
      * @uses:
      *      $db = Phprojekt::getInstance()->getDb();
-     *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Default');
+     *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
      *      $search->search('text1 text2 text3','OR');
      *
      * @return array

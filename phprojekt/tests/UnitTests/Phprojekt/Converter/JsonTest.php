@@ -84,7 +84,7 @@ class Phprojekt_Converter_JsonTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertTags()
     {
-        $tagObj    = Phprojekt_Tags_Default::getInstance();
+        $tagObj    = Phprojekt_Tags::getInstance();
         $tags      = $tagObj->getTags(1);
         $fields    = $tagObj->getFieldDefinition();
         $result    = Phprojekt_Converter_Json::convert($tags, $fields);

@@ -34,7 +34,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_Tags_Default
+class Phprojekt_Tags
 {
     /**
      * Singleton instance

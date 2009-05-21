@@ -46,7 +46,7 @@ class TagController extends IndexController
      */
     public function jsonGetTagsAction()
     {
-        $tagObj = Phprojekt_Tags_Default::getInstance();
+        $tagObj = Phprojekt_Tags::getInstance();
         $limit  = (int) $this->getRequest()->getParam('limit', 0);
         $tags   = $tagObj->getTags($limit);
         $fields = $tagObj->getFieldDefinition();
@@ -66,7 +66,7 @@ class TagController extends IndexController
      */
     public function jsonGetTagsByModuleAction()
     {
-        $tagObj = Phprojekt_Tags_Default::getInstance();
+        $tagObj = Phprojekt_Tags::getInstance();
 
         $id        = (int) $this->getRequest()->getParam('id', 0);
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
@@ -93,7 +93,7 @@ class TagController extends IndexController
      */
     public function jsonGetModulesByTagAction()
     {
-        $tagObj = Phprojekt_Tags_Default::getInstance();
+        $tagObj = Phprojekt_Tags::getInstance();
         $tag    = (string) $this->getRequest()->getParam('tag', '');
         $limit  = (int) $this->getRequest()->getParam('limit', 0);
         $tags   = $tagObj->getModulesByTag($tag, $limit);
@@ -112,7 +112,7 @@ class TagController extends IndexController
      */
     public function jsonSaveTagsAction()
     {
-        $tagObj = Phprojekt_Tags_Default::getInstance();
+        $tagObj = Phprojekt_Tags::getInstance();
         $id     = (int) $this->getRequest()->getParam('id');
         $string = (string) $this->getRequest()->getParam('string', '');
 
@@ -146,7 +146,7 @@ class TagController extends IndexController
      */
     public function jsonDeleteTagsAction()
     {
-        $tagObj = Phprojekt_Tags_Default::getInstance();
+        $tagObj = Phprojekt_Tags::getInstance();
         $id     = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {

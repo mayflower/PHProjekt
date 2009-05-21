@@ -48,9 +48,9 @@ require_once 'Converter/CsvTest.php';
 require_once 'Converter/TextTest.php';
 require_once 'ModelInformation/DefaultTest.php';
 require_once 'LoaderTest.php';
-require_once 'Tags/DefaultTest.php';
+require_once 'TagsTest.php';
 require_once 'Filter/ParseTreeTest.php';
-require_once 'Search/DefaultTest.php';
+require_once 'SearchTest.php';
 require_once 'ModuleTest.php';
 require_once 'TabsTest.php';
 require_once 'PhprojektTest.php';
@@ -107,9 +107,9 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Converter_CsvTest');
         $suite->addTestSuite('Phprojekt_Converter_TextTest');
         $suite->addTestSuite('Phprojekt_ModelInformation_DefaultTest');
-        $suite->addTestSuite('Phprojekt_Tags_DefaultTest');
+        $suite->addTestSuite('Phprojekt_TagsTest');
         $suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
-        $suite->addTestSuite('Phprojekt_Search_DefaultTest');
+        $suite->addTestSuite('Phprojekt_SearchTest');
         $suite->addTestSuite('Phprojekt_TabsTest');
         $suite->addTestSuite('Phprojekt_PhprojektTest');
 
