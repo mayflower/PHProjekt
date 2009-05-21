@@ -68,7 +68,7 @@ class Phprojekt_Converter_Text
                         $value .= ', ';
                     }
                     $fileName = substr(strstr($file, '|'), 1);
-                    $value .= $fileName;
+                    $value   .= $fileName;
                 }
                 break;
             case 'time':

@@ -400,7 +400,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
-        // only fetch records with read access
+        // Only fetch records with read access
         $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
                          AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
                          $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
