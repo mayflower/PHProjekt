@@ -74,7 +74,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
      */
     public function deleteModuleRelation($moduleId)
     {
-        $where = $this->getAdapter()->quoteInto(' module_id = ? ', (int) $moduleId);
+        $where = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }

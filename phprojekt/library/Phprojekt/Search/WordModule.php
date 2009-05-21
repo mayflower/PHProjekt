@@ -88,8 +88,8 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     {
         $where   = array();
         $ids     = array();
-        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId);
-        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId);
+        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
 
         $result = $this->fetchAll($where);
         foreach ($result as $data) {
@@ -112,7 +112,7 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     public function searchModuleByWordId($wordId, $count = null, $offset = null)
     {
         $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('word_id = ?', (int) $wordId);
+        $where[] = $this->getAdapter()->quoteInto('word_id = ?', (int) $wordId, 'INTEGER');
 
         return $this->fetchAll($where, 'item_id DESC', $count, $offset)->toArray();
     }

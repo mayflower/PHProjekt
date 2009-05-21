@@ -66,7 +66,7 @@ class Phprojekt_Tabs
                      ->joinInner(array('rel' => 'module_tab_relation'),
                                  sprintf("%s = %s", $db->quoteIdentifier("t.id"),
                                  $db->quoteIdentifier("rel.tab_id")))
-                     ->where($db->quoteInto('rel.module_id = ?', $moduleId));
+                     ->where($db->quoteInto('rel.module_id = ?', (int) $moduleId, 'INTEGER'));
         $stmt = $db->query($select);
         $rows = $stmt->fetchAll();
 
@@ -141,7 +141,7 @@ class Phprojekt_Tabs
     public function saveModuleTabRelation($tabIds, $moduleId)
     {
         $db = Phprojekt::getInstance()->getDb();
-        $db->delete('module_tab_relation', $db->quoteInto('module_id = ?', $moduleId));
+        $db->delete('module_tab_relation', $db->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER'));
         if (!is_array($tabIds)) {
             $tabIds = array($tabIds);
         }

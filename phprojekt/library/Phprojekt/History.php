@@ -167,8 +167,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         if (!isset($moduleId)) {
             $moduleId = Phprojekt_Module::getId($object->getModelName());
         }
-        $where  = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId);
-        $where .= $this->getAdapter()->quoteInto(' AND item_id = ?', $itemId);
+        $where  = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+        $where .= $this->getAdapter()->quoteInto(' AND item_id = ?', (int) $itemId, 'INTEGER');
 
         if (!empty($startDate)) {
             $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
@@ -177,7 +177,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             $where .= $this->getAdapter()->quoteInto(' AND datetime <= ?', $endDate);
         }
         if (!empty($userId)) {
-            $where .= $this->getAdapter()->quoteInto(' AND user_id = ?', $userId);
+            $where .= $this->getAdapter()->quoteInto(' AND user_id = ?', (int) $userId, 'INTEGER');
         }
 
         $result = array();
@@ -210,8 +210,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $result   = array();
         $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
-        $where    = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId);
-        $where   .= $this->getAdapter()->quoteInto(' AND item_id = ?', $itemId);
+        $where    = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+        $where   .= $this->getAdapter()->quoteInto(' AND item_id = ?', (int) $itemId, 'INTEGER');
 
         $datetime = null;
         $action   = null;

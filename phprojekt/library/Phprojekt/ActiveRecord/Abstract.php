@@ -858,7 +858,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         * Otherwise we create the entry.
         */
         if (null !== $this->_storedId) {
-            $result = ($this->update($data, $this->getAdapter()->quoteInto('id = ?', $this->_storedId)) > 0);
+            $result = ($this->update($data, $this->getAdapter()->quoteInto('id = ?', $this->_storedId, 'INTEGER')) > 0);
 
             if ($this->id !== $this->_storedId && count($this->hasMany) > 0) {
                 $result = $this->_updateHasMany($this->_storedId, $this->id) && $result;
@@ -931,7 +931,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 }
             }
 
-            parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id']));
+            parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id'], 'INTEGER'));
 
             $this->_initDataArray();
             $this->_relations = array();
@@ -1172,21 +1172,21 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Callback function for _quoteTableAndFieldName
-     * 
+     *
      * @param string
-     * 
+     *
      * return string
      */
     private function _callbackQuoteIdentifier1($string)
     {
         return Phprojekt::getInstance()->getDb()->quoteIdentifier($string[0]);
     }
-    
+
     /**
      * Callback function for _quoteTableAndFieldName
-     * 
+     *
      * @param string
-     * 
+     *
      * @return string
      */
     private function _callbackQuoteIdentifier2($string)
@@ -1204,7 +1204,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     private function _quoteTableAndFieldName($string)
     {
         // Quote value.value
-        $string = preg_replace_callback("/([a-z0-9_]+\.[a-z0-9_]+)/", 
+        $string = preg_replace_callback("/([a-z0-9_]+\.[a-z0-9_]+)/",
             array($this, '_callbackQuoteIdentifier1'),
             $string);
 
@@ -1223,7 +1223,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         // Quote the single table or fields in lowercase
         return preg_replace_callback("/(\s[a-z_]+\s)/",
-            array($this, '_callbackQuoteIdentifier2'), 
+            array($this, '_callbackQuoteIdentifier2'),
             $string);
     }
 
