@@ -329,7 +329,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $varname = trim($varname);
         $getter  = 'get' . ucfirst($varname);
-        if (in_array($getter, get_class_methods(get_class($this)))) {
+        if (method_exists(get_class($this), $getter)) {
             return call_user_func(array($this, $getter), $this->_data);
         } elseif (array_key_exists($varname, $this->hasMany)
         && array_key_exists('id', $this->_data)) {
@@ -340,7 +340,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         } elseif (array_key_exists($varname, $this->hasManyAndBelongsToMany)
         && array_key_exists('id', $this->_data)) {
             return $this->_hasManyAndBelongsToMany($varname);
-        } elseif (array_key_exists($varname, get_object_vars($this))) {
+        } elseif (property_exists($this, $varname)) {
             return $this->$varname;
         } elseif (array_key_exists($varname, $this->_data)) {
             return $this->_data[$varname];
@@ -1209,17 +1209,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $string);
 
         // Put some common words in uppercase
-        $string = preg_replace("/\sand\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\sor\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\sas\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\sin\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\son\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\snull\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\snot\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\sjoin\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\sleft\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\srigth\s/e", "strtoupper('\\1')", $string);
-        $string = preg_replace("/\sinner\s/e", "strtoupper('\\1')", $string);
+        $string = preg_replace("/\s(and|or|as|in|on|null|not|join|left|right|inner)\s/e", 
+                               "strtoupper('\\1')", $string);
 
         // Quote the single table or fields in lowercase
         return preg_replace_callback("/(\s[a-z_]+\s)/",
