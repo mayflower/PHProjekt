@@ -117,13 +117,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     url: null,
     
     _buildGrid: function() {
-    	// summary:
+        // summary:
         //    Return grid object instance
         // description:
         //    Internal method for creating and configuring a
-    	//    grid object for MinutesItems. Row configuration
-    	//    is defined here.
-    	var me = this; // variable scope workaround, needed for formatter
+        //    grid object for MinutesItems. Row configuration
+        //    is defined here.
+        var me = this; // variable scope workaround, needed for formatter
         var layout = [{
             cells: [[
                      {
@@ -146,14 +146,14 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          width:    '50px',
                          type:     dojox.grid.cells.Select,
                          formatter:function(value) {
-                    	 	var typeList = me.getItemTypes();
-                    	 	for(var i=0; i < typeList.length; i++) {
-                    	 		if (typeList[i].id && typeList[i].id == value) {
-                    	 			return typeList[i].name;
-                    	 		}
-                    	 	}
-                    	 	return value;
-                      	 }
+                             var typeList = me.getItemTypes();
+                             for(var i=0; i < typeList.length; i++) {
+                                 if (typeList[i].id && typeList[i].id == value) {
+                                     return typeList[i].name;
+                                 }
+                             }
+                             return value;
+                         }
                      },
                      {
                          name:     'Date',
@@ -167,14 +167,14 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          styles:   "text-align: center;",
                          width:    '50px',
                          formatter:function(value) {
-                     	 	var userList = me._invitedList;
-                     	 	for(var i=0; i < userList.length; i++) {
-                     	 		if (userList[i].id && userList[i].id == value) {
-                     	 			return userList[i].username;
-                     	 		}
-                     	 	}
-                     	 	console.log('Investigate! Value not in user array: ' + value);
-                     	 	return '';
+                             var userList = me._invitedList;
+                             for(var i=0; i < userList.length; i++) {
+                                 if (userList[i].id && userList[i].id == value) {
+                                     return userList[i].username;
+                                 }
+                             }
+                             console.log('Investigate! Value not in user array: ' + value);
+                             return '';
                        	 }
                      },
                  ],[
@@ -214,11 +214,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     _getItemGridStore: function() {
-    	// summary:
+        // summary:
         //    Return data store for the grid
         // description:
         //    Creates Dojo.Data.ItemFileWriteStore instance for
-    	//    displaying MinutesItems in the grid.
+        //    displaying MinutesItems in the grid.
         var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
         var gridData = { items: new Array() };
         for (var i in content) {
@@ -228,11 +228,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     updateGrid: function() {
-    	// summary:
+        // summary:
         //    Refreshes the grid's data source
         // description:
         //    Recreated the data store for the grid, which automatically
-    	//    updates the view
+        //    updates the view
         phpr.DataStore.deleteData({"url": this.url});
         phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
     },
@@ -247,11 +247,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     _invitedList:  [],
     
     saveSubFormData: function() {
-    	// summary:
+        // summary:
         //    Save the detail form for a MinutesItem
         // description:
         //    Retrieves the data from the detail form, posts it to
-    	//    the sever and refreshes the grid to reflect changes.
+        //    the sever and refreshes the grid to reflect changes.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemFormData = null;
             this.getItemList(dojo.hitch(this, this.loadSubForm)); // refresh sort orders
@@ -272,12 +272,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     deleteSubFormData: function() {
-    	// summary:
+        // summary:
         //    Deletes the currently active MinutesItem
         // description:
-    	//    Posts current form data to the server.
+        //    Posts current form data to the server.
         //    Resets detail form to default values, allowing to enter 
-    	//    a new record.
+        //    a new record.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemFormData = null;
             this.loadSubForm();
@@ -298,12 +298,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     getSubFormData: function(itemId) {
-    	// summary:
+        // summary:
         //    Reads data for a given MinutesItem from the server
         // description:
         //    Requests data for the MinutesItem having the given ID from
-    	//    the server and then reloads the detail form with the new
-    	//    data for editing.
+        //    the server and then reloads the detail form with the new
+        //    data for editing.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemFormData = responseObject.data[0];
             this.loadSubForm();
@@ -320,11 +320,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     getInvitedList: function() {
-    	// summary:
+        // summary:
         //    Fetches list of invited participants from server
         // description:
         //    Requests list of invited persons from the server, then
-    	//    stores it in the _invitedList property.
+        //    stores it in the _invitedList property.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._invitedList = responseObject.data;
             return responseObject;
@@ -343,37 +343,37 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     _itemTypes: [],
     
     getItemTypes: function() {
-    	// summary:
+        // summary:
         //    Returns a list of item types
         // description:
         //    Will return a list of valid item types for MinutesItems. Uses cached
-    	//    property if available. May do server request in the future.
-		if (this._itemTypes.length == 0) {
-			// @todo request these from server, needs thinking about asynchronous behaviour
-    		this._itemTypes = [{id:1,name:'Topic'},{id:2,name:'Statement'},{id:3,name:'TODO'},{id:4,name:'Decision'},{id:5,name:'Date'}]; 
-    	}
-    	return this._itemTypes;
+        //    property if available. May do server request in the future.
+        if (this._itemTypes.length == 0) {
+            // @todo request these from server, needs thinking about asynchronous behaviour
+            this._itemTypes = [{id:1,name:'TOPIC'},{id:2,name:'STATEMENT'},{id:3,name:'TODO'},{id:4,name:'DECISION'},{id:5,name:'DATE'}]; 
+        }
+        return this._itemTypes;
     },
     
     // private property: list of MinutesItems by sort order. used as cache.
     _itemList: [],
     
     getItemList: function(callback) {
-    	// summary:
+        // summary:
         //    Returns a list of items indexed by sort oder
         // description:
         //    Will return a list of valid MinutesItems. Uses cached
-    	//    property if available. Items are indexed by their sort order
-    	//    instead of their ID.
-    	//    Calls optional callback hook if provided.
-    	var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
+        //    property if available. Items are indexed by their sort order
+        //    instead of their ID.
+        //    Calls optional callback hook if provided.
+        var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemList = responseObject;
             if (callback) {
-            	callback();
+                callback();
             }
             return responseObject;
         });
-    	var errorHandler = dojo.hitch(this, function(e) {
+        var errorHandler = dojo.hitch(this, function(e) {
             console.debug('getItemList has encountered an error: ' + e);
             this._itemList = []; // reset values
         });
@@ -386,12 +386,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     loadSubForm: function() {
-    	// summary:
+        // summary:
         //    Load detail form and populate it
         // description:
         //    Loads the detail form template for MinutesItems and populates it with
-    	//    either default data or data from a loaded MinutesItem. Also registers
-    	//    event listeners for various detail form behaviours.
+        //    either default data or data from a loaded MinutesItem. Also registers
+        //    event listeners for various detail form behaviours.
         if (!this._itemFormData) {
             // Use default empty dataset
             this._itemFormData = {
@@ -421,7 +421,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             lblClear:	    'Clear',
             parentOrder:    this._itemFormData.sortOrder - 1 >= 0 ? this._itemFormData.sortOrder - 1 : '',
             users:          this._invitedList,
-            items:			this._itemList,
+            items:          this._itemList,
             types:          this.getItemTypes()
         };
         placeholders = dojo.mixin(placeholders, this._itemFormData);
@@ -438,53 +438,53 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         
         // have reset button reload the form using defaults
         dojo.connect(dijit.byId('minutesItemFormClear'), 'onClick', dojo.hitch(this, function() {
-        	this._itemFormData = null; // reset data
-        	this.loadSubForm();
+            this._itemFormData = null; // reset data
+            this.loadSubForm();
         }));
         
         // have delete button disabled when creating a new item,
         // and save button enabled by default when updating a new one
         if (!placeholders.id) {
-        	dijit.byId('minutesItemFormDelete').attr("disabled", true);
+            dijit.byId('minutesItemFormDelete').attr("disabled", true);
         } else {
-        	dijit.byId('minutesItemFormSubmit').attr("disabled", false);
+            dijit.byId('minutesItemFormSubmit').attr("disabled", false);
         }
         
         // disable/enable submit button according to form validation state 
         dojo.connect(dijit.byId('minutesItemForm'), "onValidStateChange", 
-    		function(state) {
-				dijit.byId('minutesItemFormSubmit').attr("disabled", !state);
-			}
+            function(state) {
+                dijit.byId('minutesItemFormSubmit').attr("disabled", !state);
+            }
         );
         
         // have the appropriate input fields appear for each type
         this._switchItemFormFields(placeholders.topicType); // defaults
         dojo.connect(dijit.byId('minutesItemFormTopicType'), 'onChange',
-        		dojo.hitch(this, this._switchItemFormFields));
+                dojo.hitch(this, this._switchItemFormFields));
         
         // set cursor to title field when all is done
         dojo.byId("minutesItemFormTitle").focus();
     },
     
     _switchItemFormFields: function(typeValue) {
-    	// summary:
+        // summary:
         //    Toggle visibility of detail form fields
         // description:
         //    Hides or shows the appropriate form fields for the currently
-    	//    selected topicType. Currently registered types are: 
-    	//    1='Topic', 2='Statement',3='TODO',4='Decision',5='Date'
-    	switch(typeValue) {
-    		case "3":
-    			dojo.byId('minutesItemFormRowUser').style.visibility = 'visible';
-    			dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
-    			break;
-    		case "5":
-    			dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
-    			dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
-    			break;
-    		default:
-    			dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
-    			dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
-    	}
+        //    selected topicType. Currently registered types are: 
+        //    1='Topic', 2='Statement',3='TODO',4='Decision',5='Date'
+        switch(typeValue) {
+            case "3":
+                dojo.byId('minutesItemFormRowUser').style.visibility = 'visible';
+                dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
+                break;
+            case "5":
+                dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
+                dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
+                break;
+            default:
+                dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
+            dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
+        }
     }
 });
