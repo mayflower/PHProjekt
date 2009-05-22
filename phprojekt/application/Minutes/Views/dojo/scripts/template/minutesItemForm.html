@@ -78,6 +78,7 @@
         <td><!-- Tooltip --></td>
     </tr>
     
+    {% if items.length %}
     <tr>
         <td class="label">
             <label>{{lblParentOrder}}</label>
@@ -95,7 +96,8 @@
         </td>
         <td><!-- Tooltip --></td>
     </tr>
-    
+    {% endif %}
+        
     <tr>
         <td class="label">
             &nbsp;

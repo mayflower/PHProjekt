@@ -367,12 +367,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    instead of their ID.
         //    Calls optional callback hook if provided.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
-            this._itemList = responseObject;
-            if (this._itemList.metadata) {
-                this._itemList = [];
-            }
-            console.log('Item list is ');
-            console.log(this._itemList);
+    		if (responseObject.length) {
+    			this._itemList = responseObject;
+    		} else {
+    			this._itemList = [];
+    		}
+            
             if (callback) {
                 callback();
             }
@@ -439,7 +439,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', 
                      dojo.hitch(this, this.saveSubFormData));
         dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', 
-                dojo.hitch(this, this.deleteSubFormData));
+                	 dojo.hitch(this, this.deleteSubFormData));
         
         // have reset button reload the form using defaults
         dojo.connect(dijit.byId('minutesItemFormClear'), 'onClick', dojo.hitch(this, function() {
@@ -489,7 +489,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 break;
             default:
                 dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
-            dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
+            	dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
         }
     }
 });
