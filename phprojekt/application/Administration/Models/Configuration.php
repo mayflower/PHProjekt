@@ -206,7 +206,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
-                        $where = sprintf('key_value = %s AND module_id = d', $this->_db->quote($key),
+                        $where = sprintf('key_value = %s AND module_id = %d', $this->_db->quote($key),
                             (int) $this->_moduleId);
                         $record = $this->fetchAll($where);
                         if (isset($record[0])) {
