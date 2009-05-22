@@ -2782,7 +2782,7 @@ itemsPerPage         = 3
 
 ; Users
 ; How the users are displayed in the system
-; (0 = lastname, firstname  1 = username, lastname, firstname, 2 = usrname)
+; (0 = lastname, firstname  1 = username, lastname, firstname, 2 = username)
 userDisplayFormat = 0
 
 ; MAIL NOTIFICATION
