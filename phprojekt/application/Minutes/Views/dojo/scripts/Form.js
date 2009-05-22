@@ -368,6 +368,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Calls optional callback hook if provided.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemList = responseObject;
+            if (this._itemList.metadata) {
+                this._itemList = [];
+            }
+            console.log('Item list is ');
+            console.log(this._itemList);
             if (callback) {
                 callback();
             }
