@@ -111,7 +111,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
         $model->ownerId     = 1;
         $model->attachments = '3bc3369dd33d3ab9c03bd76262cff633|LICENSE';
         $model->status      = 3;
-        $model->author      = 1;
+        $model->author      = 2;
         foreach ($fieldDefinition as $info) {
             // Upload
             if ($info['key'] == 'attachments') {
@@ -126,7 +126,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
             // Display
             if ($info['key'] == 'author') {
                 $value = Phprojekt_Converter_Text::convert($model, $info);
-                $this->assertEquals('', $value);
+                $this->assertEquals('Solt, Gustavo', $value);
 
                 $model->author = 100;
                 $value = Phprojekt_Converter_Text::convert($model, $info);

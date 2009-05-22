@@ -4,7 +4,7 @@
     <tr>
         <td width="{{widthHourColumn}}%"></td>
         {% for user in header.users %}
-        <td width="{{header.columnsWidth}}%" class="hours" colspan="{{user.columnsTotal}}">{{user.text}}</td>
+        <td width="{{header.columnsWidth}}%" class="hours" colspan="{{user.columnsTotal}}">{{user.display}}</td>
         {% endfor %}
     </tr>
     {% for row in schedule %}

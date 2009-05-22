@@ -278,4 +278,56 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
         return $value;
     }
+
+    /**
+     * Return the display format form the config file
+     *
+     * @return string
+     */
+    static public function getDisplay()
+    {
+        $display = (int) Phprojekt::getInstance()->getConfig()->get('userDisplayFormat');
+
+        switch ($display) {
+            case 0:
+            default:
+                $value = 'lastname, firstname';
+                break;
+            case 1:
+                $value = 'username, lastname, firstname';
+                break;
+            case 2:
+                $value = 'username';
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Apply the display to the $model and return the result
+     *
+     * @param string              $display The display format
+     * @param Phprojekt_User_User $model   The model to apply the display
+     *
+     * @return string
+     */
+    public function applyDisplay($display, $model)
+    {
+        if (preg_match_all("/([a-zA-z_]+)/", $display, $values)) {
+            $values = $values[1];
+        } else {
+            $values = $display;
+        }
+
+        $showValue = array();
+        foreach ($values as $value) {
+            if (isset($model->$value)) {
+                $showValue[] = $model->$value;
+            }
+        }
+        $showValue = implode(", ", $showValue);
+
+        return $showValue;
+    }
 }

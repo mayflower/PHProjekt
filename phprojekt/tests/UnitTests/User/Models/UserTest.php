@@ -37,7 +37,7 @@ class User_User_Test extends PHPUnit_Framework_TestCase
     public function testSave()
     {
         $user = new Phprojekt_User_User();
-        $user->find(1);
+        $user->find(3);
         $this->assertEquals($user->saveRights(), null);
         $this->assertEquals($user->recordValidate(), false);
         $error = $user->getError();
@@ -99,5 +99,19 @@ class User_User_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $user->getRights());
 
         $this->assertEquals(array(), $user->getInformation()->getTitles());
+    }
+
+    /**
+     * Test the display
+     */
+    public function testdisplay()
+    {
+        $user = new Phprojekt_User_User();
+        $this->assertEquals('lastname, firstname', $user->getDisplay());
+
+        $user->find(2);
+        $this->assertEquals('Solt, Gustavo', $user->applyDisplay('lastname, firstname', $user));
+        $this->assertEquals('gus, Solt, Gustavo', $user->applyDisplay('username, lastname, firstname', $user));
+        $this->assertEquals('gus', $user->applyDisplay('username', $user));
     }
 }

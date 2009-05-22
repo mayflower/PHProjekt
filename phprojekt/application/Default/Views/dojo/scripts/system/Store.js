@@ -82,10 +82,8 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         var users  = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in users) {
-            this._list.push({"id":        users[i]['id'],
-                             "name":      users[i]['username'],
-                             "firstname": users[i]['firstname'],
-                             "lastname":  users[i]['lastname']});
+            this._list.push({"id":      users[i]['id'],
+                             "display": users[i]['display']});
         }
     }
 });
@@ -130,10 +128,10 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
         for (i in roles) {
             this._list.push({"id":roles[i]['id'], "name":roles[i]['name']});
             for (j in roles[i]['users']) {
-                this._relationList.push({"roleId":   roles[i]['id'],
-                                         "roleName": roles[i]['name'],
-                                         "userId":   roles[i]['users'][j]['id'],
-                                         "userName": roles[i]['users'][j]['name']});
+                this._relationList.push({"roleId":      roles[i]['id'],
+                                         "roleName":    roles[i]['name'],
+                                         "userId":      roles[i]['users'][j]['id'],
+                                         "userDisplay": roles[i]['users'][j]['display']});
             }
         }
     },

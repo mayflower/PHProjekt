@@ -53,13 +53,15 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             $roles['data'][$role->id]['name']  = $role->name;
             $roles['data'][$role->id]['users'] = array();
         }
-        $where  = sprintf('project_role_user_permissions.project_id = %d', (int) $projectId);
-        $order  = 'project_role_user_permissions.user_id ASC';
-        $select = ' user.username ';
-        $join   = ' LEFT JOIN user ON user.id = project_role_user_permissions.user_id ';
+        $where   = sprintf('project_role_user_permissions.project_id = %d', (int) $projectId);
+        $order   = 'project_role_user_permissions.user_id ASC';
+        $select  = ' user.username, user.firstname, user.lastname ';
+        $join    = ' LEFT JOIN user ON user.id = project_role_user_permissions.user_id ';
+        $display = Phprojekt_User_User::getDisplay();
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
-            $roles['data'][$right->roleId]['users'][] = array('id'   => $right->userId,
-                                                              'name' => $right->username);
+            $userDisplay = Phprojekt_User_User::applyDisplay($display, $right);
+            $roles['data'][$right->roleId]['users'][] = array('id'      => $right->userId,
+                                                              'display' => $userDisplay);
         }
         return $roles;
     }

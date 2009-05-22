@@ -639,12 +639,10 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 13, 1, NULL, '1#PLANNED|2#CREATED|3#PREVIEW|4#FINAL', '0', 6, 'center', 1, 0, '1', 0, 0, 0);
 
-
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES
-(1,'david', NULL, NULL, 'A', 1),
-(2,'gus', NULL, NULL, 'A', 0),
+(1,'david', 'David', 'Soria Parra', 'A', 1),
+(2,'gus', 'Gustavo', 'Solt', 'A', 0),
 (3,'inactive', NULL, NULL, 'I', 0);
-
 
 INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `identifier`) VALUES
 (1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
@@ -683,11 +681,8 @@ INSERT INTO `groups_user_relation` (`id`, `groups_id`, `user_id`) VALUES
 (2, 2, 2),
 (3, 3, 1);
 
-
 INSERT INTO `project_role_user_permissions` (`project_id`, `user_id`, `role_id`) VALUES
 (1, 1, 1);
-
-
 
 INSERT INTO `role_module_permissions` (`role_id`, `module_id`, `access`) VALUES
 (1, 1, 139),
@@ -696,9 +691,6 @@ INSERT INTO `role_module_permissions` (`role_id`, `module_id`, `access`) VALUES
 (1, 5, 139),
 (1, 10, 139),
 (1, 11, 139);
-
-
-
 
 INSERT INTO `item_rights` (`module_id`, `item_id`, `user_id`, `access`) VALUES
 (1, 1, 1, 255),

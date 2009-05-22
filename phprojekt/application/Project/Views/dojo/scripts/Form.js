@@ -70,7 +70,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             if (userList) {
                 for (var i in userList) {
                     if (userList[i].id != currentUser) {
-                        users.push({'id': userList[i].id, 'name': userList[i].name});
+                        users.push({'id': userList[i].id, 'display': userList[i].display});
                     }
                 }
             }

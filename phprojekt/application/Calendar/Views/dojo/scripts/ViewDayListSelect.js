@@ -134,18 +134,17 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         // Summary:
         //    Fills the header array with the main row of the table.
         var headerData               = phpr.DataStore.getData({url: this._headerDataUrl});
-        this._header                 = new Array(); //It is needed to explicitly empty the array
+        this._header                 = new Array(); // It is needed to explicitly empty the array
         this._header['columnsWidth'] = -1;
         this._header['users']        = new Array();
 
         for (var user in headerData) {
-            var userId    = parseInt(headerData[user]['id']);
-            var lastname  = headerData[user]['lastname'];
-            var firstname = headerData[user]['firstname'];
+            var userId  = parseInt(headerData[user]['id']);
+            var display = headerData[user]['display'];
 
             this._header['users'][user]                 = new Array();
             this._header['users'][user]['id']           = userId;
-            this._header['users'][user]['text']         = lastname + ' ' + firstname.substr(0, 1) + '.';
+            this._header['users'][user]['display']      = display;
             this._header['users'][user]['columnsTotal'] = 1;
         }
     },

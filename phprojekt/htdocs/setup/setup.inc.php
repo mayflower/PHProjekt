@@ -2780,6 +2780,10 @@ log.crit.filename    = "' . $logsDir.DIRECTORY_SEPARATOR . 'crit.log"
 ; Not used at the moment, leave it as it is.
 itemsPerPage         = 3
 
+; Users
+; How the users are displayed in the system
+; (0 = lastname, firstname  1 = username, lastname, firstname, 2 = usrname)
+userDisplayFormat = 0
 
 ; MAIL NOTIFICATION
 ; Inside many modules, when adding or editing an item, there is a tab

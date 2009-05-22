@@ -26,7 +26,7 @@
             <select id="relationUserAdd" name="relationUserAdd" dojoType="dijit.form.FilteringSelect" required="true"
             autocomplete="true" value="" invalidMessage="" >
                 {% for user in users %}
-                <option value="{{user.id}}" >{{user.name}}</option>
+                <option value="{{user.id}}" >{{user.display}}</option>
                 {% endfor %}
             </select>
         </td>
@@ -48,7 +48,7 @@
         <td>
             <input name="userRelation[{{rel.userId}}]" type="hidden" value="{{rel.userId}}"
             dojoType="dijit.form.TextBox" />
-            {{rel.userName}}
+            {{rel.userDisplay}}
         </td>
         <td>
             <div id="relationDeleteButton{{rel.userId}}"></div>

@@ -193,7 +193,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             for (var i in userList) {
                 // Make an array with the users expect the current one
                 if (userList[i].id != currentUser) {
-                    users.push({'id': userList[i].id, 'name': userList[i].name});
+                    users.push({'id': userList[i].id, 'name': userList[i].display});
                 }
             }
         }
@@ -205,7 +205,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
                 if (temp[i] != currentUser) {
                     for (var j in userList) {
                         if (userList[j].id == temp[i]) {
-                            var userName = userList[j].name;
+                            var userName = userList[j].display;
                             break;
                         }
                     }

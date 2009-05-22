@@ -620,8 +620,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonGetSpecificUsers/');
         $this->request->setParam('users', '1,2');
         $response = $this->getResponse();
-        $this->assertContains('{"key":"username","label":"Username","type":"text","hint":"","order":0,'
-            . '"position":1', $response);
-        $this->assertContains('"numRows":2', $response);
+        $this->assertContains('{"id":"2","display":"Solt, Gustavo"},{"id":"1","display":"Soria Parra, David"}',
+            $response);
     }
 }

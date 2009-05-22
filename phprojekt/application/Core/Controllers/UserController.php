@@ -45,7 +45,14 @@ class Core_UserController extends Core_IndexController
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $records = $user->fetchAll($where, "lastname");
 
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        $data    = array();
+        $display = $user->getDisplay();
+        foreach ($records as $record) {
+            $data['data'][] = array('id'      => $record->id,
+                                    'display' => $record->applyDisplay($display, $record));
+        }
+
+        Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**

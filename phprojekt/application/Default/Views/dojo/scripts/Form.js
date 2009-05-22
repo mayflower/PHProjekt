@@ -158,12 +158,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             for (var i in userList) {
                 // Make an array with the users expect the current one
                 if (userList[i].id != currentUser) {
-                    users.push({'id': userList[i].id, 'name': userList[i].name});
+                    users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
                 // Found the name of each user
                 for (j in accessContent) {
                     if (userList[i].id == accessContent[j].userId) {
-                        accessContent[j].userName = userList[i].name;
+                        accessContent[j].userDisplay = userList[i].display;
                         break;
                     }
                 }
@@ -492,14 +492,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             phpr.destroyWidget("checkNoneAccess[" + userId + "]");
             phpr.destroyWidget("accessDeleteButton" + userId);
 
-            var userName = dijit.byId("dataAccessAdd").attr('displayedValue');
-            var table    = dojo.byId("accessTable");
-            var row      = table.insertRow(table.rows.length);
-            row.id       = "trAccessFor" + userId;
+            var userDisplay = dijit.byId("dataAccessAdd").attr('displayedValue');
+            var table       = dojo.byId("accessTable");
+            var row         = table.insertRow(table.rows.length);
+            row.id          = "trAccessFor" + userId;
 
             var cell = row.insertCell(0);
             cell.innerHTML = '<input id="dataAccess[' + userId + ']" name="dataAccess[' + userId + ']" '
-                + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
+                + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userDisplay;
             var cell = row.insertCell(1);
             cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
                 + ' id="checkReadAccess[' + userId + ']" name="checkReadAccess[' + userId + ']" '
@@ -753,21 +753,21 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         var history     = phpr.DataStore.getData({url: this._historyUrl});
         var userList    = this.userStore.getList();
         var historyData = new Array();
-        var userNames   = new Array();
+        var userDisplay = new Array();
         var row         = 0;
 
         for (var i = 0; i < history.length; i++) {
             // Search for the user name
-            if (!userNames[history[i]["userId"]]) {
+            if (!userDisplay[history[i]["userId"]]) {
                 for (var u in userList) {
                     if (userList[u].id == history[i]["userId"]) {
-                        userNames[history[i]["userId"]] = userList[u].lastname + ", " + userList[u].firstname;
+                        userDisplay[history[i]["userId"]] = userList[u].display;
                         break;
                     }
                 }
             }
-            if (userNames[history[i]["userId"]]) {
-                historyUser = userNames[history[i]["userId"]];
+            if (userDisplay[history[i]["userId"]]) {
+                historyUser = userDisplay[history[i]["userId"]];
             } else {
                 historyUser = '';
             }

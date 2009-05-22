@@ -41,7 +41,7 @@
             <select id="dataAccessAdd" name="dataAccessAdd" dojoType="dijit.form.FilteringSelect" required="true"
             autocomplete="true" value="" invalidMessage="" >
                 {% for user in users %}
-                <option value="{{user.id}}" >{{user.name}}</option>
+                <option value="{{user.id}}" >{{user.display}}</option>
                 {% endfor %}
             </select>
         </td>
@@ -111,8 +111,8 @@
     >
         <td>
             <input id="dataAccess[{{item.userId}}]" name="dataAccess[{{item.userId}}]" type="hidden"
-            value="{{item.userName}}" dojoType="dijit.form.TextBox" />
-            {{item.userName}}
+            value="{{item.userId}}" dojoType="dijit.form.TextBox" />
+            {{item.userDisplay}}
         </td>
         <td>
             <div align="center">
