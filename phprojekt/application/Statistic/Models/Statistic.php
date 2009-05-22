@@ -67,7 +67,7 @@ class Statistic_Models_Statistic
 
         // Get TimeProj
         $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-        $where = sprintf('(date >= %s AND date <= %s AND project_id IN (%s)', $model->_db->quote($startDate),
+        $where = sprintf('(date >= %s AND date <= %s AND project_id IN (%s))', $model->_db->quote($startDate),
             $model->_db->quote($endDate), implode(", ", $projectsId));
         $records = $model->fetchAll($where);
 
