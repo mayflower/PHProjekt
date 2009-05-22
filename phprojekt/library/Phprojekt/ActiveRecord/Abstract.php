@@ -1136,8 +1136,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $selectStmt = $statement[0] . ", ";
             $columns    = explode(",", trim($select));
 
+            $count = 0;
             foreach ($columns as $column) {
+                $count++;
                 $selectStmt .= " " . $this->_quoteTableAndFieldName($column) . " ";
+                if ($count < count($columns)) {
+                    $selectStmt .= ", ";
+                }
             }
 
             $selectStmt .= " FROM ";
@@ -1209,7 +1214,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $string);
 
         // Put some common words in uppercase
-        $string = preg_replace("/\s(and|or|as|in|on|null|not|join|left|right|inner)\s/e", 
+        $string = preg_replace("/\s(and|or|as|in|on|null|not|join|left|right|inner)\s/e",
                                "strtoupper('\\1')", $string);
 
         // Quote the single table or fields in lowercase
