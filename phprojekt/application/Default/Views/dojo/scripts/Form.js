@@ -294,23 +294,29 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (data.length == 0) {
             this._formNode.attr('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
-            var tabs = this.getTabs();
+            var tabs               = this.getTabs();
+            var firstRequiredField = null;
 
             this.setPermissions(data);
             this.presetValues(data);
             this.fieldTemplate = new phpr.Default.Field();
 
             for (var i = 0; i < meta.length; i++) {
-                itemtype     = meta[i]["type"];
-                itemid       = meta[i]["key"];
-                itemlabel    = meta[i]["label"];
-                itemdisabled = meta[i]["readOnly"];
-                itemrequired = meta[i]["required"];
-                itemlabel    = meta[i]["label"];
-                itemvalue    = data[0][itemid];
-                itemrange    = meta[i]["range"];
-                itemtab      = meta[i]["tab"] || 1;
-                itemhint     = meta[i]["hint"];
+                var itemtype     = meta[i]["type"];
+                var itemid       = meta[i]["key"];
+                var itemlabel    = meta[i]["label"];
+                var itemdisabled = meta[i]["readOnly"];
+                var itemrequired = meta[i]["required"];
+                var itemlabel    = meta[i]["label"];
+                var itemvalue    = data[0][itemid];
+                var itemrange    = meta[i]["range"];
+                var itemtab      = meta[i]["tab"] || 1;
+                var itemhint     = meta[i]["hint"];
+
+                // Get the first required field
+                if (itemrequired && !firstRequiredField) {
+                    firstRequiredField = itemid;
+                }
 
                 // Special workaround for new projects - set parent to current ProjectId
                 if (itemid == 'projectId' && !itemvalue){
@@ -417,6 +423,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
             if (this.id > 0 && dijit.byId('tabHistory')) {
                 dojo.connect(dijit.byId("tabHistory"), "onShow", dojo.hitch(this, "showHistory"));
+            }
+
+            // Set cursor to the first required field
+            if (dojo.byId(firstRequiredField)) {
+                dojo.byId('completeContent').focus();
+                dojo.byId(firstRequiredField).focus();
             }
 
             this.postRenderForm();
