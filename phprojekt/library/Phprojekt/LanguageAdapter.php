@@ -148,7 +148,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $lang        = array();
             if (file_exists($languageDir . $langFile)) {
                 include_once($languageDir . $langFile);
-                Phprojekt_Loader::loadFile($langFile, $languageDir, true);
+//                Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                 if (isset($lang)) {
                     if (!isset($this->_translate[$locale]['Default'])) {
                         $this->_translate[$locale]['Default'] = array();
@@ -168,7 +168,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                     $languageDir = PHPR_CORE_PATH . '/' . $module . '/Languages/';
                     if (file_exists($languageDir . $langFile)) {
                         include_once($languageDir . $langFile);
-                        Phprojekt_Loader::loadFile($langFile, $languageDir, true);
+//                        Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                         if (isset($lang)) {
                             if (!isset($this->_translate[$locale][$module])) {
                                 $this->_translate[$locale][$module] = array();
