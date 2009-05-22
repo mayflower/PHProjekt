@@ -52,13 +52,14 @@ final class Default_Helpers_Delete
             throw new Phprojekt_PublishedException('You do not have access for do this action');
         } else {
             $relations = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+            $where     = sprintf('project_id = %d', (int) $id);
 
             // Delete related items
             $modules = $relations->getProjectModulePermissionsById($id);
             foreach ($modules['data'] as $moduleData) {
                 if ($moduleData['inProject']) {
                     $module  = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
-                    $records = $module->fetchAll('project_id = ' . $id);
+                    $records = $module->fetchAll($where);
                     if (is_array($records)) {
                         foreach ($records as $record) {
                             $record->delete();
@@ -68,7 +69,7 @@ final class Default_Helpers_Delete
             }
 
             // Delete module-project relaton
-            $records = $relations->fetchAll('project_id = ' . $id);
+            $records = $relations->fetchAll($where);
             if (is_array($records)) {
                 foreach ($records as $record) {
                     $record->delete();
@@ -77,7 +78,7 @@ final class Default_Helpers_Delete
 
             // Delete user-role-projetc relation
             $relations = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-            $records   = $relations->fetchAll('project_id = ' . $id);
+            $records   = $relations->fetchAll($where);
             if (is_array($records)) {
                 foreach ($records as $record) {
                     $record->delete();

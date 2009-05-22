@@ -46,20 +46,18 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
     {
         $modules = array();
         $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll(' active = 1 AND (save_type = 0 OR save_type = 2) ', ' name ASC ') as $module) {
+        foreach ($model->fetchAll('active = 1 AND (save_type = 0 OR save_type = 2)', 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']        = $module->id;
             $modules['data'][$module->id]['name']      = $module->name;
             $modules['data'][$module->id]['label']     = Phprojekt::getInstance()->translate($module->label);
             $modules['data'][$module->id]['inProject'] = false;
         }
-        $where  = ' project_module_permissions.project_id = ' . $projectId;
-        $where .= ' AND module.active = 1 ';
-        $order  = ' module.name ASC';
+        $where  = sprintf('project_module_permissions.project_id = %d AND module.active = 1', (int) $projectId);
         $select = ' module.id AS module_id ';
         $join   = ' RIGHT JOIN module ON ( module.id = project_module_permissions.module_id ';
         $join  .= ' AND (module.save_type = 0 OR module.save_type = 2) )';
-        foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
+        foreach ($this->fetchAll($where, 'module.name ASC', null, null, $select, $join) as $right) {
             $modules['data'][$right->moduleId]['inProject'] = true;
         }
         return $modules;
@@ -74,7 +72,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
      */
     public function deleteModuleRelation($moduleId)
     {
-        $where = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+        $where = sprintf('module_id = %d', (int) $moduleId);
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }

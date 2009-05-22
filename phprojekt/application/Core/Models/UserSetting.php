@@ -234,12 +234,15 @@ class Core_Models_UserSetting
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {
                     $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
                     $setting->setModule('User');
+
                     if (($key == 'password')) {
                         $value = $password;
                     }
-                    $record = $setting->fetchAll("user_id = ". (int) $userId .
-                                                 " AND key_value = ". $setting->_db->quote($key) .
-                                                 " AND module_id = 0");
+
+                    $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
+                        $setting->_db->quote($key), 0);
+                    $record = $setting->fetchAll($where);
+
                     if (isset($record[0])) {
                         $record[0]->keyValue = $key;
                         $record[0]->value    = $value;

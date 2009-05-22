@@ -93,7 +93,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
         $where = array();
 
         foreach ($words as $word) {
-            $where[] = '(word LIKE '. $this->getAdapter()->quote('%'.$word.'%').')';
+            $where[] = '(word LIKE ' . $this->getAdapter()->quote('%' . $word . '%') . ')';
         }
         $where = implode('OR', $where);
 
@@ -120,7 +120,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
         }
 
         if (!empty($quotedWords)) {
-            $where  = array('word IN ('. implode(', ', $quotedWords) .')');
+            $where  = 'word IN ('. implode(', ', $quotedWords) .')';
             $result = $this->fetchAll($where);
             foreach ($result as $row) {
                 $data  = array('count' => $row->count + 1);
@@ -160,7 +160,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
         }
 
         if (!empty($ids)) {
-            $where  = array('id IN ('. implode(', ', $ids) .')');
+            $where  = 'id IN ('. implode(', ', $ids) .')';
             $result = $this->fetchAll($where);
             foreach ($result as $row) {
                 $where = array('id = '. (int) $row->id);

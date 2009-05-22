@@ -158,12 +158,13 @@ class Calendar_IndexController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
 
+        $db = Phprojekt::getInstance()->getDb();
         if (!empty($itemId)) {
-            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
+            $where = 'id = ' . (int) $itemId;
         } else {
-            $where   = 'participant_id = ' . PHprojekt_Auth::getUserId();
-            $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+            $where = 'participant_id = ' . (int) PHprojekt_Auth::getUserId();
         }
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
@@ -186,10 +187,10 @@ class Calendar_IndexController extends IndexController
         // so lets apply this to the query set.
         $count   = (int) $this->getRequest()->getParam('count', null);
         $offset  = (int) $this->getRequest()->getParam('start', null);
-        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $userId  = PHprojekt_Auth::getUserId();
-        $where   = 'participant_id = ' . $userId . ' AND start_date <= "' . $date . '"'
-            . ' AND end_date >= "' . $date . '"';
+        $db      = Phprojekt::getInstance()->getDb();
+        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $where   = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
@@ -240,12 +241,12 @@ class Calendar_IndexController extends IndexController
         // so lets apply this to the query set.
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
-        $dateStart = Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d")));
-        $dateEnd   = Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d")));
-        $userId    = PHprojekt_Auth::getUserId();
-        $where     = 'participant_id = ' . $userId . ' AND start_date <= "' . $dateEnd
-            . '" AND end_date >= "' . $dateStart . '"';
-        $records   = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
+        $db        = Phprojekt::getInstance()->getDb();
+        $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
+        $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
+        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
+        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -259,10 +260,10 @@ class Calendar_IndexController extends IndexController
     {
         $count   = (int) $this->getRequest()->getParam('count', null);
         $offset  = (int) $this->getRequest()->getParam('start', null);
-        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $userId  = PHprojekt_Auth::getUserId();
-        $where   = 'participant_id = ' . $userId . ' AND start_date <= "' . $date . '"'
-            . ' AND end_date >= "' . $date . '"';
+        $db      = Phprojekt::getInstance()->getDb();
+        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $where   = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -279,10 +280,20 @@ class Calendar_IndexController extends IndexController
         // so lets apply this to the query set.
         $count   = (int) $this->getRequest()->getParam('count', null);
         $offset  = (int) $this->getRequest()->getParam('start', null);
-        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $usersId = $this->getRequest()->getParam('users', null);
-        $where   = 'participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
-            . ' AND end_date >= "' . $date . '"';
+        $db      = Phprojekt::getInstance()->getDb();
+        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $users   = explode(",", $this->getRequest()->getParam('users', null));
+
+        $ids = array();
+        foreach ($users as $users) {
+            $ids[] = (int) $users;
+        }
+        if (empty($ids)) {
+            $ids[] = (int) PHprojekt_Auth::getUserId();
+        }
+
+        $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s',
+            explode(", ", $ids), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
@@ -299,12 +310,12 @@ class Calendar_IndexController extends IndexController
         // so lets apply this to the query set.
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
-        $dateStart = Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d")));
-        $dateEnd   = Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d")));
-        $userId    = PHprojekt_Auth::getUserId();
-        $where     = 'participant_id = ' . $userId . ' AND start_date <= "' . $dateEnd
-            . '" AND end_date >= "' . $dateStart . '"';
-        $records   = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
+        $db        = Phprojekt::getInstance()->getDb();
+        $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
+        $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
+        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
+        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -318,11 +329,20 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonGetSpecificUsersAction()
     {
-        $usersId = $this->getRequest()->getParam('users', null);
-        $where   = "status = 'A' AND id IN (" . $usersId . ")";
-        $order   = "lastname";
+        $users = explode(",", $this->getRequest()->getParam('users', null));
+
+        $ids = array();
+        foreach ($users as $users) {
+            $ids[] = (int) $users;
+        }
+        if (empty($ids)) {
+            $ids[] = (int) PHprojekt_Auth::getUserId();
+        }
+
+        $db      = Phprojekt::getInstance()->getDb();
+        $where   = sprintf('status = %s AND id IN (%s)', $db->quote('A'), implode(", ", $ids));
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $records = $user->fetchAll($where, $order);
+        $records = $user->fetchAll($where, "lastname");
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }

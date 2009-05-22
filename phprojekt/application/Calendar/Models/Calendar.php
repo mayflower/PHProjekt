@@ -191,7 +191,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!empty($this->id)) {
             $rootEventId  = $this->getRootEventId($this);
-            $where        = " parent_id = " . (int) $rootEventId . " OR id = " . (int) $rootEventId . " ";
+            $where        = sprintf('parent_id = %d OR id = %d', (int) $rootEventId, (int) $rootEventId);
             $records      = $this->fetchAll($where);
             foreach ($records as $record) {
                 if (null === $record->rrule) {
@@ -223,8 +223,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $model->find($id);
 
         $rootEventId = $this->getRootEventId($model);
-        $where       = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ') '
-            . ' AND participant_id = ' . (int) $model->participantId;
+        $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
+            (int) $rootEventId, (int) $model->participantId);
         $records = $model->fetchAll($where, 'start_date ASC');
 
         if ($this->_isOwner($model)) {
@@ -258,10 +258,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if ($multipleEvents) {
             $rootEventId = $this->getRootEventId($this);
             if (!$this->_isOwner($this)) {
-                $where = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ') '
-                    . ' AND participant_id = ' . (int) $this->participantId;
+                $where = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
+                    (int) $rootEventId, (int) $this->participantId);
             } else {
-                $where = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ') ';
+                $where = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
             }
 
             $records = $this->fetchAll($where);
@@ -269,11 +269,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 Default_Helpers_Delete::delete($record);
             }
         } else {
-            if (null === $this->rrule) {
-                Default_Helpers_Delete::delete($this);
-            } else {
-                Default_Helpers_Delete::delete($this);
-            }
+            Default_Helpers_Delete::delete($this);
         }
     }
 
@@ -290,8 +286,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function getUserSelectionRecords($usersId, $date, $count, $offset)
     {
-        $where = 'participant_id IN (' . $usersId . ') AND start_date <= "' . $date . '"'
-            . ' AND end_date >= "' . $date . '"';
+        $db    = Phprojekt::getInstance()->getDb();
+        $date  = $db->quote($date);
+        $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s', $usersId, $date, $date);
+
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
     }
 
@@ -372,10 +370,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $this->find($id);
 
         $rootEventId = $this->getRootEventId($this);
-        $where       = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ') ';
+        $where       = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
         if (!$this->_isOwner($this)) {
             // Save only the own events under the parentId
-            $where .= ' AND participant_id = ' . (int) $this->participantId;
+            $where .= sprintf(' AND participant_id = %d', (int) $this->participantId);
         }
 
         $currentParticipants = array();
@@ -445,8 +443,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     // Delete old participant
                     $removeModel = clone($this);
                     $rootEventId = $this->getRootEventId($this);
-                    $where       = ' (parent_id = '. $rootEventId . ' OR id = ' . $rootEventId . ')'
-                        . ' AND participant_id = '. (int) $currentParticipantId;
+                    $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
+                        (int) $rootEventId, (int) $currentParticipantId);
                     $records = $removeModel->fetchAll($where);
                     foreach ($records as $record) {
                         Default_Helpers_Delete::delete($record);
@@ -506,11 +504,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rootEventId = $this->getRootEventId($this);
         if (!$this->_isOwner($this)) {
             // Save only the own events under the parentId
-            $where = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ') '
-                . ' AND participant_id = ' . (int) $this->participantId;
+            $where = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
+                (int) $rootEventId, (int) $this->participantId);
         } else {
             // Save all the events under the parentId
-            $where = ' (parent_id = ' . $rootEventId . ' OR id = ' . $rootEventId . ')';
+            $where = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
         }
 
         $currentParticipants = array();
@@ -532,9 +530,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 // Delete old participant
                 $removeModel = clone($this);
                 $rootEventId = $this->getRootEventId($this);
-                $where       = ' (parent_id = '. $rootEventId . ' OR id = ' . $rootEventId . ')'
-                    . ' AND participant_id = '. (int) $currentParticipantId
-                    . ' AND start_date = "' . date("Y-m-d", $oneDate) . '"';
+                $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d AND start_date = %s',
+                    (int) $rootEventId, (int) $rootEventId, (int) $currentParticipantId,
+                    $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
                 $records = $removeModel->fetchAll($where);
                 foreach ($records as $record) {
                     Default_Helpers_Delete::delete($record);
@@ -554,7 +552,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             if ($newEntry) {
                 $newModel = clone($this);
                 $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
-                                 $this->getRootEventId($this));
+                    $this->getRootEventId($this));
             }
         }
     }
@@ -601,7 +599,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (null === $parentId) {
             $model->parentId = $model->id;
-            //$model->save();
         }
 
         return $model->parentId;

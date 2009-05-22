@@ -165,7 +165,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $rightNamespace = new Zend_Session_Namespace($sessionName);
 
         if (!isset($rightNamespace->right)) {
-            $where  = array();
             $values = array();
 
             // Set the current User
@@ -176,10 +175,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $access                            = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
             $values['currentUser']             = array_merge($values['currentUser'], $access);
 
-            $where[] = 'module_id = '. (int) $moduleId;
-            $where[] = 'item_id = '. (int) $itemId;
-            $where   = implode(' AND ', $where);
-            $rows    = $this->fetchAll($where)->toArray();
+            $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
+            $rows  = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
                 // Convert index
                 foreach ($row as $k => $v) {

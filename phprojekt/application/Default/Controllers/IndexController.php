@@ -138,12 +138,13 @@ class IndexController extends Zend_Controller_Action
         $itemId    = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
-            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, $count, $offset);
+            $where = sprintf('id = %d', (int) $itemId);
         } else if (!empty($projectId)) {
-            $records = $this->getModelObject()->fetchAll('project_id = ' . $projectId, null, $count, $offset);
+            $where = sprintf('project_id = %d', (int) $projectId);
         } else {
-            $records = $this->getModelObject()->fetchAll(null, null, $count, $offset);
+            $where = null;
         }
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
@@ -370,12 +371,14 @@ class IndexController extends Zend_Controller_Action
         $itemId    = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
-            $records = $this->getModelObject()->fetchAll('id = ' . $itemId, null, 0, 0);
+            $where = sprintf('id = %d', (int) $itemId);
         } else if (!empty($projectId)) {
-            $records = $this->getModelObject()->fetchAll('project_id = ' . $projectId, null, 0, 0);
+            $where = sprintf('project_id = %d', (int) $projectId);
         } else {
-            $records = $this->getModelObject()->fetchAll(null, null, 0, 0);
+            $where = null;
         }
+
+        $records = $this->getModelObject()->fetchAll($where, null, 0, 0);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }

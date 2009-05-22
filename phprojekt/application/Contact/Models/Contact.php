@@ -52,8 +52,8 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= sprintf('((%s.owner_id = %d) OR (%s.private = 0))', $this->getTableName(),
-            Phprojekt_Auth::getUserId(), $this->getTableName());
+
+        $where .= sprintf('(owner_id = %d OR private = 0)', (int) Phprojekt_Auth::getUserId());
 
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
     }
@@ -65,10 +65,11 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
      */
     public function recordValidate()
     {
-        // one is the unique value available because is a global module
+        // One is the unique value available because is a global module
         if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName())) >= 1) {
             $this->projectId = 1;
         }
+
         return true;
     }
 
@@ -93,6 +94,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     public function save()
     {
         $result = true;
+
         if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
             if ($this->id > 0) {
                 $this->_history->saveFields($this, 'edit');
@@ -102,6 +104,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
                 $this->_history->saveFields($this, 'add');
             }
         }
+
         return $result;
     }
 

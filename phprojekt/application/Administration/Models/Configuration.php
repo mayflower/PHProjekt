@@ -70,6 +70,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getModules()
     {
         $results = array();
+
         // Module Configuration
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
@@ -84,6 +85,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 }
             }
         }
+
         return $results;
     }
 
@@ -110,6 +112,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
         if (null === $this->_object) {
             $this->_object = Phprojekt_Loader::getModel($this->_module, sprintf('%sConfiguration', $this->_module));
         }
+
         return $this->_object;
     }
 
@@ -123,11 +126,13 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getAdministration($configName)
     {
         $toReturn = null;
-        $record = $this->fetchAll("key_value = ".$this->_db->quote($configName) .
-                                  " AND module_id = ".$this->_db->quote($this->_moduleId));
+
+        $where  = sprintf("key_value = %s AND module_id = %d", $this->_db->quote($configName), (int) $this->_moduleId);
+        $record = $this->fetchAll($where);
         if (!empty($record)) {
             $toReturn = $record[0]->value;
         }
+
         return $toReturn;
     }
 
@@ -142,10 +147,11 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getList($moduleId, $metadata)
     {
         $configurations  = array();
-        $record    = $this->fetchAll('module_id = '.$moduleId);
+
+        $record    = $this->fetchAll('module_id = ' . (int) $moduleId);
         $functions = get_class_methods($this->_object);
 
-        $data = array();
+        $data       = array();
         $data['id'] = 0;
         foreach ($metadata as $meta) {
             $data[$meta['key']] = '';
@@ -162,6 +168,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             }
         }
         $configurations[] = $data;
+
         return $configurations;
     }
 
@@ -175,9 +182,11 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function validateConfigurations($params)
     {
         $message = null;
+
         if (in_array('validateConfigurations', get_class_methods($this->getModel()))) {
             $message = call_user_func(array($this->getModel(), 'validateConfigurations'), $params);
         }
+
         return $message;
     }
 
@@ -197,17 +206,18 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
-                        $record = $this->fetchAll("key_value = ".$this->_db->quote($key) .
-                                                  " AND module_id = ".$this->_db->quote($this->_moduleId));
+                        $where = sprintf('key_value = %s AND module_id = d', $this->_db->quote($key),
+                            (int) $this->_moduleId);
+                        $record = $this->fetchAll($where);
                         if (isset($record[0])) {
                             $record[0]->keyValue = $key;
                             $record[0]->value    = $value;
                             $record[0]->save();
                         } else {
-                            $clone            = clone $this;
-                            $clone->moduleId  = (int) $this->_moduleId;
-                            $clone->keyValue  = $key;
-                            $clone->value     = $value;
+                            $clone           = clone $this;
+                            $clone->moduleId = (int) $this->_moduleId;
+                            $clone->keyValue = $key;
+                            $clone->value    = $value;
                             $clone->save();
                         }
                         break;

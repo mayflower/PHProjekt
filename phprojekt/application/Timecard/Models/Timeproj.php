@@ -159,12 +159,11 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
     public function getRecords($date)
     {
         $db     = Phprojekt::getInstance()->getDb();
-        $where  = sprintf('(owner_id = %d AND date = %s)', Phprojekt_Auth::getUserId(), $db->quote($date));
-        $order  = ' id ASC ';
-        $models = $this->fetchAll($where, $order);
+        $where  = sprintf('(owner_id = %d AND date = %s)', (int) Phprojekt_Auth::getUserId(), $db->quote($date));
+        $models = $this->fetchAll($where, 'id ASC');
 
-        $information     = $this->getInformation($order);
-        $fieldDefinition = $information->getFieldDefinition($order);
+        $information     = $this->getInformation();
+        $fieldDefinition = $information->getFieldDefinition();
 
         $data   = array();
         $datas  = array('timecard' => array(),
@@ -186,14 +185,11 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             $datas['timeproj'][] = $data;
         }
 
-        $where  = sprintf('(owner_id = %d AND date = %s)', Phprojekt_Auth::getUserId(), $db->quote($date));
-        $order  = 'start_time ASC';
-
         $timecard        = Phprojekt_Loader::getModel('Timecard', 'Timecard');
-        $timecardRecords = $timecard->fetchall($where, $order);
-        $information     = $timecard->getInformation($order);
+        $timecardRecords = $timecard->fetchall($where, 'start_time ASC');
+        $information     = $timecard->getInformation();
 
-        $timeCardfieldDefinition = $information->getFieldDefinition($order);
+        $timeCardfieldDefinition = $information->getFieldDefinition();
 
         foreach ($timecardRecords as $cmodel) {
             $data['id'] = $cmodel->id;

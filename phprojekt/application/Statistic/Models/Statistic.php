@@ -60,15 +60,16 @@ class Statistic_Models_Statistic
         $projectsId = array(0);
         foreach ($tree as $node) {
             if ($node->id) {
-                $projectsId[] = $node->id;
+                $projectsId[] = (int) $node->id;
                 $data['data']['projects'][$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
             }
         }
 
         // Get TimeProj
-        $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-        $records = $model->fetchAll(sprintf('(date >= "%s" AND date <= "%s") AND project_id IN (%s)',
-            $startDate, $endDate, implode(",", $projectsId)));
+        $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
+        $where = sprintf('(date >= %s AND date <= %s AND project_id IN (%s)', $model->_db->quote($startDate),
+            $model->_db->quote($endDate), implode(", ", $projectsId));
+        $records = $model->fetchAll($where);
 
         $users = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
 

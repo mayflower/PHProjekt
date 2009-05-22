@@ -88,13 +88,9 @@ class Timecard_IndexController extends IndexController
 
         if (null == $this->getRequest()->getParam('startTime', null)) {
             // Date filter to find the open register
-            $dateFilter = array();
-
-            $dateFilter[] = 'date = "'.date("Y-m-d").'"';
-            $dateFilter[] = '(end_time = "" OR end_time IS NULL)';
-            $dateFilter = implode($dateFilter, " AND ");
-
-            $records = $this->getModelObject()->fetchAll($dateFilter, null, 1);
+            $db      = Phprojekt::getInstance()->getDb();
+            $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote(date("Y-m-d")));
+            $records = $this->getModelObject()->fetchAll($where, null, 1);
 
             if (isset($records[0])) {
                 $model = $records[0];
@@ -140,12 +136,10 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $db    = Phprojekt::getInstance()->getDb();
-        $date  = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
-        $where = sprintf('(owner_id = %d AND date = %s)', Phprojekt_Auth::getUserId(), $date);
-        $order = "start_time";
-
-        $records = $this->getModelObject()->fetchAll($where, $order);
+        $db      = Phprojekt::getInstance()->getDb();
+        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $where   = sprintf('(owner_id = %d AND date = %s)', (int) Phprojekt_Auth::getUserId(), $date);
+        $records = $this->getModelObject()->fetchAll($where, 'start_time');
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -248,15 +242,11 @@ class Timecard_IndexController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
 
         // Date filter to find the open register
-        $dateFilter = array();
-
-        $dateFilter[] = 'date = "'.date("Y-m-d").'"';
-        $dateFilter[] = '(end_time = "" OR end_time IS NULL)';
-        $dateFilter = implode($dateFilter, " AND ");
+        $db      = Phprojekt::getInstance()->getDb();
+        $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote(date("Y-m-d")));
+        $records = $this->getModelObject()->fetchAll($where, null, 1, $offset);
 
         $this->getRequest()->setParam('endTime', date("H:i:s"));
-
-        $records = $this->getModelObject()->fetchAll($dateFilter, null, 1, $offset);
 
         if (isset($records[0])) {
             $model = $records[0];
@@ -363,8 +353,7 @@ class Timecard_IndexController extends IndexController
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where = sprintf('(owner_id = %d AND date LIKE %s)', $userId, $db->quote($year . '-' . $month . '-%'));
-
+        $where   = sprintf('(owner_id = %d AND date LIKE %s', (int) $userId, $db->quote($year . '-' . $month . '-%'));
         $records = $this->getModelObject()->fetchAll($where);
 
         Phprojekt_Converter_Csv::echoConvert($records, 'export');
@@ -387,7 +376,8 @@ class Timecard_IndexController extends IndexController
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where   = sprintf('(owner_id = %d AND date LIKE %s)', $userId, $db->quote($year . '-' . $month . '-%'));
+
+        $where   = sprintf('(owner_id = %d AND date LIKE %s', (int) $userId, $db->quote($year . '-' . $month . '-%'));
         $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         $records = $model->fetchAll($where);
 

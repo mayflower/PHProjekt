@@ -257,11 +257,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $where = sprintf(" owner_id = %d AND date = %s AND "
                 . " ((start_time <= %s AND end_time > %s) OR (start_time < %s AND end_time >= %s) "
                 . " OR (start_time <= %s AND end_time >= %s) OR (start_time >= %s AND end_time <= %s) ) ",
-                Phprojekt_Auth::getUserId(), $date,
+                (int) Phprojekt_Auth::getUserId(), $date,
                 $startTime, $startTime, $endTime, $endTime, $startTime, $endTime, $startTime, $endTime);
         } else {
             $where = sprintf(" owner_id = %d AND date = %s AND (start_time <= %s AND end_time > %s)",
-                Phprojekt_Auth::getUserId(), $date, $startTime, $startTime);
+                (int) Phprojekt_Auth::getUserId(), $date, $startTime, $startTime);
         }
 
         return $where;
@@ -292,7 +292,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     public function getRecords($view, $year, $month, $count, $offset)
     {
         $sortRecords = array();
-        $userId      = Phprojekt_Auth::getUserId();
+        $userId      = (int) Phprojekt_Auth::getUserId();
 
         if (strlen($month) == 1) {
             $month = '0'.$month;
@@ -300,20 +300,18 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         switch ($view) {
             case 'today':
                 $where   = sprintf('(owner_id = %d AND date = %s)', $userId, $this->getAdapter()->quote(date("Y-m-d")));
-                $order   = ' date ASC';
-                $records = $this->fetchAll($where, $order, $count, $offset);
+                $records = $this->fetchAll($where, 'date ASC', $count, $offset);
                 $data    = $records;
                 break;
             case 'month':
                 $where = sprintf('(owner_id = %d AND date LIKE %s)', $userId,
                     $this->getAdapter()->quote($year . '-' . $month . '-%'));
-                $order = ' date ASC';
+                $records = $this->fetchAll($where, 'date ASC', $count, $offset);
 
-                $records     = $this->fetchAll($where, $order, $count, $offset);
                 $sortRecords = array();
                 $timeproj    = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
 
-                $information     = $this->getInformation($order);
+                $information     = $this->getInformation();
                 $fieldDefinition = $information->getFieldDefinition($view);
 
                 $datas   = array();
@@ -404,17 +402,24 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function convertTime($time)
     {
-        $hoursDiff = floor($time / 60);
+        $hoursDiff   = floor($time / 60);
         $minutesDiff = $time - ($hoursDiff * 60);
+
         if (strlen($hoursDiff) == 1) {
             $hoursDiff = '0'.$hoursDiff;
         }
         if (strlen($minutesDiff) == 1) {
             $minutesDiff = '0'.$minutesDiff;
         }
+
         return $hoursDiff.':'.$minutesDiff;
     }
 
+    /**
+     * Delete only the own records
+     *
+     * @return boolean
+     */
     public function delete()
     {
         if ($this->ownerId == Phprojekt_Auth::getUserId()) {

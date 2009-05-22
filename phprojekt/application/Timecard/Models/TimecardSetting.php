@@ -53,9 +53,9 @@ class Timecard_Models_TimecardSetting
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $result       = $activeRecord->fetchAll();
-        $data['range'] = array();
+        $activeRecord     = Phprojekt_Loader::getModel('Project', 'Project');
+        $result           = $activeRecord->fetchAll();
+        $data['range']    = array();
         foreach ($result as $item) {
             $data['range'][] = array('id'   => $item->id,
                                      'name' => $item->title);
@@ -96,12 +96,16 @@ class Timecard_Models_TimecardSetting
                 if ($key == $data['key']) {
                     $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
                     $setting->setModule('Timecard');
+
                     if (($key == 'favorites')) {
                         $value = serialize($value);
                     }
-                    $record = $setting->fetchAll("user_id = ". Phprojekt_Auth::getUserId() .
-                                                 " AND key_value = ". $setting->_db->quote($key) .
-                                                 " AND module_id = ". Phprojekt_Module::getId('Timecard'));
+
+                    $where  = sprintf('user_id = %d AND key_value = %s AND module_id = %d',
+                        (int) Phprojekt_Auth::getUserId(), $setting->_db->quote($key),
+                        (int) Phprojekt_Module::getId('Timecard'));
+                    $record = $setting->fetchAll($where);
+
                     if (isset($record[0])) {
                         $record[0]->keyValue = $key;
                         $record[0]->value    = $value;

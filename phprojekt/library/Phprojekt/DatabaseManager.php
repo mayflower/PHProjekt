@@ -392,7 +392,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 break;
             case 'User':
                 $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-                $result       = $activeRecord->fetchAll("status = 'A'");
+                $where        = sprintf('status = %s', $this->_db->quote('A'));
+                $result       = $activeRecord->fetchAll($where);
                 $options      = $this->_setRangeValues($field, $result, $key, $value);
                 break;
             default:

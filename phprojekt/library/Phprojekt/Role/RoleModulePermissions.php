@@ -47,7 +47,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
         $modules = array();
 
         $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll(' (save_type = 0 OR save_type = 2) ', ' name ASC ') as $module) {
+        foreach ($model->fetchAll('(save_type = 0 OR save_type = 2)', 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = $module->id;
             $modules['data'][$module->id]['name']  = $module->name;
@@ -56,7 +56,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
                 Phprojekt_Acl::convertBitmaskToArray(0));
         }
 
-        $where = ' role_module_permissions.role_id = ' . (int) $roleId;
+        $where = 'role_module_permissions.role_id = ' . (int) $roleId;
         foreach ($this->fetchAll($where) as $right) {
             if (isset($modules['data'][$right->moduleId])) {
                 $modules['data'][$right->moduleId] = array_merge($modules['data'][$right->moduleId],

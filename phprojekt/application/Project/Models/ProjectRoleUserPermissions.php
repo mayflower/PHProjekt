@@ -47,14 +47,14 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         $roles = array();
         $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Role');
 
-        foreach ($model->fetchAll(null, ' name ASC ') as $role) {
+        foreach ($model->fetchAll(null, 'name ASC') as $role) {
             $roles['data'][$role->id] = array();
             $roles['data'][$role->id]['id']    = $role->id;
             $roles['data'][$role->id]['name']  = $role->name;
             $roles['data'][$role->id]['users'] = array();
         }
-        $where  = ' project_role_user_permissions.project_id = ' . $projectId;
-        $order  = ' project_role_user_permissions.user_id ASC';
+        $where  = sprintf('project_role_user_permissions.project_id = %d', (int) $projectId);
+        $order  = 'project_role_user_permissions.user_id ASC';
         $select = ' user.username ';
         $join   = ' LEFT JOIN user ON user.id = project_role_user_permissions.user_id ';
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
@@ -75,7 +75,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
      */
     public function saveRelation($roles, $users, $projectId)
     {
-        $where   = ' project_id = ' . $projectId;
+        $where = sprintf('project_id = %d', (int) $projectId);
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }
@@ -104,16 +104,18 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     public function fetchUserRole($userId, $projectId)
     {
         $role = 1;
+
         // Keep the roles in the session for optimize the query
         if (isset($userId) && isset($projectId)) {
             $sessionName   = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-' . $projectId . '-' . $userId;
             $roleNamespace = new Zend_Session_Namespace($sessionName);
+
             if (isset($roleNamespace->role)) {
                 $role = $roleNamespace->role;
             } else {
-                $where = ' project_id = '. (int) $projectId;
-                $where .= ' AND user_id = '. (int) $userId;
-                $row = $this->fetchall($where);
+                $where = sprintf('project_id = %d AND user_id = %d', (int) $projectId, (int) $userId);
+                $row   = $this->fetchall($where);
+
                 if (!empty($row)) {
                     $role = $row[0]->roleId;
                     $roleNamespace->role = $row[0]->roleId;
@@ -137,6 +139,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                 }
             }
         }
+
         return $role;
     }
 }

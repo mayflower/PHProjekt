@@ -92,8 +92,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      */
     public function getTagId($word)
     {
-        $where   = array();
-        $where[] = 'crc32 = '. $this->getAdapter()->quote(crc32($word));
+        $where = $this->getAdapter()->quoteInto('crc32 = ?', crc32($word));
 
         $record = $this->fetchAll($where);
         if ($record->count() > 0) {

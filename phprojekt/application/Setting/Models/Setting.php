@@ -142,9 +142,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
 
         $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
         if (!isset($settingNamespace->$settingName)) {
-            $record = $this->fetchAll("user_id = ". (int) $userId .
-                                      " AND key_value = ".$this->_db->quote($settingName) .
-                                      " AND module_id = ".$this->_db->quote($this->_moduleId));
+            $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
+                $this->_db->quote($settingName), (int) $this->_moduleId);
+            $record = $this->fetchAll($where);
             if (!empty($record)) {
                 $toReturn = $record[0]->value;
             }
@@ -167,13 +167,16 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     public function getList($moduleId, $metadata, $userId = null)
     {
         $settings = array();
+
         if ($userId == null) {
             $userId = (int) Phprojekt_Auth::getUserId();
         }
-        $record    = $this->fetchAll(sprintf('module_id = %d AND user_id = %d', $moduleId, $userId));
+
+        $where     = sprintf('module_id = %d AND user_id = %d', (int) $moduleId, (int) $userId);
+        $record    = $this->fetchAll($where);
         $functions = get_class_methods($this->_object);
 
-        $data = array();
+        $data       = array();
         $data['id'] = 0;
         foreach ($metadata as $meta) {
             $data[$meta['key']] = '';
@@ -190,6 +193,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             }
         }
         $settings[] = $data;
+
         return $settings;
     }
 
@@ -203,9 +207,11 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     public function validateSettings($params)
     {
         $message = null;
+
         if (in_array('validateSettings', get_class_methods($this->getModel()))) {
             $message = call_user_func(array($this->getModel(), 'validateSettings'), $params);
         }
+
         return $message;
     }
 
@@ -233,9 +239,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
-                        $record = $this->fetchAll("user_id = ". $userId .
-                                                  " AND key_value = ".$this->_db->quote($key) .
-                                                  " AND module_id = ".$this->_db->quote($this->_moduleId));
+                        $where  = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
+                            $this->_db->quote($key), (int) $this->_moduleId);
+                        $record = $this->fetchAll($where);
                         if (isset($record[0])) {
                             $record[0]->keyValue = $key;
                             $record[0]->value    = $value;
