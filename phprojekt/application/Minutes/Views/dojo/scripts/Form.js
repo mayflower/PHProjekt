@@ -47,7 +47,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             // no placeholders used atm.
         });
         
-        this.addTab(itemsData, 'tabItems', 'Items', 'itemsFormTab');        
+        this.addTab(itemsData, 'tabItems', phpr.nls.get('Items'), 'itemsFormTab');        
     },
     
     postRenderForm: function() {
@@ -127,20 +127,20 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         var layout = [{
             cells: [[
                      {
-                         name:     'Topic',
+                         name:     phpr.nls.get('Topic'),
                          field:    'topicId',
                          styles:   "text-align: center;",
                          width:    '30px',
                          rowSpan:  2
                      },
                      {
-                         name:     'Title',
+                         name:     phpr.nls.get('Title'),
                          field:    'title',
                          styles:   "text-align: left;",
                          width:    '270px'
                      },
                      {
-                         name:     'Type',
+                         name:     phpr.nls.get('Type'),
                          field:    'topicType',
                          styles:   "text-align: center;",
                          width:    '50px',
@@ -156,13 +156,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          }
                      },
                      {
-                         name:     'Date',
+                         name:     phpr.nls.get('Date'),
                          field:    'topicDate',
                          styles:   "text-align: center;",
                          width:    '65px'
                      },
                      {
-                         name:     'Who',
+                         name:     phpr.nls.get('Who'),
                          field:    'userId',
                          styles:   "text-align: center;",
                          width:    '50px',
@@ -179,7 +179,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                      },
                  ],[
                      {
-                         name:     'Comment',
+                         name:     phpr.nls.get('Comment'),
                          field:    'comment',
                          styles:   "text-align: left;",
                          width:    '465px',
@@ -415,15 +415,19 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         }
         
         var placeholders = {
-            lblTitle:       'Title',
-            lblComment:     'Comment',
-            lblUserId:      'Who',
-            lblTopicType:   'Type',
-            lblTopicDate:   'Date',
-            lblParentOrder: 'Sort after',
-            lblSubmit:      'Save',
-            lblDelete:      'Delete',
-            lblClear:	    'Clear',
+            lblTitle:       phpr.nls.get('Title'),
+            lblComment:     phpr.nls.get('Comment'),
+            lblUserId:      phpr.nls.get('Who'),
+            lblTopicType:   phpr.nls.get('Type'),
+            lblTopicDate:   phpr.nls.get('Date'),
+            lblParentOrder: phpr.nls.get('Sort'),
+            lblSubmit:      phpr.nls.get('Save'),
+            lblDelete:      phpr.nls.get('Delete'),
+            lblClear:	    phpr.nls.get('Clear'),
+            msgTitle:		phpr.nls.get('Title must not be empty'),
+            msgTopicType:	phpr.nls.get('Please choose a type for this item'),
+            msgUserId:		phpr.nls.get('Please choose a user name'),
+            msgDate:		phpr.nls.get('No date given or date format is not valid (must be YYYY-MM-DD)'),
             parentOrder:    this._itemFormData.sortOrder - 1 >= 0 ? this._itemFormData.sortOrder - 1 : '',
             users:          this._invitedList,
             items:          this._itemList,
