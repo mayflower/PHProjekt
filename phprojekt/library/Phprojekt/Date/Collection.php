@@ -156,6 +156,13 @@ class Phprojekt_Date_Collection
             $this->addArray($dates);
         }
 
+        // Clean extra dates
+        foreach ($this->_elements as $date) {
+            if ($date < $this->_minDate || $date > $this->_maxDate) {
+                unset($this->_elements[$date]);
+            }
+        }
+
         return true;
     }
 
