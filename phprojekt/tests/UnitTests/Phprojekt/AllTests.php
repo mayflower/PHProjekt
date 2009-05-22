@@ -54,6 +54,7 @@ require_once 'SearchTest.php';
 require_once 'ModuleTest.php';
 require_once 'TabsTest.php';
 require_once 'PhprojektTest.php';
+require_once 'Date/CollectionTest.php';
 
 /**
  * Test suite for the default module
@@ -112,6 +113,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_SearchTest');
         $suite->addTestSuite('Phprojekt_TabsTest');
         $suite->addTestSuite('Phprojekt_PhprojektTest');
+        $suite->addTestSuite('Phprojekt_Date_CollectionTest');
 
         return $suite;
     }
