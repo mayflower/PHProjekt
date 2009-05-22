@@ -39,7 +39,7 @@
  */
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
-    /* Define all the lang files */
+    // Define all the lang files
     const LANG_AL = 'al.inc.php';
     const LANG_BG = 'bg.inc.php';
     const LANG_BR = 'br.inc.php';
@@ -120,10 +120,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * @param string|array       $options Options for the adaptor
      *
      * @return void
-     *
-     * @todo "include_once $data" is not a good code.
-     *       Maybe must have some checks before include the file
-     *
      */
     protected function _loadTranslationData($data, $locale, array $options = array())
     {
@@ -132,7 +128,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $this->_translate[$locale] = array ();
         }
 
-        /* Get the translated string from the session if exists */
+        // Get the translated string from the session if exists
         $session = new Zend_Session_Namespace('Phprojekt_LanguageAdapter-_loadTranslationData-' . $locale);
         if (true === isset($session->translatedStrings)) {
             $this->_translate = $session->translatedStrings;
@@ -140,7 +136,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $session->translatedStrings = array();
         }
 
-        /* Collect a new translation set */
+        // Collect a new translation set
         if (true === empty($this->_translate[$locale]) && empty($session->translatedStrings)) {
             // Default
             $langFile    = $this->_getLangFile($locale);
@@ -148,7 +144,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $lang        = array();
             if (file_exists($languageDir . $langFile)) {
                 include_once($languageDir . $langFile);
-//                Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                 if (isset($lang)) {
                     if (!isset($this->_translate[$locale]['Default'])) {
                         $this->_translate[$locale]['Default'] = array();
@@ -162,13 +157,12 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $files = scandir(PHPR_CORE_PATH);
             foreach ($files as $module) {
                 if ($module != '.' && $module != '..' && $module != 'Default' && $module != '.svn') {
-                    /* Get the translation file */
+                    // Get the translation file
                     $lang        = array ();
                     $langFile    = $this->_getLangFile($locale);
                     $languageDir = PHPR_CORE_PATH . '/' . $module . '/Languages/';
                     if (file_exists($languageDir . $langFile)) {
                         include_once($languageDir . $langFile);
-//                        Phprojekt_Loader::loadFile($langFile, $languageDir, true);
                         if (isset($lang)) {
                             if (!isset($this->_translate[$locale][$module])) {
                                 $this->_translate[$locale][$module] = array();
