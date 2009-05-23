@@ -23,8 +23,6 @@ $lang["Sunday"] = "Sonntag";
 $lang["Further events"] = "Weitere Termine";
 $lang["Today"] = "Heute";
 $lang["Done"] = "Ok";
-$lang["Select users for the group view"] = "Bitte User für Gruppenansicht auswählen";
-$lang["You have to select at least one user!"] = "Sie müssen mindestens einen User auswählen";
 $lang["User selection"] = "Benutzerauswahl";
 $lang["Place"] = "Ort";
 $lang["Calendar week"] = "Kalenderwoche";
@@ -56,3 +54,7 @@ $lang["Th"] = "Do";
 $lang["Fr"] = "Fr";
 $lang["Sa"] = "Sa";
 $lang["Su"] = "So";
+
+// Messages
+$lang["Select users for the group view"] = "Bitte User für Gruppenansicht auswählen";
+$lang["You have to select at least one user!"] = "Sie müssen mindestens einen User auswählen";

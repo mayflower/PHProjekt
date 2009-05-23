@@ -23,8 +23,6 @@ $lang["Sunday"] = "Domingo";
 $lang["Further events"] = "Otros eventos";
 $lang["Today"] = "Hoy";
 $lang["Done"] = "Listo";
-$lang["Select users for the group view"] = "Elija los usuarios para la vista grupal";
-$lang["You have to select at least one user!"] = "Debe elegir al menos un usuario!";
 $lang["User selection"] = "Selección de usuario";
 $lang["Place"] = "Lugar";
 $lang["Calendar week"] = "Calendario semanal";
@@ -56,6 +54,10 @@ $lang["Th"] = "Ju";
 $lang["Fr"] = "Vi";
 $lang["Sa"] = "Sa";
 $lang["Su"] = "Do";
+
+// Messages
+$lang["Select users for the group view"] = "Elija los usuarios para la vista grupal";
+$lang["You have to select at least one user!"] = "Debe elegir al menos un usuario!";
 
 // Tooltip Help
 $lang["Interval Help"] = "El intervalo para la opción seleccionada en Repeticiones. <br>Ej.: Repeticiones Semanal - "
