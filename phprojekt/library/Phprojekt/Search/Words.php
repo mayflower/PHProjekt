@@ -199,8 +199,8 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
         $string = $this->_cleanupstring($string);
         // Split the string into an array
         $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
-        // Strip off short words
-        $tempArray = array_filter($tempArray, array($this, "_stripShortsWords"));
+        // Strip off short or long words
+        $tempArray = array_filter($tempArray, array($this, "_stripLengthWords"));
         // Strip off stop words
         $tempArray = array_filter($tempArray, array($this, "_stripStops"));
         // Remove duplicate entries
@@ -248,15 +248,15 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Remove the short words from the index
+     * Remove the short or long words from the index
      *
      * @param array $string String to check
      *
      * @return boolean
      */
-    private function _stripShortsWords($string)
+    private function _stripLengthWords($string)
     {
-        return (strlen($string) > 2);
+        return (strlen($string) > 2 && strlen($string) < 256);
     }
 
     /**

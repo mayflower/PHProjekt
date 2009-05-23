@@ -375,8 +375,8 @@ class Phprojekt_Tags
         $string = $this->_cleanupstring($string);
         // Split the string into an array
         $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
-        // Strip off short words
-        $tempArray = array_filter($tempArray, array($this, "_stripShortsWords"));
+        // Strip off short or long words
+        $tempArray = array_filter($tempArray, array($this, "_stripLengthWords"));
 
         return $tempArray;
     }
@@ -420,15 +420,15 @@ class Phprojekt_Tags
     }
 
     /**
-     * Remove the short words from the index
+     * Remove the short or long words from the index
      *
      * @param array $var String to check
      *
      * @return boolean
      */
-    private function _stripShortsWords($var)
+    private function _stripLengthWords($var)
     {
-        return (strlen($var) > 2);
+        return (strlen($var) > 2 && strlen($var) < 256);
     }
 
     /**
