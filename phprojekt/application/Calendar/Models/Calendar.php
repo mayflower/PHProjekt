@@ -628,15 +628,17 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $bodyData   = array();
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Title'),
                             'value' => $this->title);
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Place'),
+                            'value' => $this->place);
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Notes'),
                             'value' => $this->notes);
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('startDate'),
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start date'),
                             'value' => $this->_translateDate($this->_startDate));
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start Time'),
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start time'),
                             'value' => substr($this->startTime, 0, 5));
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End date'),
                             'value' => $this->_translateDate($this->_endDate));
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End Time'),
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End time'),
                             'value' => substr($this->endTime, 0, 5));
 
         $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
