@@ -69,15 +69,11 @@ class Phprojekt_Date_Collection
      * Create a new collection of dates.
      *
      * @param string $minDate The lowsest allowed value
-     * @param string $maxDate The highest allowed value
      */
-    public function __construct($minDate, $maxDate = null)
+    public function __construct($minDate)
     {
         $this->_date    = new Zend_Date();
         $this->_minDate = $this->_getDate(strtotime($minDate));
-        if (null != $maxDate) {
-            $this->_maxDate = $this->_getDate(strtotime($maxDate));
-        }
     }
 
     /**
