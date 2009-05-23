@@ -266,7 +266,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             action:   action,
                             tooltip:  this.getTooltip(itemhint)
                 });
-        return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
+        return html + this.disabledField(itemlabel, itemid, null, false, false);
     },
 
     displayFieldRender:function(itemlabel, itemid, itemvalue, itemhint, range) {

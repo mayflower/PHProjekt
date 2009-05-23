@@ -314,7 +314,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var itemhint     = meta[i]["hint"];
 
                 // Get the first required field
-                if (itemrequired && !firstRequiredField) {
+                if (itemrequired && itemtype != 'hidden' && !firstRequiredField) {
                     firstRequiredField = itemid;
                 }
 
