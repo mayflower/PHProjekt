@@ -751,6 +751,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     userTxt:     phpr.nls.get('User'),
                     fieldTxt:    phpr.nls.get('Field'),
                     oldValueTxt: phpr.nls.get('Old value'),
+                    newValueTxt: phpr.nls.get('New value'),
                     data:        this.getHistoryData()
                 });
             })});
@@ -785,9 +786,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
             historyModule   = history[i]["moduleId"];
             historyItemId   = history[i]["itemId"];
-            historyField    = history[i]["field"];
-            historyOldValue = history[i]["oldValue"];
-            historyNewValue = history[i]["newValue"];
+            historyField    = history[i]["label"] || '';
+            historyOldValue = history[i]["oldValue"] || '';
+            historyNewValue = history[i]["newValue"] || '';
             historyAction   = history[i]["action"];
             historyDate     = history[i]["datetime"];
 
@@ -802,7 +803,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 date:     historyDate,
                 user:     historyUser,
                 field:    historyField,
-                oldValue: historyOldValue
+                oldValue: historyOldValue,
+                newValue: historyNewValue
             });
 
             row++;

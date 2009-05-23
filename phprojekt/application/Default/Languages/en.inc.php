@@ -54,8 +54,8 @@ $lang["Budget"] = "Budget";
 $lang["User"] = "User";
 $lang["ItemId"] = "Item";
 $lang["Field"] = "Field";
-$lang["Old value"] = "Old Value";
-$lang["NewValue"] = "New Value";
+$lang["Old value"] = "Old value";
+$lang["New value"] = "New value";
 $lang["Datetime"] = "Datetime";
 $lang["Comments"] = "Comments";
 $lang["comments"] = "Comments";
@@ -393,4 +393,4 @@ $lang["Content Help"]["History"] = "<br/>
     <b>History tab</b><br/>
     <br/>
     It shows a listing of the changes made to the item since its creation.<br/>
-    It has four columns: <i>date</i>, <i>user</i>, <i>field</i> and <i>old value</i>.";
+    It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";

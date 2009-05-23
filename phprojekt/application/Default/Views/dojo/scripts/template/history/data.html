@@ -1,5 +1,5 @@
 <table id="historyTable"
-style="position: relative; left: 75px">
+style="position: relative; left: 75px; width: 90%">
 <tr>
     <th>
         <label>{{dateTxt}}</label>
@@ -13,6 +13,9 @@ style="position: relative; left: 75px">
     <th>
         <label>{{oldValueTxt}}</label>
     </th>
+    <th>
+        <label>{{newValueTxt}}</label>
+    </th>
 </tr>
 {% for history in data %}
 <tr class="{{history.trClass}}">
@@ -20,6 +23,7 @@ style="position: relative; left: 75px">
     <td>{{history.user}}</td>
     <td>{{history.field}}</td>
     <td>{{history.oldValue}}</td>
+    <td>{{history.newValue}}</td>
 </tr>
 {% endfor %}
 </table>

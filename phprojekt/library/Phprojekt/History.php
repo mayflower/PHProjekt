@@ -167,6 +167,15 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         if (!isset($moduleId)) {
             $moduleId = Phprojekt_Module::getId($object->getModelName());
         }
+
+        if (null === $object) {
+            $moduleName = Phprojekt_Module::getModuleName($moduleId);
+            $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
+        }
+
+        $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $fieldDefinition = $object->getInformation()->getFieldDefinition($order);
+
         $where  = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
         $where .= $this->getAdapter()->quoteInto(' AND item_id = ?', (int) $itemId, 'INTEGER');
 
@@ -181,16 +190,36 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         }
 
         $result = array();
-
+        $fields = array();
+        foreach ($fieldDefinition as $field) {
+            $fields[$field['key']] = $field;
+        }
         foreach ($this->fetchAll($where, 'datetime DESC') as $row) {
-            $result[] = array('userId'   => $row->userId,
-                              'moduleId' => $row->moduleId,
-                              'itemId'   => $row->itemId,
-                              'field'    => $row->field,
-                              'oldValue' => $row->oldValue,
-                              'newValue' => $row->newValue,
-                              'action'   => $row->action,
-                              'datetime' => $row->datetime);
+            if (isset($fields[$row->field])) {
+                $oldField        = $fields[$row->field];
+                $oldField['key'] = 'oldValue';
+                $oldValue        = Phprojekt_Converter_Text::convert($row, $oldField);
+                $newField        = $fields[$row->field];
+                $newField['key'] = 'newValue';
+                $newValue        = Phprojekt_Converter_Text::convert($row, $newField);
+                $label           = $fields[$row->field]['label'];
+            } else {
+                $oldValue = $row->oldValue;
+                $newValue = $row->newValue;
+                $label    = $row->field;
+            }
+
+            if ($oldValue != $newValue) {
+                $result[] = array('userId'   => $row->userId,
+                                  'moduleId' => $row->moduleId,
+                                  'itemId'   => $row->itemId,
+                                  'field'    => $row->field,
+                                  'label'    => $label,
+                                  'oldValue' => $oldValue,
+                                  'newValue' => $newValue,
+                                  'action'   => $row->action,
+                                  'datetime' => $row->datetime);
+            }
         }
 
         return $result;

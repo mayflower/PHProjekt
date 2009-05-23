@@ -65,8 +65,9 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'moduleId' => '1',
                        'itemId'   => $project->id,
                        'field'    => 'currentStatus',
+                       'label'    => 'Current Status',
                        'oldValue' => '',
-                       'newValue' => '2',
+                       'newValue' => 'Ordered',
                        'action'   => 'add',
                        'datetime' => date("Y-m-d"));
         $found = 0;
@@ -103,6 +104,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'moduleId' => '1',
                        'itemId'   => Zend_Registry::get('insertedId'),
                        'field'    => 'title',
+                       'label'    => 'Title',
                        'oldValue' => 'TEST',
                        'newValue' => 'EDITED TEST',
                        'action'   => 'edit',
@@ -135,6 +137,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'moduleId' => '1',
                        'itemId'   => Zend_Registry::get('insertedId'),
                        'field'    => 'title',
+                       'label'    => 'Title',
                        'oldValue' => 'TEST',
                        'newValue' => 'EDITED TEST',
                        'action'   => 'edit',
@@ -166,7 +169,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $data     = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
         $lastData = $history->getLastHistoryData($project);
 
-        $this->assertEquals(11, count($data));
+        $this->assertEquals(7, count($data));
         $this->assertEquals(1, count($lastData));
     }
 
@@ -187,6 +190,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'moduleId' => '1',
                        'itemId'   => Zend_Registry::get('insertedId'),
                        'field'    => 'title',
+                       'label'    => 'Title',
                        'oldValue' => 'EDITED TEST',
                        'newValue' => '',
                        'action'   => 'delete',
