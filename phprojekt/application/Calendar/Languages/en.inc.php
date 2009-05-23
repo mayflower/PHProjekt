@@ -58,6 +58,8 @@ $lang["Su"] = "Su";
 // Messages
 $lang["Select users for the group view"] = "Select users for the group view";
 $lang["You have to select at least one user!"] = "You have to select at least one user!";
+$lang["Wrong Recurrence Interval"] = "Wrong Recurrence Interval";
+$lang["Incomplete Recurrence Until field"] = "Incomplete Recurrence Until field";
 
 // Tooltip Help
 $lang["Interval Help"] = "The interval for the option selected in Repeats. <br>E.g.: Repeats Weekly - Interval"
