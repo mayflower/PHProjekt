@@ -89,8 +89,10 @@ class Phprojekt_Converter_Text
                     $value = $model->$field['key'];
                 }
                 break;
-            case 'text':
             case 'textarea':
+                $value = ereg_replace("\n", "", strip_tags($model->$field['key']));
+                break;
+            case 'text':
             case 'date':
             default:
                 $value = $model->$field['key'];
