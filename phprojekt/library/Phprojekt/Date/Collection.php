@@ -74,7 +74,6 @@ class Phprojekt_Date_Collection
     public function __construct($minDate, $maxDate = null)
     {
         $this->_date    = new Zend_Date();
-
         $this->_minDate = $this->_getDate(strtotime($minDate));
         if (null != $maxDate) {
             $this->_maxDate = $this->_getDate(strtotime($maxDate));
@@ -114,9 +113,9 @@ class Phprojekt_Date_Collection
      * Fill the collection with all dates that can be calculated from rrule starting with minDate.
      * If there are already elements in the collection they will be dropped.
      *
-     * @param  string  $rrule The rrule that should be parsed
+     * @param string $rrule The rrule that should be parsed
      *
-     * @return boolean        TRUE if parsing was successful, FALSE otherwise
+     * @return boolean TRUE if parsing was successful, FALSE otherwise
      */
     public function applyRrule($rrule)
     {
@@ -169,9 +168,9 @@ class Phprojekt_Date_Collection
     /**
      * Parse the RRULE of an iCal-file
      *
-     * @param  string $rrule RRULE to parse
+     * @param string $rrule RRULE to parse
      *
-     * @return array         Array containing the parsed rule
+     * @return array Array containing the parsed rule
      */
     private function _parseRrule($rrule)
     {
@@ -280,6 +279,8 @@ class Phprojekt_Date_Collection
      * Removes a series of dates from the collection
      *
      * @param array $exclude Array with Unix Timestamps that should be removed from the collection
+     *
+     * @return void
      */
     public function filter($excludeDates)
     {
