@@ -65,6 +65,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
     private $_notifParticipants;
     private $_startDate;
+    private $_endDate;
 
     /**
      * Save or inserts an event. It inserts one envent by participant
@@ -325,6 +326,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                    $sendNotification, $participantsList, $parentId)
     {
         $this->_startDate         = $request['startDate'];
+        $this->_endDate           = $request['endDate'];
         $this->_notifParticipants = implode(",", $participantsList);
 
         $totalEvents = count($eventDates);
@@ -364,6 +366,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     private function _updateMultipleEvents($request, $id, $eventDates, $daysDuration, $participantsList)
     {
         $this->_startDate         = $request['startDate'];
+        $this->_endDate           = $request['startDate'];
         $this->_notifParticipants = implode(",", $participantsList);
 
         $addParticipants = true;
@@ -490,6 +493,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     private function _updateSingleEvent($request, $id, $eventDates, $daysDuration, $participantsList)
     {
         $this->_startDate         = $request['startDate'];
+        $this->_endDate           = $request['endDate'];
         $this->_notifParticipants = implode(",", $participantsList);
 
         $addParticipants = true;
@@ -630,6 +634,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                             'value' => $this->_translateDate($this->_startDate));
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start Time'),
                             'value' => substr($this->startTime, 0, 5));
+        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End date'),
+                            'value' => $this->_translateDate($this->_endDate));
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End Time'),
                             'value' => substr($this->endTime, 0, 5));
 
