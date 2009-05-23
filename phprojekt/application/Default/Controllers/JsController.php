@@ -135,7 +135,7 @@ class JsController extends IndexController
 
         foreach ($this->_modules as $module) {
             echo '
-                this.'.$module.' = new phpr.'.$module.'.Main();
+                this.' . $module . ' = new phpr.' . $module . '.Main();
             ';
         }
 
@@ -144,6 +144,42 @@ class JsController extends IndexController
                 dojo.publish(phpr.module + ".load");
             }
         });
+        ';
+    }
+
+    /**
+     * Collect all the js files and return it as one
+     * Only in the $module folder
+     *
+     * @return void
+     */
+    public function moduleAction()
+    {
+        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
+        $module = ucfirst(str_replace(" ", "", $module));
+
+        // Load the module
+        if (is_dir(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/')) {
+            $scripts = scandir(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/');
+        } else {
+            $scripts = array();
+        }
+
+        echo 'dojo.registerModulePath'
+            . '("phpr.' . $module . '", "../../../application/' . $module . '/Views/dojo/scripts");';
+        echo $this->_getModuleScripts($scripts, $module);
+
+        // Preload the templates and save them into __phpr_templateCache
+        foreach ($this->_templates as $templateData) {
+            $content = str_replace("'", "\'", $templateData['contents']);
+            $content = str_replace("<", "<' + '", $content);
+            echo '
+                __phpr_templateCache["phpr.' . $templateData['module'] . '.template.' . $templateData['name']
+                . '"] = \'' . $content . '\';';
+        }
+
+        echo '
+            this.' . $module . ' = new phpr.' . $module . '.Main();
         ';
     }
 

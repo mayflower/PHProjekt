@@ -140,8 +140,6 @@ $lang["The module was added correctly"] = "Das Modul wurde erfolgreich hinzugef�
 $lang["The module was edited correctly"] = "Das Modul wurde erfolgreich geändert";
 $lang["The module can not be deleted"] = "Das Modul kann nicht gelöscht werden";
 $lang["The module was deleted correctly"] = "Das Modul wurde erfolgreich gelöscht";
-$lang["YOU MUST REFRESH THE PAGE TO WORK WITH THE NEW MODULE"] = "SIE MÜSSEN DIE SEITE NEU LADEN, UM MIT DEM "
-    . "NEUEN MODUL ZU ARBEITEN";
 $lang["No help available"] = "Keine Hilfe verfügbar";
 $lang["You do not have access for do this action"] = "Sie haben keinen Zugriff für diese Aktion";
 

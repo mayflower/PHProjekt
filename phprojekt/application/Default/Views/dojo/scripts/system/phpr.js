@@ -710,3 +710,24 @@ dojo.declare("phpr.TreeContent", null, {
         }
     }
 });
+
+phpr.loadJsFile = function(fileName) {
+    // Load a js and insert into the head
+    var fileRef = document.createElement('script')
+    fileRef.setAttribute("type" ,"text/javascript");
+    fileRef.setAttribute("src", fileName);
+    if (typeof fileRef != "undefined") {
+        document.getElementsByTagName("head")[0].appendChild(fileRef)
+    }
+};
+
+phpr.loadCssFile = function(fileName) {
+    // Load a css and insert into the head
+    var fileRef = document.createElement("link")
+    fileRef.setAttribute("rel", "stylesheet");
+    fileRef.setAttribute("type", "text/css");
+    fileRef.setAttribute("href", fileName);
+    if (typeof fileRef!="undefined") {
+        document.getElementsByTagName("head")[0].appendChild(fileRef)
+    }
+};

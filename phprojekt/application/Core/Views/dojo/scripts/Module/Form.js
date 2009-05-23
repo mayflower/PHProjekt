@@ -245,11 +245,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type == 'success') {
                                 if (!this.id) {
-                                    var response     = {};
-                                    response.type    = 'notice';
-                                    response.message = phpr.nls.get('YOU MUST REFRESH THE PAGE TO WORK WITH THE '
-                                        + 'NEW MODULE');
-                                    new phpr.handleResponse('serverFeedback', response);
+                                    phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData['name']);
                                 }
                                 this.publish("updateCacheData");
                                 this.publish("setUrlHash", [phpr.module]);
