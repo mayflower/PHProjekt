@@ -413,7 +413,11 @@ class Phprojekt_Mail_Notification extends Zend_Mail
 
         // Creates the Zend_Mail_Transport_Smtp object
         $smtpTransport = $this->_setTransport();
-        $this->send($smtpTransport);
+        try {
+            $this->send($smtpTransport);
+        } catch(Exception $e){
+            throw new Phprojekt_PublishedException('SMTP error: ' . $e->getMessage());
+        }
     }
 
     /**
