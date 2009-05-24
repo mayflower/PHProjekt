@@ -109,7 +109,7 @@ class Phprojekt_Converter_Csv
             $metadata = $information->getFieldDefinition($order);
             if (is_array($metadata)) {
                 foreach ($metadata as $oneCol) {
-                    $data[] = $oneCol['label'];
+                    $data[] = utf8_decode($oneCol['label']);
                 }
             }
             $datas[] = $data;
@@ -120,6 +120,7 @@ class Phprojekt_Converter_Csv
             foreach ($information->getFieldDefinition($order) as $field) {
                 $key    = $field['key'];
                 $value  = Phprojekt_Converter_Text::convert($cmodel, $field);
+                $value  = utf8_decode($value);
                 $data[] = $value;
             }
             $datas[] = $data;

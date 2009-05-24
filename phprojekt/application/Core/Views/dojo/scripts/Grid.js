@@ -30,5 +30,11 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     },
 
     showTags:function() {
+    },
+
+    setExportButton:function(meta) {
+        // Summary:
+        //    This empty function is here to override the Default one and make it not show export button
+        // in Administration module
     }
 });
