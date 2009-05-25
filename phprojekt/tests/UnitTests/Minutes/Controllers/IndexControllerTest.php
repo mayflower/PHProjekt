@@ -152,8 +152,8 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonListUser/id/1');
 
         $response = $this->getResponse();
-        $this->assertContains('{"id":"1","username":', $response);
-        $this->assertContains('{"id":"2","username":', $response);
+        $this->assertContains('{"id":"1","display":', $response);
+        $this->assertContains('{"id":"2","display":', $response);
         $this->assertContains('"numRows":2})', $response, "Response was: '$response'");
         // This action should return the list of users selected as participantsInvited only from existing minutes.
     }

@@ -170,7 +170,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                              var userList = me._invitedList;
                              for(var i=0; i < userList.length; i++) {
                                  if (userList[i].id && userList[i].id == value) {
-                                     return userList[i].username;
+                                     return userList[i].display;
                                  }
                              }
                              console.log('Investigate! Value not in user array: ' + value);
@@ -367,11 +367,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    instead of their ID.
         //    Calls optional callback hook if provided.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
-    		if (responseObject.length) {
-    			this._itemList = responseObject;
-    		} else {
-    			this._itemList = [];
-    		}
+            if (responseObject.length) {
+                this._itemList = responseObject;
+            } else {
+                this._itemList = [];
+            }
             
             if (callback) {
                 callback();

@@ -201,7 +201,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = 'sort_order', $count = null, $offset = null, $select = null, $join = null)
+    public function fetchAll($where = null, $order = 'sort_order', $count = null, $offset = null, $select = null, 
+                             $join = null)
     {
         $minutes = $this->_minutes->find($this->_minutesId);
         if (null !== $where) {

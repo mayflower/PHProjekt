@@ -213,9 +213,10 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 
                 $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
                 $users = $user->fetchAll();
+                $displayname = $user->getDisplay();
                 foreach ($users as $node) {
                     $data['range'][] = array('id'   => $node->id,
-                                             'name' => $node->username);
+                                             'name' => $node->applyDisplay($displayname, $node));
                 }
                 
                 $data['required'] = false;

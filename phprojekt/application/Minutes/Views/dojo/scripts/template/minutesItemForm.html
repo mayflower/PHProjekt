@@ -56,7 +56,7 @@
                 <option value=""></option>
                 {% for user in users %}
                 <option value="{{user.id}}">
-                  {{user.username}}
+                  {{user.display}}
                 </option>
                 <!-- {% ifequal ownerId user.id %}selected="selected"{% endifequal %} -->
                 {% endfor %}

@@ -49,7 +49,16 @@ class Minutes_IndexController extends IndexController
         if (!empty($minutes->id)) {
             $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $userList = $user->fetchAll(sprintf('id IN (%s)', $minutes->participantsInvited));
-            Phprojekt_Converter_Json::echoConvert($userList);
+
+            $data    = array();
+            $display = $user->getDisplay();
+            foreach ($userList as $record) {
+                $data['data'][] = array('id'      => $record->id,
+                                        'display' => $record->applyDisplay($display, $record));
+            }
+            $data['numRows'] = count($userList);
+            
+            Phprojekt_Converter_Json::echoConvert($data);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
