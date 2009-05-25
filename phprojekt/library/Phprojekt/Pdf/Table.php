@@ -87,15 +87,15 @@ class Phprojekt_Pdf_Table
     /**
      * Contructor
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int $x Position in the page
-     * @param int $y Position in the page
+     * @param Phprojekt_Pdf_Page    $page
+     * @param int                   $x      Position in the page
+     * @param int                   $y      Position in the page
      */
     function __construct($page, $x, $y)
     {
-        $this->page  = $page;
-        $this->x     = $x;
-        $this->y     = $y;
+        $this->page = $page;
+        $this->x    = $x;
+        $this->y    = $y;
     }
 
     /**
@@ -113,25 +113,28 @@ class Phprojekt_Pdf_Table
      *
      * @return array List of pages with table
      */
-    public function render() 
+    public function render()
     {
         $y = $this->page->getHeight() - $this->y;
         foreach($this->_rows as $row) {
             if($y - $row->testRender($this->page, $this->x, $y) < 0) {
-                $font = $this->page->getFont();
+                $font     = $this->page->getFont();
                 $fontSize = $this->page->getFontSize();
 
                 $this->page = new Phprojekt_Pdf_Page($this->page);
                 $this->page->setFont($font, $fontSize);
                 $this->page->setLineWidth($this->border);
+
                 $this->_pages[] = $this->page;
-                $y = $this->page->getHeight();
+                $y              = $this->page->getHeight();
             }
             $row->render($this->page, $this->x, $y);
             $y -= $row->getHeight();
         }
-        $this->page->freeLineY = $this->page->getHeight() - $y + $this->page->getFontSize() * Phprojekt_Pdf_Page::RATE_FONT_IN_PIX;
+        $positionOfTheLastRow  = $this->page->getHeight() - $y;
+        $rowHeight             = $this->page->getFontSize() * Phprojekt_Pdf_Page::RATE_FONT_IN_PIX;
+        $this->page->freeLineY = $positionOfTheLastRow + $rowHeight;
+
         return $this->_pages;
     }
 }
-?>

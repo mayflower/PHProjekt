@@ -72,8 +72,8 @@ class Phprojekt_Pdf_Table_Row
      * Render row
      *
      * @param Phprojekt_Pdf_Page $page
-     * @param int $x Start position x
-     * @param int $y Start position y
+     * @param int                $x    Start position x
+     * @param int                $y    Start position y
      *
      * @return void
      */

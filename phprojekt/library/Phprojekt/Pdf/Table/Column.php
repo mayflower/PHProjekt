@@ -144,8 +144,13 @@ class Phprojekt_Pdf_Table_Column
     public function render($page, $x, $y)
     {
         $fontSize = $page->getFontSize();
-        $size     = $page->drawVariableText($this->_text, $x + $this->_padding, $page->getHeight() - $y + $fontSize,
-            $this->_width - $this->_padding, $this->_align);
+        $size     = $page->drawVariableText(
+            $this->_text,
+            $x + $this->_padding,
+            $page->getHeight() - $y + $fontSize,
+            $this->_width - $this->_padding,
+            $this->_align
+        );
         $this->_height = $size['height'] + $this->_padding;
         $this->_width  = $this->_width + $this->_padding;
     }
