@@ -41,7 +41,7 @@ dojo.declare("phpr.Minutes.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Minutes.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
             phpr.TreeContent.fadeOut();
