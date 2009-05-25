@@ -88,6 +88,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         // Getting requested dates for the serial meeting (if it is serial)
         if (!empty($rrule)) {
+            if (!$this->_validateRecurrence($rrule)) {
+                $error = array_pop($this->getError());
+                throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
+            }
             if ($multipleEvents) {
                 $startDate = $this->getRecursionStartDate($id, $startDate);
             }
@@ -177,54 +181,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $this->projectId = 1;
         }
 
-        $valid = parent::recordValidate();
-
-        // Recurrence basic validation
-        if ($valid) {
-            // Parse 'rrule' values
-            $rruleItems = split(";", $this->_data['rrule']);
-            $freq       = null;
-            $interval   = null;
-            $until      = null;
-            foreach ($rruleItems as $rruleItem) {
-                $item = split("=", $rruleItem);
-                switch ($item[0]) {
-                    case 'FREQ':
-                        $freq = $item[1];
-                        break;
-                    case 'INTERVAL':
-                        $interval = (int) $item[1];
-                        break;
-                    case 'UNTIL':
-                        $until = $item[1];
-                        break;
-                    case 'BYDAY':
-                    default:
-                        break;
-                }
-            }
-
-            // Do the checking
-            if ($freq != null) {
-                if ($interval == null || $interval < 0 || $interval > 1000) {
-                    $valid = false;
-                    $this->_validate->error->addError(array(
-                        'field'   => 'Interval',
-                        'label'   => Phprojekt::getInstance()->translate('Interval'),
-                        'message' => Phprojekt::getInstance()->translate('Wrong Recurrence Interval')));
-                } else {
-                    if ($until == null) {
-                        $valid = false;
-                        $this->_validate->error->addError(array(
-                            'field'   => 'Until',
-                            'label'   => Phprojekt::getInstance()->translate('Until'),
-                            'message' => Phprojekt::getInstance()->translate('Incomplete Recurrence Until field')));
-                    }
-                }
-            }
-        }
-
-        return $valid;
+        return parent::recordValidate();
     }
 
     /**
@@ -986,5 +943,61 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
         return $save;
+    }
+
+    /**
+     * Recurrence fields basic validation
+     *
+     * @param String $rrule Event recurrence
+     *
+     * @return boolean
+     */
+    private function _validateRecurrence($rrule)
+    {
+        $valid = true;
+
+        // Parse 'rrule' values
+        $rruleItems = split(";", $rrule);
+        $freq       = null;
+        $interval   = null;
+        $until      = null;
+        foreach ($rruleItems as $rruleItem) {
+            $item = split("=", $rruleItem);
+            switch ($item[0]) {
+                case 'FREQ':
+                    $freq = $item[1];
+                    break;
+                case 'INTERVAL':
+                    $interval = (int) $item[1];
+                    break;
+                case 'UNTIL':
+                    $until = $item[1];
+                    break;
+                case 'BYDAY':
+                default:
+                    break;
+            }
+        }
+
+        // Do the checking
+        if ($freq != null) {
+            if ($interval == null || $interval < 0 || $interval > 1000) {
+                $valid = false;
+                $this->_validate->error->addError(array(
+                    'field'   => 'Interval',
+                    'label'   => Phprojekt::getInstance()->translate('Interval'),
+                    'message' => Phprojekt::getInstance()->translate('Wrong Recurrence Interval')));
+            } else {
+                if ($until == null) {
+                    $valid = false;
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Until',
+                        'label'   => Phprojekt::getInstance()->translate('Until'),
+                        'message' => Phprojekt::getInstance()->translate('Incomplete Recurrence Until field')));
+                }
+            }
+        }
+
+        return $valid;
     }
 }
