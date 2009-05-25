@@ -28,47 +28,35 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         // description:
         //    Extends inherited method to add the Items tab,
         //    inherited code is executed afterwards
-        this.addItemsTab(data);
-        this.inherited(arguments);
+	
+		// preload participant list, load extra tabs on ready to 
+		// avoid race conditions
+		this.getInvitedList(dojo.hitch(this, function() {
+			this.addItemsTab(data);
+	        this.addMailTab(data);
+		}));
+		
+		this.inherited(arguments);
     },
     
     addItemsTab:function(data) {
         // summary:
-        //    Access tab
+        //    Items tab
         // description:
         //    Display minute items grid and input form.
         //    See Default/Form.js, method addAccessTab for
         //    a more detailed example of adding tabs.
         
-        this.getInvitedList(); // preload invited users list to populate subform selectbox
         this.getItemList(); // preload item sort list
         
         var itemsData = this.render(["phpr.Minutes.template", "minutesItemGrid.html"], null, {
             // no placeholders used atm.
         });
         
-        this.addTab(itemsData, 'tabItems', phpr.nls.get('Items'), 'itemsFormTab');        
-    },
-    
-    postRenderForm: function() {
-        // summary:
-        //    Render grid
-        // description:
-        //    Render the datagrid after the rest of the form has been 
-        //    processed. Neccessary because the datagrid won't render
-        //    unless dimensions of all surrounding elements are known.
+        this.addTab(itemsData, 'tabItems', phpr.nls.get('Items'), 'itemsFormTab');
         
-        var tabs = this.form;
-        dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
-            if (child.id == 'tabItems') {
-                //dojo.byId('minutesDetailsRight').style.display = 'inline';
-                this.loadSubForm();
-                this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
-                phpr.DataStore.addStore({"url": this.url});
-                phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
-                //dojo.connect(dijit.byId('submitButton'), 'onClick', this.saveSubFormData);
-            }
-        }));
+        // the following code was previously located in postRenderForm, 
+        // but had to be moved here because of race conditions
         dojo.byId('itemsFormTab').style.display = 'none';
         if (undefined == dijit.byId('minutesBox')) {
             var minutesBox = new dijit.layout.ContentPane({
@@ -114,6 +102,43 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dijit.byId('tabItems').attr('content', minutesBox.domNode);
     },
     
+    addMailTab:function(data) {
+        // summary:
+        //    Mail tab
+        // description:
+        //    Display options for sending Minutes per mail
+        
+        var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
+            'id':		this.id,
+            'people':	this._invitedList // should be pre-populated by addModuleTabs()
+        });
+        
+        this.addTab(mailForm, 'tabMail', phpr.nls.get('Mail'), 'mailFormTab');        
+    },
+    
+    postRenderForm: function() {
+        // summary:
+        //    Render grid
+        // description:
+        //    Render the datagrid after the rest of the form has been 
+        //    processed. Neccessary because the datagrid won't render
+        //    unless dimensions of all surrounding elements are known.
+        
+        var tabs = this.form;
+        dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
+            if (child.id == 'tabItems') {
+                //dojo.byId('minutesDetailsRight').style.display = 'inline';
+                this.loadSubForm();
+                this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
+                phpr.DataStore.addStore({"url": this.url});
+                phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
+                //dojo.connect(dijit.byId('submitButton'), 'onClick', this.saveSubFormData);
+            }
+        }));
+        
+    },
+    
+    // the URL for the item grid's datastore
     url: null,
     
     _buildGrid: function() {
@@ -319,7 +344,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         });
     },
     
-    getInvitedList: function() {
+    getInvitedList: function(callback) {
         // summary:
         //    Fetches list of invited participants from server
         // description:
@@ -327,6 +352,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    stores it in the _invitedList property.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._invitedList = responseObject.data;
+            if (callback) {
+            	callback();
+            }
             return responseObject;
         });
         dojo.xhrGet( {

@@ -48,7 +48,13 @@ class Minutes_IndexController extends IndexController
 
         if (!empty($minutes->id)) {
             $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $userList = $user->fetchAll(sprintf('id IN (%s)', $minutes->participantsInvited));
+            $idList = array();
+            $idList = array_merge($idList, 
+                                  explode(',', $minutes->participantsInvited),
+                                  explode(',', $minutes->participantsExcused),
+                                  explode(',', $minutes->participantsAttending),
+                                  explode(',', $minutes->recipients));
+            $userList = $user->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
 
             $data    = array();
             $display = $user->getDisplay();

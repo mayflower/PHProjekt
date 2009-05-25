@@ -1,0 +1,71 @@
+<form id="minutesMailForm" action="javascript:;" dojoType="dijit.form.Form" class="form">
+    <input type="hidden" name="id" value="{{id}}" />
+    
+    <table id="minutesMailFormTable" class="form">
+    <col class="col1" />
+    <col class="col2" />
+    <col class="col3" />
+    <tbody>
+    <tr>
+        <td class="label">
+            <label for="minutesMailFormRecipients">Recipients</label>
+        </td>
+        <td>
+            <select dojoType="dijit.form.MultiSelect" id="minutesMailFormRecipients" name="recipients" size="4">
+			  {% for recipient in people %}
+                <option value="{{recipient.id}}">
+                  {{recipient.display}}
+                </option>
+              {% endfor %}
+			</select>
+        </td>
+        <td><!-- Tooltip --></td>
+    </tr>
+    
+    <tr>
+        <td class="label">
+            <label for="minutesMailFormAdditionalRecipients">Additional Recipients</label>
+        </td>
+        <td>
+            <input type="text" id="minutesMailFormAdditionalRecipients" name="title" dojoType="dijit.form.ValidationTextBox"
+                    required="false" value="" invalidMessage="" trim="true" tooltip="E-Mail addresses of unlisted recipients, comma-separated." />
+        </td>
+        <td><!-- Tooltip --></td>
+    </tr>
+        
+    <tr>
+        <td class="label">
+            <label for="minutesMailFormComment">Comment</label>
+        </td>
+        <td>
+            <textarea id="minutesMailFormComment" name="comment" dojoType="dijit.form.Textarea"
+                   value="" style="width: 300px" tooltip="This text will appear in the mail body."></textarea>
+        </td>
+        <td><!-- Tooltip --></td>
+    </tr>
+    
+    <tr>
+        <td class="label">
+            <label>Options</label>
+        </td>
+        <td>
+            <input id="minutesMailFormOptionPdf" name="options" dojoType="dijit.form.CheckBox"
+                   type="checkbox" value="pdf" tooltip="Send a PDF attachment with the mail." />
+            <label for="minutesMailFormOptionPdf" style="color:black; font-weight:normal; text-transform:none;">Include PDF attachment</label>
+        </td>
+        <td><!-- Tooltip --></td>
+    </tr>
+        
+    <tr>
+        <td class="label">
+            &nbsp;
+        </td>
+        <td>
+            <button dojoType="dijit.form.Button" id="minutesMailFormSend" disabled="true" style="float: left">Send mail</button>
+            <button dojoType="dijit.form.Button" id="minutesMailFormPreview" disabled="false" style="float: left">Preview</button>
+        </td>
+        <td><!-- Tooltip --></td>
+    </tr>
+    </tbody>
+    </table>
+</form>
