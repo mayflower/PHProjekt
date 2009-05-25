@@ -124,7 +124,7 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
             this.onDropExternal(source, nodes, copy);
             if (source.node.id == 'projectFavoritesSource') {
                 // If there are no projects in the box, don't let it reduce its height so much
-                if (projectFavoritesSource.getAllNodes().length == 0) {
+                if (projectFavoritesSource && projectFavoritesSource.getAllNodes().length == 0) {
                     dojo.style('projectFavoritesSource', 'height', this.MIN_HEIGHT + 'px');
                 }
                 dojo.style('projectFavoritesTarget', 'height', '');
@@ -138,7 +138,7 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
 
             } else if (source.node.id == 'projectFavoritesTarget') {
                 // If there are no projects in the box, don't let it reduce its height so much
-                if (projectFavoritesTarget.getAllNodes().length == 0) {
+                if (projectFavoritesTarget && projectFavoritesTarget.getAllNodes().length == 0) {
                     dojo.style('projectFavoritesTarget', 'height', this.MIN_HEIGHT + 'px');
                 }
                 dojo.style('projectFavoritesSource', 'height', '');

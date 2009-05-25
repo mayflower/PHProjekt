@@ -644,12 +644,12 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         dijit.byId('manageFavorites').show();
 
         // If there are no projects in any of the boxes, don't let it reduce its height so much
-        if (projectFavoritesSource.getAllNodes().length == 0) {
+        if (projectFavoritesSource && projectFavoritesSource.getAllNodes().length == 0) {
             dojo.style('projectFavoritesSource', 'height', this._manFavBoxesHeight + 'px');
         } else {
             dojo.style('projectFavoritesSource', 'height', '');
         }
-        if (projectFavoritesTarget.getAllNodes().length == 0) {
+        if (projectFavoritesTarget && projectFavoritesTarget.getAllNodes().length == 0) {
             dojo.style('projectFavoritesTarget', 'height', this._manFavBoxesHeight + 'px');
         } else {
             dojo.style('projectFavoritesTarget', 'height', '');
