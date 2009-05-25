@@ -1,38 +1,42 @@
 <table width="100%">
-    <tr>
-        <td style="width:50%; text-align:top;">
-            <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesSource" jsId="projectFavoritesSource" selfAccept="false"
-             style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: left;">
-                {% for item in allProjects %}
-                <div class="dojoDndItem" id="favoritesTarget-{{item.id}}"
-                style="cursor: move;">
-                    {{item.name}}
-                </div>
-                {% endfor %}
+<tr>
+    <td
+    style="width: 50%; text-align: top;">
+        <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesSource" jsId="projectFavoritesSource"
+        selfAccept="false"
+        style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px; float: left;">
+            {% for item in allProjects %}
+            <div class="dojoDndItem" id="favoritesTarget-{{item.id}}"
+            style="cursor: move;">
+                {{item.name}}
             </div>
-        </td>
-        <td style="width:50%; vertical-align:top;">
-            <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesTarget" jsId="projectFavoritesTarget"
-             selfAccept="false"
-             style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px;
-             float: right;">
-                {% for item in favoritesList %}
-                <div class="dojoDndItem" id="favoritesSoruce-{{item.id}}"
-                style="cursor: move;">
-                    {{item.name}}
-                </div>
-                {% endfor %}
+            {% endfor %}
+        </div>
+    </td>
+    <td
+    style="width: 50%; vertical-align: top;">
+        <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesTarget" jsId="projectFavoritesTarget"
+        selfAccept="false"
+        style="background-color: white; border: 2px solid black; width: 200px; margin: 4px; padding-top: 4px;
+        float: right;">
+            {% for item in favoritesList %}
+            <div class="dojoDndItem" id="favoritesSoruce-{{item.id}}"
+            style="cursor: move;">
+                {{item.name}}
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=2 style="vertical-align:top; text-align:center;">
-            <input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden"
-             value="{% for item in favoritesList %}{{item.id}}, {% endfor %}" />
-            <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').hide();"
-             baseClass="positive" iconClass="tick"
-             style="float: center; padding-right: 10px; padding-left: 10px;">
-            </button>
-        </td>
-    </tr>
+            {% endfor %}
+        </div>
+    </td>
+</tr>
+<tr>
+    <td colspan="2"
+    style="vertical-align: top; text-align: center;">
+        <input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden"
+        value="{% for item in favoritesList %}{{item.id}}, {% endfor %}" />
+        <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').hide();"
+        baseClass="positive" iconClass="tick"
+        style="float: center; padding-right: 10px; padding-left: 10px;">
+        </button>
+    </td>
+</tr>
 </table>
