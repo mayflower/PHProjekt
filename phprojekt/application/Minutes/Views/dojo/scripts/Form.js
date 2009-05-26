@@ -31,7 +31,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 	
 		// preload participant list, load extra tabs on ready to 
 		// avoid race conditions
-		this.getInvitedList(dojo.hitch(this, function() {
+		this.getPeopleList(dojo.hitch(this, function() {
 			this.addItemsTab(data);
 	        this.addMailTab(data);
 		}));
@@ -110,10 +110,33 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         
         var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
             'id':		this.id,
-            'people':	this._invitedList // should be pre-populated by addModuleTabs()
+            'people':	this._peopleList // should be pre-populated by addModuleTabs()
         });
         
-        this.addTab(mailForm, 'tabMail', phpr.nls.get('Mail'), 'mailFormTab');        
+        this.addTab(mailForm, 'tabMail', phpr.nls.get('Mail'), 'mailFormTab');
+        
+        dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick',
+        			 function() {
+        				 console.log('Sending mail...');
+			        	 dojo.xhrPost({
+			                 url: "index.php/Minutes/index/jsonSendMail/",
+			                 handleAs: "text",
+			                 load: function(r) {
+			        		     console.log('Mail sent successfully. Response: ' + r);
+			        	     },
+			                 error: function(e) {
+			                     console.debug('Error while sending mail: ' + e);
+			                 },
+			                 form: "mailFormTab"
+	                     });
+                     });
+        dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', 
+                     function() {
+                         // call preview function here
+        	             console.log('Call preview');
+                     });
+        
+        
     },
     
     postRenderForm: function() {
@@ -123,7 +146,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Render the datagrid after the rest of the form has been 
         //    processed. Neccessary because the datagrid won't render
         //    unless dimensions of all surrounding elements are known.
-        
         var tabs = this.form;
         dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
             if (child.id == 'tabItems') {
@@ -192,7 +214,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          styles:   "text-align: center;",
                          width:    '50px',
                          formatter:function(value) {
-                             var userList = me._invitedList;
+                             var userList = me._peopleList;
                              for(var i=0; i < userList.length; i++) {
                                  if (userList[i].id && userList[i].id == value) {
                                      return userList[i].display;
@@ -269,7 +291,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     _itemFormData: null,
     
     // private property: List of participants. Used as cache.
-    _invitedList:  [],
+    _peopleList:  [],
     
     saveSubFormData: function() {
         // summary:
@@ -344,14 +366,14 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         });
     },
     
-    getInvitedList: function(callback) {
+    getPeopleList: function(callback) {
         // summary:
         //    Fetches list of invited participants from server
         // description:
         //    Requests list of invited persons from the server, then
-        //    stores it in the _invitedList property.
+        //    stores it in the _peopleList property.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
-            this._invitedList = responseObject.data;
+            this._peopleList = responseObject.data;
             if (callback) {
             	callback();
             }
@@ -362,7 +384,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             handleAs: "json",
             load: responseHandler,
             error: function(e) {
-                console.debug('getInvitedList has encountered an error: ' + e);
+                console.debug('getPeopleList has encountered an error: ' + e);
             }
         });
     },
@@ -457,7 +479,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             msgUserId:		phpr.nls.get('Please choose a user name'),
             msgDate:		phpr.nls.get('No date given or date format is not valid (must be YYYY-MM-DD)'),
             parentOrder:    this._itemFormData.sortOrder - 1 >= 0 ? this._itemFormData.sortOrder - 1 : '',
-            users:          this._invitedList,
+            users:          this._peopleList,
             items:          this._itemList,
             types:          this.getItemTypes()
         };

@@ -33,7 +33,21 @@
  */
 class Minutes_IndexController extends IndexController
 {
-    /*
+    /**
+     * Constant for error message displayed when sending mail without
+     * specifying any recipient addresses.
+     * @see Minutes_IndexController::jsonSendMailAction()
+     */
+    const MISSING_MAIL_RECIPIENTS = 'No recipient addresses have been specified.';
+    
+    /**
+     * Constant for error message displayed when trying to send mail
+     * without being the owner of the requested Minutes entry.
+     * @see Minutes_IndexController::jsonSendMailAction()
+     */
+    const USER_IS_NOT_OWNER = 'The currently logged-in user is not owner of the given minutes entry.';
+    
+    /**
      * Get a user list in JSON
      *
      * Produces a list of users that should be selectable in the frontend.
@@ -112,5 +126,182 @@ class Minutes_IndexController extends IndexController
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
+    }
+    
+    /**
+     * Action to provide an HTML table of the whole minutes.
+     */
+    public function htmlListAction()
+    {
+        $this->getHtmlList((int) $this->getRequest()->getParam('minutesId', 0));
+        $this->render('table');
+    }
+    
+    /**
+     * Sends a mail containing the Minutes protocol.
+     */
+    public function jsonSendMailAction()
+    {
+        $log = Phprojekt::getInstance()->getLog();
+        $log->debug('Entering jsonSendMailAction... ');
+        
+        /**
+         * @todo Change Phprojekt_Mail_Notification::_setTransport() to public,
+         *       maybe even static (singleton), so the transport object can be 
+         *       fetched and configured globally. Maybe even think about using
+         *       Phprojekt_Mail_Notification instead of Zend_Mail. Benefits?
+         */
+        $config     = Phprojekt::getInstance()->getConfig();
+        $eol        = (int) $config->get('mailEndOfLine');
+        $smtpServer = $config->get('smtpServer');
+        $smtpUser   = $config->get('smtpUser');
+        $smtpPasswd = $config->get('smtpPassword');
+        
+        // The next 9 lines are copied over from Phprojekt_Mail_Notification::_setTransport(),
+        // refactoring is needed!!
+        if (empty($smtpServer)) {
+            $smtpServer = 'localhost';
+        }
+        if (empty($smtpUser)) {
+            $smtpTransport = new Zend_Mail_Transport_Smtp($smtpServer);
+        } else {
+            $smtpTransport = new Zend_Mail_Transport_Smtp($smtpServer, array('auth'     => 'login',
+                                                                             'username' => $smtpUser,
+                                                                             'password' => $smtpPasswd));
+        }
+        
+        $params     = $this->getRequest()->getParams();
+        $log->debug('Request params: ' . print_r($params,true));
+        
+        // sanity check
+        if (empty($params['id']) || !is_numeric($params['id'])) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+        
+        $minutesId     = (int) $params['id'];
+        $minutes       = Phprojekt_Loader::getModel('Minutes', 'Minutes');
+        $minutes->find($minutesId);
+        
+        // was the id provided a valid one?
+        if (!$minutes->id) {
+            // invalid ID
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+        
+        // security check: is the current user owner of this minutes entry?
+        if ($minutes->ownerId != PHprojekt_Auth::getUserId()) {
+            throw new Phprojekt_PublishedException(self::USER_IS_NOT_OWNER);
+        }
+        
+        $hasRecipients = false;
+        $mail          = new Zend_Mail();
+        $validator     = new Zend_Validate_EmailAddress();
+        
+        // Add regular recipients:
+        $idList = array();
+        if (!empty($params['recipients']) && is_array($params['recipients'])) {
+            foreach($params['recipients'] as $recipientId) {
+                if (is_numeric($recipientId)) {
+                    $idList[] = (int) $recipientId;
+                }
+            }
+        }
+        $log->debug('idList: ' . print_r($idList,true));
+        if (count($idList)) {
+            $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
+            $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
+            foreach ($userList as $record) {
+                $address = $setting->getSetting('email', (int) $record->id);
+                
+                if ($validator->isValid($address)) {
+                    $log->debug('Adding mail to: ' . $address . ' (' .
+                                $record->firstname . ' ' . $record->lastname . ')');
+                    $mail->addTo($address, $record->firstname . ' ' . $record->lastname);
+                    $hasRecipients = true;
+                } else {
+                    $log->warn('Invalid email address detected: ' . $address);
+                }
+            }
+        }
+        
+        // Add additional recipients:
+        if (!empty($params['additional'])) {
+            $additional = explode(',', $params['additional']);
+            foreach($additional as $recipient) {
+                $address = trim($recipient);
+                if ($validator->isValid($address)) {
+                    $log->debug('Adding mail to: ' . $address);
+                    $mail->addTo($address);
+                    $hasRecipients = true;
+                } else {
+                    $log->warn('Invalid email address detected: ' . $address);
+                }
+            }
+        }
+        
+        // sanity check
+        if (!$hasRecipients) {
+            throw new Phprojekt_PublishedException(self::MISSING_MAIL_RECIPIENTS);
+        }
+        
+        // handle PDF attachment if needed
+        if (!empty($params['options']) && is_array($params['options'])) {
+            if (in_array('pdf', $params['options'])) {
+                $log->debug('Creating PDF attachment...');
+                /* @todo use PDF report creator here as soon as it's ready */
+                /*
+                $pdf = Svens_Magic_Pdf_Creator::doYourMagic($minutesId);
+                $mail->createAttachment($pdf,
+                                        'application/x-pdf',
+                                        Zend_Mime::DISPOSITION_ATTACHMENT,
+                                        Zend_Mime::ENCODING_8BIT,
+                                        'minutes_' . $minutesId . '.pdf');
+                */
+            }
+        }
+        
+        // set sender address
+        $ownerModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $ownerModel->find($minutes->ownerId);
+        $ownerEmail = $ownerModel->getSetting('email');    
+        $mail->setFrom($ownerEmail, $ownerModel->firstname . ' ' . $ownerModel->lastname);
+        $log->debug('Setting FROM: ' . $ownerEmail . ' (' .
+                    $ownerModel->firstname . ' ' . $ownerModel->lastname . ')');
+        
+        // set subject
+        $subject = sprintf('Meeting minutes for "%s", %s', 
+                           $minutes->title, 
+                           $minutes->startTime);
+        $mail->setSubject($subject);
+        
+        // set mail content
+        $mail->setBodyText($subject, 'utf-8');
+        $mail->setBodyHtml($this->getHtmlList($minutesId), 'utf-8');
+        
+        //$mail->send($smtpTransport);
+    }
+    
+    protected function getHtmlList($minutesId)
+    {
+        $this->view->addScriptPath(PHPR_CORE_PATH . '/Minutes/Views/dojo/');
+        
+        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')
+                             ->init($minutesId)
+                             ->fetchAll();
+                             
+        $newitem = array();
+        foreach ($items as $item) {
+            $content = array();
+            $content['topicId'] = $item->topicId;
+            $content['title']   = $item->title;
+            $content['topicType'] = $item->topicType;
+            $content['comment'] = $item->comment;
+            $newitem[] = $content;
+        }
+        
+        $this->view->items = $newitem; 
+        
+        return $this->view->render('table.phtml');
     }
 }
