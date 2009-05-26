@@ -250,14 +250,14 @@ class Minutes_IndexController extends IndexController
             if (in_array('pdf', $params['options'])) {
                 $log->debug('Creating PDF attachment...');
                 /* @todo use PDF report creator here as soon as it's ready */
-                /*
-                $pdf = Svens_Magic_Pdf_Creator::doYourMagic($minutesId);
+                
+                $pdf = Minutes_Helpers_Pdf::getPdf($minutesId);
                 $mail->createAttachment($pdf,
                                         'application/x-pdf',
                                         Zend_Mime::DISPOSITION_ATTACHMENT,
                                         Zend_Mime::ENCODING_8BIT,
                                         'minutes_' . $minutesId . '.pdf');
-                */
+                
             }
         }
         
@@ -279,6 +279,7 @@ class Minutes_IndexController extends IndexController
         $mail->setBodyText($subject, 'utf-8');
         $mail->setBodyHtml($this->getHtmlList($minutesId), 'utf-8');
         
+        // keep send() commented out until test phase is over
         //$mail->send($smtpTransport);
     }
     
