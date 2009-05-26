@@ -271,7 +271,7 @@ $lang["Weekdays"] = "Wochentage";
 // Common status
 $lang["Offered"] = "Angebotene";
 $lang["Ordered"] = "Bestellt";
-$lang["Working"] = "Bearbeitung";
+$lang["Working"] = "In bearbeitung";
 $lang["Ended"] = "Beendet";
 $lang["Stopped"] = "Stopped";
 $lang["Re-Opened"] = "Wieder geöffnet";
