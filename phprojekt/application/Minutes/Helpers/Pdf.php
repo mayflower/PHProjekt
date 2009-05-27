@@ -45,26 +45,87 @@ final class Minutes_Helpers_Pdf
     public function getPdf($minutesId)
     {
         // Create new PDF document.
-        setlocale(LC_ALL, 'de_DE.utf8');
         $pdf = new Zend_Pdf();
-
+        
         $page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
-
-        $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA),10);
+        
+        $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 12);
+        
+        $page->addFreetext(array(
+                           'lines'  => array('Title as Headline'),
+                           'startX' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                           'startY' => 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                           'fontSize' => 20,
+                           'textWidth' => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
+        
+        $page->addFreetext(array(
+                           'lines'=>array('Lorem ipsum whatever foobar.',
+                                          'Die voluminöse Expansion der subterralen '
+                                        . 'Knollengewächse ist reziprog proportional zum '
+                                        . 'Intelligenzquotienten des Agrarökonoms. Die voluminöse Expansion der '
+                                        . 'subterralen Knollengewächse ist reziprog proportional zum '
+                                        . 'Intelligenzquotienten des Agrarökonoms.',
+                                          'Date of meeting: ' . date('Y-m-d')
+                                        . ' Start time: ' . date('H:i:s')
+                                        . ', End time: ' . date('H:i:s'),
+                                          'Location: ORTSANGABE',
+                                          'Moderator: NAMENSANGABE'),
+                            'startX'    => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                            'fontSize'  => 12));
+        
         $page->addTable(array(
-            'type' =>'table',
-            'startX'=> 35,
-            'startY'=> 60,
-            'rows' => array(
-                 array(array('text' => 'first column, first row','width' => 150),
-                       array('text' => 'Die voluminöse Expansion der subterralen Knollengewächse ist reziprog proportional zum Intelligenzquotienten des Agrarökonoms.', 
-                             'width' => 100),
-                 ),
-                 array(array('text' => 'first column, second row','width' => 150),
-                       array('text' => 'second column, second row','width' => 100),
-                 ),
-             )
-        ), $page);
+                        'startX'=> 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                        'fontSize' => 12,
+                        'rows' => array(
+                                      array(
+                                          array('text' => 'INVITED', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "NAME 1\nNAME 2\nNAME3", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => 'PARTICIPANTS', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "NAME 1\nNAME 2", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => 'EXCUSED', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "NAME 3\nNAME 4", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => 'RECIPIENTS', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "NAME 1\nNAME 2\nNAME 3\nNAME 4", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                        )));
+        
+        $page->addTable(array(
+                        'startX'=> 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                        'fontSize' => 12,
+                        'rows' => array(
+                                      array('isHeader' => true,
+                                          array('text' => 'No.', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => 'TYPE', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "ITEM", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => '1', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => 'TOPIC', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => '1.1', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => 'STATEMENT', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => '1.2', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => 'TODO', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE\nWHO: name\nDATE: YYYY-MM-DD", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                      array(
+                                          array('text' => '2', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => 'TOPIC', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE\nWHO: name\nDATE: YYYY-MM-DD", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            ),
+                                        )));
+        
         $pdf->pages[] = $page;
         return $pdf->render();
     }
