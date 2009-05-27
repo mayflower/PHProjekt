@@ -55,6 +55,13 @@ class Phprojekt_Pdf_Table_Column
      * @var unknown_type
      */
     protected $_text;
+    
+    /**
+     * Encoding of the text
+     * 
+     * @var string
+     */
+    protected $_encoding = 'UTF-8';
 
     /**
      * Padding, dafault value is 5
@@ -74,12 +81,14 @@ class Phprojekt_Pdf_Table_Column
      * Set text for the column
      *
      * @param string $text
-     *
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * 
      * @return Phprojekt_Pdf_Table_Column
      */
-    public function setText($text)
+    public function setText($text, $encoding = 'UTF-8')
     {
         $this->_text = $text;
+        $this->_encoding = $encoding;
 
         return $this;
     }
@@ -149,7 +158,8 @@ class Phprojekt_Pdf_Table_Column
             $x + $this->_padding,
             $page->getHeight() - $y + $fontSize,
             $this->_width - $this->_padding,
-            $this->_align
+            $this->_align,
+            $this->_encoding
         );
         $this->_height = $size['height'] + $this->_padding;
         $this->_width  = $this->_width + $this->_padding;
@@ -169,7 +179,7 @@ class Phprojekt_Pdf_Table_Column
     {
         $fontSize = $page->getFontSize();
         $size     = $page->getVariableText($this->_text, $x + $this->_padding, $page->getHeight() - $y + $fontSize,
-            $this->_width - $this->_padding);
+            $this->_width - $this->_padding, $this->_encoding);
         $this->_height = $size['height'] + $this->_padding;
         $this->_width  = $this->_width + $this->_padding;
     }

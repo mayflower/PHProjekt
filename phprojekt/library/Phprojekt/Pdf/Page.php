@@ -72,10 +72,11 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *                          )
      *                      ),
      * @param Phprojekt_Pdf_Page $currentPage
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
      *
      * @return array of Phprojekt_Pdf_Page
      */
-    public function addTable($tableInfo, $currentPage)
+    public function addTable($tableInfo, $currentPage, $encoding = 'UTF-8')
     {
         if (!isset($tableInfo['rows'])) {
             throw new Exception("Missing data");
@@ -113,7 +114,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
                 // TODO: add validation for column data
                 $column     = new Phprojekt_Pdf_Table_Column();
                 $alignment  = !empty($cell['align']) ? $cell['align'] : null;
-                $column->setWidth($cell['width'])->setText($cell['text'])->setAlignment($alignment);
+                $column->setWidth($cell['width'])->setText($cell['text'], $encoding)->setAlignment($alignment);
                 $tableRow->addColumn($column);
             }
             $table->addRow($tableRow);
@@ -145,10 +146,11 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *                          'fontSize' => 10,
      *                      )
      * @param Phprojekt_Pdf_Page $currentPage
-     *
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * 
      * @return Phprojekt_Pdf_Page
      */
-    public function addFreetext($freetextInfo, $currentPage)
+    public function addFreetext($freetextInfo, $currentPage, $encoding = 'UTF-8')
     {
         if (!isset($freetextInfo['lines'])) {
             throw new Exception("Missing data");
@@ -162,13 +164,13 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         }
 
         $startX = isset($freetextInfo['startX']) ? $freetextInfo['startX'] : $this->freeLineX;
-        $startY = isset($freetextInfo['startY']) ? $freetextInfo['startY'] : $this->freeLineY;
+        $startY = (isset($freetextInfo['startY']) ? $freetextInfo['startY'] : $this->freeLineY) + $currentPage->getFontSize();
 
         if (isset($freetextInfo['lineWidth'])) {
             $currentPage->setLineWidth($freetextInfo['lineWidth']);
         }
 
-        $currentPage->drawMultilineText($freetextInfo['lines'], $startX, $startY);
+        $currentPage->drawMultilineText($freetextInfo['lines'], $startX, $startY, $encoding);
 
         return $currentPage;
     }
@@ -202,10 +204,11 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *                         'header' => 'Header'
      *                      ),
      *                  )
-     *
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     *      *
      * @return array of Phprojekt_Pdf_Page
      */
-    public function parseTemplate($prototype)
+    public function parseTemplate($prototype, $encoding = 'UTF-8')
     {
         $pages       = array($this);
         $currentPage = $this;
@@ -221,11 +224,11 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             $currentPage->setFont($font, $fontSize);
             switch ($element['type']) {
                 case 'table':
-                    $pages      += $this->addTable($element, $currentPage);
+                    $pages      += $this->addTable($element, $currentPage, $encoding);
                     $currentPage = end($pages);
                     break;
                 case 'freetext':
-                    $this->addFreetext($element, $currentPage);
+                    $this->addFreetext($element, $currentPage, $encoding);
                     break;
             }
         }
@@ -242,8 +245,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * @param int    $y
      * @param int    $width
      * @param int    $height
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
      */
-    public function drawInfoBox($header, $lines, $x, $y, $width, $height)
+    public function drawInfoBox($header, $lines, $x, $y, $width, $height, $encoding = 'UTF-8')
     {
         $fontSize = $this->getFontSize();
         // Draw the box
@@ -253,7 +257,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         $this->drawLine($x, $this->getHeight() - $y - ($fontSize * 2), $x + $width,
             $this->getHeight() - $y - ($fontSize * 2));
         // Draw the header text
-        $this->drawText($header, $x + ($fontSize / 2), $this->getHeight() - $y - $fontSize - ($fontSize / 4));
+        $this->drawText($header, $x + ($fontSize / 2), $this->getHeight() - $y - $fontSize - ($fontSize / 4), $encoding);
         $this->drawMultilineText($lines, $x + 3, $y + ($fontSize * 3));
     }
 
@@ -263,8 +267,10 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * @param array $lines Array of strings
      * @param int   $x
      * @param int   $y
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * 
      */
-    public function drawMultilineText($lines, $x, $y)
+    public function drawMultilineText($lines, $x, $y, $encoding = 'UTF-8')
     {
         $y             = $this->getHeight() - $y;
         $fontSize      = $this->getFontSize();
@@ -276,7 +282,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             $parsedText = $this->getVariableText($line, $x, $y, $this->getWidth() - $x);
             foreach ($parsedText['lines'] as $parsedLine) {
                 list($str, $xTmp, $yTmp) = $parsedLine;
-                $this->drawText(implode(' ', $str), $x + 2, $y - ($fontSize * self::DEFAULT_LINE_WIDTH * $realLineCount));
+                $this->drawText(implode(' ', $str), $x + 2, $y - ($fontSize * self::DEFAULT_LINE_WIDTH * $realLineCount), $encoding);
                 $realLineCount++;
             }
         }
@@ -286,14 +292,20 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     /**
      * Get size of cell in given font and font size
      *
-     * @param text $str
-     * @param int  $x        Start position X of the text
-     * @param int  $y        Start position Y of the text
-     * @param int  $maxWidth Width of the column
-     *
+     * @param text   $str
+     * @param int    $x        Start position X of the text
+     * @param int    $y        Start position Y of the text
+     * @param int    $maxWidth Width of the column
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * 
      * @return array amount of lines, width and height of the cell
+     * 
+     * @todo This function urgently needs a rewrite to proberly handle UTF-8 and other encodings
+     *       As an example for getting proper text length see
+     *       http://osdir.com/ml/php.zend.framework.general/2006-11/msg00210.html
+     * 
      */
-    public function getVariableText($str, $x, $y, $maxWidth)
+    public function getVariableText($str, $x, $y, $maxWidth, $encoding = 'UTF-8')
     {
         $y        = $this->getHeight() - $y;
         $font     = $this->getFont();
@@ -308,7 +320,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             $word  .= ' ';
             $glyphs = array();
             foreach (range(0, strlen($word) - 1) as $i) {
-                $glyphs[] = ord($str[$i]);
+                // @todo ord() is not UTF-8 aware, produces wrong results for multibyte chars
+                // @todo additionally the character codepoint need not be identical to the glyph number 
+                $glyphs[] = ord($word[$i]);
             }
             $wordsLength[] = array_sum($font->widthsForGlyphs($glyphs)) / $em * $fontSize + $spaceSize;
         }
@@ -326,19 +340,19 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             if (count($wordsInside) > 1) {
                 // Add first word
                 $firstWord          = array_shift($wordsInside);
-                $currentWordLenth   = $wordsLength[$i] * strlen($firstWord) / strlen($words[$i]);
-                if(($xInc + $currentWordLenth) > $maxWidth) {
+                $currentWordLength   = $wordsLength[$i] * strlen($firstWord) / strlen($words[$i]);
+                if(($xInc + $currentWordLength) > $maxWidth) {
                     $lines[] = array($line, $x, $yInc);
                     $yInc   -= $fontSize;
-                    $xInc    = $currentWordLenth + $spaceSize;
+                    $xInc    = $currentWordLength + $spaceSize;
                     $line    = array();
                 }
                 $line[] = $firstWord;
                 // Add other, each from new line
                 foreach ($wordsInside as $word) {
-                    $currentWordLenth = $wordsLength[$i] * strlen($word) / strlen($words[$i]);
+                    $currentWordLength = $wordsLength[$i] * strlen($word) / strlen($words[$i]);
                     $lines[]          = array($line, $x, $yInc);
-                    $xInc             = $currentWordLenth + $spaceSize;
+                    $xInc             = $currentWordLength + $spaceSize;
                     $yInc            -= $fontSize;
                     $line             = array();
                     $line[]           = $word;
@@ -373,10 +387,11 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * @param int    $y
      * @param int    $maxWidth
      * @param string $align    left, right or center
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
      *
      * @return array
      */
-    public function drawVariableText($str, $x, $y, $maxWidth, $align = 'left')
+    public function drawVariableText($str, $x, $y, $maxWidth, $align = 'left', $encoding = 'UTF-8')
     {
         $text = $this->getVariableText($str, $x, $y, $maxWidth);
         foreach($text['lines'] as $line) {
@@ -389,7 +404,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
                 $length = $this->_calculateTextWidth(implode(' ', $str));
                 $xPos += ($maxWidth - $length - $this->getFontSize() / 2) / 2;
             }
-            $this->drawText(implode(' ', $str), $xPos, $y);
+            $this->drawText(implode(' ', $str), $xPos, $y, $encoding);
         }
 
         return array('width'  => $maxWidth,
@@ -400,10 +415,13 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * Get text length in px
      *
      * @param string $str
-     *
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * 
      * @return int
+     * 
+     * @todo This function has to be made multibyte encoding aware, too. See getVariableText
      */
-    private function _calculateTextWidth($str)
+    private function _calculateTextWidth($str, $encoding = 'UTF-8')
     {
         $font     = $this->getFont();
         $fontSize = $this->getFontSize();
