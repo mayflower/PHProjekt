@@ -38,6 +38,8 @@ require_once 'Zend/Pdf.php';
  */
 class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 {
+    const PT_PER_CM = 28.346456692913385826771653543307; // pt/cm equals 72 pt/in / 2.54 cm/in 
+    
     const DEFAULT_LINE_HEIGHT = 1.2;
     const DEFAULT_FONT_SIZE  = 10;
     const HEADER_GRAY_LEVEL  = 0.9;
@@ -76,8 +78,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *
      * @return array of Phprojekt_Pdf_Page
      */
-    public function addTable($tableInfo, $currentPage, $encoding = 'UTF-8')
+    public function addTable($tableInfo, $currentPage = NULL, $encoding = 'UTF-8')
     {
+        if (is_null($currentPage)) {
+            $currentPage = $this;
+        }
+        
         if (!isset($tableInfo['rows'])) {
             throw new Exception("Missing data");
         }
@@ -150,8 +156,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * 
      * @return Phprojekt_Pdf_Page
      */
-    public function addFreetext($freetextInfo, $currentPage, $encoding = 'UTF-8')
+    public function addFreetext($freetextInfo, $currentPage = NULL, $encoding = 'UTF-8')
     {
+        if (is_null($currentPage)) {
+            $currentPage = $this;
+        }
+        
         if (!isset($freetextInfo['lines'])) {
             throw new Exception("Missing data");
         }
