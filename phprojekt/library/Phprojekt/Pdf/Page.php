@@ -38,7 +38,7 @@ require_once 'Zend/Pdf.php';
  */
 class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 {
-    const DEFAULT_LINE_WIDTH = 1.2;
+    const DEFAULT_LINE_HEIGHT = 1.2;
     const DEFAULT_FONT_SIZE  = 10;
     const HEADER_GRAY_LEVEL  = 0.9;
 
@@ -84,7 +84,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 
         if (isset($tableInfo['fontSize'])) {
             $fontSizeChangeRate      = $tableInfo['fontSize'] - $currentPage->getFontSize();
-            $currentPage->freeLineY += $fontSizeChangeRate * self::DEFAULT_LINE_WIDTH;
+            $currentPage->freeLineY += $fontSizeChangeRate * self::DEFAULT_LINE_HEIGHT;
 
             $currentPage->setFont($this->getFont(), $tableInfo['fontSize']);
         }
@@ -159,7 +159,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         // Change font size
         if (isset($freetextInfo['fontSize'])) {
             $fontSizeChangeRate      = $freetextInfo['fontSize'] - $currentPage->getFontSize();
-            $currentPage->freeLineY += $fontSizeChangeRate * self::DEFAULT_LINE_WIDTH;
+            $currentPage->freeLineY += $fontSizeChangeRate * self::DEFAULT_LINE_HEIGHT;
             $currentPage->setFont($this->getFont(), $freetextInfo['fontSize']);
         }
 
@@ -282,11 +282,11 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             $parsedText = $this->getVariableText($line, $x, $y, $this->getWidth() - $x);
             foreach ($parsedText['lines'] as $parsedLine) {
                 list($str, $xTmp, $yTmp) = $parsedLine;
-                $this->drawText(implode(' ', $str), $x + 2, $y - ($fontSize * self::DEFAULT_LINE_WIDTH * $realLineCount), $encoding);
+                $this->drawText(implode(' ', $str), $x + 2, $y - ($fontSize * self::DEFAULT_LINE_HEIGHT * $realLineCount), $encoding);
                 $realLineCount++;
             }
         }
-        $this->freeLineY = $this->getHeight() - $y + ($fontSize * self::DEFAULT_LINE_WIDTH * $realLineCount);
+        $this->freeLineY = $this->getHeight() - $y + ($fontSize * self::DEFAULT_LINE_HEIGHT * $realLineCount);
     }
 
     /**
