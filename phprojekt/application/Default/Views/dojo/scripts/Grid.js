@@ -156,9 +156,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
                         styles:      "text-align: center;",
-                        type:        dojox.grid.cells._Widget,
-                        widgetClass: "dijit.form.HorizontalSlider",
-                        formatter:   phpr.grid.formatPercentage,
+                        type:        phpr.grid.cells.Percentage,
                         editable:    meta[i]['readOnly'] ? false : true
                     });
                     break;
