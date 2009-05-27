@@ -1,4 +1,4 @@
-Project's aims are to extend Zend Framework with new PDF functionality.
+Project's aim is to extend Zend Framework with new PDF functionality.
 PHProjekt_Pdf is a library for creating PDF documents with tables.
 Library uses Zend framework functionality for PDF documents and
 provides with additional not implemeted functions for drawing tables together with free text.
@@ -22,17 +22,19 @@ Content.
 Template has a form of array, where some fields have specific form.
 
 Fields are:
-1.font –(optional)  type of string, contain the name of the font
-2.fontSize – (optional) type of int, contain font size
-3.Elements to parse.
+1.Elements to parse.
+2.font –(optional)  type of string, contain the name of the font
+3.fontSize – (optional) type of int, contain font size
+
 For example:
 
 array(
-   'font' => 'Helvetica',
-   'fontSize' => 10,
     0 => array(....),
     1 => array(....),
         …
+
+    'font'     => 'Helvetica',
+    'fontSize' => 10,
 );
 
 Each element for parsing is an array. There are 2 types of elements.
@@ -70,11 +72,26 @@ Text would be parsed according to the cell width, keeping all passed paragraphs
 For example:
 array('text' => 'Datum', 'width' => 50);
 
+There is a possibility to mark header with background grey color. To use it user need to pass
+'isHeader' => true
+to the seleceted row.
+
+For example:
+'rows'  => array(
+    array(
+        'isHeader' => true,
+        array('text' => 'Datum ', 'width' => 100),
+        array('text' => '06.05.2009', 'width' => 150)),
+    array(
+        array('text' => 'Naechster Termin', 'width' => 100),
+        array('text' => '12.05.2009', 'width' => 150)),
+)
+
 1.2. Specification of Free text in $template.
 
 Array of element should contain following keys:
 type -  with a value  'freetext',which defines a type of the element,
-lines – value is array of strings, where every string would be inserted from the new line
+lines – value is array of strings or text, where every string would be inserted from the new line, saving paragraphs
 
 Optional parameters are:
 startX and startY - (optional) values of type int, define coordinates of left top corner of the Free text block
@@ -94,7 +111,56 @@ array(
 )
 
 2. Example of usage.
+2.1 Default settings
 
+<?php
+$pdf  = new Zend_Pdf();
+$page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_LETTER);
+$template = array(
+    0 => array(
+        'type' =>'table',
+        'rows' => array(
+            array(
+                array('text' => 'Datum', 'width' => 50),
+                array('text' => '06.05.2009', 'width' => 150),
+                array('text' => 'Naechster Termin', 'width' => 100),
+                array('text' => '12.05.2009', 'width' => 100)),
+            array(
+                array('text' => 'Datum', 'width' => 50),
+                array('text' => '12.05.2009', 'width' => 150),
+                array('text' => 'Naechster Termin', 'width' => 100),
+                array('text' => '15.05.2009', 'width' => 100)),
+        )
+    ),
+    1 => array(
+        'type' =>'table',
+        'rows' => array(
+            array(
+                array('text' => 'Datum', 'width' => 50),
+                array('text' => '06.05.2009', 'width' => 150)),
+            array(
+                array('text' => 'Naechster Termin', 'width' => 50),
+                array('text' => '12.05.2009', 'width' => 150)),
+        )
+    ),
+    2 => array(
+        'type'  => 'freetext',
+        'lines' => array('First line free text', 'Second line free text')
+    )
+);
+
+$pages = $page->parseTemplate($template);
+
+$pdf->pages[] = $page;
+foreach ($pages as $page) {
+    $pdf->pages[] = $page;
+}
+
+$pdf->save('Testname.pdf');
+?>
+
+
+2.2 With some additional properties.
 <?php
 $pdf  = new Zend_Pdf();
 $page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_LETTER);
@@ -137,13 +203,13 @@ $template = array(
         'lineWidth' => 0.5,
         'fontSize'  => 12,
         'lines'     => array('First line free text', 'Second line free text')
-     )
+    )
 );
 
 $pages = $page->parseTemplate($template);
 
 $pdf->pages[] = $page;
-foreach($pages as $page) {
+foreach ($pages as $page) {
     $pdf->pages[] = $page;
 }
 
@@ -153,11 +219,10 @@ $pdf->save('Testname.pdf');
 
 This code would create test pdf file with 2 tables, free text with 2 lines.
 
-
 3. Known bugs
 
 - Library works incorrect in case one of the cells has an inner text which after parsing can't in current page fit.
-- Library don't care about overlapping of elements and width of elements. For example when the user passed to prototype
-free text element with fixed coordinates, library wouldn't check if element would fit to the page with width.
-In case element is bigger than the page, it would be printed as long as it's possible.
-In case given position of the element is not free, elements will overlap.
+- Library don't care about overlapping of the elements and width of elements.
+For example when the user passed to prototype free text element with fixed coordinates,
+library wouldn't check if element would fit to the page with width. In case element is bigger than the page,
+it would be printed as long as it's possible. In case given position of the element is not free, elements will overlap.

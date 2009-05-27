@@ -57,6 +57,13 @@ class Phprojekt_Pdf_Table_Row
     protected $_cols = array();
 
     /**
+     * Show if current row is header or not
+     *
+     * @var bool
+     */
+    protected $_isHeader = false;
+
+    /**
      * Add column to the list
      *
      * @param Phprojekt_Pdf_Table_Column $col
@@ -81,6 +88,7 @@ class Phprojekt_Pdf_Table_Row
     {
         $tmpX      = $x;
         $maxHeight = 0;
+        $this->renderBorder($page, $tmpX, $y);
         foreach ($this->_cols as $col) {
             $col->render($page, $x, $y);
             $height = $col->getHeight();
@@ -90,7 +98,6 @@ class Phprojekt_Pdf_Table_Row
             $x += $col->getWidth();
         }
         $this->_height = $maxHeight;
-        $this->renderBorder($page, $tmpX, $y);
     }
 
     /**
@@ -130,7 +137,7 @@ class Phprojekt_Pdf_Table_Row
     public function renderBorder($page, $x, $y)
     {
         foreach ($this->_cols as $col) {
-            $col->renderBorder($page, $x, $y, $this->_height);
+            $col->renderBorder($page, $x, $y, $this->_height, $this->_isHeader);
             $x += $col->getWidth();
         }
     }
@@ -143,5 +150,15 @@ class Phprojekt_Pdf_Table_Row
     public function getHeight()
     {
         return $this->_height;
+    }
+
+    /**
+     * Set true value of the protected property for the current row
+     *
+     * @return void
+     */
+    public function setHeader()
+    {
+        $this->_isHeader = true;
     }
 }

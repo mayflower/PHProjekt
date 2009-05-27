@@ -38,8 +38,9 @@ require_once 'Zend/Pdf.php';
  */
 class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 {
-    const RATE_FONT_IN_PIX  = 1.2;
-    const DEFAULT_FONT_SIZE = 10;
+    const DEFAULT_LINE_WIDTH = 1.2;
+    const DEFAULT_FONT_SIZE  = 10;
+    const HEADER_GRAY_LEVEL  = 0.9;
 
     /**
      * Default position X of the next element in the page
@@ -82,7 +83,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 
         if (isset($tableInfo['fontSize'])) {
             $fontSizeChangeRate      = $tableInfo['fontSize'] - $currentPage->getFontSize();
-            $currentPage->freeLineY += $fontSizeChangeRate * self::RATE_FONT_IN_PIX;
+            $currentPage->freeLineY += $fontSizeChangeRate * self::DEFAULT_LINE_WIDTH;
 
             $currentPage->setFont($this->getFont(), $tableInfo['fontSize']);
         }
@@ -102,7 +103,13 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         $table = new Phprojekt_Pdf_Table($currentPage, $startX, $startY);
         foreach ($tableInfo['rows'] as $row) {
             $tableRow = new Phprojekt_Pdf_Table_Row();
+            if (isset($row['isHeader']) && $row['isHeader']) {
+                $tableRow->setHeader();
+            }
             foreach ($row as $cell) {
+                if (!is_array($cell)) {
+                    continue;
+                }
                 // TODO: add validation for column data
                 $column     = new Phprojekt_Pdf_Table_Column();
                 $alignment  = !empty($cell['align']) ? $cell['align'] : null;
@@ -150,7 +157,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         // Change font size
         if (isset($freetextInfo['fontSize'])) {
             $fontSizeChangeRate      = $freetextInfo['fontSize'] - $currentPage->getFontSize();
-            $currentPage->freeLineY += $fontSizeChangeRate * self::RATE_FONT_IN_PIX;
+            $currentPage->freeLineY += $fontSizeChangeRate * self::DEFAULT_LINE_WIDTH;
             $currentPage->setFont($this->getFont(), $freetextInfo['fontSize']);
         }
 
@@ -259,12 +266,21 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      */
     public function drawMultilineText($lines, $x, $y)
     {
-        $y        = $this->getHeight() - $y;
-        $fontSize = $this->getFontSize();
-        foreach($lines as $i => $line) {
-            $this->drawText($line, $x + 2, $y - ($fontSize * self::RATE_FONT_IN_PIX * $i));
+        $y             = $this->getHeight() - $y;
+        $fontSize      = $this->getFontSize();
+        $realLineCount = 0;
+        if (!is_array($lines)) {
+            $lines = array($lines);
         }
-        $this->freeLineY = $this->getHeight() - $y + ($fontSize * self::RATE_FONT_IN_PIX * count($lines));
+        foreach ($lines as $line) {
+            $parsedText = $this->getVariableText($line, $x, $y, $this->getWidth() - $x);
+            foreach ($parsedText['lines'] as $parsedLine) {
+                list($str, $xTmp, $yTmp) = $parsedLine;
+                $this->drawText(implode(' ', $str), $x + 2, $y - ($fontSize * self::DEFAULT_LINE_WIDTH * $realLineCount));
+                $realLineCount++;
+            }
+        }
+        $this->freeLineY = $this->getHeight() - $y + ($fontSize * self::DEFAULT_LINE_WIDTH * $realLineCount);
     }
 
     /**
@@ -367,8 +383,8 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             list($str, $x, $y) = $line;
             $xPos              = $x;
             if ($align == 'right') {
-                $length = $this->calculateTextWidth(implode(' ', $str));
-                $xPos += $maxWidth - $length - $this->getFontSize() / 2;
+                $length = $this->_calculateTextWidth(implode(' ', $str));
+                $xPos += $maxWidth - $length - $this->getFontSize();
             } else if ($align == 'center') {
                 $length = $this->_calculateTextWidth(implode(' ', $str));
                 $xPos += ($maxWidth - $length - $this->getFontSize() / 2) / 2;

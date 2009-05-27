@@ -181,11 +181,19 @@ class Phprojekt_Pdf_Table_Column
      * @param int                $x
      * @param int                $y
      * @param int                $height
+     * @param boolean            $isHeader
      *
      * @return void
      */
-    public function renderBorder($page, $x, $y, $height)
+    public function renderBorder($page, $x, $y, $height, $isHeader = false)
     {
+        if ($isHeader) {
+            $grayColor  = new Zend_Pdf_Color_GrayScale(Phprojekt_Pdf_Page::HEADER_GRAY_LEVEL);
+            $blackColor = new Zend_Pdf_Color_GrayScale(0);
+            $page->setFillColor($grayColor);
+            $page->drawRectangle($x, $y, $x + $this->_width, $y - $height, Zend_Pdf_Page::SHAPE_DRAW_FILL);
+            $page->setFillColor($blackColor);
+        }
         $page->drawRectangle($x, $y, $x + $this->_width, $y - $height, Zend_Pdf_Page::SHAPE_DRAW_STROKE);
     }
 }
