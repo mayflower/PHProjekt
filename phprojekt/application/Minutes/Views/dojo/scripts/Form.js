@@ -110,22 +110,38 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         
         var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
             'id':		this.id,
-            'people':	this._peopleList // should be pre-populated by addModuleTabs()
+            'people':	this._peopleList, // should be pre-populated by addModuleTabs(),
+            'lblRecipients': phpr.nls.get('Recipients'),
+            'lblAdditional': phpr.nls.get('Additional Recipients'),
+            'lblComment':	 phpr.nls.get('Comment'),
+            'lblOptions':	 phpr.nls.get('Options'),
+            'lblAttachPdf':	 phpr.nls.get('Include PDF attachment'),
+            'lblSendMail':	 phpr.nls.get('Send mail'),
+            'lblPreview':	 phpr.nls.get('Preview')
         });
         
         this.addTab(mailForm, 'tabMail', phpr.nls.get('Mail'), 'mailFormTab');
+        
+        new dijit.Tooltip({
+        	connectId:	['minutesMailFormAdditionalRecipientsTooltip'],
+        	label:		phpr.nls.get('Email addresses of unlisted recipients, comma-separated.')
+        });
         
         dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick',
         			 function() {
         				 console.log('Sending mail...');
 			        	 dojo.xhrPost({
 			                 url: "index.php/Minutes/index/jsonSendMail/",
-			                 handleAs: "text",
+			                 handleAs: "json",
 			                 load: function(r) {
-			        		     console.log('Mail sent successfully. Response: ' + r);
+			        		 	 new phpr.handleResponse('serverFeedback', r);
+			        		     console.debug('Mail sent successfully. Response: ' + r);
+			        		     console.dir(r);
 			        	     },
 			                 error: function(e) {
+			        	    	 new phpr.handleResponse('serverFeedback', e);
 			                     console.debug('Error while sending mail: ' + e);
+			                     console.dir(e);
 			                 },
 			                 form: "mailFormTab"
 	                     });
@@ -154,7 +170,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
                 phpr.DataStore.addStore({"url": this.url});
                 phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
-                //dojo.connect(dijit.byId('submitButton'), 'onClick', this.saveSubFormData);
             }
         }));
         
@@ -171,26 +186,30 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    grid object for MinutesItems. Row configuration
         //    is defined here.
         var me = this; // variable scope workaround, needed for formatter
+        var rowSelectHandler = dojo.hitch(this, function(e) {
+            var data = e.grid.getItem(e.rowIndex);
+            this.getSubFormData(data.id);
+        });
         var layout = [{
             cells: [[
                      {
                          name:     phpr.nls.get('Topic'),
                          field:    'topicId',
                          styles:   "text-align: center;",
-                         width:    '30px',
+                         width:    '5%',
                          rowSpan:  2
                      },
                      {
                          name:     phpr.nls.get('Title'),
                          field:    'title',
                          styles:   "text-align: left;",
-                         width:    '270px'
+                         width:    '50%'
                      },
                      {
                          name:     phpr.nls.get('Type'),
                          field:    'topicType',
                          styles:   "text-align: center;",
-                         width:    '50px',
+                         width:    '10%',
                          type:     dojox.grid.cells.Select,
                          formatter:function(value) {
                              var typeList = me.getItemTypes();
@@ -206,13 +225,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          name:     phpr.nls.get('Date'),
                          field:    'topicDate',
                          styles:   "text-align: center;",
-                         width:    '65px'
+                         width:    '15%'
                      },
                      {
                          name:     phpr.nls.get('Who'),
                          field:    'userId',
                          styles:   "text-align: center;",
-                         width:    '50px',
+                         width:    '20%',
                          formatter:function(value) {
                              var userList = me._peopleList;
                              for(var i=0; i < userList.length; i++) {
@@ -220,7 +239,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                                      return userList[i].display;
                                  }
                              }
-                             console.log('Investigate! Value not in user array: ' + value);
                              return '';
                        	 }
                      },
@@ -229,7 +247,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          name:     phpr.nls.get('Comment'),
                          field:    'comment',
                          styles:   "text-align: left;",
-                         width:    '465px',
+                         width:    '100%',
                          colSpan:  4
                      }
                  ]]
@@ -249,10 +267,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             }]*/
         }, document.createElement('div'));
         
-        dojo.connect(grid, 'onRowDblClick', dojo.hitch(this, function(e) {
-            var data = e.grid.getItem(e.rowIndex);
-            this.getSubFormData(data.id);
-        }));
+        dojo.connect(grid, 'onRowDblClick', rowSelectHandler);
         
         //dojo.byId('tabItems').appendChild(grid.domNode);
         dijit.byId('minutesGridBox').attr('content', grid.domNode);
@@ -302,6 +317,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemFormData = null;
             this.getItemList(dojo.hitch(this, this.loadSubForm)); // refresh sort orders
+            new phpr.handleResponse('serverFeedback', responseObject);
             //this.loadSubForm();
             this.updateGrid();
             return responseObject;
@@ -309,7 +325,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.xhrPost({
             // The following URL must match that used to test the server.
             url: "index.php/Minutes/item/jsonSave/",
-            handleAs: "text",
+            handleAs: "json",
             load: responseHandler,
             error: function(e) {
                 console.debug('saveSubFormData() has encountered an error: ' + e);
@@ -327,6 +343,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    a new record.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._itemFormData = null;
+            new phpr.handleResponse('serverFeedback', responseObject);
             this.loadSubForm();
             //this._buildGrid();
             this.updateGrid();
@@ -335,7 +352,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.xhrPost({
             // The following URL must match that used to test the server.
             url: "index.php/Minutes/item/jsonDelete/",
-            handleAs: "text",
+            handleAs: "json",
             load: responseHandler,
             error: function(e) {
                 console.debug('deleteSubFormData() has encountered an error: ' + e);

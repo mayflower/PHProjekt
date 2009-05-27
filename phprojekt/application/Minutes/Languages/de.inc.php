@@ -15,6 +15,9 @@ $lang["Content Help"]["People"] = "<br/>
 $lang["Content Help"]["Items"] = "<br/>
     Hilfetext für Protokolleinträge
     ";
+$lang["Content Help"]["E-Mail"] = "<br/>
+    Hilfetext für den E-Mail Versand von Protokollen
+    ";
 
 $lang["Content Help"]["Access"] = "DEFAULT";
 $lang["Content Help"]["Notification"] = "DEFAULT";
@@ -59,4 +62,22 @@ $lang['Invited'] = 'Eingeladen';
 $lang['Attending'] = 'Teilnehmer';
 $lang['Excused'] = 'Entschuldigt';
 $lang['recipients'] = 'Empfänger';
+
+// Mail tab
+$lang['Recipients'] = 'Empfänger';
+$lang['Additional Recipients'] = 'Weitere Empfänger';
+//$lang['Comment'] = 'Zusatztext';
+$lang['Options'] = 'Optionen';
+$lang['Include PDF attachment'] = 'PDF als Anhang hinzufügen';
+$lang['Email addresses of unlisted recipients, comma-separated.'] = 'E-Mail Adressen für hier nicht gelistete Empfänger, kommasepariert';
+$lang['Send mail'] = 'E-Mail absenden';
+$lang['Preview'] = 'Vorschau';
+$lang['Mail'] = 'E-Mail';
+
+// Mail functions
+$lang['Meeting minutes for "%s", %s'] = 'Meeting-Protokoll "%s", %s';
+$lang['The mail could not be sent.'] = 'Die E-Mail konnte nicht gesendet werden.';
+$lang['The mail was sent successfully.'] = 'Die E-Mail wurde erfolgreich versandt.';
+$lang['Invalid email address detected: %s'] = 'Ungültige E-Mail Adresse: %s';
+
 //$lang[''] = '';

@@ -47,6 +47,9 @@ class Minutes_IndexController extends IndexController
      */
     const USER_IS_NOT_OWNER = 'The currently logged-in user is not owner of the given minutes entry.';
     
+    const MAIL_FAIL_TEXT = 'The mail could not be sent.';
+    const MAIL_SUCCESS_TEXT = 'The mail was sent successfully.';
+    
     /**
      * Get a user list in JSON
      *
@@ -136,6 +139,7 @@ class Minutes_IndexController extends IndexController
     {
         $log = Phprojekt::getInstance()->getLog();
         $log->debug('Entering jsonSendMailAction... ');
+        $errors = array();
         
         /**
          * @todo Change Phprojekt_Mail_Notification::_setTransport() to public,
@@ -212,7 +216,8 @@ class Minutes_IndexController extends IndexController
                     $mail->addTo($address, $record->firstname . ' ' . $record->lastname);
                     $hasRecipients = true;
                 } else {
-                    $log->warn('Invalid email address detected: ' . $address);
+                    $errors[] = array('message' => 'Invalid email address detected: %s',
+                                      'value'   => $address) ;
                 }
             }
         }
@@ -227,52 +232,72 @@ class Minutes_IndexController extends IndexController
                     $mail->addTo($address);
                     $hasRecipients = true;
                 } else {
-                    $log->warn('Invalid email address detected: ' . $address);
+                    $errors[] = array('message' => 'Invalid email address detected: %s',
+                                      'value'   => $address);
                 }
             }
         }
         
         // sanity check
         if (!$hasRecipients) {
-            throw new Phprojekt_PublishedException(self::MISSING_MAIL_RECIPIENTS);
+            $errors[] = array('message' => self::MISSING_MAIL_RECIPIENTS,
+                              'value'   => null);
         }
         
         // handle PDF attachment if needed
-        if (!empty($params['options']) && is_array($params['options'])) {
-            if (in_array('pdf', $params['options'])) {
-                $log->debug('Creating PDF attachment...');
-                /* @todo use PDF report creator here as soon as it's ready */
-                
-                $pdf = Minutes_Helpers_Pdf::getPdf($minutesId);
-                $mail->createAttachment($pdf,
-                                        'application/x-pdf',
-                                        Zend_Mime::DISPOSITION_ATTACHMENT,
-                                        Zend_Mime::ENCODING_8BIT,
-                                        'minutes_' . $minutesId . '.pdf');
-                
+        if (!count($errors)) {
+            if (!empty($params['options']) && is_array($params['options'])) {
+                if (in_array('pdf', $params['options'])) {
+                    $log->debug('Creating PDF attachment...');
+                    /* @todo use PDF report creator here as soon as it's ready */
+                    
+                    $pdf = Minutes_Helpers_Pdf::getPdf($minutesId);
+                    $mail->createAttachment($pdf,
+                                            'application/x-pdf',
+                                            Zend_Mime::DISPOSITION_ATTACHMENT,
+                                            Zend_Mime::ENCODING_8BIT,
+                                            'minutes_' . $minutesId . '.pdf');
+                }
             }
+            
+            // set sender address
+            $ownerModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $ownerModel->find($minutes->ownerId);
+            $ownerEmail = $ownerModel->getSetting('email');    
+            $mail->setFrom($ownerEmail, $ownerModel->firstname . ' ' . $ownerModel->lastname);
+            $log->debug('Setting FROM: ' . $ownerEmail . ' (' .
+                        $ownerModel->firstname . ' ' . $ownerModel->lastname . ')');
+            
+            // set subject
+            $subject = sprintf(Phprojekt::getInstance()->translate('Meeting minutes for "%s", %s'), 
+                               $minutes->title, 
+                               $minutes->startTime);
+            $mail->setSubject($subject);
+            
+            // set mail content
+            $mail->setBodyText($subject, 'utf-8');
+            $mail->setBodyHtml($this->getHtmlList($minutesId), 'utf-8');
+            
+            // keep send() commented out until test phase is over
+            //$mail->send($smtpTransport);
+            $return = array('type'    => 'success',
+                            'message' => Phprojekt::getInstance()->translate(self::MAIL_SUCCESS_TEXT),
+                            'code'    => 0,
+                            'id'      => $minutesId);
+        } else {
+            $message = Phprojekt::getInstance()->translate(self::MAIL_FAIL_TEXT);
+            foreach($errors as $error) {
+                $message .= "\n";
+                $message .= sprintf(Phprojekt::getInstance()->translate($error['message']), 
+                                    $error['value']);
+            }
+            $return = array('type'    => 'error',
+                            'message' => nl2br($message),
+                            'code'    => -1,
+                            'id'      => $minutesId);
         }
         
-        // set sender address
-        $ownerModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $ownerModel->find($minutes->ownerId);
-        $ownerEmail = $ownerModel->getSetting('email');    
-        $mail->setFrom($ownerEmail, $ownerModel->firstname . ' ' . $ownerModel->lastname);
-        $log->debug('Setting FROM: ' . $ownerEmail . ' (' .
-                    $ownerModel->firstname . ' ' . $ownerModel->lastname . ')');
-        
-        // set subject
-        $subject = sprintf('Meeting minutes for "%s", %s', 
-                           $minutes->title, 
-                           $minutes->startTime);
-        $mail->setSubject($subject);
-        
-        // set mail content
-        $mail->setBodyText($subject, 'utf-8');
-        $mail->setBodyHtml($this->getHtmlList($minutesId), 'utf-8');
-        
-        // keep send() commented out until test phase is over
-        //$mail->send($smtpTransport);
+        Phprojekt_Converter_Json::echoConvert($return);
     }
     
     protected function getHtmlList($minutesId)

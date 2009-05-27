@@ -14,7 +14,9 @@ $lang["Content Help"]["People"] = "<br/>
 $lang["Content Help"]["Items"] = "<br/>
     Help text for Minutes Items
     ";
-
+$lang["Content Help"]["Mail"] = "<br/>
+    Help text for Minutes Mail tab
+    ";
 $lang["Content Help"]["Access"] = "DEFAULT";
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";
@@ -58,4 +60,22 @@ $lang['Invited'] = 'Invited';
 $lang['Attending'] = 'Attending';
 $lang['Excused'] = 'Excused';
 $lang['recipients'] = 'Recipients';
+
+// Mail tab
+$lang['Recipients'] = 'Recipients';
+$lang['Additional Recipients'] = 'Additional Recipients';
+//$lang['Comment'] = 'Comment';
+$lang['Options'] = 'Options';
+$lang['Include PDF attachment'] = 'Include PDF attachment';
+$lang['Email addresses of unlisted recipients, comma-separated.'] = 'Email addresses of unlisted recipients, comma-separated.';
+$lang['Send mail'] = 'Send mail';
+$lang['Preview'] = 'Preview';
+$lang['Mail'] = 'Mail';
+
+// Mail functions
+$lang['Meeting minutes for "%s", %s'] = 'Meeting minutes for "%s", %s';
+$lang['The mail could not be sent.'] = 'The mail could not be sent.';
+$lang['The mail was sent successfully.'] = 'The mail was sent successfully.';
+$lang['Invalid email address detected: %s'] = 'Invalid email address detected: %s';
+
 //$lang[''] = '';
