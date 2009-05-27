@@ -142,6 +142,11 @@ $lang["The module can not be deleted"] = "Das Modul kann nicht gelöscht werden"
 $lang["The module was deleted correctly"] = "Das Modul wurde erfolgreich gelöscht";
 $lang["No help available"] = "Keine Hilfe verfügbar";
 $lang["You do not have access for do this action"] = "Sie haben keinen Zugriff für diese Aktion";
+$lang["Internal exception"] = "Interne ausnahme";
+$lang["Please contact the administrator and check the error logs"] = "Bitte wenden Sie sich an den Administrator und"
+    . " prüfen Sie die Fehlerprotokolle";
+$lang["Invalid json format"] = "Ungültiges JSON-Format";
+$lang["User error"] = "User Error";
 
 // System Modules
 $lang["Administration"] = "Administration";

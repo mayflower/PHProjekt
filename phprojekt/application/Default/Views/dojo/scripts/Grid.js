@@ -459,14 +459,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             }
         }
 
-        //post the content of all changed forms
+        // post the content of all changed forms
         dojo.rawXhrPost( {
-            url: this.updateUrl,
+            url:      this.updateUrl,
             postData: content,
             handleAs: "json",
             load: dojo.hitch(this, function(response, ioArgs) {
                 new phpr.handleResponse('serverFeedback', response);
-                if (response.type =='success') {
+                if (response.type == 'success') {
                     this._newRowValues = {};
                     this._oldRowValues = {};
                     this.publish("updateCacheData");
@@ -474,7 +474,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 }
             }),
             error:function(response, ioArgs) {
-                new phpr.handleResponse('serverFeedback', response);
+                phpr.handleError(this.url, 'exception');
             }
         });
     },

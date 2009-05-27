@@ -229,20 +229,21 @@ phpr.send = function(/*Object*/paramsIn) {
 
     phpr.loading.show();
     var params = {
-        url:"",
-        content:"",
-        handleAs: "json",
-        onSuccess:null,
-        onError:null,
-        onEnd:null,
-        sync:false,
-        chunkMap:{}
+        url:       "",
+        content:   "",
+        handleAs:  "json",
+        onSuccess: null,
+        onError:   null,
+        onEnd:     null,
+        sync:      false,
+        chunkMap:  {}
     }
     if (dojo.isObject(paramsIn)) {
         dojo.mixin(params, paramsIn);
     }
     var _onError, _onSuccess = function() {};
     var _onEnd = params.onEnd || function() {};
+
     if (params.onError) {
         _onError = function(response, ioArgs) {
             params.onError(response, ioArgs);
@@ -250,37 +251,31 @@ phpr.send = function(/*Object*/paramsIn) {
         }
     } else {
         _onError = function(response, ioArgs) {
-            new phpr.handleResponse('serverFeedback', response);
+            phpr.handleError(params.url, 'php');
             _onEnd();
         }
     }
 
-    if (params.onSuccess) {
-        // If you define onSuccess, make sure to also show the error, for ret=False!!!!!!!
-        _onSuccess = function(data, ioArgs) {
-            try {
-                // 500 is the error code for logut
-                if (data.code && data.code == 500) {
-                    location = phpr.webpath + "index.php/Login/logout";
-                    return;
-                } else {
+    _onSuccess = function(data, ioArgs) {
+        try {
+            // 500 is the error code for logut
+            if (data.code && data.code == 500) {
+                location = phpr.webpath + "index.php/Login/logout";
+                return;
+            } else {
+                if (params.onSuccess) {
                     params.onSuccess(data, ioArgs);
-                    _onEnd();
-                    phpr.loading.hide();
+                } else {
+                    new phpr.handleResponse('serverFeedback', data);
                 }
-            } catch(e) {
-                var response     = {};
-                response.type    = 'error';
-                response.message = e;
-                new phpr.handleResponse('serverFeedback', response);
+                _onEnd();
+                phpr.loading.hide();
             }
-        };
-    } else {
-        _onSuccess = function(data) {
-            new phpr.handleResponse('serverFeedback', data);
-            _onEnd();
-        };
-    }
+        } catch(e) {
+            phpr.handleError(params.url, 'exception');
+            return;
+        }
+    };
 
     dojo.xhrPost({
         url:      params.url,
@@ -400,7 +395,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Set a new store for save the data
         // description:
         //    Set a new store for save the data
-        if (!this._internalCache[params.url]) {
+        if (typeof this._internalCache[params.url] == 'undefined') {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
                 data:  new Array(),
@@ -430,11 +425,24 @@ dojo.declare("phpr.DataStore", null, {
                 onComplete: dojo.hitch(this, "saveData", {
                     url:         params.url,
                     processData: params.processData
+                }),
+                onError: dojo.hitch(this, "errorHandler", {
+                    url:         params.url,
+                    processData: params.processData
                 })}
             );
         } else if (params.processData) {
             params.processData.call();
         }
+    },
+
+    errorHandler:function(scope) {
+        // summary:
+        //    Display a PHP error
+        // description:
+        //    If there is some data before the json
+        //    the error is cached and showed
+        phpr.handleError(scope.url, 'php');
     },
 
     saveData:function(params, data) {
@@ -504,41 +512,41 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // description:
     //    Request to the server and return an array with
     //    data and metadata values
-    requestMethod: "post",
+    requestMethod:  "post",
     doClientPaging: false,
 
     _assertIsItem:function(item) {
     },
 
     _filterResponse:function(data) {
-        // 500 is the error code for logut
-        if (data.code && data.code == 500) {
+        var retData     = new Array();
+        var retMetaData = new Array();
+
+        if (!data) {
+            phpr.handleError(this.url, 'exception');
+        } else if (data.code && data.code == 500) {
+            // 500 is the error code for logut
             location = phpr.webpath + "index.php/Login/logout";
-            return;
         } else if (data.type && data.type == "error") {
-            var response     = {};
-            response.type    = 'error';
-            response.message = data.message
-            new phpr.handleResponse('serverFeedback', response);
-            return;
-        }
-
-        if (typeof data.data == 'undefined') {
-            data.data = new Array();
-        }
-
-        if (data.data.length == 0 && typeof data.metadata == 'undefined') {
-            var retData     = data;
-            var retMetaData = new Array();
+            phpr.handleError(this.url, 'error', data.message);
         } else {
-            var retData     = data.data;
-            var retMetaData = data.metadata;
+            if (typeof data.data == 'undefined') {
+                data.data = new Array();
+            }
+
+            if (data.data.length == 0 && typeof data.metadata == 'undefined') {
+                retData     = data;
+            } else {
+                retData     = data.data;
+                retMetaData = data.metadata;
+            }
         }
 
-        ret = {
+        var ret = {
             items: [
                 {"data":     retData},
-                {"metadata": retMetaData}]
+                {"metadata": retMetaData}
+            ]
         }
 
         return ret;
@@ -727,4 +735,36 @@ phpr.loadCssFile = function(fileName) {
     if (typeof fileRef!="undefined") {
         document.getElementsByTagName("head")[0].appendChild(fileRef)
     }
+};
+
+phpr.handleError = function(url, type, message) {
+    // Process and return an error message
+    var response  = {};
+    response.type = 'error';
+
+    if (url) {
+        response.message = url.replace(phpr.webpath, "") + ': ';
+    } else {
+        response.message = '';
+    }
+
+    switch (type) {
+        case 'exception':
+            response.message += phpr.nls.get('Internal exception') + '<br />';
+            response.message += phpr.nls.get('Please contact the administrator and check the error logs');
+            break;
+        case 'php':
+            response.message += phpr.nls.get('Invalid json format') + '<br />';
+            response.message += phpr.nls.get('Please contact the administrator and check the error logs');
+            break;
+        case 'error':
+            response.message += phpr.nls.get('User error') + '<br />';
+            response.message += message
+            break;
+        default:
+            response.message += 'Unexpected error';
+            break;
+    }
+
+    new phpr.handleResponse('serverFeedback', response);
 };
