@@ -280,6 +280,7 @@ class Minutes_IndexController extends IndexController
             
             // keep send() commented out until test phase is over
             //$mail->send($smtpTransport);
+            
             $return = array('type'    => 'success',
                             'message' => Phprojekt::getInstance()->translate(self::MAIL_SUCCESS_TEXT),
                             'code'    => 0,
@@ -292,7 +293,7 @@ class Minutes_IndexController extends IndexController
                                     $error['value']);
             }
             $return = array('type'    => 'error',
-                            'message' => nl2br($message),
+                            'message' => nl2br($message), // converting to BR should be done in the view!
                             'code'    => -1,
                             'id'      => $minutesId);
         }

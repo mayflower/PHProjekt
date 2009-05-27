@@ -267,7 +267,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             }]*/
         }, document.createElement('div'));
         
-        dojo.connect(grid, 'onRowDblClick', rowSelectHandler);
+        dojo.connect(grid, 'onRowClick', rowSelectHandler);
         
         //dojo.byId('tabItems').appendChild(grid.domNode);
         dijit.byId('minutesGridBox').attr('content', grid.domNode);
