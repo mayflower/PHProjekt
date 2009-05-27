@@ -14,7 +14,7 @@
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id: Right.php 1553 2009-04-02 14:28:43Z svenrtbg $
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @author     Markus Wolff <markus.wolff@mayflower.de>
  * @since      File available since Release 6.0
@@ -34,6 +34,17 @@
 final class Minutes_Helpers_Pdf
 {
     /**
+     * Helper function to create string lists of user names
+     */
+    private static function _concat ($collect, $new)
+    {
+        if (is_null($collect)) {
+            return $new['display'];
+        }
+        return $collect . "\n" . $new['display'];
+    }
+    
+    /**
      * Creates a PDF report for the Minutes entry having
      * the given ID. Returns the PDF as a string that can
      * either be saved to disk or streamed back to the
@@ -42,7 +53,7 @@ final class Minutes_Helpers_Pdf
      * @param int $minutesId ID of the Minutes entry
      * @return string The resulting PDF document
      */
-    public function getPdf($minutesId)
+    public static function getPdf(Phprojekt_Model_Interface $minutesModel)
     {
         // Create new PDF document.
         $pdf = new Zend_Pdf();
@@ -52,46 +63,54 @@ final class Minutes_Helpers_Pdf
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 12);
         
         $page->addFreetext(array(
-                           'lines'  => array('Title as Headline'),
+                           'lines'  => array($minutesModel->title),
                            'startX' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'startY' => 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'fontSize' => 20,
                            'textWidth' => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
         
         $page->addFreetext(array(
-                           'lines'=>array('Lorem ipsum whatever foobar.',
-                                          'Die voluminöse Expansion der subterralen '
-                                        . 'Knollengewächse ist reziprog proportional zum '
-                                        . 'Intelligenzquotienten des Agrarökonoms. Die voluminöse Expansion der '
-                                        . 'subterralen Knollengewächse ist reziprog proportional zum '
-                                        . 'Intelligenzquotienten des Agrarökonoms.',
-                                          'Date of meeting: ' . date('Y-m-d')
-                                        . ' Start time: ' . date('H:i:s')
-                                        . ', End time: ' . date('H:i:s'),
-                                          'Location: ORTSANGABE',
-                                          'Moderator: NAMENSANGABE'),
+                           'lines'=>array($minutesModel->description,
+                                          'Date of meeting: ' . $minutesModel->meetingDate
+                                        . ' Start time: ' . $minutesModel->startTime
+                                        . ', End time: ' . $minutesModel->endTime,
+                                          'Location: ' . $minutesModel->place,
+                                          'Moderator: ' . $minutesModel->moderator),
                             'startX'    => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                             'fontSize'  => 12));
+        
+        $invited    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsInvited);
+        $attending  = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsAttending);
+        $excused    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsExcused);
+        $recipients = Minutes_Helpers_Userlist::expandIdList($minutesModel->recipients);
         
         $page->addTable(array(
                         'startX'=> 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                         'fontSize' => 12,
                         'rows' => array(
                                       array(
-                                          array('text' => 'INVITED', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "NAME 1\nNAME 2\nNAME3", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => 'INVITED', 
+                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => array_reduce($invited, array('self', '_concat')), 
+                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
-                                          array('text' => 'PARTICIPANTS', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "NAME 1\nNAME 2", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => 'PARTICIPANTS',
+                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => array_reduce($attending, array('self', '_concat')),
+                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
-                                          array('text' => 'EXCUSED', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "NAME 3\nNAME 4", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => 'EXCUSED',
+                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => array_reduce($excused, array('self', '_concat')),
+                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
-                                          array('text' => 'RECIPIENTS', 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "NAME 1\nNAME 2\nNAME 3\nNAME 4", 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => 'RECIPIENTS',
+                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                          array('text'  => array_reduce($recipients, array('self', '_concat')),
+                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                         )));
         

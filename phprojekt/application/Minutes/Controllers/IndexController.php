@@ -61,22 +61,14 @@ class Minutes_IndexController extends IndexController
         $minutes->find($this->getRequest()->getParam('id'));
 
         if (!empty($minutes->id)) {
-            $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $idList = array();
             $idList = array_merge($idList, 
-                                  explode(',', $minutes->participantsInvited),
-                                  explode(',', $minutes->participantsExcused),
-                                  explode(',', $minutes->participantsAttending),
-                                  explode(',', $minutes->recipients));
-            $userList = $user->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
-
-            $data    = array();
-            $display = $user->getDisplay();
-            foreach ($userList as $record) {
-                $data['data'][] = array('id'      => $record->id,
-                                        'display' => $record->applyDisplay($display, $record));
-            }
-            $data['numRows'] = count($userList);
+                              explode(',', $minutes->participantsInvited),
+                              explode(',', $minutes->participantsExcused),
+                              explode(',', $minutes->participantsAttending),
+                              explode(',', $minutes->recipients));
+            $data['data']    = Minutes_Helpers_Userlist::expandIdList(implode(',', $idList));
+            $data['numRows'] = count($data['data']);
             
             Phprojekt_Converter_Json::echoConvert($data);
         } else {
@@ -313,8 +305,20 @@ class Minutes_IndexController extends IndexController
      */
     public function pdfAction()
     {
-        header("Content-Disposition: inline; filename=result.pdf");
-        header("Content-type: application/x-pdf; charset=utf-8");
-        echo Minutes_Helpers_Pdf::getPdf((int) $this->getRequest()->getParam('minutesId', 0));
+        $id = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+
+        $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes')->find($id);
+
+        if ($minutes instanceof Phprojekt_Model_Interface) {
+            header("Content-Disposition: inline; filename=result.pdf");
+            header("Content-type: application/x-pdf; charset=utf-8");
+            echo Minutes_Helpers_Pdf::getPdf($minutes);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
     }
 }
