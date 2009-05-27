@@ -64,7 +64,13 @@ class Core_IndexController extends IndexController
             }
 
             if (!$valid) {
-                $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/index');
+                // If is a GET, show the login page
+                // If is a POST, send message in json format
+                if (!$this->getFrontController()->getRequest()->isGet()) {
+                    throw new Phprojekt_PublishedException('Admin section is only for admin users', 500);
+                } else {
+                    $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/logout');
+                }
                 exit;
             }
         }
