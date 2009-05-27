@@ -116,8 +116,8 @@ class Phprojekt_Pdf_Table
     public function render()
     {
         $y = $this->page->getHeight() - $this->y;
-        foreach($this->_rows as $row) {
-            if($y - $row->testRender($this->page, $this->x, $y) < 0) {
+        foreach ($this->_rows as $row) {
+            if ($y - $row->testRender($this->page, $this->x, $y) < 0) {
                 $font     = $this->page->getFont();
                 $fontSize = $this->page->getFontSize();
 

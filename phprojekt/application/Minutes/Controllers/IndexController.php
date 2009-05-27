@@ -171,7 +171,7 @@ class Minutes_IndexController extends IndexController
         }
         
         $params     = $this->getRequest()->getParams();
-        $log->debug('Request params: ' . print_r($params,true));
+        $log->debug('Request params: ' . print_r($params, true));
         
         // sanity check
         if (empty($params['id']) || !is_numeric($params['id'])) {
@@ -200,13 +200,13 @@ class Minutes_IndexController extends IndexController
         // Add regular recipients:
         $idList = array();
         if (!empty($params['recipients']) && is_array($params['recipients'])) {
-            foreach($params['recipients'] as $recipientId) {
+            foreach ($params['recipients'] as $recipientId) {
                 if (is_numeric($recipientId)) {
                     $idList[] = (int) $recipientId;
                 }
             }
         }
-        $log->debug('idList: ' . print_r($idList,true));
+        $log->debug('idList: ' . print_r($idList, true));
         if (count($idList)) {
             $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
@@ -228,7 +228,7 @@ class Minutes_IndexController extends IndexController
         // Add additional recipients:
         if (!empty($params['additional'])) {
             $additional = explode(',', $params['additional']);
-            foreach($additional as $recipient) {
+            foreach ($additional as $recipient) {
                 $address = trim($recipient);
                 if ($validator->isValid($address)) {
                     $log->debug('Adding mail to: ' . $address);
@@ -304,5 +304,17 @@ class Minutes_IndexController extends IndexController
         $this->view->items = $newitem; 
         
         return $this->view->render('table.phtml');
+    }
+    
+    /**
+     * Completely bogus action to create demo pdf file
+     * 
+     * @todo Remove this function or refactor to final action
+     */
+    public function pdfAction()
+    {
+        header("Content-Disposition: inline; filename=result.pdf");
+        header("Content-type: application/x-pdf; charset=utf-8");
+        echo Minutes_Helpers_Pdf::getPdf((int) $this->getRequest()->getParam('minutesId', 0));
     }
 }

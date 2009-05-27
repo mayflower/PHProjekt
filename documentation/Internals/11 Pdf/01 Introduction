@@ -23,15 +23,15 @@ Template has a form of array, where some fields have specific form.
 
 Fields are:
 1.Elements to parse.
-2.font –(optional)  type of string, contain the name of the font
-3.fontSize – (optional) type of int, contain font size
+2.font -(optional)  type of string, contain the name of the font
+3.fontSize - (optional) type of int, contain font size
 
 For example:
 
 array(
     0 => array(....),
     1 => array(....),
-        …
+        ...
 
     'font'     => 'Helvetica',
     'fontSize' => 10,
@@ -44,13 +44,13 @@ Each element for parsing is an array. There are 2 types of elements.
 Array of element should contain following keys:
 
 type - with value 'table', which defines a type of the element
-rows – value is an array, where every row contain array of columns
+rows - value is an array, where every row contain array of columns
 
 Optional parameters are:
 startX and startY  - (optional) values of type int, define coordinates of left top corner of the table.
                      By default element would be added to the next free line in the document.
-fontSize – (optional) change font size for the free text
-lineWidth – (optional) change width of lines for the free text
+fontSize - (optional) change font size for the free text
+lineWidth - (optional) change width of lines for the free text
 
 For example:
 
@@ -63,9 +63,9 @@ array( 'type'   =>'table',
 )
 
 Column has type of array with following rows:
-1.text – type of text
-2.width – type of int, width of the column
-3.alignment (optional) – type of string, left is by default
+1.text - type of text
+2.width - type of int, width of the column
+3.alignment (optional) - type of string, left is by default
 
 Text would be parsed according to the cell width, keeping all passed paragraphs
 
@@ -91,13 +91,13 @@ For example:
 
 Array of element should contain following keys:
 type -  with a value  'freetext',which defines a type of the element,
-lines – value is array of strings or text, where every string would be inserted from the new line, saving paragraphs
+lines - value is array of strings or text, where every string would be inserted from the new line, saving paragraphs
 
 Optional parameters are:
 startX and startY - (optional) values of type int, define coordinates of left top corner of the Free text block
                      By default element would be added to the next free line in the document.
-fontSize – (optional) change font size for the free text
-lineWidth – (optional) change width of lines for the free text
+fontSize - (optional) change font size for the free text
+lineWidth - (optional) change width of lines for the free text
 
 For example:
 
