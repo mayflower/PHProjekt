@@ -235,7 +235,7 @@ class Minutes_ItemController_Test extends FrontInit
     
     public function testHtmlListAction()
     {
-        $this->setRequestUrl('Minutes/item/htmlList/minutesId/3');
+        $this->setRequestUrl('Minutes/index/htmlList/minutesId/3');
         $response = $this->getResponse();
         
         $this->assertFalse($this->error, 'Exception was: '. $this->errormessage);
