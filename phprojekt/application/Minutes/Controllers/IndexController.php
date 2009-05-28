@@ -64,13 +64,10 @@ class Minutes_IndexController extends IndexController
         $minutes->find($this->getRequest()->getParam('id'));
 
         if (!empty($minutes->id)) {
-            $idList = array();
-            $idList = array_merge($idList, 
-                              explode(',', $minutes->participantsInvited),
-                              explode(',', $minutes->participantsExcused),
-                              explode(',', $minutes->participantsAttending),
-                              explode(',', $minutes->recipients));
-            $data['data']    = Minutes_Helpers_Userlist::expandIdList(implode(',', $idList));
+            $data['data']    = Minutes_Helpers_Userlist::expandIdList($minutes->participantsInvited, 
+                                                                      $minutes->participantsExcused,
+                                                                      $minutes->participantsAttending,
+                                                                      $minutes->recipients);
             $data['numRows'] = count($data['data']);
             
             Phprojekt_Converter_Json::echoConvert($data);
@@ -287,7 +284,7 @@ class Minutes_IndexController extends IndexController
                             'id'      => $minutesId);
         } else {
             $message = Phprojekt::getInstance()->translate(self::MAIL_FAIL_TEXT);
-            foreach($errors as $error) {
+            foreach ($errors as $error) {
                 $message .= "\n";
                 $message .= sprintf(Phprojekt::getInstance()->translate($error['message']), 
                                     $error['value']);
