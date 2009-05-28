@@ -93,8 +93,9 @@ class Project_IndexController extends IndexController
         $data    = (array) $this->getRequest()->getParam('data');
         $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId  = array();
+        $model   = $this->getModelObject();
         foreach ($data as $id => $fields) {
-            $model   = $this->getModelObject()->find($id);
+            $model->find($id);
             $node    = new Phprojekt_Tree_Node_Database($model, $id);
             $newNode = Default_Helpers_Save::save($node, $fields, (int) $this->getRequest()->getParam('nodeId', null));
             $showId[] = $newNode->id;
