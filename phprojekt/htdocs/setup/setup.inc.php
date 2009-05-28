@@ -274,10 +274,10 @@ function installPhprojekt()
     }
 
     $result = $tableManager->createTable('groups_user_relation', array(
-        'id'        => array('type' => 'auto_increment', 'null' => false),
-        'groups_id' => array('type' => 'int', 'length' => 11, 'null' => true),
-        'user_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
-        ),array('primary key' => array('id')));
+            'id'        => array('type' => 'auto_increment', 'null' => false),
+            'groups_id' => array('type' => 'int', 'length' => 11, 'null' => true),
+            'user_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
+        ), array('primary key' => array('id')));
     if (!$result) {
         die("Error creating the table groups_user_relation");
     }
