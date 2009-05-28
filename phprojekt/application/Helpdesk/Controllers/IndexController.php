@@ -74,7 +74,7 @@ class Helpdesk_IndexController extends IndexController
      *
      * @return array
      */
-    private function _setParams($params, $model, $newItem = false)
+    public function setParams($params, $model, $newItem = false)
     {
         if ($newItem) {
             $params['author'] = Phprojekt_Auth::getUserId();

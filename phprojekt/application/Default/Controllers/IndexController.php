@@ -201,7 +201,7 @@ class IndexController extends Zend_Controller_Action
         }
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $params = $this->_setParams($this->getRequest()->getParams(), $model, $newItem);
+            $params = $this->setParams($this->getRequest()->getParams(), $model, $newItem);
             Default_Helpers_Save::save($model, $params);
 
             $return = array('type'    => 'success',
@@ -236,7 +236,7 @@ class IndexController extends Zend_Controller_Action
         $model   = $this->getModelObject();
         foreach ($data as $id => $fields) {
             $model->find((int) $id);
-            $params = $this->_setParams($fields, $model);
+            $params = $this->setParams($fields, $model);
             Default_Helpers_Save::save($model, $params);
             $showId[] = $id;
         }
@@ -613,7 +613,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return array
      */
-    private function _setParams($params, $model, $newItem = false)
+    public function setParams($params, $model, $newItem = false)
     {
         return $params;
     }

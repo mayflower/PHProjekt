@@ -43,7 +43,7 @@ class Todo_IndexController extends IndexController
      *
      * @return array
      */
-    private function _setParams($params, $model, $newItem = false)
+    public function setParams($params, $model, $newItem = false)
     {
         // Add rights to the Assigned user, if any
         $assignedUser = (isset($params['userId'])) ? $params['userId'] : 0;
