@@ -45,7 +45,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      *
      * @var integer
      */
-    protected $_minutesId;
+    protected $_minutesId = null;
 
     /**
      * The standard information manager with hardcoded
@@ -208,7 +208,10 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= sprintf('(%s.minutes_id = %d )', $this->getTableName(), $this->_minutesId);
+        $where .= sprintf('(%s.minutes_id = %d )', 
+                          $this->getTableName(), 
+                          (empty($this->_minutesId) ? $this->_relations['hasMany']['id'] : $this->_minutesId));
+        
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
         return $result;

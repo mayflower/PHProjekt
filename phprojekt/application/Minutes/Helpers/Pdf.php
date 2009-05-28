@@ -45,17 +45,18 @@ final class Minutes_Helpers_Pdf
     }
     
     /**
-     * Creates a PDF report for the Minutes entry having
-     * the given ID. Returns the PDF as a string that can
-     * either be saved to disk or streamed back to the
-     * browser.
+     * Creates a PDF report from the Minutes model given.
+     * Returns the PDF as a string that can either be saved to disk 
+     * or streamed back to the browser.
      * 
-     * @param int $minutesId ID of the Minutes entry
+     * @param Phprojekt_Model_Interface $minutesModel The minutes model object to create the PDF from
+     * 
      * @return string The resulting PDF document
      */
     public static function getPdf(Phprojekt_Model_Interface $minutesModel)
     {
-        // Create new PDF document.
+        $phpr = Phprojekt::getInstance();
+        
         $pdf = new Zend_Pdf();
         
         $page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
@@ -63,7 +64,7 @@ final class Minutes_Helpers_Pdf
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 12);
         
         $page->addFreetext(array(
-                           'lines'  => array($minutesModel->title),
+                           'lines'  => $minutesModel->title,
                            'startX' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'startY' => 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'fontSize' => 20,
@@ -71,11 +72,11 @@ final class Minutes_Helpers_Pdf
         
         $page->addFreetext(array(
                            'lines'=>array($minutesModel->description,
-                                          'Date of meeting: ' . $minutesModel->meetingDate
-                                        . ' Start time: ' . $minutesModel->startTime
-                                        . ', End time: ' . $minutesModel->endTime,
-                                          'Location: ' . $minutesModel->place,
-                                          'Moderator: ' . $minutesModel->moderator),
+                                          $phpr->translate('Date of Meeting') . ': ' . $minutesModel->meetingDate
+                                        . ' ' . $phpr->translate('Start time') . ': ' . $minutesModel->startTime
+                                        . ', ' . $phpr->translate('End time') . ': ' . $minutesModel->endTime,
+                                          $phpr->translate('Place') . ': ' . $minutesModel->place,
+                                          $phpr->translate('Moderator') . ': ' . $minutesModel->moderator),
                             'startX'    => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                             'fontSize'  => 12));
         
@@ -89,63 +90,68 @@ final class Minutes_Helpers_Pdf
                         'fontSize' => 12,
                         'rows' => array(
                                       array(
-                                          array('text'  => 'INVITED', 
+                                          array('text'  => $phpr->translate('Invited'), 
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($invited, array('self', '_concat')), 
                                                 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
-                                          array('text'  => 'PARTICIPANTS',
+                                          array('text'  => $phpr->translate('Attending'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($attending, array('self', '_concat')),
                                                 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
-                                          array('text'  => 'EXCUSED',
+                                          array('text'  => $phpr->translate('Excused'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($excused, array('self', '_concat')),
                                                 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
-                                          array('text'  => 'RECIPIENTS',
+                                          array('text'  => $phpr->translate('recipients'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($recipients, array('self', '_concat')),
                                                 'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                         )));
         
+        $itemtable = array();
+        $items = $minutesModel->items->fetchAll();
+        
+        foreach ($items as $item) {
+            $itemtable[] = array(
+                              array('text'  => '1', 
+                                    'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                              array('text'  => 'TOPIC', 
+                                    'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                              array('text'  => $item->title . "\n" . $item->comment, 
+                                    'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                );
+        }
+        
         $page->addTable(array(
                         'startX'=> 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                         'fontSize' => 12,
-                        'rows' => array(
+                        'rows' => array_merge(array(
                                       array('isHeader' => true,
                                           array('text' => 'No.', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text' => 'TYPE', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text' => "ITEM", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text' => '1', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => 'TOPIC', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text' => '1.1', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => 'STATEMENT', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text' => '1.2', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => 'TODO', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE\nWHO: name\nDATE: YYYY-MM-DD", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text' => '2', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => 'TOPIC', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text' => "TITLE OF ITEM\nCOMMENT OF ITEM IN MULTILINE\nWHO: name\nDATE: YYYY-MM-DD", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                        )));
+                                      )), $itemtable)
+                                  ));
         
         $pdf->pages[] = $page;
+        
+        $pdf->properties['Title']  = $minutesModel->title;
+        $owner                     = Minutes_Helpers_Userlist::expandIdList($minutesModel->ownerId);
+        $pdf->properties['Author'] = $owner[0]['display'];
+        $pdf->properties['Producer'] = 'PHProjekt version ' . Phprojekt::getVersion();
+        $pdf->properties['CreationDate'] = 'D:' . gmdate('YmdHis') 
+                                         . sprintf("%+02d'00'", 
+                                         (int) Phprojekt_User_User::getSetting("timeZone", 
+                                                   Phprojekt::getInstance()->getConfig()->timeZone));
+        $pdf->properties['Keywords'] = $minutesModel->description;
+        
         return $pdf->render();
     }
 }
