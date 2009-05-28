@@ -75,6 +75,13 @@
             }
             ?>
             init();
+            <?php
+            if (false === $this->isLoggedIn) {
+            ?>
+                dojo.byId('username').focus();
+            <?php
+            }
+            ?>
         });
 
         window.onresize = function() {
