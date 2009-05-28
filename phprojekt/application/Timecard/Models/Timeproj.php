@@ -189,7 +189,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         $timecardRecords = $timecard->fetchall($where, 'start_time ASC');
         $information     = $timecard->getInformation();
 
-        $timeCardfieldDefinition = $information->getFieldDefinition();
+        $timeCardfieldDefinition = $information->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($timecardRecords as $cmodel) {
             $data['id'] = $cmodel->id;
