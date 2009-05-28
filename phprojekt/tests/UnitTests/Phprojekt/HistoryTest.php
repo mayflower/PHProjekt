@@ -65,7 +65,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
                        'moduleId' => '1',
                        'itemId'   => $project->id,
                        'field'    => 'currentStatus',
-                       'label'    => 'Current Status',
+                       'label'    => 'Status',
                        'oldValue' => '',
                        'newValue' => 'Ordered',
                        'action'   => 'add',
