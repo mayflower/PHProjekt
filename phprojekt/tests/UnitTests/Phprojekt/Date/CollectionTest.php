@@ -318,7 +318,7 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = clone($this->_collection);
         $rrule      = 'FREQ=WEEKLY;UNTIL=20090625T110000Z;INTERVAL=1;BYDAY=WE';
-        $return     = $collection->applyRrule($rrule,true);
+        $return     = $collection->applyRrule($rrule, true);
         $this->assertTrue($return);
 
         $eventDates = $collection->getValues();
@@ -342,7 +342,7 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = clone($this->_collection);
         $rrule      = 'FREQ=MONTHLY;UNTIL=20091220T110000Z;INTERVAL=2;BYDAY=MO';
-        $return     = $collection->applyRrule($rrule,true);
+        $return     = $collection->applyRrule($rrule, true);
         $this->assertTrue($return);
 
         $eventDates = $collection->getValues();
@@ -364,7 +364,7 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = clone($this->_collection);
         $rrule      = 'FREQ=WEEKLY;UNTIL=20090625T110000Z;INTERVAL=1;BYDAY=MO,WE,FR';
-        $return     = $collection->applyRrule($rrule,true);
+        $return     = $collection->applyRrule($rrule, true);
         $this->assertTrue($return);
 
         $eventDates = $collection->getValues();
@@ -398,7 +398,7 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = clone($this->_collection);
         $rrule      = 'FREQ=YEARLY;UNTIL=20140522T110000Z;INTERVAL=2;BYDAY=SA;BYHOUR=14;BYMINUTE=30';
-        $return     = $collection->applyRrule($rrule,true);
+        $return     = $collection->applyRrule($rrule, true);
         $this->assertTrue($return);
 
         $eventDates = $collection->getValues();
@@ -420,7 +420,7 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = clone($this->_collection);
         $rrule      = 'FREQ=YEARLY;UNTIL=20140522T110000Z;INTERVAL=2;BYMONTH=4,10';
-        $return     = $collection->applyRrule($rrule,true);
+        $return     = $collection->applyRrule($rrule, true);
         $this->assertTrue($return);
 
         $eventDates = $collection->getValues();
@@ -444,7 +444,7 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = clone($this->_collection);
         $rrule      = 'FREQ=DAILY;INTERVAL=1';
-        $return     = $collection->applyRrule($rrule,true);
+        $return     = $collection->applyRrule($rrule, true);
         $this->assertTrue($return);
 
         $eventDates = $collection->getValues();
