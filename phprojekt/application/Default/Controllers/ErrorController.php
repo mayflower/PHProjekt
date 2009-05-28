@@ -60,17 +60,15 @@ class ErrorController extends Zend_Controller_Action
                 break;
             default:
                 $exception = $errors->exception;
-
-                $logger = Phprojekt::getInstance()->getLog();
-                $logger->err($exception->getMessage() . "\n"
-                           . $exception->getTraceAsString());
-
-                /* we only forward exception with type PublishedException */
+                // We only forward exception with type PublishedException
                 if ($exception instanceof Phprojekt_PublishedException) {
                     $error = array('type'    => 'error',
                                    'message' => $exception->getMessage(),
                                    'code'    => $exception->getCode());
                     echo '{}&&('.Zend_Json_Encoder::encode($error).')';
+                } else {
+                    $logger = Phprojekt::getInstance()->getLog();
+                    $logger->err($exception->getMessage() . "\n" . $exception->getTraceAsString());
                 }
                 break;
         }
