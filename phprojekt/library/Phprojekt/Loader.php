@@ -342,23 +342,43 @@ class Phprojekt_Loader extends Zend_Loader
     /**
      * Try to include a file by the class name
      *
-     * @param strung $class The name of the class
+     * @param string  $class          The name of the class
+     * @param boolean $isLibraryClass True if the class is in the library dir
      *
      * @return boolean
      */
-    public function tryToLoadClass($class)
+    public function tryToLoadClass($class, $isLibraryClass = false)
     {
         $names  = explode('_', $class);
-        $file   = PHPR_CORE_PATH;
+
+        if (!$isLibraryClass) {
+            $file = PHPR_CORE_PATH;
+        } else {
+            $file = PHPR_LIBRARY_PATH;
+        }
         foreach ($names as $name) {
             $file .= DIRECTORY_SEPARATOR . $name;
         }
         $file .= '.php';
+
+        $assert = false;
         if (file_exists($file)) {
             self::_includeFile($file, true);
-            return true;
-        } else {
-            return false;
+            $assert = true;
         }
+
+        return $assert;
+    }
+
+    /**
+     * Try to include a library file by the class name
+     *
+     * @param string $class The name of the class
+     *
+     * @return boolean
+     */
+    public function tryToLoadLibClass($class)
+    {
+        return self::tryToLoadClass($class, true);
     }
 }
