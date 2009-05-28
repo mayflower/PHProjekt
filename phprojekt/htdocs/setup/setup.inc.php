@@ -217,8 +217,7 @@ function installPhprojekt()
         }
     }
 
-    $result = $tableManager->createTable('database_manager',
-        array(
+    $result = $tableManager->createTable('database_manager', array(
             'id'              => array('type' => 'auto_increment', 'null' => false),
             'table_name'      => array('type' => 'varchar', 'length' => 50, 'null' => true),
             'table_field'     => array('type' => 'varchar', 'length' => 60, 'null' => true),
@@ -243,8 +242,7 @@ function installPhprojekt()
         die("Error creating the table database_manager");
     }
 
-    $result = $tableManager->createTable('user',
-        array(
+    $result = $tableManager->createTable('user', array(
             'id'        => array('type' => 'auto_increment', 'null' => false),
             'username'  => array('type' => 'varchar', 'length' => 255, 'null' => true),
             'firstname' => array('type' => 'varchar', 'length' => 255, 'null' => true),
@@ -256,8 +254,7 @@ function installPhprojekt()
         die("Error creating the table user");
     }
 
-    $result = $tableManager->createTable('module',
-        array(
+    $result = $tableManager->createTable('module', array(
             'id'        => array('type' => 'auto_increment', 'null' => false),
             'name'      => array('type' => 'varchar', 'length' => 255, 'null' => true),
             'label'     => array('type' => 'varchar', 'length' => 255, 'null' => true),
@@ -268,8 +265,7 @@ function installPhprojekt()
         die("Error creating the table module");
     }
 
-    $result = $tableManager->createTable('groups',
-        array(
+    $result = $tableManager->createTable('groups', array(
             'id'   => array('type' => 'auto_increment', 'null' => false),
             'name' => array('type' => 'varchar', 'length' => 255, 'null' => true),
         ), array('primary key' => array('id')));
@@ -277,18 +273,16 @@ function installPhprojekt()
         die("Error creating the table groups");
     }
 
-    $result = $tableManager->createTable('groups_user_relation',
-        array(
-            'id'        => array('type' => 'auto_increment', 'null' => false),
-            'groups_id' => array('type' => 'int', 'length' => 11, 'null' => true),
-            'user_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
+    $result = $tableManager->createTable('groups_user_relation', array(
+        'id'        => array('type' => 'auto_increment', 'null' => false),
+        'groups_id' => array('type' => 'int', 'length' => 11, 'null' => true),
+        'user_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
         ),array('primary key' => array('id')));
     if (!$result) {
         die("Error creating the table groups_user_relation");
     }
 
-    $result = $tableManager->createTable('history',
-        array(
+    $result = $tableManager->createTable('history', array(
             'id'        => array('type' => 'auto_increment', 'null' => false),
             'module_id' => array('type' => 'int', 'length' => 11, 'null' => true),
             'user_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -298,14 +292,13 @@ function installPhprojekt()
             'new_value' => array('type' => 'text', 'null' => true),
             'action'    => array('type' => 'varchar', 'length' => 50, 'null' => true),
             'datetime'  => array('type' => 'timestamp', 'length' => 255, 'null' => false,
-                'default' => 'CURRENT_TIMESTAMP', 'default_no_quote' => true),
+            'default' => 'CURRENT_TIMESTAMP', 'default_no_quote' => true),
         ), array('primary key' => array('id')));
     if (!$result) {
         die("Error creating the table history");
     }
 
-    $result = $tableManager->createTable('project',
-        array(
+    $result = $tableManager->createTable('project', array(
             'id'               => array('type' => 'auto_increment', 'null' => false),
             'project_id'       => array('type' => 'int', 'length' => 11, 'null' => true),
             'path'             => array('type' => 'varchar', 'length' => 25, 'null' => true, 'default' => '/'),
@@ -325,8 +318,7 @@ function installPhprojekt()
         die("Error creating the table project");
     }
 
-    $result = $tableManager->createTable('project_module_permissions',
-        array(
+    $result = $tableManager->createTable('project_module_permissions', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'module_id'  => array('type' => 'int', 'length' => 11, 'null' => true),
             'project_id' => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -335,8 +327,7 @@ function installPhprojekt()
         die("Error creating the table project_module_permissions");
     }
 
-    $result = $tableManager->createTable('role',
-        array(
+    $result = $tableManager->createTable('role', array(
             'id'     => array('type' => 'auto_increment', 'null' => false),
             'name'   => array('type' => 'varchar', 'length' => 255, 'null' => false),
             'parent' => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -345,8 +336,7 @@ function installPhprojekt()
         die("Error creating the table role");
     }
 
-    $result = $tableManager->createTable('project_role_user_permissions',
-        array(
+    $result = $tableManager->createTable('project_role_user_permissions', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'project_id' => array('type' => 'int', 'length' => 11, 'null' => false),
             'user_id'    => array('type' => 'int', 'length' => 11, 'null' => false),
@@ -356,8 +346,7 @@ function installPhprojekt()
         die("Error creating the table project_role_user_permissions");
     }
 
-    $result = $tableManager->createTable('role_module_permissions',
-        array(
+    $result = $tableManager->createTable('role_module_permissions', array(
             'id'        => array('type' => 'auto_increment', 'null' => false),
             'role_id'   => array('type' => 'int', 'length' => 11, 'null' => false),
             'module_id' => array('type' => 'int', 'length' => 11, 'null' => false),
@@ -367,8 +356,7 @@ function installPhprojekt()
         die("Error creating the table role_module_permissions");
     }
 
-    $result = $tableManager->createTable('todo',
-        array(
+    $result = $tableManager->createTable('todo', array(
             'id'             => array('type' => 'auto_increment', 'null' => false),
             'title'          => array('type' => 'varchar', 'length' => 255, 'null' => true),
             'notes'          => array('type' => 'text', 'null' => true),
@@ -384,8 +372,7 @@ function installPhprojekt()
         die("Error creating the table todo");
     }
 
-    $result = $tableManager->createTable('setting',
-        array(
+    $result = $tableManager->createTable('setting', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'user_id'    => array('type' => 'int', 'length' => 11, 'null' => true),
             'module_id'  => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -397,8 +384,7 @@ function installPhprojekt()
         die("Error creating the table setting");
     }
 
-    $result = $tableManager->createTable('search_words',
-        array(
+    $result = $tableManager->createTable('search_words', array(
             'id'    => array('type' => 'auto_increment', 'null' => false),
             'word'  => array('type' => 'varchar', 'length' => 255, 'null' => true),
             'count' => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -407,8 +393,7 @@ function installPhprojekt()
         die("Error creating the table search_words");
     }
 
-    $result = $tableManager->createTable('search_word_module',
-        array(
+    $result = $tableManager->createTable('search_word_module', array(
             'module_id' => array('type' => 'int', 'length' => 11, 'null' => false),
             'item_id'   => array('type' => 'int', 'length' => 11, 'null' => false),
             'word_id'   => array('type' => 'int', 'length' => 11, 'null' => false),
@@ -417,8 +402,7 @@ function installPhprojekt()
         die("Error creating the table search_word_module");
     }
 
-    $result = $tableManager->createTable('search_display',
-        array(
+    $result = $tableManager->createTable('search_display', array(
             'module_id'      => array('type' => 'int', 'length' => 11, 'null' => false),
             'item_id'        => array('type' => 'int', 'length' => 11, 'null' => false),
             'first_display'  => array('type' => 'text', 'null' => true),
@@ -429,8 +413,7 @@ function installPhprojekt()
         die("Error creating the table search_display");
     }
 
-    $result = $tableManager->createTable('tags',
-        array(
+    $result = $tableManager->createTable('tags', array(
             'id'    => array('type' => 'auto_increment', 'null' => false),
             'word'  => array('type' => 'varchar', 'length' => 255, 'null' => false),
             'crc32' => array('type' => 'bigint', 'null' => false),
@@ -439,8 +422,7 @@ function installPhprojekt()
         die("Error creating the table tags");
     }
 
-    $result = $tableManager->createTable('tags_users',
-        array(
+    $result = $tableManager->createTable('tags_users', array(
             'id'      => array('type' => 'auto_increment', 'null' => false),
             'user_id' => array('type' => 'int', 'length' => 11, 'null' => false),
             'tag_id'  => array('type' => 'int', 'length' => 11, 'null' => false),
@@ -449,8 +431,7 @@ function installPhprojekt()
         die("Error creating the table tags_users");
     }
 
-    $result = $tableManager->createTable('tags_modules',
-        array(
+    $result = $tableManager->createTable('tags_modules', array(
             'module_id'   => array('type' => 'int', 'length' => 11, 'null' => false),
             'item_id'     => array('type' => 'int', 'length' => 11, 'null' => false),
             'tag_user_id' => array('type' => 'int', 'length' => 11, 'null' => false),
@@ -459,8 +440,7 @@ function installPhprojekt()
         die("Error creating the table tags_modules");
     }
 
-    $result = $tableManager->createTable('tab',
-        array(
+    $result = $tableManager->createTable('tab', array(
             'id'    => array('type' => 'auto_increment', 'null' => false),
             'label' => array('type' => 'varchar', 'length' => 255, 'null' => false),
         ), array('primary key' => array('id')));
@@ -468,8 +448,7 @@ function installPhprojekt()
         die("Error creating the table tab");
     }
 
-    $result = $tableManager->createTable('module_tab_relation',
-        array(
+    $result = $tableManager->createTable('module_tab_relation', array(
             'tab_id'    => array('type' => 'int', 'length' => 11, 'null' => false),
             'module_id' => array('type' => 'int', 'length' => 11, 'null' => false),
         ), array('primary key' => array('tab_id', 'module_id')));
@@ -477,8 +456,7 @@ function installPhprojekt()
         die("Error creating the table module_tab_relation");
     }
 
-    $result = $tableManager->createTable('note',
-        array(
+    $result = $tableManager->createTable('note', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'project_id' => array('type' => 'int', 'length' => 11, 'null' => true),
             'title'      => array('type' => 'varchar', 'length' => 255, 'null' => true),
@@ -490,8 +468,7 @@ function installPhprojekt()
         die("Error creating the table note");
     }
 
-    $result = $tableManager->createTable('configuration',
-        array(
+    $result = $tableManager->createTable('configuration', array(
             'id'        => array('type' => 'auto_increment', 'null' => false),
             'module_id' => array('type' => 'int', 'length' => 11, 'null' => false),
             'key_value' => array('type' => 'varchar', 'length' => 255, 'null' => false),
@@ -501,8 +478,7 @@ function installPhprojekt()
         die("Error creating the table configuration");
     }
 
-    $result = $tableManager->createTable('item_rights',
-        array(
+    $result = $tableManager->createTable('item_rights', array(
             'module_id' => array('type' => 'int', 'length' => 11, 'null' => false),
             'item_id'   => array('type' => 'int', 'length' => 11, 'null' => false),
             'user_id'   => array('type' => 'int', 'length' => 11, 'null' => false),
@@ -512,8 +488,7 @@ function installPhprojekt()
         die("Error creating the table item_rights");
     }
 
-    $result = $tableManager->createTable('timecard',
-        array(
+    $result = $tableManager->createTable('timecard', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'owner_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
             'date'       => array('type' => 'date', 'null' => true),
@@ -524,8 +499,7 @@ function installPhprojekt()
         die("Error creating the table timecard");
     }
 
-    $result = $tableManager->createTable('timeproj',
-        array(
+    $result = $tableManager->createTable('timeproj', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'notes'      => array('type' => 'text', 'null' => true),
             'owner_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -537,8 +511,7 @@ function installPhprojekt()
         die("Error creating the table timeproj");
     }
 
-    $result = $tableManager->createTable('calendar',
-        array(
+    $result = $tableManager->createTable('calendar', array(
             'id'             => array('type' => 'auto_increment', 'null' => false),
             'parent_id'      => array('type' => 'int', 'length' => 11, 'null' => true),
             'owner_id'       => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -570,8 +543,7 @@ function installPhprojekt()
         die("Error creating the table calendar");
     }
 
-    $result = $tableManager->createTable('contact',
-        array(
+    $result = $tableManager->createTable('contact', array(
             'id'          => array('type' => 'auto_increment', 'null' => false),
             'owner_id'    => array('type' => 'int', 'length' => 11, 'null' => true),
             'project_id'  => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -592,8 +564,7 @@ function installPhprojekt()
         die("Error creating the table contact");
     }
 
-    $result = $tableManager->createTable('filemanager',
-        array(
+    $result = $tableManager->createTable('filemanager', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'owner_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
             'title'      => array('type' => 'varchar', 'length' => 50, 'null' => true),
@@ -606,8 +577,7 @@ function installPhprojekt()
         die("Error creating the table filemanager");
     }
 
-    $result = $tableManager->createTable('helpdesk',
-        array(
+    $result = $tableManager->createTable('helpdesk', array(
             'id'          => array('type' => 'auto_increment', 'null' => false),
             'owner_id'    => array('type' => 'int', 'length' => 11, 'null' => true),
             'title'       => array('type' => 'varchar', 'length' => 255, 'null' => true),
@@ -628,8 +598,7 @@ function installPhprojekt()
         die("Error creating the table helpdesk");
     }
 
-    $result = $tableManager->createTable('minutes',
-        array(
+    $result = $tableManager->createTable('minutes', array(
             'id'                     => array('type' => 'auto_increment', 'null' => false),
             'owner_id'               => array('type' => 'int', 'length' => 11, 'null' => true),
             'project_id'             => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -650,8 +619,7 @@ function installPhprojekt()
         die("Error creating the table minutes");
     }
 
-    $result = $tableManager->createTable('minutes_item',
-        array(
+    $result = $tableManager->createTable('minutes_item', array(
             'id'         => array('type' => 'auto_increment', 'null' => false),
             'owner_id'   => array('type' => 'int', 'length' => 11, 'null' => true),
             'project_id' => array('type' => 'int', 'length' => 11, 'null' => true),
@@ -2957,15 +2925,15 @@ useCacheForClasses   = true;
         }
 
         // User group
-        $UserGroups = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "grup_user");
+        $userGroups = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "grup_user");
 
-        while (list($dummy, $UserGroup) = each($UserGroups)) {
+        while (list($dummy, $userGroup) = each($userGroups)) {
             $db->insert('groups_user_relation', array(
-                'groups_id' => $UserGroup["grup_ID"],
-                'user_id'   => $UserGroup["user_ID"]
+                'groups_id' => $userGroup["grup_ID"],
+                'user_id'   => $userGroup["user_ID"]
             ));
-            $tmp                = $UserGroup["grup_ID"];
-            $groupUsers[$tmp][] = $UserGroup["user_ID"];
+            $tmp                = $userGroup["grup_ID"];
+            $groupUsers[$tmp][] = $userGroup["user_ID"];
         }
 
         // Project migration
@@ -2975,7 +2943,7 @@ useCacheForClasses   = true;
         $paths[1] = "/1/";
 
         while (list($dummy, $project) = each($projects)) {
-            $project["ID"] = convertproject_id($project["ID"]);
+            $project["ID"] = convertProjectId($project["ID"]);
             switch ($project["parent"]) {
                 case 0:
                     $project["parent"] = 1;
@@ -2990,8 +2958,8 @@ useCacheForClasses   = true;
                     $project["path"] = $paths[$parent] . $project["ID"] . "/";
                     break;
             }
-            $ID         = $project["ID"];
-            $paths[$ID] = $project["path"];
+            $id         = $project["ID"];
+            $paths[$id] = $project["path"];
             $tmpStatus  = $project["kategorie"];
             if (!empty($statusConversion[$tmpStatus])) {
                 $tmpStatus = $statusConversion[$tmpStatus];
@@ -3084,7 +3052,7 @@ useCacheForClasses   = true;
         $todos = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "todo ORDER BY ID");
 
         while (list($dummy, $todo) = each($todos)) {
-            $todo["project"] = convertproject_id($todo["project"]);
+            $todo["project"] = convertProjectId($todo["project"]);
             $db->insert('todo', array(
                 'id'             => $todo["ID"],
                 'project_id'     => $todo["project"],
@@ -3111,7 +3079,7 @@ useCacheForClasses   = true;
         $notes = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "notes ORDER BY ID");
 
         while (list($dummy, $note) = each($notes)) {
-            $note["projekt"] = convertproject_id($note["projekt"]);
+            $note["projekt"] = convertProjectId($note["projekt"]);
             $db->insert('note', array(
                 'id'         => $note["ID"],
                 'project_id' => $note["projekt"],
@@ -3135,7 +3103,7 @@ useCacheForClasses   = true;
         $timeprojRecords = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "timeproj ORDER BY ID");
 
         while (list($dummy, $timeProj) = each($timeprojRecords)) {
-            $timeProj["projekt"] = convertproject_id($timeProj["projekt"]);
+            $timeProj["projekt"] = convertProjectId($timeProj["projekt"]);
             $db->insert('timeproj', array(
                 'id'         => $timeProj["ID"],
                 'notes'      => $timeProj["note"],
@@ -3152,7 +3120,7 @@ useCacheForClasses   = true;
         while (list($dummy, $timeCard) = each($timecardRecords)) {
             $timeCard["anfang"]  = stringToTime($timeCard["anfang"]);
             $timeCard["ende"]    = stringToTime($timeCard["ende"]);
-            $timeCard["projekt"] = convertproject_id($timeCard["projekt"]);
+            $timeCard["projekt"] = convertProjectId($timeCard["projekt"]);
             $db->insert('timecard', array(
                 'id'         => $timeCard["ID"],
                 "owner_id"   => $timeCard["users"],
@@ -3166,7 +3134,7 @@ useCacheForClasses   = true;
         $events = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "termine ORDER BY ID");
 
         while (list($dummy, $calendar) = each($events)) {
-            $calendar["projekt"] = convertproject_id($calendar["projekt"]);
+            $calendar["projekt"] = convertProjectId($calendar["projekt"]);
             $calendar["anfang"]  = stringToTime($calendar["anfang"]);
             $calendar["ende"]    = stringToTime($calendar["ende"]);
             $db->insert('calendar', array(
@@ -3211,7 +3179,7 @@ useCacheForClasses   = true;
         $files = $dbOrig->fetchAll("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID");
 
         while (list($dummy, $file) = each($files)) {
-            $file["div2"] = convertproject_id($file["div2"]);
+            $file["div2"] = convertProjectId($file["div2"]);
             $newFilename  = md5($file["tempname"]);
 
             copy(PHPR_FILE_PATH . "\\" . $file["tempname"], $uploadDir . "\\" . $newFilename);
@@ -3242,8 +3210,8 @@ useCacheForClasses   = true;
  * Migrates the permission from PHProjekt 5.x version to PHProjekt 6.0
  *
  * @param database_manager $db
- * @param int              $module_id  Module to grant permissions
- * @param int              $item_id    Item to set the permission
+ * @param int              $moduleId   Module to grant permissions
+ * @param int              $itemId     Item to set the permission
  * @param mixed            $users      Serialized array of users or group
  * @param int              $access     Access value
  * @param int              $group      Group of the project
@@ -3252,7 +3220,7 @@ useCacheForClasses   = true;
  *
  * @return void
  */
-function migratePermissions($db, $module_id, $item_id, $users, $access, $group, $userGroups, $userKurz)
+function migratePermissions($db, $moduleId, $itemId, $users, $access, $group, $userGroups, $userKurz)
 {
     $userList     = array();
     @$tmpUserList = unserialize($users);
@@ -3271,8 +3239,8 @@ function migratePermissions($db, $module_id, $item_id, $users, $access, $group, 
 
     foreach ($userList as $oneUser) {
         $db->insert('item_rights', array(
-            'module_id' => (int)$module_id,
-            'item_id'   => (int)$item_id,
+            'module_id' => (int)$moduleId,
+            'item_id'   => (int)$itemId,
             'user_id'   => (int)$oneUser,
             'access'    => (int)$access
         ));
@@ -3302,17 +3270,17 @@ function stringToTime($stringTime)
 /**
  * Converts the old project Id to a Phprojekt 6 ID
  *
- * @param integer $oldproject_id
+ * @param integer $oldprojectId
  *
  * @return integer
  */
-function convertproject_id($oldproject_id)
+function convertProjectId($oldprojectId)
 {
-    if ($oldproject_id == 1) {
+    if ($oldprojectId == 1) {
         return 10001;
-    } elseif (empty($oldproject_id)) {
+    } elseif (empty($oldprojectId)) {
         return 1;
     }
 
-    return $oldproject_id;
+    return $oldprojectId;
 }
