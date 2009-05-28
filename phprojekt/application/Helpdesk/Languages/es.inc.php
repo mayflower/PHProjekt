@@ -17,7 +17,8 @@ $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Incidencias"] = "<br/>
     Esta es la <b>Ayuda General del módulo Incidencias</b><br/>
     <br/>
-    El módulo Incidencias sirve para el reporte y seguimiento de fallas o asuntos a resolver en cualquier contexto.<br/>
+    El módulo Incidencias sirve para el reporte y seguimiento de fallas o asuntos a resolver en cualquier contexto.
+    <br/>
     <br/>
     Tiene muchos campos que pueden ser completados con la información necesitada para que el usuario asignado
     resuelva el ticket.

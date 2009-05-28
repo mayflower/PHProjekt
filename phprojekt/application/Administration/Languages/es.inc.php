@@ -54,8 +54,8 @@ $lang["Content Help"]["Administración"] = "<br/>
     Está dividido en 4 partes:<br/>
     <br/>
     <ul>
-        <li><b>Modulo:</b> este es el Diseñador de Módulos, una interfaz muy fácil de usar, con un manejo visual y con
-            métodos <i>arrastrar y soltar</i> (drag and drop), que sirve para crear módulos o modificar los
+            <li><b>Modulo:</b> este es el Diseñador de Módulos, una interfaz muy fácil de usar, con un manejo visual
+            y con métodos <i>arrastrar y soltar</i> (drag and drop), que sirve para crear módulos o modificar los
             existentes.<br/>
         <li><b>Solapa:</b> aquí puedes crear solapas adicionales para ser mostradas en los módulos.<br/>
         <li><b>Usuario:</b> para agregar, modificar y borrar usuarios del sistema.<br/>
@@ -97,10 +97,10 @@ $lang["Content Help"]["Modulo"] = "<br/>
             panel de edición se abre en la parte izquierda baja de la ventana para que configurar el campo.<br/>
             Los campos pueden ser reordenados mediante arrastrar y soltar y borrados de la solapa arrastrándolos de
             vuelta hacia el panel izquierdo o sólo presionando <b>Borrar</b>.<br/>
-            Hay tantas solapas en este panel como solapas están definidas en el módulo <b>Administración</b> submódulo
-            <b>Solapa</b>.<br/>
-            No necesita usar todas las solapas creadas. La solapa aparecerá en el módulo sólo si hay campos dentro de
-            ella.<br/>
+            Hay tantas solapas en este panel como solapas están definidas en el módulo <b>Administración</b>
+            submódulo <b>Solapa</b>.<br/>
+            No necesita usar todas las solapas creadas. La solapa aparecerá en el módulo sólo si hay campos
+            dentro de ella.<br/>
             <br/>
         <li><b>El panel de edición, debajo a la izquierda:</b> aquí, cuando se presiona el botón <b>Editar</b> de un
             campo, un panel aparece para modificar sus valores y parámetros.<br/>
@@ -120,8 +120,8 @@ $lang["Content Help"]["Modulo"] = "<br/>
         <li>Asumiendo que está en la sección <b>Modulo</b> del módulo <b>Administración</b>, presione el botón
             <b>Agregar</b>.<br/>
         <li>Un formulario vacío aparece. Escriba el nombre del nuevo módulo en el campo <b>Etiqueta</b>.<br/>
-        <li>Presione el botón <b>Abrir Diseñador</b>. Una gran ventana emergente aparece, conteniendo el diseñador de
-            módulos.<br/>
+        <li>Presione el botón <b>Abrir Diseñador</b>. Una gran ventana emergente aparece, conteniendo el
+            diseñador de módulos.<br/>
             Verá dos grandes paneles, uno a la izquierda y otro a la derecha, y un espacio vacío abajo a la izquierda
             donde la ventana de edición de campos aparece eventualmente.<br/>
             En el panel derecho (el módulo como será visto fuera del diseñador) hay un campo Project. Ese campo debe
@@ -130,9 +130,9 @@ $lang["Content Help"]["Modulo"] = "<br/>
             en el panel derecho, puede elegir la solapa previo a depositar el campo, para ponerlo allí. En ambos casos,
             luego de soltarlo la ventana de edición aparece para que lo configure.<br/>
             Nota: para soltar el campo al
-            arrastrarlo, tiene que posicionarlo con el mouse sobre un lugar donde la caja flotante que está arrastrando
-            se convierta de rojo rosado a verde; eso significa que en ese lugar puede soltar el campo (arriba
-            o abajo de otro campo).<br/>
+            arrastrarlo, tiene que posicionarlo con el mouse sobre un lugar donde la caja flotante que está
+            arrastrando se convierta de rojo rosado a verde; eso significa que en ese lugar puede soltar el campo
+            (arriba o abajo de otro campo).<br/>
         <li>Configure el campo ocupándose de cada una de las 4 solapas de la ventana de edición como se explica aquí
             arriba.<br/>
         <li>Repita los pasos 5 y 6 tantas veces como campos quiera agregar.<br/>
@@ -150,7 +150,8 @@ $lang["Content Help"]["Modulo"] = "<br/>
         <li>Pueden ser arrastrados de vuelta campos del panel derecho hacia el izquierdo. Esto es útil para
             regresarlos más tarde al panel derecho, o para moverlos de esta forma hacia otra solapa del panel
             derecho.<br/>
-        <li><u>Se recomienda no modificar los módulos originales que vienen con el sistema. La mayoría de ellos tienen
+        <li><u>Se recomienda no modificar los módulos originales que vienen con el sistema.
+            La mayoría de ellos tienen
             funcionalidad adicional que no fue hecha con el diseñador de módulos y pueden fallar si son modificados
             con él.</u><br/>
     </ul>
@@ -158,7 +159,8 @@ $lang["Content Help"]["Modulo"] = "<br/>
     <br/>
     <b>Otras solapas especiales</b><br/>
     <br/>
-    Existen otras solapas de módulos usadas en el sistema, que no están definidas aquí, ni pueden ser modificadas.<br/>
+    Existen otras solapas de módulos usadas en el sistema, que no están definidas aquí, ni pueden ser modificadas.
+    <br/>
     <br/>
     <ul>
         <li>Módulos generales: solapas <i>Accesos</i>, <i>Notificación</i> e <i>Historial</i>.<br/>
@@ -178,17 +180,19 @@ $lang["Content Help"]["Solapa"] = "<br/>
     <br/>
     Su propósito es sólo administrar cuántas solapas definidas por el usuario pueden existir en los módulos, y sus
     nombres. Por ejemplo, si hay 3 solapas: la predeterminada 'Datos Básicos' más dos creadas por usted, en el
-    'Diseñador de Módulos' puede definir que solapas usar en un módulo específico: no necesita usar todas las solapas
-    creadas. La solapa aparecera en el módulo sólo si cuando la está modificando con el <b>Diseñador de Módulos</b>
+    'Diseñador de Módulos' puede definir que solapas usar en un módulo específico: no necesita usar todas las
+    solapas creadas.
+    La solapa aparecera en el módulo sólo si cuando la está modificando con el <b>Diseñador de Módulos</b>
     usted deposita campos en ella.<br/>
-    Ejemplo: puede crear una solapa adicional 'Información Geográfica' y crer un módulo con el 'Diseñador de Módulos'.
+    Ejemplo: puede crear una solapa adicional 'Información Geográfica' y crer un módulo con el
+    'Diseñador de Módulos'.
     Si sólo arrastra y suelta campos a la solapa 'Datos Básicos' y ninguno a la solapa 'Información Geográfica',
     entonces la segunda solapa no se verá en el módulo.<br/>
     <br/>
     <b>Otras solapas especiales</b><br/>
     <br/>
-    Existen otras solapas de módulos usadas en el sistema, que no están definidas aquí, ni pueden ser modificadas. Esto
-    depende del módulo con el que esté trabajando:<br/>
+    Existen otras solapas de módulos usadas en el sistema, que no están definidas aquí, ni pueden ser modificadas.
+    Esto depende del módulo con el que esté trabajando:<br/>
     <ul>
         <li>Módulos generales: solapas <i>Accesos</i>, <i>Notificación</i> y <i>Historial</i>.<br/>
             Todos los módulos <i>creados</i> con el <b>Diseñador de módulos</b> tendrán, aparte de las solapas
@@ -214,9 +218,9 @@ $lang["Content Help"]["Rol"] = "<br/>
     <br/>
     Esta sección permite administrar los Roles.<br/>
     <br/>
-    Un Rol es un set específico de permisos para cada módulo. Ese Rol es luego asignado a los usuarios de los Proyectos
-    que desee, de modo que esos usuarios tendrán esos permisos. Cuando crea o edita un Proyecto, puere darle a los
-    usuarios que desee ese Rol en la solapa Rol.<br/>
+    Un Rol es un set específico de permisos para cada módulo. Ese Rol es luego asignado a los usuarios de los
+    Proyectos que desee, de modo que esos usuarios tendrán esos permisos. Cuando crea o edita un Proyecto,
+    puere darle a los usuarios que desee ese Rol en la solapa Rol.<br/>
     El permiso final que un usuario tenga para trabajar con un ítem está definido por la combinación de lo
     especificado tanto en la solapa Rol como en la solapa Accesos de un proyecto determinado.<br/>
     <br/>
@@ -228,8 +232,8 @@ $lang["Content Help"]["Rol"] = "<br/>
     Puede crear un Rol llamado 'Puede leer TODOs y NOTAs'.<br/>
     Y especificar en ese Rol, acceso <i>Lectura</i> para los módulos <b>Todo</b> y <b>Nota</b>.<br/>
     Luego crea un Proyecto y le asigna al usuario 'juan' el Rol 'Puede leer TODOs y NOTAs', entonces cuando él entra
-    al proyecto, lo único que podrá hacer además de leer la información principal del proyecto en sí, es leer (pero no
-    modificar) ítems de los módulos <b>Todo</b> y <b>Nota</b>.<br/>
+    al proyecto, lo único que podrá hacer además de leer la información principal del proyecto en sí, es leer
+    (pero no modificar) ítems de los módulos <b>Todo</b> y <b>Nota</b>.<br/>
     <br/>
     <b>Nota:</b> en el listado de módulos para asignar permisos a un Rol, hay uno llamado <b>Project</b>, ese
         representa los Subproyectos de Proyectos.<br/>

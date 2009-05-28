@@ -12,8 +12,10 @@ $lang["ends before sub-project"] = "ends before subproject";
 $lang["ends after parent project"] = "ends after parent project";
 $lang["starts before parent project"] = "starts before parent project";
 
-$lang["Click \"OK\" to adjust parent project to new start date"] = "Click \"OK\" to adjust parent project to new start date";
-$lang["Click \"OK\" to adjust parent project to new end date"] = "Click \"OK\" to adjust parent project to new end date";
+$lang["Click \"OK\" to adjust parent project to new start date"] = "Click \"OK\" to adjust parent project to new
+    start date";
+$lang["Click \"OK\" to adjust parent project to new end date"] = "Click \"OK\" to adjust parent project to new
+    end date";
 $lang["Click \"OK\" to adjust sub-project to new end date"] = "Click \"OK\" to adjust subproject to new end date";
 $lang["Click \"OK\" to adjust sub-project to new start date"] = "Click \"OK\" to adjust subproject to new start date";
 

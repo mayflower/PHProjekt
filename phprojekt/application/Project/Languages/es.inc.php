@@ -25,16 +25,16 @@ $lang["Content Help"]["Proyecto"] = "<br/>
             aunque en realidad en el sistema se los asocia al proyecto 'PHProjekt', que representa el padre de todos
             los proyectos principales.<br/>
             Verá todos los módulos generales en la fila de solapas principal en la parte superior de la pantalla. Si
-            entra allí, verá los ítems de módulos que no están asociados a ningún proyecto (aunque técnicamente, lo
-            están al proyecto 'PHProjekt').<br/>
+            entra allí, verá los ítems de módulos que no están asociados a ningún proyecto (aunque técnicamente,
+            lo están al proyecto 'PHProjekt').<br/>
             Si quiere ver la información principal del proyecto, puede cliquearlo en la grilla y sus solapas
-            principales se abrirán en el formulario debajo. Pero si quiere ver los ítems de los módulos generales que
-            están directamente asociados a ese proyecto, tiene que acceder al proyecto desde el árbol a la izquierda,
-            tal como se explica en el siguiente punto aquí.
+            principales se abrirán en el formulario debajo. Pero si quiere ver los ítems de los módulos generales 
+            que están directamente asociados a ese proyecto, tiene que acceder al proyecto desde el árbol a la 
+            izquierda, tal como se explica en el siguiente punto aquí.
         <li><b>El árbol:</b> el panel de árbol de proyectos a la izquierda permite acceder a los Proyectos y
             Subproyectos de un modo completo, significa que la fila principal de solapas arriba mostrará la solapa
-            <b>Datos Básicos</b> más los módulos <b>asociados</b> al proyecto, y si accede a esos módulos desde allí,
-            se listarán sólo los ítems del módulo que pertenecen a al proyecto o subproyecto cliqueado en el
+            <b>Datos Básicos</b> más los módulos <b>asociados</b> al proyecto, y si accede a esos módulos desde
+            allí, se listarán sólo los ítems del módulo que pertenecen a al proyecto o subproyecto cliqueado en el
             árbol.<br/>
     </ul>
     <br/>

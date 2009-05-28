@@ -34,7 +34,8 @@ $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Asistencia"] = "<br/>
     Esta es la <b>Ayuda General del módulo Asistencia</b><br/>
     <br/>
-    Asistencia es un módulo para cargar y asignar horas de trabajo a los Proyectos. Tiene una interfaz visual muy fácil
+    Asistencia es un módulo para cargar y asignar horas de trabajo a los Proyectos.
+    Tiene una interfaz visual muy fácil
     de usar.<br/>
     <br/>
     La pantalla se divide en 4 secciones:<br/>
@@ -96,8 +97,8 @@ $lang["Content Help"]["Tiempo de Trabajo"] = "<br/>
     Luego el <b>botón con la tilde</b> lo graba y el período aparece en 3 lugares dentro de la pantalla:<br/>
     <ol>
         <li>Debajo del recuadro en el mismo panel.<br/>
-        <li>Dentro del panel <b>Horas de Proyectos</b> en la parte derecha como un recuadro amarillo que abarca ese período
-            dentro del listado de horas.<br/>
+        <li>Dentro del panel <b>Horas de Proyectos</b> en la parte derecha como un recuadro amarillo que abarca ese
+        período dentro del listado de horas.<br/>
         <li>En el panel <b>Grilla Mensual</b> la cantidad de horas agregada se sumará a las existentes para ese día
             en la fila correspondiente de la columna <i>Tiempo de Trabajo</i>.<br/>
     </ol>
@@ -115,8 +116,8 @@ $lang["Content Help"]["Horas de Proyectos"] = "<br/>
     Hay un botón <b>Admin. lista de proyectos</b> que permite seleccionar proyectos
     <i>favoritos</i> que son los con los cuales se va a trabajar, es decir, se van a asignar a horas de trabajo
     cargadas.<br/>
-    Esos proyectos aparecerán sobre dicho botón y son un sólo grupo para todo el módulo, o sea que si cambia de fecha
-    en la vista del módulo, se seguirá viendo el mismo grupo de proyectos.<br/>
+    Esos proyectos aparecerán sobre dicho botón y son un sólo grupo para todo el módulo,
+    o sea que si cambia de fecha en la vista del módulo, se seguirá viendo el mismo grupo de proyectos.<br/>
     <br/>
     <b>Agenda horaria:</b><br/>
     <br/>
@@ -156,30 +157,32 @@ $lang["Content Help"]["Paso a paso"] = "<br/>
             mediante el campo de fecha de la barra superior. Luego presione el botón que está a la derecha del
             mismo.<br/>
             <br/>
-        <li>En el panel <b>Tiempo de Trabajo</b> ingrese un período trabajado en el día, por ejemplo si usted trabajó
-            desde las 9:00 hasta las 13:00 y desde las 14:00 hasta las 18:00, esto serían dos períodos, comience
-            cargando el primero. Para ello en el campo <b>Comienzo</b> ingrese <i>9:00</i> y en el campo <b>Fin</b>
-            escriba <i>13:00</i> (puede omitir los dos puntos escribiendo 900 y 1300 si lo desea).<br/>
-            <br/>
+        <li>En el panel <b>Tiempo de Trabajo</b> ingrese un período trabajado en el día, por ejemplo si usted
+            trabajó desde las 9:00 hasta las 13:00 y desde las 14:00 hasta las 18:00, esto serían dos períodos,
+            comience cargando el primero. Para ello en el campo <b>Comienzo</b> ingrese <i>9:00</i> y
+            en el campo <b>Fin</b> escriba <i>13:00</i>
+            (puede omitir los dos puntos escribiendo 900 y 1300 si lo desea).<br/><br/>
         <li>Presione el botón con el tilde ubicado bajo esos campos para grabar su ingreso. Luego de unos instantes
             aparecerá el período dentro de esta pantalla en varios lugares:<br/>
             <ul>
-                <li>Debajo, en el mismo panel como un rectángulo pequeño de color, con el período que acaba de ingresar.
+                <li>Debajo, en el mismo panel como un rectángulo pequeño de color, con el período que acaba de
+                    ingresar.
                     El mismo posee un botón con una cruz, que le permite borrarlo. Debajo de dicho recuadro
                     dirá el total de tiempo de trabajo cargado para este día.
                 <li>En el panel <b>Horas de Proyectos</b> aparecerá en la parte derecha, en la agenda diaria de 8:00 a
                     20:00, un recuadro amarillo que ocupa la superficie acorde al período.
                 <li>En la <b>Grilla Mensual</b> que es el panel de la derecha de la pantalla, para el día
                     activo se agregará al total de horas, en la columna <b>Tiempo de Trabajo</b> la cantidad de horas
-                    que usted acaba de cargar. Si es el primer período que carga en el día elegido, aparecerá sólo esa
-                    cantidad de horas.
+                    que usted acaba de cargar. Si es el primer período que carga en el día elegido, aparecerá
+                    sólo esa cantidad de horas.
             </ul>
         <li>Ahora tiene que focalizarse en el panel central que es en el que los proyectos (y subproyectos) se asignan
             a los períodos trabajados. Asegúrese que los proyectos de su incumbencia se encuentren listados en el
-            panel, entre el título del panel y el botón <b>Admin. lista de proyectos</b>. Si no hay ningún proyecto, o
-            desea agregar uno o modificar el listado, presione el botón <b>Admin. lista de proyectos</b>.<br/>
+            panel, entre el título del panel y el botón <b>Admin. lista de proyectos</b>. Si no hay ningún proyecto,
+             o desea agregar uno o modificar el listado, presione el botón <b>Admin. lista de proyectos</b>.<br/>
             <br/>
-        <li>Si presiona el botón <b>Admin. lista de proyectos</b> aparecerá una ventana que le mostrará los proyectos
+        <li>Si presiona el botón <b>Admin. lista de proyectos</b> aparecerá una ventana que le mostrará los
+            proyectos
             en los que usted está involucrado en un panel izquierdo y le permitirá arrastrarlos con el mouse hacia el
             panel derecho que es el de los proyectos que se mostrarán luego, al cerrar esta ventana emergente, en el
             panel <b>Horas de Proyectos</b>.<br/>

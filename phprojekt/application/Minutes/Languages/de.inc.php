@@ -9,8 +9,9 @@ $lang["Content Help"]["Minutes"] = "<br/>
     ";
 $lang["Content Help"]["Basic data"] = "DEFAULT";
 $lang["Content Help"]["People"] = "<br/>
-    Dieser Karteireiter dient zur Festlegung von Personen, die zu dem Meeting eingeladen sind bzw. tatsächlich daran teilnehmen,
-    oder die entschuldigt sind. Darüber hinaus können Personen angegeben werden, die das Protokoll erhalten sollen.  
+    Dieser Karteireiter dient zur Festlegung von Personen, die zu dem Meeting eingeladen sind bzw. tatsächlich daran
+    teilnehmen,
+    oder die entschuldigt sind. Darüber hinaus können Personen angegeben werden, die das Protokoll erhalten sollen.
     ";
 $lang["Content Help"]["Items"] = "<br/>
     Hilfetext für Protokolleinträge
@@ -41,7 +42,8 @@ $lang['Topic'] = 'Thema';
 $lang['Title must not be empty'] = 'Der Titel darf nicht leer sein';
 $lang['Please choose a type for this item'] = 'Bitte wählen Sie den Typ dieses Eintrags';
 $lang['Please choose a user name'] = 'Bitte wählen Sie einen gültigen Benutzernamen aus';
-$lang['No date given or date format is not valid (must be YYYY-MM-DD)'] = 'Das Datumsformat ist ungültig (Schema: YYYY-MM-DD)';
+$lang['No date given or date format is not valid (must be YYYY-MM-DD)'] = 'Das Datumsformat ist ungültig
+    (Schema: YYYY-MM-DD)';
 
 // [Form.js] - Tab name
 $lang['Items'] = 'Einträge';
@@ -69,7 +71,8 @@ $lang['Additional Recipients'] = 'Weitere Empfänger';
 //$lang['Comment'] = 'Zusatztext';
 $lang['Options'] = 'Optionen';
 $lang['Include PDF attachment'] = 'PDF als Anhang hinzufügen';
-$lang['Email addresses of unlisted recipients, comma-separated.'] = 'E-Mail Adressen für hier nicht gelistete Empfänger, kommasepariert';
+$lang['Email addresses of unlisted recipients, comma-separated.'] = 'E-Mail Adressen für hier nicht gelistete
+    Empfänger, kommasepariert';
 $lang['Send mail'] = 'E-Mail absenden';
 $lang['Preview'] = 'Vorschau';
 $lang['Mail'] = 'E-Mail';

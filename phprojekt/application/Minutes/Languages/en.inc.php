@@ -39,7 +39,8 @@ $lang['Topic'] = 'Topic';
 $lang['Title must not be empty'] = 'Title must not be empty';
 $lang['Please choose a type for this item'] = 'Please choose a type for this item';
 $lang['Please choose a user name'] = 'Please choose a user name';
-$lang['No date given or date format is not valid (must be YYYY-MM-DD)'] = 'No date given or date format is not valid (must be YYYY-MM-DD)';
+$lang['No date given or date format is not valid (must be YYYY-MM-DD)'] = 'No date given or date format is not valid
+    (must be YYYY-MM-DD)';
 
 // [Form.js] - Tab name
 $lang['Items'] = 'Items';
@@ -67,7 +68,8 @@ $lang['Additional Recipients'] = 'Additional Recipients';
 //$lang['Comment'] = 'Comment';
 $lang['Options'] = 'Options';
 $lang['Include PDF attachment'] = 'Include PDF attachment';
-$lang['Email addresses of unlisted recipients, comma-separated.'] = 'Email addresses of unlisted recipients, comma-separated.';
+$lang['Email addresses of unlisted recipients, comma-separated.'] = 'Email addresses of unlisted recipients,
+    comma-separated.';
 $lang['Send mail'] = 'Send mail';
 $lang['Preview'] = 'Preview';
 $lang['Mail'] = 'Mail';

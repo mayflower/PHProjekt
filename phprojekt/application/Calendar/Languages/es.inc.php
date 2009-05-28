@@ -79,7 +79,8 @@ $lang["Content Help"]["Evento"] = "<br/>
     La <b>pantalla</b> se divide en 5 secciones:<br/>
     <br/>
     <ol>
-        <li><b>Botonera superior derecha:</b> aquí, según los ítems mostrados y los permisos del usuario, se mostrarán
+        <li><b>Botonera superior derecha:</b> aquí, según los ítems mostrados y los permisos del usuario,
+            se mostrarán
             hasta 3 botones.<br/>
             <ul>
                 <li><b>Agregar:</b> lo presiona y un formulario vacío se abre para que cree un nuevo evento.<br/>
@@ -92,25 +93,28 @@ $lang["Content Help"]["Evento"] = "<br/>
                 <li><b>Lista:</b> una grilla con todos los eventos para el usuario logueado.<br/>
                 <li><b>Día:</b> una agenda desde las 8:00 hasta las 20:00 hs. donde se muestran todos los eventos de un
                     día determinado.<br/>
-                    <u>Tiene dos subtipos</u> que son elegidos a través de las solapas <b>Propio</b> y <b>Selección</b>
+                    <u>Tiene dos subtipos</u> que son elegidos a través de las solapas <b>Propio</b> y
+                    <b>Selección</b>
                     que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> está activo:
                     <ul>
                         <li><b>Propio:</b> se muestran los eventos del día elegido, para el usuario activo.
-                        <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece permitiendo
-                            al usuario seleccionar un pequeño grupo de gente de modo que la lista de eventos contendrá
+                        <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece 
+                            permitiendo al usuario seleccionar un pequeño grupo de gente de modo que la lista de 
+                            eventos contendrá
                             tantas columnas como usuarios elegidos; se verá una agenda grupal para el día activo.
                     </ul>
                 <li><b>Semana:</b> una agenda semanal, igual la diaria pero para los siete días de la semana
                     simultáneamente.
-                <li><b>Mes:</b> una agenda mensual que expone en un formato claro de calendario todos los días del mes,
+                <li><b>Mes:</b> una agenda mensual que expone en un formato claro de calendario todos los días
+                    del mes,
                     más los días necesarios del mes anterior y siguiente para completar todas las semanas mostradas.
             </ul>
             Cuando Día, Semana o Mes son la vista activa, aparece una barra adicional sobre los listados. Esta tiene
             los vínculos <i>previo</i>, <i>hoy</i> y <i>siguiente</i>, para cambiar el día / semana / mes
             secuencialmente. Además muestra la fecha del período seleccionado.<br/>
             <br/>
-        <li><b>Grilla / Lista:</b> aquí se muestra la lista de ítems o la agenda de un día determinado, según la vista
-            elegida.<br/>
+        <li><b>Grilla / Lista:</b> aquí se muestra la lista de ítems o la agenda de un día determinado,
+            según la vista elegida.<br/>
         <br/>
         <li><b>Formulario:</b> cuando un ítem esta por ser creado o se cliquea en uno del listado, un formulario se
             muestra aquí para completar o modificar sus datos.<br/>

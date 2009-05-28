@@ -143,8 +143,8 @@ $lang["The module was deleted correctly"] = "El módulo fue borrado correctament
 $lang["No help available"] = "No hay ayuda disponible";
 $lang["You do not have access for do this action"] = "Usted no tiene acceso para realizar esta acción";
 $lang["Internal exception"] = "Excepción interna";
-$lang["Please contact the administrator and check the error logs"] = "Por favor, póngase en contacto con el administrador"
-    . " y compruebe el error de los registros";
+$lang["Please contact the administrator and check the error logs"] = "Por favor, póngase en contacto con el
+    administrador y compruebe el error de los registros";
 $lang["Invalid json format"] = "Json, formato inválido";
 $lang["User error"] = "Error de usuario";
 
@@ -322,8 +322,9 @@ $lang["Content Help"]["General"] = "<br/>
         <ol>
             <li><b>Árbol de proyectos:</b> es un árbol jerárquico de proyectos y subproyectos. Ambos se abren en el
                 panel central sólo cliqueándolos dentro del árbol.<br/>
-            <li><b>Caja de tags:</b> es una <i>nube de etiquetas</i> (<i>tag cloud</i> en inglés) con vínculos a ítems
-                del sistema. Los tags son definidos por el usuario al editar cada ítem. A mayor veces que un tag se
+            <li><b>Caja de tags:</b> es una <i>nube de etiquetas</i> (<i>tag cloud</i> en inglés) con vínculos a
+                ítems del sistema.
+                Los tags son definidos por el usuario al editar cada ítem. A mayor veces que un tag se
                 repite en el sistema, más grande aparece aquí.<br/>
         </ol>
         <li>Los paneles centrales:<br/>
@@ -337,8 +338,8 @@ $lang["Content Help"]["General"] = "<br/>
                 <ol>
                     <li><b>Agregar:</b> para crear un nuevo ítem del módulo activo.<br/>
                     <li><b>Grabar:</b> graba los cambios hechos en la grilla (edición en línea).<br/>
-                    <li><b>Exportar:</b> exporta los ítems que están siendo mostrados en la grilla a un archivo en formato
-                        CSV.<br/>
+                    <li><b>Exportar:</b> exporta los ítems que están siendo mostrados en la grilla a un archivo
+                        en formato CSV.<br/>
                 </ol>
             </ol>
             <li>Una <b>grilla</b> con el listado de ítems del módulo. Según los permisos del usuario, pueden ser
