@@ -37,7 +37,8 @@ class Module_IndexController_Test extends FrontInit
     public function testJsonSave()
     {
         // Database manager, needed for create the table first
-        $designerData = '{"0":{"id":0,"tableName":"Test","formPosition":1,"formTab":1,"formColumns":1,"formRegexp":null,'
+        $designerData = '{"0":{"id":0,"tableName":"Test","formPosition":1,"formTab":1,"formColumns":1,'
+            . '"formRegexp":null,'
             . '"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,"isUnique":0,"tableField":'
             . '"project_id","selectType":"project","tableType":"int","tableLength":11,"formLabel":"Project","formType"'
             . ':"selectValues","formRange":"Project # id # title","defaultValue":1,"listPosition":0,"status":1,'

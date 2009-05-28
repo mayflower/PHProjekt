@@ -158,7 +158,6 @@ class Calendar_IndexController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
 
-        $db = Phprojekt::getInstance()->getDb();
         if (!empty($itemId)) {
             $where = 'id = ' . (int) $itemId;
         } else {

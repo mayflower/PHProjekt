@@ -500,7 +500,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $this->_endDate           = $request['endDate'];
         $this->_notifParticipants = implode(",", $participantsList);
 
-        $addParticipants = true;
         $this->find($id);
 
         $oneDate = $eventDates[0];

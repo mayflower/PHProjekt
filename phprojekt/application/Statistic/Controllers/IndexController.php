@@ -85,8 +85,7 @@ class Statistic_IndexController extends IndexController
 
         $converter = Phprojekt_Loader::getLibraryClass('Phprojekt_Date_Converter');
         foreach ($data['projects'] as $projectId => $title) {
-            $userData      = array();
-            $sumPerProject = 0;
+            $sumPerProject  = 0;
             $rows[$index][] = $title;
             foreach (array_keys($data['users']) as $userId) {
                 if (!isset($data['rows'][$projectId][$userId])) {
@@ -106,7 +105,6 @@ class Statistic_IndexController extends IndexController
 
         $rows[$index][] = 'Total';
         $total          = 0;
-        $totalPerUser   = array();
         foreach (array_keys($data['users']) as $userId) {
             if (!isset($sumPerUser[$userId])) {
                 $rows[$index][] = $converter->convertMinutesToHours(0);

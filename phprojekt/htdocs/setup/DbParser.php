@@ -388,6 +388,7 @@ class DbParser
             foreach ($content as $action => $data) {
                 foreach ($data as $index => $values) {
                     foreach ($values as $key => $value) {
+                        $matches   = array();
                         $tmpValues = array();
                         if ($value == "all" && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
                             $tmpValues = $this->_getAllRows($matches[1]);
@@ -414,6 +415,7 @@ class DbParser
             foreach ($content as $action => $data) {
                 foreach ($data as $index => $values) {
                     foreach ($values as $key => $value) {
+                        $matches = array();
                         if ($value == '##id##') {
                             $value = $newId;
                         } else if (preg_match("/^##([A-Za-z]+)_moduleId##$/", $value, $matches)) {

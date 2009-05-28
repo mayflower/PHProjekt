@@ -72,14 +72,13 @@ class AllTests extends PHPUnit_Framework_TestSuite
 {
     /**
      * Initialize the TestRunner
-     *
      */
-    public static function main(Zend_Config $config = null)
+    public static function main()
     {
         // for compability with phpunit offer suite() without any parameter.
         // in that case use defaults
 
-        PHPUnit_TextUI_TestRunner::run(self::suite($config));
+        PHPUnit_TextUI_TestRunner::run(self::suite());
     }
 
     /**
@@ -87,7 +86,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
      *
      * @return PHPUnit_Framework_TestSuite
      */
-    public static function suite($config = null)
+    public static function suite()
     {
         // These directories are
         // covered for the code coverage even they are not part of unit testing
@@ -186,7 +185,7 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
         PHPUnit_Util_Filter::addDirectoryToWhitelist(PHPR_LIBRARY_PATH . '/Phprojekt');
     }
 
-    AllTests::main($config);
+    AllTests::main();
 }
 
 function usage() {

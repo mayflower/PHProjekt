@@ -185,8 +185,7 @@ class Phprojekt_RoleModelsRoleModulePermissions_Test extends PHPUnit_Framework_T
     public function testGetRoleModulePermissionsByIdPart2()
     {
         $roleModel = new Phprojekt_Role_RoleModulePermissions();
-        $expected  = $this->_expected;
-        $return = $roleModel->getRoleModulePermissionsById(100);
+        $return    = $roleModel->getRoleModulePermissionsById(100);
         $this->assertEquals(ksort($this->_expected), ksort($return));
     }
 

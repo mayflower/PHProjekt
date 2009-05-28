@@ -206,10 +206,10 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     public function fetchAll($where = null, $order = 'sort_order', $count = null, $offset = null, $select = null,
                              $join = null)
     {
-        $minutes = $this->_minutes->find($this->_minutesId);
         if (null !== $where) {
             $where .= ' AND ';
         }
+
         $where .= sprintf('(%s.minutes_id = %d )',
                           $this->getTableName(),
                           (empty($this->_minutesId) ? $this->_relations['hasMany']['id'] : $this->_minutesId));

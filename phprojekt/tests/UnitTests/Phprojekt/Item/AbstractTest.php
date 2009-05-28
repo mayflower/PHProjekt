@@ -469,9 +469,9 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $model->save();
         $model->saveRights(array(1 => 255));
         $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $this->assertEquals(255, $getRights = $rights->getItemRight(10, $model->id, 1));
+        $this->assertEquals(255, $rights->getItemRight(10, $model->id, 1));
 
-        $this->assertEquals(0, $getRights = $rights->getItemRight(10, $model->id, 10));
+        $this->assertEquals(0, $rights->getItemRight(10, $model->id, 10));
     }
 
     /**

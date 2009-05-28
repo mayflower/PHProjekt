@@ -118,9 +118,6 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     public function delete()
     {
         if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
-
-            $moduleId = Phprojekt_Module::getId($this->getModelName());
-
             // Is there is any upload file, -> delete the files from the server
             $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
                 Phprojekt_DatabaseManager::COLUMN_NAME);

@@ -143,7 +143,6 @@ class Minutes_IndexController extends IndexController
          *       Phprojekt_Mail_Notification instead of Zend_Mail. Benefits?
          */
         $config     = Phprojekt::getInstance()->getConfig();
-        $eol        = (int) $config->get('mailEndOfLine');
         $smtpServer = $config->get('smtpServer');
         $smtpUser   = $config->get('smtpUser');
         $smtpPasswd = $config->get('smtpPassword');
