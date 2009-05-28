@@ -87,9 +87,13 @@ class Core_IndexController extends IndexController
         static $object = null;
         if (null === $object) {
             $moduleName = ucfirst($this->getRequest()->getControllerName());
-            $moduleName = "Phprojekt_".$moduleName."_".$moduleName;
-            $db         = Phprojekt::getInstance()->getDb();
-            $object     = new $moduleName($db);
+            $moduleName = "Phprojekt_" . $moduleName . "_" . $moduleName;
+            if (Phprojekt_Loader::tryToLoadLibClass($moduleName)) {
+                $db     = Phprojekt::getInstance()->getDb();
+                $object = new $moduleName($db);
+            } else {
+                $object = null;
+            }
             if (null === $object) {
                 $object = Phprojekt_Loader::getModel('Default', 'Default');
             }
