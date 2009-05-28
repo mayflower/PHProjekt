@@ -193,13 +193,16 @@ class IndexController extends Zend_Controller_Action
         if (empty($id)) {
             $model   = $this->getModelObject();
             $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+            $newItem = true;
         } else {
             $model   = $this->getModelObject()->find($id);
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            $newItem = false;
         }
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            $params = $this->_setParams($this->getRequest()->getParams(), $model, $newItem);
+            Default_Helpers_Save::save($model, $params);
 
             $return = array('type'    => 'success',
                             'message' => $message,
@@ -233,7 +236,8 @@ class IndexController extends Zend_Controller_Action
         $model   = $this->getModelObject();
         foreach ($data as $id => $fields) {
             $model->find((int) $id);
-            Default_Helpers_Save::save($model, $fields);
+            $params = $this->_setParams($fields, $model);
+            Default_Helpers_Save::save($model, $params);
             $showId[] = $id;
         }
 
@@ -597,5 +601,20 @@ class IndexController extends Zend_Controller_Action
         }
 
         $this->render('upload');
+    }
+
+    /**
+     * Set some values deppend on the params
+     * Each module can implement this function for change their values
+     *
+     * @param array                     $params  The post values
+     * @param Phprojekt_Model_Interface $model   The current module to save
+     * @param boolean                   $newItem If is new item or not
+     *
+     * @return array
+     */
+    private function _setParams($params, $model, $newItem = false)
+    {
+        return $params;
     }
 }

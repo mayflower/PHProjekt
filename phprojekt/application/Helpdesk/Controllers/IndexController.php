@@ -53,7 +53,7 @@ class Helpdesk_IndexController extends IndexController
             $record->author = Phprojekt_Auth::getUserId();
             $record->date   = date("Y-m-d");
         } else {
-            $record   = $this->getModelObject()->find($id);
+            $record = $this->getModelObject()->find($id);
             if ($record->solvedBy == null) {
                 // This is because of the solved date being unable to be deleted from the item
                 $record->solvedDate = '';
@@ -61,85 +61,6 @@ class Helpdesk_IndexController extends IndexController
         }
 
         Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Saves the current item
-     * Save if you are add one or edit one.
-     * Use the model module for get the data
-     *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
-     *
-     * @requestparam integer id ...
-     *
-     * @return void
-     */
-    public function jsonSaveAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-
-        if (empty($id)) {
-            // New item
-            $model   = $this->getModelObject();
-            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-            $newItem = true;
-        } else {
-            // Existing item
-            $model   = $this->getModelObject()->find($id);
-            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
-            $newItem = false;
-        }
-
-        if ($model instanceof Phprojekt_Model_Interface) {
-            $params = $this->_setParams($this->getRequest()->getParams(), $model, $newItem);
-            Default_Helpers_Save::save($model, $params);
-
-            $return = array('type'    => 'success',
-                            'message' => $message,
-                            'code'    => 0,
-                            'id'      => $model->id);
-
-            Phprojekt_Converter_Json::echoConvert($return);
-        } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        }
-    }
-
-    /**
-     * Save some fields for many items
-     * Only edit existing items
-     * Use the model module to get the data
-     *
-     * If there is an error, the saving will return a Phprojekt_PublishedException
-     * If not, it returns is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
-     *
-     * @requestparam string data Array with fields and values
-     *
-     * @return void
-     */
-    public function jsonSaveMultipleAction()
-    {
-        $data    = (array) $this->getRequest()->getParam('data');
-        $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
-        $showId  = array();
-
-        // For every modified row
-        foreach ($data as $id => $params) {
-            $model  = $this->getModelObject()->find((int) $id);
-            $params = $this->_setParams($params, $model);
-            Default_Helpers_Save::save($model, $params);
-            $showId[] = $id;
-        }
-
-        $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => implode(',', $showId));
-
-        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
