@@ -41,7 +41,7 @@ final class Minutes_Helpers_Userlist
      * 
      * @return array
      */
-    public static function expandIdList($idList)
+    public static function expandIdList($idList = '')
     {
         if (1 < ($num = func_num_args())) {
             for ($i = 1; $i < $num; $i++) {
@@ -56,7 +56,7 @@ final class Minutes_Helpers_Userlist
         $data    = array();
         if (!empty($idList)) {
             $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $userList = $user->fetchAll(sprintf('id IN (%s)', $idList));
+            $userList = $user->fetchAll(sprintf('id IN (%s)', $idList), 'id ASC');
             
             $display = $user->getDisplay();
             foreach ($userList as $record) {

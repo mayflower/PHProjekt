@@ -25,6 +25,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
+require_once 'Helpers/UserlistTest.php';
 require_once 'Controllers/IndexControllerTest.php';
 require_once 'Controllers/ItemControllerTest.php';
 
@@ -59,8 +60,10 @@ class Minutes_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Minutes Controller');
 
+        $suite->addTestSuite('Minutes_Helpers_Userlist_Test');
         $suite->addTestSuite('Minutes_IndexController_Test');
         $suite->addTestSuite('Minutes_ItemController_Test');
+
 
         return $suite;
     }

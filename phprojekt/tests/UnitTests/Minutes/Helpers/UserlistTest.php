@@ -1,0 +1,115 @@
+<?php
+/**
+ * Unit test
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @version    $Id$
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.0
+ */
+require_once 'PHPUnit/Framework.php';
+
+/**
+ * Tests for Minutes Userlist Helper
+ *
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @version    Release: @package_version@
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.0
+ * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
+ */
+class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Test the userlist helper
+     */
+    public function testUserlistEmptyCall()
+    {
+        $this->assertEquals(array(), Minutes_Helpers_Userlist::expandIdList());
+    }
+    
+    public function testUserlistEmptyString()
+    {
+        $this->assertEquals(array(), Minutes_Helpers_Userlist::expandIdList(''));
+    }
+    
+    public function testUserlistSingleId()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('1');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
+    }
+    
+    public function testUserlistMultiId()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('1,2');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
+                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+    }
+    
+    /**
+     * The order of the id should not matter on the result
+     */
+    public function testUserlistMultiIdReverse()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('2,1');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
+                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+    }
+    
+    public function testUserlistMultiArguments()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('1', '2');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
+                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+    }
+
+    /**
+     * The order of the id should not matter
+     */
+    public function testUserlistMultiArgumentsReverse()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('2', '1');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
+                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+    }
+    
+    /**
+     * Duplicate ids should show as single entry in result
+     */
+    public function testUserlistDuplicateId()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('1,1');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
+    }
+    
+    /**
+     * Duplicate ids should show as single entry in result
+     */
+    public function testUserlistDuplicateIdMulti()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('1', '1');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
+    }
+    
+    /**
+     * Multiple occurances of ids should show as single entry in result
+     */
+    public function testUserlistStresstest()
+    {
+        $data = Minutes_Helpers_Userlist::expandIdList('1', '1,2', '2, 1', '2', '', '2,1,1,2');
+        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
+                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+    }
+    
+}
