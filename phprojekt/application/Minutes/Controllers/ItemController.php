@@ -35,16 +35,17 @@ class Minutes_ItemController extends IndexController
 {
     /**
      * Returns list of minutes items referenced by a minutesId
-     * 
+     *
      * @requestparam integer minutesId The id of the minutes this list belongs to.
+     *
      * @return void
      */
     public function jsonListAction()
     {
         $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
         $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
-        
         $result = $itemModel->fetchAll();
+
         Phprojekt_Converter_Json::echoConvert($result, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
@@ -60,15 +61,14 @@ class Minutes_ItemController extends IndexController
     {
         $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
         $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
-        
         $id = (int) $this->getRequest()->getParam('id');
-        
+
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         } else {
             $record = $itemModel->find($id);
         }
-        
+
         Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
@@ -84,20 +84,19 @@ class Minutes_ItemController extends IndexController
      *
      * @return void
      */
-    
+
     public function jsonSaveAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
-        
+
         $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $minutes->find($minutesId);
-        
+
         if (empty($minutes->id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         } else {
-            
             $id = (int) $this->getRequest()->getParam('id');
-            
+
             if (empty($id)) {
                 $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId);
                 $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
@@ -105,61 +104,59 @@ class Minutes_ItemController extends IndexController
                 $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
                 $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             }
-            
+
             if ($model instanceof Phprojekt_Model_Interface) {
                 $params = $this->getRequest()->getParams();
-                
+
                 $params['projectId'] = $minutes->projectId;
                 $params['ownerId']   = $minutes->ownerId;
-                
-                if (isset($params['parentOrder']) && 
-                    is_numeric($params['parentOrder']) && 
-                    $params['parentOrder'] > 0) {
-                    // this item is supposed to be sorted after the given order
+
+                if (isset($params['parentOrder']) && is_numeric($params['parentOrder']) && $params['parentOrder'] > 0) {
+                    // This item is supposed to be sorted after the given order
                     $params['sortOrder'] = $params['parentOrder'] + 1;
                     unset($params['parentOrder']);
                 }
-                
+
                 Phprojekt::getInstance()->getLog()->debug('Saving Item model with params: '.print_r($params, true));
-                
+
                 Default_Helpers_Save::save($model, $params);
-                
+
                 $return = array('type'    => 'success',
                                 'message' => $message,
                                 'code'    => 0,
                                 'id'      => $model->id);
-                
+
                 Phprojekt_Converter_Json::echoConvert($return);
             } else {
                 throw new Phprojekt_PublishedException(self::NOT_FOUND);
             }
         }
     }
-    
+
     /*
      * Deletes the minutes item
-     * 
-     * @requestparam integer minutesId   ID of the minutes being worked on.
-     * @requestparam integer id          ID of the item to be deleted.
-     * 
+     *
+     * @requestparam integer minutesId Id of the minutes being worked on.
+     * @requestparam integer id        Id of the item to be deleted.
+     *
      * @return void
      */
     public function jsonDeleteAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
-        
+
         if (empty($minutesId)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
-        
+
         $id = (int) $this->getRequest()->getParam('id');
-        
+
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
-        
+
         $model = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
-        
+
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
@@ -167,6 +164,7 @@ class Minutes_ItemController extends IndexController
             } else {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             }
+
             $return = array('type'    => 'success',
                             'message' => $message,
                             'code'    => 0,
@@ -177,7 +175,7 @@ class Minutes_ItemController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
-    
+
     /**
      * Provide list of items for sort ordering
      */
@@ -190,16 +188,15 @@ class Minutes_ItemController extends IndexController
             Phprojekt_Converter_Json::echoConvert(array());
             return;
         }
-        
+
         $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->fetchAll();
-        
+
         $return = array();
         foreach ($items as $item) {
-            /* @var item MinutesItem */
+            // @var item MinutesItem
             $return[] = array('sortOrder' => $item->sortOrder, 'title' => $item->title);
         }
-        
+
         Phprojekt_Converter_Json::echoConvert($return);
     }
-    
 }

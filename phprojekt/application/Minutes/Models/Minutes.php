@@ -35,11 +35,11 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 {
     /**
      * Relation to Items
-     * 
+     *
      * @var array hasMany
      */
     public $hasMany = array('items' => array('classname' => 'Minutes_Models_MinutesItem'));
-    
+
     /**
      * Customized version to calculate the status of a minutes item regardless of its saved database entry.
      *
@@ -55,6 +55,7 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
+
         return array_map(array($this, '_calcStatus'), $result);
     }
 
@@ -70,27 +71,26 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
     protected function _calcStatus(Phprojekt_Item_Abstract &$minutes)
     {
         $meetingDate = new Zend_Date($minutes->meetingDate);
-        $now = new Zend_Date();
-        
+        $now         = new Zend_Date();
+
         $status = 0;
         if ($meetingDate->isLater($now)) {
             $status = 1;
         } else {
             $status = 2;
-            
-            $count = count($minutes->items->fetchAll());
-            
+            $count  = count($minutes->items->fetchAll());
+
             if ($count > 0) {
                 $status = 3;
             }
         }
-        
+
         if (4 != $minutes->itemStatus) {
             $minutes->itemStatus = $status;
         } else {
             $minutes->itemStatus = 4;
         }
-        
+
         return $minutes;
     }
 
@@ -105,6 +105,7 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
         if (4 != $this->itemStatus) {
             $this->itemStatus = 0;
         }
+
         return parent::save();
     }
 }

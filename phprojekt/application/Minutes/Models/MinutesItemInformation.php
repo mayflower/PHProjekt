@@ -41,7 +41,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
      * Return an array of field information.
      *
      * @todo The meta info has to be refactored to fit the db table
-     * 
+     *
      * @param string $ordering Sort
      *
      * @return array
@@ -110,7 +110,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['tab']      = 1;
 
                 $converted[] = $data;
-                
+
                 // topicId
                 $data = array();
                 $data['key']      = 'topicType';
@@ -130,7 +130,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['tab']      = 1;
 
                 $converted[] = $data;
-                
+
                 // sortOrder
                 $data = array();
                 $data['key']      = 'sortOrder';
@@ -147,8 +147,8 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['tab']      = 1;
 
                 $converted[] = $data;
-                
-                                
+
+
                 // title
                 $data = array();
                 $data['key']      = 'title';
@@ -165,7 +165,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['tab']      = 1;
 
                 $converted[] = $data;
-                
+
                 // comment
                 $data = array();
                 $data['key']      = 'comment';
@@ -182,7 +182,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['tab']      = 1;
 
                 $converted[] = $data;
-                
+
                 // topicDate
                 $data = array();
                 $data['key']      = 'topicDate';
@@ -210,7 +210,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                 $data['position'] = 9;
                 $data['fieldset'] = '';
                 $data['range']    = array();
-                
+
                 $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
                 $users = $user->fetchAll();
                 $displayname = $user->getDisplay();
@@ -218,14 +218,15 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
                     $data['range'][] = array('id'   => $node->id,
                                              'name' => $node->applyDisplay($displayname, $node));
                 }
-                
+
                 $data['required'] = false;
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
-                
+
                 $converted[] = $data;
                 break;
         }
+
         return $converted;
     }
 

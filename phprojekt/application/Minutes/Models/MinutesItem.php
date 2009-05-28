@@ -61,10 +61,10 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
-    
+
     /**
      * Initial state of the data after find()
-     * 
+     *
      * @var array
      */
     protected $_history = null;
@@ -121,7 +121,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
-    
+
     /*
      * Get error message from model
      */
@@ -152,7 +152,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     {
         // No code here as the rights are managed by the parent minutes model.
     }
-    
+
     /**
      * Initialize the related minutes object
      *
@@ -166,26 +166,28 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 
         return $this;
     }
-    
+
     /**
      * Finds a record with current criteria key and populates
      * the object with its data. Makes a copy of the data in the
      * protected $_history array, to be able to detect changes
      * made after calling find().
-     * 
+     *
      * @param mixed Optional criteria. Can be primary key value or array of field=>value pairs.
      * @return Minutes_Models_MinutesItem
      */
     public function find($criteria=null)
     {
-        // the parameter check in the parent method is bogus, hence this construct:
+        // The parameter check in the parent method is bogus, hence this construct:
         if ($criteria === null) {
             $res = parent::find();
         } else {
             $res = parent::find($criteria);
         }
-        // make a backup of the initial data to compare against in save() method
+
+        // Make a backup of the initial data to compare against in save() method
         $this->_history = $this->_data;
+
         return $res;
     }
 
@@ -201,22 +203,21 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = 'sort_order', $count = null, $offset = null, $select = null, 
+    public function fetchAll($where = null, $order = 'sort_order', $count = null, $offset = null, $select = null,
                              $join = null)
     {
         $minutes = $this->_minutes->find($this->_minutesId);
         if (null !== $where) {
             $where .= ' AND ';
         }
-        $where .= sprintf('(%s.minutes_id = %d )', 
-                          $this->getTableName(), 
+        $where .= sprintf('(%s.minutes_id = %d )',
+                          $this->getTableName(),
                           (empty($this->_minutesId) ? $this->_relations['hasMany']['id'] : $this->_minutesId));
-        
+
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
         return $result;
     }
-
 
     /**
      * Save is handled by parent.
@@ -226,29 +227,30 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     public function save()
     {
         $db = $this->getAdapter();
-        
+
         if (trim($this->sortOrder) == '' || is_null($this->sortOrder) || !$this->sortOrder) {
             // We don't have a sort order yet, most probably a brand-new record.
             // Detect highest available sort order up until now and use next-higher number.
-            
+
             $sql     = 'SELECT MAX(sort_order) FROM ' . $this->getTableName() . ' WHERE minutes_id = ?';
             $result  = $db->fetchCol($sql, $this->_minutesId);
             $maxSort = $result[0];
-        
+
             if (!$maxSort || $maxSort < 0) {
                 $maxSort = 0;
             }
             $this->sortOrder = $maxSort + 1;
-        } elseif (is_numeric($this->sortOrder) && $this->sortOrder > 0 && 
-                  isset($this->_history['sortOrder']) && $this->_history['sortOrder'] != $this->sortOrder) {
+        } elseif (is_numeric($this->sortOrder) && $this->sortOrder > 0 &&
+            isset($this->_history['sortOrder']) && $this->_history['sortOrder'] != $this->sortOrder) {
+
             // A sort order was given and differs from the initial value. We need to increment
             // all sort order values equal or above the new value by one, and then update this
             // record with the new value. That should ensure order value consistency.
-            
-            $sql     = 'UPDATE ' . $this->getTableName() . ' SET sort_order = sort_order+1 ' . 
-                       'WHERE minutes_id = ? AND sort_order >= ?';
+            $sql = 'UPDATE ' . $this->getTableName() . ' SET sort_order = sort_order+1 ' .
+                'WHERE minutes_id = ? AND sort_order >= ?';
             $db->query($sql, array($this->_minutesId,$this->sortOrder));
         }
+
         return parent::save();
     }
 }
