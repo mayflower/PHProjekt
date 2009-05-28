@@ -110,7 +110,8 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonTreeAction()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->getModelObject(), 1);
+        $model = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree  = new Phprojekt_Tree_Node_Database($model, 1);
         $tree->setup();
 
         Phprojekt_Converter_Json::echoConvert($tree);
