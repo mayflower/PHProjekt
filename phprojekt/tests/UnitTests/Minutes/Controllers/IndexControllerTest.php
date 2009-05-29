@@ -96,7 +96,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('requiredField1', '(*) Required Field');
         $response = $this->getResponse();
         
-        $this->assertFalse($this->error, "Yesterdays date used: '$meetDateString', Exception was: ".$this->errormessage);
+        $this->assertFalse($this->error, "Yesterdays date used: '$meetDateString', Exception is: ".$this->errormessage);
         $this->assertContains(Minutes_IndexController::ADD_TRUE_TEXT, $response, "Response was: '$response'");
         $this->assertContains('"id":"1"', $response, "ID created was not numbered 1.");
     }
