@@ -284,4 +284,64 @@ final class Default_Helpers_Right
 
         return $params;
     }
+
+    /**
+     * Add read, write and delete access to the assigned user in an item
+     *
+     * @param string                    $key     The name of the user field
+     * @param array                     $params  The post values
+     * @param Phprojekt_Model_Interface $model   The current module to save
+     * @param boolean                   $newItem If is new item or not
+     *
+     * @return array
+     */
+    public function addRightsToAssignedUser($key, $params, $model, $newItem)
+    {
+        // Add rights to the Assigned user, if any
+        $assignedUser = (isset($params[$key])) ? $params[$key] : 0;
+
+        // The assgined user is setted
+        if ($assignedUser != 0) {
+            // Is an Existing item
+            // The logged user don't have access to the 'Access' tab
+            if (!$newItem && (!isset($params['dataAccess']))) {
+                // The rights will be added to the Request Params, but also it needs to be added the
+                // already existing rights for users on this item. Case else, the saving routine deletes all
+                // other rights that the ones added for the assigned user
+
+                // Add already existing rights of the item,
+                // except for the new assignedUser
+                // except for the old assignedUser
+                $currentRights = $model->getRights();
+                $rightsType    = array('access', 'read', 'write', 'create', 'copy', 'delete', 'download', 'admin');
+                foreach ($currentRights as $userRights) {
+                    $userId = $userRights['userId'];
+                    if ($userId != $assignedUser && $userId != $model->$key) {
+                        $params = self::addUser($params, $userId);
+                        foreach ($rightsType as $rightName) {
+                            if (array_key_exists($rightName, $userRights)) {
+                                if ($userRights[$rightName] == 1) {
+                                    $rightCompleteName = 'check' . ucfirst($rightName) . 'Access';
+                                    if (!array_key_exists($rightCompleteName, $params)) {
+                                        $params[$rightCompleteName] = array();
+                                    }
+                                    $params[$rightCompleteName][$userId] = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Add the assigned user basic write rights to $params
+            // If is the owner, set full access
+            if ($model->ownerId == $assignedUser) {
+                $params = self::allowAll($params, $model->ownerId);
+            } else {
+                $params = self::allowReadWriteDelete($params, $assignedUser);
+            }
+        }
+
+        return $params;
+    }
 }
