@@ -38,6 +38,52 @@
 class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Phprojekt_ModelInformation_Interface
 {
     /**
+     * @var list of available topic types. Keywords need to be translated.
+     */
+    protected $_topicTypeList = array(
+            1 => 'TOPIC',
+            2 => 'STATEMENT',
+            3 => 'TODO',
+            4 => 'DECISION',
+            5 => 'DATE',
+        );
+    
+    protected $_userIdList = array();
+
+    /**
+     * Constructor fills metadata
+     */
+    public function __construct()
+    {
+        // Fill variable metadata into structure.
+        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $users = $user->fetchAll();
+        $displayname = $user->getDisplay();
+        foreach ($users as $node) {
+            $this->_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
+        }
+
+    }
+    
+    public function getTopicType($topicType)
+    {
+        return (isset($this->_topicTypeList[$topicType])? $this->_topicTypeList[$topicType] : NULL);
+    }
+
+    public function getUserName($userId)
+    {
+        return (isset($this->_userIdList[$userId])? $this->_userIdList[$userId] : NULL);
+    }
+    
+    public function convertArray($array, $keyname = 'id', $valuename = 'name')
+    {
+        $result = array();
+        foreach ($array as $key => $value) {
+            $result[] = array($keyname => $key, $valuename => $value);
+        }
+        return $result;
+    }
+    /**
      * Return an array of field information.
      *
      * @return array
@@ -114,17 +160,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['order']    = 0;
         $data['position'] = 5;
         $data['fieldset'] = '';
-        $data['range']    = array( array('id'   => '1',
-                                         'name' => Phprojekt::getInstance()->translate('TOPIC')),
-                                   array('id'   => '2',
-                                         'name' => Phprojekt::getInstance()->translate('STATEMENT')),
-                                   array('id'   => '3',
-                                         'name' => Phprojekt::getInstance()->translate('TODO')),
-                                   array('id'   => '4',
-                                         'name' => Phprojekt::getInstance()->translate('DECISION')),
-                                   array('id'   => '5',
-                                         'name' => Phprojekt::getInstance()->translate('DATE')),
-                                  );
+        $data['range']    = $this->convertArray($this->_topicTypeList);
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
@@ -209,16 +245,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['order']    = 0;
         $data['position'] = 9;
         $data['fieldset'] = '';
-        $data['range']    = array();
-
-        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $users = $user->fetchAll();
-        $displayname = $user->getDisplay();
-        foreach ($users as $node) {
-            $data['range'][] = array('id'   => $node->id,
-                                     'name' => $node->applyDisplay($displayname, $node));
-        }
-
+        $data['range']    = $this->convertArray($this->_userIdList);
         $data['required'] = false;
         $data['readOnly'] = true;
         $data['tab']      = 1;

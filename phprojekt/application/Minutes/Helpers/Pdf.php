@@ -68,6 +68,7 @@ final class Minutes_Helpers_Pdf
                            'fontSize' => 20,
                            'textWidth' => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
         $page->addFreetext(array(
+
                            'lines'    => array($minutesModel->description,
                                             $phpr->translate('Date of Meeting') . ': ' . $minutesModel->meetingDate
                                             . ' ' . $phpr->translate('Start time') . ': ' . $minutesModel->startTime
@@ -112,17 +113,42 @@ final class Minutes_Helpers_Pdf
                                             ),
                                         )));
 
-        $itemtable = array();
-        $items     = $minutesModel->items->fetchAll();
+        $itemtable     = array();
+        $topicCount    = 0;
+        $topicSubCount = 0;
+        $items         = $minutesModel->items->fetchAll();
 
         foreach ($items as $item) {
-            $itemtable[] = array(
-                              array('text'  => '1',
-                                    'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                              array('text'  => 'TOPIC',
-                                    'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                              array('text'  => $item->title . "\n" . $item->comment,
-                                    'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+            switch ($item->topicType) {
+                case 1: // TOPIC
+                    $topicCount++;
+                    $topicSubCount = -1;
+                case 2: // STATEMENT
+                case 4: // DECISION
+                    $topicSubCount++;
+                    $form = $phpr->translate("%1\$s\n%2\$s");
+                    break;
+                case 3: // TODO
+                    $topicSubCount++;
+                    $form = $phpr->translate("%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s");
+                    break;
+                case 5:
+                    $topicSubCount++;
+                    $form = $phpr->translate("%1\$s\n%2\$s\nDATE: %3\$s");
+                    break;
+                default:
+                    $form = $phpr->translate("Undefined topicType");
+                    break;
+            }
+            $itemtable[]  = array(
+                                array('text'  => (1 == $item->topicType? sprintf('%d', $topicCount) 
+                                                    : sprintf('%d.%d', $topicCount, $topicSubCount)),
+                                      'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                array('text'  => $phpr->translate($item->information->getTopicType($item->topicType)),
+                                      'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                array('text'  => sprintf($form, $item->title, $item->comment, $item->topicDate,
+                                                    $item->information->getUserName($item->userId)),
+                                      'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
                             );
         }
 
@@ -144,7 +170,7 @@ final class Minutes_Helpers_Pdf
         $pdf->properties['Author']       = $owner[0]['display'];
         $pdf->properties['Producer']     = 'PHProjekt version ' . Phprojekt::getVersion();
         $pdf->properties['CreationDate'] = 'D:' . gmdate('YmdHis') . sprintf("%+02d'00'",
-            (int) Phprojekt_User_User::getSetting("timeZone", Phprojekt::getInstance()->getConfig()->timeZone));
+            (int) Phprojekt_User_User::getSetting("timeZone", $phpr->getConfig()->timeZone));
         $pdf->properties['Keywords'] = $minutesModel->description;
 
         return $pdf->render();
