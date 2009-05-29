@@ -46,12 +46,25 @@ $lang['No date given or date format is not valid (must be YYYY-MM-DD)'] = 'No da
 $lang['Items'] = 'Items';
 $lang['People'] = 'People';
 
+// [Form.js] - Selectbox values
+$lang['TOPIC'] = 'Topic';
+$lang['STATEMENT'] = 'Statement';
+$lang['TODO'] = 'Todo';
+$lang['DECISION'] = 'Decision';
+$lang['DATE'] = 'Date';
+
 // Grid headers - field names from DatabaseDesigner
 $lang['Date of Meeting'] = 'Date of Meeting';
 $lang['Description'] = 'Description';
 $lang['Start Time'] = 'Start Time';
 $lang['Place'] = 'Place';
 $lang['Status'] = 'Status';
+
+// Grid values - from DatabaseDesigner
+$lang['PLANNED'] = 'planned';
+$lang['CREATED'] = 'empty';
+$lang['PREVIEW'] = 'filled';
+$lang['FINAL']   = 'final'; 
 
 // Field labels from DatabaseDesigner
 $lang['Moderator'] = 'Moderator';

@@ -28,15 +28,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         // description:
         //    Extends inherited method to add the Items tab,
         //    inherited code is executed afterwards
-	
-		// preload participant list, load extra tabs on ready to 
-		// avoid race conditions
-		this.getPeopleList(dojo.hitch(this, function() {
-			this.addItemsTab(data);
-	        this.addMailTab(data);
-		}));
-		
-		this.inherited(arguments);
+
+        // preload participant list, load extra tabs on ready to 
+        // avoid race conditions
+        this.getPeopleList(dojo.hitch(this, function() {
+            this.addItemsTab(data);
+            this.addMailTab(data);
+        }));
+
+        this.inherited(arguments);
     },
     
     addItemsTab:function(data) {
@@ -109,47 +109,47 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Display options for sending Minutes per mail
         
         var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
-            'id':		this.id,
-            'people':	this._peopleList, // should be pre-populated by addModuleTabs(),
+            'id':            this.id,
+            'people':        this._peopleList, // should be pre-populated by addModuleTabs(),
             'lblRecipients': phpr.nls.get('Recipients'),
             'lblAdditional': phpr.nls.get('Additional Recipients'),
-            'lblComment':	 phpr.nls.get('Comment'),
-            'lblOptions':	 phpr.nls.get('Options'),
-            'lblAttachPdf':	 phpr.nls.get('Include PDF attachment'),
-            'lblSendMail':	 phpr.nls.get('Send mail'),
-            'lblPreview':	 phpr.nls.get('Preview')
+            'lblComment':    phpr.nls.get('Comment'),
+            'lblOptions':    phpr.nls.get('Options'),
+            'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
+            'lblSendMail':   phpr.nls.get('Send mail'),
+            'lblPreview':    phpr.nls.get('Preview')
         });
         
         this.addTab(mailForm, 'tabMail', phpr.nls.get('Mail'), 'mailFormTab');
         
         new dijit.Tooltip({
-        	connectId:	['minutesMailFormAdditionalRecipientsTooltip'],
-        	label:		phpr.nls.get('Email addresses of unlisted recipients, comma-separated.')
+            connectId:  ['minutesMailFormAdditionalRecipientsTooltip'],
+            label:      phpr.nls.get('Email addresses of unlisted recipients, comma-separated.')
         });
         
         dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick',
-        			 function() {
-        				 console.log('Sending mail...');
-			        	 dojo.xhrPost({
-			                 url: "index.php/Minutes/index/jsonSendMail/",
-			                 handleAs: "json",
-			                 load: function(r) {
-			        		 	 new phpr.handleResponse('serverFeedback', r);
-			        		     console.debug('Mail sent successfully. Response: ' + r);
-			        		     console.dir(r);
-			        	     },
-			                 error: function(e) {
-			        	    	 new phpr.handleResponse('serverFeedback', e);
-			                     console.debug('Error while sending mail: ' + e);
-			                     console.dir(e);
-			                 },
-			                 form: "mailFormTab"
-	                     });
-                     });
+                    function() {
+                        console.log('Sending mail...');
+                        dojo.xhrPost({
+                            url: "index.php/Minutes/index/jsonSendMail/",
+                            handleAs: "json",
+                            load: function(r) {
+                                new phpr.handleResponse('serverFeedback', r);
+                                console.debug('Mail sent successfully. Response: ' + r);
+                                console.dir(r);
+                            },
+                            error: function(e) {
+                                new phpr.handleResponse('serverFeedback', e);
+                                console.debug('Error while sending mail: ' + e);
+                                console.dir(e);
+                            },
+                            form: "mailFormTab"
+                        });
+                    });
         dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', 
                      function() {
-                         // call preview function here
-        	             console.log('Call preview');
+                        // call preview function here
+                        console.log('Call preview');
                      });
         
         
@@ -560,7 +560,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 break;
             default:
                 dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
-            	dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
+                dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
         }
     }
 });
