@@ -183,7 +183,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     {
         $message = null;
 
-        if (in_array('validateConfigurations', get_class_methods($this->getModel()))) {
+        if (method_exists($this->getModel(), 'validateConfigurations')) {
             $message = call_user_func(array($this->getModel(), 'validateConfigurations'), $params);
         }
 
@@ -199,7 +199,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
      */
     public function setConfigurations($params)
     {
-        if (in_array('setConfigurations', get_class_methods($this->getModel()))) {
+        if (method_exists($this->getModel(), 'setConfigurations')) {
             call_user_func(array($this->getModel(), 'setConfigurations'), $params);
         } else {
             $fields = $this->getModel()->getFieldDefinition();

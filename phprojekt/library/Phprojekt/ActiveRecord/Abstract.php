@@ -366,9 +366,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $setter = 'set' . ucfirst($varname);
 
-        if (in_array($setter, get_class_methods(get_class($this)))) {
+        if (method_exists($this, $setter)) {
             call_user_func(array($this, $setter), $value);
-        } elseif (array_key_exists($varname, get_object_vars($this))) {
+        } elseif (property_exists($this, $varname)) {
             $this->$varname = $value;
         } elseif (array_key_exists($varname, $this->_data)) {
             $this->_data[$varname] = $value;

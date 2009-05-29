@@ -208,7 +208,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $message = null;
 
-        if (in_array('validateSettings', get_class_methods($this->getModel()))) {
+        if (method_exists($this->getModel(), 'validateSettings')) {
             $message = call_user_func(array($this->getModel(), 'validateSettings'), $params);
         }
 
@@ -232,7 +232,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
         $settingNamespace->unsetAll();
 
-        if (in_array('setSettings', get_class_methods($this->getModel()))) {
+        if (method_exists($this->getModel(), 'setSettings')) {
             call_user_func(array($this->getModel(), 'setSettings'), $params, $userId);
         } else {
             $fields = $this->getModel()->getFieldDefinition();

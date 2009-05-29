@@ -399,7 +399,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 break;
             default:
                 $activeRecord = Phprojekt_Loader::getModel($module, $module);
-                if (in_array('getRangeFromModel', get_class_methods($activeRecord))) {
+                if (method_exists($activeRecord, 'getRangeFromModel')) {
                     $options = call_user_func(array($activeRecord, 'getRangeFromModel'), $field);
                 } else {
                     $result  = $activeRecord->fetchAll();

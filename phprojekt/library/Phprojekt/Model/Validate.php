@@ -101,7 +101,7 @@ class Phprojekt_Model_Validate
                 /* Validate an special fieldName */
                 $validator  = 'validate' . ucfirst($varname);
                 if ($validator != 'validateIsRequired') {
-                    if (in_array($validator, get_class_methods($class))) {
+                    if (method_exists($class, $validator)) {
                         $error = call_user_func(array($class, $validator), $value);
                         if (null !== $error) {
                             $valid = false;
