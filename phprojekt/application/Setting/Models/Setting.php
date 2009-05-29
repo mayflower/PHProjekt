@@ -172,9 +172,8 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $userId = (int) Phprojekt_Auth::getUserId();
         }
 
-        $where     = sprintf('module_id = %d AND user_id = %d', (int) $moduleId, (int) $userId);
-        $record    = $this->fetchAll($where);
-        $functions = get_class_methods($this->_object);
+        $where  = sprintf('module_id = %d AND user_id = %d', (int) $moduleId, (int) $userId);
+        $record = $this->fetchAll($where);
 
         $data       = array();
         $data['id'] = 0;
@@ -183,7 +182,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             foreach ($record as $oneSetting) {
                 if ($oneSetting->keyValue == $meta['key']) {
                     $getter = 'get'.ucfirst($oneSetting->keyValue);
-                    if (in_array($getter, $functions)) {
+                    if (method_exists($this->getModel(), $getter)) {
                         $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $oneSetting->value);
                     } else {
                         $data[$meta['key']] = $oneSetting->value;

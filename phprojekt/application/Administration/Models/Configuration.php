@@ -147,9 +147,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getList($moduleId, $metadata)
     {
         $configurations  = array();
-
-        $record    = $this->fetchAll('module_id = ' . (int) $moduleId);
-        $functions = get_class_methods($this->_object);
+        $record          = $this->fetchAll('module_id = ' . (int) $moduleId);
 
         $data       = array();
         $data['id'] = 0;
@@ -158,7 +156,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             foreach ($record as $config) {
                 if ($config->keyValue == $meta['key']) {
                     $getter = 'get'.ucfirst($config->keyValue);
-                    if (in_array($getter, $functions)) {
+                    if (method_exists($this->getModel(), $getter)) {
                         $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $config->value);
                     } else {
                         $data[$meta['key']] = $config->value;
