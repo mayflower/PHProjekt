@@ -316,11 +316,11 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Save the favorties projects for the current user
+     * Save the favorites projects for the current user
      *
      * @return void
      */
-    public function jsonFavortiesSaveAction()
+    public function jsonFavoritesSaveAction()
     {
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('Timecard');

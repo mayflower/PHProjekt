@@ -564,7 +564,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/Timecard/index/jsonFavortiesSave',
+            url:       phpr.webpath + 'index.php/Timecard/index/jsonFavoritesSave',
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
