@@ -60,6 +60,12 @@ $lang["Select users for the group view"] = "Select users for the group view";
 $lang["You have to select at least one user!"] = "You have to select at least one user!";
 $lang["Wrong Recurrence Interval"] = "Wrong Recurrence Interval";
 $lang["Incomplete Recurrence Until field"] = "Incomplete Recurrence Until field";
+$lang["Edit repeating events"] = "Edit repeating events";
+$lang["Edit just this occurrence"] = "Edit just this occurrence";
+$lang["Edit all occurrences"] = "Edit all occurrences";
+$lang["Delete repeating events"] = "Delete repeating events";
+$lang["Delete just this occurrence"] = "Delete just this occurrence";
+$lang["Delete all occurrences"] = "Delete all occurrences";
 
 // Tooltip Help
 $lang["Interval Help"] = "The interval for the option selected in Repeats. <br>E.g.: Repeats Weekly - Interval"

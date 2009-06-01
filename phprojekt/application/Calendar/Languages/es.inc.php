@@ -60,6 +60,12 @@ $lang["Select users for the group view"] = "Elija los usuarios para la vista gru
 $lang["You have to select at least one user!"] = "Debe elegir al menos un usuario!";
 $lang["Wrong Recurrence Interval"] = "Intervalo erróneo de Recurrencia";
 $lang["Incomplete Recurrence Until field"] = "Campo Hasta en Recurrencia incompleto";
+$lang["Edit repeating events"] = "Eventos recurrentes";
+$lang["Edit just this occurrence"] = "Editar este evento";
+$lang["Edit all occurrences"] = "Editar todos los eventos";
+$lang["Delete repeating events"] = "Eventos recurrentes";
+$lang["Delete just this occurrence"] = "Borrar este evento";
+$lang["Delete all occurrences"] = "Borrar todos los eventos";
 
 // Tooltip Help
 $lang["Interval Help"] = "El intervalo para la opción seleccionada en Repeticiones. <br>Ej.: Repeticiones Semanal - "
@@ -98,8 +104,8 @@ $lang["Content Help"]["Evento"] = "<br/>
                     que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> está activo:
                     <ul>
                         <li><b>Propio:</b> se muestran los eventos del día elegido, para el usuario activo.
-                        <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece 
-                            permitiendo al usuario seleccionar un pequeño grupo de gente de modo que la lista de 
+                        <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece
+                            permitiendo al usuario seleccionar un pequeño grupo de gente de modo que la lista de
                             eventos contendrá
                             tantas columnas como usuarios elegidos; se verá una agenda grupal para el día activo.
                     </ul>
