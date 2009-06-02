@@ -560,7 +560,7 @@ dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
         //     description:
         //     Make sure that the date is not only displayed localized, but also
         //     the value which is returned is set to this date format
-        return dojo.date.locale.format(d, {selector:'date', datePattern:'dd-MMM-yyyy'}).toLowerCase();
+        return dojo.date.locale.format(d, {selector:'date', datePattern:'yyyy-MM-dd'}).toLowerCase();
     }
 });
 
