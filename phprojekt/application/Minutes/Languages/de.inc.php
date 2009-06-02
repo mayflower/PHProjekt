@@ -96,4 +96,13 @@ $lang['The mail could not be sent.'] = 'Die E-Mail konnte nicht gesendet werden.
 $lang['The mail was sent successfully.'] = 'Die E-Mail wurde erfolgreich versandt.';
 $lang['Invalid email address detected: %s'] = 'Ungültige E-Mail Adresse: %s';
 
+// PDF formatting strings
+$lang["%1\$s\n%2\$s"] = "%1\$s\n%2\$s";
+$lang["%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s"] = "%1\$s\n%2\$s\nZuständig: %4\$s\nDatum: %3\$s";
+$lang["%1\$s\n%2\$s\nDATE: %3\$s"] = "%1\$s\n%2\$s\nDatum: %3\$s";
+$lang["Undefined topicType"] = "Undefinierter Typ";
+$lang['No.'] = 'Nr.';
+$lang['TYPE'] = 'Typ';
+$lang['ITEM'] = 'Eintrag';
+
 //$lang[''] = '';
