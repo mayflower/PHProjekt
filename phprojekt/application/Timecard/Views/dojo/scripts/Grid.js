@@ -59,7 +59,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
     },
 
     customGridLayout:function(meta) {
-       this.gridLayout[0].styles = "cursor:pointer;"
+       this.gridLayout[0].styles = "cursor:pointer; text-align:center;";
     },
 
     setSaveChangesButton:function(meta) {
