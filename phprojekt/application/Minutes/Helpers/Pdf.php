@@ -132,7 +132,7 @@ final class Minutes_Helpers_Pdf
                     $topicSubCount++;
                     $form = $phpr->translate("%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s");
                     break;
-                case 5:
+                case 5: // DATE
                     $topicSubCount++;
                     $form = $phpr->translate("%1\$s\n%2\$s\nDATE: %3\$s");
                     break;
@@ -157,9 +157,12 @@ final class Minutes_Helpers_Pdf
                         'fontSize' => 12,
                         'rows'     => array_merge(array(
                                         array('isHeader' => true,
-                                            array('text' => 'No.', 'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            array('text' => 'TYPE', 'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            array('text' => "ITEM", 'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            array('text'  => $phpr->translate('No.'),
+                                                  'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            array('text'  => $phpr->translate('TYPE'),
+                                                  'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                            array('text'  => $phpr->translate('ITEM'),
+                                                  'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
                                         )
                                       ), $itemtable)
                         ));
