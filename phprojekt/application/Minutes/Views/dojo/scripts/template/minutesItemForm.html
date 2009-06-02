@@ -70,9 +70,9 @@
             <label>{{lblTopicDate}}</label>
         </td>
         <td>
-            <input id="topicDate" name="topicDate" type="text" dojoType="dijit.form.DateTextBox"
-                   constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{{topicDate}}" 
-                   invalidMessage="{{msgDate}}" />
+            <input type="text" id="topicDate" name="topicDate" dojoType="phpr.DateTextBox"
+                   constraints="{datePattern: 'yyyy-MM-dd', strict: true}" promptMessage="yyyy-MM-dd"
+                   invalidMessage="{{msgDate}}" value="{{topicDate}}" />
         </td>
         <td><!-- Tooltip --></td>
     </tr>
