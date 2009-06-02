@@ -57,13 +57,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     protected $_history = null;
 
     /**
-     * Config for inicializes children objects
-     *
-     * @var array
-     */
-    protected $_config = null;
-
-    /**
      * Full text Search object
      *
      * @var Phprojekt_Search_Words
@@ -111,9 +104,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
         $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
         $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_config    = Phprojekt::getInstance()->getConfig();
         $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $this->_timezone  = (int)Phprojekt_User_User::getSetting("timeZone", $this->_config->timeZone);
+        $this->_timezone  = (int)Phprojekt_User_User::getSetting("timeZone", 'UTC');
     }
 
     /**

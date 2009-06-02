@@ -141,7 +141,7 @@ final class Minutes_Helpers_Pdf
                     break;
             }
             $itemtable[]  = array(
-                                array('text'  => (1 == $item->topicType? sprintf('%d', $topicCount) 
+                                array('text'  => (1 == $item->topicType? sprintf('%d', $topicCount)
                                                     : sprintf('%d.%d', $topicCount, $topicSubCount)),
                                       'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
                                 array('text'  => $phpr->translate($item->information->getTopicType($item->topicType)),
@@ -173,7 +173,7 @@ final class Minutes_Helpers_Pdf
         $pdf->properties['Author']       = $owner[0]['display'];
         $pdf->properties['Producer']     = 'PHProjekt version ' . Phprojekt::getVersion();
         $pdf->properties['CreationDate'] = 'D:' . gmdate('YmdHis') . sprintf("%+02d'00'",
-            (int) Phprojekt_User_User::getSetting("timeZone", $phpr->getConfig()->timeZone));
+            (int) Phprojekt_User_User::getSetting("timeZone", 'UTC'));
         $pdf->properties['Keywords'] = $minutesModel->description;
 
         return $pdf->render();

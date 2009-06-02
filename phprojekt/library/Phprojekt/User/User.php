@@ -286,7 +286,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     static public function getDisplay()
     {
-        $display = (int) Phprojekt::getInstance()->getConfig()->get('userDisplayFormat');
+        $display = (int) Phprojekt::getInstance()->getConfig()->userDisplayFormat;
 
         switch ($display) {
             case 0:
