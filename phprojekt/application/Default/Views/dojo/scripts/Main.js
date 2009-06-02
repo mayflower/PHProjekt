@@ -157,7 +157,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             currentModule: phpr.module
         });
 
-        this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
         this.hideSuggest();
 
         // Get all the tabs
