@@ -215,27 +215,53 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
 
                 if ($this->id != 0) {
-                    // End Hours button pressed - Check if end time overlaps any existing period
+                    // End Hours button pressed, or it is being saved an existing period
+                    // Check if end time overlaps any existing period but the current one
                     $records = $this->fetchAll($this->_getWhereForTimes());
                     if (count($records) > 0) {
-                        $this->_validate->error->addError(array(
-                            'field'   => Phprojekt::getInstance()->translate('Time period'),
-                            'label'   => Phprojekt::getInstance()->translate('Time period'),
-                            'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this '
-                                . 'moment is occupied by an existing period.')));
-                        return false;
+                        $showError = false;
+                        foreach ($records as $record) {
+                            if ($record->id != $this->id) {
+                                $showError = true;
+                                break;
+                            }
+                        }
+                        if ($showError) {
+                            $this->_validate->error->addError(array(
+                                'field'   => Phprojekt::getInstance()->translate('Time period'),
+                                'label'   => Phprojekt::getInstance()->translate('Time period'),
+                                'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
+                                    . ' moment is occupied by an existing period.')));
+                            return false;
+                        }
                     }
                 }
 
                 // Check if new period overlaps any existing one
                 $records = $this->fetchAll($this->_getWhereForTimes());
                 if (count($records) > 0) {
-                    $this->_validate->error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Time period'),
-                        'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps existing '
-                            . 'one')));
-                    return false;
+                    if ($this->id != 0) {
+                        // End Hours button pressed, or it is being saved an existing period
+                        // Check if end time overlaps any existing period but the current one
+                        $showError = false;
+                        foreach ($records as $record) {
+                            if ($record->id != $this->id) {
+                                $showError = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        $showError = true;
+                    }
+
+                    if ($showError) {
+                        $this->_validate->error->addError(array(
+                            'field'   => Phprojekt::getInstance()->translate('Time period'),
+                            'label'   => Phprojekt::getInstance()->translate('Time period'),
+                            'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
+                                . 'existing one')));
+                        return false;
+                    }
                 }
             }
         }
