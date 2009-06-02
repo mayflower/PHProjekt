@@ -60,10 +60,10 @@ $lang["Select users for the group view"] = "Elija los usuarios para la vista gru
 $lang["You have to select at least one user!"] = "Debe elegir al menos un usuario!";
 $lang["Wrong Recurrence Interval"] = "Intervalo erróneo de Recurrencia";
 $lang["Incomplete Recurrence Until field"] = "Campo Hasta en Recurrencia incompleto";
-$lang["Edit repeating events"] = "Eventos recurrentes";
+$lang["Edit repeating events"] = "Editar eventos recurrentes";
 $lang["Edit just this occurrence"] = "Editar este evento";
 $lang["Edit all occurrences"] = "Editar todos los eventos";
-$lang["Delete repeating events"] = "Eventos recurrentes";
+$lang["Delete repeating events"] = "Borrar eventos recurrentes";
 $lang["Delete just this occurrence"] = "Borrar este evento";
 $lang["Delete all occurrences"] = "Borrar todos los eventos";
 
