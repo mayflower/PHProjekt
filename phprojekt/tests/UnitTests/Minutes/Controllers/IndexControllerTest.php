@@ -74,7 +74,8 @@ class Minutes_IndexController_Test extends FrontInit
      */
     public function testJsonSaveActionSaveFirstMinutes()
     {
-        $meetDate = new Zend_Date();
+        $locale = new Zend_Locale('en');
+        $meetDate = new Zend_Date($locale);
         $meetDate->sub(1, Zend_Date::DAY);
         $meetDateString = $meetDate->toString("EEE MMM dd yyyy '00:00:00 GMT'ZZZ");
         
