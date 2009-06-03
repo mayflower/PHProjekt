@@ -56,23 +56,32 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * @var float
      */
     public $freeLineY = 30;
+    
+    /**
+     * Default text width for freetext in point
+     * 
+     * NULL acts as a default indicator.
+     * 
+     * @var float
+     */
+    public $textWidth = NULL;
 
      /**
-     * Height of the line in text
+     * Height of the line in text, in relation to font size
      *
      * @var float
      */
-    public $lineHeight = 1.2;
+    public $lineHeight = 1.4;
 
     /**
-     * Padding in the table
+     * Padding in the table in point
      *
      * @var int
      */
     public $tablePadding = 5;
 
     /**
-     * Pdding down for paragraphs
+     * Padding down for paragraphs in point
      *
      * @var int
      */
@@ -200,13 +209,14 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         if (isset($freetextInfo['lineWidth'])) {
             $currentPage->setLineWidth($freetextInfo['lineWidth']);
         }
-        $width = $this->getWidth() - $startX;
 
         if (isset($freetextInfo['width'])) {
-            $width = $freetextInfo['width'];
+            $this->textWidth = $freetextInfo['width'];
+        } elseif (is_null($this->textWidth)) {
+            $this->textWidth = $this->getWidth() - (2 * $startX);
         }
 
-        $currentPage->drawMultilineText($freetextInfo['lines'], $startX, $startY, $width, $encoding);
+        $currentPage->drawMultilineText($freetextInfo['lines'], $startX, $startY, $this->textWidth, $encoding);
 
         return $currentPage;
     }
@@ -356,13 +366,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         $spaceSize     = array_sum($font->widthsForGlyphs(array(ord(' ')))) / $em * $fontSize;
         foreach ($words as $i => $word) {
             $word  .= ' ';
-            $drawingString = iconv($encoding, 'UTF-16BE', $word);
-            $characters = array();
-            for ($i=0; $i < strlen($drawingString); $i++) {
-                $characters[] = (ord($drawingString[$i++]) << 8) | ord($drawingString[$i]);
-            }
-            $glyphs = $font->glyphNumbersForCharacters($characters);
-            $wordsLength[] = array_sum($font->widthsForGlyphs($glyphs)) / $em * $fontSize;
+            $wordsLength[] = $this->_calculateTextWidth($word, $encoding);
         }
         // Push words onto lines to be drawn.
         $yInc      = $y;
@@ -453,7 +457,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Get text length in px
+     * Get text length in point
      *
      * @param string $str
      * @param string $encoding Encoding of the text string $str, UTF-8 by default
@@ -462,7 +466,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *
      * @todo This function has to be made multibyte encoding aware, too. See getVariableText
      */
-    private function _calculateTextWidth($str, $encoding = 'UTF-8')
+    protected final function _calculateTextWidth($str, $encoding = 'UTF-8')
     {
         $font     = $this->getFont();
         $fontSize = $this->getFontSize();
@@ -470,12 +474,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         // Find out each word's width
         $em     = $font->getUnitsPerEm();
         $characters = array();
-        $drawingString = iconv('', $encoding, $str);
-        foreach (range(0, strlen($drawingString) - 1) as $i) {
+        $drawingString = iconv($encoding, 'UTF-16BE', $str);
+        for ($i=0; $i < strlen($drawingString); $i++) {
             $characters[] = (ord($drawingString[$i++]) << 8) | ord($drawingString[$i]);
         }
         $glyphs = $font->glyphNumbersForCharacters($characters);
-
+        
         return array_sum($font->widthsForGlyphs($glyphs)) / $em * $fontSize;
     }
 

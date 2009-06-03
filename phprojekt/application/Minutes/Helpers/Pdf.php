@@ -61,14 +61,15 @@ final class Minutes_Helpers_Pdf
         $page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
 
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 12);
-        $page->addFreetext(array(
-                           'lines'  => $minutesModel->title,
-                           'startX' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
-                           'startY' => 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
-                           'fontSize' => 20,
-                           'textWidth' => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
-        $page->addFreetext(array(
 
+        $page->addFreetext(array(
+                           'lines'    => $minutesModel->title,
+                           'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                           'startY'   => 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+                           'fontSize' => 20,
+                           'width'    => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
+
+        $page->addFreetext(array(
                            'lines'    => array($minutesModel->description,
                                             $phpr->translate('Date of Meeting') . ': ' . $minutesModel->meetingDate
                                             . ' ' . $phpr->translate('Start time') . ': ' . $minutesModel->startTime
@@ -91,25 +92,25 @@ final class Minutes_Helpers_Pdf
                                           array('text'  => $phpr->translate('Invited'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($invited, array('self', '_concat')),
-                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
                                           array('text'  => $phpr->translate('Attending'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($attending, array('self', '_concat')),
-                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
                                           array('text'  => $phpr->translate('Excused'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($excused, array('self', '_concat')),
-                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                       array(
                                           array('text'  => $phpr->translate('recipients'),
                                                 'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                           array('text'  => array_reduce($recipients, array('self', '_concat')),
-                                                'width' => 12.2 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                         )));
 
@@ -148,7 +149,7 @@ final class Minutes_Helpers_Pdf
                                       'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                 array('text'  => sprintf($form, $item->title, $item->comment, $item->topicDate,
                                                     $item->information->getUserName($item->userId)),
-                                      'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                      'width' => 12.4 * Phprojekt_Pdf_Page::PT_PER_CM),
                             );
         }
 
@@ -162,7 +163,7 @@ final class Minutes_Helpers_Pdf
                                             array('text'  => $phpr->translate('TYPE'),
                                                   'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             array('text'  => $phpr->translate('ITEM'),
-                                                  'width' => 12.6 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                  'width' => 12.4 * Phprojekt_Pdf_Page::PT_PER_CM),
                                         )
                                       ), $itemtable)
                         ));
