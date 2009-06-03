@@ -1,47 +1,41 @@
-<div id="completeContent" dojoType="dijit.layout.ContentPane"
-    style="width: 100%; height: 1000px; overflow: hidden;">
-    <!-- Top Bar menu -->
-    <div dojoType="dijit.layout.ContentPane" id="header" region="top" splitter="false"
-    style="height:55px;">
-        <img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
-        <div id="mainNavigation" class="right align-right">
-        </div>
-    </div>
+<div id="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
+ style="width: 100%; height: 1000px;">
     <!-- Left Content -->
-    <div id="navigation-container"
-    style="width:15%; height: 100%">
-        <div dojoType="dijit.layout.ContentPane">
-            <div id="subheader" class="block">
-                <div id="navigation-container-titel">
-                </div>
-            </div>
-            <!-- Tree menu -->
-            <div id="tree-navigation" dojoType="dijit.layout.ContentPane">
-                <div dojoType="dijit.layout.ContentPane" id="treeBox">
+    <div id="navigation-container" dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180" maxSize="300"
+    style="width: 15%; overflow: hidden;">
+        <div region="center" dojoType="dijit.layout.ContentPane">
+            <div id="tree-navigation">
+                <div dojoType="dijit.layout.ContentPane" id="treeBox"
+                 style="height: 100%;">
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Top Bar menu -->
+    <div dojoType="dijit.layout.ContentPane" region="top" id="header"
+    style="height: 55px; overflow: hidden;">
+        <img class="left" src="<?php echo $this->webpath; ?>img/logo.png" alt="PHProjekt 6" />
+        <div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
+        </div>
+    </div>
+
     <!-- Center Content -->
-    <div dojoType="dijit.layout.ContentPane"
-    style="position: absolute; top: 55px; left: 16%; width: 100%;">
-        <div dojoType="dijit.layout.ContentPane" design="sidebar"
-        style="width: 84%; height: 100%;">
+    <div id="completeCenterContent" dojoType="dijit.layout.ContentPane" region="center"
+    style="height: 1000px;">
+        <div dojoType="dijit.layout.BorderContainer" design="sidebar"
+        style="height: 100%;">
             <!-- Second Top Bar -->
-            <div dojoType="dijit.layout.ContentPane" region="top" class="block"
-            style="height: 7%;" splitter="false">
-                <!-- Submodule navigation -->
-                <div class="column left span-17 append-1 align-left" id="subModuleNavigation">
+            <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
+            style="height: 100%;">
+                <div class="column">
+                    <img src="<?php echo $this->webpath; ?>img/subheaderborder.png" alt="" />
                 </div>
-                <!-- Add / Save Buttons -->
-                <div id="buttonRow" class="align-right append-0">
+                <div dojoType="dijit.layout.ContentPane" region="top" class="block"
+                style="height: 7%;" splitter="false">
                 </div>
-                <!-- spaces -->
-                <hr class="space"/>
-                <hr class="space"/>
-                <hr class="space"/>
                 <!-- Exception Form -->
-                <div id="serverFeedback" class="prepend-24">
+                <div id="serverFeedback" class="prepend-1 append-1">
                 <?php
                 if ($this->message) {
                     echo '<div class="error">'.$this->message.'</div>';
@@ -51,9 +45,8 @@
                 }
                 ?>
                 </div>
-            </div>
-            <!-- Main Content -->
-            <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
+                <!-- Main Content -->
+                <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
                 <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
                     <input dojoType="dijit.form.TextBox" id="hash" type="hidden" name="hash" value=""" />
                     <table width="100%" align="center" class="form">
@@ -81,6 +74,7 @@
                         </tr>
                     </table>
                 </form>
+                </div>
             </div>
         </div>
     </div>
