@@ -67,7 +67,7 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('tag', 'test');
         $this->request->setParam('limit', 2);
         $response = $this->getResponse();
-        $this->assertContains('{"id":"1","moduleId":"1","moduleName":"Project",'
-            . '"moduleLabel":"Project","firstDisplay":"test","secondDisplay":null,"projectId":"1"}', $response);
+        $this->assertContains('{"id":1,"moduleId":1,"moduleName":"Project",'
+            . '"moduleLabel":"Project","firstDisplay":"test","secondDisplay":null,"projectId":1}', $response);
     }
 }

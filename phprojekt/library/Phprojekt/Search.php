@@ -175,31 +175,8 @@ class Phprojekt_Search
     {
         $rights          = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $result          = $this->_words->searchWords($words, $count, $offset);
-        $foundResults    = array();
         $userId          = Phprojekt_Auth::getUserId();
-        $tmpFoundResults = array();
-
-        foreach ($result as $wordData) {
-            $tmpResult = $this->_wordModule->searchModuleByWordId($wordData['id'], $count, $offset);
-            // Prevent the same moduleId-itemId twise
-            if (empty($tmpFoundResults)) {
-                $tmpFoundResults = $tmpResult;
-            } else {
-                foreach ($tmpResult as $data) {
-                    $found = false;
-                    foreach ($tmpFoundResults as $values) {
-                        if (($data['module_id'] == $values['module_id']) &&
-                            ($data['item_id']   == $values['item_id'])) {
-                            $found = true;
-                            break;
-                        }
-                    }
-                    if (!$found) {
-                        $tmpFoundResults[] = $data;
-                    }
-                }
-            }
-        }
+        $tmpFoundResults = $this->_wordModule->searchModuleByWordId($result, $count, $offset);
 
         // Limit the number of ocurrences per module to $count
         if ($count > 0) {
@@ -222,13 +199,14 @@ class Phprojekt_Search
 
         // Convert result to array and add the display data
         // only fetch records with read access
+        $dataForDisplay = array();
         foreach ($limitedFoundResults as $moduleData) {
             if ($rights->getItemRight($moduleData['module_id'], $moduleData['item_id'], $userId) > 0) {
-                $foundResults[] = $this->_display->getDisplay($moduleData['module_id'], $moduleData['item_id']);
+                $dataForDisplay[$moduleData['module_id']][] = $moduleData['item_id'];
             }
         }
 
-        return $foundResults;
+        return $this->_display->getDisplay($dataForDisplay);
     }
 
     /**

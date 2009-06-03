@@ -60,37 +60,53 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     /**
      * Return the display data for a moduleId-ItemId pair
      *
-     * @param integer $moduleId The module Id for search
-     * @param integer $itemId   The item Id for search
+     * @param array $data Array with the module data for show (moduleId => itemId)
      *
      * @return array
      */
-    public function getDisplay($moduleId, $itemId)
+    public function getDisplay($data)
     {
-        $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
+        $results = array();
 
-        $tmpResult   = $this->fetchAll($where)->toArray();
-        $moduleLabel = Phprojekt::getInstance()->translate(Phprojekt_Module::getModuleLabel($moduleId));
+        foreach ($data as $moduleId => $content) {
+            $ids    = array();
+            foreach ($content as $id) {
+                $ids[] = (int) $id;
+            }
 
-        if (isset($tmpResult[0])) {
-            $result = array('id'            => $itemId,
-                            'moduleId'      => $moduleId,
-                            'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                            'moduleLabel'   => $moduleLabel,
-                            'firstDisplay'  => $tmpResult[0]['first_display'],
-                            'secondDisplay' => $tmpResult[0]['second_display'],
-                            'projectId'     => $tmpResult[0]['project_id']);
-        } else {
-            $result = array('id'            => $itemId,
-                            'moduleId'      => $moduleId,
-                            'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
-                            'moduleLabel'   => $moduleLabel,
-                            'firstDisplay'  => '',
-                            'secondDisplay' => '',
-                            'projectId'     => 1);
+            if (!empty($ids)) {
+                $where = sprintf('module_id = %d AND item_id IN (%s)', (int) $moduleId, implode(', ', $ids));
+
+                $tmpResult   = $this->fetchAll($where)->toArray();
+                $moduleLabel = Phprojekt::getInstance()->translate(Phprojekt_Module::getModuleLabel($moduleId));
+
+                foreach ($tmpResult as $result) {
+                    $index           = $moduleId . '-' . $result['item_id'];
+                    $results[$index] = array('id'            => (int) $result['item_id'],
+                                             'moduleId'      => (int) $moduleId,
+                                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
+                                             'moduleLabel'   => $moduleLabel,
+                                             'firstDisplay'  => $result['first_display'],
+                                             'secondDisplay' => $result['second_display'],
+                                             'projectId'     => (int) $result['project_id']);
+                }
+
+                foreach ($ids as $id) {
+                    $index = $moduleId . '-' . $id;
+                    if (!isset($results[$index])) {
+                        $results[$index] = array('id'            => (int) $id,
+                                                 'moduleId'      => (int) $moduleId,
+                                                 'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
+                                                 'moduleLabel'   => $moduleLabel,
+                                                 'firstDisplay'  => '',
+                                                 'secondDisplay' => '',
+                                                 'projectId'     => 1);
+                    }
+                }
+            }
         }
 
-        return $result;
+        return array_values($results);
     }
 
     /**

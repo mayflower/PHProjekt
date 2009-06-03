@@ -100,18 +100,18 @@ class Phprojekt_TagsTest extends PHPUnit_Framework_TestCase
     {
         $tag    = Phprojekt_Tags::getInstance();
         $result = array(
-                        '0' => array('id'            => 2,
-                                     'moduleId'      => 1,
-                                     'moduleName'    => 'Project',
-                                     'moduleLabel'   => 'Project',
-                                     'firstDisplay'  => '',
-                                     'secondDisplay' => '',
-                                     'projectId'     => 1),
-                        '1' => array('id'            => 1,
+                        '0' => array('id'            => 1,
                                      'moduleId'      => 1,
                                      'moduleName'    => 'Project',
                                      'moduleLabel'   => 'Project',
                                      'firstDisplay'  => 'test',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1),
+                        '1' => array('id'            => 2,
+                                     'moduleId'      => 1,
+                                     'moduleName'    => 'Project',
+                                     'moduleLabel'   => 'Project',
+                                     'firstDisplay'  => '',
                                      'secondDisplay' => '',
                                      'projectId'     => 1),
                         '2' => array('id'            => 1,
@@ -125,18 +125,18 @@ class Phprojekt_TagsTest extends PHPUnit_Framework_TestCase
 
         // limit
         $result = array(
-                        '0' => array('id'            => 2,
-                                     'moduleId'      => 1,
-                                     'moduleName'    => 'Project',
-                                     'moduleLabel'   => 'Project',
-                                     'firstDisplay'  => '',
-                                     'secondDisplay' => '',
-                                     'projectId'     => 1),
-                        '1' => array('id'            => 1,
+                        '0' => array('id'            => 1,
                                      'moduleId'      => 1,
                                      'moduleName'    => 'Project',
                                      'moduleLabel'   => 'Project',
                                      'firstDisplay'  => 'test',
+                                     'secondDisplay' => '',
+                                     'projectId'     => 1),
+                        '1' => array('id'            => 2,
+                                     'moduleId'      => 1,
+                                     'moduleName'    => 'Project',
+                                     'moduleLabel'   => 'Project',
+                                     'firstDisplay'  => '',
                                      'secondDisplay' => '',
                                      'projectId'     => 1));
         $this->assertEquals($tag->getModulesByTag('this', 2), $result);

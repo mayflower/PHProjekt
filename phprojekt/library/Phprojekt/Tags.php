@@ -211,12 +211,17 @@ class Phprojekt_Tags
                     $foundResults = array_slice($foundResults, 0, $limit);
                 }
 
-                $display = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+                // Convert result to array and add the display data
+                // only fetch records with read access
+                $display        = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+                $dataForDisplay = array();
                 foreach ($foundResults as $result) {
                     if ($rights->getItemRight($result['moduleId'], $result['itemId'], $userId) > 0) {
-                        $results[] = $display->getDisplay($result['moduleId'], $result['itemId']);
+                        $dataForDisplay[$result['moduleId']][] = $result['itemId'];
                     }
                 }
+
+                $results = $display->getDisplay($dataForDisplay);
             }
         }
 

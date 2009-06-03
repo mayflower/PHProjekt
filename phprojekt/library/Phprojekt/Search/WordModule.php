@@ -101,15 +101,32 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     /**
      * Get all the modules-item with the wordId
      *
-     * @param integer $wordId  Word Id
-     * @param integer $count   Limit query
-     * @param integer $offset  Query offset
+     * @param array   $words  Array with words Ids
+     * @param integer $count  Limit query
+     * @param integer $offset Query offset
      *
      * @return array
      */
-    public function searchModuleByWordId($wordId, $count = null, $offset = null)
+    public function searchModuleByWordId($words, $count = null, $offset = null)
     {
-        return $this->fetchAll('word_id = '. (int) $wordId, 'item_id DESC', $count, $offset)->toArray();
+        $ids    = array();
+        $result = array();
+
+        foreach ($words as $content) {
+            $ids[] = (int) $content['id'];
+        }
+
+        if (!empty($ids)) {
+            $where     = 'word_id IN (' . implode(', ', $ids) . ')';
+            $order     = array('module_id ASC', 'item_id DESC');
+            $tmpResult = $this->fetchAll($where, $order, $count, $offset)->toArray();
+
+            foreach ($tmpResult as $data) {
+                $result[$data['module_id'] . '-' . $data['item_id']] = $data;
+            }
+        }
+
+        return $result;
     }
 
     /**
