@@ -56,9 +56,10 @@ final class Minutes_Helpers_Pdf
      */
     public static function getPdf(Phprojekt_Model_Interface $minutesModel)
     {
-        $phpr = Phprojekt::getInstance();
-        $pdf  = new Zend_Pdf();
-        $page = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
+        $phpr  = Phprojekt::getInstance();
+        $pdf   = new Zend_Pdf();
+        $page  = new Phprojekt_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
+        $pages = array($page);
 
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 12);
 
@@ -84,7 +85,7 @@ final class Minutes_Helpers_Pdf
         $excused    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsExcused);
         $recipients = Minutes_Helpers_Userlist::expandIdList($minutesModel->recipients);
 
-        $page->addTable(array(
+        $pages += $page->addTable(array(
                         'startX'=> 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                         'fontSize' => 12,
                         'rows' => array(
@@ -113,6 +114,7 @@ final class Minutes_Helpers_Pdf
                                                 'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                             ),
                                         )));
+        $page = end($pages);
 
         $itemtable     = array();
         $topicCount    = 0;
@@ -153,7 +155,7 @@ final class Minutes_Helpers_Pdf
                             );
         }
 
-        $page->addTable(array(
+        $pages += $page->addTable(array(
                         'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                         'fontSize' => 12,
                         'rows'     => array_merge(array(
@@ -167,7 +169,9 @@ final class Minutes_Helpers_Pdf
                                         )
                                       ), $itemtable)
                         ));
-        $pdf->pages[] = $page;
+        $page = end($pages);
+        
+        $pdf->pages = $pages;
 
         $pdf->properties['Title']        = $minutesModel->title;
         $owner                           = Minutes_Helpers_Userlist::expandIdList($minutesModel->ownerId);
