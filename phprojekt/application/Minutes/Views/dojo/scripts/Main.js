@@ -27,7 +27,6 @@ dojo.declare("phpr.Minutes.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Minutes.Grid;
         this.formWidget = phpr.Minutes.Form;
         this.treeWidget = phpr.Minutes.Tree;
-        console.debug('In Minutes constructor');
     },
 
     reload:function() {

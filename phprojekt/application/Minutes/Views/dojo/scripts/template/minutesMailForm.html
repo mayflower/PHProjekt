@@ -12,12 +12,12 @@
         </td>
         <td>
             <select dojoType="dijit.form.MultiSelect" id="minutesMailFormRecipients" name="recipients[]" size="4">
-			  {% for recipient in people %}
+            {% for recipient in people %}
                 <option value="{{recipient.id}}">
                   {{recipient.display}}
                 </option>
               {% endfor %}
-			</select>
+            </select>
         </td>
         <td><!-- Tooltip --></td>
     </tr>

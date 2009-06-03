@@ -62,7 +62,10 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         foreach ($users as $node) {
             $this->_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
         }
-
+        
+        foreach ($this->_topicTypeList as $key => $value) {
+            $this->_topicTypeList[$key] = Phprojekt::getInstance()->translate($value);
+        }
     }
     
     public function getTopicType($topicType)

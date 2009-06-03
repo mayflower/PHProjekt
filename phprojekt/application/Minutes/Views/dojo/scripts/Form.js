@@ -166,7 +166,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
             if (child.id == 'tabItems') {
                 //dojo.byId('minutesDetailsRight').style.display = 'inline';
-                this.loadSubForm();
                 this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
                 phpr.DataStore.addStore({"url": this.url});
                 phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
@@ -185,6 +184,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Internal method for creating and configuring a
         //    grid object for MinutesItems. Row configuration
         //    is defined here.
+        this.loadSubForm();
         var me = this; // variable scope workaround, needed for formatter
         var rowSelectHandler = dojo.hitch(this, function(e) {
             var data = e.grid.getItem(e.rowIndex);
@@ -225,7 +225,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          name:     phpr.nls.get('Date'),
                          field:    'topicDate',
                          styles:   "text-align: center;",
-                         width:    '15%'
+                         width:    '15%',
+                         formatter:function(value) {
+                             if (value == "0000-00-00") {
+                                 return '';
+                             }
+                             return value;
+                         }
                      },
                      {
                          name:     phpr.nls.get('Who'),
@@ -240,7 +246,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                                  }
                              }
                              return '';
-                       	 }
+                         }
                      },
                  ],[
                      {
@@ -413,11 +419,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         // summary:
         //    Returns a list of item types
         // description:
-        //    Will return a list of valid item types for MinutesItems. Uses cached
-        //    property if available. May do server request in the future.
+        //    Will return a list of valid item types for MinutesItems from metadata. 
+        //    Uses cached property if available.
         if (this._itemTypes.length == 0) {
-            // @todo request these from server, needs thinking about asynchronous behaviour
-            this._itemTypes = [{id:1,name:'TOPIC'},{id:2,name:'STATEMENT'},{id:3,name:'TODO'},{id:4,name:'DECISION'},{id:5,name:'DATE'}]; 
+            meta = dojo.clone(phpr.DataStore.getMetaData({url: this.url}));
+            for (i=0; i < meta.length; i++) {
+                if (meta[i]['key'] == 'topicType') {
+                    this._itemTypes = meta[i]['range'];
+                }
+            }
         }
         return this._itemTypes;
     },
