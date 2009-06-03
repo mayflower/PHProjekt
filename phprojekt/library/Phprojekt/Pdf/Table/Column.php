@@ -80,7 +80,7 @@ class Phprojekt_Pdf_Table_Column
      */
     public function setText($text, $encoding = 'UTF-8')
     {
-        $this->_text = $text;
+        $this->_text     = $text;
         $this->_encoding = $encoding;
 
         return $this;
@@ -146,12 +146,8 @@ class Phprojekt_Pdf_Table_Column
     public function render($page, $x, $y)
     {
         $fontSize = $page->getFontSize();
-        $size     = $page->drawVariableText($this->_text,
-                                            $x,
-                                            $page->getHeight() - $y + $fontSize,
-                                            $this->_width,
-                                            $this->_align,
-                                            $this->_encoding);
+        $size     = $page->drawVariableText($this->_text, $x, $page->getHeight() - $y + $fontSize, $this->_width,
+            $this->_align, $this->_encoding);
         $this->_height = $size['height'] + $page->tablePadding;
         $this->_width  = $this->_width;
     }

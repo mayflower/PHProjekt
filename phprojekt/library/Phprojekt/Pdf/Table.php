@@ -87,9 +87,9 @@ class Phprojekt_Pdf_Table
     /**
      * Contructor
      *
-     * @param Phprojekt_Pdf_Page    $page
-     * @param int                   $x    Position in the page
-     * @param int                   $y    Position in the page
+     * @param Phprojekt_Pdf_Page $page
+     * @param int                $x    Position in the page
+     * @param int                $y    Position in the page
      */
     function __construct($page, $x, $y)
     {
