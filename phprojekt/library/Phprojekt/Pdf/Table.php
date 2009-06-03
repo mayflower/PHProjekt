@@ -132,7 +132,7 @@ class Phprojekt_Pdf_Table
             $y -= $row->getHeight();
         }
         $positionOfTheLastRow  = $this->page->getHeight() - $y;
-        $rowHeight             = $this->page->getFontSize() * Phprojekt_Pdf_Page::DEFAULT_LINE_HEIGHT;
+        $rowHeight             = $this->page->getFontSize() * $this->page->lineHeight;
         $this->page->freeLineY = $positionOfTheLastRow + $rowHeight;
 
         return $this->_pages;

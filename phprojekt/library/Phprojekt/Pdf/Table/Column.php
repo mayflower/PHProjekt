@@ -64,13 +64,6 @@ class Phprojekt_Pdf_Table_Column
     protected $_encoding = 'UTF-8';
 
     /**
-     * Padding, dafault value is 5
-     *
-     * @var int
-     */
-    protected $_padding = 5;
-
-    /**
      * Align for the text in cell
      *
      * @var string
@@ -153,10 +146,14 @@ class Phprojekt_Pdf_Table_Column
     public function render($page, $x, $y)
     {
         $fontSize = $page->getFontSize();
-        $size     = $page->drawVariableText($this->_text, $x + $this->_padding, $page->getHeight() - $y + $fontSize,
-            $this->_width - $this->_padding, $this->_align, $this->_encoding);
-        $this->_height = $size['height'] + $this->_padding;
-        $this->_width  = $this->_width + $this->_padding;
+        $size     = $page->drawVariableText($this->_text,
+                                            $x,
+                                            $page->getHeight() - $y + $fontSize,
+                                            $this->_width,
+                                            $this->_align,
+                                            $this->_encoding);
+        $this->_height = $size['height'] + $page->tablePadding;
+        $this->_width  = $this->_width;
     }
 
     /**
@@ -172,10 +169,10 @@ class Phprojekt_Pdf_Table_Column
     public function testRender($page, $x, $y)
     {
         $fontSize = $page->getFontSize();
-        $size     = $page->getVariableText($this->_text, $x + $this->_padding, $page->getHeight() - $y + $fontSize,
-            $this->_width - $this->_padding, $this->_encoding);
-        $this->_height = $size['height'] + $this->_padding;
-        $this->_width  = $this->_width + $this->_padding;
+        $size     = $page->getVariableText($this->_text, $x, $page->getHeight() - $y + $fontSize,
+            $this->_width, $this->_encoding);
+        $this->_height = $size['height'] + $page->tablePadding;
+        $this->_width  = $this->_width;
     }
 
     /**

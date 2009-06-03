@@ -137,7 +137,7 @@ class Phprojekt_Pdf_Table_Row
     public function renderBorder($page, $x, $y)
     {
         foreach ($this->_cols as $col) {
-            $col->renderBorder($page, $x, $y, $this->_height, $this->_isHeader);
+            $col->renderBorder($page, $x, $y, $this->testRender($page, $x, $y), $this->_isHeader);
             $x += $col->getWidth();
         }
     }
