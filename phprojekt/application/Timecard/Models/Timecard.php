@@ -215,7 +215,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
 
                 if ($this->id != 0) {
-                    // End Hours button pressed, or it is being saved an existing period
+                    // Stop Working Times button pressed, or it is being saved an existing period
                     // Check if end time overlaps any existing period but the current one
                     $records = $this->fetchAll($this->_getWhereForTimes());
                     if (count($records) > 0) {
@@ -241,7 +241,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $records = $this->fetchAll($this->_getWhereForTimes());
                 if (count($records) > 0) {
                     if ($this->id != 0) {
-                        // End Hours button pressed, or it is being saved an existing period
+                        // Stop Working Times button pressed, or it is being saved an existing period
                         // Check if end time overlaps any existing period but the current one
                         $showError = false;
                         foreach ($records as $record) {
@@ -270,7 +270,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
-     * Make the where for check date and times
+     * Make the where to check date and times
      *
      * @return string
      */
