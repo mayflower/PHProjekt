@@ -67,9 +67,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     public function getDisplay($moduleId, $itemId)
     {
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+        $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
 
         $tmpResult   = $this->fetchAll($where)->toArray();
         $moduleLabel = Phprojekt::getInstance()->translate(Phprojekt_Module::getModuleLabel($moduleId));
@@ -137,9 +135,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     public function deleteDisplay($moduleId, $itemId)
     {
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+        $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
         $this->delete($where);
     }
 
@@ -198,9 +194,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
         $data['second_display'] = $secondDisplay;
         $data['project_id']     = (int) $projectId;
 
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+        $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
 
         $this->update($data, $where);
     }

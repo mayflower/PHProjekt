@@ -151,7 +151,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $select   = $database->select();
 
         $select->from($table, 'path')
-               ->where($database->quoteInto('id = ?', (int) $this->_requestedId, 'INTEGER'))
+               ->where(sprintf('id = %d', (int) $this->_requestedId))
                ->limit(1);
 
         if (null !== $filter) {
@@ -164,8 +164,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             throw new Phprojekt_Tree_Node_Exception('Requested node not found');
         }
 
-        $where = sprintf("%s OR %s", $database->quoteInto("path LIKE ?", $rootPath . '%'),
-                                     $database->quoteInto("id = ?", (int) $this->id, 'INTEGER'));
+        $where = sprintf("%s OR id = %d", $database->quoteInto("path LIKE ?", $rootPath . '%'), (int) $this->id);
 
         $rows = $this->_activeRecord->fetchAll($where, 'path');
         $this->_index = array();

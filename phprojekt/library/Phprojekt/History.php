@@ -176,8 +176,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $object->getInformation()->getFieldDefinition($order);
 
-        $where  = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-        $where .= $this->getAdapter()->quoteInto(' AND item_id = ?', (int) $itemId, 'INTEGER');
+        $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
 
         if (!empty($startDate)) {
             $where .= $this->getAdapter()->quoteInto(' AND datetime >= ?', $startDate);
@@ -186,7 +185,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             $where .= $this->getAdapter()->quoteInto(' AND datetime <= ?', $endDate);
         }
         if (!empty($userId)) {
-            $where .= $this->getAdapter()->quoteInto(' AND user_id = ?', (int) $userId, 'INTEGER');
+            $where .= sprintf(' AND user_id = %d', (int) $userId);
         }
 
         $result = array();
@@ -239,8 +238,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $result   = array();
         $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
-        $where    = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-        $where   .= $this->getAdapter()->quoteInto(' AND item_id = ?', (int) $itemId, 'INTEGER');
+        $where    = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
 
         $datetime = null;
         $action   = null;

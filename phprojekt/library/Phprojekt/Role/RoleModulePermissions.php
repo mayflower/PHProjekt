@@ -92,7 +92,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
      */
     public function deleteModuleRelation($moduleId)
     {
-        $where = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
+        $where = sprintf('module_id = %d', (int) $moduleId);
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }

@@ -71,10 +71,8 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function saveTags($tagId)
     {
-        $id      = 0;
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('user_id = ?', (int) $this->_user, 'INTEGER');
-        $where[] = $this->getAdapter()->quoteInto('tag_id  = ?', (int) $tagId, 'INTEGER');
+        $id    = 0;
+        $where = sprintf('user_id = %d AND tag_id = %d', (int) $this->_user, (int) $tagId);
 
         $record = $this->fetchAll($where);
         if ($record->count() == 0) {
@@ -107,9 +105,9 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
             $userId = $this->_user;
         }
 
-        $where = $this->getAdapter()->quoteInto('user_id = ?', (int) $userId, 'INTEGER');
+        $where = sprintf('user_id = %d', (int) $userId);
         if ($tagId > 0) {
-            $where .= $this->getAdapter()->quoteInto(' AND tag_id = ?', (int) $tagId, 'INTEGER');
+            $where .= sprintf(' AND tag_id = %d', (int) $tagId);
         }
         $select = $this->select();
         $select->from($this->_name, array('id', 'tag_id'))
@@ -162,8 +160,7 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function deleteUserTags($userId)
     {
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('user_id = ?', (int) $userId, 'INTEGER');
+        $where = sprintf('user_id = %d', (int) $userId);
         $this->delete($where);
     }
 }

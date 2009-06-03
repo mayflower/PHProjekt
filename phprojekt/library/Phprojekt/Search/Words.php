@@ -124,7 +124,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
             $result = $this->fetchAll($where);
             foreach ($result as $row) {
                 $data  = array('count' => $row->count + 1);
-                $where = $this->getAdapter()->quoteInto('id = ?', (int) $row->id, 'INTEGER');
+                $where = sprintf('id = %d', (int) $row->id);
                 $this->update($data, $where);
                 $foundWords[] = $row->word;
                 $ids[]        = $row->id;

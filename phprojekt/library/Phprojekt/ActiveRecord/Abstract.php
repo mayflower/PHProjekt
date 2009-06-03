@@ -435,18 +435,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $select = $adapter->select()->from(array('rel' => $tableName));
 
-        $select->joinInner(array('my' => $myTable),
-            sprintf("%s = %s",
-            $adapter->quoteIdentifier("my.id"),
+        $select->joinInner(array('my' => $myTable), sprintf("%s = %s", $adapter->quoteIdentifier("my.id"),
             $adapter->quoteIdentifier("rel." . self::convertVarToSql($myKeyName))));
 
         $select->joinInner(array('foreign' => $foreignTable),
-            sprintf("%s = %s",
-            $adapter->quoteIdentifier("foreign.id"),
+            sprintf("%s = %s", $adapter->quoteIdentifier("foreign.id"),
             $adapter->quoteIdentifier("rel." . self::convertVarToSql($foreignKeyName))));
         if (isset($classId)) {
-            $select->where(sprintf("%s = ?",
-                $adapter->quoteIdentifier("rel." . self::convertVarToSql($myKeyName))), $classId);
+            $select->where(sprintf("%s = %d", $adapter->quoteIdentifier("rel." . self::convertVarToSql($myKeyName)),
+                (int) $classId));
         }
         /*
         * somewhat special, we might have a better solution here once.
@@ -600,10 +597,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $im        = new $className($this->getAdapter());
         $tableName = $this->_translateIntoRelationTableName($this, $im);
 
-        $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)",
-                         $this->getAdapter()->quoteIdentifier($tableName),
-                         $this->getAdapter()->quoteIdentifier($myKeyName),
-                         $this->getAdapter()->quoteIdentifier($foreignKeyName));
+        $query = sprintf("INSERT INTO %s (%s, %s) VALUES (?, ?)", $this->getAdapter()->quoteIdentifier($tableName),
+            $this->getAdapter()->quoteIdentifier($myKeyName), $this->getAdapter()->quoteIdentifier($foreignKeyName));
 
         if (null !== $this->_log) {
             $this->_log->debug($query);
@@ -631,10 +626,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $tableName  = $im->getTableName();
             $columnName = $this->_translateKeyFormat(get_class($this));
 
-            $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-                $this->getAdapter()->quoteIdentifier($tableName),
-                $this->getAdapter()->quoteIdentifier($columnName),
-                $this->getAdapter()->quoteIdentifier($columnName));
+            $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?", $this->getAdapter()->quoteIdentifier($tableName),
+                $this->getAdapter()->quoteIdentifier($columnName), $this->getAdapter()->quoteIdentifier($columnName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -677,10 +670,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $myKeyName = $this->_translateKeyFormat(get_class($this));
             $tableName = $this->_translateIntoRelationTableName($this, $im);
 
-            $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
-                $this->getAdapter()->quoteIdentifier($tableName),
-                $this->getAdapter()->quoteIdentifier($myKeyName),
-                $this->getAdapter()->quoteIdentifier($myKeyName));
+            $query = sprintf("UPDATE %s SET %s = ? WHERE %s = ?", $this->getAdapter()->quoteIdentifier($tableName),
+                $this->getAdapter()->quoteIdentifier($myKeyName), $this->getAdapter()->quoteIdentifier($myKeyName));
 
             if (null !== $this->_log) {
                 $this->_log->debug($query);
@@ -769,13 +760,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _translateKeyFormat($className)
     {
-        $im        = new $className($this->getAdapter());
-        $tableName = $im->getTableName();
-        $keyName   = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
-        $keyName{0}= strtolower($keyName{0});
+        $im         = new $className($this->getAdapter());
+        $tableName  = $im->getTableName();
+        $keyName    = str_replace(':tableName', $tableName, self::FOREIGN_KEY_FORMAT);
+        $keyName{0} = strtolower($keyName{0});
         if (null !== $this->_log) {
-            $this->_log->debug(sprintf("%s translated to %s",
-            $className, $keyName));
+            $this->_log->debug(sprintf("%s translated to %s", $className, $keyName));
         }
 
         unset ($im);
@@ -858,7 +848,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         * Otherwise we create the entry.
         */
         if (null !== $this->_storedId) {
-            $result = ($this->update($data, $this->getAdapter()->quoteInto('id = ?', $this->_storedId, 'INTEGER')) > 0);
+            $result = ($this->update($data, sprintf('id = %d', (int) $this->_storedId)) > 0);
 
             if ($this->id !== $this->_storedId && count($this->hasMany) > 0) {
                 $result = $this->_updateHasMany($this->_storedId, $this->id) && $result;
@@ -906,9 +896,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                     $im         = new $className($this->getAdapter());
                     $tableName  = $im->getTableName();
                     $columnName = $this->_translateKeyFormat(get_class($this));
-                    $this->getAdapter()->delete($tableName,
-                    $this->getAdapter()->quoteInto(sprintf('%s = ?', $columnName),
-                    $this->id));
+                    $this->getAdapter()->delete($tableName, sprintf('%s = %d',
+                        $this->getAdapter()->quoteIdentifier($columnName), (int) $this->id));
                 }
             }
 
@@ -925,13 +914,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                     $keyName   = $this->_translateKeyFormat(get_class($this));
                     $im        = new $className($this->getAdapter());
                     $tableName = $this->_translateIntoRelationTableName($this, $im);
-                    $this->getAdapter()->delete($tableName,
-                    $this->getAdapter()->quoteInto(sprintf('%s = ?', $keyName),
-                    $this->id));
+                    $this->getAdapter()->delete($tableName, sprintf('%s = %d',
+                        $this->getAdapter()->quoteIdentifier($keyName), (int) $this->id));
                 }
             }
 
-            parent::delete($this->getAdapter()->quoteInto('id = ?', $this->_data['id'], 'INTEGER'));
+            parent::delete(sprintf('id = %d', (int) $this->_data['id']));
 
             $this->_initDataArray();
             $this->_relations = array();
@@ -957,8 +945,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
-            $sqlString = sprintf('%s = ?', $this->_translateKeyFormat($this->_relations['hasMany']['classname']));
-            $wheres[]  = $this->getAdapter()->quoteInto($sqlString, $this->_relations['hasMany']['id']);
+            $keyName  = $this->_translateKeyFormat($this->_relations['hasMany']['classname']);
+            $wheres[] = sprintf('%s = %d', $this->getAdapter()->quoteIdentifier($keyName),
+                (int) $this->_relations['hasMany']['id']);
         }
         if (null !== $where) {
             $wheres[] = $where;

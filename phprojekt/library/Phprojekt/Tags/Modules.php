@@ -90,7 +90,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
         $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
 
-        $where   = $this->getAdapter()->quoteInto('tag_user_id = ?', (int) $tagUserId, 'INTEGER');
+        $where   = sprintf('tag_user_id = %d', (int) $tagUserId);
         $modules = $this->fetchAll($where, 'item_id DESC');
 
         foreach ($modules as $moduleData) {
@@ -113,11 +113,9 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      */
     public function getRelationIdByModule($moduleId, $itemId)
     {
-        $where        = array();
         $foundResults = array();
 
-        $where[] = $this->getAdapter()->quoteInto('module_id  = ?', (int) $moduleId, 'INTEGER');
-        $where[] = $this->getAdapter()->quoteInto('item_id  = ?', (int) $itemId, 'INTEGER');
+        $where   = sprintf('module_id  = %d AND item_id  = %d', (int) $moduleId, (int) $itemId);
         $modules = $this->fetchAll($where);
 
         if (!empty($modules)) {
@@ -147,8 +145,8 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
 
         if (!empty($ids)) {
             $where   = array();
-            $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-            $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+            $where[] = sprintf('module_id = %d', (int) $moduleId);
+            $where[] = sprintf('item_id = %d', (int) $itemId);
             $where[] = 'tag_user_id IN ('. implode(', ', $ids) .')';
             $this->delete($where);
         }
@@ -164,9 +162,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
      */
     public function deleteRelationsByItem($moduleId, $itemId)
     {
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('module_id = ?', (int) $moduleId, 'INTEGER');
-        $where[] = $this->getAdapter()->quoteInto('item_id = ?', (int) $itemId, 'INTEGER');
+        $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
         $this->delete($where);
     }
 
