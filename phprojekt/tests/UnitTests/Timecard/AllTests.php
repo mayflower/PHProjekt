@@ -26,6 +26,7 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
+require_once 'Models/TimecardTest.php';
 
 /**
  * Test suite for the default module
@@ -59,6 +60,7 @@ class Timecard_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Timecard Controller');
 
         $suite->addTestSuite('Timecard_IndexController_Test');
+        $suite->addTestSuite('Timecard_Models_Timecard_Test');
 
         return $suite;
     }
