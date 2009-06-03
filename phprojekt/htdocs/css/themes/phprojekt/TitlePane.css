@@ -1,4 +1,8 @@
 /* dijit.layout.TitlePane */
+.phprojekt .dijitTitlePane {
+    overflow: visible;
+    overflow-x: hidden;
+}
 
 .phprojekt .dijitTitlePane .dijitTitlePaneTitle {
     background: #294064;
