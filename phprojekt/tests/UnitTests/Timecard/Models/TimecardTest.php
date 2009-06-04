@@ -128,7 +128,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
      */
     public function testRecordValidateAndSave()
     {
-        // Will be inserted a open period and then tried to close it in an overlapping end time
+        // Will be inserted a open period and then tried to close it in an overlapping end time, then close it right
         // Part 1 - Insert common period
         $timecardModel            = clone($this->_model);
         $timecardModel->ownerId   = 1;
@@ -150,6 +150,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         // Part 3 - Insert open period
         unset($timecardModel);
         $timecardModel            = clone($this->_model);
+        $timecardModel->ownerId   = 1;
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '13:00:00';
         $response                 = $timecardModel->recordValidate();
@@ -160,6 +161,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         unset($timecardModel);
         $timecardModel = clone($this->_model);
         $timecardModel->find(13);
+        $timecardModel->ownerId = 1;
         $this->assertEquals('2009-05-17', $timecardModel->date);
         $this->assertEquals('13:00:00', $timecardModel->startTime);
         $this->assertEquals(null, $timecardModel->endTime);
@@ -168,10 +170,23 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel->endTime = '15:00:00';
         $response               = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
-        $response        = $timecardModel->save();
         $error           = $timecardModel->getError();
         $expectedMessage = 'Can not End Working Time because this moment is occupied by an existing period.';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
+        // Part 6 - Close previous period not overlapping another
+        $timecardModel->endTime = '13:30:00';
+        $response               = $timecardModel->save();
+        $this->assertEquals(true, $response);
+    }
+
+    /**
+     * Test for mock function
+     */
+    public function testMocks()
+    {
+        $timecardModel = clone($this->_model);
+        $this->assertEquals(array(), $timecardModel->getRights());
+        $this->assertEquals(array(), $timecardModel->getInformation()->getTitles());
     }
 }
