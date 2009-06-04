@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -32,11 +32,19 @@ require_once 'PHPUnit/Framework.php';
 class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
 {
     /**
+     * setUp method for PHPUnit
+     */
+    public function setUp()
+    {
+        $this->_model = new Timecard_Models_Timecard();
+    }
+
+    /**
      * Test simple finding
      */
     public function testSimpleFind()
     {
-        $timecardModel = new Timecard_Models_Timecard();
+        $timecardModel = clone($this->_model);
         $timecardModel->find(7);
         $this->assertEquals("2009-05-16", $timecardModel->date);
         $this->assertEquals("10:30:00", $timecardModel->startTime);
@@ -49,7 +57,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
     public function testRecordValidate()
     {
         // Right data
-        $timecardModel            = new Timecard_Models_Timecard();
+        $timecardModel            = clone($this->_model);
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '10:00:00';
         $timecardModel->endTime   = '18:00:00';
@@ -122,7 +130,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
     {
         // Will be inserted a open period and then tried to close it in an overlapping end time
         // Part 1 - Insert common period
-        $timecardModel            = new Timecard_Models_Timecard();//
+        $timecardModel            = clone($this->_model);
         $timecardModel->ownerId   = 1;
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '14:00:00';
@@ -133,7 +141,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
 
         // Part 2 - Check it was well inserted
         unset($timecardModel);
-        $timecardModel = new Timecard_Models_Timecard();//
+        $timecardModel = clone($this->_model);
         $timecardModel->find(12);
         $this->assertEquals('2009-05-17', $timecardModel->date);
         $this->assertEquals('14:00:00', $timecardModel->startTime);
@@ -141,7 +149,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
 
         // Part 3 - Insert open period
         unset($timecardModel);
-        $timecardModel            = new Timecard_Models_Timecard();
+        $timecardModel            = clone($this->_model);
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '13:00:00';
         $response                 = $timecardModel->recordValidate();
@@ -150,7 +158,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
 
         // Part 4 - Check it was well inserted
         unset($timecardModel);
-        $timecardModel = new Timecard_Models_Timecard();//
+        $timecardModel = clone($this->_model);
         $timecardModel->find(13);
         $this->assertEquals('2009-05-17', $timecardModel->date);
         $this->assertEquals('13:00:00', $timecardModel->startTime);
