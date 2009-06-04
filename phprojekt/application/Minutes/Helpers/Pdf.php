@@ -72,11 +72,12 @@ final class Minutes_Helpers_Pdf
 
         $page->addFreetext(array(
                            'lines'    => array_merge(explode("\n\n", $minutesModel->description),
-                                            array($phpr->translate('Date of Meeting') . ': ' . $minutesModel->meetingDate
-                                            . ' ' . $phpr->translate('Start time') . ': ' . $minutesModel->startTime
-                                            . ', ' . $phpr->translate('End time') . ': ' . $minutesModel->endTime,
-                                            $phpr->translate('Place') . ': ' . $minutesModel->place,
-                                            $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
+                                            array($phpr->translate('Date of Meeting') . ': '
+                                                . $minutesModel->meetingDate . ' ' . $phpr->translate('Start time')
+                                                . ': ' . $minutesModel->startTime . ', ' . $phpr->translate('End time')
+                                                . ': ' . $minutesModel->endTime,
+                                                $phpr->translate('Place') . ': ' . $minutesModel->place,
+                                                $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
                            'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'fontSize' => 12));
 
@@ -162,7 +163,7 @@ final class Minutes_Helpers_Pdf
                                       ), $itemtable)
                         ));
         $page = end($pages);
-        
+
         $pdf->pages = $pages;
 
         $pdf->properties['Title']        = $minutesModel->title;
