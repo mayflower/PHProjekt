@@ -147,12 +147,11 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                         });
                     });
         dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', 
-                     function() {
+                     dojo.hitch(this, function() {
                         // call preview function here
                         console.log('Call preview');
-                     });
-        
-        
+                        window.open(phpr.webpath + 'index.php/Minutes/index/pdf/id/' + this.id, 'pdf');
+                     }));
     },
     
     postRenderForm: function() {
