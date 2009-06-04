@@ -314,9 +314,7 @@ class Minutes_IndexController extends IndexController
     }
 
     /**
-     * Completely bogus action to create demo pdf file
-     *
-     * @todo Remove this function or refactor to final action
+     * Create pdf file and stream to client
      */
     public function pdfAction()
     {
@@ -329,6 +327,7 @@ class Minutes_IndexController extends IndexController
         $minutes = $this->getModelObject()->find($id);
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
+            // @todo Throw out this check for sent headers, its only here for running unittest
             if ($this->getResponse()->canSendHeaders()) {
                 $this->getResponse()->setHeader("Content-Disposition", "inline; filename=result.pdf");
                 $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
