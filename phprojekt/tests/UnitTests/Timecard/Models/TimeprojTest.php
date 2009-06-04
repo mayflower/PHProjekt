@@ -20,7 +20,7 @@
 require_once 'PHPUnit/Framework.php';
 
 /**
- * Tests Timecard Model class
+ * Tests Timecard Model Timeproj class
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
