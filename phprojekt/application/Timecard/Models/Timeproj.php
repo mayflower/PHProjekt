@@ -186,9 +186,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $timecard        = Phprojekt_Loader::getModel('Timecard', 'Timecard');
-        Phprojekt::getInstance()->getLog()->debug($where);
         $timecardRecords = $timecard->fetchall($where, 'start_time ASC');
-        Phprojekt::getInstance()->getLog()->debug(count($timecardRecords));
         $information     = $timecard->getInformation();
 
         $timeCardfieldDefinition = $information->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
