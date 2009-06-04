@@ -32,7 +32,7 @@ $lang['Date'] = 'Date';
 $lang['Sort'] = 'Sort after';
 $lang['Save'] = 'Save';
 $lang['Delete'] = 'Delete';
-$lang['Clear'] = 'Clear';
+$lang['New'] = 'New';
 $lang['Topic'] = 'Topic';
 
 // [Form.js] - Validation messages

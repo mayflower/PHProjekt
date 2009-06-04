@@ -135,33 +135,7 @@ class Minutes_IndexController extends IndexController
         $log = Phprojekt::getInstance()->getLog();
         $log->debug('Entering jsonSendMailAction... ');
         $errors = array();
-
-        /**
-         * @todo Change Phprojekt_Mail_Notification::_setTransport() to public,
-         *       maybe even static (singleton), so the transport object can be
-         *       fetched and configured globally. Maybe even think about using
-         *       Phprojekt_Mail_Notification instead of Zend_Mail. Benefits?
-         */
-        $config     = Phprojekt::getInstance()->getConfig();
-        $smtpServer = $config->smtpServer;
-        $smtpUser   = $config->smtpUser;
-        $smtpPasswd = $config->smtpPassword;
-
-        // The next 9 lines are copied over from Phprojekt_Mail_Notification::_setTransport(),
-        // refactoring is needed!!
-        if (empty($smtpServer)) {
-            $smtpServer = 'localhost';
-        }
-        if (empty($smtpUser)) {
-            $smtpTransport = new Zend_Mail_Transport_Smtp($smtpServer);
-        } else {
-            $smtpTransport = new Zend_Mail_Transport_Smtp($smtpServer, array('auth'     => 'login',
-                                                                             'username' => $smtpUser,
-                                                                             'password' => $smtpPasswd));
-        }
-
         $params = $this->getRequest()->getParams();
-        $log->debug('Request params: ' . print_r($params, true));
 
         // Sanity check
         if (empty($params['id']) || !is_numeric($params['id'])) {
@@ -184,7 +158,9 @@ class Minutes_IndexController extends IndexController
         }
 
         $hasRecipients = false;
-        $mail          = new Zend_Mail();
+        $mail          = new Phprojekt_Mail_Notification(); // @todo Refactor mail classes and use base class here!
+        /* @var $mail ZendMail */
+        $smtpTransport = $mail->setTransport();
         $validator     = new Zend_Validate_EmailAddress();
 
         // Add regular recipients:
@@ -242,11 +218,14 @@ class Minutes_IndexController extends IndexController
         if (!count($errors)) {
             if (!empty($params['options']) && is_array($params['options'])) {
                 if (in_array('pdf', $params['options'])) {
-                    $log->debug('Creating PDF attachment...');
-                    // @todo use PDF report creator here as soon as it's ready
-                    $pdf = Minutes_Helpers_Pdf::getPdf($minutesId);
-                    $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
-                        Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
+                    $minutes = $this->getModelObject()->find($minutesId);
+                    if ($minutes instanceof Phprojekt_Model_Interface) {
+                        $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
+                        $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
+                                                Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
+                    } else {
+                        $log->debug("Could not find model for minutes id: $minutesId");
+                    }
                 }
             }
 

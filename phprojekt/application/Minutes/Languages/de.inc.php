@@ -35,7 +35,7 @@ $lang['Date'] = 'Datum';
 $lang['Sort'] = 'Einordnen nach';
 $lang['Save'] = 'Speichern';
 $lang['Delete'] = 'Löschen';
-$lang['Clear'] = 'Leeren';
+$lang['New'] = 'Neu';
 $lang['Topic'] = 'Thema';
 
 // [Form.js] - Validation messages

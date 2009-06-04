@@ -130,22 +130,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick',
                     function() {
                         console.log('Sending mail...');
-                        dojo.xhrPost({
-                            url: "index.php/Minutes/index/jsonSendMail/",
+                        phpr.send({
+                            url:      phpr.webpath + "index.php/Minutes/index/jsonSendMail/",
                             handleAs: "json",
-                            load: function(r) {
-                                new phpr.handleResponse('serverFeedback', r);
-                                console.debug('Mail sent successfully. Response: ' + r);
-                                console.dir(r);
-                            },
-                            error: function(e) {
-                                new phpr.handleResponse('serverFeedback', e);
-                                console.debug('Error while sending mail: ' + e);
-                                console.dir(e);
-                            },
-                            form: "mailFormTab"
+                            content:  dojo.formToObject('mailFormTab')
                         });
                     });
+        
         dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', 
                      dojo.hitch(this, function() {
                         // call preview function here
@@ -323,19 +314,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             this._itemFormData = null;
             this.getItemList(dojo.hitch(this, this.loadSubForm)); // refresh sort orders
             new phpr.handleResponse('serverFeedback', responseObject);
-            //this.loadSubForm();
             this.updateGrid();
             return responseObject;
         });
-        dojo.xhrPost({
+        phpr.send({
             // The following URL must match that used to test the server.
-            url: "index.php/Minutes/item/jsonSave/",
+            url: phpr.webpath + "index.php/Minutes/item/jsonSave/",
             handleAs: "json",
-            load: responseHandler,
-            error: function(e) {
-                console.debug('saveSubFormData() has encountered an error: ' + e);
-            },
-            form: "minutesItemForm"
+            onSuccess: responseHandler,
+            content: dojo.formToObject("minutesItemForm")
         });
     },
     
@@ -350,19 +337,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             this._itemFormData = null;
             new phpr.handleResponse('serverFeedback', responseObject);
             this.loadSubForm();
-            //this._buildGrid();
             this.updateGrid();
             return responseObject;
         });
-        dojo.xhrPost({
+        phpr.send({
             // The following URL must match that used to test the server.
-            url: "index.php/Minutes/item/jsonDelete/",
+            url: phpr.webpath + "index.php/Minutes/item/jsonDelete/",
             handleAs: "json",
-            load: responseHandler,
-            error: function(e) {
-                console.debug('deleteSubFormData() has encountered an error: ' + e);
-            },
-            form: "minutesItemForm"
+            onSuccess: responseHandler,
+            content: dojo.formToObject("minutesItemForm")
         });
     },
     
@@ -378,13 +361,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             this.loadSubForm();
             return responseObject;
         });
-        dojo.xhrGet({
-            url: "index.php/Minutes/item/jsonDetail/minutesId/"+this.id+'/id/'+itemId,
+        phpr.send({
+            url: phpr.webpath + "index.php/Minutes/item/jsonDetail/minutesId/"+this.id+'/id/'+itemId,
             handleAs: "json",
-            load: responseHandler,
-            error: function(e) {
-                console.debug('getSubFormData has encountered an error: ' + e);
-            }
+            onSuccess: responseHandler
         });
     },
     
@@ -401,13 +381,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             }
             return responseObject;
         });
-        dojo.xhrGet( {
-            url: "index.php/Minutes/index/jsonListUser/id/"+this.id,
+        phpr.send( {
+            url: phpr.webpath + "index.php/Minutes/index/jsonListUser/id/"+this.id,
             handleAs: "json",
-            load: responseHandler,
-            error: function(e) {
-                console.debug('getPeopleList has encountered an error: ' + e);
-            }
+            onSuccess: responseHandler
         });
     },
     
@@ -455,14 +432,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             return responseObject;
         });
         var errorHandler = dojo.hitch(this, function(e) {
-            console.debug('getItemList has encountered an error: ' + e);
             this._itemList = []; // reset values
         });
-        dojo.xhrGet( {
-            url: "index.php/Minutes/item/jsonListItemSortOrder/minutesId/"+this.id,
+        phpr.send( {
+            url: phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/"+this.id,
             handleAs: "json",
-            load: responseHandler,
-            error: errorHandler
+            onSuccess: responseHandler,
+            onError: errorHandler
         });
     },
     
@@ -499,7 +475,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             lblParentOrder: phpr.nls.get('Sort'),
             lblSubmit:      phpr.nls.get('Save'),
             lblDelete:      phpr.nls.get('Delete'),
-            lblClear:	    phpr.nls.get('Clear'),
+            lblClear:	    phpr.nls.get('New'),
             msgTitle:		phpr.nls.get('Title must not be empty'),
             msgTopicType:	phpr.nls.get('Please choose a type for this item'),
             msgUserId:		phpr.nls.get('Please choose a user name'),
