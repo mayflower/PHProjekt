@@ -12,6 +12,6 @@ $lang["Add working time and drag projects into the bar"] = "Füge Arbeitszeiten 
 $lang["Manage project list"] = "Projektliste verwalten";
 $lang["Amount [hhmm]"] = "Zeit [hhmm]";
 $lang["Total"] = "Gesamt";
-$lang["The amount is invalid"] = "Der Betrag ist ungültig (Von 30 bis 1300)";
+$lang["The amount is invalid (from 30 to 1300)"] = "Der Betrag ist ungültig (Von 30 bis 1300)";
 $lang["Start time has to be between 8:00 and 21:00"] = "Startzeit muss zwischen 8:00 und 21:00 liegen";
 $lang["End time has to be between 8:00 and 21:00"] = "Endzeit muss zwischen 8:00 und 21:00 liegen";

@@ -132,7 +132,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             $this->_validate->error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate('Amount'),
                 'label'   => Phprojekt::getInstance()->translate('Amount'),
-                'message' => Phprojekt::getInstance()->translate('The amount is invalid')));
+                'message' => Phprojekt::getInstance()->translate('The amount is invalid (from 30 to 1300)')));
                 return false;
         }
 
@@ -186,7 +186,9 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $timecard        = Phprojekt_Loader::getModel('Timecard', 'Timecard');
+        Phprojekt::getInstance()->getLog()->debug($where);
         $timecardRecords = $timecard->fetchall($where, 'start_time ASC');
+        Phprojekt::getInstance()->getLog()->debug(count($timecardRecords));
         $information     = $timecard->getInformation();
 
         $timeCardfieldDefinition = $information->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
