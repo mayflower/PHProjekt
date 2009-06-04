@@ -216,6 +216,19 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
+        // Integrate numbering
+        $topicCount    = 0;
+        $topicSubCount = 0;
+        foreach ($result as $item) {
+            if (1 == $item->topicType) {
+                $topicCount++;
+                $topicSubCount = -1;
+            }
+            $topicSubCount++;
+            $item->topicId = (1 == $item->topicType? sprintf('%d', $topicCount)
+                                                    : sprintf('%d.%d', $topicCount, $topicSubCount));
+        }
+        // @TODO insert item numbering scheme here before returning.
         return $result;
     }
 

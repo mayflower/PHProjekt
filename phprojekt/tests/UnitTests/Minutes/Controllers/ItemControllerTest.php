@@ -209,6 +209,38 @@ class Minutes_ItemController_Test extends FrontInit
     }
 
     /**
+     * Test various methods to get a PDF
+     */
+    public function testPdfGeneration()
+    {
+        $this->setRequestUrl('Minutes/index/pdf/id/3');
+        $response = $this->getResponse();
+        
+        $this->assertContains('SecondTestTitle', $response);
+        $this->assertContains('SecondTestDescription', $response);
+        $this->assertContains('DerTitel', $response);
+        $this->assertContains('SecondTitleSecondSave', $response);
+    }
+    
+    public function testPdfNoId()
+    {
+        $this->setRequestUrl('Minutes/index/pdf');
+        $this->getResponse();
+        
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_IndexController::ID_REQUIRED_TEXT, $this->errormessage);
+    }
+    
+    public function testPdfWrongId()
+    {
+        $this->setRequestUrl('Minutes/index/pdf/id/1');
+        $this->getResponse();
+        
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_IndexController::NOT_FOUND, $this->errormessage);
+    }
+
+    /**
      * Test the Minutes deletion
      */
     public function testJsonDeleteAction()

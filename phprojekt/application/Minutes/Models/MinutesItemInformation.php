@@ -149,7 +149,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['range']    = array('id'   => '',
                                   'name' => '');
         $data['required'] = false;
-        $data['readOnly'] = false;
+        $data['readOnly'] = true;
         $data['tab']      = 1;
 
         $converted[] = $data;
@@ -200,7 +200,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['range']    = array('id'   => '',
                                   'name' => '');
         $data['required'] = true;
-        $data['readOnly'] = true;
+        $data['readOnly'] = false;
         $data['tab']      = 1;
 
         $converted[] = $data;
@@ -217,7 +217,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['range']    = array('id'   => '',
                                   'name' => '');
         $data['required'] = false;
-        $data['readOnly'] = true;
+        $data['readOnly'] = false;
         $data['tab']      = 1;
 
         $converted[] = $data;
@@ -234,7 +234,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['range']    = array('id'   => '',
                                   'name' => '');
         $data['required'] = false;
-        $data['readOnly'] = true;
+        $data['readOnly'] = false;
         $data['tab']      = 1;
 
         $converted[] = $data;
@@ -250,7 +250,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['fieldset'] = '';
         $data['range']    = $this->convertArray($this->_userIdList);
         $data['required'] = false;
-        $data['readOnly'] = true;
+        $data['readOnly'] = false;
         $data['tab']      = 1;
 
         $converted[] = $data;

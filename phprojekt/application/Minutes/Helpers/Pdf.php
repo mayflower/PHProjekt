@@ -71,12 +71,12 @@ final class Minutes_Helpers_Pdf
                            'width'    => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
 
         $page->addFreetext(array(
-                           'lines'    => array($minutesModel->description,
-                                            $phpr->translate('Date of Meeting') . ': ' . $minutesModel->meetingDate
+                           'lines'    => array_merge(explode("\n\n", $minutesModel->description),
+                                            array($phpr->translate('Date of Meeting') . ': ' . $minutesModel->meetingDate
                                             . ' ' . $phpr->translate('Start time') . ': ' . $minutesModel->startTime
                                             . ', ' . $phpr->translate('End time') . ': ' . $minutesModel->endTime,
                                             $phpr->translate('Place') . ': ' . $minutesModel->place,
-                                            $phpr->translate('Moderator') . ': ' . $minutesModel->moderator),
+                                            $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
                            'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'fontSize' => 12));
 
@@ -116,27 +116,20 @@ final class Minutes_Helpers_Pdf
                                         )));
         $page = end($pages);
 
-        $itemtable     = array();
-        $topicCount    = 0;
-        $topicSubCount = 0;
-        $items         = $minutesModel->items->fetchAll();
+        $itemtable = array();
+        $items     = $minutesModel->items->fetchAll();
 
         foreach ($items as $item) {
             switch ($item->topicType) {
                 case 1: // TOPIC
-                    $topicCount++;
-                    $topicSubCount = -1;
                 case 2: // STATEMENT
                 case 4: // DECISION
-                    $topicSubCount++;
                     $form = $phpr->translate("%1\$s\n%2\$s");
                     break;
                 case 3: // TODO
-                    $topicSubCount++;
                     $form = $phpr->translate("%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s");
                     break;
                 case 5: // DATE
-                    $topicSubCount++;
                     $form = $phpr->translate("%1\$s\n%2\$s\nDATE: %3\$s");
                     break;
                 default:
@@ -144,8 +137,7 @@ final class Minutes_Helpers_Pdf
                     break;
             }
             $itemtable[]  = array(
-                                array('text'  => (1 == $item->topicType? sprintf('%d', $topicCount)
-                                                    : sprintf('%d.%d', $topicCount, $topicSubCount)),
+                                array('text'  => $item->topicId,
                                       'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
                                 array('text'  => $phpr->translate($item->information->getTopicType($item->topicType)),
                                       'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
