@@ -268,7 +268,7 @@ class Minutes_IndexController extends IndexController
             $mail->setBodyHtml($this->getHtmlList($minutesId), 'utf-8');
 
             // Keep send() commented out until test phase is over
-            //$mail->send($smtpTransport);
+            $mail->send($smtpTransport);
 
             $return = array('type'    => 'success',
                             'message' => Phprojekt::getInstance()->translate(self::MAIL_SUCCESS_TEXT),
@@ -329,8 +329,10 @@ class Minutes_IndexController extends IndexController
         $minutes = $this->getModelObject()->find($id);
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
-            header("Content-Disposition: inline; filename=result.pdf");
-            header("Content-type: application/x-pdf; charset=utf-8");
+            if ($this->getResponse()->canSendHeaders()) {
+                $this->getResponse()->setHeader("Content-Disposition", "inline; filename=result.pdf");
+                $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
+            }
             echo Minutes_Helpers_Pdf::getPdf($minutes);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
