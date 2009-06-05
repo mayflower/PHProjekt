@@ -421,6 +421,75 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertTrue($this->error);
         $this->assertContains('topicType: Is a required field', $this->errormessage);
     }
+
+    /**
+     * Minutes with itemStatus == 4 are read-only with exeption of writes to itemStatus itself.
+     */
+    public function testFinalizeMinutes()
+    {
+        $this->setRequestUrl('Minutes/index/jsonSave/');
+        $this->request->setParam('id', '3');
+        $this->request->setParam('itemStatus', '4');
+        $response = $this->getResponse();
+
+        $this->assertFalse($this->error);
+        $this->assertContains(Minutes_IndexController::EDIT_TRUE_TEXT, $response);
+    }
+
+    public function testItemsNowReadonly()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', '2');
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('parentOrder', '1');
+        $this->request->setParam('projectId', '1');
+        $this->request->setParam('sortOrder', '2');
+        $this->request->setParam('title', 'ReadonlySecondTitleSecondSave');
+        $this->request->setParam('comment', "ReadonlySome lines of new comment\nSome lines of new comment");
+        $this->request->setParam('topicType', '2');
+        $this->request->setParam('topicDate', '2009-05-01');
+        $this->request->setParam('userId', '1');
+        $this->request->setParam('topicId', '1.1');
+        $response = $this->getResponse();
+
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_ItemController::MINUTES_READ_ONLY, $this->errormessage);
+    }
+
+    public function testMinutesReadonly()
+    {
+        $this->setRequestUrl('Minutes/index/jsonSave/id/3');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('title', 'ReadOnly');
+        $this->request->setParam('description', 'ReadOnly');
+        $this->request->setParam('meetingDate', 'Thu Apr 09 2009 00:00:00 GMT+0200');
+        $this->request->setParam('startTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
+        $this->request->setParam('endTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
+        $this->request->setParam('place', 'ReadOnly');
+        $this->request->setParam('moderator', 'ReadOnly');
+        $this->request->setParam('participantsInvited', array());
+        $this->request->setParam('participantsAttending', array());
+        $this->request->setParam('participantsExcused', array());
+        $this->request->setParam('recipients', array());
+        $this->request->setParam('itemStatus', 3);
+        $this->request->setParam('string', '');
+        $this->request->setParam('requiredField1', '(*) Required Field');
+        $response = $this->getResponse();
+
+        $this->assertContains(Minutes_IndexController::EDIT_TRUE_TEXT, $response, "Response was: '$response'");
+        $this->assertContains('"id":"3"', $response, "ID edited was not numbered 3.");
+    }
+
+    public function testEditWasNotDone()
+    {
+        $this->setRequestUrl('Minutes/index/jsonList/');
+        $this->request->setParam('id', 3);
+        $response = $this->getResponse();
+
+        $this->assertContains('"itemStatus":1', $response);
+        $this->assertNotContains('ReadOnly', $response, "Response was edited: '$response'");
+    }
+
     /**
      * Test the Minutes deletion with errors
      */
