@@ -456,6 +456,17 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertContains(Minutes_ItemController::MINUTES_READ_ONLY, $this->errormessage);
     }
 
+    public function testItemsUndeletable()
+    {
+        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->request->setParam('id', '1');
+        $this->request->setParam('minutesId', '3');
+        $this->getResponse();
+
+        $this->assertTrue($this->error);
+        $this->assertContains(Minutes_ItemController::MINUTES_READ_ONLY, $this->errormessage);
+    }
+
     public function testMinutesReadonly()
     {
         $this->setRequestUrl('Minutes/index/jsonSave/id/3');
