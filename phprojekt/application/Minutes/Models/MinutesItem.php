@@ -228,7 +228,6 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
             $item->topicId = (1 == $item->topicType? sprintf('%d', $topicCount)
                                                     : sprintf('%d.%d', $topicCount, $topicSubCount));
         }
-        // @TODO insert item numbering scheme here before returning.
         return $result;
     }
 

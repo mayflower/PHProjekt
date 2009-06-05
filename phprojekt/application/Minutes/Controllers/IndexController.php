@@ -143,11 +143,10 @@ class Minutes_IndexController extends IndexController
         }
 
         $minutesId = (int) $params['id'];
-        $minutes   = $this->getModelObject();
-        $minutes->find($minutesId);
+        $minutes   = $this->getModelObject()->find($minutesId);
 
         // Was the id provided a valid one?
-        if (!$minutes->id) {
+        if (!($minutes instanceof Phprojekt_Model_Interface) || !$minutes->id) {
             // Invalid ID
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
@@ -218,14 +217,9 @@ class Minutes_IndexController extends IndexController
         if (!count($errors)) {
             if (!empty($params['options']) && is_array($params['options'])) {
                 if (in_array('pdf', $params['options'])) {
-                    $minutes = $this->getModelObject()->find($minutesId);
-                    if ($minutes instanceof Phprojekt_Model_Interface) {
-                        $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
-                        $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
-                                                Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
-                    } else {
-                        $log->debug("Could not find model for minutes id: $minutesId");
-                    }
+                    $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
+                    $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
+                                            Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
                 }
             }
 

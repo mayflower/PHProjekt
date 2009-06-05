@@ -181,13 +181,7 @@ class Minutes_ItemController extends IndexController
      */
     public function jsonListItemSortOrderAction()
     {
-        $minutesId = $this->getRequest()->getParam('minutesId');
-        Phprojekt::getInstance()->getLog()->debug('jsonListItemSortOrder: $minutesId='.print_r($minutesId, true));
-        if (!is_numeric($minutesId) || $minutesId < 1) {
-            Phprojekt::getInstance()->getLog()->debug('Param minutesId non-numeric or below zero');
-            Phprojekt_Converter_Json::echoConvert(array());
-            return;
-        }
+        $minutesId = (int) $this->getRequest()->getParam('minutesId');
 
         $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->fetchAll();
 
