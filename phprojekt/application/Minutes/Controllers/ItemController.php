@@ -44,9 +44,14 @@ class Minutes_ItemController extends IndexController
      */
     public function jsonListAction()
     {
-        $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
-        $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
-        $result = $itemModel->fetchAll();
+        $minutesId = (int) $this->getRequest()->getParam('minutesId', 0);
+        if (!empty($minutesId)) {
+            $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
+            $itemModel->init($minutesId);
+            $result = $itemModel->fetchAll();
+        } else {
+            $result = array();
+        }
 
         Phprojekt_Converter_Json::echoConvert($result, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }

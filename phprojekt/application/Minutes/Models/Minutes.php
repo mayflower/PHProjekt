@@ -70,11 +70,11 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      */
     protected function _calcStatus(Phprojekt_Item_Abstract &$minutes)
     {
-        $meetingDate = new Zend_Date($minutes->meetingDate);
-        $now         = new Zend_Date();
+        $meetingDate = strtotime($minutes->meetingDate);
+        $now         = strtotime("now");
 
         $status = 0;
-        if ($meetingDate->isLater($now)) {
+        if ($meetingDate > $now) {
             $status = 1;
         } else {
             $status = 2;
