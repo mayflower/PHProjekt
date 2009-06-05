@@ -29,17 +29,17 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Extends inherited method to add the Items tab,
         //    inherited code is executed afterwards
 
-		// render additional tabs only if there is an ID (these
-		// tabs don't make sense for unsaved records - in fact,
-	    // they will not work)
-		if (this.id) {
-	        // preload participant list, load extra tabs on ready to 
-	        // avoid race conditions
-	        this.getPeopleList(dojo.hitch(this, function() {
-	            this.addItemsTab(data);
-	            this.addMailTab(data);
-	        }));
-		}
+        // render additional tabs only if there is an ID (these
+        // tabs don't make sense for unsaved records - in fact,
+        // they will not work)
+        if (this.id) {
+            // preload participant list, load extra tabs on ready to 
+            // avoid race conditions
+            this.getPeopleList(dojo.hitch(this, function() {
+                this.addItemsTab(data);
+                this.addMailTab(data);
+            }));
+        }
         this.inherited(arguments);
     },
     
@@ -62,7 +62,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         // the following code was previously located in postRenderForm, 
         // but had to be moved here because of race conditions
         dojo.byId('itemsFormTab').style.display = 'none';
-        if (undefined == dijit.byId('minutesBox')) {
+        if (!dijit.byId('minutesBox')) {
             var minutesBox = new dijit.layout.ContentPane({
                                  region: 'center',
                                  id: 'minutesBox'
@@ -71,7 +71,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         } else {
             var minutesBox = dijit.byId('minutesBox');
         }
-        if (undefined == dijit.byId('minutesLayout')) {
+        if (!dijit.byId('minutesLayout')) {
             var minutesLayout = new dijit.layout.BorderContainer({
                                     design: 'sidebar',
                                     id: 'minutesLayout'
@@ -80,7 +80,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         } else {
             var minutesLayout = dijit.byId('minutesLayout');
         }
-        if (undefined == dijit.byId('minutesGridBox')) {
+        if (!dijit.byId('minutesGridBox')) {
             var minutesGridBox = new dijit.layout.ContentPane({
                                     region: 'center',
                                     id: 'minutesGridBox'
@@ -89,7 +89,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         } else {
             var minutesGridBox = dijit.byId('minutesGridBox');
         }
-        if (undefined == dijit.byId('minutesDetailsRight')) {
+        if (!dijit.byId('minutesDetailsRight')) {
             var minutesDetailsRight = new dijit.layout.ContentPane({
                  region: 'right',
                  id: 'minutesDetailsRight',
@@ -132,7 +132,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         
         dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick',
                     function() {
-                        console.log('Sending mail...');
                         phpr.send({
                             url:      phpr.webpath + "index.php/Minutes/index/jsonSendMail/",
                             handleAs: "json",
@@ -142,8 +141,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         
         dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', 
                      dojo.hitch(this, function() {
-                        // call preview function here
-                        console.log('Call preview');
                         window.open(phpr.webpath + 'index.php/Minutes/index/pdf/id/' + this.id, 'pdf');
                      }));
     },
