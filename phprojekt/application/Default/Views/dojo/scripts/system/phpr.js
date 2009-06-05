@@ -782,7 +782,7 @@ phpr.handleError = function(url, type, message) {
             response.message += message;
             break;
         default:
-            response.message += 'Unexpected error';
+            response.message += phpr.nls.get('Unexpected error');
             break;
     }
 
