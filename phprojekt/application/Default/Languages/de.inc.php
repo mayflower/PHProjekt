@@ -148,6 +148,8 @@ $lang["Please contact the administrator and check the error logs"] = "Bitte wend
     . " prüfen Sie die Fehlerprotokolle";
 $lang["Invalid json format"] = "Ungültiges JSON-Format";
 $lang["User error"] = "User Error";
+$lang["Internal javascript error"] = "Interne JavaScript-Fehler";
+$lang["Unexpected error"] = "Unerwarteter Fehler";
 
 // System Modules
 $lang["Administration"] = "Administration";
