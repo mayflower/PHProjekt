@@ -29,13 +29,17 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Extends inherited method to add the Items tab,
         //    inherited code is executed afterwards
 
-        // preload participant list, load extra tabs on ready to 
-        // avoid race conditions
-        this.getPeopleList(dojo.hitch(this, function() {
-            this.addItemsTab(data);
-            this.addMailTab(data);
-        }));
-
+		// render additional tabs only if there is an ID (these
+		// tabs don't make sense for unsaved records - in fact,
+	    // they will not work)
+		if (this.id) {
+	        // preload participant list, load extra tabs on ready to 
+	        // avoid race conditions
+	        this.getPeopleList(dojo.hitch(this, function() {
+	            this.addItemsTab(data);
+	            this.addMailTab(data);
+	        }));
+		}
         this.inherited(arguments);
     },
     
@@ -60,8 +64,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.byId('itemsFormTab').style.display = 'none';
         if (undefined == dijit.byId('minutesBox')) {
             var minutesBox = new dijit.layout.ContentPane({
-                                     region: 'center',
-                                     id: 'minutesBox'
+                                 region: 'center',
+                                 id: 'minutesBox'
                              }, 
                              dojo.doc.createElement('div'));
         } else {
@@ -69,8 +73,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         }
         if (undefined == dijit.byId('minutesLayout')) {
             var minutesLayout = new dijit.layout.BorderContainer({
-                                        design: 'sidebar',
-                                        id: 'minutesLayout'
+                                    design: 'sidebar',
+                                    id: 'minutesLayout'
                                 }, 
                                 dojo.doc.createElement('div'));
         } else {
@@ -78,8 +82,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         }
         if (undefined == dijit.byId('minutesGridBox')) {
             var minutesGridBox = new dijit.layout.ContentPane({
-                                        region: 'center',
-                                        id: 'minutesGridBox'
+                                    region: 'center',
+                                    id: 'minutesGridBox'
                                  }, 
                                  dojo.doc.createElement('div'));
         } else {
@@ -87,17 +91,16 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         }
         if (undefined == dijit.byId('minutesDetailsRight')) {
             var minutesDetailsRight = new dijit.layout.ContentPane({
-                                        region: 'right',
-                                        id: 'minutesDetailsRight',
-                                        style: 'width: 50%;'
-                                 }, 
-                                 dojo.doc.createElement('div'));
+                 region: 'right',
+                 id: 'minutesDetailsRight',
+                 style: 'width: 50%;'
+              }, 
+             dojo.doc.createElement('div'));
         } else {
             var minutesDetailsRight = dijit.byId('minutesDetailsRight');
         }
         minutesLayout.addChild(minutesGridBox);
         minutesLayout.addChild(minutesDetailsRight);
-        //minutesBox.addChild(minutesLayout);
         minutesBox.attr("content", minutesLayout.domNode);
         dijit.byId('tabItems').attr('content', minutesBox.domNode);
     },

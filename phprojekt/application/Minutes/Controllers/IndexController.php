@@ -159,7 +159,7 @@ class Minutes_IndexController extends IndexController
 
         $hasRecipients = false;
         $mail          = new Phprojekt_Mail_Notification(); // @todo Refactor mail classes and use base class here!
-        /* @var $mail ZendMail */
+        /* @var $mail Zend_Mail */
         $smtpTransport = $mail->setTransport();
         $validator     = new Zend_Validate_EmailAddress();
 
@@ -172,7 +172,7 @@ class Minutes_IndexController extends IndexController
                 }
             }
         }
-        $log->debug('idList: ' . print_r($idList, true));
+
         if (count($idList)) {
             $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
