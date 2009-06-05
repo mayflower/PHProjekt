@@ -310,4 +310,26 @@ class Minutes_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
+    /**
+     * Final minutes only allow write access to status field
+     * @todo This should really be placed inside the model itself
+     *
+     * @param array                     $params  The post values
+     * @param Phprojekt_Model_Interface $model   The current module to save
+     * @param boolean                   $newItem If is new item or not
+     *
+     * @return array
+     */
+    public function setParams($params, $model, $newItem = false)
+    {
+        if (4 == $model->itemStatus) {
+            if (isset($params['itemStatus'])) {
+                return array('itemStatus' => $params['itemStatus']);
+            } else {
+                return array();
+            }
+        } else {
+            return $params;
+        }
+    }
 }

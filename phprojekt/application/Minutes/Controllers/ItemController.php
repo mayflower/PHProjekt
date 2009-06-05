@@ -33,6 +33,8 @@
  */
 class Minutes_ItemController extends IndexController
 {
+    const MINUTES_READ_ONLY = 'The minutes is final and cannot be edited.';
+
     /**
      * Returns list of minutes items referenced by a minutesId
      *
@@ -94,6 +96,8 @@ class Minutes_ItemController extends IndexController
 
         if (empty($minutes->id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        } elseif (4 == $minutes->itemStatus) {
+            throw new Phprojekt_PublishedException(self::MINUTES_READ_ONLY);
         } else {
             $id = (int) $this->getRequest()->getParam('id');
 
