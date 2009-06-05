@@ -315,9 +315,9 @@ phpr.getCurrent = function(data, identifier, value) {
 
 
 phpr.drawEmptyMessage = function(message) {
-    // summary:
+    // Summary:
     //    Center and make bold an error message
-    // description:
+    // Description:
     //    Center and make bold an error message
     var output = '';
     output += '<div style="text-align: center; margin: 10px 10px 10px 10px; font-weight: bold;">';
@@ -327,9 +327,9 @@ phpr.drawEmptyMessage = function(message) {
 };
 
 phpr.isValidInputKey = function(key) {
-    // summary:
+    // Summary:
     //    Return if a key is a valid input key
-    // description:
+    // Description:
     //    Return if a key is a valid input key
     if ((key != dojo.keys.ENTER) &&
        (key != dojo.keys.NUMPAD_ENTER) &&
@@ -383,17 +383,17 @@ phpr.isValidInputKey = function(key) {
 };
 
 dojo.declare("phpr.DataStore", null, {
-    // summary:
+    // Summary:
     //    Get and return data from the server
-    // description:
+    // Description:
     //    The data is request to the server
     //    and then is cached for the future used.
     _internalCache: new Array(),
 
     addStore:function(params) {
-        // summary:
+        // Summary:
         //    Set a new store for save the data
-        // description:
+        // Description:
         //    Set a new store for save the data
         if (typeof this._internalCache[params.url] == 'undefined') {
             store = new phpr.ReadStore({url: params.url});
@@ -411,9 +411,9 @@ dojo.declare("phpr.DataStore", null, {
     },
 
     requestData:function(params) {
-        // summary:
+        // Summary:
         //    Request the data
-        // description:
+        // Description:
         //    If the data is not cached, request to the server.
         //    Then return to the processData function
         if (typeof params.processData == "undefined") {
@@ -436,19 +436,35 @@ dojo.declare("phpr.DataStore", null, {
         }
     },
 
-    errorHandler:function(scope) {
-        // summary:
-        //    Display a PHP error
-        // description:
+    errorHandler:function(scope, error) {
+        // Summary:
+        //    Display a PHP or JS error
+        // Description:
         //    If there is some data before the json
         //    the error is cached and showed
-        phpr.handleError(scope.url, 'php');
+        //    Also is cached the JS error
+
+        // Get the message error
+        if ((error.number && (error.number & 0xFFFF == 1002 || error.number & 0xFFFF == 1006)) // IE
+            || (error.name && error.name == "SyntaxError")) { // FF
+            // PHP Error
+            phpr.handleError(scope.url, 'php');
+        } else {
+            // Js error
+            var message = null;
+            if (error.message) {
+                message = error.message;
+            } else if (error.description) {
+                message = error.description;
+            }
+            phpr.handleError(scope.url, 'js', message);
+        }
     },
 
     saveData:function(params, data) {
-        // summary:
+        // Summary:
         //    Store the data in the cache
-        // description:
+        // Description:
         //    Store the data in the cache
         //    Then return to the processData function
         this._internalCache[params.url]['data'] = data;
@@ -459,25 +475,25 @@ dojo.declare("phpr.DataStore", null, {
     },
 
     getData:function(params) {
-        // summary:
+        // Summary:
         //    Return the "data" tag from the server
-        // description:
+        // Description:
         //    Return the "data" tag from the server
         return this.getStore(params).getValue(this._internalCache[params.url]['data'][0], "data") || Array();
     },
 
     getMetaData:function(params) {
-        // summary:
+        // Summary:
         //    Return the "metadata" tag from the server
-        // description:
+        // Description:
         //    Return the "metadata" tag from the server
         return this.getStore(params).getValue(this._internalCache[params.url]['data'][1], "metadata") || Array();
     },
 
     deleteData:function(params) {
-        // summary:
+        // Summary:
         //    Delete the cache
-        // description:
+        // Description:
         //    Delete the cache
         if (this._internalCache[params.url]) {
            this._internalCache[params.url]['data'] = new Array();
@@ -485,17 +501,17 @@ dojo.declare("phpr.DataStore", null, {
     },
 
     getStore:function(params) {
-        // summary:
+        // Summary:
         //    Return the current data.store
-        // description:
+        // Description:
         //    Return the current data.store
         return this._internalCache[params.url]['store'];
     },
 
     deleteAllCache:function() {
-        // summary:
+        // Summary:
         //    Delete all the cache
-        // description:
+        // Description:
         //    Delete all the cache
         for (var i in this._internalCache) {
             // Special case for global modules since are not reloaded
@@ -507,9 +523,9 @@ dojo.declare("phpr.DataStore", null, {
 });
 
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
-    // summary:
+    // Summary:
     //    Request to the server
-    // description:
+    // Description:
     //    Request to the server and return an array with
     //    data and metadata values
     requestMethod:  "post",
@@ -555,9 +571,9 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 
 dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
     serialize:function(d, options) {
-        // summary:
+        // Summary:
         //     This function overwrites the dijit.form.DateTextBox display
-        //     description:
+        // Description:
         //     Make sure that the date is not only displayed localized, but also
         //     the value which is returned is set to this date format
         return dojo.date.locale.format(d, {selector:'date', datePattern:'yyyy-MM-dd'}).toLowerCase();
@@ -565,9 +581,9 @@ dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
 });
 
 dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
-    // summary:
+    // Summary:
     //     A class for displaying the ServerFeedback
-    // description:
+    // Description:
     //     This class receives the Server Feedback and displays it to the User
     messages:[],
     displayedMessages:[],
@@ -595,9 +611,9 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
 });
 
 dojo.declare("phpr.loading", null, {
-    // summary:
+    // Summary:
     //     Simple class for show or hide the loading icon
-    // description:
+    // Description:
     //     Simple class for show or hide the loading icon
     hide:function() {
         if (dojo.byId('loadingIcon')) {
@@ -613,9 +629,9 @@ dojo.declare("phpr.loading", null, {
 });
 
 dojo.declare("phpr.translator", null, {
-    // summary:
+    // Summary:
     //     Trasnlation class
-    // description:
+    // Description:
     //     Collect all the trasnlated strings into an array
     //     and return the request string translateds
     _strings: {},
@@ -645,12 +661,12 @@ dojo.declare("phpr.translator", null, {
 });
 
 dojo.declare("phpr.Dialog", [dijit.Dialog], {
-    // summary:
+    // Summary:
     //     Provide a dialog with some changes
-    // description:
+    // Description:
     //     Allow dialog into other dialog and fix the key input
     _onKey:function(/*Event*/ evt) {
-    // summary: handles the keyboard events for accessibility reasons
+    // Summary: handles the keyboard events for accessibility reasons
         if (evt.charOrCode) {
             var dk   = dojo.keys;
             var node = evt.target;
@@ -699,9 +715,9 @@ dojo.declare("phpr.Dialog", [dijit.Dialog], {
 });
 
 dojo.declare("phpr.TreeContent", null, {
-    // summary:
+    // Summary:
     //     Manage the visibility of the tree panel
-    // description:
+    // Description:
     //     Manage the visibility of the tree panel
     fadeOut:function() {
         if (dojo.style("treeBox", "opacity") != 0.5) {
@@ -759,7 +775,11 @@ phpr.handleError = function(url, type, message) {
             break;
         case 'error':
             response.message += phpr.nls.get('User error') + '<br />';
-            response.message += message
+            response.message += message;
+            break;
+        case 'js':
+            response.message += phpr.nls.get('Internal javascript error') + '<br />';
+            response.message += message;
             break;
         default:
             response.message += 'Unexpected error';
