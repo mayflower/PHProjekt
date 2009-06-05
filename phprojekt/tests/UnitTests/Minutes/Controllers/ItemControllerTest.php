@@ -370,15 +370,6 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertContains(',"numRows":1}', $response);
     }
 
-    public function testHtmlListAction()
-    {
-        $this->setRequestUrl('Minutes/index/htmlList/minutesId/3');
-        $response = $this->getResponse();
-
-        $this->assertFalse($this->error, 'Exception was: '. $this->errormessage);
-        $this->assertContains('<table', $response, 'Response was: '. $response);
-    }
-
     /**
      * Test sending forms with errors
      */
@@ -482,7 +473,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('participantsAttending', array());
         $this->request->setParam('participantsExcused', array());
         $this->request->setParam('recipients', array());
-        $this->request->setParam('itemStatus', 3);
+        $this->request->setParam('itemStatus', 1);
         $this->request->setParam('string', '');
         $this->request->setParam('requiredField1', '(*) Required Field');
         $response = $this->getResponse();
@@ -497,7 +488,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('id', 3);
         $response = $this->getResponse();
 
-        $this->assertContains('"itemStatus":1', $response);
+        $this->assertContains('"itemStatus":3', $response);
         $this->assertNotContains('ReadOnly', $response, "Response was edited: '$response'");
     }
 

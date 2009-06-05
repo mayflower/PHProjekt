@@ -119,15 +119,6 @@ class Minutes_IndexController extends IndexController
     }
 
     /**
-     * Action to provide an HTML table of the whole minutes.
-     */
-    public function htmlListAction()
-    {
-        $this->getHtmlList((int) $this->getRequest()->getParam('minutesId', 0));
-        $this->render('table');
-    }
-
-    /**
      * Sends a mail containing the Minutes protocol.
      */
     public function jsonSendMailAction()
@@ -238,7 +229,7 @@ class Minutes_IndexController extends IndexController
 
             // Set mail content
             $mail->setBodyText($subject, 'utf-8');
-            $mail->setBodyHtml($this->getHtmlList($minutesId), 'utf-8');
+            $mail->setBodyHtml($this->getHtmlList($minutes), 'utf-8');
 
             // Keep send() commented out until test phase is over
             $mail->send($smtpTransport);
@@ -263,13 +254,11 @@ class Minutes_IndexController extends IndexController
         Phprojekt_Converter_Json::echoConvert($return);
     }
 
-    protected function getHtmlList($minutesId)
+    protected function getHtmlList(Phprojekt_Model_Interface $minutes)
     {
         $this->view->addScriptPath(PHPR_CORE_PATH . '/Minutes/Views/dojo/');
 
-        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')
-            ->init($minutesId)
-            ->fetchAll();
+        $items = $minutes->items->fetchAll();
 
         $newitem = array();
         foreach ($items as $item) {
