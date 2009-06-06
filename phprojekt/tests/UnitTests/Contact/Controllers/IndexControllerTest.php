@@ -72,7 +72,7 @@ class Contact_IndexController_Test extends FrontInit
             . '341234","secondphone":"23452345","mobilephone":"34563456","street":"Edison 1234","city":"Buenos Aires","'
             . 'zipcode":"1234AAA","country":"Argentina","comment":"Very intelligent","private":"0"}],"numRows":1})';
         $this->assertContains($expectedContent, $response);
-        }
+    }
 
     /**
      * Test of json save, json list and json detail - actually the Default functions
@@ -117,7 +117,7 @@ class Contact_IndexController_Test extends FrontInit
             . 'ires2","zipcode":"1234AAA2","country":"Argentina2","comment":"Very intelligent2","private":"1"}],"numRow'
             . 's":1})';
         $this->assertContains($expectedContent, $response);
-        }
+    }
 
     /**
      * Test of json delete - actually the Default functions
@@ -140,5 +140,5 @@ class Contact_IndexController_Test extends FrontInit
         $response        = $this->getResponse();
         $expectedContent = '{}&&({"metadata":[]})';
         $this->assertContains($expectedContent, $response);
-        }
     }
+}
