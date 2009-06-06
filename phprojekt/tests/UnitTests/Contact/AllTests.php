@@ -29,7 +29,7 @@ require_once 'Controllers/IndexControllerTest.php';
 require_once 'Models/ContactTest.php';
 
 /**
- * Test suite for the default module
+ * Test suite for the Contact module
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
