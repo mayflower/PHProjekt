@@ -1,6 +1,6 @@
 {
 
-"6.0.0-DR2":
+"6.0.0":
 {
     "structure":
     {
@@ -215,7 +215,7 @@
                             [
                                 {
                                     "module_id":  "##id##",
-                                    "project_id": "all"
+                                    "project_id": "1"
                                 }
                             ]
                         },
@@ -226,7 +226,7 @@
                             [
                                 {
                                     "module_id": "##id##",
-                                    "role_id":   "all",
+                                    "role_id":   "1",
                                     "access":    "139"
                                 }
                             ]
@@ -235,137 +235,35 @@
                 }
             ]
         }
-    }
-},
-
-"6.0.0-RC1":
-{
-    "initialData":
-    {
-        "database_manager":
-        {
-            "insert":
-            [
-                {
-                    "table_name":      "Todo",
-                    "table_field":     "title2",
-                    "form_tab":        "1",
-                    "form_label":      "Title",
-                    "form_type":       "text",
-                    "form_position":   "1",
-                    "form_columns":    "1",
-                    "form_regexp":     "NULL",
-                    "form_range":      "NULL",
-                    "default_value":   "NULL",
-                    "list_position":   "1",
-                    "list_align":      "left",
-                    "list_use_filter": "1",
-                    "alt_position":    "2",
-                    "status":          "1",
-                    "is_integer":      "0",
-                    "is_required":     "1",
-                    "is_unique":       "0"
-                }
-            ]
-        }
-    }
-},
-
-"6.0.0-RC6":
-{
-    "structure":
-    {
-        "todo":
-        {
-            "drop":
-            {
-            },
-
-            "add":
-            {
-                "user_id2":    {"type": "int"},
-                "project_id2": {"type": "int", "notNull": "true"}
-            },
-
-            "update":
-            {
-                "priority":       {"type": "int", "notNull": "true", "default": "2"},
-                "current_status": {"type": "int", "length": "1", "notNull": "true", "default": "2", "newName": "pepe"}
-            },
-
-            "delete":
-            {
-                "user_id": {}
-            }
-        }
     },
 
-    "initialData":
+    "extraData":
     {
-        "database_manager":
+        "role_module_permissions":
         {
             "insert":
             [
                 {
-                    "table_name":      "Todo",
-                    "table_field":     "title2",
-                    "form_tab":        "1",
-                    "form_label":      "Title",
-                    "form_type":       "text",
-                    "form_position":   "1",
-                    "form_columns":    "1",
-                    "form_regexp":     "NULL",
-                    "form_range":      "NULL",
-                    "default_value":   "NULL",
-                    "list_position":   "1",
-                    "list_align":      "left",
-                    "list_use_filter": "1",
-                    "alt_position":    "2",
-                    "status":          "1",
-                    "is_integer":      "0",
-                    "is_required":     "1",
-                    "is_unique":       "0"
+                    "module_id": "##Todo_moduleId##",
+                    "role_id":   "3",
+                    "access":    "0"
+                },
+
+                {
+                    "module_id": "##Todo_moduleId##",
+                    "role_id":   "2,4",
+                    "access":    "1"
                 }
             ]
         },
 
-        "todo":
+        "project_module_permissions":
         {
-            "update":
+            "insert":
             [
                 {
-                    "notes":     "default todo",
-                    "_sqlWhere": "id = 1"
-                },
-
-                {
-                    "title":     "default title",
-                    "_sqlWhere": ""
-                },
-
-                {
-                    "owner_id":   "4",
-                    "project_id": "2",
-                    "_sqlWhere":  "start_date = '2000-01-01' AND end_date = '2000-01-01'"
-                }
-            ]
-        }
-    }
-},
-
-
-"6.0.0-RC7":
-{
-    "initialData":
-    {
-        "todo":
-        {
-            "delete":
-            [
-                {
-                    "_sqlWhere": "id = 1",
-                    "_sqlWhere": "",
-                    "_sqlWhere": "start_date = '2000-01-01' AND end_date = '2000-01-01'"
+                    "module_id":  "##Todo_moduleId##",
+                    "project_id": "2"
                 }
             ]
         }

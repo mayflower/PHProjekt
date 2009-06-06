@@ -1,6 +1,6 @@
 {
 
-"6.0.0-DR2":
+"6.0.0":
 {
     "structure":
     {
@@ -9,7 +9,7 @@
             "create":
             {
                 "id":             "default",
-                "parent_id":      {"type": "int"},
+                "parent_id":      {"type": "int", "default": "0"},
                 "owner_id":       {"type": "int"},
                 "project_id":     {"type": "int", "notNull": "true"},
                 "title":          {"type": "varchar"},
@@ -32,7 +32,6 @@
                 "transparent":    {"type": "int", "length": "1"},
                 "rrule":          {"type": "text"},
                 "properties":     {"type": "text"},
-                "deleted":        {"type": "int", "length": "1"},
                 "participant_id": {"type": "int", "notNull": "true"}
             }
         }
@@ -122,6 +121,27 @@
                     "list_align":      "center",
                     "list_use_filter": "1",
                     "alt_position":    "3",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "1",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Calendar",
+                    "table_field":     "start_time",
+                    "form_tab":        "1",
+                    "form_label":      "Start time",
+                    "form_type":       "time",
+                    "form_position":   "5",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "3",
+                    "list_align":      "center",
+                    "list_use_filter": "1",
+                    "alt_position":    "0",
                     "status":          "1",
                     "is_integer":      "0",
                     "is_required":     "1",

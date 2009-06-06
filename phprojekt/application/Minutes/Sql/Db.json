@@ -1,6 +1,6 @@
 {
 
-"6.0.0-DR2":
+"6.0.0":
 {
     "structure":
     {
@@ -343,7 +343,7 @@
                             [
                                 {
                                     "module_id":  "##id##",
-                                    "project_id": "all"
+                                    "project_id": "1"
                                 }
                             ]
                         },
@@ -354,12 +354,44 @@
                             [
                                 {
                                     "module_id": "##id##",
-                                    "role_id":   "all",
+                                    "role_id":   "1",
                                     "access":    "139"
                                 }
                             ]
                         }
                     }
+                }
+            ]
+        }
+    },
+
+    "extraData":
+    {
+        "role_module_permissions":
+        {
+            "insert":
+            [
+                {
+                    "module_id": "##Minutes_moduleId##",
+                    "role_id":   "2,3",
+                    "access":    "0"
+                },
+
+                {
+                    "module_id": "##Minutes_moduleId##",
+                    "role_id":   "4",
+                    "access":    "1"
+                }
+            ]
+        },
+
+        "project_module_permissions":
+        {
+            "insert":
+            [
+                {
+                    "module_id":  "##Minutes_moduleId##",
+                    "project_id": "2"
                 }
             ]
         }
