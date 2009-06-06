@@ -178,8 +178,8 @@
         {
             "create":
             {
-                "item_id":        {"type": "int", "notNull": "true", "primary": "true"},
                 "module_id":      {"type": "int", "notNull": "true", "primary": "true"},
+                "item_id":        {"type": "int", "notNull": "true", "primary": "true"},
                 "project_id":     {"type": "int", "notNull": "true"},
                 "first_display":  {"type": "text"},
                 "second_display": {"type": "text"}
@@ -200,8 +200,8 @@
         {
             "create":
             {
-                "module_id": {"type": "int", "notNull": "true", "primary": "true"},
                 "item_id":   {"type": "int", "notNull": "true", "primary": "true"},
+                "module_id": {"type": "int", "notNull": "true", "primary": "true"},
                 "word_id":   {"type": "int", "notNull": "true", "primary": "true"}
             }
         },
