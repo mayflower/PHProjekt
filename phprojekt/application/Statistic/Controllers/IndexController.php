@@ -95,6 +95,7 @@ class Statistic_IndexController extends IndexController
                     $sumPerProject  = $sumPerProject + $data['rows'][$projectId][$userId];
                     if (!isset($sumPerUser[$userId])) {
                         $sumPerUser[$userId] = 0;
+                    } else {
                     }
                     $sumPerUser[$userId] = $sumPerUser[$userId] + $data['rows'][$projectId][$userId];
                 }

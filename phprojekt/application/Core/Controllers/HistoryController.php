@@ -57,6 +57,7 @@ class Core_HistoryController extends Core_IndexController
 
         if (empty($moduleId)) {
             $moduleId = Phprojekt_Module::getId($moduleName);
+        } else {
         }
 
         if (empty($itemId) || empty($moduleId)) {

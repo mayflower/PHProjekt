@@ -79,14 +79,14 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 
             if ($users == NULL) {
                 $this->fail('No user found');
+            } else {
+                $david        = $users[0];
+                $group        = $david->groups->create();
+                $group->name  = 'TEST GROUP';
+                $this->assertTrue($group->save());
+
+                $this->assertNotNull($group->id);
             }
-
-            $david        = $users[0];
-            $group        = $david->groups->create();
-            $group->name  = 'TEST GROUP';
-            $this->assertTrue($group->save());
-
-            $this->assertNotNull($group->id);
         } catch (Exception $e) {
             $this->fail($e->getMessage().$e->getTraceAsString());
         }

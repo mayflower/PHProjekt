@@ -40,9 +40,9 @@ final class Minutes_Helpers_Pdf
     {
         if (is_null($collect)) {
             return $new['display'];
+        } else {
+            return $collect . "\n" . $new['display'];
         }
-
-        return $collect . "\n" . $new['display'];
     }
 
     /**
