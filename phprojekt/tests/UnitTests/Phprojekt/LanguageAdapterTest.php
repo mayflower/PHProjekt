@@ -52,7 +52,6 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
             if (strstr($value, 'inc.php')) {
                 $value = str_replace('.inc.php', '', $value);
                 new Phprojekt_Language($value);
-            } else {
             }
         }
     }
