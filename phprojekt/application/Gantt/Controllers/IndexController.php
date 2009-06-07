@@ -45,7 +45,7 @@ class Gantt_IndexController extends IndexController
         $projectId    = (int) $this->getRequest()->getParam('nodeId', null);
         $data['data'] = array();
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree->setup();
         $min = gmmktime(0, 0, 0, 12, 31, 2030);
         $max = gmmktime(0, 0, 0, 1, 1, 1970);
