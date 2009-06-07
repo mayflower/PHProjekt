@@ -660,12 +660,12 @@ INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `iden
 
 INSERT INTO `project` (`id`, `project_id`, `path`, `title`, `notes`, `owner_id`, `start_date`, `end_date`, `priority`, `current_status`, `complete_percent`, `hourly_wage_rate`, `budget`) VALUES
 (1,NULL,'/','Invisible Root','',1,NULL,NULL,NULL,1,0,NULL,NULL),
-(2,1,'/1/','Project 1','',1,NULL,NULL,NULL,1,0,NULL,NULL),
+(2,1,'/1/','Project 1','',1,'2009-06-01','2009-10-31',NULL,1,0,NULL,NULL),
 (3,1,'/1/','Project 2','',2,NULL,NULL,NULL,1,0,NULL,NULL),
-(4,2,'/1/2/','Sub Project','',1,NULL,NULL,NULL,1,0,NULL,NULL),
-(5,2,'/1/2/','Test Project','Test note',1,NULL,NULL,NULL,2,0,NULL,NULL),
-(6,4,'/1/2/4/','Sub Sub Project 1','',1,NULL,NULL,NULL,1,0,NULL,NULL),
-(7,4,'/1/2/4/','Sub Sub Project 2','',1,NULL,NULL,NULL,1,0,NULL,NULL);
+(4,2,'/1/2/','Sub Project','',1,'2009-06-01','2009-07-31',NULL,1,0,NULL,NULL),
+(5,2,'/1/2/','Test Project','Test note',1,'2009-08-01','2009-10-31',NULL,2,0,NULL,NULL),
+(6,4,'/1/2/4/','Sub Sub Project 1','',1,'2009-06-01','2009-06-30',NULL,1,0,NULL,NULL),
+(7,4,'/1/2/4/','Sub Sub Project 2','',1,'2009-07-01','2009-07-31',NULL,1,0,NULL,NULL);
 
 INSERT INTO `groups` (`id`, `name`) VALUES
 (1, 'default'),
