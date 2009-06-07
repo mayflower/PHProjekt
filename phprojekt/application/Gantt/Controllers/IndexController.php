@@ -34,7 +34,7 @@
 class Gantt_IndexController extends IndexController
 {
     /**
-     * Return a list of projects with the info nessesary for make the gantt chart
+     * Return a list of projects with the necessary info to make the gantt chart
      *
      * @requestparam integer nodeId
      *
