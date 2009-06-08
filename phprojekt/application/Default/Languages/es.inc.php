@@ -172,6 +172,7 @@ $lang["Statistic"] = "Estadísticas";
 $lang["Contact"] = "Contactos";
 $lang["Module Designer"] = "Diseñador de Módulos";
 $lang["Helpdesk"] = "Incidencias";
+$lang["Minutes"] = "MINUTES?";
 
 // Titles
 $lang["Search results"] = "Resultados de la búsqueda";
