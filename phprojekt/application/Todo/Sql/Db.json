@@ -16,7 +16,7 @@
                 "start_date":     {"type": "date"},
                 "end_date":       {"type": "date"},
                 "priority":       {"type": "int"},
-                "current_status": {"type": "int", "length": "1", "notNull": "true", "default": "2"},
+                "current_status": {"type": "int", "length": "2", "notNull": "true", "default": "1"},
                 "user_id":        {"type": "int"}
             }
         }
@@ -56,7 +56,7 @@
                     "form_label":      "Notes",
                     "form_type":       "textarea",
                     "form_position":   "2",
-                    "form_columns":    "2",
+                    "form_columns":    "1",
                     "form_regexp":     "NULL",
                     "form_range":      "NULL",
                     "default_value":   "NULL",
@@ -149,7 +149,7 @@
                     "list_use_filter": "1",
                     "alt_position":    "6",
                     "status":          "1",
-                    "is_integer":      "0",
+                    "is_integer":      "1",
                     "is_required":     "0",
                     "is_unique":       "0"
                 },
@@ -189,7 +189,7 @@
                     "list_position":   "6",
                     "list_align":      "left",
                     "list_use_filter": "1",
-                    "alt_position":    "1",
+                    "alt_position":    "7",
                     "status":          "1",
                     "is_integer":      "1",
                     "is_required":     "0",

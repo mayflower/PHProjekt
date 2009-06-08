@@ -53,7 +53,6 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 2);
         $this->request->setParam('title', 'test title');
         $this->request->setParam('comments', 'comment test');
-        $this->request->setParam('category', 'my category');
         $this->request->setParam('files', '966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt');
         $response = $this->getResponse();
         $this->assertContains(Filemanager_IndexController::ADD_TRUE_TEXT, $response);
@@ -147,7 +146,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $expectedContent = '"data":[{"id":null,"title":"","rights":{"currentUser":{"moduleId":"7","itemId":null,"userId'
              . '":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"downlo'
-             . 'ad":true,"admin":true}},"comments":"","projectId":"","category":"","files":""}],"numRows":1})';
+             . 'ad":true,"admin":true}},"comments":"","projectId":"","files":""}],"numRows":1})';
         $this->assertContains($expectedContent, $response);
 
         // Existing item
@@ -157,7 +156,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $expectedContent = '"data":[{"id":"1","title":"test title MODIFIED AGAIN","rights":{"currentUser":{"module_id":'
             . '"7","item_id":"1","user_id":"1","access":true,"moduleId":"7","itemId":"1","userId":"1","none":false,"rea'
             . 'd":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"comments":"'
-            . 'comment test MODIFIED AGAIN","projectId":"1","category":"my category","files":"a66f9bfa01ec4a2a3fa6282bb'
+            . 'comment test MODIFIED AGAIN","projectId":"1","files":"a66f9bfa01ec4a2a3fa6282bb'
             . '8fa8d56|articles2.txt"}],"numRows":1})';
         $this->assertContains($expectedContent, $response);
     }

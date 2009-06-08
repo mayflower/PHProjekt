@@ -206,7 +206,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     break;
                 case 'display':
                     // Has it an Id value that should be translated into a descriptive String?
-                    if ($field->formRange == '') {
+                    if (null === $field->formRange) {
                         // No
                         $entry = $this->_convertStandard($field);
                     } else {

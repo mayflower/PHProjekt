@@ -12,16 +12,16 @@
                 "owner_id":    {"type": "int"},
                 "project_id":  {"type": "int", "notNull": "true"},
                 "name":        {"type": "varchar", "notNull": "true"},
-                "email":       {"type": "varchar"},
-                "company":     {"type": "varchar"},
-                "firstphone":  {"type": "varchar"},
-                "secondphone": {"type": "varchar"},
-                "mobilephone": {"type": "varchar"},
-                "street":      {"type": "varchar"},
-                "city":        {"type": "varchar"},
-                "zipcode":     {"type": "varchar", "length": "50"},
-                "country":     {"type": "varchar"},
-                "comment":     {"type": "text"},
+                "email":       {"type": "varchar", "notNull": "true"},
+                "company":     {"type": "varchar", "notNull": "true"},
+                "firstphone":  {"type": "varchar", "notNull": "true"},
+                "secondphone": {"type": "varchar", "notNull": "true"},
+                "mobilephone": {"type": "varchar", "notNull": "true"},
+                "street":      {"type": "varchar", "notNull": "true"},
+                "city":        {"type": "varchar", "notNull": "true"},
+                "zipcode":     {"type": "varchar", "length": "50", "notNull": "true"},
+                "country":     {"type": "varchar", "notNull": "true"},
+                "comment":     {"type": "text", "notNull": "true"},
                 "private":     {"type": "int", "length": "1", "default": "0"}
             }
         }
@@ -280,7 +280,7 @@
                     "list_use_filter": "1",
                     "alt_position":    "0",
                     "status":          "1",
-                    "is_integer":      "0",
+                    "is_integer":      "1",
                     "is_required":     "0",
                     "is_unique":       "0"
                 }

@@ -96,6 +96,7 @@ CREATE TABLE `module` (
   `name` varchar(255) NOT NULL,
   `label` varchar(255) NOT NULL,
   `save_type` int(1) NOT NULL default 0,
+  `version` varchar(20) default NULL,
   `active` int(1) NOT NULL default 1,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -152,7 +153,7 @@ CREATE TABLE `project` (
   `start_date` date default NULL,
   `end_date` date default NULL,
   `priority` int(11) default NULL,
-  `current_status` int(2) NOT NULL default 1,
+  `current_status` int(2) NOT NULL default 2,
   `complete_percent` varchar(4) default NULL,
   `hourly_wage_rate` varchar(10) default NULL,
   `budget` varchar(10) default NULL,
@@ -473,10 +474,10 @@ CREATE TABLE `helpdesk` (
   `assigned` int(11) default NULL,
   `date` date default NULL,
   `project_id` int(11) NOT NULL,
-  `priority` int(11) default NULL,
+  `priority` int(2) default NULL,
   `attachments` text default NULL,
   `description` text default NULL,
-  `status` varchar(50) NOT NULL,
+  `status` int(2) default NULL,
   `due_date` date default NULL,
   `author` varchar(255) default NULL,
   `solved_by` varchar(255) default NULL,
@@ -530,105 +531,105 @@ CREATE TABLE `minutes_item` (
 -- INSERT DATA
 --
 
-INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `active`) VALUES
-(1, 'Project', 'Project', 0, 1),
-(2, 'Todo', 'Todo', 0, 1),
-(3, 'Note', 'Note', 0, 1),
-(4, 'Timecard', 'Timecard', 1, 1),
-(5, 'Calendar', 'Calendar', 1, 1),
-(6, 'Gantt', 'Gantt', 0, 1),
-(7, 'Filemanager', 'Filemanager', 0, 1),
-(8, 'Statistic', 'Statistic', 0, 1),
-(9, 'Contact', 'Contact', 1, 1),
-(10, 'Helpdesk', 'Helpdesk', 0, 1),
-(11, 'Minutes','Minutes', 0, 1);
+INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `version`, `active`) VALUES
+(1, 'Project', 'Project', 0, '6.0.0', 1),
+(2, 'Todo', 'Todo', 0, '6.0.0', 1),
+(3, 'Note', 'Note', 0, '6.0.0', 1),
+(4, 'Timecard', 'Timecard', 1, '6.0.0', 1),
+(5, 'Calendar', 'Calendar', 1, '6.0.0', 1),
+(6, 'Gantt', 'Gantt', 0, '6.0.0', 1),
+(7, 'Filemanager', 'Filemanager', 0, '6.0.0', 1),
+(8, 'Statistic', 'Statistic', 0, '6.0.0', 1),
+(9, 'Contact', 'Contact', 1, '6.0.0', 1),
+(10, 'Helpdesk', 'Helpdesk', 0, '6.0.0', 1),
+(11, 'Minutes','Minutes', 0, '6.0.0', 1);
 
 INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `form_label`, `form_type`, `form_position`, `form_columns`, `form_regexp`, `form_range`, `default_value`, `list_position`, `list_align`, `list_use_filter`, `alt_position`, `status`, `is_integer`, `is_required`, `is_unique`) VALUES
-(0, 'Project', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
-(0, 'Project', 'notes', 1, 'Notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Project', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
+(0, 'Project', 'notes', 1, 'Notes', 'textarea', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Project', 'project_id', 1, 'Parent', 'selectValues', 3, 1, NULL, 'Project#id#title', '1', 0, NULL, 1, 1, '1', 1, 1, 0),
-(0, 'Project', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
-(0, 'Project', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
+(0, 'Project', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, NULL, 3, 'center', 1, 3, '1', 0, 0, 0),
+(0, 'Project', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, NULL, 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Project', 'priority', 1, 'Priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
-(0, 'Project', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 0, 0, 0),
-(0, 'Project', 'complete_percent', 1, 'Complete percent', 'percentage', 8, 1, NULL, NULL, '', 7, 'center', 1, 7, '1', 0, 0, 0),
-(0, 'Project', 'budget', 1, 'Budget', 'text', 9, 1, NULL, NULL, '', 0, NULL, 1, 8, '1', 0, 0, 0),
-(0, 'Project', 'contact_id', 1, 'Contact', 'selectValues', 10, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
+(0, 'Project', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 1, 0, 0),
+(0, 'Project', 'complete_percent', 1, 'Complete percent', 'percentage', 8, 1, NULL, NULL, NULL, 7, 'center', 1, 7, '1', 0, 0, 0),
+(0, 'Project', 'budget', 1, 'Budget', 'text', 9, 1, NULL, NULL, NULL, 0, NULL, 1, 8, '1', 0, 0, 0),
+(0, 'Project', 'contact_id', 1, 'Contact', 'selectValues', 10, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 9, '1', 1, 0, 0),
 
-(0, 'Todo', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
-(0, 'Todo', 'notes', 1, 'Notes', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Todo', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
-(0, 'Todo', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, '', 4, 'center', 1, 4, '1', 0, 0, 0),
+(0, 'Todo', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
+(0, 'Todo', 'notes', 1, 'Notes', 'textarea', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Todo', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, NULL, 3, 'center', 1, 3, '1', 0, 0, 0),
+(0, 'Todo', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, NULL   , 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Todo', 'priority', 1, 'Priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
-(0, 'Todo', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 7, 'center', 1, 6, '1', 0, 0, 0),
-(0, 'Todo', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
-(0, 'Todo', 'user_id', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', '', 6, 'left', 1, 1, '1', 1, 0, 0),
+(0, 'Todo', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 7, 'center', 1, 6, '1', 1, 0, 0),
+(0, 'Todo', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Todo', 'user_id', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', NULL  , 6, 'left', 1, 7, '1', 1, 0, 0),
 
-(0, 'Note', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 0, 1, 0),
+(0, 'Note', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
 (0, 'Note', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
-(0, 'Note', 'comments', 1, 'Comments', 'textarea', 2, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Note', 'category', 1, 'Category', 'text', 4, 2, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
+(0, 'Note', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Note', 'category', 1, 'Category', 'text', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 
-(0, 'Calendar', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
-(0, 'Calendar', 'place', 1, 'Place', 'text', 2, 1, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'notes', 1, 'Notes', 'textarea', 3, 2, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Calendar', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, '', 2, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'start_time', 1, 'Start time', 'time', 5, 1, NULL, NULL, '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'end_date', 1, 'End date', 'date', 6, 1, NULL, NULL, '', 4, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'end_time', 1, 'End time', 'time', 7, 1, NULL, NULL, '', 5, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Calendar', 'participant_id', 1, 'Participant', 'hidden', 8, 1, NULL, NULL, '', 0, NULL, 1, 1, '1', 1, 1, 0),
-(0, 'Calendar', 'rrule', 1, 'Rrule', 'hidden', 9, 1, NULL, NULL, '', NULL, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
+(0, 'Calendar', 'place', 1, 'Place', 'text', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'notes', 1, 'Notes', 'textarea', 3, 2, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Calendar', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, NULL, 2, 'center', 1, 3, '1', 0, 1, 0),
+(0, 'Calendar', 'start_time', 1, 'Start time', 'time', 5, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'end_date', 1, 'End date', 'date', 6, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'end_time', 1, 'End time', 'time', 7, 1, NULL, NULL, NULL, 5, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'participant_id', 1, 'Participant', 'hidden', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Calendar', 'rrule', 1, 'Rrule', 'hidden', 9, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 
-(0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Filemanager', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Filemanager', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 0, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Filemanager', 'files', 1, 'Upload', 'upload', 5, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Filemanager', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Filemanager', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Filemanager', 'files', 1, 'Upload', 'upload', 5, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
 
-(0, 'Contact', 'name', 1, 'Name', 'text', 1, 1, NULL, '', '', 1, 'left', 1, 0, '1', 0, 1, 0),
-(0, 'Contact', 'email', 1, 'E-Mail', 'text', 2, 1, NULL, '', '', 2, 'left', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'company', 1, 'Company', 'text', 3, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'firstphone', 1, 'First phone', 'text', 4, 1, NULL, '', '',  3, 'left', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'secondphone', 1, 'Second phone', 'text', 5, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'mobilephone', 1, 'Mobile phone', 'text', 6, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'street', 1, 'Street', 'text', 7, 1, NULL, '', '', 4, 'left', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'city', 1, 'City', 'text', 8, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'zipcode', 1, 'Zip Code', 'text', 9, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'country', 1, 'Country', 'text', 10, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'comment', 1, 'Comment', 'textarea', 11, 1, NULL, '', '', 0, '', 1, 0, '1', 0, 0, 0),
-(0, 'Contact', 'private', 1, 'Private', 'selectValues', 12, 1, NULL, '0#No|1#Yes', '0', 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'name', 1, 'Name', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 0, '1', 0, 1, 0),
+(0, 'Contact', 'email', 1, 'E-Mail', 'text', 2, 1, NULL, NULL, NULL, 2, 'left', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'company', 1, 'Company', 'text', 3, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'firstphone', 1, 'First phone', 'text', 4, 1, NULL, NULL, NULL,  3, 'left', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'secondphone', 1, 'Second phone', 'text', 5, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'mobilephone', 1, 'Mobile phone', 'text', 6, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'street', 1, 'Street', 'text', 7, 1, NULL, NULL, NULL, 4, 'left', 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'city', 1, 'City', 'text', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'zipcode', 1, 'Zip Code', 'text', 9, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'country', 1, 'Country', 'text', 10, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'comment', 1, 'Comment', 'textarea', 11, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Contact', 'private', 1, 'Private', 'selectValues', 12, 1, NULL, '0#No|1#Yes', '0', 5, 'center', 1, 0, '1', 1, 0, 0),
 
-(0, 'Helpdesk', 'title', 1, 'Title', 'text', 1, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'assigned', 1, 'Assigned', 'selectValues', 3, 1, NULL, 'User#id#lastname', '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'date', 1, 'Date', 'display', 4, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'project_id', 1, 'Project', 'selectValues', 6, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'priority', 1, 'Priority', 'selectValues', 7, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '', 5, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'attachments', 1, 'Attachments', 'upload', 8, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'description', 1, 'Description', 'textarea', 11, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Open|2#Assigned|3#Solved|4#Verified|5#Closed', '1', 6, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'due_date', 1, 'Due date', 'date', 5, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'author', 1, 'Author', 'display', 2, 1, NULL, 'User#id#lastname', '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'solved_by', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'solved_date', 1, 'Solved date', 'display', 10, 1, NULL, '', '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 1, '1', 1, 0, 0),
+(0, 'Helpdesk', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'assigned', 1, 'Assigned', 'selectValues', 3, 1, NULL, 'User#id#lastname', NULL, 4, 'center', 1, 0, '1', 1, 0, 0),
+(0, 'Helpdesk', 'date', 1, 'Date', 'display', 4, 1, NULL, NULL, NULL, 2, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'project_id', 1, 'Project', 'selectValues', 6, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Helpdesk', 'priority', 1, 'Priority', 'selectValues', 7, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 0, '1', 1, 0, 0),
+(0, 'Helpdesk', 'attachments', 1, 'Attachments', 'upload', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'description', 1, 'Description', 'textarea', 11, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Open|2#Assigned|3#Solved|4#Verified|5#Closed', '1', 6, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Helpdesk', 'due_date', 1, 'Due date', 'date', 5, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'author', 1, 'Author', 'display', 2, 1, NULL, 'User#id#lastname', NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Helpdesk', 'solved_by', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'solved_date', 1, 'Solved date', 'display', 10, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
 
-(0, 'Minutes', 'project_id', 1, 'Select', 'hidden', 1, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, '', '', 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, '', '', 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'meeting_date', 1, 'Date of Meeting', 'date', 4, 1, NULL, '', '', 1, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'start_time', 1, 'Start Time', 'time', 5, 1, NULL, '', '', 2, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'end_time', 1, 'End Time', 'time', 6, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, '', '', 5, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, '', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_invited', 2, 'Invited', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', '', 0, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 0, 1, NULL, '1#PLANNED|2#CREATED|3#PREVIEW|4#FINAL', '0', 6, 'center', 1, 0, '1', 0, 0, 0);
+(0, 'Minutes', 'project_id', 1, 'Select', 'hidden', 1, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
+(0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'meeting_date', 1, 'Date of Meeting', 'date', 4, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'start_time', 1, 'Start Time', 'time', 5, 1, NULL, NULL, NULL, 2, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'end_time', 1, 'End Time', 'time', 6, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, NULL, NULL, 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participants_invited', 2, 'Invited', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 0, 1, NULL, '1#Planned|2#Created|3#Preview|4#Final', '0', 6, 'center', 1, 0, '1', 1, 0, 0);
 
 
 INSERT INTO `user` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES
-(1,'admin','MyName1','MyLastName1','A', 1),
-(2,'test','MyName2','MyLastName2','A', 0);
+(1,'admin','Admin','Admin','A', 1),
+(2,'test','Test','Test','A', 0);
 
 
 INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `identifier`) VALUES
@@ -642,13 +643,12 @@ INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `iden
 (8, 2, 0, 'timeZone','2', 'Core');
 
 INSERT INTO `project` (`id`, `project_id`, `path`, `title`, `notes`, `owner_id`, `start_date`, `end_date`, `priority`, `current_status`, `complete_percent`, `hourly_wage_rate`, `budget`) VALUES
-(1, NULL, '/', 'PHProjekt', 'Test', 1, '2008-05-02', '2008-07-02', 1, 1, 0, NULL, NULL),
-(2, 1, '/1/', 'Project 1', 'Test', 1, '2008-05-02', '2008-07-02', 2, 1, 0, NULL, NULL),
-(3, 2, '/1/2/', 'Sub Project', 'Test',1, '2008-05-02', '2008-07-02', 2, 1, 0, NULL, NULL);
+(1, NULL, '/', 'PHProjekt', 'Test', 1, '2009-05-12', '2009-07-28', 1, 3, 0, NULL, NULL),
+(2, 1, '/1/', 'Project 1', 'Test', 1, '2009-05-12', '2009-07-02', 2, 3, 0, NULL, NULL),
+(3, 2, '/1/2/', 'Sub Project', 'Test',1, '2009-05-12', '2009-07-02', 2, 3, 0, NULL, NULL);
 
 INSERT INTO `groups` (`id`, `name`) VALUES
-(1, 'default'),
-(2, 'ninatest');
+(1, 'default');
 
 INSERT INTO `role` (`id`, `name`, `parent`) VALUES
 (1, 'admin in all', null), #Necessary
@@ -658,8 +658,7 @@ INSERT INTO `role` (`id`, `name`, `parent`) VALUES
 
 INSERT INTO `groups_user_relation` (`id`, `groups_id`, `user_id`) VALUES
 (1, 1, 1),
-(2, 2, 2);
-
+(2, 1, 2);
 
 INSERT INTO `project_role_user_permissions` (`project_id`, `user_id`, `role_id`) VALUES
 (1, 1, 1),
@@ -722,12 +721,9 @@ INSERT INTO `project_module_permissions` (`module_id`, `project_id`) VALUES
 (1, 1),
 (2, 1),
 (3, 1),
-(4, 1),
-(5, 1),
 (6, 1),
 (7, 1),
 (8, 1),
-(9, 1),
 (10, 1),
 (11, 1),
 
@@ -737,7 +733,6 @@ INSERT INTO `project_module_permissions` (`module_id`, `project_id`) VALUES
 (6, 2),
 (7, 2),
 (8, 2),
-(9, 2),
 (10, 2),
 (11, 2),
 
