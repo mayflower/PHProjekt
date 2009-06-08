@@ -54,7 +54,7 @@ class Helpdesk_IndexController extends IndexController
             $record->date   = date("Y-m-d");
         } else {
             $record = $this->getModelObject()->find($id);
-            if ($record->solvedBy == null) {
+            if (null === $record->solvedBy) {
                 // This is because of the solved date being unable to be deleted from the item
                 $record->solvedDate = '';
             }
@@ -78,7 +78,7 @@ class Helpdesk_IndexController extends IndexController
     public function setParams($params, $model, $newItem = false)
     {
         if ($newItem) {
-            $params['author'] = Phprojekt_Auth::getUserId();
+            $params['author'] = (int) Phprojekt_Auth::getUserId();
             $params['date']   = date("Y-m-d");
         } else {
             // The author comes as a STRING but must be saved as an INT (and it doesn't change since the item creation)
@@ -92,7 +92,7 @@ class Helpdesk_IndexController extends IndexController
             } else {
                 // Status 'Solved' - If it has just been changed to this state, save user and date
                 if ($model->status != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
-                    $params['solvedBy']   = Phprojekt_Auth::getUserId();
+                    $params['solvedBy']   = (int) Phprojekt_Auth::getUserId();
                     $params['solvedDate'] = date("Y-m-d");
                 } else {
                     // The solver comes as a STRING but must be saved as an INT (and the Id doesn't change)
