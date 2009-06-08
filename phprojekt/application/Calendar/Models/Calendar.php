@@ -999,4 +999,26 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         return $valid;
     }
+
+    /**
+     * Returns all the connected events (by the parentId) for the logged user
+     *
+     * @return array
+     */
+    public function getRelatedEvents()
+    {
+        $rootEventId = $this->getRootEventId($this);
+        $userId      = Phprojekt_Auth::getUserId();
+        $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d',
+            (int) $rootEventId, (int) $rootEventId, (int) $userId);
+        $model   = clone($this);
+        $records = $model->fetchAll($where);
+        $return  = array();
+        foreach ($records as $record) {
+            if ($record->id != $this->id) {
+                $return[] = $record->id;
+            }
+        }
+        return $return;
+    }
 }

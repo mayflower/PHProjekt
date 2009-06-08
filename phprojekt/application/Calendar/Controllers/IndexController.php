@@ -61,22 +61,30 @@ class Calendar_IndexController extends IndexController
         $rrule          = (string) $this->getRequest()->getParam('rrule', null);
         $participants   = (array) $this->getRequest()->getParam('dataParticipant');
         $multipleEvents = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
+        $modification   = false;
 
         $this->getRequest()->setParam('endTime', $endTime);
         $this->getRequest()->setParam('startTime', $startTime);
 
         if (!empty($id)) {
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            $modification = true;
         }
 
-        $model   = $this->getModelObject();
-        $request = $this->getRequest()->getParams();
-        $id      = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents);
+        $model          = $this->getModelObject();
+        $request        = $this->getRequest()->getParams();
+        $id             = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents);
+        if ($modification) {
+            $updateCacheIds = $model->getRelatedEvents();
+        }
 
         $return = array('type'    => 'success',
                         'message' => $message,
                         'code'    => 0,
                         'id'      => $id);
+        if ($modification && count($updateCacheIds) > 0) {
+            $return['updateCacheIds'] = $updateCacheIds;
+        }
 
         Phprojekt_Converter_Json::echoConvert($return);
     }

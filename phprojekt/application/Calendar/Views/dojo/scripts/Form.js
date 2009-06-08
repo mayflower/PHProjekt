@@ -26,6 +26,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _owner:          null,
     _currentDate:    null,
     _currentTime:    null,
+    _updateCacheIds: null,
 
     _FRMWIDG_BASICDATA:  0,
     _FRMWIDG_PARTICIP:   1,
@@ -447,5 +448,58 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._participantUrl});
         phpr.DataStore.deleteData({url: this._tagUrl});
+        if (this._updateCacheIds != null) {
+            this.updateCacheIds();
+        }
+    },
+
+    submitForm:function() {
+        // summary:
+        //    This function is responsible for submitting the formdata
+        // description:
+        //    This function sends the form data as json data to the server
+        //    and call the reload routine
+        if (!this.prepareSubmission()) {
+            return false;
+        }
+
+        phpr.send({
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
+            content:   this.sendData,
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
+               if (!this.id) {
+                   this.id = data['id'];
+               }
+               if (data.type == 'success') {
+                   if ((data.updateCacheIds != undefined) && this.useCache) {
+                       this._updateCacheIds = data.updateCacheIds;
+                   }
+                   phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
+                            + '/id/' + this.id,
+                        content:   this.sendData,
+                        onSuccess: dojo.hitch(this, function(data) {
+                            if (this.sendData['string']) {
+                                new phpr.handleResponse('serverFeedback', data);
+                            }
+                            if (data.type =='success') {
+                                this.publish("updateCacheData");
+                                this.publish("setUrlHash", [phpr.module]);
+                            }
+                        })
+                    });
+                }
+            })
+        });
+    },
+
+    updateCacheIds:function() {
+        // Summary:
+        //    This function deletes the cache for the ids stored in _updateCacheIds
+        for (idPos in this._updateCacheIds) {
+            var url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this._updateCacheIds[idPos];
+            phpr.DataStore.deleteData({url: url});
+        }
     }
 });
