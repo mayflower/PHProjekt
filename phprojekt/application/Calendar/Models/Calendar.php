@@ -93,7 +93,18 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
             }
             if ($multipleEvents) {
-                $startDate = $this->getRecursionStartDate($id, $startDate);
+                $model = clone($this);
+                $model->find($id);
+                // If the startDate has changed, apply that difference of days to all the events of recurrence
+                if ($startDate != $model->startDate) {
+                    $startDateZendPm = new Zend_Date($startDate);
+                    $startDiff       = $startDateZendPm->compare($model->startDate);
+                    $startDate       = $this->getRecursionStartDate($id, $startDate);
+                    $startDateZendNw = new Zend_Date($startDate);
+                    $startDateZendNw->addDay($startDiff);
+                    $startDate = $startDateZendNw->get();
+                    $startDate = date("Y-m-d", $startDate);
+                }
             }
             $dateCollection = new Phprojekt_Date_Collection($startDate);
             $dateCollection->applyRrule($rrule);
@@ -235,9 +246,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if ($this->_isOwner($model)) {
             // Only use the new startDate if the user is owner
             // and the starDate is less than the minimal value for startDate
-            if ($records[0]->startDate < $startDate) {
+            //if ($records[0]->startDate < $startDate) {
                 $startDate = $records[0]->startDate;
-            }
+            //}
         } else {
             // If the user is not the owner, always use the minimal value for startDate
             $startDate = $records[0]->startDate;
