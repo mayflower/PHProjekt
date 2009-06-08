@@ -123,7 +123,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     for (j in range){
                         vals.push(range[j]["id"]);
                         opts.push(range[j]["name"]);
-                        j++;
                     }
                     this.gridLayout.push({
                         name:     meta[i]["label"],
@@ -196,7 +195,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         for (j in range){
                             vals.push(range[j]["id"]);
                             opts.push(range[j]["name"]);
-                            j++;
                         }
                         this.gridLayout.push({
                             name:     meta[i]["label"],

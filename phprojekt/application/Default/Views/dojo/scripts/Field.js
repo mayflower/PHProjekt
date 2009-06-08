@@ -205,7 +205,6 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 found = true;
             }
             options.push(range[j]);
-            j++;
         }
         if (!found) {
             itemvalue = first;
@@ -238,7 +237,6 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 }
             }
             options.push(range[j]);
-            j++;
         }
         var html = this.render(["phpr.Default.template", "formselect.html"], null, {
                             label:    itemlabel,
@@ -273,9 +271,11 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         if (range != undefined) {
             // The Id must be translated into a descriptive String
             for (var j in range) {
-                if (parseInt(range[j]['id']) == itemvalue) {
-                    itemvalue = range[j]['name'];
-                    break;
+                if (range[j]) {
+                    if (parseInt(range[j].id) == itemvalue) {
+                        itemvalue = range[j].name;
+                        break;
+                    }
                 }
             }
         }
