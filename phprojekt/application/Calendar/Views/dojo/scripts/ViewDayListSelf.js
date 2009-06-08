@@ -168,7 +168,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                         }
                     }
                     if (useColumn != -1) {
-                        break
+                        break;
                     }
                 }
 
