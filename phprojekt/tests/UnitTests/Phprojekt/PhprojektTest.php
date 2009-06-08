@@ -33,12 +33,12 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
 {
     public function testGetVersion()
     {
-        $this->assertEquals("6.0.0-RC1", Phprojekt::getVersion());
+        $this->assertEquals("6.0.0", Phprojekt::getVersion());
     }
 
     public function testCompareVersion()
     {
-        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0", Phprojekt::getVersion()));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1", Phprojekt::getVersion()));
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1", "6.0.0"));
         $this->assertLessThan(0, Phprojekt::compareVersion("6.0.1", "6.1.0"));
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1-RC2", "6.0.1-RC1"));

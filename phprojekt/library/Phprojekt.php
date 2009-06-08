@@ -53,7 +53,7 @@ class Phprojekt
     /**
      * The extra part of the version number
      */
-    const VERSION_EXTRA = "RC1";
+    const VERSION_EXTRA = null;
 
     /**
      * Singleton instance
