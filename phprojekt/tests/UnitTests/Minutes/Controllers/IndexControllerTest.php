@@ -28,6 +28,7 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
+ * @group      minutes, controller, minutes-controller
  */
 class Minutes_IndexController_Test extends FrontInit
 {
@@ -39,7 +40,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
-        
+
         $this->assertContains('{"metadata":[]}', $response, "Response was: '$response'");
     }
 
@@ -64,7 +65,7 @@ class Minutes_IndexController_Test extends FrontInit
     public function testJsonListUserActionFromNonExistingMinutes() {
         $this->setRequestUrl('Minutes/index/jsonListUser/id/1');
         $response = $this->getResponse();
-        
+
         $this->assertContains(Minutes_IndexController::NOT_FOUND, $this->errormessage, "Response was: '$response'");
         // This action should return the list of users selected as participantsInvited only from existing minutes.
     }
@@ -78,7 +79,7 @@ class Minutes_IndexController_Test extends FrontInit
         $meetDate = new Zend_Date($locale);
         $meetDate->sub(1, Zend_Date::DAY);
         $meetDateString = $meetDate->toString("EEE MMM dd yyyy '00:00:00 GMT'ZZZ");
-        
+
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'TestTitle');
@@ -96,7 +97,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('string', '');
         $this->request->setParam('requiredField1', '(*) Required Field');
         $response = $this->getResponse();
-        
+
         $this->assertFalse($this->error, "Yesterdays date used: '$meetDateString', Exception is: ".$this->errormessage);
         $this->assertContains(Minutes_IndexController::ADD_TRUE_TEXT, $response, "Response was: '$response'");
         $this->assertContains('"id":"1"', $response, "ID created was not numbered 1.");
@@ -107,7 +108,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
-        
+
         $this->assertContains('"numRows":1}', $response, "Response was: '$response'");
     }
 
@@ -133,7 +134,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('string', '');
         $this->request->setParam('requiredField1', '(*) Required Field');
         $response = $this->getResponse();
-        
+
         $this->assertContains(Minutes_IndexController::ADD_TRUE_TEXT, $response, "Response was: '$response'");
         $this->assertContains('"id":"2"', $response, "ID created was not numbered 2.");
     }
@@ -143,18 +144,18 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
-        
+
         $this->assertContains('"numRows":2}', $response, "Response was: '$response'");
     }
 
     /*
      * Test getting the user list
      */
-    public function testJsonListUserActionFromExistingMinutes() 
+    public function testJsonListUserActionFromExistingMinutes()
     {
         $this->setRequestUrl('Minutes/index/jsonListUser/id/1');
         $response = $this->getResponse();
-        
+
         $this->assertContains('{"id":"1","display":', $response);
         $this->assertContains('{"id":"2","display":', $response);
         $this->assertContains('"numRows":2})', $response, "Response was: '$response'");
@@ -167,7 +168,7 @@ class Minutes_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Minutes/index/jsonDetail/id/1');
         $response = $this->getResponse();
-        
+
         $this->assertContains('TestTitle', $response, "Response was: '$response'");
     }
 
@@ -176,7 +177,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonList/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        
+
         $this->assertContains('"numRows":1}', $response, "Response was: '$response'");
     }
 
@@ -212,7 +213,7 @@ class Minutes_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Minutes/index/jsonDelete/id/1');
         $response = $this->getResponse();
-        
+
         $this->assertContains(Minutes_IndexController::DELETE_TRUE_TEXT, $response, "Response was: '$response'");
     }
 
@@ -220,7 +221,7 @@ class Minutes_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Minutes/index/jsonDelete/id/2');
         $response = $this->getResponse();
-        
+
         $this->assertContains(Minutes_IndexController::DELETE_TRUE_TEXT, $response, "Response was: '$response'");
     }
 
@@ -233,7 +234,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
-        
+
         $this->assertContains('{"metadata":[]}', $response, "Response was: '$response'");
     }
 }

@@ -28,6 +28,7 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
+ * @group      minutes, helpers, minutes-helpers
  */
 class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
 {
@@ -38,25 +39,25 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(array(), Minutes_Helpers_Userlist::expandIdList());
     }
-    
+
     public function testUserlistEmptyString()
     {
         $this->assertEquals(array(), Minutes_Helpers_Userlist::expandIdList(''));
     }
-    
+
     public function testUserlistSingleId()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('1');
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
-    
+
     public function testUserlistMultiId()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('1,2');
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
                                   1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
     }
-    
+
     /**
      * The order of the id should not matter on the result
      */
@@ -66,7 +67,7 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
                                   1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
     }
-    
+
     public function testUserlistMultiArguments()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('1', '2');
@@ -83,7 +84,7 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
                                   1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
     }
-    
+
     /**
      * Duplicate ids should show as single entry in result
      */
@@ -92,7 +93,7 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
         $data = Minutes_Helpers_Userlist::expandIdList('1,1');
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
-    
+
     /**
      * Duplicate ids should show as single entry in result
      */
@@ -101,7 +102,7 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
         $data = Minutes_Helpers_Userlist::expandIdList('1', '1');
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
-    
+
     /**
      * Multiple occurances of ids should show as single entry in result
      */
@@ -111,5 +112,5 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
                                   1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
     }
-    
+
 }
