@@ -53,11 +53,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         
         this.getItemList(); // preload item sort list
         
-        var itemsData = this.render(["phpr.Minutes.template", "minutesItemGrid.html"], null, {
-            // no placeholders used atm.
-        });
-        
-        this.addTab(itemsData, 'tabItems', phpr.nls.get('Items'), 'itemsFormTab');
+        this.addTab('', 'tabItems', phpr.nls.get('Items'), 'itemsFormTab');
         
         // the following code was previously located in postRenderForm, 
         // but had to be moved here because of race conditions
@@ -377,7 +373,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             this._peopleList = responseObject.data;
             if (callback) {
-            	callback();
+                callback();
             }
             return responseObject;
         });
@@ -419,6 +415,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    property if available. Items are indexed by their sort order
         //    instead of their ID.
         //    Calls optional callback hook if provided.
+        
+        var serviceUrl = phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/"+this.id;
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
             if (responseObject.length) {
                 this._itemList = responseObject;
@@ -433,9 +431,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         });
         var errorHandler = dojo.hitch(this, function(e) {
             this._itemList = []; // reset values
+            phpr.handleError(serviceUrl, 'php');
         });
         phpr.send( {
-            url: phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/"+this.id,
+            url: serviceUrl,
             handleAs: "json",
             onSuccess: responseHandler,
             onError: errorHandler
