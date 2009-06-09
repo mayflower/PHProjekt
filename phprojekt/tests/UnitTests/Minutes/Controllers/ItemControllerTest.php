@@ -40,7 +40,11 @@ class Minutes_ItemController_Test extends FrontInit
         $this->setRequestUrl('Minutes/item/jsonList/minutesId/1');
         $response = $this->getResponse();
 
-        $this->assertContains('{"metadata":[]}', $response);
+        $this->assertContains('{"metadata":[{"key":', $response);
+        $this->assertContains('"topicType","type":"selectbox"', $response);
+        $this->assertContains('"range":[{"id":1,"name":"Topic"},{"id":2,"name":"Statement"},{"id":3,"name":"Todo"},'
+            . '{"id":4,"name":"Decision"},{"id":5,"name":"Date"}]', $response);
+        $this->assertContains('"numRows":0}', $response);
     }
 
     /**
@@ -100,7 +104,11 @@ class Minutes_ItemController_Test extends FrontInit
         $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
         $response = $this->getResponse();
 
-        $this->assertContains('{"metadata":[]}', $response);
+        $this->assertContains('{"metadata":[{"key":', $response);
+        $this->assertContains('"topicType","type":"selectbox"', $response);
+        $this->assertContains('"range":[{"id":1,"name":"Topic"},{"id":2,"name":"Statement"},{"id":3,"name":"Todo"},'
+            . '{"id":4,"name":"Decision"},{"id":5,"name":"Date"}]', $response);
+        $this->assertContains('"numRows":0}', $response);
     }
 
     /**
