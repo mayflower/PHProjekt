@@ -74,7 +74,7 @@ class Setup_Models_Migration
         $this->_tableManager = new Phprojekt_Table($this->_db);
 
         include_once ($file);
-        $this->_checkFile($file);
+        $this->_checkFile();
     }
 
     /**
@@ -104,7 +104,7 @@ class Setup_Models_Migration
      *
      * @return void
      */
-    private function _checkFile($file)
+    private function _checkFile()
     {
         // Check version
         if (substr(PHPR_VERSION, 0, 1) != '5') {
@@ -133,8 +133,7 @@ class Setup_Models_Migration
     private function _getGroups()
     {
         // Group migration
-        $groupUsers = array();
-        $groups     = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
+        $groups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
 
         foreach ($groups as $group) {
             $this->_groups[$group["ID"]] = array();
@@ -183,12 +182,13 @@ class Setup_Models_Migration
                 $this->_timeZone[$user["ID"]] = 2;
                 $language                     = 'en';
 
-                if ($settings = unserialize($user["settings"])) {
+                @$settings = unserialize($user["settings"]);
+                if (is_array($settings)) {
                     if (isset($settings["timezone"])) {
                         $this->_timeZone[$user["ID"]] = $settings["timezone"];
                     }
-                    if (isset($settings["language"])) {
-                        $language = $settings["language"];
+                    if (isset($settings["langua"])) {
+                        $language = $settings["langua"];
                     }
                 }
 
@@ -565,7 +565,7 @@ class Setup_Models_Migration
         @$tmpUserList = unserialize($users);
 
         if (is_array($tmpUserList)) {
-            foreach ($tmpUserList as $dummy => $kurz) {
+            foreach ($tmpUserList as $kurz) {
                 $userList[] = $this->_userKurz[$kurz];
             }
         } elseif ($users == 'group') {

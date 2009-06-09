@@ -339,11 +339,10 @@ class Timecard_IndexController_Test extends FrontInit
     public function testJsonBookingDeleteEmptyId()
     {
         $this->setRequestUrl('Timecard/index/jsonBookingDelete/');
-        try {
-            $response = $this->getResponse();
-        } catch(Exception $e) {
-            $this->assertEquals(Timecard_IndexController::ID_REQUIRED_TEXT, $e->getMessage());
-        }
+        $this->getResponse();
+
+        $this->assertTrue($this->error);
+        $this->assertContains(Timecard_IndexController::ID_REQUIRED_TEXT, $this->errormessage);
     }
 
     /**
@@ -353,11 +352,10 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonBookingDelete/');
         $this->request->setParam('id', '50');
-        try {
-            $response = $this->getResponse();
-        } catch(Exception $e) {
-            $this->assertEquals(Timecard_IndexController::NOT_FOUND, $e->getMessage());
-        }
+        $response = $this->getResponse();
+
+        $this->assertTrue($this->error);
+        $this->assertContains(Timecard_IndexController::NOT_FOUND, $this->errormessage);
     }
 
     /**

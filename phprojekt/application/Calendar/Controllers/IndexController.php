@@ -71,9 +71,9 @@ class Calendar_IndexController extends IndexController
             $modification = true;
         }
 
-        $model          = $this->getModelObject();
-        $request        = $this->getRequest()->getParams();
-        $id             = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents);
+        $model   = $this->getModelObject();
+        $request = $this->getRequest()->getParams();
+        $id      = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents);
         if ($modification) {
             $updateCacheIds = $model->getRelatedEvents();
         }
