@@ -75,11 +75,11 @@ class Helpdesk_Models_Helpdesk extends Phprojekt_Item_Abstract
             foreach ($changes as $change) {
                 if ($change['field'] == 'assigned') {
                     // The user has changed
-                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0' 
-                        && $change['oldValue'] != null) {
+                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0'
+                        && $change['oldValue'] !== null) {
                         $recipients .= "," . $change['oldValue'];
                         break;
-                    } 
+                    }
                 }
             }
         }

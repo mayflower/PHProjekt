@@ -90,7 +90,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $endDateData['type']     = 'time';
         $endDateData['hint']     = Phprojekt::getInstance()->getTooltip('endTime');
         $endDateData['order']    = 0;
-        $endDateDatadata['position'] = 3;
+        $endDateData['position'] = 3;
         $endDateData['fieldset'] = '';
         $endDateData['range']    = array('id'   => '',
                                          'name' => '');

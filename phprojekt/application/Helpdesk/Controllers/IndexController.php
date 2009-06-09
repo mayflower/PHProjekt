@@ -54,7 +54,7 @@ class Helpdesk_IndexController extends IndexController
             $record->date   = date("Y-m-d");
         } else {
             $record = $this->getModelObject()->find($id);
-            if (null === $record->solvedBy) {
+            if (null === $record->solvedBy || $record->solvedBy == '') {
                 // This is because of the solved date being unable to be deleted from the item
                 $record->solvedDate = '';
             }

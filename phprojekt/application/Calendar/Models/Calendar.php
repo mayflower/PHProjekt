@@ -678,7 +678,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Participants'),
                             'value' => $participantsValue);
 
-        if ($this->rrule != null) {
+        if ($this->rrule !== null) {
             $bodyData = array_merge($bodyData, $this->_getRruleDescriptive($this->rrule));
         }
 
@@ -709,12 +709,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             if (strtolower($changes[$i]['field']) == 'rrule') {
                 $oldRruleEmpty = false;
                 $newRruleEmpty = false;
-                if ($changes[$i]['oldValue'] != null) {
+                if ($changes[$i]['oldValue'] !== null) {
                     $oldRrule = $this->_getRruleDescriptive($changes[$i]['oldValue']);
                 } else {
                     $oldRruleEmpty = true;
                 }
-                if ($changes[$i]['newValue'] != null) {
+                if ($changes[$i]['newValue'] !== null) {
                     $newRrule = $this->_getRruleDescriptive($changes[$i]['newValue']);
                 } else {
                     $newRruleEmpty = true;
@@ -818,7 +818,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Interval'),
                                'value' => Phprojekt::getInstance()->translate($interval));
 
-        if ($until != null) {
+        if ($until !== null) {
             $year      = substr($until, 0, 4);
             $month     = substr($until, 4, 2);
             $dayNum    = substr($until, 6, 2);
@@ -831,7 +831,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                   'value' => $this->_translateDate($untilDesc));
         }
 
-        if ($byday != null) {
+        if ($byday !== null) {
             switch ($byday) {
                 case 'MO':
                     $weekDay = "Monday";
@@ -990,7 +990,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
         // Do the checking
-        if ($freq != null) {
+        if ($freq !== null) {
             if ($interval === null || $interval < 0 || $interval > 1000) {
                 $valid = false;
                 $this->_validate->error->addError(array(
