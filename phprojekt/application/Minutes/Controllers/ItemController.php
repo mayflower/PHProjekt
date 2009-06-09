@@ -53,6 +53,12 @@ class Minutes_ItemController extends IndexController
             $result = array();
         }
 
+        if (array() === $result && isset($itemModel)) {
+            // Inject metadata for correct filling of topicType select field
+            $result = array('metadata' => $itemModel->getInformation()->getFieldDefinition(),
+                            'numRows'  => 0);
+        }
+
         Phprojekt_Converter_Json::echoConvert($result, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
