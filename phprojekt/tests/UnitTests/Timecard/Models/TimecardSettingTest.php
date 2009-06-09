@@ -79,7 +79,7 @@ class Timecard_Models_TimecardSetting_Test extends PHPUnit_Framework_TestCase
         $settingsModel->setModule('Timecard');
         $response      = $settingsModel->getSetting('favorites');
         $response      = unserialize($response);
-        $this->assertEquals('', $response);
+        $this->assertEquals(null, $response);
     }
 
     /**

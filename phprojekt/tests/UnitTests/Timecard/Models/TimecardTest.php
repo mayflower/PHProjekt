@@ -121,6 +121,46 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $error           = $timecardModel->getError();
         $expectedMessage = 'The end time is invalid';
         $this->assertEquals($expectedMessage, $error[0]['message']);
+
+        // Wrong data - Invalid start time
+        $timecardModel->date      = '2009-05-17';
+        $timecardModel->startTime = '10:60:00';
+        $timecardModel->endTime   = '12:00:00';
+        $response                 = $timecardModel->recordValidate();
+        $this->assertEquals(false, $response);
+        $error           = $timecardModel->getError();
+        $expectedMessage = 'The start time is invalid';
+        $this->assertEquals($expectedMessage, $error[0]['message']);
+
+        // Wrong data - Invalid start time
+        $timecardModel->date      = '2009-05-17';
+        $timecardModel->startTime = null;
+        $timecardModel->endTime   = '12:00:00';
+        $response                 = $timecardModel->recordValidate();
+        $this->assertEquals(false, $response);
+        $error           = $timecardModel->getError();
+        $expectedMessage = 'The start time is invalid';
+        $this->assertEquals($expectedMessage, $error[0]['message']);
+
+        // Wrong data - Invalid start time
+        $timecardModel->date      = '2009-05-17';
+        $timecardModel->startTime = '10:60:00';
+        $timecardModel->endTime   = '12:00:00';
+        $response                 = $timecardModel->recordValidate();
+        $this->assertEquals(false, $response);
+        $error           = $timecardModel->getError();
+        $expectedMessage = 'The start time is invalid';
+        $this->assertEquals($expectedMessage, $error[0]['message']);
+
+        // Wrong data - Invalid start time
+        $timecardModel->date      = '2009-05-17';
+        $timecardModel->startTime = '07:00:00';
+        $timecardModel->endTime   = '12:00:00';
+        $response                 = $timecardModel->recordValidate();
+        $this->assertEquals(false, $response);
+        $error           = $timecardModel->getError();
+        $expectedMessage = 'Start time has to be between 8:00 and 21:00';
+        $this->assertEquals($expectedMessage, $error[0]['message']);
     }
 
     /**
@@ -188,5 +228,60 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel = clone($this->_model);
         $this->assertEquals(array(), $timecardModel->getRights());
         $this->assertEquals(array(), $timecardModel->getInformation()->getTitles());
+    }
+
+    public function testGetFieldDefinition()
+    {
+        // date
+        $dateData = array();
+        $dateData['key']      = 'date';
+        $dateData['label']    = Phprojekt::getInstance()->translate('Date');
+        $dateData['type']     = 'date';
+        $dateData['hint']     = Phprojekt::getInstance()->getTooltip('date');
+        $dateData['order']    = 0;
+        $dateData['position'] = 1;
+        $dateData['fieldset'] = '';
+        $dateData['range']    = array('id'   => '',
+                                      'name' => '');
+        $dateData['required'] = true;
+        $dateData['readOnly'] = true;
+        $dateData['tab']      = 1;
+
+        // startDate
+        $startDateData = array();
+        $startDateData['key']      = 'startTime';
+        $startDateData['label']    = Phprojekt::getInstance()->translate('Start Time');
+        $startDateData['type']     = 'time';
+        $startDateData['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
+        $startDateData['order']    = 0;
+        $startDateData['position'] = 2;
+        $startDateData['fieldset'] = '';
+        $startDateData['range']    = array('id'   => '',
+                                           'name' => '');
+        $startDateData['required'] = true;
+        $startDateData['readOnly'] = false;
+        $startDateData['tab']      = 1;
+
+        // endDate
+        $endDateData = array();
+        $endDateData['key']      = 'endTime';
+        $endDateData['label']    = Phprojekt::getInstance()->translate('End Time');
+        $endDateData['type']     = 'time';
+        $endDateData['hint']     = Phprojekt::getInstance()->getTooltip('endTime');
+        $endDateData['order']    = 0;
+        $endDateData['position'] = 3;
+        $endDateData['fieldset'] = '';
+        $endDateData['range']    = array('id'   => '',
+                                         'name' => '');
+        $endDateData['required'] = false;
+        $endDateData['readOnly'] = false;
+        $endDateData['tab']      = 1;
+
+        $timecardModel = clone($this->_model);
+        $expected = array($startDateData, $endDateData);
+        $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition('today'));
+
+        $expected = array($dateData, $startDateData, $endDateData);
+        $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition('export'));
     }
 }

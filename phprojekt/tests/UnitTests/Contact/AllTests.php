@@ -57,7 +57,7 @@ class Contact_AllTests
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite('Calendar Controller');
+        $suite = new PHPUnit_Framework_TestSuite('Contact Controller');
 
         $suite->addTestSuite('Contact_IndexController_Test');
         $suite->addTestSuite('Contact_Models_Contact_Test');
