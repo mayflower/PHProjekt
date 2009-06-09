@@ -81,10 +81,6 @@ class FrontInit extends PHPUnit_Framework_TestCase
                 continue;
             }
 
-            if (is_dir(PHPR_CORE_PATH . '/' . $module . '/Views/dojo')) {
-                $view->addScriptPath(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/');
-            }
-
             $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
 
             if (is_dir($helperPath)) {
