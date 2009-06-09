@@ -312,7 +312,7 @@
                     "form_position":   "0",
                     "form_columns":    "1",
                     "form_regexp":     "NULL",
-                    "form_range":      "1#planned|2#created|3#preview|4#final",
+                    "form_range":      "1#Planned|2#Created|3#Filled|4#Final",
                     "default_value":   "0",
                     "list_position":   "6",
                     "list_align":      "center",

@@ -64,10 +64,10 @@ $lang['Place'] = 'Ort';
 $lang['Status'] = 'Status';
 
 // Grid values - from DatabaseDesigner
-$lang['planned'] = 'geplant';
-$lang['created'] = 'noch leer';
-$lang['filled'] = 'ausgefüllt';
-$lang['final']   = 'fixiert';
+$lang['Planned'] = 'Geplant';
+$lang['Created'] = 'Noch leer';
+$lang['Filled'] = 'Ausgefüllt';
+$lang['Final']   = 'Fixiert';
 
 // Field labels from DatabaseDesigner
 $lang['Moderator'] = 'Moderator';
