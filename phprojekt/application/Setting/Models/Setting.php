@@ -168,7 +168,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $settings = array();
 
-        if ($userId == null) {
+        if ($userId === null) {
             $userId = (int) Phprojekt_Auth::getUserId();
         }
 

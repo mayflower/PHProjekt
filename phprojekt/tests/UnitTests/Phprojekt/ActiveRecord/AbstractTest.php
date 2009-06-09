@@ -77,7 +77,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
             $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
 
-            if ($users == NULL) {
+            if ($users === null) {
                 $this->fail('No user found');
             } else {
                 $david        = $users[0];

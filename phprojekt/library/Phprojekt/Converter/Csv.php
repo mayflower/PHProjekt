@@ -48,7 +48,7 @@ class Phprojekt_Converter_Csv
     {
         // Convert Models
         if (is_array($param1) && isset($param1[0]) && $param1[0] instanceof Phprojekt_Model_Interface) {
-            if (null == $param2) {
+            if (null === $param2) {
                 $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
             }
             return self::_convertModel($param1, $param2);

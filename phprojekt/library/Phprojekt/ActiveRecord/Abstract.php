@@ -1112,7 +1112,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $sqlStr    = $selectObj->__toString();
         $statement = explode("FROM", $sqlStr);
 
-        if (null == $select) {
+        if (null === $select) {
             $sqlStr    = "SELECT ";
             $columns   = array();
             $tableName = $this->getTableName();

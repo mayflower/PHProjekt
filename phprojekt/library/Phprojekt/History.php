@@ -246,7 +246,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $stop     = false;
         foreach ($history as $row) {
             if (!$stop) {
-                if (null == $datetime) {
+                if (null === $datetime) {
                     $datetime = $row->datetime;
                     $action   = $row->action;
                 }

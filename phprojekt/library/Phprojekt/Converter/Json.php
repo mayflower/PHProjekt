@@ -70,13 +70,13 @@ class Phprojekt_Converter_Json
 
         // Convert Models
         } else if (is_array($param1) && isset($param1[0]) && $param1[0] instanceof Phprojekt_Model_Interface) {
-            if (null == $param2) {
+            if (null === $param2) {
                 $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
             }
             return self::_convertModel($param1, $param2);
 
         // Convert normal values
-        } else if (is_array($param1) && !empty($param1) && null == $param2) {
+        } else if (is_array($param1) && !empty($param1) && null === $param2) {
             return self::_convertValue($param1);
 
         // Convert tags or Search
@@ -85,7 +85,7 @@ class Phprojekt_Converter_Json
 
         // Convert Models
         } else if ($param1 instanceof Phprojekt_Model_Interface) {
-            if (null == $param2) {
+            if (null === $param2) {
                 $param2 = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT;
             }
             return self::_convertModel($param1, $param2);

@@ -648,7 +648,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 $index = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field->tableField);
                 $data[$i]['tableType']   = $info['metadata'][$index]['DATA_TYPE'];
-                if (null == $info['metadata'][$index]['LENGTH']) {
+                if (null === $info['metadata'][$index]['LENGTH']) {
                     switch ($info['metadata'][$index]['DATA_TYPE']) {
                         case 'int':
                             $data[$i]['tableLength'] = 11;

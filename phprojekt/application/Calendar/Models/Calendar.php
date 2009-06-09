@@ -991,14 +991,14 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         // Do the checking
         if ($freq != null) {
-            if ($interval == null || $interval < 0 || $interval > 1000) {
+            if ($interval === null || $interval < 0 || $interval > 1000) {
                 $valid = false;
                 $this->_validate->error->addError(array(
                     'field'   => 'Interval',
                     'label'   => Phprojekt::getInstance()->translate('Interval'),
                     'message' => Phprojekt::getInstance()->translate('Wrong Recurrence Interval')));
             } else {
-                if ($until == null) {
+                if ($until === null) {
                     $valid = false;
                     $this->_validate->error->addError(array(
                         'field'   => 'Until',
