@@ -1,0 +1,143 @@
+<form dojoType="dijit.form.Form" id="loginForm" name="frm" method="post" enctype="multipart/form-data"
+action="<?php echo $this->url(array('action' => 'install')); ?>">
+<table width="100%" align="center" class="form">
+<col class="col1" />
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="serverType">Server type</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <select id="serverType" name="serverType" dojoType="dijit.form.FilteringSelect"
+        required="true" autocomplete="true" value="pdo_mysql" searchAttr="name" invalidMessage="You must select one">
+            <option value="pdo_mysql">MySQL</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbHost">Database server:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbHost" name="dbHost" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbHost; ?>" invalidMessage="" />
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbUser">Database username:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbUser" name="dbUser" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbUser; ?>" invalidMessage="" />
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbPass">Database password:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="dbPass" name="dbPass" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbPass; ?>" invalidMessage="" />
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbName">Database name:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbName" name="dbName" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbName; ?>" invalidMessage="" />
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="adminPass">Admin user pass:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="adminPass" name="adminPass" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->adminPass; ?>" invalidMessage="" />
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="adminPassConfirm">Admin pass confirm:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="adminPassConfirm" name="adminPassConfirm" dojoType="dijit.form.TextBox"
+        required="required" value="<?php echo $this->adminPassConfirm; ?>" invalidMessage="" />
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="extraData">Install example data:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="checkbox" dojotype="dijit.form.CheckBox" id="useExtraData" name="useExtraData"
+        <?php
+        if ($this->useExtraData) {
+            echo 'checked="checked"';
+        }
+        ?>
+        value="1" />
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        <h3>Migration</h3>
+    </td>
+    <td>
+        Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<br />
+        <u>Notes</u>:<br />
+        <ul>
+            <li>It could take several minutes depending on the number of projects to be migrated.</li>
+            <li>The migration is compatible with version 5.1 or superion.</li>
+            <li>The config.inc.php needs to be on the same server where you are installing PHProjekt 6</li>
+            <li>User passwords will be migrated from version 5.2.1 or better.
+            All previous versions migration will have the same username and password.</li>
+            <li>Root user will not be migrated. Please use the admin user.</li>
+            <li>The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Timecard and
+            Filemanager.</li>
+            <li>Customized module fields will not be migrated.</li>
+            <li>If Filemanager files does not work after migration please try moving manually the uploaded files
+            (e.g. move the files on /phprojekt5.x/uploads to /phprojekt6/uploads).</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        <label for="migration_config">Configuration file:</label>
+    </td>
+    <td>
+        <input dojoType="dijit.form.TextBox" type="text" name="migrationConfigFile"
+        value="<?php echo $this->migrationConfigFile; ?>" />
+        <br />File path (e.g. /var/www/html/config.inc.php)
+   </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" baseClass="positive" id="submitButton" type="submit" iconClass="tick">
+            Install
+        </button>
+    </td>
+</tr>
+</table>
+</form>
