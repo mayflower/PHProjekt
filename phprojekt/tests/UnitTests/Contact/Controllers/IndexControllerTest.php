@@ -60,6 +60,7 @@ class Contact_IndexController_Test extends FrontInit
             . 'erId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"dow'
             . 'nload":true,"admin":true}},"email":"mariano.lapenna@mayflower.de","firstphone":"12341234","street":"Edis'
             . 'on 1234","private":"0"}],"numRows":1})';
+        $this->assertContains($response, $expectedContent);
         $this->assertContains($expectedContent, $response);
 
         // Check it
@@ -104,6 +105,7 @@ class Contact_IndexController_Test extends FrontInit
             . 'serId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"do'
             . 'wnload":true,"admin":true}},"email":"mariano.lapenna@mayflower.de2","firstphone":"12341234B","street":"E'
             . 'dison 1234B","private":"1"}],"numRows":1})';
+        $this->assertContains($response, $expectedContent);
         $this->assertContains($expectedContent, $response);
 
         // Check it

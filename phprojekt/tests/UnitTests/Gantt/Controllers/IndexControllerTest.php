@@ -58,6 +58,7 @@ class Gantt_IndexController_Test extends FrontInit
             . 'ndM":"10","endY":"2009"},{"id":"12","level":10,"parent":"1","childs":0,"caption":"test","start":12181032'
             . '00,"end":1598832000,"startD":"07","startM":"08","startY":"2008","endD":"31","endM":"08","endY":"2020"}],'
             . '"min":1199145600,"max":1609372800,"step":4749}})';
+        $this->assertContains($response, $expected);
         $this->assertContains($expected, $response);
     }
 
@@ -68,6 +69,7 @@ class Gantt_IndexController_Test extends FrontInit
         $expected = '"data":{"rights":{"currentUser":{"write":true}},"projects":[{"id":"5","level":0,"parent":0,"childs'
             . '":0,"caption":"Test Project","start":1249120800,"end":1256947200,"startD":"01","startM":"08","startY":"2'
             . '009","endD":"31","endM":"10","endY":"2009"}],"min":1230768000,"max":1262217600,"step":365}})';
+        $this->assertContains($response, $expected);
         $this->assertContains($expected, $response);
     }
 

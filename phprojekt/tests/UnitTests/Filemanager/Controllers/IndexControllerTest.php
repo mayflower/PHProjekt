@@ -147,6 +147,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $expectedContent = '"data":[{"id":null,"title":"","rights":{"currentUser":{"moduleId":"7","itemId":null,"userId'
              . '":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"downlo'
              . 'ad":true,"admin":true}},"comments":"","projectId":"","files":""}],"numRows":1})';
+        $this->assertContains($response, $expectedContent);
         $this->assertContains($expectedContent, $response);
 
         // Existing item
