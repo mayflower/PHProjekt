@@ -57,15 +57,30 @@ class Phprojekt_Table
     protected $_excludeFields = array('id','ownerId');
 
     /**
+     * Use log file
+     *
+     * @var boolean
+     */
+    protected $_log = false;
+
+    /**
      * Initialize a new table admin
      *
      * @param array $db Db configurations
      */
     public function __construct($db = null)
     {
+        if (null === $db) {
+            $db = Phprojekt::getInstance()->getDb();
+        }
         $this->_db     = $db;
         $this->_dbType = get_class($db);
         $this->_dbType = strtolower(substr($this->_dbType, strpos($this->_dbType, "Pdo") + 4));
+    }
+
+    public function activeDebugLog()
+    {
+        $this->_log = true;
     }
 
     /**
@@ -126,7 +141,9 @@ class Phprojekt_Table
             $this->_db->closeConnection();
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            if ($this->_log) {
+                Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            }
             return false;
         }
     }
@@ -173,7 +190,9 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            if ($this->_log) {
+                Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            }
             return false;
         }
     }
@@ -217,7 +236,9 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            if ($this->_log) {
+                Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            }
             return false;
         }
     }
@@ -262,7 +283,9 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            if ($this->_log) {
+                Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            }
             return false;
         }
     }
@@ -291,7 +314,9 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            if ($this->_log) {
+                Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            }
             return false;
         }
     }
@@ -426,7 +451,9 @@ class Phprojekt_Table
             $this->_db->getConnection()->exec($sqlString);
             return true;
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            if ($this->_log) {
+                Phprojekt::getInstance()->getLog()->debug($error->getMessage());
+            }
             return false;
         }
     }
