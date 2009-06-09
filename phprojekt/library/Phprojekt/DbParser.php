@@ -102,7 +102,7 @@ class Phprojekt_DbParser
      */
     public function parseData($coreDirectory = null)
     {
-        if (null == $coreDirectory) {
+        if (null === $coreDirectory) {
             $coreDirectory = PHPR_CORE_PATH;
         }
 
@@ -179,7 +179,7 @@ class Phprojekt_DbParser
 
                 if (isset($content['initialData'])) {
                     echo 'initalData | ';
-                    $this->_processData($content['initialData']);
+                    $this->_processData($this->_convertSpecialValues($content['initialData'], 0));
                 }
 
                 if (isset($content['extraData']) && $this->_useExtraData) {
@@ -440,7 +440,7 @@ class Phprojekt_DbParser
             }
         }
 
-        // Convert ##id## and ##ModuleName_moduleId##
+        // Convert ##id##, ##ModuleName_moduleId## and NULL
         foreach ($array as $tableName => $content) {
             foreach ($content as $action => $data) {
                 foreach ($data as $index => $values) {
@@ -451,6 +451,8 @@ class Phprojekt_DbParser
                                 $value = $newId;
                             } else if (preg_match("/^##([A-Za-z]+)_moduleId##$/", $value, $matches)) {
                                 $value = $this->_getModuleId($matches[1]);
+                            } else if ($value == 'NULL') {
+                                $value = null;
                             }
                         }
                         $array[$tableName][$action][$index][$key] = $value;
