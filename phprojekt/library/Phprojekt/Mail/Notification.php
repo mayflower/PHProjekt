@@ -364,6 +364,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
             }
         }
 
+        Phprojekt_Loader::loadViewScript();
         $this->_customBody = $this->_view->render('mail' . $this->_bodyMode . '.phtml');
     }
 

@@ -381,4 +381,17 @@ class Phprojekt_Loader extends Zend_Loader
     {
         return self::tryToLoadClass($class, true);
     }
+
+    /**
+     * Add the module path for load customs templates
+     *
+     * @return void;
+     */
+    public function loadViewScript()
+    {
+        $module = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        $view   = Phprojekt::getInstance()->getView();
+        $view->addScriptPath(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR
+            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo');
+    }
 }

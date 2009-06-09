@@ -395,9 +395,6 @@ class Phprojekt
             $view = new Zend_View();
             $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
             foreach ($helperPaths as $helperPath) {
-                if (is_dir(PHPR_CORE_PATH . '/' . $helperPath['module'] . '/Views/dojo')) {
-                    $view->addScriptPath(PHPR_CORE_PATH . '/' . $helperPath['module'] . '/Views/dojo/');
-                }
                 if (is_dir($helperPath['path'])) {
                     $view->addHelperPath($helperPath['path'], $helperPath['module'] . '_' . 'Helpers');
                 }

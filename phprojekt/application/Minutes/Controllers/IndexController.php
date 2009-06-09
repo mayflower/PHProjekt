@@ -256,8 +256,6 @@ class Minutes_IndexController extends IndexController
 
     protected function getHtmlList(Phprojekt_Model_Interface $minutes)
     {
-        $this->view->addScriptPath(PHPR_CORE_PATH . '/Minutes/Views/dojo/');
-
         $items = $minutes->items->fetchAll();
 
         $newitem = array();
@@ -272,6 +270,7 @@ class Minutes_IndexController extends IndexController
 
         $this->view->items = $newitem;
 
+        Phprojekt_Loader::loadViewScript();
         return $this->view->render('table.phtml');
     }
 
