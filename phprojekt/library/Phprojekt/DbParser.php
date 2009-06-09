@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class DbParser
+class Phprojekt_DbParser
 {
     /**
      * Class for manage the db transactions
@@ -56,15 +56,38 @@ class DbParser
      */
     private $_relations = array();
 
+    /**
+     * Current db connection
+     *
+     * @var Zend_Db
+     */
+    private $_db = null;
 
-    public function __construct($options = array())
+    /**
+     * Use log file
+     *
+     * @var boolean
+     */
+    protected $_log = false;
+
+    public function __construct($options = array(), $db = null)
     {
-        $this->_tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
+        if (null === $db) {
+            $this->_db = Phprojekt::getInstance()->getDb();
+        } else {
+            $this->_db = $db;
+        }
+
+        $this->_tableManager = new Phprojekt_Table($this->_db);
+
         if (isset($options['useExtraData'])) {
             $this->_useExtraData = (boolean) $options['useExtraData'];
         }
+    }
 
-        $this->_collectData();
+    public function activeDebugLog()
+    {
+        $this->_log = true;
     }
 
     /**
@@ -77,19 +100,23 @@ class DbParser
      *
      * @return array
      */
-    private function _collectData()
+    public function parseData($coreDirectory = null)
     {
+        if (null == $coreDirectory) {
+            $coreDirectory = PHPR_CORE_PATH;
+        }
+
         // Load the Code file and process it
-        $json = file_get_contents(PHPR_CORE_PATH .'/Core/Sql/Db.json');
+        $json = file_get_contents($coreDirectory . '/Core/Sql/Db.json');
         $data = Zend_Json::decode($json);
         $this->_parseData($data, 'Core');
 
         // Per module, load the file and process it
-        $files = scandir(PHPR_CORE_PATH);
+        $files = scandir($coreDirectory);
         foreach ($files as $file) {
             if ($file != '.'  && $file != '..' && $file != '.svn' && $file != 'Core') {
-                if (file_exists(PHPR_CORE_PATH . '/' . $file . '/Sql/Db.json')) {
-                    $json = file_get_contents(PHPR_CORE_PATH . '/' . $file . '/Sql/Db.json');
+                if (file_exists($coreDirectory . '/' . $file . '/Sql/Db.json')) {
+                    $json = file_get_contents($coreDirectory . '/' . $file . '/Sql/Db.json');
                     $data = Zend_Json::decode($json);
                     $this->_parseData($data, $file);
                 }
@@ -140,27 +167,30 @@ class DbParser
         $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
         $moduleVersion = $this->_getModuleVersion($module);
         foreach ($data as $version => $content) {
-            echo 'Module: '. $module . ': <br />';
-            echo '-> Version found: '. $version . ': ';
+            echo 'Module: '. $module . ' - ';
+            echo 'Version found: ' . $version . ': ';
             // Only process the initialData if the module version is lower than the data version
             if (Phprojekt::compareVersion($moduleVersion, $version) < 0) {
+                echo 'Process : ';
                 if (isset($content['structure'])) {
-                    echo '--> Process Structure<br />';
+                    echo 'Structure | ';
                     $this->_processStructure($content['structure']);
                 }
 
                 if (isset($content['initialData'])) {
-                    echo '--> Process initalData<br />';
+                    echo 'initalData | ';
                     $this->_processData($content['initialData']);
                 }
 
                 if (isset($content['extraData']) && $this->_useExtraData) {
-                    echo '--> Process extraData<br />';
-                    $this->_processData($content['extraData']);
+                    echo 'extraData | ';
+                    $this->_processData($this->_convertSpecialValues($content['extraData'], 0));
                 }
+                echo 'Done';
             } else {
-                echo 'Already Done<br />';
+                echo 'Already installed';
             }
+            echo '<br />';
             $this->_setModuleVersion($module, $version);
         }
     }
@@ -209,10 +239,9 @@ class DbParser
             $module = 'Project';
         }
 
-        $model = new Phprojekt_Module_Module();
-        $model->find($this->_getModuleId($module));
-        $model->version = $version;
-        $model->save();
+        $data  = array('version' => $version);
+        $where = sprintf('id = %d', (int) $this->_getModuleId($module));
+        $this->_tableManager->updateRows('module', $data, $where);
     }
 
     /**
@@ -270,42 +299,33 @@ class DbParser
                 switch ($action) {
                     case 'create':
                         if (!$this->_tableManager->tableExists($tableName)) {
-                            echo 'Create table '. $tableName.'<br>';
                             $keys   = $this->_getKeys($fields);
                             $fields = $this->_convertFieldsData($fields);
                             $this->_tableManager->createTable($tableName, $fields, $keys);
                         }
                         break;
                     case 'drop':
-                        echo 'Drop table '. $tableName.'<br>';
                         $this->_tableManager->dropTable($tableName);
                         break;
                     case 'add':
                         $fields = $this->_convertFieldsData($fields);
-                        echo 'Add field in table '. $tableName.'<br>';
                         foreach ($fields as $key => $field) {
-                            echo '--> field '. $key.'<br>';
                             $this->_tableManager->addField($tableName, $field);
                         }
                         break;
                     case 'update':
-                        echo 'update field into TABLE '.$tableName;
                         $fields = $this->_convertFieldsData($fields);
                         foreach ($fields as $key => $field) {
                             if (!isset($field['newName'])) {
-                                echo '--> modify field '. $key.'<br>';
                                 $this->_tableManager->modifyField($tableName, $field);
                             } else {
-                                echo '--> change field '. $key.'<br>';
                                 $this->_tableManager->changeField($tableName, $field);
                             }
                         }
                         break;
                     case 'delete':
-                        echo 'delete field into TABLE '.$tableName;
                         $fields = $this->_convertFieldsData($fields);
                         foreach ($fields as $key => $field) {
-                            echo "delete field ". $field.'<br>';
                             $this->_tableManager->deleteField($tableName, $field);
                         }
                         break;
@@ -314,6 +334,15 @@ class DbParser
         }
     }
 
+    private function _convertModulesId($data) {
+        foreach ($data as $key => $value) {
+            if (preg_match("/^##([A-Za-z]+)_moduleId##$/", $value, $matches)) {
+                $data[$key] = $this->_getModuleId($matches[1]);
+            }
+        }
+
+        return $data;
+    }
     /**
      * Parse and process the data content
      *
@@ -334,12 +363,12 @@ class DbParser
                 switch ($action) {
                     case 'insert':
                         foreach ($rows as $data) {
-                            echo 'insert row in '. $tableName.'<br>';
                             $relations = array();
                             if (isset($data['_relations'])) {
                                 $relations = $data['_relations'];
                                 unset($data['_relations']);
                             }
+                            $data  = $this->_convertModulesId($data);
                             $newId = $this->_tableManager->insertRow($tableName, $data);
                             if (!empty($relations)) {
                                 $this->_relations[] = array('newId'   => $newId,
@@ -349,22 +378,22 @@ class DbParser
                         break;
                     case 'update':
                         foreach ($rows as $data) {
-                            echo 'update row in '. $tableName.'<br>';
                             if (empty($data['_sqlWhere'])) {
                                 $where = null;
                             } else {
                                 $where = $data['_sqlWhere'];
                             }
                             unset($data['_sqlWhere']);
+                            $data = $this->_convertModulesId($data);
                             $this->_tableManager->updateRows($tableName, $data, $where);
                         }
                         break;
                     case 'delete':
                         foreach ($rows as $code => $where) {
-                            echo 'delete row in '. $tableName.'<br>';
                             if (empty($code)) {
                                 $where = null;
                             }
+                            $data = $this->_convertModulesId($data);
                             $this->_tableManager->deleteRows($tableName, $where);
                         }
                         break;
@@ -390,12 +419,13 @@ class DbParser
                     foreach ($values as $key => $value) {
                         $matches   = array();
                         $tmpValues = array();
-                        if ($value == "all" && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
-                            $tmpValues = $this->_getAllRows($matches[1]);
-                        } else if (strstr($value, ",") && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
-                            $tmpValues = split(",", $value);
+                        if (!is_array($value)) {
+                            if ($value == "all" && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
+                                $tmpValues = $this->_getAllRows($matches[1]);
+                            } else if (strstr($value, ",") && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
+                                $tmpValues = split(",", $value);
+                            }
                         }
-
                         if (!empty($tmpValues)) {
                             $array[$tableName][$action][$index][$key] = array_shift($tmpValues);
                             foreach ($tmpValues as $id) {
@@ -416,10 +446,12 @@ class DbParser
                 foreach ($data as $index => $values) {
                     foreach ($values as $key => $value) {
                         $matches = array();
-                        if ($value == '##id##') {
-                            $value = $newId;
-                        } else if (preg_match("/^##([A-Za-z]+)_moduleId##$/", $value, $matches)) {
-                            $value = $this->_getModuleId($matches[1]);
+                        if (!is_array($value)) {
+                            if ($value == '##id##') {
+                                $value = $newId;
+                            } else if (preg_match("/^##([A-Za-z]+)_moduleId##$/", $value, $matches)) {
+                                $value = $this->_getModuleId($matches[1]);
+                            }
                         }
                         $array[$tableName][$action][$index][$key] = $value;
                     }
@@ -440,10 +472,8 @@ class DbParser
     private function _getAllRows($module)
     {
         $rows   = array();
-        $db     = Phprojekt::getInstance()->getDb();
-
-        $select = $db->select()
-                     ->from($module);
+        $select = $this->_db->select()
+                            ->from($module);
 
         switch ($module) {
             case 'module':
@@ -454,7 +484,7 @@ class DbParser
                 break;
         }
 
-        $results = $db->query($select)->fetchAll();
+        $results = $this->_db->query($select)->fetchAll();
         foreach ($results as $result) {
             if (isset($result['id'])) {
                 array_push($rows, $result['id']);
@@ -567,7 +597,7 @@ class DbParser
     {
         $moduleId = $this->_moduleRow($module, 'id');
         if ($moduleId == 0) {
-            $moduleId = Phprojekt::getInstance()->getDb()->lastInsertId($module, 'id');
+            $moduleId = $this->_db->lastInsertId($module, 'id');
         }
 
         return $moduleId;
@@ -584,11 +614,11 @@ class DbParser
      */
     private function _moduleRow($module, $field = 'id')
     {
-        $db     = Phprojekt::getInstance()->getDb();
-        $select = $db->select()
-                     ->from('module')
-                     ->where('name = ?', $module);
-        $stmt = $db->query($select);
+        $select = $this->_db->select()
+                            ->from('module')
+                            ->where('name = ?', $module);
+
+        $stmt = $this->_db->query($select);
         $rows = $stmt->fetchAll();
 
         switch ($field) {
