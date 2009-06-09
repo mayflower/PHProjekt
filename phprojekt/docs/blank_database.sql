@@ -624,7 +624,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 0, 1, NULL, '1#Planned|2#Created|3#Preview|4#Final', '0', 6, 'center', 1, 0, '1', 1, 0, 0);
+(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 0, 1, NULL, '1#planned|2#created|3#filled|4#final', '0', 6, 'center', 1, 0, '1', 1, 0, 0);
 
 
 INSERT INTO `user` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES

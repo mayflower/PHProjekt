@@ -61,10 +61,10 @@ $lang['Place'] = 'Place';
 $lang['Status'] = 'Status';
 
 // Grid values - from DatabaseDesigner
-$lang['PLANNED'] = 'planned';
-$lang['CREATED'] = 'empty';
-$lang['PREVIEW'] = 'filled';
-$lang['FINAL']   = 'final'; 
+$lang['planned'] = 'planned';
+$lang['created'] = 'empty';
+$lang['filled'] = 'filled';
+$lang['final']   = 'final';
 
 // Field labels from DatabaseDesigner
 $lang['Moderator'] = 'Moderator';
@@ -73,7 +73,7 @@ $lang['Tag'] = 'Tag';
 $lang['Invited'] = 'Invited';
 $lang['Attending'] = 'Attending';
 $lang['Excused'] = 'Excused';
-$lang['recipients'] = 'Recipients';
+$lang['Recipients'] = 'Recipients';
 
 // Mail tab
 $lang['Recipients'] = 'Recipients';
