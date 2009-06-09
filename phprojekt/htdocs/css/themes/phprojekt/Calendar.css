@@ -204,6 +204,10 @@
     border-right: 1px solid black;
 }
 
+.phprojekt #calendarSchedule .emptyCellBottom {
+    border-bottom: 1px solid black;
+}
+
 .phprojekt #calendarSchedule .horizontalLine {
     margin:3px;
     border-bottom:1px dashed #203040;

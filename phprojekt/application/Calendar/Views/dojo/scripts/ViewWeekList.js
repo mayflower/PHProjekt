@@ -212,6 +212,10 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                             this._schedule[row][day]['columns'][column]['class'] = '';
                         }
                     }
+                    // Last row? Show bottom line
+                    if (row == this._schedule.length - 1) {
+                        this._schedule[row][day]['columns'][column]['class'] += ' emptyCellBottom';
+                    }
                 }
             }
         }

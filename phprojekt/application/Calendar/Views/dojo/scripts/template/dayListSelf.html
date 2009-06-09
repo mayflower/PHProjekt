@@ -20,13 +20,13 @@
         </td>
                 {% endifequal %}
             {% else %}
+        <td width="{{column.width}}%" class="{{column.class}}"
                 {% ifequal row.even true %}
-        <td width="{{column.width}}%"
-        style="background-color: white;"></td>
+        style="background-color: white;"
                 {% else %}
-        <td width="{{column.width}}%"
-        style="background-color: #e9f3ff;"></td>
+        style="background-color: #e9f3ff;"
                 {% endifequal %}
+        ></td>
             {% endif %}
         {% endfor %}
     </tr>

@@ -62,6 +62,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         this.fillScheduleArrayStructure_part1();
         this.determineColumns(content);
         this.fillScheduleArrayStructure_part2(content);
+        this.fillScheduleArrayEmptyCells();
 
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "dayListSelf.html"], dojo.byId('gridBox'), {
@@ -197,6 +198,40 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                 this._furtherEvents['events'][nextPosition]['id']    = content[event]['id'];
                 this._furtherEvents['events'][nextPosition]['time']  = eventInfo['time'];
                 this._furtherEvents['events'][nextPosition]['title'] = content[event]['title'];
+            }
+        }
+    },
+
+    fillScheduleArrayEmptyCells:function() {
+        // Summary:
+        //    Fills inside the schedule array the classes of the empty cells
+
+        // For every row
+        for (var row = 0; row < this._schedule.length; row++) {
+            // For every column
+            for (var column = 0; column < this._maxSimultEvents; column++) {
+                // Is it an empty cell?
+                if (!this._schedule[row]['columns'][column]['occupied']) {
+                    // Is it the only column?
+                    if (this._maxSimultEvents == 1) {
+                        this._schedule[row]['columns'][column]['class'] = 'emptyCellSingle';
+                        // Is it the bottom row?
+                        if (row == this._schedule.length - 1) {
+                            this._schedule[row]['columns'][column]['class'] += 'Bottom';
+                        }
+                    } else {
+                        if (column == 0) {
+                            this._schedule[row]['columns'][column]['class'] = 'emptyCellLeft';
+                        } else if (column == (this._maxSimultEvents - 1)) {
+                            this._schedule[row]['columns'][column]['class'] = 'emptyCellRight';
+                        } else {
+                            this._schedule[row]['columns'][column]['class'] = '';
+                        }
+                        if (row == this._schedule.length - 1) {
+                            this._schedule[row]['columns'][column]['class'] += ' emptyCellBottom';
+                        }
+                    }
+                }
             }
         }
     }
