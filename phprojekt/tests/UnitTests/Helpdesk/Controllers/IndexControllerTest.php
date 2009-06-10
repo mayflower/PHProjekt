@@ -235,6 +235,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         // New item data request
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $response = $this->getResponse();
+
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":10,"itemId":0,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,"date":"' . date("Y-m-d") . '",'
@@ -246,6 +247,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
+
         $expected = '"data":[{"id":1,"title":"My completely new title","rights":{"currentUser":{"moduleId":10,'
             . '"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":1,'
@@ -258,6 +260,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 2);
         $response = $this->getResponse();
+
         $expected = '"data":[{"id":2,"title":"My completely new title 2","rights":{"currentUser":{"moduleId":10,'
             . '"itemId":2,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,'

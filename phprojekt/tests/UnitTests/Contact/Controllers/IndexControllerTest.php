@@ -41,9 +41,9 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('name', 'Mariano');
         $this->request->setParam('email', 'mariano.lapenna@mayflower.de');
         $this->request->setParam('company', 'Mayflower');
-        $this->request->setParam('firstphone', '12341234');
-        $this->request->setParam('secondphone', '23452345');
-        $this->request->setParam('mobilephone', '34563456');
+        $this->request->setParam('firstphone', '004912341234');
+        $this->request->setParam('secondphone', '004923452345');
+        $this->request->setParam('mobilephone', '004934563456');
         $this->request->setParam('street', 'Edison 1234');
         $this->request->setParam('city', 'Buenos Aires');
         $this->request->setParam('zipcode', '1234AAA');
@@ -59,7 +59,7 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de",'
-            . '"firstphone":12341234,"street":"Edison 1234","private":0}],"numRows":1})';
+            . '"firstphone":"004912341234","street":"Edison 1234","private":0}],"numRows":1})';
         $this->assertContains($expected, $response);
 
         // Check it
@@ -69,7 +69,7 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de",'
-            . '"company":"Mayflower","firstphone":12341234,"secondphone":23452345,"mobilephone":34563456,'
+            . '"company":"Mayflower","firstphone":"004912341234","secondphone":"004923452345","mobilephone":"004934563456",'
             . '"street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA","country":"Argentina",'
             . '"comment":"Very intelligent","private":0}],"numRows":1})';
         $this->assertContains($expected, $response);

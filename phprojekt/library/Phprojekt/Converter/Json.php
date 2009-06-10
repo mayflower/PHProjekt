@@ -145,16 +145,10 @@ class Phprojekt_Converter_Json
                 foreach ($fieldDefinition as $field) {
                     $key   = $field['key'];
                     $value = $cmodel->$key;
-                    if (is_numeric($value)) {
+                    if ($field['integer']) {
                         $data[$key] = (int) $value;
-                    } else if (is_scalar($value)) {
-                        $data[$key] = $value;
                     } else {
-                        if ($field['integer']) {
-                            $data[$key] = (int) $value;
-                        } else {
-                            $data[$key] = (string) $value;
-                        }
+                        $data[$key] = (string) $value;
                     }
                     $data['rights'] = $cmodel->getRights();
                 }

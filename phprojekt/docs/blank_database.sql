@@ -607,8 +607,8 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Helpdesk', 'description', 1, 'Description', 'textarea', 11, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Open|2#Assigned|3#Solved|4#Verified|5#Closed', '1', 6, 'center', 1, 0, '1', 1, 1, 0),
 (0, 'Helpdesk', 'due_date', 1, 'Due date', 'date', 5, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Helpdesk', 'author', 1, 'Author', 'display', 2, 1, NULL, 'User#id#lastname', NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'solved_by', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Helpdesk', 'author', 1, 'Author', 'display', 2, 1, NULL, 'User#id#lastname', NULL, 3, 'center', 1, 0, '1', 1, 1, 0),
+(0, 'Helpdesk', 'solved_by', 1, 'Solved by', 'display', 9, 1, NULL, 'User#id#lastname', NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
 (0, 'Helpdesk', 'solved_date', 1, 'Solved date', 'display', 10, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
 
