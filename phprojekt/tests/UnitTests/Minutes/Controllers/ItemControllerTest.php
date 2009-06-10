@@ -28,7 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
- * @group      minutes, controller, minutes-controller
+ * @group      minutes
+ * @group      controller
+ * @group      minutes-controller
  */
 class Minutes_ItemController_Test extends FrontInit
 {

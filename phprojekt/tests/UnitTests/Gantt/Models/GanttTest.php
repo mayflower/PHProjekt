@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      gantt
+ * @group      model
+ * @group      gantt-model
  */
 class Gantt_Models_Gantt_Test extends PHPUnit_Framework_TestCase
 {

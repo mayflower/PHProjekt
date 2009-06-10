@@ -28,7 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
- * @group      minutes, helpers, minutes-helpers
+ * @group      minutes
+ * @group      helpers
+ * @group      minutes-helpers
  */
 class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
 {
