@@ -387,11 +387,13 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return void;
      */
-    public function loadViewScript()
+    public function loadViewScript($view = null)
     {
         $module = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
-        $view   = Phprojekt::getInstance()->getView();
+        if (null === $view) {
+            $view = Phprojekt::getInstance()->getView();
+        }
         $view->addScriptPath(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR
-            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo');
+            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR);
     }
 }

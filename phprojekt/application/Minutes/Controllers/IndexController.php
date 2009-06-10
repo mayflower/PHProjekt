@@ -270,7 +270,7 @@ class Minutes_IndexController extends IndexController
 
         $this->view->items = $newitem;
 
-        Phprojekt_Loader::loadViewScript();
+        Phprojekt_Loader::loadViewScript($this->view);
         return $this->view->render('table.phtml');
     }
 
