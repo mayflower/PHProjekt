@@ -394,4 +394,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('abcäöüxyz', Phprojekt_ModuleInstance::convertVarToSql('abcäöüxyz'));
         $this->assertEquals('Äöü123abc', Phprojekt_ModuleInstance::convertVarToSql('Äöü123abc'));
     }
+
+    /**
+     * Test sql conversion, calls are static here to avoid Db adapter confusion
+     */
+    public function testVarFromSql()
+    {
+        $this->assertEquals('lowcaseUnderscored', Phprojekt_ModuleInstance::convertVarFromSql('lowcase_underscored'));
+        $this->assertEquals('LowcaseUnderscored', Phprojekt_ModuleInstance::convertVarFromSql('Lowcase_underscored'));
+        $this->assertEquals('lowcasenoscore', Phprojekt_ModuleInstance::convertVarFromSql('lowcasenoscore'));
+        $this->assertEquals('Lowcasenoscore', Phprojekt_ModuleInstance::convertVarFromSql('Lowcasenoscore'));
+        $this->assertEquals('123textText', Phprojekt_ModuleInstance::convertVarFromSql('123text_text'));
+        $this->assertEquals('abcäöüxyz', Phprojekt_ModuleInstance::convertVarFromSql('abcäöüxyz'));
+        $this->assertEquals('Äöü123abc', Phprojekt_ModuleInstance::convertVarFromSql('Äöü123abc'));
+    }
 }
