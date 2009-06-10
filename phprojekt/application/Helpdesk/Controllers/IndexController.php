@@ -54,7 +54,7 @@ class Helpdesk_IndexController extends IndexController
             $record->date   = date("Y-m-d");
         } else {
             $record = $this->getModelObject()->find($id);
-            if (null === $record->solvedBy || $record->solvedBy == '') {
+            if ($record->solvedBy == 0) {
                 // This is because of the solved date being unable to be deleted from the item
                 $record->solvedDate = '';
             }
@@ -82,13 +82,13 @@ class Helpdesk_IndexController extends IndexController
             $params['date']   = date("Y-m-d");
         } else {
             // The author comes as a STRING but must be saved as an INT (and it doesn't change since the item creation)
-            $params['author'] = $model->author;
+            $params['author'] = (int) $model->author;
         }
 
         if (!$newItem && isset($params['status'])) {
             if ($params['status'] != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
                 // Status != 'Solved' - The solver should be null (the solved date can't be deleted, but should be)
-                $params['solvedBy'] = '';
+                $params['solvedBy'] = 0;
             } else {
                 // Status 'Solved' - If it has just been changed to this state, save user and date
                 if ($model->status != Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
@@ -96,7 +96,7 @@ class Helpdesk_IndexController extends IndexController
                     $params['solvedDate'] = date("Y-m-d");
                 } else {
                     // The solver comes as a STRING but must be saved as an INT (and the Id doesn't change)
-                    $params['solvedBy'] = $model->solvedBy;
+                    $params['solvedBy'] = (int) $model->solvedBy;
                 }
             }
         }

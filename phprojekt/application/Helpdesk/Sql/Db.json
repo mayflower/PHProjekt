@@ -19,8 +19,8 @@
                 "description": {"type": "text"},
                 "status":      {"type": "int", "length": "2"},
                 "due_date":    {"type": "date"},
-                "author":      {"type": "varchar"},
-                "solved_by":   {"type": "varchar"},
+                "author":      {"type": "int"},
+                "solved_by":   {"type": "int"},
                 "solved_date": {"type": "date"},
                 "contact_id":  {"type": "int"}
             }
@@ -238,7 +238,7 @@
                     "list_use_filter": "1",
                     "alt_position":    "0",
                     "status":          "1",
-                    "is_integer":      "0",
+                    "is_integer":      "1",
                     "is_required":     "1",
                     "is_unique":       "0"
                 },
@@ -259,7 +259,7 @@
                     "list_use_filter": "1",
                     "alt_position":    "0",
                     "status":          "1",
-                    "is_integer":      "0",
+                    "is_integer":      "1",
                     "is_required":     "0",
                     "is_unique":       "0"
                 },

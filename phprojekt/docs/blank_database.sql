@@ -479,8 +479,8 @@ CREATE TABLE `helpdesk` (
   `description` text default NULL,
   `status` int(2) default NULL,
   `due_date` date default NULL,
-  `author` varchar(255) default NULL,
-  `solved_by` varchar(255) default NULL,
+  `author` int(11) default NULL,
+  `solved_by` int(11) default NULL,
   `solved_date` date default NULL,
   `contact_id` int(11) default NULL,
   PRIMARY KEY  (`id`)

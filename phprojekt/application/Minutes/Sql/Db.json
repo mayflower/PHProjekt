@@ -309,7 +309,7 @@
                     "form_tab":        "1",
                     "form_label":      "Status",
                     "form_type":       "selectValues",
-                    "form_position":   "0",
+                    "form_position":   "13",
                     "form_columns":    "1",
                     "form_regexp":     "NULL",
                     "form_range":      "1#Planned|2#Created|3#Filled|4#Final",
