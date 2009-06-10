@@ -354,7 +354,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test getting a nonexisting attribute.
-     * Should throw an exceptio n
+     * Should throw an exception
      *
      * @return void
      */
@@ -379,5 +379,19 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             return $error->getMessage();
         }
         $this->fail('Phprojekt_ActiveRecord_Exception expected');
+    }
+
+    /**
+     * Test sql conversion, calls are static here to avoid Db adapter confusion
+     */
+    public function testVarToSql()
+    {
+        $this->assertEquals('lowcase_underscored', Phprojekt_ModuleInstance::convertVarToSql('lowcaseUnderscored'));
+        $this->assertEquals('lowcase_underscored', Phprojekt_ModuleInstance::convertVarToSql('LowcaseUnderscored'));
+        $this->assertEquals('lowcasenoscore', Phprojekt_ModuleInstance::convertVarToSql('lowcasenoscore'));
+        $this->assertEquals('lowcasenoscore', Phprojekt_ModuleInstance::convertVarToSql('Lowcasenoscore'));
+        $this->assertEquals('123text_text', Phprojekt_ModuleInstance::convertVarToSql('123textText'));
+        $this->assertEquals('abcäöüxyz', Phprojekt_ModuleInstance::convertVarToSql('abcäöüxyz'));
+        $this->assertEquals('Äöü123abc', Phprojekt_ModuleInstance::convertVarToSql('Äöü123abc'));
     }
 }

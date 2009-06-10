@@ -1224,20 +1224,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function convertVarToSql($varName)
     {
-        if (preg_match("/^[A-Z]{1}/", $varName)) {
-            $varName = preg_replace("/^([A-Z]){1}/e", "strtolower('\\1')", $varName);
-            $varName = preg_replace("/([A-Z])/e", "'_'.strtolower('\\1')", $varName);
-        } else {
-            $varName = preg_replace("/([A-Z])/e", "'_'.strtolower('\\1')", $varName);
-        }
-
-        return $varName;
+        $varName = preg_replace("/^([A-Z])/e", "strtolower('\\1')", $varName);
+        return preg_replace("/([A-Z])/e", "'_'.strtolower('\\1')", $varName);
     }
-
     /**
      * Convert from SQl to Camel case
      * var_name   => varName
-     * table_name => TableName
+     * table_name => TableName - does not take place!
      *
      * @param string $varName The var to convert
      *
