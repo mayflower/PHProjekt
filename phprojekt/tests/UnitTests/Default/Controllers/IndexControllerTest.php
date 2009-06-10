@@ -72,8 +72,8 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertContains('{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1',
-                              $response);
+        $expected = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
+        $this->assertContains($expected, $response);
         $this->assertContains('"numRows":1}', $response);
     }
 
@@ -84,8 +84,8 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonDetail');
         $response = $this->getResponse();
-        $this->assertContains('[{"id":"1","name":"Invisible Root"}', $response);
-        $this->assertContains('{"id":"2","name":"....Project 1"}', $response);
+        $this->assertContains('[{"id":1,"name":"Invisible Root"}', $response);
+        $this->assertContains('{"id":2,"name":"....Project 1"}', $response);
     }
 
     /**

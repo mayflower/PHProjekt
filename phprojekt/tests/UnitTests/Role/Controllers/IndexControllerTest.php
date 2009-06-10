@@ -38,7 +38,7 @@ class Role_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/role/jsonList');
         $response = $this->getResponse();
-        $this->assertContains('{"id":"1","name":"admin","rights":[]}],"numRows":1}', $response);
+        $this->assertContains('{"id":1,"name":"admin","rights":[]}],"numRows":1}', $response);
     }
 
     /**

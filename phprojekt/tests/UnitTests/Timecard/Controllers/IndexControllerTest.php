@@ -67,8 +67,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDetail/');
         $this->request->setParam('date', '2009-05-16');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":"7","startTime":"09:00:00","rights":[],"endTime":"13:00:00"},{"id":"8","startTime":"'
-            . '14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2}';
+        $expected = '"data":[{"id":7,"startTime":"09:00:00","rights":[],"endTime":"13:00:00"},{"id":8,'
+            . '"startTime":"14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2}';
         $this->assertContains($expected, $response);
     }
 
@@ -88,7 +88,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDetail/');
         $this->request->setParam('date', date("Y-m-d"));
         $response = $this->getResponse();
-        $expected = '"data":[{"id":"9","startTime":"10:00:00","rights":[],"endTime":""}],"numRows":1}';
+        $expected = '"data":[{"id":9,"startTime":"10:00:00","rights":[],"endTime":""}],"numRows":1}';
         $this->assertContains($expected, $response);
     }
 
@@ -108,7 +108,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDetail/');
         $this->request->setParam('date', date("Y-m-d"));
         $response = $this->getResponse();
-        $expected = '"data":[{"id":"9","startTime":"10:00:00","rights":[],"endTime":"19:00:00"}],"numRows":1}';
+        $expected = '"data":[{"id":9,"startTime":"10:00:00","rights":[],"endTime":"19:00:00"}],"numRows":1}';
         $this->assertContains($expected, $response);
     }
 
@@ -130,8 +130,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDetail/');
         $this->request->setParam('date', '2009-05-16');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":"7","startTime":"10:30:00","rights":[],"endTime":"12:30:00"},{"id":"8","startTime":"'
-            . '14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2})';
+        $expected = '"data":[{"id":7,"startTime":"10:30:00","rights":[],"endTime":"12:30:00"},{"id":8,'
+            . '"startTime":"14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2})';
         $this->assertContains($expected, $response);
     }
 
@@ -286,8 +286,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonBookingDetail/');
         $this->request->setParam('date', '2009-05-17');
         $response = $this->getResponse();
-        $expected = '"data":{"timecard":[],"timeproj":[{"id":"1","date":"2009-05-17","rights":[],"projectId":"1","notes'
-            . '":"My note","amount":"02:00:00"}]},"numRows":1}';
+        $expected = '"data":{"timecard":[],"timeproj":[{"id":1,"date":"2009-05-17","rights":[],"projectId":1,'
+            . '"notes":"My note","amount":"02:00:00"}]},"numRows":1}';
         $this->assertContains($expected, $response);
     }
 
@@ -310,8 +310,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonBookingDetail/');
         $this->request->setParam('date', '2009-05-17');
         $response = $this->getResponse();
-        $expected = '"data":{"timecard":[],"timeproj":[{"id":"1","date":"2009-05-17","rights":[],"projectId":"1","notes'
-            . '":"My note 2","amount":"01:00:00"}]},"numRows":1}';
+        $expected = '"data":{"timecard":[],"timeproj":[{"id":1,"date":"2009-05-17","rights":[],"projectId":1,'
+            . '"notes":"My note 2","amount":"01:00:00"}]},"numRows":1}';
         $this->assertContains($expected, $response);
     }
 
@@ -378,17 +378,24 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonStart');
         $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+        $hour     = date("G");
+        if ($hour < 20 && $hour > 8) {
+            $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
-        // Check that the period has been added
-        $this->setRequestUrl('Timecard/index/jsonDetail/');
-        $this->request->setParam('date', date('Y-m-d'));
-        $response = $this->getResponse();
-        // We don't expect the complete string containing date('Y-m-d') because the seconds usually change
-        $expected1 = '"data":[{"id":"11","startTime":"';
-        $expected2 = '","rights":[],"endTime":""}],"numRows":1}';
-        $this->assertContains($expected1, $response);
-        $this->assertContains($expected2, $response);
+            // Check that the period has been added
+            $this->setRequestUrl('Timecard/index/jsonDetail/');
+            $this->request->setParam('date', date('Y-m-d'));
+            $response = $this->getResponse();
+            // We don't expect the complete string containing date('Y-m-d') because the seconds usually change
+            $expected = '"data":[{"id":11,"startTime":"';
+            $this->assertContains($expected, $response);
+
+            $expected = '","rights":[],"endTime":""}],"numRows":1}';
+            $this->assertContains($expected, $response);
+        } else {
+            $this->assertTrue($this->error);
+            $this->assertContains('Start time has to be between 8:00 and 21:00', $this->errormessage);
+        }
     }
 
     /**
@@ -398,7 +405,12 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+        $hour     = date("G");
+        if ($hour < 20 && $hour > 8) {
+            $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+        } else {
+            $this->assertContains('The Item was not found', $response);
+        }
     }
 
     /**

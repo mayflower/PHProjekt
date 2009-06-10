@@ -38,7 +38,7 @@ class User_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/user/jsonGetUsers');
         $response = $this->getResponse();
-        $this->assertContains('{"id":"2","display":"Solt, Gustavo"},{"id":"1","display":"Soria Parra, David"}',
-            $response);
+        $expected = '{"id":2,"display":"Solt, Gustavo"},{"id":1,"display":"Soria Parra, David"}';
+        $this->assertContains($expected, $response);
     }
 }

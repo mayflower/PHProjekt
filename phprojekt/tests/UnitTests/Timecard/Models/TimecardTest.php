@@ -180,9 +180,10 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel->save();
 
         // Part 2 - Check it was well inserted
+        $lastId = $timecardModel->id;
         unset($timecardModel);
         $timecardModel = clone($this->_model);
-        $timecardModel->find(12);
+        $timecardModel->find($lastId);
         $this->assertEquals('2009-05-17', $timecardModel->date);
         $this->assertEquals('14:00:00', $timecardModel->startTime);
         $this->assertEquals('18:00:00', $timecardModel->endTime);
@@ -198,9 +199,10 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel->save();
 
         // Part 4 - Check it was well inserted
+        $lastId = $timecardModel->id;
         unset($timecardModel);
         $timecardModel = clone($this->_model);
-        $timecardModel->find(13);
+        $timecardModel->find($lastId);
         $timecardModel->ownerId = 1;
         $this->assertEquals('2009-05-17', $timecardModel->date);
         $this->assertEquals('13:00:00', $timecardModel->startTime);
@@ -233,55 +235,58 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
     public function testGetFieldDefinition()
     {
         // date
-        $dateData = array();
-        $dateData['key']      = 'date';
-        $dateData['label']    = Phprojekt::getInstance()->translate('Date');
-        $dateData['type']     = 'date';
-        $dateData['hint']     = Phprojekt::getInstance()->getTooltip('date');
-        $dateData['order']    = 0;
-        $dateData['position'] = 1;
-        $dateData['fieldset'] = '';
-        $dateData['range']    = array('id'   => '',
-                                      'name' => '');
-        $dateData['required'] = true;
-        $dateData['readOnly'] = true;
-        $dateData['tab']      = 1;
+        $data1 = array();
+        $data1['key']      = 'date';
+        $data1['label']    = Phprojekt::getInstance()->translate('Date');
+        $data1['type']     = 'date';
+        $data1['hint']     = Phprojekt::getInstance()->getTooltip('date');
+        $data1['order']    = 0;
+        $data1['position'] = 1;
+        $data1['fieldset'] = '';
+        $data1['range']    = array('id'   => '',
+                                   'name' => '');
+        $data1['required'] = true;
+        $data1['readOnly'] = true;
+        $data1['tab']      = 1;
+        $data1['integer']  = false;
 
         // startDate
-        $startDateData = array();
-        $startDateData['key']      = 'startTime';
-        $startDateData['label']    = Phprojekt::getInstance()->translate('Start Time');
-        $startDateData['type']     = 'time';
-        $startDateData['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
-        $startDateData['order']    = 0;
-        $startDateData['position'] = 2;
-        $startDateData['fieldset'] = '';
-        $startDateData['range']    = array('id'   => '',
-                                           'name' => '');
-        $startDateData['required'] = true;
-        $startDateData['readOnly'] = false;
-        $startDateData['tab']      = 1;
+        $data2 = array();
+        $data2['key']      = 'startTime';
+        $data2['label']    = Phprojekt::getInstance()->translate('Start Time');
+        $data2['type']     = 'time';
+        $data2['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
+        $data2['order']    = 0;
+        $data2['position'] = 2;
+        $data2['fieldset'] = '';
+        $data2['range']    = array('id'   => '',
+                                   'name' => '');
+        $data2['required'] = true;
+        $data2['readOnly'] = false;
+        $data2['tab']      = 1;
+        $data2['integer']  = false;
 
         // endDate
-        $endDateData = array();
-        $endDateData['key']      = 'endTime';
-        $endDateData['label']    = Phprojekt::getInstance()->translate('End Time');
-        $endDateData['type']     = 'time';
-        $endDateData['hint']     = Phprojekt::getInstance()->getTooltip('endTime');
-        $endDateData['order']    = 0;
-        $endDateData['position'] = 3;
-        $endDateData['fieldset'] = '';
-        $endDateData['range']    = array('id'   => '',
-                                         'name' => '');
-        $endDateData['required'] = false;
-        $endDateData['readOnly'] = false;
-        $endDateData['tab']      = 1;
+        $data3 = array();
+        $data3['key']      = 'endTime';
+        $data3['label']    = Phprojekt::getInstance()->translate('End Time');
+        $data3['type']     = 'time';
+        $data3['hint']     = Phprojekt::getInstance()->getTooltip('endTime');
+        $data3['order']    = 0;
+        $data3['position'] = 3;
+        $data3['fieldset'] = '';
+        $data3['range']    = array('id'   => '',
+                                   'name' => '');
+        $data3['required'] = false;
+        $data3['readOnly'] = false;
+        $data3['tab']      = 1;
+        $data3['integer']  = false;
 
         $timecardModel = clone($this->_model);
-        $expected = array($startDateData, $endDateData);
+        $expected = array($data2, $data3);
         $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition('today'));
 
-        $expected = array($dateData, $startDateData, $endDateData);
+        $expected = array($data1, $data2, $data3);
         $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition('export'));
     }
 }

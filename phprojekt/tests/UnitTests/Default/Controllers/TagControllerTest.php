@@ -40,8 +40,9 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $this->request->setParam('limit', 2);
         $response = $this->getResponse();
-        $this->assertContains('"metadata":[{"key":"string","label":"Tag"},'
-            . '{"key":"count","label":"Count"}],"data":[{"string":"this","count":3}', $response);
+        $expected = '"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],'
+            . '"data":[{"string":"this","count":3}';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -67,7 +68,8 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('tag', 'test');
         $this->request->setParam('limit', 2);
         $response = $this->getResponse();
-        $this->assertContains('{"id":1,"moduleId":1,"moduleName":"Project",'
-            . '"moduleLabel":"Project","firstDisplay":"test","secondDisplay":null,"projectId":1}', $response);
+        $expected = '{"id":1,"moduleId":1,"moduleName":"Project","moduleLabel":"Project","firstDisplay":"test",'
+            . '"secondDisplay":null,"projectId":1}';
+        $this->assertContains($expected, $response);
     }
 }

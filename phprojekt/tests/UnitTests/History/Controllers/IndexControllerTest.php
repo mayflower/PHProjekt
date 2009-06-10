@@ -40,8 +40,8 @@ class History_IndexController_Test extends FrontInit
         $this->request->setParam('moduleId', 1);
         $this->request->setParam('itemId', 5);
         $response = $this->getResponse();
-        $this->assertContains('{"userId":"1","moduleId":"1","itemId":"5","field":"title","label":"Title","oldValue"',
-            $response);
+        $expected = '{"userId":1,"moduleId":1,"itemId":5,"field":"title","label":"Title","oldValue"';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -53,8 +53,8 @@ class History_IndexController_Test extends FrontInit
         $this->request->setParam('moduleName', 'Project');
         $this->request->setParam('itemId', 5);
         $response = $this->getResponse();
-        $this->assertContains('{"userId":"1","moduleId":"1","itemId":"5","field":"title","label":"Title","oldValue":',
-            $response);
+        $expected = '{"userId":1,"moduleId":1,"itemId":5,"field":"title","label":"Title","oldValue":';
+        $this->assertContains($expected, $response);
     }
 
     /**

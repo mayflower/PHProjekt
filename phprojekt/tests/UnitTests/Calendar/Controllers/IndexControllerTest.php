@@ -424,22 +424,22 @@ class Calendar_IndexController_Test extends FrontInit
         // New event data request
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":null,"title":"","rights":{"currentUser":{"moduleId":"5","itemId":null'
-            . ',"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
+        $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":5,"itemId":0,"userId":1,'
+            . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
             . '"download":true,"admin":true}},"place":"","notes":"","startDate":"","startTime":"02:00:00","endDate":"",'
-            . '"endTime":"02:00:00","participantId":"","rrule":""}],"numRows":1})';
-        $this->assertContains($expectedContent, $response);
+            . '"endTime":"02:00:00","participantId":0,"rrule":""}],"numRows":1})';
+        $this->assertContains($expected, $response);
 
         // Existing event
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","title":"test edited","rights":{"currentUser":{"module_id":"5","item_id":'
-            . '"1","user_id":"1","access":true,"moduleId":"5","itemId":"1","userId":"1","none":false,"read":true,'
-            . '"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"place":"Bariloche"'
-            . ',"notes":"test note edited","startDate":"2009-06-03","startTime":"10:00:00","endDate":"2009-06-03",'
-            . '"endTime":"11:00:00","participantId":"1","rrule":""}],"numRows":1})';
-        $this->assertContains($expectedContent, $response);
+        $expected = '"data":[{"id":1,"title":"test edited","rights":{"currentUser":{"moduleId":5,"itemId":1,'
+            . '"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,"delete":true,'
+            . '"download":true,"admin":true}},"place":"Bariloche","notes":"test note edited","startDate":"2009-06-03",'
+            . '"startTime":"10:00:00","endDate":"2009-06-03","endTime":"11:00:00","participantId":1,"rrule":""}],'
+            . '"numRows":1})';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -620,7 +620,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonGetSpecificUsers/');
         $this->request->setParam('users', '1,2');
         $response = $this->getResponse();
-        $this->assertContains('{"id":"2","display":"Solt, Gustavo"},{"id":"1","display":"Soria Parra, David"}',
-            $response);
+        $expected = '{"id":2,"display":"Solt, Gustavo"},{"id":1,"display":"Soria Parra, David"}';
+        $this->assertContains($expected, $response);
     }
 }

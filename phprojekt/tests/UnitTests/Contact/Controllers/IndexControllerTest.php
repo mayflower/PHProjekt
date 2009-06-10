@@ -55,24 +55,24 @@ class Contact_IndexController_Test extends FrontInit
 
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
-        $response        = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","name":"Mariano","rights":{"currentUser":{"moduleId":"9","itemId":"1","us'
-            . 'erId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"dow'
-            . 'nload":true,"admin":true}},"email":"mariano.lapenna@mayflower.de","firstphone":"12341234","street":"Edis'
-            . 'on 1234","private":"0"}],"numRows":1})';
-        $this->assertContains($response, $expectedContent);
-        $this->assertContains($expectedContent, $response);
+        $response = $this->getResponse();
+        $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de",'
+            . '"firstphone":12341234,"street":"Edison 1234","private":0}],"numRows":1})';
+        $this->assertContains($expected, $response);
 
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
         $this->request->setParam('id', 1);
-        $response        = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","name":"Mariano","rights":{"currentUser":{"moduleId":"9","itemId":"1","us'
-            . 'erId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"dow'
-            . 'nload":true,"admin":true}},"email":"mariano.lapenna@mayflower.de","company":"Mayflower","firstphone":"12'
-            . '341234","secondphone":"23452345","mobilephone":"34563456","street":"Edison 1234","city":"Buenos Aires","'
-            . 'zipcode":"1234AAA","country":"Argentina","comment":"Very intelligent","private":"0"}],"numRows":1})';
-        $this->assertContains($expectedContent, $response);
+        $response = $this->getResponse();
+        $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de",'
+            . '"company":"Mayflower","firstphone":12341234,"secondphone":23452345,"mobilephone":34563456,'
+            . '"street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA","country":"Argentina",'
+            . '"comment":"Very intelligent","private":0}],"numRows":1})';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -100,25 +100,24 @@ class Contact_IndexController_Test extends FrontInit
 
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
-        $response        = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","name":"Mariano2","rights":{"currentUser":{"moduleId":"9","itemId":"1","u'
-            . 'serId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"do'
-            . 'wnload":true,"admin":true}},"email":"mariano.lapenna@mayflower.de2","firstphone":"12341234B","street":"E'
-            . 'dison 1234B","private":"1"}],"numRows":1})';
-        $this->assertContains($response, $expectedContent);
-        $this->assertContains($expectedContent, $response);
+        $response = $this->getResponse();
+        $expected = '"data":[{"id":1,"name":"Mariano2","rights":{"currentUser":{"moduleId":9,"itemId":1,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de2",'
+            . '"firstphone":"12341234B","street":"Edison 1234B","private":1}],"numRows":1})';
+        $this->assertContains($expected, $response);
 
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
         $this->request->setParam('id', 1);
-        $response        = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","name":"Mariano2","rights":{"currentUser":{"moduleId":"9","itemId":"1","u'
-            . 'serId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"do'
-            . 'wnload":true,"admin":true}},"email":"mariano.lapenna@mayflower.de2","company":"Mayflower2","firstphone":'
-            . '"12341234B","secondphone":"23452345B","mobilephone":"34563456B","street":"Edison 1234B","city":"Buenos A'
-            . 'ires2","zipcode":"1234AAA2","country":"Argentina2","comment":"Very intelligent2","private":"1"}],"numRow'
-            . 's":1})';
-        $this->assertContains($expectedContent, $response);
+        $response = $this->getResponse();
+        $expected = '"data":[{"id":1,"name":"Mariano2","rights":{"currentUser":{"moduleId":9,"itemId":1,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de2",'
+            . '"company":"Mayflower2","firstphone":"12341234B","secondphone":"23452345B","mobilephone":"34563456B",'
+            . '"street":"Edison 1234B","city":"Buenos Aires2","zipcode":"1234AAA2","country":"Argentina2",'
+            . '"comment":"Very intelligent2","private":1}],"numRows":1})';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -139,8 +138,7 @@ class Contact_IndexController_Test extends FrontInit
     public function testJsonDeleteCheck() {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
-        $response        = $this->getResponse();
-        $expectedContent = '{}&&({"metadata":[]})';
-        $this->assertContains($expectedContent, $response);
+        $response = $this->getResponse();
+        $this->assertContains('{}&&({"metadata":[]})', $response);
     }
 }

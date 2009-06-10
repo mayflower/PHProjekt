@@ -115,12 +115,10 @@ class Timecard_Models_Timeproj_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($response['data']));
 
         $firstRecord = $response['data']['timecard'][0];
-        $this->assertEquals(13, $firstRecord['id']);
         $this->assertEquals('13:00:00', $firstRecord['startTime']);
         $this->assertEquals('13:30:00', $firstRecord['endTime']);
 
         $secondRecord = $response['data']['timecard'][1];
-        $this->assertEquals(12, $secondRecord['id']);
         $this->assertEquals('14:00:00', $secondRecord['startTime']);
         $this->assertEquals('18:00:00', $secondRecord['endTime']);
     }

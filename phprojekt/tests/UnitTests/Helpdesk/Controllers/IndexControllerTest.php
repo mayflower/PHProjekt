@@ -235,35 +235,35 @@ class Helpdesk_IndexController_Test extends FrontInit
         // New item data request
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":null,"title":"","rights":{"currentUser":{"moduleId":"10","itemId":null,'
-            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete"'
-            . ':true,"download":true,"admin":true}},"author":"1","assigned":"","date":"' . date("Y-m-d") . '","dueDate"'
-            . ':"","projectId":"","priority":"","attachments":"","solvedBy":"","solvedDate":"","description":"","status'
-            . '":"","contactId":""}],"numRows":1})';
-        $this->assertContains($expectedContent, $response);
+        $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":10,"itemId":0,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,"date":"' . date("Y-m-d") . '",'
+            . '"dueDate":"","projectId":0,"priority":0,"attachments":"","solvedBy":"","solvedDate":"",'
+            . '"description":"","status":0,"contactId":0}],"numRows":1})';
+        $this->assertContains($expected, $response);
 
         // Existing item
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","title":"My completely new title","rights":{"currentUser":{"module_id":"'
-            . '10","item_id":"1","user_id":"1","access":true,"moduleId":"10","itemId":"1","userId":"1","none":false,"re'
-            . 'ad":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"author":"1'
-            . '","assigned":"1","date":"' . date("Y-m-d") . '","dueDate":"2009-05-30","projectId":"1","priority":"2","a'
-            . 'ttachments":"","solvedBy":"1","solvedDate":"' . date("Y-m-d") . '","description":'
-            . '"This is the description MODIFIED","status":"3","contactId":"0"}],"numRows":1}';
-        $this->assertContains($expectedContent, $response);
+        $expected = '"data":[{"id":1,"title":"My completely new title","rights":{"currentUser":{"moduleId":10,'
+            . '"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":1,'
+            . '"date":"' . date("Y-m-d") . '","dueDate":"2009-05-30","projectId":1,"priority":2,"attachments":"",'
+            . '"solvedBy":1,"solvedDate":"' . date("Y-m-d") . '","description":"This is the description MODIFIED",'
+            . '"status":3,"contactId":0}],"numRows":1}';
+        $this->assertContains($expected, $response);
 
         // Existing item
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 2);
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":"2","title":"My completely new title 2","rights":{"currentUser":{"module_id":'
-            . '"10","item_id":"2","user_id":"1","access":true,"moduleId":"10","itemId":"2","userId":"1","none":false,"'
-            . 'read":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"auth'
-            . 'or":"1","assigned":"0","date":"' . date("Y-m-d") . '","dueDate":"2009-05-17","projectId":"1","priority":'
-            . '"5","attachments":"","solvedBy":"","solvedDate":"","description":"This is the description 2","status":"4'
-            . '","contactId":"0"}],"numRows":1}';
-        $this->assertContains($expectedContent, $response);
+        $expected = '"data":[{"id":2,"title":"My completely new title 2","rights":{"currentUser":{"moduleId":10,'
+            . '"itemId":2,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,'
+            . '"date":"' . date("Y-m-d") . '","dueDate":"2009-05-17","projectId":1,"priority":5,"attachments":"",'
+            . '"solvedBy":"","solvedDate":"","description":"This is the description 2","status":4,"contactId":0}],'
+            . '"numRows":1}';
+        $this->assertContains($expected, $response);
     }
 }

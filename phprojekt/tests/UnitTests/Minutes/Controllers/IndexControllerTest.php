@@ -40,7 +40,6 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonList/nodeId/1');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
-
         $this->assertContains('{"metadata":[]}', $response, "Response was: '$response'");
     }
 
@@ -52,11 +51,11 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonDetail/id/0');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
+        $expected = '{"metadata":[{"key":"projectId","label":"Select","type":"hidden",';
+        $this->assertContains($expected, $response, "Response was: '$response'");
 
-        $this->assertContains('{"metadata":[{"key":"projectId","label":"Select","type":"hidden",', $response,
-            "Response was: '$response'");
-        $this->assertContains(',"data":[{"id":null,"projectId":"","rights":'
-            . '{"currentUser":{"moduleId":"11","itemId":null', $response, "Response was: '$response'");
+        $expected = ',"data":[{"id":0,"projectId":0,"rights":{"currentUser":{"moduleId":11,"itemId":0';
+        $this->assertContains($expected, $response, "Response was: '$response'");
     }
 
     /*
@@ -75,18 +74,13 @@ class Minutes_IndexController_Test extends FrontInit
      */
     public function testJsonSaveActionSaveFirstMinutes()
     {
-        $locale = new Zend_Locale('en');
-        $meetDate = new Zend_Date($locale);
-        $meetDate->sub(1, Zend_Date::DAY);
-        $meetDateString = $meetDate->toString("EEE MMM dd yyyy '00:00:00 GMT'ZZZ");
-
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'TestTitle');
         $this->request->setParam('description', 'TestDescription');
-        $this->request->setParam('meetingDate', $meetDateString);
-        $this->request->setParam('startTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
-        $this->request->setParam('endTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
+        $this->request->setParam('meetingDate', '2009-06-09');
+        $this->request->setParam('startTime', strtotime('03:00'));
+        $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'TestPlace');
         $this->request->setParam('moderator', 'TestModerator');
         $this->request->setParam('participantsInvited', array(2, 1));
@@ -98,7 +92,6 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('requiredField1', '(*) Required Field');
         $response = $this->getResponse();
 
-        $this->assertFalse($this->error, "Yesterdays date used: '$meetDateString', Exception is: ".$this->errormessage);
         $this->assertContains(Minutes_IndexController::ADD_TRUE_TEXT, $response, "Response was: '$response'");
         $this->assertContains('"id":"1"', $response, "ID created was not numbered 1.");
     }
@@ -121,9 +114,9 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'SecondTestTitle');
         $this->request->setParam('description', 'SecondTestDescription');
-        $this->request->setParam('meetingDate', 'Thu Apr 09 2009 00:00:00 GMT+0200');
-        $this->request->setParam('startTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
-        $this->request->setParam('endTime', 'Thu Jan 01 1970 03:00:00 GMT+0100');
+        $this->request->setParam('meetingDate', '2009-06-09');
+        $this->request->setParam('startTime', strtotime('03:00'));
+        $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'SecondTestPlace');
         $this->request->setParam('moderator', 'SecondTestModerator');
         $this->request->setParam('participantsInvited', array(1, 2));
@@ -156,11 +149,12 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonListUser/id/1');
         $response = $this->getResponse();
 
-        $this->assertContains('{"id":"1","display":', $response);
-        $this->assertContains('{"id":"2","display":', $response);
+        $this->assertContains('{"id":1,"display":', $response);
+        $this->assertContains('{"id":2,"display":', $response);
         $this->assertContains('"numRows":2})', $response, "Response was: '$response'");
         // This action should return the list of users selected as participantsInvited only from existing minutes.
     }
+
     /**
      * Test the Minutes event detail
      */

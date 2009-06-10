@@ -144,22 +144,20 @@ class Filemanager_IndexController_Test extends FrontInit
         // New item data request
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":null,"title":"","rights":{"currentUser":{"moduleId":"7","itemId":null,"userId'
-             . '":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"downlo'
-             . 'ad":true,"admin":true}},"comments":"","projectId":"","files":""}],"numRows":1})';
-        $this->assertContains($response, $expectedContent);
-        $this->assertContains($expectedContent, $response);
+        $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":7,"itemId":0,"userId":1,'
+            . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
+            . '"download":true,"admin":true}},"comments":"","projectId":0,"files":""}],"numRows":1})';
+        $this->assertContains($expected, $response);
 
         // Existing item
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $expectedContent = '"data":[{"id":"1","title":"test title MODIFIED AGAIN","rights":{"currentUser":{"module_id":'
-            . '"7","item_id":"1","user_id":"1","access":true,"moduleId":"7","itemId":"1","userId":"1","none":false,"rea'
-            . 'd":true,"write":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}},"comments":"'
-            . 'comment test MODIFIED AGAIN","projectId":"1","files":"a66f9bfa01ec4a2a3fa6282bb'
-            . '8fa8d56|articles2.txt"}],"numRows":1})';
-        $this->assertContains($expectedContent, $response);
+        $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","rights":{"currentUser":{'
+            . '"moduleId":7,"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,'
+            . '"copy":true,"delete":true,"download":true,"admin":true}},"comments":"comment test MODIFIED AGAIN",'
+            . '"projectId":1,"files":"a66f9bfa01ec4a2a3fa6282bb8fa8d56|articles2.txt"}],"numRows":1})';
+        $this->assertContains($expected, $response);
     }
 
     /**

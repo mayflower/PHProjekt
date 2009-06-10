@@ -187,7 +187,7 @@ class Module_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/moduledesigner/jsonDetail');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertContains('"tableName":"Project","id":"1"', $response);
+        $this->assertContains('"tableName":"Project","id":1', $response);
     }
 
     /**
