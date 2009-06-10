@@ -322,12 +322,13 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     {
         try {
             $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-            $project->title = 'Hello World Project to delete';
+            $project->id        = 9;
+            $project->title     = 'Hello World Project to delete';
             $project->startDate = '1981-05-12';
-            $project->endDate = '1981-05-12';
-            $project->priority = 1;
+            $project->endDate   = '1981-05-12';
+            $project->priority  = 1;
             $project->projectId = 1;
-            $project->path = '/';
+            $project->path      = '/';
             $project->save();
 
             $this->assertNotNull($project->id);

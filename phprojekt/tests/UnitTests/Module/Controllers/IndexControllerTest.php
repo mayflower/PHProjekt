@@ -52,7 +52,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
         $response = $this->getResponse();
-        $this->assertContains('The table module was created correctly', $response);
+        $this->assertContains('The table module was created correctly', $response, 'Response was: ' . $response);
 
         // Save
         $this->setRequestUrl('Core/module/jsonSave');
@@ -62,7 +62,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('saveType', 0);
         $this->request->setParam('active', 1);
         $response = $this->getResponse();
-        $this->assertContains('The module was added correctly', $response);
+        $this->assertContains('The module was added correctly', $response, 'Response was: ' . $response);
 
         // Reset cache for modules
         $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
@@ -81,7 +81,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('saveType', 0);
         $this->request->setParam('active', 0);
         $response = $this->getResponse();
-        $this->assertContains('The module was edited correctly', $response);
+        $this->assertContains('The module was edited correctly', $response, 'Response was: ' . $response);
 
         // Without name
         $this->setRequestUrl('Core/module/jsonSave');
@@ -90,7 +90,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('saveType', 0);
         $this->request->setParam('active', 0);
         $response = $this->getResponse();
-        $this->assertContains('The module was edited correctly', $response);
+        $this->assertContains('The module was edited correctly', $response, 'Response was: ' . $response);
     }
 
     public function testEditDatabaseManager()
@@ -118,7 +118,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
         $response = $this->getResponse();
-        $this->assertContains('The table module was edited correctly', $response);
+        $this->assertContains('The table module was edited correctly', $response, 'Response was: ' . $response);
 
         // Add
         $designerData = '{"0":{"id":' . $dbId . ',"tableName":"Test","formPosition":1,"formTab":1,"formColumns":1,'
@@ -137,7 +137,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
         $response = $this->getResponse();
-        $this->assertContains('The table module was edited correctly', $response);
+        $this->assertContains('The table module was edited correctly', $response, 'Response was: ' . $response);
 
         // Delete
         $designerData = '{"0":{"id":' . $dbId . ',"tableName":"Test","formPosition":1,"formTab":1,"formColumns":1,'
@@ -151,7 +151,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
         $response = $this->getResponse();
-        $this->assertContains('The table module was edited correctly', $response);
+        $this->assertContains('The table module was edited correctly', $response, 'Response was: ' . $response);
     }
 
     /**

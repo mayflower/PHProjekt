@@ -72,25 +72,7 @@ class Timecard_Models_TimecardSetting_Test extends PHPUnit_Framework_TestCase
     /**
      * Test setSettings
      */
-    public function testSetSettingsPart1()
-    {
-        // Save favorites setting
-        $timecardSetting = clone($this->_model);
-        $params          = array('favorites' => "");
-        $timecardSetting->setSettings($params);
-
-        // Check it was well saved
-        $settingsModel = new Setting_Models_Setting();
-        $settingsModel->setModule('Timecard');
-        $response      = $settingsModel->getSetting('favorites');
-        $response      = unserialize($response);
-        $this->assertEquals(null, $response);
-    }
-
-    /**
-     * Test setSettings
-     */
-    public function testSetSettingsPart2()
+    public function testSetSettings()
     {
         // Save favorites setting
         $timecardSetting = clone($this->_model);
