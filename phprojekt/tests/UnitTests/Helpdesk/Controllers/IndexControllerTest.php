@@ -239,7 +239,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":10,"itemId":0,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,"date":"' . date("Y-m-d") . '",'
-            . '"dueDate":"","projectId":0,"priority":0,"attachments":"","solvedBy":"","solvedDate":"",'
+            . '"dueDate":"","projectId":0,"priority":0,"attachments":"","solvedBy":0,"solvedDate":"",'
             . '"description":"","status":0,"contactId":0}],"numRows":1})';
         $this->assertContains($expected, $response);
 
@@ -265,7 +265,7 @@ class Helpdesk_IndexController_Test extends FrontInit
             . '"itemId":2,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,'
             . '"date":"' . date("Y-m-d") . '","dueDate":"2009-05-17","projectId":1,"priority":5,"attachments":"",'
-            . '"solvedBy":"","solvedDate":"","description":"This is the description 2","status":4,"contactId":0}],'
+            . '"solvedBy":0,"solvedDate":"","description":"This is the description 2","status":4,"contactId":0}],'
             . '"numRows":1}';
         $this->assertContains($expected, $response);
     }

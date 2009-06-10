@@ -133,8 +133,14 @@ class Phprojekt_Converter_Json
                 $value = $models->$key;
                 if ($field['integer']) {
                     $data[$key] = (int) $value;
+                } else if (is_scalar($value)) {
+                    $data[$key] = $value;
                 } else {
-                    $data[$key] = (string) $value;
+                    if ($field['integer']) {
+                        $data[$key] = (int) $value;
+                    } else {
+                        $data[$key] = (string) $value;
+                    }
                 }
                 $data['rights'] = $model->getRights();
             }
@@ -147,8 +153,14 @@ class Phprojekt_Converter_Json
                     $value = $cmodel->$key;
                     if ($field['integer']) {
                         $data[$key] = (int) $value;
+                    } else if (is_scalar($value)) {
+                        $data[$key] = $value;
                     } else {
-                        $data[$key] = (string) $value;
+                        if ($field['integer']) {
+                            $data[$key] = (int) $value;
+                        } else {
+                            $data[$key] = (string) $value;
+                        }
                     }
                     $data['rights'] = $cmodel->getRights();
                 }

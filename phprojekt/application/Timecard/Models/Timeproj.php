@@ -175,7 +175,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             foreach ($fieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $cmodel->$key;
-                if (is_numeric($value)) {
+                if ($field['integer']) {
                     $data[$key] = (int) $value;
                 } else if (is_scalar($value)) {
                     $data[$key] = $value;
@@ -202,7 +202,7 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
             foreach ($timeCardfieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $cmodel->$key;
-                if (is_numeric($value)) {
+                if ($field['integer']) {
                     $data[$key] = (int) $value;
                 } else if (is_scalar($value)) {
                     $data[$key] = $value;
