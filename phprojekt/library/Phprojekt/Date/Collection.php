@@ -139,16 +139,18 @@ class Phprojekt_Date_Collection
                 return false;
         }
 
-        $date  = $this->_minDate;
-        $dates = $this->_rruleByXXX($rules, $date);
-        $this->addArray($dates);
+        $datePointer = $this->_minDate;
+        $datesToAdd  = $this->_rruleByXXX($rules, $datePointer);
+        $this->addArray($datesToAdd);
 
-        while ($date < $this->_maxDate) {
-            $date = $this->_applyMethod($method, $rules['INTERVAL'], $date);
-            if ($date < $this->_maxDate) {
-                $dates = $this->_rruleByXXX($rules, $date);
+        while ($datePointer < $this->_maxDate) {
+            $datePointer = $this->_applyMethod($method, $rules['INTERVAL'], $datePointer);
+            $datesToAdd  = $this->_rruleByXXX($rules, $datePointer);
+            foreach ($datesToAdd as $dateToAdd) {
+                if ($dateToAdd < $this->_maxDate) {
+                    $this->add($dateToAdd);
+                }
             }
-            $this->addArray($dates);
         }
 
         // Clean extra dates
