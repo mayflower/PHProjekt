@@ -33,12 +33,25 @@
  */
 class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 {
+    protected $_name = 'minutes';
     /**
      * Relation to Items
      *
      * @var array hasMany
      */
     public $hasMany = array('items' => array('classname' => 'Minutes_Models_MinutesItem'));
+
+    /**
+     * Constructor initializes additional Infomanager.
+     *
+     * @param array $db Configuration for Zend_Db_Table
+     */
+    public function __construct($db = null)
+    {
+        parent::__construct($db);
+
+        $this->_dbManager = new Minutes_Models_MinutesInformation($this, $db);
+    }
 
     /**
      * Customized version to calculate the status of a minutes item regardless of its saved database entry.
