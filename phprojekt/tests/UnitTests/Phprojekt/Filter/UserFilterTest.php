@@ -28,6 +28,11 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @group      phprojekt
+ * @group      filter
+ * @group      user
+ * @group      phprojekt-filter
+ * @group      phprojekt-filter-user
  */
 class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
 {

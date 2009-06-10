@@ -38,6 +38,9 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @group      phprojekt
+ * @group      activerecord
+ * @group      phprojekt-activerecord
  */
 class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 {

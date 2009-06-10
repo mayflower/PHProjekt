@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      tabs
+ * @group      phprojekt-tabs
  */
 class Phprojekt_TabsTest extends PHPUnit_Framework_TestCase
 {

@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      note
+ * @group      model
+ * @group      note-model
  */
 class Note_Models_Note_Test extends PHPUnit_Framework_TestCase
 {

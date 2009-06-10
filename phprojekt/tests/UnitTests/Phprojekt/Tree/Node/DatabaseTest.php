@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @group      phprojekt
+ * @group      treenode
+ * @group      phprojekt-treenode
  */
 class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
 {

@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      group
+ * @group      phprojekt-group
  */
 class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
 {

@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      todo
+ * @group      model
+ * @group      todo-model
  */
 class Todo_Models_Todo_Test extends PHPUnit_Framework_TestCase
 {

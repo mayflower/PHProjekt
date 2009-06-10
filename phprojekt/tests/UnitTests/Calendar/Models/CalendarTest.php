@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      calendar
+ * @group      model
+ * @group      calendar-model
  */
 class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
 {

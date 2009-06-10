@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      filemanager
+ * @group      model
+ * @group      filemanager-model
  */
 class Filemanager_Models_Filemanager_Test extends PHPUnit_Framework_TestCase
 {

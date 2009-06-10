@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      history
+ * @group      phprojekt-history
  */
 class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
 {
@@ -57,6 +60,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $project->priority = 1;
         $project->currentStatus = 2;
         $project->save();
+        $this->assertEquals('9', $project->id);
         Zend_Registry::set('insertedId', $project->id);
 
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));

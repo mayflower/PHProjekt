@@ -28,6 +28,11 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      converter
+ * @group      csv
+ * @group      phprojekt-converter
+ * @group      phprojekt-converter-csv
  */
 class Phprojekt_Converter_CsvTest extends PHPUnit_Framework_TestCase
 {

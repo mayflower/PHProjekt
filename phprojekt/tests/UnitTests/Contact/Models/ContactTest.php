@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      contact
+ * @group      model
+ * @group      contact-model
  */
 class Contact_Models_Contact_Test extends PHPUnit_Framework_TestCase
 {

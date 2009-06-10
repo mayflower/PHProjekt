@@ -28,6 +28,11 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @group      phprojekt
+ * @group      mail
+ * @group      notification
+ * @group      phprojekt-mail
+ * @group      phprojekt-mail-notification
  */
 class Phprojekt_NotificationTest extends PHPUnit_Framework_TestCase
 {

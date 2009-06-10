@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @group      phprojekt
+ * @group      auth
+ * @group      phprojekt-auth
  */
 class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
 {

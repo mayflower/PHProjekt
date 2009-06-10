@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      log
+ * @group      phprojekt-log
  */
 class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
 {

@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      administration
+ * @group      controller
+ * @group      administration-controller
  */
 class Administration_IndexController_Test extends FrontInit
 {

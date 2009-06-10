@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      role
+ * @group      controller
+ * @group      role-controller
  */
 class Role_IndexController_Test extends FrontInit
 {

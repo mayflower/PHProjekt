@@ -28,6 +28,11 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      databasemanager
+ * @group      field
+ * @group      phprojekt-databasemanager
+ * @group      phprojekt-databasemanager-field
  */
 class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
 {

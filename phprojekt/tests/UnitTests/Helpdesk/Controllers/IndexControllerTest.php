@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      helpdesk
+ * @group      controller
+ * @group      helpdesk-controller
  */
 class Helpdesk_IndexController_Test extends FrontInit
 {

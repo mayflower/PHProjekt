@@ -28,6 +28,10 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Nina Schmitt <nina.schmitt@mayflower.de>
+ * @group      phprojekt
+ * @group      role
+ * @group      rights
+ * @group      phprojekt-role-rights
  */
 
 class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase

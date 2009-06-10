@@ -28,6 +28,11 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      language
+ * @group      adapter
+ * @group      phprojekt-language
+ * @group      phprojekt-language-adapter
  */
 class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
 {

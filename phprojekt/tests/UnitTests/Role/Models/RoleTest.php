@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      role
+ * @group      model
+ * @group      role-model
  */
 class Phprojekt_Role_Test extends PHPUnit_Framework_TestCase
 {

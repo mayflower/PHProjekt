@@ -28,19 +28,13 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Nina Schmitt <nina.schmitt@mayflower.de>
+ * @group      phprojekt
+ * @group      acl
+ * @group      phprojekt-acl
  */
 
 class Phprojekt_AclTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * setUp method for PHPUnit. We use a shared db connection
-     *
-     */
-    public function setUp()
-    {
-
-    }
-
     /**
      * This function constructs the Acl list and checks whether all Rights are
      * registered and returned correctly

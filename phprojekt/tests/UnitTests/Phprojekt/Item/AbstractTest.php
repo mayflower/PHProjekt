@@ -40,6 +40,10 @@ class Customized_Project extends Project_Models_Project
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      item
+ * @group      phprojekt-item
+ * @group      activerecord
  */
 class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 {

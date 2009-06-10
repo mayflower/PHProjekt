@@ -28,6 +28,12 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      date
+ * @group      converter
+ * @group      phprojekt-converter
+ * @group      phprojekt-date
+ * @group      phprojekt-converter-date
  */
 class Phprojekt_Date_ConverterTest extends PHPUnit_Framework_TestCase
 {

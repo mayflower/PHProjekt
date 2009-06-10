@@ -28,6 +28,12 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @group      phprojekt
+ * @group      modelinformation
+ * @group      phprojekt-modelinformation
+ * @group      model
+ * @group      activerecord
+ * @group      databasemanager
  */
 class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
 {

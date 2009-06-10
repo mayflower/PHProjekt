@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      contact
+ * @group      controller
+ * @group      contact-controller
  */
 class Contact_IndexController_Test extends FrontInit
 {

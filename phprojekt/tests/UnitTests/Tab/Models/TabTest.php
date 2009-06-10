@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @group      tab
+ * @group      model
+ * @group      tab-model
  */
 class Phprojekt_TabModelTab_Test extends PHPUnit_Framework_TestCase
 {

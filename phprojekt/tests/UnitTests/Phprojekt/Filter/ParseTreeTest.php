@@ -13,7 +13,7 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @version    $Id:$
+ * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -28,6 +28,11 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
+ * @group      phprojekt
+ * @group      filter
+ * @group      parsetree
+ * @group      phprojekt-filter
+ * @group      phprojekt-filter-parsetree
  */
 class Phprojekt_Filter_ParseTreeTest extends PHPUnit_Framework_TestCase
 {

@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     David Soria Parra <dsp@php.net>
+ * @group      phprojekt
+ * @group      main
+ * @group      phprojekt-main
  */
 class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
 {

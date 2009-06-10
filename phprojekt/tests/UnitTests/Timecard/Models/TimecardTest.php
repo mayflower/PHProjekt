@@ -28,6 +28,9 @@ require_once 'PHPUnit/Framework.php';
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @group      timecard
+ * @group      model
+ * @group      timecard-model
  */
 class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
 {
