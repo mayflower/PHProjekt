@@ -95,32 +95,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     *
-     */
-    public function testDeleteProject ()
-    {
-        try {
-            $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-            $project->title = 'Hello World Project to delete';
-            $project->startDate = '1981-05-12';
-            $project->endDate = '1981-05-12';
-            $project->priority = 1;
-            $project->projectId = 1;
-            $project->path = '/';
-            $project->save();
-
-            $this->assertNotNull($project->id);
-            $id = $project->id;
-            $project->delete();
-
-            $project->find($id);
-            $this->assertNull($project->title);
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
-    }
-
     public function testGetTableName()
     {
        $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
@@ -275,16 +249,16 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     {
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
-        $instance->id = 10;
+        $instance->id = 8;
         $instance->notes = '';
         $this->assertTrue($instance->save());
 
-        $instance->find(10);
+        $instance->find(8);
         $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
-        $this->assertEquals(10, $instance->instances->find(1)->projectId);
+        $this->assertEquals(8, $instance->instances->find(1)->projectId);
 
         $instance->id = 5;
-        $instance->save();
+        $this->assertTrue($instance->save());
     }
 
     /**
@@ -339,6 +313,32 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
 
         $instance->title = 'Test Project';
         $this->assertTrue($instance->save());
+    }
+
+    /**
+     *
+     */
+    public function testDeleteProject ()
+    {
+        try {
+            $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+            $project->title = 'Hello World Project to delete';
+            $project->startDate = '1981-05-12';
+            $project->endDate = '1981-05-12';
+            $project->priority = 1;
+            $project->projectId = 1;
+            $project->path = '/';
+            $project->save();
+
+            $this->assertNotNull($project->id);
+            $id = $project->id;
+            $project->delete();
+
+            $project->find($id);
+            $this->assertNull($project->title);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
     }
 
     /**

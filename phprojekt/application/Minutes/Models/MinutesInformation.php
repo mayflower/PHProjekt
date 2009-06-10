@@ -35,7 +35,8 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager implements Phprojekt_ModelInformation_Interface
+class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager
+    implements Phprojekt_ModelInformation_Interface
 {
     /**
      * Set the db table name to use to this fixed value. The database used by the parent
@@ -59,12 +60,13 @@ class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager implem
 
         // If itemStatus == final then set readOnly for all fields except itemStatus
         if (4 == $this->_model->itemStatus) {
-            foreach ($meta as $key => $field) {
+            foreach (array_keys($meta) as $key) {
                 if ('itemStatus' != $meta[$key]['key']) {
-                    $meta[$key]['readOnly'] = true;
+                    $meta[$key]['readOnly'] = 1;
                 }
             }
         }
+
         return $meta;
     }
 }

@@ -355,7 +355,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonBookingDelete/');
         $this->request->setParam('id', '50');
-        $response = $this->getResponse();
+        $this->getResponse();
 
         $this->assertTrue($this->error);
         $this->assertContains(Timecard_IndexController::NOT_FOUND, $this->errormessage);

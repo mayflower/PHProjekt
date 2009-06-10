@@ -59,7 +59,7 @@ class Gantt_IndexController_Test extends FrontInit
             . '"childs":1,"caption":"Project 1","start":1243850400,"end":1256947200,"startD":"01","startM":"06",'
             . '"startY":"2009","endD":"31","endM":"10","endY":"2009"},{"id":5,"level":20,"parent":2,"childs":0,'
             . '"caption":"Test Project","start":1249120800,"end":1256947200,"startD":"01","startM":"08",'
-            . '"startY":"2009","endD":"31","endM":"10","endY":"2009"},{"id":12,"level":10,"parent":1,"childs":0,'
+            . '"startY":"2009","endD":"31","endM":"10","endY":"2009"},{"id":13,"level":10,"parent":1,"childs":0,'
             . '"caption":"test","start":1218103200,"end":1598832000,"startD":"07","startM":"08","startY":"2008",'
             . '"endD":"31","endM":"08","endY":"2020"}],"min":1199145600,"max":1609372800,"step":4749}})';
 
@@ -86,7 +86,7 @@ class Gantt_IndexController_Test extends FrontInit
         // EDIT two projects
         $this->setRequestUrl('Gantt/index/jsonSave/');
         $projects = array('5,2009-06-01,2009-06-25',
-                          '12,2008-01-01,2008-12-31');
+                          '13,2008-01-01,2008-12-31');
         $this->request->setParam('projects', $projects);
         $response = $this->getResponse();
         $this->assertContains(Gantt_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
@@ -100,7 +100,7 @@ class Gantt_IndexController_Test extends FrontInit
             . '"childs":1,"caption":"Project 1","start":1243850400,"end":1256947200,"startD":"01","startM":"06",'
             . '"startY":"2009","endD":"31","endM":"10","endY":"2009"},{"id":5,"level":20,"parent":2,"childs":0,'
             . '"caption":"Test Project","start":1243850400,"end":1245888000,"startD":"01","startM":"06",'
-            . '"startY":"2009","endD":"25","endM":"06","endY":"2009"},{"id":12,"level":10,"parent":1,"childs":0,'
+            . '"startY":"2009","endD":"25","endM":"06","endY":"2009"},{"id":13,"level":10,"parent":1,"childs":0,'
             . '"caption":"test","start":1199181600,"end":1230681600,"startD":"01","startM":"01","startY":"2008",'
             . '"endD":"31","endM":"12","endY":"2008"}],"min":1199145600,"max":1262217600,"step":731}})';
 

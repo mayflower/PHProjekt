@@ -72,9 +72,9 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de",'
-            . '"company":"Mayflower","firstphone":"004912341234","secondphone":"004923452345","mobilephone":"004934563456",'
-            . '"street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA","country":"Argentina",'
-            . '"comment":"Very intelligent","private":0}],"numRows":1})';
+            . '"company":"Mayflower","firstphone":"004912341234","secondphone":"004923452345",'
+            . '"mobilephone":"004934563456","street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA",'
+            . '"country":"Argentina","comment":"Very intelligent","private":0}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 

@@ -498,7 +498,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('topicDate', '2009-05-01');
         $this->request->setParam('userId', '1');
         $this->request->setParam('topicId', '1.1');
-        $response = $this->getResponse();
+        $this->getResponse();
 
         $this->assertTrue($this->error);
         $this->assertContains(Minutes_ItemController::MINUTES_READ_ONLY, $this->errormessage);
