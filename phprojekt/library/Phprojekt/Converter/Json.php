@@ -127,20 +127,14 @@ class Phprojekt_Converter_Json
          */
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
             foreach ($fieldDefinition as $field) {
-               $data['id'] = (int) $models->id;
+                $data['id'] = (int) $models->id;
 
-               $key   = $field['key'];
-               $value = $models->$key;
-                if (is_numeric($value)) {
+                $key   = $field['key'];
+                $value = $models->$key;
+                if ($field['integer']) {
                     $data[$key] = (int) $value;
-                } else if (is_scalar($value)) {
-                    $data[$key] = $value;
                 } else {
-                    if ($field['integer']) {
-                        $data[$key] = (int) $value;
-                    } else {
-                        $data[$key] = (string) $value;
-                    }
+                    $data[$key] = (string) $value;
                 }
                 $data['rights'] = $model->getRights();
             }
