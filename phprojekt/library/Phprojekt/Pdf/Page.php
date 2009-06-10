@@ -337,8 +337,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             }
             $padding += $this->paragraphPadding;
         }
-        $this->freeLineY = $this->getHeight() - $y + ($fontSize * $this->lineHeight * $realLineCount) +
-            $this->paragraphPadding;
+        $this->freeLineY = $this->getHeight() - $y + ($fontSize * $this->lineHeight * $realLineCount) + $padding;
     }
 
     /**
