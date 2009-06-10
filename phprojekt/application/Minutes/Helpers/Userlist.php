@@ -53,16 +53,16 @@ final class Minutes_Helpers_Userlist
         }
 
         Phprojekt::getInstance()->getLog()->debug('called with "' . $idList . '"');
-        
+
         $data = array();
-        
+
         if (!empty($idList)) {
             $user     = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $userList = $user->fetchAll(sprintf('id IN (%s)', $idList), 'id ASC');
             $display  = $user->getDisplay();
-            
+
             foreach ($userList as $record) {
-                $data[] = array('id'      => $record->id,
+                $data[] = array('id'      => (int) $record->id,
                                 'display' => $record->applyDisplay($display, $record));
             }
         }

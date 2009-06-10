@@ -71,6 +71,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 $history->oldValue = $difference['oldValue'];
                 $history->newValue = $difference['newValue'];
                 $history->action   = $action;
+                $history->datetime = date("Y-m-d H:i:s");
                 $history->save();
             }
         } else {
@@ -209,9 +210,9 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             }
 
             if ($oldValue != $newValue) {
-                $result[] = array('userId'   => $row->userId,
-                                  'moduleId' => $row->moduleId,
-                                  'itemId'   => $row->itemId,
+                $result[] = array('userId'   => (int) $row->userId,
+                                  'moduleId' => (int) $row->moduleId,
+                                  'itemId'   => (int) $row->itemId,
                                   'field'    => $row->field,
                                   'label'    => $label,
                                   'oldValue' => $oldValue,

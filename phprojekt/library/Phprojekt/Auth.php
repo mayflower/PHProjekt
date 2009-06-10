@@ -110,7 +110,7 @@ class Phprojekt_Auth extends Zend_Auth
             $returnValue = $authNamespace->userId;
         }
 
-        return $returnValue;
+        return (int) $returnValue;
     }
 
     /**

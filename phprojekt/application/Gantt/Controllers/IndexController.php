@@ -71,13 +71,13 @@ class Gantt_IndexController extends IndexController
                     if ($end > $max) {
                         $max = $end;
                     }
-                    $data['data']["projects"][] = array('id'      => $key,
-                                                        'level'   => $node->getDepth() * 10,
-                                                        'parent'  => $parent,
-                                                        'childs'  => count($node->getChildren()),
+                    $data['data']["projects"][] = array('id'      => (int) $key,
+                                                        'level'   => (int) $node->getDepth() * 10,
+                                                        'parent'  => (int) $parent,
+                                                        'childs'  => (int) count($node->getChildren()),
                                                         'caption' => $node->title,
-                                                        'start'   => $start,
-                                                        'end'     => $end,
+                                                        'start'   => (int) $start,
+                                                        'end'     => (int) $end,
                                                         'startD'  => $startDay,
                                                         'startM'  => $startMonth,
                                                         'startY'  => $startYear,

@@ -48,7 +48,7 @@ class Core_UserController extends Core_IndexController
         $data    = array();
         $display = $user->getDisplay();
         foreach ($records as $record) {
-            $data['data'][] = array('id'      => $record->id,
+            $data['data'][] = array('id'      => (int) $record->id,
                                     'display' => $record->applyDisplay($display, $record));
         }
 

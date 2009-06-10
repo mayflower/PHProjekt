@@ -49,7 +49,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
 
         foreach ($model->fetchAll(null, 'name ASC') as $role) {
             $roles['data'][$role->id] = array();
-            $roles['data'][$role->id]['id']    = $role->id;
+            $roles['data'][$role->id]['id']    = (int) $role->id;
             $roles['data'][$role->id]['name']  = $role->name;
             $roles['data'][$role->id]['users'] = array();
         }
@@ -60,7 +60,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         $display = Phprojekt_User_User::getDisplay();
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $userDisplay = Phprojekt_User_User::applyDisplay($display, $right);
-            $roles['data'][$right->roleId]['users'][] = array('id'      => $right->userId,
+            $roles['data'][$right->roleId]['users'][] = array('id'      => (int) $right->userId,
                                                               'display' => $userDisplay);
         }
         return $roles;

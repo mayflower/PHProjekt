@@ -171,14 +171,20 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         $numRows = 0;
 
         foreach ($models as $cmodel) {
-            $data['id'] = $cmodel->id;
+            $data['id'] = (int) $cmodel->id;
             foreach ($fieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $cmodel->$key;
-                if (is_scalar($value)) {
+                if (is_numeric($value)) {
+                    $data[$key] = (int) $value;
+                } else if (is_scalar($value)) {
                     $data[$key] = $value;
                 } else {
-                    $data[$key] = (string) $value;
+                    if ($field['integer']) {
+                        $data[$key] = (int) $value;
+                    } else {
+                        $data[$key] = (string) $value;
+                    }
                 }
                 $data['rights'] = $cmodel->getRights();
             }
@@ -192,14 +198,20 @@ class Timecard_Models_Timeproj extends Phprojekt_ActiveRecord_Abstract implement
         $timeCardfieldDefinition = $information->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         foreach ($timecardRecords as $cmodel) {
-            $data['id'] = $cmodel->id;
+            $data['id'] = (int) $cmodel->id;
             foreach ($timeCardfieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $cmodel->$key;
-                if (is_scalar($value)) {
+                if (is_numeric($value)) {
+                    $data[$key] = (int) $value;
+                } else if (is_scalar($value)) {
                     $data[$key] = $value;
                 } else {
-                    $data[$key] = (string) $value;
+                    if ($field['integer']) {
+                        $data[$key] = (int) $value;
+                    } else {
+                        $data[$key] = (string) $value;
+                    }
                 }
                 $data['rights'] = $cmodel->getRights();
             }

@@ -127,28 +127,40 @@ class Phprojekt_Converter_Json
          */
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
             foreach ($fieldDefinition as $field) {
-               $data['id'] = $models->id;
+               $data['id'] = (int) $models->id;
 
                $key   = $field['key'];
                $value = $models->$key;
-               if (is_scalar($value)) {
-                   $data[$key] = $value;
-               } else {
-                   $data[$key] = (string) $value;
-               }
-               $data['rights'] = $model->getRights();
+                if (is_numeric($value)) {
+                    $data[$key] = (int) $value;
+                } else if (is_scalar($value)) {
+                    $data[$key] = $value;
+                } else {
+                    if ($field['integer']) {
+                        $data[$key] = (int) $value;
+                    } else {
+                        $data[$key] = (string) $value;
+                    }
+                }
+                $data['rights'] = $model->getRights();
             }
             $datas[] = $data;
         } else {
             foreach ($models as $cmodel) {
-                $data['id'] = $cmodel->id;
+                $data['id'] = (int) $cmodel->id;
                 foreach ($fieldDefinition as $field) {
                     $key   = $field['key'];
                     $value = $cmodel->$key;
-                    if (is_scalar($value)) {
+                    if (is_numeric($value)) {
+                        $data[$key] = (int) $value;
+                    } else if (is_scalar($value)) {
                         $data[$key] = $value;
                     } else {
-                        $data[$key] = (string) $value;
+                        if ($field['integer']) {
+                            $data[$key] = (int) $value;
+                        } else {
+                            $data[$key] = (string) $value;
+                        }
                     }
                     $data['rights'] = $cmodel->getRights();
                 }

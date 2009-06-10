@@ -169,9 +169,9 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 
             // Set the current User
             // Use for an empty rights, if not, will be re-write
-            $values['currentUser']['moduleId'] = $moduleId;
-            $values['currentUser']['itemId']   = $itemId;
-            $values['currentUser']['userId']   = Phprojekt_Auth::getUserId();
+            $values['currentUser']['moduleId'] = (int) $moduleId;
+            $values['currentUser']['itemId']   = (int) $itemId;
+            $values['currentUser']['userId']   = (int) Phprojekt_Auth::getUserId();
             $access                            = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
             $values['currentUser']             = array_merge($values['currentUser'], $access);
 
@@ -180,7 +180,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             foreach ($rows as $row) {
                 // Convert index
                 foreach ($row as $k => $v) {
-                    $row[Phprojekt_ActiveRecord_Abstract::convertVarFromSql($k)] = $v;
+                    unset($row[$k]);
+                    $row[Phprojekt_ActiveRecord_Abstract::convertVarFromSql($k)] = (int) $v;
                 }
                 $row = array_merge($row, Phprojekt_Acl::convertBitmaskToArray($row['access']));
                 if (Phprojekt_Auth::getUserId() == $row['userId']) {
