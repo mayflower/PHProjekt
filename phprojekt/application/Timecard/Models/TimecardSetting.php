@@ -63,6 +63,7 @@ class Timecard_Models_TimecardSetting
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 

@@ -247,6 +247,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (strpos($field->formRange, "|") > 0) {
             foreach (explode('|', $field->formRange) as $range) {
                 list($key, $value) = explode('#', $range);
+                if (is_numeric($key)) {
+                    $key = (int) $key;
+                }
                 $converted['range'][] = array('id'   => $key,
                                               'name' => Phprojekt::getInstance()->translate($value));
             }
@@ -282,6 +285,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['required'] = (boolean) $field->isRequired;
         $converted['readOnly'] = false;
         $converted['tab']      = $field->formTab;
+        $converted['integer']  = (boolean) $field->isInteger;
 
         return $converted;
     }
@@ -384,7 +388,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree->setup();
                 foreach ($tree as $node) {
-                    $showKey   = $node->$key;
+                    $showKey   = (int) $node->$key;
                     $showValue = str_repeat('....', $node->getDepth()) . $node->$value;
                     $options[] = array('id'   => $showKey,
                                        'name' => $showValue);
@@ -642,7 +646,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 while ($field->valid()) {
                     $key = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->key());
                     if ($key != 'tableName') {
-                        $data[$i][$key] = $field->$key;
+
+                        $value = $field->$key;
+                        if (is_numeric($value)) {
+                            $data[$i][$key] = (int) $value;
+                        } else if (is_scalar($value)) {
+                            $data[$i][$key] = $value;
+                        } else {
+                            if ($field->isInteger) {
+                                $data[$i][$key] = (int) $value;
+                            } else {
+                                $data[$i][$key] = (string) $value;
+                            }
+                        }
                     }
                     $field->next();
                 }

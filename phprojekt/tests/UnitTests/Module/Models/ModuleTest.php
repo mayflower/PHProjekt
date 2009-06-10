@@ -50,6 +50,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 
@@ -68,6 +69,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 
@@ -87,6 +89,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = true;
 
         $converted[] = $data;
 

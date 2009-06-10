@@ -47,7 +47,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             4 => 'DECISION',
             5 => 'DATE',
         );
-    
+
     protected $_userIdList = array();
 
     /**
@@ -62,12 +62,12 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         foreach ($users as $node) {
             $this->_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
         }
-        
+
         foreach ($this->_topicTypeList as $key => $value) {
             $this->_topicTypeList[$key] = Phprojekt::getInstance()->translate($value);
         }
     }
-    
+
     public function getTopicType($topicType)
     {
         return (isset($this->_topicTypeList[$topicType])? $this->_topicTypeList[$topicType] : NULL);
@@ -77,7 +77,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
     {
         return (isset($this->_userIdList[$userId])? $this->_userIdList[$userId] : NULL);
     }
-    
+
     public function convertArray($array, $keyname = 'id', $valuename = 'name')
     {
         $result = array();
@@ -117,6 +117,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = true;
         $data['readOnly'] = true;
         $data['tab']      = 1;
+        $data['integer']  = true;
 
         $converted[] = $data;
 
@@ -134,6 +135,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = true;
         $data['readOnly'] = true;
         $data['tab']      = 1;
+        $data['integer']  = true;
 
         $converted[] = $data;
 
@@ -151,6 +153,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = false;
         $data['readOnly'] = true;
         $data['tab']      = 1;
+        $data['integer']  = true;
 
         $converted[] = $data;
 
@@ -167,6 +170,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = true;
 
         $converted[] = $data;
 
@@ -184,6 +188,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 
@@ -202,6 +207,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 
@@ -219,6 +225,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 
@@ -236,6 +243,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = false;
 
         $converted[] = $data;
 
@@ -252,6 +260,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
+        $data['integer']  = true;
 
         $converted[] = $data;
 
