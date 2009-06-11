@@ -63,12 +63,12 @@ final class Minutes_Helpers_Pdf
 
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 12);
 
+        $page->setBorder(2.0 * Phprojekt_Pdf_Page::PT_PER_CM, 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
+            2.0 * Phprojekt_Pdf_Page::PT_PER_CM, 3.0 * Phprojekt_Pdf_Page::PT_PER_CM);
+
         $page->addFreetext(array(
                            'lines'    => $minutesModel->title,
-                           'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
-                           'startY'   => 2.0 * Phprojekt_Pdf_Page::PT_PER_CM,
-                           'fontSize' => 20,
-                           'width'    => 16.7 * Phprojekt_Pdf_Page::PT_PER_CM));
+                           'fontSize' => 20));
 
         $page->addFreetext(array(
                            'lines'    => array_merge(explode("\n\n", $minutesModel->description),
@@ -78,7 +78,6 @@ final class Minutes_Helpers_Pdf
                                                 . ': ' . $minutesModel->endTime,
                                                 $phpr->translate('Place') . ': ' . $minutesModel->place,
                                                 $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
-                           'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                            'fontSize' => 12));
 
         $invited    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsInvited);
@@ -87,7 +86,6 @@ final class Minutes_Helpers_Pdf
         $recipients = Minutes_Helpers_Userlist::expandIdList($minutesModel->recipients);
 
         $pages += $page->addTable(array(
-                        'startX'=> 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                         'fontSize' => 12,
                         'rows' => array(
                                       array(
@@ -149,7 +147,6 @@ final class Minutes_Helpers_Pdf
         }
 
         $pages += $page->addTable(array(
-                        'startX'   => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM,
                         'fontSize' => 12,
                         'rows'     => array_merge(array(
                                         array('isHeader' => true,
