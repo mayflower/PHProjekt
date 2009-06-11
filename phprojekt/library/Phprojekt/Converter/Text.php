@@ -90,7 +90,7 @@ class Phprojekt_Converter_Text
                 }
                 break;
             case 'textarea':
-                $value = ereg_replace("\n", "", strip_tags($model->$field['key']));
+                $value = preg_replace("/\n/", " ", strip_tags($model->$field['key']));
                 break;
             case 'text':
             case 'date':

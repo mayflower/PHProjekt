@@ -332,7 +332,7 @@ class Phprojekt
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
             $error->getMessage();
-            $webPath = "http://" . $_SERVER['HTTP_HOST'] . ereg_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+            $webPath = "http://" . $_SERVER['HTTP_HOST'] . preg_replace('/index.php/', '', $_SERVER['SCRIPT_NAME']);
             echo 'You need the file configuration.ini to continue.
                   Have you tried the <a href="' . $webPath . 'setup.php">setup</a> routine?';
             die();

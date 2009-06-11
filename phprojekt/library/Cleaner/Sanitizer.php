@@ -128,7 +128,8 @@ class Cleaner_Sanitizer
         if (is_int($value)) {
             return date($format, $value);
         } else {
-            if (ereg("([A-Za-z0-9 \r\t])?([0-9]{2}):([0-9]{2}):?([0-9]{2})?(A-Za-z0-9 \r\t])?", $value, $regs)) {
+            $expr = "/([A-Za-z0-9 \r\t])?([0-9]{2}):([0-9]{2}):?([0-9]{2})?(A-Za-z0-9 \r\t])?/";
+            if (preg_match($expr, $value, $regs)) {
                 return date($format, mktime($regs[2], $regs[3], 0, date("m"), date("d"), date("Y")));
             } else {
                 return null;
