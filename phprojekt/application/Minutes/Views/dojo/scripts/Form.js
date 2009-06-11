@@ -549,6 +549,14 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     
     _allowSubmit: false,
     prepareSubmission: function() {
+        // summary:
+        //    Gathers data for form submission and displays confirm dialogs if needed
+        // description:
+        //    Overrides functionality of parent class' method: Checks for itemStatus
+        //    property and displays dialogs to the user to confirm his actions whenever
+        //    the status changes from/to 4 (finalized). Displays an informal dialog
+        //    when a save action is attempted while status remains at 4 (not possible).
+        
         var result = this.inherited(arguments);
         if (result) {
             var data = phpr.DataStore.getData({url: this._url});
@@ -557,7 +565,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             if (data[0].itemStatus == 4 && this.sendData.itemStatus != 4) {
                 // finalized form is about to be made writeable again,
                 // check for write rights and ask permission:
-                console.log('Finalized -> unfinalize');
                 if (!this._allowSubmit) {
                     this.displayConfirmDialog({
                         title:   phpr.nls.get('Unfinalize Minutes'),
@@ -569,7 +576,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             } else if (data[0].itemStatus != 4 && this.sendData.itemStatus == 4) {
                 // writeable form is about to be finalized,
                 // ask for sanity check and permission:
-                console.log('Unfinalized -> finalize');
                 if (!this._allowSubmit) {
                     this.displayConfirmDialog({
                         title:   phpr.nls.get('Finalize Minutes'),
@@ -590,7 +596,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 result = false;
             } else {
                 // all is well, proceed with submission
-                console.log('Not finalized -> no change -> all is good');
+                result = true;
             }
         }
         // reset flag to initial value of false for next run
@@ -599,6 +605,14 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     displayConfirmDialog: function(options) {
+        // summary:
+        //    Display a modal dialog
+        // description:
+        //    Displays a configurable dijit.Dialog. Uses external template
+        //    'confirmDialog.html'. No return value as dialog runs asynchronously.
+        //    User input must be processed using event handlers "callbackOk" and
+        //    "callbackCancel".
+        
         if (!options) {
             options = [];
         }
@@ -621,8 +635,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             })
         };
         options = dojo.mixin(defaults, options);
-        console.log("Options:");
-        console.debug(options);
         var content = this.render(["phpr.Minutes.template", "confirmDialog.html"], null, {
             message:        options.message,
             displayButtons: options.displayButtons,
