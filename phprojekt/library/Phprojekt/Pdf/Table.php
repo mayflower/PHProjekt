@@ -123,10 +123,9 @@ class Phprojekt_Pdf_Table
 
                 $this->page = new Phprojekt_Pdf_Page($this->page);
                 $this->page->setFont($font, $fontSize);
-                $this->page->setLineWidth($this->border);
 
                 $this->_pages[] = $this->page;
-                $y              = $this->page->getHeight();
+                $y              = $this->page->getHeight() - $this->page->borderTop;
             }
             $row->render($this->page, $this->x, $y);
             $y -= $row->getHeight();

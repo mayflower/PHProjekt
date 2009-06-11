@@ -44,6 +44,15 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     const HEADER_GRAY_LEVEL   = 0.9;
 
     /**
+     * Default border values
+     *
+     * @var float
+     */
+    public $borderLeft   = 30;
+    public $borderRight  = 30;
+    public $borderTop    = 30;
+    public $borderBottom = 30;
+    /**
      * Default position X of the next element in the page
      *
      * @var float
@@ -76,16 +85,58 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     /**
      * Padding in the table in point
      *
-     * @var int
+     * @var float
      */
     public $tablePadding = 5;
 
     /**
      * Padding down for paragraphs in point
      *
-     * @var int
+     * @var float
      */
     public $paragraphPadding = 5;
+
+    public function __construct($param1, $param2 = NULL, $param3 = NULL)
+    {
+        parent::__construct($param1, $param2, $param3);
+
+        if ($param1 instanceof Phprojekt_Pdf_Page && $param2 === null && $param3 === null) {
+            // clone additional properties
+            $this->setBorder($param1->borderTop, $param1->borderRight, $param1->borderBottom, $param1->borderLeft);
+        }
+    }
+
+    /**
+     * Define the used border space
+     *
+     * @param float $top
+     * @param float $right
+     * @param float $bottom
+     * @param float $left
+     * @return void
+     */
+    public function setBorder($top, $right = NULL, $bottom = NULL, $left = NULL)
+    {
+        if (is_null($left)) {
+            $left = $right;
+        }
+        if (is_null($bottom)) {
+            $bottom = $top;
+            $left   = $right;
+        }
+        if (is_null($right)) {
+            $right  = $top;
+            $bottom = $top;
+            $left   = $top;
+        }
+
+        $this->borderTop    = $top;
+        $this->borderRight  = $right;
+        $this->borderBottom = $bottom;
+        $this->borderLeft   = $left;
+        $this->freeLineX    = $this->borderLeft;
+        $this->freeLineY    = $this->borderTop;
+    }
 
     /**
      * Function inserts table with given rows to pdf pages
@@ -124,8 +175,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             $currentPage->setFont($this->getFont(), $tableInfo['fontSize']);
         }
 
-        $startX = isset($tableInfo['startX']) ? $tableInfo['startX'] : $this->freeLineX;
-        $startY = isset($tableInfo['startY']) ? $tableInfo['startY'] : $this->freeLineY;
+        $startX = isset($tableInfo['startX']) ? $tableInfo['startX'] : $this->borderLeft;
+        $startY = (isset($tableInfo['startY']) ? $tableInfo['startY'] : ($this->freeLineY != $this->borderTop ?
+                  $this->freeLineY : $this->borderTop));
 
         if (empty($tableInfo['rows']) || !is_array($tableInfo['rows'])) {
             throw new Exception("Rows are empty");
@@ -202,9 +254,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
             $currentPage->setFont($this->getFont(), $freetextInfo['fontSize']);
         }
 
-        $startX = isset($freetextInfo['startX']) ? $freetextInfo['startX'] : $this->freeLineX;
-        $startY = (isset($freetextInfo['startY']) ? $freetextInfo['startY'] : $this->freeLineY)
-                + $currentPage->getFontSize();
+        $startX = isset($freetextInfo['startX']) ? $freetextInfo['startX'] : $this->borderLeft;
+        $startY = (isset($freetextInfo['startY']) ? $freetextInfo['startY'] : ($this->freeLineY != $this->borderTop?
+                  $this->freeLineY :$this->borderTop)) + $currentPage->getFontSize();
 
         if (isset($freetextInfo['lineWidth'])) {
             $currentPage->setLineWidth($freetextInfo['lineWidth']);
@@ -213,7 +265,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         if (isset($freetextInfo['width'])) {
             $this->textWidth = $freetextInfo['width'];
         } elseif (is_null($this->textWidth)) {
-            $this->textWidth = $this->getWidth() - (2 * $startX);
+            $this->textWidth = $this->getWidth() - ($this->borderLeft + $this->borderRight);
         }
 
         $currentPage->drawMultilineText($freetextInfo['lines'], $startX, $startY, $this->textWidth, $encoding);
@@ -528,9 +580,13 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     {
         if (!is_null($x)) {
             $this->freeLineX = $x;
+        } else {
+            $this->freeLineX = $this->borderLeft;
         }
         if (!is_null($y)) {
-            $this->freeLineX = $y;
+            $this->freeLineY = $y;
+        } else {
+            $this->freeLineY = $this->borderTop;
         }
     }
 }
