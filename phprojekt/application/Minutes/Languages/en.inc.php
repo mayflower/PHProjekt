@@ -102,4 +102,16 @@ $lang['No.'] = 'No.';
 $lang['TYPE'] = 'Type';
 $lang['ITEM'] = 'Item';
 
+// Confirmation dialogs
+$lang['Confirm'] = 'Confirm';
+$lang['Are you sure?'] = 'Are you sure?';
+$lang['OK'] = 'OK';
+$lang['Cancel'] = 'Cancel';
+$lang['Unfinalize Minutes'] = 'Unfinalize Minutes';
+$lang['Are you sure this Minutes entry should no longer be finalized? After proceeding, changes to the data will be possible again.'] = 'Are you sure this Minutes entry should no longer be finalized? After proceeding, changes to the data will be possible again.';
+$lang['Finalize Minutes'] = 'Finalize Minutes';
+$lang['Are you sure this Minutes entry should be finalized? Write access will be prohibited!'] = 'Are you sure this Minutes entry should be finalized? Write access will be prohibited!';
+$lang['Minutes are finalized'] = 'Minutes are finalized';
+$lang['This Minutes entry is finalized. Editing data is no longer possible. Your changes have not been saved.'] = 'This Minutes entry is finalized. Editing data is no longer possible. Your changes have not been saved.';
+
 //$lang[''] = '';
