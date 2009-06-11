@@ -382,7 +382,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonStart');
         $response = $this->getResponse();
         $hour     = date("G");
-        if ($hour <= 20 && $hour >= 8) {
+        if ($hour < 21 && $hour >= 8) {
             $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
             // Check that the period has been added
@@ -409,7 +409,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
         $hour     = date("G");
-        if ($hour <= 20 && $hour >= 8) {
+        if ($hour < 21 && $hour >= 8) {
             $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
         } else {
             $this->assertContains('The Item was not found', $response,
