@@ -151,7 +151,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         var tabs = this.form;
         dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
             if (child.id == 'tabItems') {
-                //dojo.byId('minutesDetailsRight').style.display = 'inline';
                 this.url  = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
                 phpr.DataStore.addStore({"url": this.url});
                 phpr.DataStore.requestData({"url": this.url, processData: dojo.hitch(this, "_buildGrid")});
@@ -494,7 +493,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', 
                      dojo.hitch(this, this.saveSubFormData));
         dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', 
-                	 dojo.hitch(this, this.deleteSubFormData));
+                     dojo.hitch(this, this.deleteSubFormData));
         
         // have reset button reload the form using defaults
         dojo.connect(dijit.byId('minutesItemFormClear'), 'onClick', dojo.hitch(this, function() {
@@ -546,5 +545,100 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
                 dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
         }
+    },
+    
+    _allowSubmit: false,
+    prepareSubmission: function() {
+        var result = this.inherited(arguments);
+        if (result) {
+            var data = phpr.DataStore.getData({url: this._url});
+            // check for status. possible states are:
+            // 1#Planned|2#Created|3#Filled|4#Final
+            if (data[0].itemStatus == 4 && this.sendData.itemStatus != 4) {
+                // finalized form is about to be made writeable again,
+                // check for write rights and ask permission:
+                console.log('Finalized -> unfinalize');
+                if (!this._allowSubmit) {
+                    this.displayConfirmDialog({
+                        title:   phpr.nls.get('Unfinalize Minutes'),
+                        message: phpr.nls.get('Are you sure this Minutes entry should no longer be finalized? ' +
+                                              'After proceeding, changes to the data will be possible again.')
+                    });
+                    result = false;
+                }
+            } else if (data[0].itemStatus != 4 && this.sendData.itemStatus == 4) {
+                // writeable form is about to be finalized,
+                // ask for sanity check and permission:
+                console.log('Unfinalized -> finalize');
+                if (!this._allowSubmit) {
+                    this.displayConfirmDialog({
+                        title:   phpr.nls.get('Finalize Minutes'),
+                        message: phpr.nls.get('Are you sure this Minutes entry should be finalized? ' +
+                                              'Write access will be prohibited!')
+                    });
+                    result = false;
+                }
+            } else if (data[0].itemStatus == 4 && this.sendData.itemStatus == 4) {
+                // form is finalized and settings have not changed, display
+                // informal message that form can't be saved.
+                this.displayConfirmDialog({
+                    title:   phpr.nls.get('Minutes are finalized'),
+                    message: phpr.nls.get('This Minutes entry is finalized. Editing data is no longer possible. ' +
+                                          'Your changes have not been saved.'),
+                    displayButtons: false
+                });
+                result = false;
+            } else {
+                // all is well, proceed with submission
+                console.log('Not finalized -> no change -> all is good');
+            }
+        }
+        // reset flag to initial value of false for next run
+        this._allowSubmit = false;
+        return result;
+    },
+    
+    displayConfirmDialog: function(options) {
+        if (!options) {
+            options = [];
+        }
+        var defaults = {
+            title:          phpr.nls.get('Confirm'),
+            message:        phpr.nls.get('Are you sure?'),
+            displayButtons: true,
+            labelOK:        phpr.nls.get('OK'),
+            labelCancel:    phpr.nls.get('Cancel'),
+            callbackOk:     dojo.hitch(this, function(e) {
+                this._allowSubmit = true;
+                confirmDialog.hide();
+                confirmDialog.destroyRecursive();
+                this.submitForm();
+            }),
+            callbackCancel: dojo.hitch(this, function(e) {
+                this._allowSubmit = false;
+                confirmDialog.hide();
+                confirmDialog.destroyRecursive();
+            })
+        };
+        options = dojo.mixin(defaults, options);
+        console.log("Options:");
+        console.debug(options);
+        var content = this.render(["phpr.Minutes.template", "confirmDialog.html"], null, {
+            message:        options.message,
+            displayButtons: options.displayButtons,
+            labelOK:        options.labelOK,
+            labelCancel:    options.labelCancel
+        });
+        
+        var confirmDialog = new dijit.Dialog({ 
+            title:   options.title, 
+            content: content
+        });
+        
+        dojo.body().appendChild(confirmDialog.domNode);
+        confirmDialog.startup();
+        dojo.connect(dijit.byId('minutesConfirmDialogButtonOK'), 'onClick', options.callbackOk);
+        dojo.connect(dijit.byId('minutesConfirmDialogButtonCancel'), 'onClick', options.callbackCancel);
+        confirmDialog.show();
     }
 });
