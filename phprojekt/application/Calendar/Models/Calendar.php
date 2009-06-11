@@ -828,7 +828,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $untilDesc = $dayDesc . " " . $monthDesc . " " . $dayNum . " " . $year;
 
             $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Until'),
-                                  'value' => $this->_translateDate($untilDesc));
+                                   'value' => $this->_translateDate($untilDesc));
         }
 
         if ($byday !== null) {
@@ -1022,8 +1022,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $userId      = Phprojekt_Auth::getUserId();
         $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d',
             (int) $rootEventId, (int) $rootEventId, (int) $userId);
-        $model   = clone($this);
-        $records = $model->fetchAll($where);
+        $records = $this->fetchAll($where);
         $return  = array();
         foreach ($records as $record) {
             if ($record->id != $this->id) {

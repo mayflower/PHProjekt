@@ -87,31 +87,31 @@ final class Minutes_Helpers_Pdf
 
         $pages += $page->addTable(array(
                         'fontSize' => 12,
-                        'rows' => array(
-                                      array(
-                                          array('text'  => $phpr->translate('Invited'),
-                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text'  => array_reduce($invited, array('self', '_concat')),
-                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text'  => $phpr->translate('Attending'),
-                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text'  => array_reduce($attending, array('self', '_concat')),
-                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text'  => $phpr->translate('Excused'),
-                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text'  => array_reduce($excused, array('self', '_concat')),
-                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
-                                      array(
-                                          array('text'  => $phpr->translate('recipients'),
-                                                'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                          array('text'  => array_reduce($recipients, array('self', '_concat')),
-                                                'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            ),
+                        'rows'     => array(
+                                          array(
+                                              array('text'  => $phpr->translate('Invited'),
+                                                    'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                              array('text'  => array_reduce($invited, array('self', '_concat')),
+                                                    'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                ),
+                                          array(
+                                              array('text'  => $phpr->translate('Attending'),
+                                                    'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                              array('text'  => array_reduce($attending, array('self', '_concat')),
+                                                    'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                ),
+                                          array(
+                                              array('text'  => $phpr->translate('Excused'),
+                                                    'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                              array('text'  => array_reduce($excused, array('self', '_concat')),
+                                                    'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                ),
+                                          array(
+                                              array('text'  => $phpr->translate('recipients'),
+                                                    'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                              array('text'  => array_reduce($recipients, array('self', '_concat')),
+                                                    'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
+                                                ),
                                         )));
         $page = end($pages);
 

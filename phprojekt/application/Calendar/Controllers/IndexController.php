@@ -67,7 +67,7 @@ class Calendar_IndexController extends IndexController
         $this->getRequest()->setParam('startTime', $startTime);
 
         if (!empty($id)) {
-            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            $message      = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             $modification = true;
         }
 
@@ -82,6 +82,7 @@ class Calendar_IndexController extends IndexController
                         'message' => $message,
                         'code'    => 0,
                         'id'      => $id);
+
         if ($modification && count($updateCacheIds) > 0) {
             $return['updateCacheIds'] = $updateCacheIds;
         }

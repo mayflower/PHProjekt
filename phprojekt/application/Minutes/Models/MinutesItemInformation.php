@@ -127,6 +127,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         }
         return $result;
     }
+
     /**
      * Return an array of field information.
      *

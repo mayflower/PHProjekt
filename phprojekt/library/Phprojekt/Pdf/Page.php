@@ -52,6 +52,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     public $borderRight  = 30;
     public $borderTop    = 30;
     public $borderBottom = 30;
+
     /**
      * Default position X of the next element in the page
      *
@@ -101,7 +102,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         parent::__construct($param1, $param2, $param3);
 
         if ($param1 instanceof Phprojekt_Pdf_Page && $param2 === null && $param3 === null) {
-            // clone additional properties
+            // Clone additional properties
             $this->setBorder($param1->borderTop, $param1->borderRight, $param1->borderBottom, $param1->borderLeft);
         }
     }
@@ -113,6 +114,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * @param float $right
      * @param float $bottom
      * @param float $left
+     *
      * @return void
      */
     public function setBorder($top, $right = NULL, $bottom = NULL, $left = NULL)
@@ -177,7 +179,7 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 
         $startX = isset($tableInfo['startX']) ? $tableInfo['startX'] : $this->borderLeft;
         $startY = (isset($tableInfo['startY']) ? $tableInfo['startY'] : ($this->freeLineY != $this->borderTop ?
-                  $this->freeLineY : $this->borderTop));
+            $this->freeLineY : $this->borderTop));
 
         if (empty($tableInfo['rows']) || !is_array($tableInfo['rows'])) {
             throw new Exception("Rows are empty");
@@ -255,8 +257,8 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
         }
 
         $startX = isset($freetextInfo['startX']) ? $freetextInfo['startX'] : $this->borderLeft;
-        $startY = (isset($freetextInfo['startY']) ? $freetextInfo['startY'] : ($this->freeLineY != $this->borderTop?
-                  $this->freeLineY :$this->borderTop)) + $currentPage->getFontSize();
+        $startY = (isset($freetextInfo['startY']) ? $freetextInfo['startY'] : ($this->freeLineY != $this->borderTop ?
+            $this->freeLineY :$this->borderTop)) + $currentPage->getFontSize();
 
         if (isset($freetextInfo['lineWidth'])) {
             $currentPage->setLineWidth($freetextInfo['lineWidth']);

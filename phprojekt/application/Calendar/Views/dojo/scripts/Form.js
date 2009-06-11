@@ -180,9 +180,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     addParticipantsTab:function(data) {
-        // summary:
+        // Summary:
         //    Participants tab
-        // description:
+        // Description:
         //    Display all the users for add into the event
         var userList     = this.userStore.getList();
         var urlData      = phpr.DataStore.getData({url: this._participantUrl});
@@ -253,9 +253,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     newParticipant:function() {
-        // summary:
+        // Summary:
         //    Add a new row of one participant
-        // description:
+        // Description:
         //    Add a the row of one participant
         var userId = dijit.byId("dataParticipantAdd").attr('value');
         if (!dojo.byId("trParticipantFor" + userId) && userId > 0) {
@@ -288,9 +288,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     deleteParticipant:function(userId) {
-        // summary:
+        // Summary:
         //    Remove the row of one participant
-        // description:
+        // Description:
         //    Remove the row of one participant
         //    and destroy all the used widgets
         phpr.destroyWidget("dataParticipant[" + userId + "]");
@@ -302,9 +302,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     addRecurrenceTab:function(data) {
-        // summary:
+        // Summary:
         //    Adds a tab for recurrence
-        // description:
+        // Description:
         //    Adds a tab to configure the rules if/when the event will reoccure
         var recurrenceTab = '';
 
@@ -374,9 +374,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     deleteForm:function() {
-        // summary:
+        // Summary:
         //    This function is responsible for deleting a dojo element
-        // description:
+        // Description:
         //    This function calls jsonDeleteAction
 
         var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].attr('value')['rruleFreq'];
@@ -454,9 +454,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     submitForm:function() {
-        // summary:
+        // Summary:
         //    This function is responsible for submitting the formdata
-        // description:
+        // Description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
         if (!this.prepareSubmission()) {
