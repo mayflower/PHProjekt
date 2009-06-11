@@ -33,7 +33,6 @@
  */
 class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 {
-    protected $_name = 'minutes';
     /**
      * Relation to Items
      *
