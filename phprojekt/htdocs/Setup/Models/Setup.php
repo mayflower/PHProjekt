@@ -66,7 +66,7 @@ class Setup_Models_Setup
         }
 
         // Checking if configuration.ini exists
-        $baseDir = preg_replace('/htdocs\/setup.php/', '', $_SERVER['SCRIPT_FILENAME']);
+        $baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         if (file_exists($baseDir . "configuration.ini")) {
             throw new Exception("Configuration file found. Please, delete it before run setup again.");
         }
@@ -130,7 +130,7 @@ class Setup_Models_Setup
         }
 
         // Check write access
-        $baseDir    = preg_replace('/htdocs\/setup.php/', '', $_SERVER['SCRIPT_FILENAME']);
+        $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         $configFile = $baseDir . "configuration.ini";
 
         if (!file_exists($configFile)) {
@@ -226,7 +226,7 @@ class Setup_Models_Setup
         $content = $config->getDefaultProduction($params['dbUser'], $params['dbPass'], $params['dbName'],
             'Pdo_Mysql', $params['dbHost']);
 
-        $baseDir    = preg_replace('/htdocs\/setup.php/', '', $_SERVER['SCRIPT_FILENAME']);
+        $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         $configFile = $baseDir . "configuration.ini";
         file_put_contents($configFile, $content);
     }

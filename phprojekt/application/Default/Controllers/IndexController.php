@@ -430,7 +430,7 @@ class IndexController extends Zend_Controller_Action
 
         // Is there any file?
         if (!empty($value)) {
-            $files = split('\|\|', $value);
+            $files = explode('||', $value);
             $filesForView = array();
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');
@@ -496,7 +496,7 @@ class IndexController extends Zend_Controller_Action
         // Is there any file?
         $filesForView = array();
         if (!empty($value)) {
-            $files = split('\|\|', $value);
+            $files = explode('||', $value);
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');
                 $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
@@ -557,7 +557,7 @@ class IndexController extends Zend_Controller_Action
         $deleteFile = (string) $this->getRequest()->getParam('file', null);
 
         // Delete the file from the $value string
-        $filesIn = split('\|\|', $value);
+        $filesIn = explode('||', $value);
         $filesOut = '';
         foreach ($filesIn as $file) {
             if ($file != $deleteFile) {
@@ -588,7 +588,7 @@ class IndexController extends Zend_Controller_Action
 
         // Is there any file?
         if (!empty($value)) {
-            $files = split('\|\|', $value);
+            $files = explode('||', $value);
             $filesForView = array();
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');

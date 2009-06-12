@@ -59,8 +59,8 @@ class Gantt_IndexController extends IndexController
                 $parent = ($node->getParentNode()) ? $node->getParentNode()->id : 0;
 
                 if (strstr($node->startDate, '-') && strstr($node->endDate, '-')) {
-                    list($startYear, $startMonth, $startDay) = split("-", $node->startDate);
-                    list($endYear, $endMonth, $endDay)       = split("-", $node->endDate);
+                    list($startYear, $startMonth, $startDay) = explode("-", $node->startDate);
+                    list($endYear, $endMonth, $endDay)       = explode("-", $node->endDate);
 
                     $start = gmmktime(10, 0, 0, $startMonth, $startDay, $startYear);
                     $end   = gmmktime(0, 0, 0, $endMonth, $endDay, $endYear);
@@ -121,7 +121,7 @@ class Gantt_IndexController extends IndexController
         $projects     = (array) $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         foreach ($projects as $project) {
-            list($id, $startDate, $endDate) = split(",", $project);
+            list($id, $startDate, $endDate) = explode(",", $project);
             $activeRecord->find((int) $id);
             $activeRecord->startDate = $startDate;
             $activeRecord->endDate   = $endDate;

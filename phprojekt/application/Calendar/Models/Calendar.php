@@ -656,7 +656,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                             'value' => substr($this->endTime, 0, 5));
 
         $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $participants      = split(",", $this->_notifParticipants);
+        $participants      = explode(",", $this->_notifParticipants);
         $participantsValue = "";
         $i                 = 0;
         $lastItem          = count($participants);
@@ -802,14 +802,14 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     private function _getRruleDescriptive($rrule)
     {
-        $tmp1     = split(";", $rrule);
-        $tmp2     = split("=", $tmp1[0]);
+        $tmp1     = explode(";", $rrule);
+        $tmp2     = explode("=", $tmp1[0]);
         $freq     = $tmp2[1];
-        $tmp2     = split("=", $tmp1[1]);
+        $tmp2     = explode("=", $tmp1[1]);
         $until    = $tmp2[1];
-        $tmp2     = split("=", $tmp1[2]);
+        $tmp2     = explode("=", $tmp1[2]);
         $interval = $tmp2[1];
-        $tmp2     = split("=", $tmp1[3]);
+        $tmp2     = explode("=", $tmp1[3]);
         $byday    = $tmp2[1];
         $freq     = ucfirst(strtolower($freq));
 
@@ -967,12 +967,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $valid = true;
 
         // Parse 'rrule' values
-        $rruleItems = split(";", $rrule);
+        $rruleItems = explode(";", $rrule);
         $freq       = null;
         $interval   = null;
         $until      = null;
         foreach ($rruleItems as $rruleItem) {
-            $item = split("=", $rruleItem);
+            $item = explode("=", $rruleItem);
             switch ($item[0]) {
                 case 'FREQ':
                     $freq = $item[1];

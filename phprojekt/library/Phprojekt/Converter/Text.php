@@ -60,8 +60,8 @@ class Phprojekt_Converter_Text
                 $value = number_format($model->$field['key'], 2);
                 break;
             case 'upload':
-                $i = 0;
-                $files = split('\|\|', $model->$field['key']);
+                $i     = 0;
+                $files = explode('||', $model->$field['key']);
                 foreach ($files as $file) {
                     $i++;
                     if ($i > 1) {
@@ -90,7 +90,7 @@ class Phprojekt_Converter_Text
                 }
                 break;
             case 'textarea':
-                $value = preg_replace("/\n/", " ", strip_tags($model->$field['key']));
+                $value = str_replace("\n", " ", strip_tags($model->$field['key']));
                 break;
             case 'text':
             case 'date':

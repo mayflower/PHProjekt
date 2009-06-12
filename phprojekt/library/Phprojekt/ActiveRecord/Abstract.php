@@ -1141,10 +1141,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $join = $this->_quoteTableAndFieldName($join);
         if (preg_match('/WHERE/i', $sqlStr)) {
             $joinPart = ' ' . $join . ' WHERE ';
-            $sqlStr   = preg_replace('/WHERE/i', $joinPart, $sqlStr);
+            $sqlStr   = str_replace('WHERE', $joinPart, $sqlStr);
         } else if (preg_match('/ORDER/i', $sqlStr)) {
             $joinPart = ' ' . $join . ' ORDER ';
-            $sqlStr   = preg_replace('/ORDER/i', $joinPart, $sqlStr);
+            $sqlStr   = str_replace('ORDER', $joinPart, $sqlStr);
         } else {
             $sqlStr .= ' ' . $join;
         }

@@ -423,7 +423,7 @@ class Phprojekt_DbParser
                             if ($value == "all" && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
                                 $tmpValues = $this->_getAllRows($matches[1]);
                             } else if (strstr($value, ",") && preg_match("/^([a-z]+)_id$/", $key, $matches)) {
-                                $tmpValues = split(",", $value);
+                                $tmpValues = explode(",", $value);
                             }
                         }
                         if (!empty($tmpValues)) {

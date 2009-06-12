@@ -101,9 +101,9 @@ class Setup_Models_Config
      */
     private function _setBaseDir()
     {
-        $this->_baseDir = preg_replace('/htdocs\/setup.php/', '', $_SERVER['SCRIPT_FILENAME']);
+        $this->_baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         if ($this->_isWindows()) {
-            $this->_baseDir = preg_replace('/\//', '\\', $this->_baseDir);
+            $this->_baseDir = str_replace('/', '\\', $this->_baseDir);
         }
     }
 
@@ -176,7 +176,7 @@ class Setup_Models_Config
         $content .= $this->_eol;
 
         $content .= '; Where the site and the main file (index.php) are located (htdocs folder).' . $this->_eol;
-        $webPath = "http://" . $_SERVER['HTTP_HOST'] . preg_replace('/setup.php/', '', $_SERVER['SCRIPT_NAME']);
+        $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('setup.php', '', $_SERVER['SCRIPT_NAME']);
         $content .= 'webpath = "' . $webPath . '"' . $this->_eol;
         $content .= $this->_eol;
 

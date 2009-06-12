@@ -211,7 +211,7 @@ class Phprojekt_Mail_Notification extends Zend_Mail
             }
         } else {
             // Yes - The model defines its own recipients
-            $recipients = split(',', $this->_model->getNotificationRecipients());
+            $recipients = explode(',', $this->_model->getNotificationRecipients());
         }
 
         // All the recipients IDs are inside $recipients, now add emails and descriptive names to _customTo

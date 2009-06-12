@@ -49,7 +49,7 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
 
-        $webPath = "http://" . $_SERVER['HTTP_HOST'] . preg_replace('/setup.php/', '', $_SERVER['SCRIPT_NAME']);
+        $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('setup.php', '', $_SERVER['SCRIPT_NAME']);
 
         $this->view->webPath = $webPath;
 

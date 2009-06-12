@@ -525,7 +525,7 @@ class Setup_Models_Migration
             $file["div2"] = $this->_convertProjectId($file["div2"]);
             $newFilename  = md5($file["tempname"]);
 
-            $uploadDir = preg_replace('/htdocs\/setup.php/', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
+            $uploadDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
             copy(PHPR_FILE_PATH . "\\" . $file["tempname"], $uploadDir . "\\" . $newFilename);
 
             $this->_tableManager->insertRow('filemanager', array(
