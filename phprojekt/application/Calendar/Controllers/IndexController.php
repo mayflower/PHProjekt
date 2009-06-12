@@ -350,10 +350,10 @@ class Calendar_IndexController extends IndexController
         $db      = Phprojekt::getInstance()->getDb();
         $where   = sprintf('status = %s AND id IN (%s)', $db->quote('A'), implode(", ", $ids));
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $records = $user->fetchAll($where, "lastname");
-
-        $data    = array();
         $display = $user->getDisplay();
+        $records = $user->fetchAll($where, $display);
+
+        $data = array();
         foreach ($records as $record) {
             $data['data'][] = array('id'      => (int) $record->id,
                                     'display' => $record->applyDisplay($display, $record));

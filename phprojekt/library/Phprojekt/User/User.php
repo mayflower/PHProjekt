@@ -282,7 +282,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     /**
      * Return the display format form the config file
      *
-     * @return string
+     * @return array List of field names from user table to use
      */
     static public function getDisplay()
     {
@@ -291,13 +291,16 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         switch ($display) {
             case 0:
             default:
-                $value = 'lastname, firstname';
+                $value = array('lastname', 'firstname');
                 break;
             case 1:
-                $value = 'username, lastname, firstname';
+                $value = array('username', 'lastname', 'firstname');
                 break;
             case 2:
-                $value = 'username';
+                $value = array('username');
+                break;
+            case 3:
+                $value = array('firstname', 'lastname');
                 break;
         }
 
@@ -307,27 +310,20 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     /**
      * Apply the display to the $model and return the result
      *
-     * @param string              $display The display format
+     * @param array               $display The display format
      * @param Phprojekt_User_User $model   The model to apply the display
      *
      * @return string
      */
-    public function applyDisplay($display, $model)
+    public function applyDisplay(array $display, $model)
     {
-        if (preg_match_all("/([a-zA-z_]+)/", $display, $values)) {
-            $values = $values[1];
-        } else {
-            $values = $display;
-        }
-
         $showValue = array();
-        foreach ($values as $value) {
+        foreach ($display as $value) {
             if (isset($model->$value)) {
                 $showValue[] = $model->$value;
             }
         }
-        $showValue = implode(", ", $showValue);
 
-        return $showValue;
+        return implode(', ', $showValue);
     }
 }

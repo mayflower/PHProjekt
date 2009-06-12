@@ -56,8 +56,8 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
     public function testUserlistMultiId()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('1,2');
-        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
-                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+        $this->assertEquals(array(0 => array('id' => 2, 'display' => 'Solt, Gustavo'),
+                                  1 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
 
     /**
@@ -66,15 +66,15 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
     public function testUserlistMultiIdReverse()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('2,1');
-        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
-                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+        $this->assertEquals(array(0 => array('id' => 2, 'display' => 'Solt, Gustavo'),
+                                  1 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
 
     public function testUserlistMultiArguments()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('1', '2');
-        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
-                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+        $this->assertEquals(array(0 => array('id' => 2, 'display' => 'Solt, Gustavo'),
+                                  1 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
 
     /**
@@ -83,8 +83,8 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
     public function testUserlistMultiArgumentsReverse()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('2', '1');
-        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
-                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+        $this->assertEquals(array(0 => array('id' => 2, 'display' => 'Solt, Gustavo'),
+                                  1 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
 
     /**
@@ -111,8 +111,8 @@ class Minutes_Helpers_Userlist_Test extends PHPUnit_Framework_TestCase
     public function testUserlistStresstest()
     {
         $data = Minutes_Helpers_Userlist::expandIdList('1', '1,2', '2, 1', '2', '', '2,1,1,2');
-        $this->assertEquals(array(0 => array('id' => 1, 'display' => 'Soria Parra, David'),
-                                  1 => array('id' => 2, 'display' => 'Solt, Gustavo')), $data);
+        $this->assertEquals(array(0 => array('id' => 2, 'display' => 'Solt, Gustavo'),
+                                  1 => array('id' => 1, 'display' => 'Soria Parra, David')), $data);
     }
 
 }

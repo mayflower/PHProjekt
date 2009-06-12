@@ -270,7 +270,10 @@ class Setup_Models_Config
 
         $content .= '; Users' . $this->_eol;
         $content .= '; How the users are displayed in the system' . $this->_eol;
-        $content .= '; (0 = lastname, firstname  1 = username, lastname, firstname, 2 = username)' . $this->_eol;
+        $content .= '; 0 = lastname, firstname' . $this->_eol;
+        $content .= '; 1 = username, lastname, firstname' . $this->_eol;
+        $content .= '; 2 = username' . $this->_eol;
+        $content .= '; 3 = firstname, lastname' . $this->_eol;
         $content .= 'userDisplayFormat  = ' . (int) $userDisplayFormat . $this->_eol;
 
         return $content;

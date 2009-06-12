@@ -60,6 +60,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         $display = Phprojekt_User_User::getDisplay();
         foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
             $userDisplay = Phprojekt_User_User::applyDisplay($display, $right);
+
             $roles['data'][$right->roleId]['users'][] = array('id'      => (int) $right->userId,
                                                               'display' => $userDisplay);
         }

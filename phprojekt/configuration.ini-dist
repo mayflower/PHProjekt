@@ -86,7 +86,10 @@ itemsPerPage = 3
 
 ; Users
 ; How the users are displayed in the system
-; (0 = lastname, firstname  1 = username, lastname, firstname, 2 = username)
+; 0 = lastname, firstname
+; 1 = username, lastname, firstname
+; 2 = username
+; 3 = firstname, lastname
 userDisplayFormat  = 0
 
 ;;;;;;;;;;;;;;;;;;;;;

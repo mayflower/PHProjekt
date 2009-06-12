@@ -58,9 +58,9 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
     {
         // Fill variable metadata into structure.
         /* @var $user Phprojekt_User_User */
-        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user        = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $displayname = $user->getDisplay();
-        $users = $user->fetchAll();
+        $users       = $user->fetchAll(null, $displayname);
         foreach ($users as $node) {
             $this->_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
         }

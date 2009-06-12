@@ -9,7 +9,7 @@
             <select id="userList" dojoType="dijit.form.MultiSelect" required="true" autocomplete="true"
             searchAttr="name" invalidMessage="" multiple="true" size="10">
                 {% for user in userList %}
-                <option value ="{{user.id}}">{{user.display}}</option>
+                <option value ="{{user.id}}" {{user.selected}}>{{user.display}}</option>
                 {% endfor %}
                 </select>
             </td>

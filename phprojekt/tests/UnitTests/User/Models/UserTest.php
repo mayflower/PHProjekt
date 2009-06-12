@@ -110,11 +110,12 @@ class User_User_Test extends PHPUnit_Framework_TestCase
     public function testdisplay()
     {
         $user = new Phprojekt_User_User();
-        $this->assertEquals('lastname, firstname', $user->getDisplay());
+        $this->assertEquals(array('lastname', 'firstname'), $user->getDisplay());
 
         $user->find(2);
-        $this->assertEquals('Solt, Gustavo', $user->applyDisplay('lastname, firstname', $user));
-        $this->assertEquals('gus, Solt, Gustavo', $user->applyDisplay('username, lastname, firstname', $user));
-        $this->assertEquals('gus', $user->applyDisplay('username', $user));
+        $this->assertEquals('Solt, Gustavo', $user->applyDisplay(array('lastname', 'firstname'), $user));
+        $this->assertEquals('gus, Solt, Gustavo', $user->applyDisplay(array('username', 'lastname', 'firstname'),
+            $user));
+        $this->assertEquals('gus', $user->applyDisplay(array('username'), $user));
     }
 }

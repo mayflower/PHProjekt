@@ -43,10 +43,10 @@ class Core_UserController extends Core_IndexController
         $db      = Phprojekt::getInstance()->getDb();
         $where   = $db->quoteInto('status = ?', 'A');
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $records = $user->fetchAll($where, "lastname");
-
-        $data    = array();
         $display = $user->getDisplay();
+        $records = $user->fetchAll($where, $display);
+
+        $data = array();
         foreach ($records as $record) {
             $data['data'][] = array('id'      => (int) $record->id,
                                     'display' => $record->applyDisplay($display, $record));

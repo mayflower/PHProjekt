@@ -335,15 +335,25 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dojo.byId('selectorTitle').innerHTML = phpr.nls.get('User selection');
         dijit.byId('selectorDialog').attr('title', phpr.nls.get('Calendar'));
 
+        // Mark as select the selected users
+        for (var i = 0; i < userList.length; i++) {
+            userList[i].selected = '';
+            if (this._usersSelected.length > 0) {
+                for (var j = 0; j < this._usersSelected.length; j++) {
+                    if (this._usersSelected[j] == userList[i].id) {
+                        userList[i].selected = 'selected="selected"';
+                    }
+                }
+            }
+        }
+
         this.render(["phpr.Calendar.template", "usersSelector.html"], dojo.byId('selectorContainer'), {
             label:           phpr.nls.get('Select users for the group view'),
             userList:        userList,
             done:            phpr.nls.get('Done'),
             noUsersSelected: phpr.nls.get('You have to select at least one user!')
         });
-        if (this._usersSelected.length > 0) {
-            dijit.byId('userList').setValue(this._usersSelected.join(','));
-        }
+
         dijit.byId('selectorDialog').show();
     },
 
