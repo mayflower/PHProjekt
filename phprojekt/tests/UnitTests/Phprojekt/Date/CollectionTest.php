@@ -395,6 +395,43 @@ class Phprojekt_Date_CollectionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test Weekly recurrence By days Wednesday and Friday producing a very specific result
+     */
+    public function testWeeklyBydayTricky()
+    {
+        $collection = clone($this->_collection);
+        $rrule      = 'FREQ=WEEKLY;UNTIL=20090604T110000Z;INTERVAL=1;BYDAY=WE,FR';
+        $return     = $collection->applyRrule($rrule, true);
+        $this->assertTrue($return);
+
+        $eventDates = $collection->getValues();
+        $this->assertEquals(4, count($eventDates));
+
+        $date = array();
+        foreach ($eventDates as $oneDate) {
+            $date[] = date("Y-m-d", $oneDate);
+        }
+        $this->assertEquals('2009-05-22', $date[0]);
+        $this->assertEquals('2009-05-27', $date[1]);
+        $this->assertEquals('2009-05-29', $date[2]);
+        $this->assertEquals('2009-06-03', $date[3]);
+    }
+
+    /**
+     * Test Weekly recurrence By days Wednesday producing no result
+     */
+    public function testWeeklyBydayTricky2()
+    {
+        $collection = clone($this->_collection);
+        $rrule      = 'FREQ=WEEKLY;UNTIL=20090526T110000Z;INTERVAL=1;BYDAY=WE';
+        $return     = $collection->applyRrule($rrule, true);
+        $this->assertTrue($return);
+
+        $eventDates = $collection->getValues();
+        $this->assertEquals(0, count($eventDates));
+    }
+
+    /**
      * Test Yearly recurrence By day, hour, minute and second
      */
     public function testYearlyByDayHourMinute()
