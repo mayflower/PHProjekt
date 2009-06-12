@@ -70,9 +70,9 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         this.fillHeaderArray();
 
         // Fill the structure of the main array
-        this.fillScheduleArrayStructure_part1();
+        this.fillScheduleArrayStructurePart1();
         this.determineColumnsPerDay(content);
-        this.fillScheduleArrayStructure_part2();
+        this.fillScheduleArrayStructurePart2();
 
         // Fill it with the data of the events
         this.fillScheduleArrayData(content);
@@ -112,7 +112,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         }
     },
 
-    fillScheduleArrayStructure_part1:function() {
+    fillScheduleArrayStructurePart1:function() {
         // Summary:
         //    This function fills the week days arrays with the rows for every half of hour.
         // Description:
@@ -187,7 +187,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         }
     },
 
-    fillScheduleArrayStructure_part2:function() {
+    fillScheduleArrayStructurePart2:function() {
         // Summary:
         //    Continues creating the schedule array structure, supporting simultaneous events.
         for (var row = 0; row < 24; row ++) {

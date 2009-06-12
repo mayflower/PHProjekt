@@ -35,7 +35,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     beforeConstructor:function() {
         // Summary:
         //    Calls the schedule array basic filling function, before constructor function
-        this.fillScheduleArray_part1();
+        this.fillScheduleArrayPart1();
     },
 
     afterConstructor:function() {
@@ -67,7 +67,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         this.fillHeaderArray();
 
         // Fill the main array with the data of the events
-        this.fillScheduleArray_part2(content);
+        this.fillScheduleArrayPart2(content);
 
         // All done, let's render the template
         this.render(["phpr.Calendar.template", "monthList.html"], dojo.byId('gridBox'), {
@@ -95,7 +95,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         return false;
     },
 
-    fillScheduleArray_part1:function() {
+    fillScheduleArrayPart1:function() {
         // Summary:
         //    Fills the schedule array with the basic structure and data of every day of the calendar month table.
         // It includes not only the days of this month but the necessary days of the previous and next month in
@@ -151,7 +151,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         this._header['days'][6]      = phpr.nls.get('Sunday');
     },
 
-    fillScheduleArray_part2:function(content) {
+    fillScheduleArrayPart2:function(content) {
         // Summary:
         //    Puts every event in the corresponding array position.
         for (var event in content) {
