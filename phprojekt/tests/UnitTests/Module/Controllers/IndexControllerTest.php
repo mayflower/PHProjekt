@@ -46,7 +46,7 @@ class Module_IndexController_Test extends FrontInit
             . '"project_id","selectType":"project","tableType":"int","tableLength":11,"formLabel":"Project","formType"'
             . ':"selectValues","formRange":"Project # id # title","defaultValue":1,"listPosition":0,"status":1,'
             . '"isRequired":1}}';
-        $this->setRequestUrl('Core/moduledesigner/jsonSave');
+        $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('id', null);
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('name', 'test');
@@ -112,7 +112,7 @@ class Module_IndexController_Test extends FrontInit
             . '"tableField":"project_id","selectType":"project","tableType":"int","tableLength":5,'
             . '"formLabel":"Project","formType":"selectValues","formRange":"Project # id # title","defaultValue":1,'
             . '"listPosition":0,"status":1,"isRequired":1}}';
-        $this->setRequestUrl('Core/moduledesigner/jsonSave');
+        $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('id', $moduleId);
         $this->request->setParam('name', 'test');
@@ -131,7 +131,7 @@ class Module_IndexController_Test extends FrontInit
             . '"tableField":"test_field","selectType":"custom","tableType":"varchar","tableLength":10,'
             . '"formLabel":"Project","formType":"text","formRange":"","defaultValue":1,'
             . '"listPosition":0,"status":1,"isRequired":1}}';
-        $this->setRequestUrl('Core/moduledesigner/jsonSave');
+        $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('id', $moduleId);
         $this->request->setParam('name', 'test');
@@ -145,7 +145,7 @@ class Module_IndexController_Test extends FrontInit
             . '"tableField":"project_id","selectType":"project","tableType":"int","tableLength":5,'
             . '"formLabel":"Project","formType":"selectValues","formRange":"Project # id # title","defaultValue":1,'
             . '"listPosition":0,"status":1,"isRequired":1}}';
-        $this->setRequestUrl('Core/moduledesigner/jsonSave');
+        $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('id', $moduleId);
         $this->request->setParam('name', 'test');
@@ -187,7 +187,7 @@ class Module_IndexController_Test extends FrontInit
      */
     public function testDatabaseManagerDetail()
     {
-        $this->setRequestUrl('Core/moduledesigner/jsonDetail');
+        $this->setRequestUrl('Core/moduleDesigner/jsonDetail');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
         $this->assertContains('"tableName":"Project","id":1', $response);
