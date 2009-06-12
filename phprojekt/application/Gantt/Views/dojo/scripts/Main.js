@@ -340,7 +340,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var endDate   = new Date(this.gantt.MAX_DATE);
         var months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
             'October', 'November', 'December'];
-        var surface   = dojox.gfx.createSurface("timeLine", 1024, 100);
+        var maxWidth  = dojo.byId('timeLine').offsetWidth;
+        var surface   = dojox.gfx.createSurface("timeLine", maxWidth + 10, 100);
         var m         = dojox.gfx.matrix;
 
         var height = this.getProjectsHeight(phpr.currentProjectId);
@@ -354,7 +355,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         html += 'border-left: 1px dotted #3d3d3d; margin-left: -1px;"></li>';
 
         // Get how many years there are
-        var years = 1;
+        var years          = 1;
         var checkStartDate = startDate;
         for (var i = 0 ; true ; i++) {
             checkStartDate = dojo.date.add(checkStartDate, 'month', 1);
@@ -367,7 +368,11 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 years++;
             }
         }
-        this.scale = (2 / years);
+
+        // Make the scale witht the current resolution
+        var resolutionFix = (document.getElementById("timeLine").offsetWidth - (268 + (years * 3))) / 365;
+        resolutionFix     = resolutionFix.toString().substr(0,4);
+        this.scale        = (resolutionFix / years);
 
         // Draw the timeline with the correct scale
         var totalWidth = 0;
@@ -390,7 +395,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             html += '<li class="splitter" style="float: left; width: 1px; height: ' + height + 'px;';
             html += 'border-left: 1px dotted #3d3d3d; margin-left: -2px;"></li>';
 
-            var x = 260 + (totalWidth -(width / 2));
+            var x = 260 + (totalWidth - (width / 2));
             if (years > 3) {
                 var size = 7 * (this.scale * 2);
             } else {
