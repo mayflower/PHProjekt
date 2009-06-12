@@ -23,9 +23,9 @@ dojo.provide("phpr.Minutes.ItemGrid");
 
 dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     addModuleTabs:function(data) {
-        // summary:
+        // Summary:
         //    Add default module tabs plus Items tab
-        // description:
+        // Description:
         //    Extends inherited method to add the Items tab,
         //    inherited code is executed afterwards
 
@@ -44,9 +44,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     addItemsTab:function(data) {
-        // summary:
+        // Summary:
         //    Items tab
-        // description:
+        // Description:
         //    Display minute items grid and input form.
         //    See Default/Form.js, method addAccessTab for
         //    a more detailed example of adding tabs.
@@ -102,9 +102,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     addMailTab:function(data) {
-        // summary:
+        // Summary:
         //    Mail tab
-        // description:
+        // Description:
         //    Display options for sending Minutes per mail
         
         var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
@@ -142,9 +142,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     postRenderForm: function() {
-        // summary:
+        // Summary:
         //    Render grid
-        // description:
+        // Description:
         //    Render the datagrid after the rest of the form has been 
         //    processed. Neccessary because the datagrid won't render
         //    unless dimensions of all surrounding elements are known.
@@ -163,9 +163,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     url: null,
     
     _buildGrid: function() {
-        // summary:
+        // Summary:
         //    Return grid object instance
-        // description:
+        // Description:
         //    Internal method for creating and configuring a
         //    grid object for MinutesItems. Row configuration
         //    is defined here.
@@ -267,9 +267,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     _getItemGridStore: function() {
-        // summary:
+        // Summary:
         //    Return data store for the grid
-        // description:
+        // Description:
         //    Creates Dojo.Data.ItemFileWriteStore instance for
         //    displaying MinutesItems in the grid.
         var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
@@ -281,9 +281,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     updateGrid: function() {
-        // summary:
+        // Summary:
         //    Refreshes the grid's data source
-        // description:
+        // Description:
         //    Recreated the data store for the grid, which automatically
         //    updates the view
         phpr.DataStore.deleteData({"url": this.url});
@@ -300,9 +300,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     _peopleList:  [],
     
     saveSubFormData: function() {
-        // summary:
+        // Summary:
         //    Save the detail form for a MinutesItem
-        // description:
+        // Description:
         //    Retrieves the data from the detail form, posts it to
         //    the sever and refreshes the grid to reflect changes.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
@@ -322,9 +322,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     deleteSubFormData: function() {
-        // summary:
+        // Summary:
         //    Deletes the currently active MinutesItem
-        // description:
+        // Description:
         //    Posts current form data to the server.
         //    Resets detail form to default values, allowing to enter 
         //    a new record.
@@ -345,9 +345,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     getSubFormData: function(itemId) {
-        // summary:
+        // Summary:
         //    Reads data for a given MinutesItem from the server
-        // description:
+        // Description:
         //    Requests data for the MinutesItem having the given ID from
         //    the server and then reloads the detail form with the new
         //    data for editing.
@@ -364,9 +364,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     getPeopleList: function(callback) {
-        // summary:
+        // Summary:
         //    Fetches list of invited participants from server
-        // description:
+        // Description:
         //    Requests list of invited persons from the server, then
         //    stores it in the _peopleList property.
         var responseHandler = dojo.hitch(this, function(responseObject, ioArgs) {
@@ -387,9 +387,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     _itemTypes: [],
     
     getItemTypes: function() {
-        // summary:
+        // Summary:
         //    Returns a list of item types
-        // description:
+        // Description:
         //    Will return a list of valid item types for MinutesItems from metadata. 
         //    Uses cached property if available.
         if (this._itemTypes.length == 0) {
@@ -407,9 +407,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     _itemList: [],
     
     getItemList: function(callback) {
-        // summary:
+        // Summary:
         //    Returns a list of items indexed by sort oder
-        // description:
+        // Description:
         //    Will return a list of valid MinutesItems. Uses cached
         //    property if available. Items are indexed by their sort order
         //    instead of their ID.
@@ -441,9 +441,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     loadSubForm: function() {
-        // summary:
+        // Summary:
         //    Load detail form and populate it
-        // description:
+        // Description:
         //    Loads the detail form template for MinutesItems and populates it with
         //    either default data or data from a loaded MinutesItem. Also registers
         //    event listeners for various detail form behaviours.
@@ -526,9 +526,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     _switchItemFormFields: function(typeValue) {
-        // summary:
+        // Summary:
         //    Toggle visibility of detail form fields
-        // description:
+        // Description:
         //    Hides or shows the appropriate form fields for the currently
         //    selected topicType. Currently registered types are: 
         //    1='Topic', 2='Statement',3='TODO',4='Decision',5='Date'
@@ -547,11 +547,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         }
     },
     
+    // Private property: Global flag needed for confirm dialogs
     _allowSubmit: false,
+    
     prepareSubmission: function() {
-        // summary:
+        // Summary:
         //    Gathers data for form submission and displays confirm dialogs if needed
-        // description:
+        // Description:
         //    Overrides functionality of parent class' method: Checks for itemStatus
         //    property and displays dialogs to the user to confirm his actions whenever
         //    the status changes from/to 4 (finalized). Displays an informal dialog
@@ -605,9 +607,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     },
     
     displayConfirmDialog: function(options) {
-        // summary:
+        // Summary:
         //    Display a modal dialog
-        // description:
+        // Description:
         //    Displays a configurable dijit.Dialog. Uses external template
         //    'confirmDialog.html'. No return value as dialog runs asynchronously.
         //    User input must be processed using event handlers "callbackOk" and
