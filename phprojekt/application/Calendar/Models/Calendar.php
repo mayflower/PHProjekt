@@ -79,7 +79,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return integer the id of the root event
      */
-    public function saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents)
+    public function saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents,
+        $multipleParticip)
     {
         $userId           = Phprojekt_Auth::getUserId();
         $participantsList = array();
@@ -104,6 +105,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     $startDateZendNw->addDay($startDiff);
                     $startDate = $startDateZendNw->get();
                     $startDate = date("Y-m-d", $startDate);
+                } else {
+                    $startDate = $this->getRecursionStartDate($id, $startDate);
                 }
             }
             $dateCollection = new Phprojekt_Date_Collection($startDate);
@@ -151,9 +154,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         } else {
             // Edit Multiple Events
             if ($multipleEvents) {
-                $this->_updateMultipleEvents($request, $id, $eventDates, $daysDuration, $participantsList);
+                $this->_updateMultipleEvents($request, $id, $eventDates, $daysDuration, $participantsList,
+                    $multipleParticip);
             } else {
-                $this->_updateSingleEvent($request, $id, $eventDates, $daysDuration, $participantsList);
+                $this->_updateSingleEvent($request, $id, $eventDates, $daysDuration, $participantsList,
+                    $multipleParticip);
             }
         }
 
@@ -269,11 +274,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function deleteEvents($multipleEvents)
+    public function deleteEvents($multipleEvents, $multipleParticip)
     {
         if ($multipleEvents) {
             $rootEventId = $this->getRootEventId($this);
-            if (!$this->_isOwner($this)) {
+            if (!$this->_isOwner($this) || !$multipleParticip) {
                 $where = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
                     (int) $rootEventId, (int) $this->participantId);
             } else {
@@ -378,18 +383,18 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    private function _updateMultipleEvents($request, $id, $eventDates, $daysDuration, $participantsList)
+    private function _updateMultipleEvents($request, $id, $eventDates, $daysDuration, $participantsList,
+        $multipleParticip)
     {
         $this->_startDate         = $request['startDate'];
         $this->_endDate           = $request['startDate'];
         $this->_notifParticipants = implode(",", $participantsList);
 
-        $addParticipants = true;
         $this->find($id);
 
         $rootEventId = $this->getRootEventId($this);
         $where       = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
-        if (!$this->_isOwner($this)) {
+        if (!$this->_isOwner($this) || !$multipleParticip) {
             // Save only the own events under the parentId
             $where .= sprintf(' AND participant_id = %d', (int) $this->participantId);
         }
@@ -424,7 +429,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         // Only for owners
         if ($this->_isOwner($this)) {
-            // Add the new entry of recurrence
+            // Add any new occurrences of the event for all participants
             foreach ($eventDates as $oneDate) {
                 $newEntry = true;
                 $date     = date("Y-m-d", $oneDate);
@@ -435,43 +440,44 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     }
                 }
                 if ($newEntry) {
-                    // Add participans is not nessesary since is done here
                     $addParticipants = false;
                     foreach ($participantsList as $participantId) {
-                        $newModel = clone($this);
-                        $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
-                                         $this->getRootEventId($this));
+                        if (Phprojekt_Auth::getUserId() == $participantId || $multipleParticip) {
+                            $newModel = clone($this);
+                            $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
+                                             $this->getRootEventId($this));
 
-                        // If notification email was requested, then send it just once
-                        $request['sendNotification'] = '';
+                            // If notification email was requested, then send it just once
+                            $request['sendNotification'] = '';
+                        }
                     }
                 }
             }
 
-            // Delete removed participans
-            foreach ($currentParticipants as $currentParticipantId) {
-                $found = false;
-                foreach ($participantsList as $participantId) {
-                    if ($participantId == $currentParticipantId) {
-                        $found = true;
-                        break;
+            if ($multipleParticip) {
+                // Delete removed participants
+                foreach ($currentParticipants as $currentParticipantId) {
+                    $found = false;
+                    foreach ($participantsList as $participantId) {
+                        if ($participantId == $currentParticipantId) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        // Delete old participant
+                        $removeModel = clone($this);
+                        $rootEventId = $this->getRootEventId($this);
+                        $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
+                            (int) $rootEventId, (int) $currentParticipantId);
+                        $recordsDelete = $removeModel->fetchAll($where);
+                        foreach ($recordsDelete as $record) {
+                            Default_Helpers_Delete::delete($record);
+                        }
                     }
                 }
-                if (!$found) {
-                    // Delete old participant
-                    $removeModel = clone($this);
-                    $rootEventId = $this->getRootEventId($this);
-                    $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
-                        (int) $rootEventId, (int) $currentParticipantId);
-                    $records = $removeModel->fetchAll($where);
-                    foreach ($records as $record) {
-                        Default_Helpers_Delete::delete($record);
-                    }
-                }
-            }
 
-            // Add the new entry for a new participant
-            if ($addParticipants) {
+                // Add new participants to existing events
                 foreach ($participantsList as $participantId) {
                     $newEntry = true;
                     foreach ($currentParticipants as $currentParticipantId) {
@@ -482,12 +488,23 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     }
                     if ($newEntry) {
                         foreach ($eventDates as $oneDate) {
-                            $newModel = clone($this);
-                            $parentId = $this->getRootEventId($this);
-                            $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId, $parentId);
-
-                            // If notification email was requested, then send it just once
-                            $request['sendNotification'] = '';
+                            if (Phprojekt_Auth::getUserId() == $participantId || $multipleParticip) {
+                                $newModel       = clone($this);
+                                $parentId       = $this->getRootEventId($this);
+                                $addParticipant = false;
+                                foreach ($records as $record) {
+                                    if (strtotime($record->startDate) == $oneDate) {
+                                        $addParticipant = true;
+                                        break;
+                                    }
+                                }
+                                if ($addParticipant) {
+                                    $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
+                                        $parentId);
+                                    // If notification email was requested, then send it just once
+                                    $request['sendNotification'] = '';
+                                }
+                            }
                         }
                     }
                 }
@@ -505,7 +522,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    private function _updateSingleEvent($request, $id, $eventDates, $daysDuration, $participantsList)
+    private function _updateSingleEvent($request, $id, $eventDates, $daysDuration, $participantsList, $multipleParticip)
     {
         $this->_startDate         = $request['startDate'];
         $this->_endDate           = $request['endDate'];
@@ -516,61 +533,58 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $oneDate = $eventDates[0];
         $this->_saveEvent($request, $this, $oneDate, $daysDuration, $this->participantId, $this->parentId);
 
-        // If notification email was requested, then send it just once
-        $request['sendNotification'] = '';
+        // Edit the rest of participants?
+        if ($this->_isOwner($this) && $multipleParticip) {
+            // If notification email was requested, then send it just once
+            $request['sendNotification'] = '';
 
-        $rootEventId = $this->getRootEventId($this);
-        if (!$this->_isOwner($this)) {
-            // Save only the own events under the parentId
-            $where = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
-                (int) $rootEventId, (int) $this->participantId);
-        } else {
-            // Save all the events under the parentId
-            $where = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
-        }
+            $rootEventId = $this->getRootEventId($this);
+            $where       = sprintf('(parent_id = %d OR id = %d) AND start_date = %s', (int) $rootEventId,
+                (int) $rootEventId, $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
 
-        $currentParticipants = array();
-        $records             = $this->fetchAll($where);
-        foreach ($records as $record) {
-            $currentParticipants[$record->participantId] = $record->participantId;
-        }
+            $currentParticipants = array();
+            $records             = $this->fetchAll($where);
+            foreach ($records as $record) {
+                $currentParticipants[$record->participantId] = $record->participantId;
+                $currentParticipantId                        = $record->participantId;
 
-        // Delete removed participans
-        foreach ($currentParticipants as $currentParticipantId) {
-            $found = false;
+                $found = false;
+                foreach ($participantsList as $participantId) {
+                    if ($participantId == $currentParticipantId) {
+                        $found = true;
+                        // Update basic data
+                        $this->_saveEvent($request, $record, $oneDate, $daysDuration, $participantId, $this->parentId);
+                        break;
+                    }
+                }
+                if (!$found) {
+                    // Delete removed participant
+                    $removeModel = clone($this);
+                    $rootEventId = $this->getRootEventId($this);
+                    $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d AND start_date = %s',
+                        (int) $rootEventId, (int) $rootEventId, (int) $currentParticipantId,
+                        $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
+                    $records = $removeModel->fetchAll($where);
+                    foreach ($records as $record) {
+                        Default_Helpers_Delete::delete($record);
+                    }
+                }
+            }
+
+            // Add the new entry for a new participant
             foreach ($participantsList as $participantId) {
-                if ($participantId == $currentParticipantId) {
-                    $found = true;
-                    break;
+                $newEntry = true;
+                foreach ($currentParticipants as $currentParticipantId) {
+                    if ($currentParticipantId == $participantId) {
+                        $newEntry = false;
+                        break;
+                    }
                 }
-            }
-            if (!$found) {
-                // Delete old participant
-                $removeModel = clone($this);
-                $rootEventId = $this->getRootEventId($this);
-                $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d AND start_date = %s',
-                    (int) $rootEventId, (int) $rootEventId, (int) $currentParticipantId,
-                    $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
-                $records = $removeModel->fetchAll($where);
-                foreach ($records as $record) {
-                    Default_Helpers_Delete::delete($record);
+                if ($newEntry) {
+                    $newModel = clone($this);
+                    $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
+                        $this->getRootEventId($this));
                 }
-            }
-        }
-
-        // Add the new entry for a new participant
-        foreach ($participantsList as $participantId) {
-            $newEntry = true;
-            foreach ($currentParticipants as $currentParticipantId) {
-                if ($currentParticipantId == $participantId) {
-                    $newEntry = false;
-                    break;
-                }
-            }
-            if ($newEntry) {
-                $newModel = clone($this);
-                $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
-                    $this->getRootEventId($this));
             }
         }
     }

@@ -50,9 +50,9 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
     public function testGetRootEventId()
     {
         $calendarModel = clone($this->_model);
-        $calendarModel->find(7);
+        $calendarModel->find(27);
         $return = $calendarModel->getRootEventId($calendarModel);
-        $this->assertEquals(6, $return);
+        $this->assertEquals(26, $return);
     }
 
     /**
@@ -61,7 +61,7 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
     public function testRecordValidate()
     {
         $calendarModel = clone($this->_model);
-        $calendarModel->find(7);
+        $calendarModel->find(27);
         $return = $calendarModel->recordValidate();
         $this->assertEquals(true, $return);
 
@@ -106,14 +106,14 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel = clone($this->_model);
         $before        = count($calendarModel->fetchAll());
         $calendarModel->find(18);
-        $calendarModel->deleteEvents(true);
+        $calendarModel->deleteEvents(true, true);
         $after = count($calendarModel->fetchAll());
         $this->assertEquals($before - 8, $after);
 
         $calendarModel = clone($this->_model);
         $before        = count($calendarModel->fetchAll());
-        $calendarModel->find(7);
-        $calendarModel->deleteEvents(false);
+        $calendarModel->find(27);
+        $calendarModel->deleteEvents(false, false);
         $after = count($calendarModel->fetchAll());
         $this->assertEquals($before - 1, $after);
     }
@@ -126,7 +126,7 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel = clone($this->_model);
         $before        = count($calendarModel->fetchAll());
         $calendarModel->find(50);
-        $calendarModel->deleteEvents(true);
+        $calendarModel->deleteEvents(true, true);
         $after = count($calendarModel->fetchAll());
         $this->assertEquals($before, $after);
     }

@@ -21,12 +21,15 @@ dojo.provide("phpr.Calendar.Form");
 
 dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
-    _participantUrl: null,
-    _multipleEvents: null,
-    _owner:          null,
-    _currentDate:    null,
-    _currentTime:    null,
-    _updateCacheIds: null,
+    _participantUrl:     null,
+    _multipleEvents:     null,
+    _multipleParticip:   null,
+    _owner:              null,
+    _currentDate:        null,
+    _currentTime:        null,
+    _updateCacheIds:     null,
+    _participantsInDb:   null,
+    _participantsInTab:  null,
 
     _FRMWIDG_BASICDATA:  0,
     _FRMWIDG_PARTICIP:   1,
@@ -68,9 +71,24 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
         }
 
-        if (this.id > 0 && this.sendData.rruleFreq && null === this._multipleEvents) {
-            this.showEventSelector('Edit', "submitForm");
-            return false;
+        if (this.id > 0) {
+            if (this.sendData.rruleFreq && null === this._multipleEvents) {
+                // If the event has recurrence ask what to modify
+                this.showEventSelector('Edit', "submitForm");
+                return false;
+            } else if (null === this._multipleParticip) {
+                if (this._participantsInDb > 0 && this._participantsInDb == this._participantsInTab) {
+                    // If there is at least one user in Participant tab and the user hasn't changed that tab, ask him
+                    this.showParticipSelector('Edit', 'submitForm');
+                    return false;
+                } else if (this._participantsInDb != this._participantsInTab) {
+                    // If the user has modified Participant tab, changes apply for all participants
+                    this._multipleParticip = true;
+                } else {
+                    // If there was no user in Participant tab and neither now, the action is obvious:
+                    this._multipleParticip = false;
+                }
+            }
         }
 
         // check if rule for recurrence is set
@@ -116,7 +134,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             this.sendData.rrule = null;
         }
 
-        this.sendData.multipleEvents = this._multipleEvents;
+        this.sendData.multipleEvents   = this._multipleEvents;
+        this.sendData.multipleParticip = this._multipleParticip;
 
         return true;
     },
@@ -214,6 +233,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
                 }
             }
         }
+        this._participantsInDb  = participants.length;
+        this._participantsInTab = participants.length;
 
         // Template for the participants tab
         var participantData = this.render(["phpr.Calendar.template", "participanttab.html"], null, {
@@ -284,6 +305,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             var tmp = new dijit.form.Button(params);
             dojo.byId(buttonName).appendChild(tmp.domNode);
             dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteParticipant", userId));
+
+            this._participantsInTab += 1;
         }
     },
 
@@ -299,6 +322,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         var e      = dojo.byId("trParticipantFor" + userId);
         var parent = e.parentNode;
         parent.removeChild(e);
+        this._participantsInTab -= 1;
     },
 
     addRecurrenceTab:function(data) {
@@ -380,12 +404,28 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    This function calls jsonDeleteAction
 
         var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].attr('value')['rruleFreq'];
-        if (this.id > 0 && rruleFreq && null === this._multipleEvents) {
-            this.showEventSelector('Delete', "deleteForm");
-            return false;
+        if (this.id > 0) {
+            // If the event has recurrence or is at least one participant added in participants tab, ask what to modify
+            if (rruleFreq && null === this._multipleEvents) {
+                this.showEventSelector('Delete', "deleteForm");
+                return false;
+            } else if (null === this._multipleParticip) {
+                if (this._participantsInDb > 0 && this._participantsInDb == this._participantsInTab) {
+                    // If there is at least one user in Participant tab and the user hasn't changed that tab, ask him
+                    this.showParticipSelector('Delete', "deleteForm");
+                    return false;
+                } else if (this._participantsInDb != this._participantsInTab) {
+                    // If the user has modified Participant tab, changes apply for all participants
+                    this._multipleParticip = true;
+                } else {
+                    // If there was no user in Participant tab and neither now, the action is obvious:
+                    this._multipleParticip = false;
+                }
+            }
         }
 
-        this.sendData.multipleEvents = this._multipleEvents;
+        this.sendData.multipleEvents   = this._multipleEvents;
+        this.sendData.multipleParticip = this._multipleParticip;
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
@@ -437,6 +477,44 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         dojo.byId("eventSelectorContainer").appendChild(multipleEvent.domNode);
         dojo.connect(multipleEvent, "onClick", dojo.hitch(this, function() {
             this._multipleEvents = true;
+            dijit.byId('eventSelectorDialog').hide();
+            eval('this.' + nextFunction + '()');
+        }));
+
+        dijit.byId('eventSelectorDialog').show();
+    },
+
+    showParticipSelector:function(action, nextFunction) {
+        // Summary:
+        //    This function shows the participant dialog selector
+
+        dojo.byId("eventSelectorContainer").innerHTML = '';
+
+        dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get(action + ' multiple participants');
+        dijit.byId('eventSelectorDialog').attr('title', phpr.nls.get('Calendar'));
+
+        // Add button for one Participant
+        var params = {
+            label: phpr.nls.get(action + ' just for me'),
+            alt:   phpr.nls.get(action + ' just for me')
+        };
+        var singleParticipant = new dijit.form.Button(params);
+        dojo.byId("eventSelectorContainer").appendChild(singleParticipant.domNode);
+        dojo.connect(singleParticipant, "onClick", dojo.hitch(this, function() {
+            this._multipleParticip = false;
+            dijit.byId('eventSelectorDialog').hide();
+            eval('this.' + nextFunction + '()');
+        }));
+
+        // Add button for multiple Participants
+        var params = {
+            label: phpr.nls.get(action + ' for me and all participants'),
+            alt:   phpr.nls.get(action + ' for me and all participants')
+        };
+        var multipleParticip = new dijit.form.Button(params);
+        dojo.byId("eventSelectorContainer").appendChild(multipleParticip.domNode);
+        dojo.connect(multipleParticip, "onClick", dojo.hitch(this, function() {
+            this._multipleParticip = true;
             dijit.byId('eventSelectorDialog').hide();
             eval('this.' + nextFunction + '()');
         }));

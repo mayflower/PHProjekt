@@ -143,6 +143,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', strtotime('22:00'));
         $this->request->setParam('endTime', strtotime('23:00'));
         $this->request->setParam('participantId', 1);
+        $this->request->setParam('multipleParticip', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -229,6 +230,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081204T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('multipleParticip', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -257,8 +259,9 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', strtotime('12:00'));
         $this->request->setParam('endTime', strtotime('13:00'));
         $this->request->setParam('dataParticipant', array(2 => 2));
-        $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('multipleEvents', true);
+        $this->request->setParam('multipleParticip', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -351,8 +354,9 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', strtotime('15:00'));
         $this->request->setParam('endTime', strtotime('20:00'));
         $this->request->setParam('participantId', 1);
-        $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=WEEKLY;UNTIL=20090208T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('multipleEvents', true);
+        $this->request->setParam('multipleParticip', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -409,14 +413,128 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', strtotime('18:00'));
         $this->request->setParam('participantId', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
-        $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090901T040000Z;INTERVAL=2;BYDAY=');
+        $this->request->setParam('multipleEvents', true);
+        $this->request->setParam('multipleParticip', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check total amount of rows
         $rowsAfter = count($this->_model->fetchAll($where));
         $this->assertEquals($rowsBefore + 4, $rowsAfter);
+    }
+
+    /**
+     * Test of json save calendar for multiple events
+     */
+    public function testJsonSaveMultiplePart10()
+    {
+        $rowsBefore = count($this->_model->fetchAll());
+
+        // INSERT: Multiple events - Two dates in total, one participant
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('title', 'Multiple5');
+        $this->request->setParam('place', 'Buenos Aires');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2009-06-12');
+        $this->request->setParam('endDate', '2009-06-12');
+        $this->request->setParam('startTime', strtotime('08:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('participantId', 1);
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY=');
+        $response = $this->getResponse();
+        $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $rowsAfter = count($this->_model->fetchAll());
+        $this->assertEquals($rowsBefore + 2, $rowsAfter);
+    }
+
+    /**
+     * Test of json save calendar for multiple events
+     */
+    public function testJsonSaveMultiplePart11()
+    {
+        $rowsBefore = count($this->_model->fetchAll());
+
+        // EDIT LAST EVENTS: Add them one extra event and also one extra participant for all events
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('id', 26);
+        $this->request->setParam('title', 'Multiple5');
+        $this->request->setParam('place', 'Buenos Aires');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2009-06-12');
+        $this->request->setParam('endDate', '2009-06-12');
+        $this->request->setParam('startTime', strtotime('08:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('participantId', 1);
+        $this->request->setParam('dataParticipant', array(2 => 2));
+        $this->request->setParam('multipleEvents', true);
+        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY=');
+        $response = $this->getResponse();
+        $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $rowsAfter = count($this->_model->fetchAll());
+        $this->assertEquals($rowsBefore + 4, $rowsAfter);
+    }
+
+    /**
+     * Test of json save calendar for multiple events
+     */
+    public function testJsonSaveMultiplePart12()
+    {
+        $rowsBefore = count($this->_model->fetchAll());
+
+        // EDIT: Take out the participant in the second of the three dates
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('id', 27);
+        $this->request->setParam('title', 'Multiple5');
+        $this->request->setParam('place', 'Buenos Aires');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2009-06-13');
+        $this->request->setParam('endDate', '2009-06-13');
+        $this->request->setParam('startTime', strtotime('08:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('participantId', 1);
+        $this->request->setParam('multipleEvents', false);
+        $this->request->setParam('multipleParticip', true);
+        $response = $this->getResponse();
+        $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $rowsAfter = count($this->_model->fetchAll());
+        $this->assertEquals($rowsBefore - 1, $rowsAfter);
+    }
+
+    /**
+     * Test of json save calendar for multiple events
+     */
+    public function testJsonSaveMultiplePart13()
+    {
+        $rowsBefore = count($this->_model->fetchAll());
+
+        // EDIT: Decrease in 1 day the start date of all the occurrences of the last series of events just for me
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('id', 27);
+        $this->request->setParam('title', 'Multiple5');
+        $this->request->setParam('place', 'Buenos Aires');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2009-06-12');
+        $this->request->setParam('endDate', '2009-06-12');
+        $this->request->setParam('startTime', strtotime('08:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('participantId', 1);
+        $this->request->setParam('multipleEvents', true);
+        $this->request->setParam('multipleParticip', false);
+        $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY=');
+        $response = $this->getResponse();
+        $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $rowsAfter = count($this->_model->fetchAll());
+        $this->assertEquals($rowsBefore + 1, $rowsAfter);
     }
 
     /**
@@ -453,7 +571,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonList/');
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":13}', $response);
+        $this->assertContains('"numRows":17}', $response);
 
         $this->setRequestUrl('Calendar/index/jsonList/');
         $this->request->setParam('id', 1);
@@ -553,7 +671,7 @@ class Calendar_IndexController_Test extends FrontInit
     /**
      * Test the calendar deletion
      */
-    public function testJsonDeleteActionMultiple()
+    public function testJsonDeleteActionMultiplePart1()
     {
         // Store current amount of rows
         $rowsBefore = count($this->_model->fetchAll());
@@ -568,6 +686,27 @@ class Calendar_IndexController_Test extends FrontInit
         // Check total amount of rows
         $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore - 2, $rowsAfter);
+    }
+
+    /**
+     * Test the calendar deletion
+     */
+    public function testJsonDeleteActionMultiplePart2()
+    {
+        // Store current amount of rows
+        $rowsBefore = count($this->_model->fetchAll());
+
+        // Multiple Event - Take out all the occurrences of this series of events for participant #1
+        $this->setRequestUrl('Calendar/index/jsonDelete/');
+        $this->request->setParam('id', 6);
+        $this->request->setParam('multipleEvents', true);
+        $this->request->setParam('multipleParticip', false);
+        $response = $this->getResponse();
+        $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
+
+        // Check total amount of rows
+        $rowsAfter = count($this->_model->fetchAll());
+        $this->assertEquals($rowsBefore - 3, $rowsAfter);
     }
 
     /**
