@@ -76,31 +76,25 @@ class Calendar_IndexController extends IndexController
         $request = $this->getRequest()->getParams();
         $id      = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents,
             $multipleParticip);
-        if ($modification) {
-            $updateCacheIds = $model->getRelatedEvents();
-        }
 
         $return = array('type'    => 'success',
                         'message' => $message,
                         'code'    => 0,
                         'id'      => $id);
 
-        if ($modification && count($updateCacheIds) > 0) {
-            $return['updateCacheIds'] = $updateCacheIds;
-        }
-
         Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**
-     * Returns all the participants for one item
-     * (Check the recurrent and return all the users involved)
+     * Echoes:
+     * 1) All the participants for one item (checks the recurrence and returns all the users involved)
+     * 2) All the related events to the current one
      *
      * @requestparam integer id The event id
      *
      * @return void
      */
-    public function jsonGetParticipantsAction()
+    public function jsonGetRelatedDataAction()
     {
         $id   = (int) $this->getRequest()->getParam('id');
         $data = array('data' => array());
@@ -108,7 +102,10 @@ class Calendar_IndexController extends IndexController
         if ($id > 0) {
             $record = $this->getModelObject()->find($id);
             if (isset($record->id)) {
-                $data = array('data' => $record->getAllParticipants());
+                $participants  = $record->getAllParticipants();
+                $relatedEvents = $record->getRelatedEvents();
+                $data['data']  = array('participants' => $participants,
+                                       'relatedEvents' => $relatedEvents);
             }
         }
 

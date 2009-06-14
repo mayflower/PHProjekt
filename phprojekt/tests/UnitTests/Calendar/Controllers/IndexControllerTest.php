@@ -631,22 +631,47 @@ class Calendar_IndexController_Test extends FrontInit
     }
 
     /**
-     * Test the calendar participants getting
+     * Test the calendar participants and related events getting
      */
-    public function testGetParticipantsAction()
+    public function testGetRelatedDataAction1()
     {
-        $this->setRequestUrl('Calendar/index/jsonGetParticipants/');
+        $this->setRequestUrl('Calendar/index/jsonGetRelatedData/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertContains('"data":"1"', $response);
+        $this->assertContains('"data":{"participants":"1","relatedEvents":""}', $response);
+    }
 
-        $this->request->setParam('id', 2);
+    /**
+     * Test the calendar participants and related events getting
+     */
+    public function testGetRelatedDataAction2()
+    {
+        $this->setRequestUrl('Calendar/index/jsonGetRelatedData/');
+        $this->request->setParam('id', 28);
         $response = $this->getResponse();
-        $this->assertContains('"data":"1"', $response);
+        $this->assertContains('"data":{"participants":"1,2","relatedEvents":"26,27,32"}', $response);
+    }
 
-        $this->request->setParam('id', 18);
+    /**
+     * Test the calendar participants and related events getting
+     */
+    public function testGetRelatedDataAction3()
+    {
+        $this->setRequestUrl('Calendar/index/jsonGetRelatedData/');
+        $this->request->setParam('id', 15);
         $response = $this->getResponse();
-        $this->assertContains('"data":"1,2"', $response);
+        $this->assertContains('"data":{"participants":"1","relatedEvents":"14"}', $response);
+    }
+
+    /**
+     * Test the calendar participants and related events getting
+     */
+    public function testGetRelatedDataAction4()
+    {
+        $this->setRequestUrl('Calendar/index/jsonGetRelatedData/');
+        $this->request->setParam('id', 100);
+        $response = $this->getResponse();
+        $this->assertContains('"data":[]', $response);
     }
 
     /**

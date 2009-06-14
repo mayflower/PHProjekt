@@ -21,7 +21,7 @@ dojo.provide("phpr.Calendar.Form");
 
 dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
-    _participantUrl:     null,
+    _relatedDataUrl:     null,
     _multipleEvents:     null,
     _multipleParticip:   null,
     _owner:              null,
@@ -40,9 +40,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
 
-        // Get the participants
-        this._participantUrl = phpr.webpath + 'index.php/Calendar/index/jsonGetParticipants/id/' + this.id;
-        this._initData.push({'url': this._participantUrl, 'noCache': true});
+        // Get the participants and related events
+        this._relatedDataUrl = phpr.webpath + 'index.php/Calendar/index/jsonGetRelatedData/id/' + this.id;
+        this._initData.push({'url': this._relatedDataUrl});
 
         // Get the tags
         this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
@@ -203,11 +203,11 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    Participants tab
         // Description:
         //    Display all the users for add into the event
-        var userList     = this.userStore.getList();
-        var urlData      = phpr.DataStore.getData({url: this._participantUrl});
-        var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
-        var participants = new Array();
-        var users        = new Array();
+        var userList       = this.userStore.getList();
+        var urlRelatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
+        var currentUser    = data[0]["rights"]["currentUser"]["userId"] || 0;
+        var participants   = new Array();
+        var users          = new Array();
 
         if (userList) {
             for (var i in userList) {
@@ -219,17 +219,19 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         }
 
         // Make an array with the current participants
-        if (urlData.length > 0) {
-            var temp = urlData.split(',');
-            for (var i in temp) {
-                if (temp[i] != currentUser) {
-                    for (var j in userList) {
-                        if (userList[j].id == temp[i]) {
-                            var userName = userList[j].display;
-                            break;
+        if (urlRelatedData.data != '') {
+            if (urlRelatedData.participants.length > 0) {
+                var temp = urlRelatedData.participants.split(',');
+                for (var i in temp) {
+                    if (temp[i] != currentUser) {
+                        for (var j in userList) {
+                            if (userList[j].id == temp[i]) {
+                                var userName = userList[j].display;
+                                break;
+                            }
                         }
+                        participants.push({'userId': temp[i], 'userName': userName});
                     }
-                    participants.push({'userId': temp[i], 'userName': userName});
                 }
             }
         }
@@ -524,60 +526,32 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
     updateData:function() {
         phpr.DataStore.deleteData({url: this._url});
-        phpr.DataStore.deleteData({url: this._participantUrl});
         phpr.DataStore.deleteData({url: this._tagUrl});
-        if (this._updateCacheIds != null) {
-            this.updateCacheIds();
-        }
-    },
 
-    submitForm:function() {
-        // Summary:
-        //    This function is responsible for submitting the formdata
-        // Description:
-        //    This function sends the form data as json data to the server
-        //    and call the reload routine
-        if (!this.prepareSubmission()) {
-            return false;
+        // Delete the cache of the 3 urls for every related event?
+        var urlRelatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
+        if (urlRelatedData.data != '') {
+            // Make an array with the related events
+            this._updateCacheIds = urlRelatedData.relatedEvents.split(',');
+            if (this._updateCacheIds.length > 0 && this.useCache) {
+                this.updateCacheIds();
+            }
         }
-
-        phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (!this.id) {
-                   this.id = data['id'];
-               }
-               if (data.type == 'success') {
-                   if ((data.updateCacheIds != undefined) && this.useCache) {
-                       this._updateCacheIds = data.updateCacheIds;
-                   }
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
-                            + '/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            if (this.sendData['string']) {
-                                new phpr.handleResponse('serverFeedback', data);
-                            }
-                            if (data.type =='success') {
-                                this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
-                            }
-                        })
-                    });
-                }
-            })
-        });
+        phpr.DataStore.deleteData({url: this._relatedDataUrl});
     },
 
     updateCacheIds:function() {
         // Summary:
-        //    This function deletes the cache for the ids stored in _updateCacheIds
+        //    This function deletes the cache of the 3 urls for the ids stored in _updateCacheIds
         for (idPos in this._updateCacheIds) {
-            var url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this._updateCacheIds[idPos];
+            var id         = this._updateCacheIds[idPos];
+            var url        = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + id;
+            var relatedUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetRelatedData/id/" + id;
+            var tagUrl     = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
+                + '/id/' + id;
             phpr.DataStore.deleteData({url: url});
+            phpr.DataStore.deleteData({url: relatedUrl});
+            phpr.DataStore.deleteData({url: tagUrl});
         }
     }
 });

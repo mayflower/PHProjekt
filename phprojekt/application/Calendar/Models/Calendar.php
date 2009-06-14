@@ -1026,22 +1026,28 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns all the connected events (by the parentId) for the logged user
+     * Returns all the events connected with the current one by the parentId, for the logged user as participant.
+     * Doesn't return the current event among them
      *
-     * @return array
+     * @return string
      */
     public function getRelatedEvents()
     {
         $rootEventId = $this->getRootEventId($this);
-        $userId      = Phprojekt_Auth::getUserId();
-        $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d',
-            (int) $rootEventId, (int) $rootEventId, (int) $userId);
-        $records = $this->fetchAll($where);
-        $return  = array();
-        foreach ($records as $record) {
-            if ($record->id != $this->id) {
-                $return[] = $record->id;
+        if ($rootEventId > 0) {
+            $userId      = Phprojekt_Auth::getUserId();
+            $where       = sprintf('(parent_id = %d OR id = %d) AND id != %d AND participant_id = %d',
+                (int) $rootEventId, (int) $rootEventId, (int) $this->id, (int) $userId);
+            $records = $this->fetchAll($where);
+            $return  = array();
+            foreach ($records as $record) {
+                if ($record->id != $this->id) {
+                    $return[] = $record->id;
+                }
             }
+            $return = implode(",", $return);
+        } else {
+            $return = "";
         }
         return $return;
     }
