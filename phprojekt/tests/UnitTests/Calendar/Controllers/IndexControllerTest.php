@@ -725,13 +725,13 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 6);
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', false);
+        $this->request->setParam('multipleParticip', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
 
         // Check total amount of rows
         $rowsAfter = count($this->_model->fetchAll());
-        $this->assertEquals($rowsBefore - 3, $rowsAfter);
+        $this->assertEquals($rowsBefore - 6, $rowsAfter);
     }
 
     /**
