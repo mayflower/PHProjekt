@@ -40,7 +40,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
     /**
      * @var list of available topic types. Keywords need to be translated.
      */
-    protected $_topicTypeList = array(
+    protected static $_topicTypeListTemplate = array(
             1 => 'TOPIC',
             2 => 'STATEMENT',
             3 => 'TODO',
@@ -48,44 +48,87 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             5 => 'DATE',
         );
 
-    protected $_userIdList  = array();
-    protected $_projectList = array();
+    protected static $_topicTypeList = array();
+    protected static $_userIdList    = array();
+    protected static $_projectList   = array();
 
     /**
-     * Constructor fills metadata
+     * Lazy load the topicType translation list.
+     *
+     * @return array _topicTypeList
      */
-    public function __construct()
+    protected function _getTopicTypeList()
     {
-        // Fill variable metadata into structure.
-        /* @var $user Phprojekt_User_User */
-        $user        = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $displayname = $user->getDisplay();
-        $users       = $user->fetchAll(null, $displayname);
-        foreach ($users as $node) {
-            $this->_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
+        if (array() === self::$_topicTypeList) {
+            foreach (self::$_topicTypeListTemplate as $key => $value) {
+                self::$_topicTypeList[$key] = Phprojekt::getInstance()->translate($value);
+            }
         }
-
-        foreach ($this->_topicTypeList as $key => $value) {
-            $this->_topicTypeList[$key] = Phprojekt::getInstance()->translate($value);
-        }
-
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree->setup();
-        $this->_projectList = array();
-        foreach ($tree as $node) {
-            $this->_projectList[$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
-        }
+        return self::$_topicTypeList;
     }
 
+    /**
+     * Returns the translated text of a given topicType id, or NULL if undefined.
+     *
+     * @param int $topicTypeValue
+     *
+     * @return mixed
+     */
     public function getTopicType($topicTypeValue)
     {
-        return (isset($this->_topicTypeList[$topicTypeValue])? $this->_topicTypeList[$topicTypeValue] : NULL);
+        $types = $this->_getTopicTypeList();
+        return (isset($types[$topicTypeValue])? $types[$topicTypeValue] : NULL);
     }
 
+    /**
+     * Lazy load the userId list
+     *
+     * @return array _userIdList
+     */
+    protected function _getUserIdList()
+    {
+        if (array() === self::$_userIdList) {
+            /* @var $user Phprojekt_User_User */
+            $user        = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $displayname = $user->getDisplay();
+            $users       = $user->fetchAll(null, $displayname);
+            foreach ($users as $node) {
+                self::$_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
+            }
+        }
+        return self::$_userIdList;
+    }
+
+    /**
+     * Returns the displayName of a given user id, or NULL if undefined.
+     *
+     * @param int $userId
+     *
+     * @return mixed
+     */
     public function getUserName($userId)
     {
-        return (isset($this->_userIdList[$userId])? $this->_userIdList[$userId] : NULL);
+        $users = $this->_getUserIdList();
+        return (isset($users[$userId])? $users[$userId] : NULL);
+    }
+
+    /**
+     * Lazy load the projectList list
+     *
+     * @return array _projectList
+     */
+    protected function _getProjectList()
+    {
+        if (array() === self::$_projectList) {
+            /* @var $projectModel Project_Models_Project */
+            $projectModel = Phprojekt_Loader::getModel('Project', 'Project');
+            $tree         = new Phprojekt_Tree_Node_Database($projectModel, 1);
+            $tree->setup();
+            foreach ($tree as $node) {
+                self::$_projectList[$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
+            }
+        }
+        return self::$_projectList;
     }
 
     /**
@@ -117,14 +160,22 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             'integer'  => false);
     }
 
-    protected function _fillTemplate(Array $data)
+    protected function _fillTemplate($key, $label, $type, $hint, $position, array $data = array())
     {
         $result = $this->_getFieldTemplate();
-        foreach ($data as $key => $value) {
-            if (isset($result[$key])) {
-                $result[$key] = $value;
+
+        foreach ($data as $index => $value) {
+            if (isset($result[$index])) {
+                $result[$index] = $value;
             }
         }
+
+        $result['key']   = $key;
+        $result['label'] = Phprojekt::getInstance()->translate($label);
+        $result['type']  = $type;
+        $result['hint']  = Phprojekt::getInstance()->getTooltip($hint);
+        $result['position'] = (int) $position;
+
         return $result;
     }
 
@@ -138,90 +189,45 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $converted = array();
 
         // projectId
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'projectId',
-            'label'    => Phprojekt::getInstance()->translate('Project'),
-            'type'     => 'selectbox',
-            'hint'     => Phprojekt::getInstance()->getTooltip('projectId'),
-            'position' => 2,
-            'range'    => $this->convertArray($this->_projectList),
+        $converted[] = $this->_fillTemplate('projectId', 'Project', 'selectbox', 'projectId', 2, array(
+            'range'    => $this->convertArray($this->_getProjectList()),
             'required' => true,
             'readOnly' => true,
             'integer'  => true));
 
         // minutesId
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'minutesId',
-            'label'    => Phprojekt::getInstance()->translate('minutesId'),
-            'type'     => 'display',
-            'hint'     => Phprojekt::getInstance()->getTooltip('minutesId'),
-            'position' => 3,
+        $converted[] = $this->_fillTemplate('minutesId', 'minutesId', 'display', 'minutesId', 3, array(
             'required' => true,
             'readOnly' => true,
             'integer'  => true));
 
         // topicId
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'topicId',
-            'label'    => Phprojekt::getInstance()->translate('topicId'),
-            'type'     => 'display',
-            'hint'     => Phprojekt::getInstance()->getTooltip('topicId'),
-            'position' => 4,
+        $converted[] = $this->_fillTemplate('topicId', 'topicId', 'display', 'topicId', 4, array(
             'readOnly' => true,
             'integer'  => true));
 
         // topicType
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'topicType',
-            'label'    => Phprojekt::getInstance()->translate('topicType'),
-            'type'     => 'selectbox',
-            'hint'     => Phprojekt::getInstance()->getTooltip('topicType'),
-            'position' => 5,
-            'range'    => $this->convertArray($this->_topicTypeList),
+        $converted[] = $this->_fillTemplate('topicType', 'topicType', 'selectbox', 'topicType', 5, array(
+            'range'    => $this->convertArray($this->_getTopicTypeList()),
             'required' => true,
             'integer'  => true));
 
         // sortOrder
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'sortOrder',
-            'label'    => Phprojekt::getInstance()->translate('sortOrder'),
-            'type'     => 'integer',
-            'hint'     => Phprojekt::getInstance()->getTooltip('sortOrder'),
-            'position' => 6));
+        $converted[] = $this->_fillTemplate('sortOrder', 'sortOrder', 'integer', 'sortOrder', 6);
 
         // title
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'title',
-            'label'    => Phprojekt::getInstance()->translate('title'),
-            'type'     => 'text',
-            'hint'     => Phprojekt::getInstance()->getTooltip('title'),
-            'position' => 6,
-            'required' => true));
+        $converted[] = $this->_fillTemplate('title', 'title', 'text', 'title', 7, array('required' => true));
 
         // comment
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'comment',
-            'label'    => Phprojekt::getInstance()->translate('comment'),
-            'type'     => 'textarea',
-            'hint'     => Phprojekt::getInstance()->getTooltip('comment'),
-            'position' => 7));
+        $converted[] = $this->_fillTemplate('comment', 'comment', 'textarea', 'comment', 8);
 
         // topicDate
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'topicDate',
-            'label'    => Phprojekt::getInstance()->translate('topicDate'),
-            'type'     => 'date',
-            'hint'     => Phprojekt::getInstance()->getTooltip('topicDate'),
-            'position' => 8));
+        $converted[] = $this->_fillTemplate('topicDate', 'topicDate', 'date', 'topicDate', 9);
 
         // userId
-        $converted[] = $this->_fillTemplate(array(
-            'key'      => 'userId',
-            'label'    => Phprojekt::getInstance()->translate('userId'),
-            'type'     => 'selectbox',
-            'hint'     => Phprojekt::getInstance()->getTooltip('userId'),
-            'position' => 9,
-            'range'    => $this->convertArray($this->_userIdList)));
+        $converted[] = $this->_fillTemplate('userId', 'userId', 'selectbox', 'userId', 10, array(
+            'range'    => $this->convertArray($this->_getUserIdList()),
+            ));
 
         return $converted;
     }
