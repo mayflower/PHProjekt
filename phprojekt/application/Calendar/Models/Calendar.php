@@ -98,13 +98,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $model->find($id);
                 // If the startDate has changed, apply that difference of days to all the events of recurrence
                 if ($startDate != $model->startDate) {
-                    $startDateZendPm = new Zend_Date($startDate);
-                    $startDiff       = $startDateZendPm->compare($model->startDate);
-                    $startDate       = $this->getRecursionStartDate($id, $startDate);
-                    $startDateZendNw = new Zend_Date($startDate);
-                    $startDateZendNw->addDay($startDiff);
-                    $startDate = $startDateZendNw->get();
-                    $startDate = date("Y-m-d", $startDate);
+                    $diffSeconds    = strtotime($startDate) - strtotime($model->startDate);
+                    $startDateTemp  = $this->getRecursionStartDate($id, $startDate);
+                    $startDateTemp  = strtotime($startDate) + $diffSeconds;
+                    $startDate      = date("Y-m-d", $startDateTemp);
                 } else {
                     $startDate = $this->getRecursionStartDate($id, $startDate);
                 }
