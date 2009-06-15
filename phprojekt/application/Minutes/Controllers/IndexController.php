@@ -260,15 +260,12 @@ class Minutes_IndexController extends IndexController
 
         $newitem = array();
         foreach ($items as $item) {
-            $content = array();
-            $content['topicId']   = $item->topicId;
-            $content['title']     = $item->title;
-            $content['topicType'] = $item->topicType;
-            $content['comment']   = $item->comment;
-            $newitem[] = $content;
+            $newitem[] = $item->toArray();
         }
 
-        $this->view->items = $newitem;
+        $this->view->translate = Phprojekt::getInstance()->getTranslate();
+        $this->view->items = $items; //$newitem;
+        $this->view->minutes = $minutes->toArray();
 
         Phprojekt_Loader::loadViewScript($this->view);
         return $this->view->render('table.phtml');

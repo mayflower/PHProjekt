@@ -100,6 +100,16 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     }
 
     /**
+     * Returns all model data as array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return (array)$this->_data;
+    }
+
+    /**
      * Return the information manager
      *
      * @return Phprojekt_ModelInformation_Interface

@@ -41,6 +41,16 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
     public $hasMany = array('items' => array('classname' => 'Minutes_Models_MinutesItem'));
 
     /**
+     * Returns all model data as array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return (array)$this->_data;
+    }
+
+    /**
      * Constructor initializes additional Infomanager.
      *
      * @param array $db Configuration for Zend_Db_Table
