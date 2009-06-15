@@ -89,9 +89,6 @@ class Setup_Models_Setup
         } else if (!isset($params['dbUser']) || empty($params['dbUser'])) {
             $this->_error[] = 'The database user can not be empty';
             $valid = false;
-        } else if (!isset($params['dbPass']) || empty($params['dbPass'])) {
-            $this->_error[] = 'The database password can not be empty';
-            $valid = false;
         } else if (!isset($params['dbName']) || empty($params['dbName'])) {
             $this->_error[] = 'The database name can not be empty';
             $valid = false;
