@@ -209,7 +209,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if (!empty($this->id)) {
             $rootEventId  = $this->getRootEventId($this);
-            $where        = sprintf('parent_id = %d OR id = %d', (int) $rootEventId, (int) $rootEventId);
+            $where        = sprintf('(parent_id = %d OR id = %d) AND start_date = %s', (int) $rootEventId,
+                (int) $rootEventId, $this->getAdapter()->quote($this->startDate));
             $records      = $this->fetchAll($where);
             foreach ($records as $record) {
                 if (null === $record->rrule) {
