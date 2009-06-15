@@ -112,8 +112,7 @@ class IndexController extends Zend_Controller_Action
     private function _setParams() {
         return array(
             'serverType'          => Cleaner::sanitize('string', $this->getRequest()->getParam('serverType')),
-            'dbHost'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbHost')),
-            'dbHost'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbHost')),
+            'dbHost'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbHost')),
             'dbUser'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbUser')),
             'dbPass'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbPass')),
             'dbName'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbName')),
