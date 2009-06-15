@@ -437,7 +437,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     }
                 }
                 if ($newEntry) {
-                    $addParticipants = false;
                     foreach ($participantsList as $participantId) {
                         if (Phprojekt_Auth::getUserId() == $participantId || $multipleParticip) {
                             $newModel = clone($this);
