@@ -262,32 +262,37 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     /**
      * Delete routine
      *
-     * If the delete is for all, delete all events related to this event
-     * If the delete is for one item:
-     *  If have rrule (other events) make a soft delete
-     *  If is a single event, make a hard delete
+     * Deletes single or multiple events, both for single or multiple participants.
      *
-     * @param bool $multipleEvents Action to multiple events or single one
+     * @param bool $multipleEvents   Action for multiple events or single one
+     * @param bool $multipleParticip Action for multiple participants or just the logged one
      *
      * @return void
      */
     public function deleteEvents($multipleEvents, $multipleParticip)
     {
-        if ($multipleEvents) {
-            $rootEventId = $this->getRootEventId($this);
-            if (!$this->_isOwner($this) || !$multipleParticip) {
-                $where = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
-                    (int) $rootEventId, (int) $this->participantId);
-            } else {
-                $where = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
-            }
+        $rootEventId    = $this->getRootEventId($this);
+        $where          = sprintf('(parent_id = %d OR id = %d)', (int) $rootEventId, (int) $rootEventId);
+        $alreadyDeleted = false;
 
+        if ($multipleEvents) {
+            if (!$this->_isOwner($this) || !$multipleParticip) {
+                $where .= sprintf(' AND participant_id = %d', (int) $this->participantId);
+            }
+        } else {
+            if (!$this->_isOwner($this) || !$multipleParticip) {
+                Default_Helpers_Delete::delete($this);
+                $alreadyDeleted = true;
+            } else {
+                $where .= sprintf(' AND start_date = %s', $this->getAdapter()->quote($this->startDate));
+            }
+        }
+
+        if (!$alreadyDeleted) {
             $records = $this->fetchAll($where);
             foreach ($records as $record) {
                 Default_Helpers_Delete::delete($record);
             }
-        } else {
-            Default_Helpers_Delete::delete($this);
         }
     }
 
