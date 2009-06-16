@@ -122,8 +122,10 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 
-    /*
+    /**
      * Get error message from model
+     *
+     * @return array
      */
     public function getError()
     {
@@ -142,9 +144,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
 
     /**
      * Save the rights for the current item
-     * The users are a POST array with userIds
      *
-     * @param array $rights - Array of usersId with the bitmask access
+     * @param array $rights
      *
      * @return void
      */
@@ -157,7 +158,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * Initialize the related minutes object
      *
      * @param integer $minutesId
-     * @return void
+     *
+     * @return Minutes_Models_MinutesItem
      */
     public function init($minutesId = null)
     {
@@ -174,6 +176,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * made after calling find().
      *
      * @param mixed Optional criteria. Can be primary key value or array of field=>value pairs.
+     *
      * @return Minutes_Models_MinutesItem
      */
     public function find($criteria = null)
@@ -203,9 +206,9 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
             $where .= ' AND ';
         }
 
-        $where .= sprintf('(%s.minutes_id = %d )',
-                          $this->getTableName(),
-                          (empty($this->_minutesId) ? $this->_relations['hasMany']['id'] : $this->_minutesId));
+        $where .= sprintf('(%s.%s = %d )',
+            $this->_db->quoteIdentifier($this->getTableName()), $this->_db->quoteIdentifier('minutes_id'),
+            (empty($this->_minutesId) ? $this->_relations['hasMany']['id'] : $this->_minutesId));
 
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
@@ -227,7 +230,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     /**
      * Save is handled by parent.
      *
-     * @return void
+     * @return boolean
      */
     public function save()
     {
@@ -236,8 +239,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         if (trim($this->sortOrder) == '' || is_null($this->sortOrder) || !$this->sortOrder) {
             // We don't have a sort order yet, most probably a brand-new record.
             // Detect highest available sort order up until now and use next-higher number.
-
-            $sql     = 'SELECT MAX(sort_order) FROM ' . $this->getTableName() . ' WHERE minutes_id = ?';
+            $sql     = 'SELECT MAX(' . $db->quoteIdentifier('sort_order') . ') FROM '
+                . $db->quoteIdentifier($this->getTableName()) . ' WHERE '.$db->quoteIdentifier('minutes_id').' = ?';
             $result  = $db->fetchCol($sql, $this->_minutesId);
             $maxSort = $result[0];
 
@@ -245,15 +248,15 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
                 $maxSort = 0;
             }
             $this->sortOrder = $maxSort + 1;
-        } elseif (is_numeric($this->sortOrder) && $this->sortOrder > 0 &&
-            isset($this->_history['sortOrder']) && $this->_history['sortOrder'] != $this->sortOrder) {
-
+        } elseif (is_numeric($this->sortOrder) && ($this->sortOrder > 0) &&
+            isset($this->_history['sortOrder']) && ($this->_history['sortOrder'] != $this->sortOrder)) {
             // A sort order was given and differs from the initial value. We need to increment
             // all sort order values equal or above the new value by one, and then update this
             // record with the new value. That should ensure order value consistency.
-            $sql = 'UPDATE ' . $this->getTableName() . ' SET sort_order = sort_order+1 ' .
-                'WHERE minutes_id = ? AND sort_order >= ?';
-            $db->query($sql, array($this->_minutesId,$this->sortOrder));
+            $data  = array('sort_order' => new Zend_Db_Expr($this->_db->quoteIdentifier('sort_order') . ' + 1'));
+            $where = sprintf('%s = %d and %s >= %d', $this->_db->quoteIdentifier('minutes_id'), $this->_minutesId,
+                $this->_db->quoteIdentifier('sort_order'), $this->sortOrder);
+            $this->update($data, $where);
         }
 
         return parent::save();

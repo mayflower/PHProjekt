@@ -38,7 +38,7 @@
 class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Phprojekt_ModelInformation_Interface
 {
     /**
-     * @var list of available topic types. Keywords need to be translated.
+     * @var array List of available topic types. Keywords need to be translated.
      */
     protected static $_topicTypeListTemplate = array(
             1 => 'TOPIC',
@@ -48,8 +48,25 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             5 => 'DATE',
         );
 
+    /**
+     * Stores the translated list of topic types
+     *
+     * @var array
+     */
     protected static $_topicTypeList = array();
+
+    /**
+     * Stores the list of user names in display format
+     *
+     * @var array
+     */
     protected static $_userIdList    = array();
+
+    /**
+     * Stores the list of projects
+     *
+     * @var array
+     */
     protected static $_projectList   = array();
 
     /**
@@ -133,8 +150,14 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
 
     /**
      * Converts array into form used by json
+     *
+     * @param array  $array     The array to be converted
+     * @param string $keyname   The identifier to be used for key values
+     * @param string $valuename The identifier to be used for value names
+     *
+     * @return array
      */
-    public function convertArray(Array $array, $keyname = 'id', $valuename = 'name')
+    public function convertArray(array $array, $keyname = 'id', $valuename = 'name')
     {
         $result = array();
         foreach ($array as $key => $value) {
@@ -143,6 +166,11 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         return $result;
     }
 
+    /**
+     * Returns an array with empty default values for a model field
+     *
+     * @return array
+     */
     protected function _getFieldTemplate()
     {
         return array(
@@ -160,6 +188,18 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             'integer'  => false);
     }
 
+    /**
+     * Returns an array filled with mandatory data and optional keys. Undefined keys are stripped.
+     *
+     * @param string $key      Name of the model property
+     * @param string $label    Label of the form field (will get translated)
+     * @param string $type     Type of the form control
+     * @param string $hint     Tooltip text index (will get translated)
+     * @param int    $position Position of the field in the form
+     * @param array  $data     Optional additional keys
+     *
+     * @return array
+     */
     protected function _fillTemplate($key, $label, $type, $hint, $position, array $data = array())
     {
         $result = $this->_getFieldTemplate();

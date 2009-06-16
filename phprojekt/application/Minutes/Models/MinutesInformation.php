@@ -52,6 +52,8 @@ class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager
     /**
      * Return an array of field information.
      *
+     * @param int $ordering
+     *
      * @return array
      */
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)

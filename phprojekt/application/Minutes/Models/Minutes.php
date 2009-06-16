@@ -54,6 +54,8 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      * Constructor initializes additional Infomanager.
      *
      * @param array $db Configuration for Zend_Db_Table
+     *
+     * @return void
      */
     public function __construct($db = null)
     {
@@ -83,8 +85,6 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 
     /**
      * Function to calculate status based on other item properties
-     *
-     * @todo enter calculations based on spec
      *
      * @param Phproject_Item_Abstract Item to do status calculations with
      *

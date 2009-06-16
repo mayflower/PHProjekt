@@ -50,13 +50,22 @@ class Minutes_IndexController extends IndexController
     const MAIL_FAIL_TEXT    = 'The mail could not be sent.';
     const MAIL_SUCCESS_TEXT = 'The mail was sent successfully.';
 
+    /**
+     * @var Phprojekt_Log
+     */
     protected $_log = NULL;
 
+    /**
+     * Init method adds a log object
+     *
+     * @return void
+     */
     public function init()
     {
         parent::init();
         $this->_log = Phprojekt::getInstance()->getLog();
     }
+
     /**
      * Get a user list in JSON
      *
@@ -125,6 +134,14 @@ class Minutes_IndexController extends IndexController
         }
     }
 
+    /**
+     * Collects all mail addresses from user ids
+     *
+     * @param array                  $userIdList Array of user ids to be fetched
+     * @param Zend_Validate_Abstract $validator  Validator to be used for the mail addresses
+     *
+     * @return array Array of arrays with either 'mail'/'name' pairs or 'message'/'value' errors.
+     */
     protected function _getMailFromUserIds($userIdList, Zend_Validate_Abstract $validator)
     {
         // Add regular recipients:
@@ -162,6 +179,14 @@ class Minutes_IndexController extends IndexController
         return $userMailList;
     }
 
+    /**
+     * Collects all mail addresses from a comma separated string
+     *
+     * @param string                 $csvString String with mail addresses
+     * @param Zend_Validate_Abstract $validator Validator to be used for the mail addresses
+     *
+     * @return array Array of arrays with either 'mail'/'name' pairs or 'message'/'value' errors.
+     */
     protected function _getMailFromCsvString($csvString, Zend_Validate_Abstract $validator)
     {
         $mailList = array();
@@ -183,6 +208,15 @@ class Minutes_IndexController extends IndexController
         return $mailList;
     }
 
+    /**
+     * Add recipients to the Zend_Mail object if valid, or put error message into return array
+     *
+     * @param Zend_Mail $mail     Zend_Mail object to be used
+     * @param array     $mailList Array of mail addresses to be added, or error messages to be returned
+     * @param array     $errors   Array of errors that new errors should be added to.
+     *
+     * @return array Array of errors encountered
+     */
     protected function _addRecipients(Zend_Mail $mail, array $mailList, array $errors)
     {
         foreach ($mailList as $mailUser) {
@@ -289,6 +323,13 @@ class Minutes_IndexController extends IndexController
         Phprojekt_Converter_Json::echoConvert($return);
     }
 
+    /**
+     * Returns a string with HTML representing the minutes data
+     *
+     * @param Minutes_Models_Minutes $minutes Minutes object to use for data
+     *
+     * @return string HTML representation of minutes data
+     */
     protected function _getHtmlList(Phprojekt_Model_Interface $minutes)
     {
         $items = $minutes->items->fetchAll();
@@ -308,6 +349,8 @@ class Minutes_IndexController extends IndexController
 
     /**
      * Create pdf file and stream to client
+     *
+     * @return void
      */
     public function pdfAction()
     {
@@ -322,7 +365,7 @@ class Minutes_IndexController extends IndexController
         if ($minutes instanceof Phprojekt_Model_Interface) {
             // @todo Throw out this check for sent headers, its only here for running unittest
             if ($this->getResponse()->canSendHeaders()) {
-                $this->getResponse()->setHeader("Content-Disposition", "inline; filename=result.pdf");
+                $this->getResponse()->setHeader("Content-Disposition", "inline; filename=minutes-".$minutes->id.".pdf");
                 $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
             }
             echo Minutes_Helpers_Pdf::getPdf($minutes);
@@ -330,6 +373,7 @@ class Minutes_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
     }
+
     /**
      * Final minutes only allow write access to status field
      * @todo This should really be placed inside the model itself
@@ -340,7 +384,7 @@ class Minutes_IndexController extends IndexController
      *
      * @return array
      */
-    public function setParams($params, $model, $newItem = false)
+    public function setParams($params, Phprojekt_Model_Interface $model, $newItem = false)
     {
         if (4 == $model->itemStatus) {
             if (isset($params['itemStatus'])) {

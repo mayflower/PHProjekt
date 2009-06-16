@@ -76,11 +76,12 @@ class Minutes_IndexController_Test extends FrontInit
      */
     public function testJsonSaveActionSaveFirstMinutes()
     {
+        $tomorrow = strtotime('tomorrow');
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'TestTitle');
         $this->request->setParam('description', 'TestDescription');
-        $this->request->setParam('meetingDate', '2009-06-09');
+        $this->request->setParam('meetingDate', date('Y-m-d', $tomorrow));
         $this->request->setParam('startTime', strtotime('03:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'TestPlace');
@@ -112,11 +113,12 @@ class Minutes_IndexController_Test extends FrontInit
      */
     public function testCreateOneMeetingMinutesForItemTest ()
     {
+        $yesterday = strtotime('yesterday');
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'SecondTestTitle');
         $this->request->setParam('description', 'SecondTestDescription');
-        $this->request->setParam('meetingDate', '2009-06-09');
+        $this->request->setParam('meetingDate', date('Y-m-d', $yesterday));
         $this->request->setParam('startTime', strtotime('03:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'SecondTestPlace');

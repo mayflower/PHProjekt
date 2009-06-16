@@ -198,6 +198,10 @@ class Minutes_ItemController extends IndexController
 
     /**
      * Provide list of items for sort ordering
+     *
+     * @requestparam integer minutesId
+     *
+     * @return void
      */
     public function jsonListItemSortOrderAction()
     {

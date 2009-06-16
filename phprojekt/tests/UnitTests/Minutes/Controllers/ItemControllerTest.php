@@ -68,11 +68,12 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testCreateOneMeetingMinutes ()
     {
+        $yesterday = strtotime('yesterday');
         $this->setRequestUrl('Minutes/index/jsonSave/id/0');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'SecondTestTitle');
         $this->request->setParam('description', 'SecondTestDescription');
-        $this->request->setParam('meetingDate', '2009-06-09');
+        $this->request->setParam('meetingDate', date('Y-m-d', $yesterday));
         $this->request->setParam('startTime', strtotime('03:00'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'SecondTestPlace');
@@ -87,6 +88,7 @@ class Minutes_ItemController_Test extends FrontInit
         $response = $this->getResponse();
 
         $this->assertContains(Minutes_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains('"id":"3"', $response, "ID created was not numbered 3.");
     }
 
     /**
@@ -125,7 +127,6 @@ class Minutes_ItemController_Test extends FrontInit
         $this->setRequestUrl('Minutes/item/jsonSave/');
         $this->request->setParam('id', null);
         $this->request->setParam('minutesId', '3');
-        $this->request->setParam('parentOrder', null);
         $this->request->setParam('projectId', null);
         $this->request->setParam('sortOrder', null);
         $this->request->setParam('title', 'DerTitel');
@@ -171,7 +172,6 @@ class Minutes_ItemController_Test extends FrontInit
         $this->setRequestUrl('Minutes/item/jsonSave/');
         $this->request->setParam('id', '');
         $this->request->setParam('minutesId', '3');
-        $this->request->setParam('parentOrder', null);
         $this->request->setParam('projectId', null);
         $this->request->setParam('sortOrder', null);
         $this->request->setParam('title', 'SecondTitle');
@@ -218,12 +218,11 @@ class Minutes_ItemController_Test extends FrontInit
         $this->setRequestUrl('Minutes/item/jsonSave/');
         $this->request->setParam('id', '2');
         $this->request->setParam('minutesId', '3');
-        $this->request->setParam('parentOrder', '1');
         $this->request->setParam('projectId', '1');
         $this->request->setParam('sortOrder', '2');
         $this->request->setParam('title', 'SecondTitleSecondSave');
         $this->request->setParam('comment', "Some lines of new comment\nSome lines of new comment");
-        $this->request->setParam('topicType', '2');
+        $this->request->setParam('topicType', '3');
         $this->request->setParam('topicDate', '2009-05-01');
         $this->request->setParam('userId', '1');
         $this->request->setParam('topicId', '1.1');
@@ -255,6 +254,102 @@ class Minutes_ItemController_Test extends FrontInit
 
         $this->assertContains('[{"sortOrder":"1","title":"DerTitel"},'
             . '{"sortOrder":"2","title":"SecondTitleSecondSave"}]', $response);
+    }
+
+    /**
+     * Add one minutes item
+     */
+    public function testJsonSaveThirdItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', null);
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', null);
+        $this->request->setParam('sortOrder', null);
+        $this->request->setParam('title', 'StatementTitle');
+        $this->request->setParam('topicDate', null);
+        $this->request->setParam('topicType', '2');
+        $this->request->setParam('userId', null);
+        $this->request->setParam('topicId', 0);
+        $this->request->setParam('comment', 'StatementComment');
+
+        $response = $this->getResponse();
+        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+    }
+
+    /**
+     * Add one minutes item
+     */
+    public function testJsonSaveFourthItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', null);
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', null);
+        $this->request->setParam('sortOrder', null);
+        $this->request->setParam('title', 'DecisionTitle');
+        $this->request->setParam('topicDate', null);
+        $this->request->setParam('topicType', '4');
+        $this->request->setParam('userId', null);
+        $this->request->setParam('topicId', 0);
+        $this->request->setParam('comment', 'DecisionComment');
+
+        $response = $this->getResponse();
+        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+    }
+
+    /**
+     * Add one minutes item
+     */
+    public function testJsonSaveFifthItem()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', null);
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', null);
+        $this->request->setParam('sortOrder', null);
+        $this->request->setParam('title', 'DateTitle');
+        $this->request->setParam('topicDate', '2009-05-01');
+        $this->request->setParam('topicType', '5');
+        $this->request->setParam('userId', null);
+        $this->request->setParam('topicId', 0);
+        $this->request->setParam('comment', 'DateComment');
+
+        $response = $this->getResponse();
+        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+    }
+
+    public function testJsonSaveActionThirdItemEdit()
+    {
+        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->request->setParam('id', '3');
+        $this->request->setParam('minutesId', '3');
+        $this->request->setParam('projectId', '1');
+        $this->request->setParam('sortOrder', '2');
+        $this->request->setParam('title', 'StatementTitle');
+        $this->request->setParam('topicDate', null);
+        $this->request->setParam('topicType', '2');
+        $this->request->setParam('userId', null);
+        $this->request->setParam('topicId', 0);
+        $this->request->setParam('comment', 'StatementComment');
+
+        $response = $this->getResponse();
+
+        $this->assertContains(Minutes_ItemController::EDIT_TRUE_TEXT, $response);
+    }
+
+    /**
+     * Test list
+     */
+    public function testJsonListItemSortOrder3()
+    {
+        $this->setRequestUrl('Minutes/item/jsonListItemSortOrder/minutesId/3');
+        $response = $this->getResponse();
+
+        $this->assertContains('[{"sortOrder":"1","title":"DerTitel"},'
+            . '{"sortOrder":"2","title":"StatementTitle"},{"sortOrder":"3","title":"SecondTitleSecondSave"}',
+            $response);
+
     }
 
     /**
@@ -422,7 +517,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->assertNotContains('"DerTitel"', $response);
         $this->assertContains('"SecondTitleSecondSave"', $response);
         $this->assertContains('"Some lines of new comment\\nSome lines of new comment"', $response);
-        $this->assertContains(',"numRows":1}', $response);
+        $this->assertContains(',"numRows":4}', $response);
     }
 
     /**

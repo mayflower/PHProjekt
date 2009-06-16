@@ -34,7 +34,12 @@
 final class Minutes_Helpers_Pdf
 {
     /**
-     * Helper function to create string lists of user names
+     * Callback helper function for array_reduce to create string lists of user names
+     *
+     * @param string $collect Var to collect all strings
+     * @param string $new     New array member to add
+     *
+     * @return string Result of array_reduce call
      */
     private static function _concat($collect, $new)
     {
