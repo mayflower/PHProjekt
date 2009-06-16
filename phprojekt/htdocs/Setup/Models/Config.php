@@ -88,8 +88,8 @@ class Setup_Models_Config
                 $this->_eol = "\r\n";
                 break;
             default:
-                $this->_os = self::OS_UNIX;
-                $this->_eol = $this->_eol;
+                $this->_os  = self::OS_UNIX;
+                $this->_eol = "\n";
                 break;
         }
     }
