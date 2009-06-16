@@ -554,9 +554,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 foreach ($participantsList as $participantId) {
                     if ($participantId == $currentParticipantId) {
                         $found = true;
-                        // Update basic data
-                        $this->_saveEvent($request, $record, $oneDate, $daysDuration, $participantId, $this->parentId);
-                        break;
+                        if ($participantId != $this->ownerId) {
+                            // Update basic data
+                            $this->_saveEvent($request, $record, $oneDate, $daysDuration, $participantId, $this->id);
+                            break;
+                        }
                     }
                 }
                 if (!$found) {
