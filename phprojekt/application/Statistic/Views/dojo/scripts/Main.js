@@ -42,7 +42,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:            phpr.webpath,
             selectedPeriodText: phpr.nls.get("Selected Statistic Period"),
-            selectedPeriodHelp: phpr.nls.get("Selected Period Help")
+            selectedPeriodHelp: phpr.nls.get("Choose here the period for the statistics to be calculated.")
         });
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {

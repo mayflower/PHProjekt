@@ -58,11 +58,12 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             show = show + i + ':00';
             hours.push({"hour": show, "pair": pair});
         }
-
+        var projectTimesHelpText = phpr.nls.get("Inside this panel you can Drag & Drop Projects into the worked "
+            + "hours.");
         this.render(["phpr.Timecard.template", "form.html"], dojo.byId('detailsBox'), {
             hours:                    hours,
             timecardProjectTimesText: phpr.nls.get("Project Bookings"),
-            projectTimesHelpText:     phpr.nls.get("Project Times Help"),
+            projectTimesHelpText:     projectTimesHelpText,
             manageFavoritesText:      phpr.nls.get('Manage project list')
         });
         dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
@@ -166,12 +167,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 id:        data[i].id
             });
         }
+        var hoursHelp = phpr.nls.get('The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.');
 
         this.render(["phpr.Timecard.template", "hoursForm.html"], dojo.byId('TimecardHours'), {
             date: this._date,
             timecardWorkingTimesText: phpr.nls.get("Working Times"),
-            workingTimesHelpText:     phpr.nls.get("Working Times Help"),
-            hoursHelpText:            phpr.nls.get("Hours Help"),
+            workingTimesHelpText:     phpr.nls.get("Here you should add the all the worked hours of the selected day."),
+            hoursHelpText:            hoursHelp,
             timecardStartText:        phpr.nls.get("Start"),
             timecardEndText:          phpr.nls.get("End"),
             timecardTotalText:        phpr.nls.get("Total"),

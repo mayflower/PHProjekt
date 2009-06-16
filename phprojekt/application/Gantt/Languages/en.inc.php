@@ -22,6 +22,10 @@ $lang["Click \"OK\" to adjust sub-project to new start date"] = "Click \"OK\" to
 $lang["Click \"Reset\" to reset current project"] = "Click \"Reset\" to reset current project";
 $lang["Click \"x\" or \"ESC\" to do nothing"] = "Click \"x\" or \"ESC\" to do nothing";
 
+// Tooltip Help
+$lang["Click on a Project timeline and see and/or change here the Start and End dates."] = "Click on a Project timeline"
+    . " and see and/or change here the Start and End dates.";
+
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Gantt"] = "<br/>
@@ -39,6 +43,3 @@ $lang["Content Help"]["Gantt"] = "<br/>
     different date or graphically selecting a day in the calendar that pops up.<br/>
     <br/>
     <br/>";
-
-// General Tooltip buttons Help
-$lang["Project Period Help"] = "Click on a Project timeline and see and/or change here the Start and End dates.";

@@ -22,10 +22,18 @@ $lang["Can not End Working Time because this moment is occupied by an existing p
     . "because this moment is occupied by an existing period.";
 
 // Tooltip Help
-$lang["Start Stop Buttons Help"] = "This buttons Start and Stop working time automatically.";
-$lang["Working Times Help"] = "Here you should add the all the worked hours of the selected day.";
-$lang["Hours Help"] = "The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.";
-$lang["Project Times Help"] = "Inside this panel you can Drag & Drop Projects into the worked hours.";
+// Start Stop Buttons
+$lang["This buttons Start and Stop working time automatically."] = "This buttons Start and Stop working time "
+    . "automatically.";
+// Working Times
+$lang["Here you should add the all the worked hours of the selected day."] = "Here you should add the all the worked "
+    . "hours of the selected day.";
+// Hours
+$lang["The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc."] = "The format of the hours may"
+    . " be with or without a symbol: 08:00, 0800, 800, etc.";
+// Project Times
+$lang["Inside this panel you can Drag & Drop Projects into the worked hours."] = "Inside this panel you can Drag & Drop"
+    . " Projects into the worked hours.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

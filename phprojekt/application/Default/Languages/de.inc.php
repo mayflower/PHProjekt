@@ -302,5 +302,6 @@ $lang["The module must have a project selector called projectId"] = "Das Modul m
     . "enhalten";
 
 // Tooltip Help
-$lang["Notification Help"] = "Klicken Sie diese checkbox an, um den Teilnehmern eine Benachrichtigungsmail zu "
-    . "schicken";
+// 'Notification' checkbox
+$lang["Check this box to send an email notification to the participants"] = "Klicken Sie diese checkbox an, um den "
+    . "Teilnehmern eine Benachrichtigungsmail zu schicken";

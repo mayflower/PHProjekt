@@ -38,13 +38,15 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     },
 
     reload:function() {
-        phpr.module       = this.module;
-        phpr.submodule    = '';
-        phpr.parentmodule = '';
+        phpr.module           = this.module;
+        phpr.submodule        = '';
+        phpr.parentmodule     = '';
+        var projectPeriodHelp = phpr.nls.get("Click on a Project timeline and see and/or change here the Start and End"
+            + " dates.");
         this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:                     phpr.webpath,
             selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline"),
-            projectPeriodHelp:           phpr.nls.get("Project Period Help")
+            projectPeriodHelp:           projectPeriodHelp
         });
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {

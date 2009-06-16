@@ -74,9 +74,13 @@ $lang["Delete just for me"] = "Delete just for me";
 $lang["Delete for all participants"] = "Delete for all participants";
 
 // Tooltip Help
-$lang["Interval Help"] = "The interval for the option selected in Repeats. <br>E.g.: Repeats Weekly - Interval"
-    . " 2, that will create one event every 2 weeks.";
-$lang["Until Help"] = "The day the recurrence will stop happening. <br>The last event's day could not match this day.";
+// 'Interval' field
+$lang["The interval for the option selected in Repeats.<br>"] = "The interval for the option selected in Repeats.<br>";
+$lang["E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks."] = "E.g.: Repeats Weekly - "
+    . "Interval 2, that will create one event every 2 weeks.";
+// 'Until' field
+$lang["The day the recurrence will stop happening. <br>The last event's day could not match this day."] = "The day the "
+    . "recurrence will stop happening. <br>The last event's day could not match this day.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

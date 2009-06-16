@@ -4,6 +4,10 @@ $lang["Selected Statistic Period"] = "Selected Statistic Period";
 $lang["Period"] = "Period";
 $lang["End time can not be before Start time"] = "End time can not be before Start time";
 
+// Tooltip Help
+$lang["Choose here the period for the statistics to be calculated."] = "Choose here the period for the statistics to be"
+    . " calculated.";
+
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Statistic"] = "<br/>
@@ -19,5 +23,3 @@ $lang["Content Help"]["Statistic"] = "<br/>
     <br/>
     <br/>";
 
-// Tooltip Help
-$lang["Selected Period Help"] = "Choose here the period for the statistics to be calculated.";

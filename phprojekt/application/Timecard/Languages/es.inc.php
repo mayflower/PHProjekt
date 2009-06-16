@@ -24,10 +24,18 @@ $lang["Can not End Working Time because this moment is occupied by an existing p
     . "Tiempo de Trabajo porque este momento está ocupado por un período existente.";
 
 // Tooltip Help
-$lang["Start Stop Buttons Help"] = "Estos botones Comienzan y Finalizan las horas de trabajo automáticamente.";
-$lang["Working Times Help"] = "Aquí puede agregar todas las horas trabajadas del día elegido.";
-$lang["Hours Help"] = "El formato de las horas puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
-$lang["Project Times Help"] = "Dentro de este panel puede Arrastrar y Soltar proyectos dentro de las horas trabajadas.";
+// Start Stop Buttons
+$lang["This buttons Start and Stop working time automatically."] = "Estos botones Comienzan y Finalizan las horas de "
+    . "trabajo automáticamente.";
+// Working Times
+$lang["Here you should add the all the worked hours of the selected day."] = "Aquí puede agregar todas las horas "
+    . "trabajadas del día elegido.";
+// Hours
+$lang["The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc."] = "El formato de las horas "
+    . "puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
+// Project Times
+$lang["Inside this panel you can Drag & Drop Projects into the worked hours."] = "Dentro de este panel puede Arrastrar"
+    . " y Soltar proyectos dentro de las horas trabajadas.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

@@ -45,7 +45,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         phpr.submodule    = '';
         phpr.parentmodule = '';
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            startStopButtonsHelp: phpr.nls.get('Start Stop Buttons Help'),
+            startStopButtonsHelp: phpr.nls.get('This buttons Start and Stop working time automatically.'),
             startWorkingTimeText: phpr.nls.get('Start Working Time'),
             stopWorkingTimeText:  phpr.nls.get('Stop Working Time'),
             selectDate:           phpr.nls.get('Change date')

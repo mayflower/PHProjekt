@@ -386,12 +386,17 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         } else {
             var disabled = false;
         }
+        var intervalHelp = phpr.nls.get('The interval for the option selected in Repeats.<br>');
+        intervalHelp    += ' ' + phpr.nls.get('E.g.: Repeats Weekly - Interval 2, that will create one event every 2 '
+                + 'weeks.');
+        var untilHelp = phpr.nls.get('The day the recurrence will stop happening. <br>The last event\'s day could not '
+                + 'match this day.');
         recurrenceTab += this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
             false, disabled);
         recurrenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
-            values.INTERVAL, false, disabled, phpr.nls.get('Interval Help'));
+            values.INTERVAL, false, disabled, intervalHelp);
         recurrenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
-            disabled, phpr.nls.get('Until Help'));
+            disabled, untilHelp);
         recurrenceTab += this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
             values.BYDAY, false, disabled, 7, true);
 
