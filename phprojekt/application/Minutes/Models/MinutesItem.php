@@ -186,18 +186,11 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      * @param mixed Optional criteria. Can be primary key value or array of field=>value pairs.
      * @return Minutes_Models_MinutesItem
      */
-    public function find($criteria=null)
+    public function find($criteria = null)
     {
-        // The parameter check in the parent method is bogus, hence this construct:
-        if ($criteria === null) {
-            $res = parent::find();
-        } else {
-            $res = parent::find($criteria);
-        }
-
+        $res = parent::find($criteria);
         // Make a backup of the initial data to compare against in save() method
         $this->_history = $this->_data;
-
         return $res;
     }
 
