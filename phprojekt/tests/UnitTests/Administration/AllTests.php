@@ -56,7 +56,7 @@ class Administration_AllTests
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite('Calendar Controller');
+        $suite = new PHPUnit_Framework_TestSuite('Administration Controller');
 
         $suite->addTestSuite('Administration_IndexController_Test');
 
