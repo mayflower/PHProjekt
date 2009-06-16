@@ -331,6 +331,7 @@ class Minutes_ItemController_Test extends FrontInit
 
         $this->assertFalse($this->error, 'Response was: '. $response);
         $this->assertContains(Minutes_IndexController::MAIL_FAIL_TEXT, $response);
+        $this->assertContains(Minutes_IndexController::MISSING_MAIL_RECIPIENTS, $response);
     }
 
     /**
@@ -392,6 +393,9 @@ class Minutes_ItemController_Test extends FrontInit
 
         $this->assertFalse($this->error, 'Response was: '. $response);
         $this->assertContains(Minutes_IndexController::MAIL_FAIL_TEXT, $response);
+        $this->assertContains('Invalid email address detected: Test User <test@example.com>', $response);
+        $this->assertContains('Invalid email address detected: Anotha Usa <foobar@example.com>; '
+            . 'third@example.com', $response);
     }
 
     /**

@@ -50,6 +50,13 @@ class Minutes_IndexController extends IndexController
     const MAIL_FAIL_TEXT    = 'The mail could not be sent.';
     const MAIL_SUCCESS_TEXT = 'The mail was sent successfully.';
 
+    protected $_log = NULL;
+
+    public function init()
+    {
+        parent::init();
+        $this->_log = Phprojekt::getInstance()->getLog();
+    }
     /**
      * Get a user list in JSON
      *
@@ -94,12 +101,12 @@ class Minutes_IndexController extends IndexController
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
             foreach ($minutesItems as $item) {
-                Phprojekt::getInstance()->getLog()->debug('Deleting minutesItem' . $item->id);
+                $this->_log->debug('Deleting minutesItem' . $item->id);
                 $success = $success && (false !== Default_Helpers_Delete::delete($item));
-                Phprojekt::getInstance()->getLog()->debug('Deletion was successful:' . ($success?'yes':'no'));
+                $this->_log->debug('Deletion was successful:' . ($success?'yes':'no'));
             }
             $success = $success && (false !== Default_Helpers_Delete::delete($minutes));
-            Phprojekt::getInstance()->getLog()->debug('Main Deletion was successful:' . ($success?'yes':'no'));
+            $this->_log->debug('Main Deletion was successful:' . ($success?'yes':'no'));
 
             if ($success === false) {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
@@ -118,13 +125,82 @@ class Minutes_IndexController extends IndexController
         }
     }
 
+    protected function _getMailFromUserIds($userIdList, Zend_Validate_Abstract $validator)
+    {
+        // Add regular recipients:
+        $idList = array();
+        if (!empty($userIdList) && is_array($userIdList)) {
+            foreach ($userIdList as $recipientId) {
+                if (is_numeric($recipientId)) {
+                    $idList[] = (int) $recipientId;
+                }
+            }
+        }
+
+        $userMailList = array();
+        if (count($idList)) {
+            /* @var $userModel Phprojekt_User_User */
+            $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
+            $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
+            $display   = $userModel->getDisplay();
+            /* @var $record Phprojekt_User_User */
+            foreach ($userList as $record) {
+                $address = $setting->getSetting('email', (int) $record->id);
+
+                if ($validator->isValid($address)) {
+                    $this->_log->debug('Adding mail to: ' . $address . ' (' .
+                        $record->firstname . ' ' . $record->lastname . ')');
+                    $userMailList[] = array('mail' => $address, 'name' => $record->applyDisplay($display, $record));
+                } else {
+                    $this->_log->debug('Invalid mail: ' . $address);
+                    $userMailList[] = array('message' => 'Invalid email address detected: %s',
+                                      'value'   => $address) ;
+                }
+            }
+        }
+        return $userMailList;
+    }
+
+    protected function _getMailFromCsvString($csvString, Zend_Validate_Abstract $validator)
+    {
+        $mailList = array();
+        // Add additional recipients:
+        if (!empty($csvString)) {
+            $additional = explode(',', $csvString);
+            foreach ($additional as $recipient) {
+                $address = trim($recipient);
+                if ($validator->isValid($address)) {
+                    $this->_log->debug('Adding mail to: ' . $address);
+                    $mailList[] = array('mail' => $address, 'name' => '');
+                } else {
+                    $this->_log->debug('Invalid mail: ' . $address);
+                    $mailList[] = array('message' => 'Invalid email address detected: %s',
+                                      'value'   => $address);
+                }
+            }
+        }
+        return $mailList;
+    }
+
+    protected function _addRecipients(Zend_Mail $mail, array $mailList, array $errors)
+    {
+        foreach ($mailList as $mailUser) {
+            if (isset($mailUser['mail'])) {
+                $mail->addTo($mailUser['mail'], $mailUser['name']);
+            } else {
+                $errors[] = $mailUser;
+            }
+        }
+        return $errors;
+    }
+
     /**
      * Sends a mail containing the Minutes protocol.
      */
     public function jsonSendMailAction()
     {
-        $log = Phprojekt::getInstance()->getLog();
-        $log->debug('Entering jsonSendMailAction... ');
+        $this->_log->debug('Entering jsonSendMailAction... ');
         $errors = array();
         $params = $this->getRequest()->getParams();
 
@@ -147,65 +223,23 @@ class Minutes_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::USER_IS_NOT_OWNER);
         }
 
-        $hasRecipients = false;
         $mail          = new Phprojekt_Mail_Notification(); // @todo Refactor mail classes and use base class here!
         /* @var $mail Zend_Mail */
         $smtpTransport = $mail->setTransport();
         $validator     = new Zend_Validate_EmailAddress();
 
-        // Add regular recipients:
-        $idList = array();
-        if (!empty($params['recipients']) && is_array($params['recipients'])) {
-            foreach ($params['recipients'] as $recipientId) {
-                if (is_numeric($recipientId)) {
-                    $idList[] = (int) $recipientId;
-                }
-            }
-        }
-
-        if (count($idList)) {
-            $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
-            $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
-            foreach ($userList as $record) {
-                $address = $setting->getSetting('email', (int) $record->id);
-
-                if ($validator->isValid($address)) {
-                    $log->debug('Adding mail to: ' . $address . ' (' .
-                                $record->firstname . ' ' . $record->lastname . ')');
-                    $mail->addTo($address, $record->firstname . ' ' . $record->lastname);
-                    $hasRecipients = true;
-                } else {
-                    $errors[] = array('message' => 'Invalid email address detected: %s',
-                                      'value'   => $address) ;
-                }
-            }
-        }
-
-        // Add additional recipients:
-        if (!empty($params['additional'])) {
-            $additional = explode(',', $params['additional']);
-            foreach ($additional as $recipient) {
-                $address = trim($recipient);
-                if ($validator->isValid($address)) {
-                    $log->debug('Adding mail to: ' . $address);
-                    $mail->addTo($address);
-                    $hasRecipients = true;
-                } else {
-                    $errors[] = array('message' => 'Invalid email address detected: %s',
-                                      'value'   => $address);
-                }
-            }
-        }
+        $userMails  = array_merge($this->_getMailFromUserIds($this->getRequest()->getParam('recipients', array()),
+            $validator), $this->_getMailFromCsvString($this->getRequest()->getParam('additional', ''), $validator));
+        $errors     = $this->_addRecipients($mail, $userMails, $errors);
 
         // Sanity check
-        if (!$hasRecipients) {
+        if (array() === $mail->getRecipients()) {
             $errors[] = array('message' => self::MISSING_MAIL_RECIPIENTS,
                               'value'   => null);
         }
 
-        // Handle PDF attachment if needed
         if (!count($errors)) {
+            // Handle PDF attachment if needed
             if (!empty($params['options']) && is_array($params['options'])) {
                 if (in_array('pdf', $params['options'])) {
                     $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
@@ -218,9 +252,10 @@ class Minutes_IndexController extends IndexController
             $ownerModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $ownerModel->find($minutes->ownerId);
             $ownerEmail = $ownerModel->getSetting('email');
-            $mail->setFrom($ownerEmail, $ownerModel->firstname . ' ' . $ownerModel->lastname);
-            $log->debug('Setting FROM: ' . $ownerEmail . ' (' . $ownerModel->firstname . ' '
-                . $ownerModel->lastname . ')');
+            $display    = $ownerModel->getDisplay();
+            $mail->setFrom($ownerEmail, $ownerModel->applyDisplay($display, $ownerModel));
+            $this->_log->debug('Setting FROM: ' . $ownerEmail . ' ('
+                . $ownerModel->applyDisplay($display, $ownerModel) . ')');
 
             // Set subject
             $subject = sprintf(Phprojekt::getInstance()->translate('Meeting minutes for "%s", %s'), $minutes->title,
@@ -229,7 +264,7 @@ class Minutes_IndexController extends IndexController
 
             // Set mail content
             $mail->setBodyText($subject, 'utf-8');
-            $mail->setBodyHtml($this->getHtmlList($minutes), 'utf-8');
+            $mail->setBodyHtml($this->_getHtmlList($minutes), 'utf-8');
 
             // Keep send() commented out until test phase is over
             $mail->send($smtpTransport);
@@ -246,7 +281,7 @@ class Minutes_IndexController extends IndexController
             }
 
             $return = array('type'    => 'error',
-                            'message' => nl2br($message), // converting to BR should be done in the view!
+                            'message' => nl2br($message), // @todo Converting to BR should be done in the view!
                             'code'    => -1,
                             'id'      => $minutesId);
         }
@@ -254,7 +289,7 @@ class Minutes_IndexController extends IndexController
         Phprojekt_Converter_Json::echoConvert($return);
     }
 
-    protected function getHtmlList(Phprojekt_Model_Interface $minutes)
+    protected function _getHtmlList(Phprojekt_Model_Interface $minutes)
     {
         $items = $minutes->items->fetchAll();
 
