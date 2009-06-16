@@ -106,13 +106,13 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel = clone($this->_model);
         $calendarModel->find(18);
         $return = $calendarModel->getRelatedEvents();
-        $this->assertEquals('19,20,21', $return);
+        $this->assertEquals(array(19,20,21), $return);
 
         // No existing id
         $calendarModel = clone($this->_model);
         $calendarModel->find(50);
         $return = $calendarModel->getRelatedEvents();
-        $this->assertEquals('', $return);
+        $this->assertEquals(array(), $return);
     }
 
     /**

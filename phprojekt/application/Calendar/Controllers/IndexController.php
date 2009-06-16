@@ -52,17 +52,17 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $message          = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-        $id               = (int) $this->getRequest()->getParam('id');
-        $startDate        = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
-        $endDate          = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
-        $startTime        = Cleaner::sanitize('time', $this->getRequest()->getParam('startTime', date("H-i-s")));
-        $endTime          = Cleaner::sanitize('time', $this->getRequest()->getParam('endTime', date("H-i-s")));
-        $rrule            = (string) $this->getRequest()->getParam('rrule', null);
-        $participants     = (array) $this->getRequest()->getParam('dataParticipant');
-        $multipleEvents   = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
-        $multipleParticip = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleParticip'));
-        $modification     = false;
+        $message              = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+        $id                   = (int) $this->getRequest()->getParam('id');
+        $startDate            = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
+        $endDate              = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
+        $startTime            = Cleaner::sanitize('time', $this->getRequest()->getParam('startTime', date("H-i-s")));
+        $endTime              = Cleaner::sanitize('time', $this->getRequest()->getParam('endTime', date("H-i-s")));
+        $rrule                = (string) $this->getRequest()->getParam('rrule', null);
+        $participants         = (array) $this->getRequest()->getParam('dataParticipant');
+        $multipleEvents       = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
+        $multipleParticipants = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleParticipants'));
+        $modification         = false;
 
         $this->getRequest()->setParam('endTime', $endTime);
         $this->getRequest()->setParam('startTime', $startTime);
@@ -75,7 +75,7 @@ class Calendar_IndexController extends IndexController
         $model   = $this->getModelObject();
         $request = $this->getRequest()->getParams();
         $id      = $model->saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents,
-            $multipleParticip);
+            $multipleParticipants);
 
         $return = array('type'    => 'success',
                         'message' => $message,
@@ -103,8 +103,8 @@ class Calendar_IndexController extends IndexController
             $record = $this->getModelObject()->find($id);
             if (isset($record->id)) {
                 $participants  = $record->getAllParticipants();
-                $relatedEvents = $record->getRelatedEvents();
-                $data['data']  = array('participants' => $participants,
+                $relatedEvents = implode(",", $record->getRelatedEvents());
+                $data['data']  = array('participants'  => $participants,
                                        'relatedEvents' => $relatedEvents);
             }
         }
@@ -123,9 +123,9 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonDeleteAction()
     {
-        $id               = (int) $this->getRequest()->getParam('id');
-        $multipleEvents   = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
-        $multipleParticip = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleParticip'));
+        $id                   = (int) $this->getRequest()->getParam('id');
+        $multipleEvents       = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
+        $multipleParticipants = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleParticipants'));
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -134,7 +134,7 @@ class Calendar_IndexController extends IndexController
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
-            $model->deleteEvents($multipleEvents, $multipleParticip);
+            $model->deleteEvents($multipleEvents, $multipleParticipants);
             $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             $return  = array('type'    => 'success',
                              'message' => $message,

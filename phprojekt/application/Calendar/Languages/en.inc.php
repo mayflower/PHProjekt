@@ -66,6 +66,12 @@ $lang["Edit all occurrences"] = "Edit all occurrences";
 $lang["Delete repeating events"] = "Delete repeating events";
 $lang["Delete just this occurrence"] = "Delete just this occurrence";
 $lang["Delete all occurrences"] = "Delete all occurrences";
+$lang["Edit for who"] = "Edit for who";
+$lang["Edit just for me"] = "Edit just for me";
+$lang["Edit for all participants"] = "Edit for all participants";
+$lang["Delete for who"] = "Delete for who";
+$lang["Delete just for me"] = "Delete just for me";
+$lang["Delete for all participants"] = "Delete for all participants";
 
 // Tooltip Help
 $lang["Interval Help"] = "The interval for the option selected in Repeats. <br>E.g.: Repeats Weekly - Interval"

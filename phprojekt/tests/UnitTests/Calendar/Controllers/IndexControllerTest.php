@@ -143,7 +143,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', strtotime('22:00'));
         $this->request->setParam('endTime', strtotime('23:00'));
         $this->request->setParam('participantId', 1);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -230,7 +230,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081204T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('sendNotification', 'on');
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -261,7 +261,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -356,7 +356,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('participantId', 1);
         $this->request->setParam('rrule', 'FREQ=WEEKLY;UNTIL=20090208T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -415,7 +415,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090901T040000Z;INTERVAL=2;BYDAY=');
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -470,7 +470,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('participantId', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY=');
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
@@ -499,7 +499,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', strtotime('10:00'));
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', false);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -527,7 +527,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', strtotime('10:00'));
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', false);
+        $this->request->setParam('multipleParticipants', false);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY=');
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
@@ -725,7 +725,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonDelete/');
         $this->request->setParam('id', 6);
         $this->request->setParam('multipleEvents', true);
-        $this->request->setParam('multipleParticip', true);
+        $this->request->setParam('multipleParticipants', true);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
 
