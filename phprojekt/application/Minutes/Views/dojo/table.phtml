@@ -19,7 +19,7 @@
 <tbody>
 <?php
 /* @var $item Minutes_Model_MinutesItem */
-foreach ($this->items as $index => $item): ?>
+foreach ($this->items as $item): ?>
 <tr>
     <td rowspan="2"><?php echo $this->escape($item->topicId); ?></td>
     <td><?php echo $this->escape($item->information->getTopicType($item->topicType)); ?></td>
