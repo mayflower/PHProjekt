@@ -241,12 +241,6 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
      */
     public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        switch ($ordering) {
-            default:
-                $result = array();
-                break;
-        }
-
-        return $result;
+        return array();
     }
 }
