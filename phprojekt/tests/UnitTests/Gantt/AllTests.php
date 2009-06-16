@@ -57,7 +57,7 @@ class Gantt_AllTests
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite('Calendar Controller');
+        $suite = new PHPUnit_Framework_TestSuite('Gantt Controller');
 
         $suite->addTestSuite('Gantt_IndexController_Test');
         $suite->addTestSuite('Gantt_Models_Gantt_Test');

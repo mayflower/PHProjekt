@@ -57,7 +57,7 @@ class Filemanager_AllTests
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite('Calendar Controller');
+        $suite = new PHPUnit_Framework_TestSuite('Filemanager Controller');
 
         $suite->addTestSuite('Filemanager_IndexController_Test');
         $suite->addTestSuite('Filemanager_Models_Filemanager_Test');
