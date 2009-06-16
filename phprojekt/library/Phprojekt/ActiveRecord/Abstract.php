@@ -1240,4 +1240,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         return preg_replace("/_([a-z])/e", "strtoupper('\\1')", $varName);
     }
+
+    /**
+     * Returns all model data as array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return (array)$this->_data;
+    }
 }
