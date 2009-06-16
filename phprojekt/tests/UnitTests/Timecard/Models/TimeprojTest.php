@@ -51,7 +51,6 @@ class Timecard_Models_Timeproj_Test extends PHPUnit_Framework_TestCase
     {
         $timeprojModel = clone($this->_model);
         $this->assertEquals(array(), $timeprojModel->getRights());
-        $this->assertEquals(array(), $timeprojModel->getInformation()->getTitles());
     }
 
     /**

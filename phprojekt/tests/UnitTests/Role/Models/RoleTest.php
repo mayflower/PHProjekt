@@ -63,7 +63,5 @@ class Phprojekt_Role_Test extends PHPUnit_Framework_TestCase
     {
         $role = new Phprojekt_Role_Role();
         $this->assertEquals(array(), $role->getRights());
-
-        $this->assertEquals(array(), $role->getInformation()->getTitles());
     }
 }

@@ -232,7 +232,6 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
     {
         $timecardModel = clone($this->_model);
         $this->assertEquals(array(), $timecardModel->getRights());
-        $this->assertEquals(array(), $timecardModel->getInformation()->getTitles());
     }
 
     public function testGetFieldDefinition()

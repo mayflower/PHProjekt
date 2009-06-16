@@ -100,8 +100,6 @@ class User_User_Test extends PHPUnit_Framework_TestCase
     {
         $user = new Phprojekt_User_User();
         $this->assertEquals(array(), $user->getRights());
-
-        $this->assertEquals(array(), $user->getInformation()->getTitles());
     }
 
     /**

@@ -41,16 +41,6 @@
 interface Phprojekt_ModelInformation_Interface
 {
     /**
-     * A shortcut to get a list of titles from a model information
-     * Note: this method should return an empty array if necessary
-     *
-     * @param integer $ordering Set the column order of the titles
-     *
-     * @return array
-     */
-    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT);
-
-    /**
      * Return an array of field information.
      * See /docs/Documentation of the detailed exchange format.odt
      *

@@ -203,32 +203,4 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
         }
         return $definition;
     }
-
-    /**
-     * Return an array containing all titles
-     *
-     * @param integer $ordering Type of order
-     *
-     * @see Phprojekt_ModelInformation_Interface::getTitles()
-     *
-     * @return array
-     */
-    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
-    {
-        switch ($ordering) {
-            case Phprojekt_ModelInformation_Default::ORDERING_FILTER:
-            case Phprojekt_ModelInformation_Default::ORDERING_LIST:
-                $list = $this->_listFields;
-                break;
-            case Phprojekt_ModelInformation_Default::ORDERING_FORM:
-                $list = $this->_formFields;
-                break;
-        }
-
-        $result = array();
-        foreach ($list as $definition) {
-            $result[] = $definition['label'];
-        }
-        return $result;
-    }
 }

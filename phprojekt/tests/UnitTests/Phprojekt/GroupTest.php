@@ -111,7 +111,5 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $group->getRights());
 
         $this->assertTrue($group->recordValidate());
-
-        $this->assertEquals(array(), $group->getInformation()->getTitles());
     }
 }

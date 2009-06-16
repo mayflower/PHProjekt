@@ -93,12 +93,6 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
 
         $records = $object->getListFields();
         $this->assertEquals($records, $this->_defaultForm);
-
-        $records = $object->getTitles();
-        $this->assertEquals($records[0], '');
-
-        $records = $object->getTitles(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $this->assertEquals($records[0], '');
     }
 
     /**

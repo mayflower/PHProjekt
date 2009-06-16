@@ -120,8 +120,6 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $module = new Phprojekt_Module_Module();
         $this->assertEquals(array(), $module->getRights());
 
-        $this->assertEquals(array(), $module->getInformation()->getTitles());
-
         $module->name     = 'Test';
         $module->label    = 'Test';
         $module->active   = 1;

@@ -73,22 +73,4 @@ class Phprojekt_Groups_Information extends EmptyIterator implements Phprojekt_Mo
 
         return $converted;
     }
-
-    /**
-     * Return an array with titles to simplify things
-     *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
-     *
-     * @return array
-     */
-    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
-    {
-        switch ($ordering) {
-            default:
-                $result = array();
-                break;
-        }
-
-        return $result;
-    }
 }

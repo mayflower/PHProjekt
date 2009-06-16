@@ -63,6 +63,5 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
         $expected[] = $data;
 
         $this->assertEquals($tabModel->getFieldDefinition(), $expected);
-        $this->assertEquals($tabModel->getTitles(), array());
     }
 }

@@ -317,24 +317,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Return an array with titles to simplify things
-     *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
-     *
-     * @return array
-     */
-    public function getTitles($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
-    {
-        $result = array();
-
-        foreach ($this->_getFields($this->_mapping[$ordering]) as $field) {
-            $result[] = $field->formLabel;
-        }
-
-        return $result;
-    }
-
-    /**
      * Return an array with form types to simplify things
      *
      * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
