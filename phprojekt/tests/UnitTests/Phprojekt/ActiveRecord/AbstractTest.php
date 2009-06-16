@@ -412,4 +412,28 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('abcäöüxyz', Phprojekt_ModuleInstance::convertVarFromSql('abcäöüxyz'));
         $this->assertEquals('Äöü123abc', Phprojekt_ModuleInstance::convertVarFromSql('Äöü123abc'));
     }
+
+    /**
+     * Test toArray
+     */
+    public function testToArray()
+    {
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $project->find(1);
+        $expected = array('id'              => 1,
+                          'projectId'       => "",
+                          'path'            => '/',
+                          'title'           => 'Invisible Root',
+                          'notes'           => "",
+                          'ownerId'         => 1,
+                          'startDate'       => "",
+                          'endDate'         => "",
+                          'priority'        => "",
+                          'currentStatus'   => 1,
+                          'completePercent' => 0,
+                          'hourlyWageRate'  => "",
+                          'budget'          => "",
+                          'contactId'       => "");
+        $this->assertEquals($expected, $project->toArray());
+    }
 }

@@ -1248,6 +1248,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function toArray()
     {
-        return (array)$this->_data;
+        return (array) $this->_data;
     }
 }
