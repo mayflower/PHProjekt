@@ -23,7 +23,7 @@ $lang["Can not End Working Time because this moment is occupied by an existing p
 
 // Tooltip Help
 // Start Stop Buttons
-$lang["This buttons Start and Stop working time automatically."] = "This buttons Start and Stop working time "
+$lang["These buttons Start and Stop working time automatically."] = "These buttons Start and Stop working time "
     . "automatically.";
 // Working Times
 $lang["Here you should add the all the worked hours of the selected day."] = "Here you should add the all the worked "
