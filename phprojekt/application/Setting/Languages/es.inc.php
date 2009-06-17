@@ -19,6 +19,9 @@ $lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos
 
 // Tooltip Help
 $lang["Tooltip"]["amount"] = "Proyectos que serán vistos en Asistencia y estarán listos para Arrastrar y Soltar";
+$lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br> "
+    . "Es un dato requerido para todos los usuarios pero especialmente útil para coordinación temporal de eventos "
+    . "internacionales.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

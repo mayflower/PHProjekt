@@ -18,6 +18,8 @@ $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 
 // Tooltip Help
 $lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop";
+$lang["Tooltip"]["timeZone"] = "The Time Zone (UTC) for the region or country you will be using Phprojekt.<br>"
+    . "This is required for all users but specially useful for international events time coordination.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
