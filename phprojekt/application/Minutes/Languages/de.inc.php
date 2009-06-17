@@ -115,8 +115,8 @@ $lang['Are you sure this Minutes entry should no longer be finalized? After proc
     . 'possible again.'] = 'Sind Sie sicher, daß dieses Protokol nicht mehr finalisiert sein soll? Änderungen wären '
     . 'dann wieder möglich.';
 $lang['Finalize Minutes'] = 'Protokoll finalisieren';
-$lang['Are you sure this Minutes entry should be finalized? Write access will be prohibited!'] = 'Sind Sie sicher, daß '
-    . 'dieses Protokoll finalisiert werden soll? Änderungen sind danach nicht mehr möglich!';
+$lang['Are you sure this Minutes entry should be finalized? Write access will be prohibited!'] = 'Sind Sie sicher, daß'
+    . ' dieses Protokoll finalisiert werden soll? Änderungen sind danach nicht mehr möglich!';
 $lang['Minutes are finalized'] = 'Protokoll ist finalisiert';
 $lang['This Minutes entry is finalized. Editing data is no longer possible. Your changes have not been saved.'] =
     'Dieses Protokoll ist finalisiert. Einträge sind nicht mehr möglich. Ihre Änderungen wurden nicht gespeichert.';
