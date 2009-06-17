@@ -52,10 +52,10 @@ class IndexController extends Zend_Controller_Action
     /**
      * Init function
      *
-     * First check if is a logged user, if not he is redirected to the login form.
+     * First check if it is a logged user, if not he is redirected to the login form.
      *
      * The function initializes all the Helpers,
-     * collect the data from the Model Object for list and form
+     * collects the data from the Model Object for list and form
      * and initializes the Project Tree view
      *
      * @return void
@@ -175,11 +175,11 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Saves the current item
-     * Save if you are add one or edit one.
-     * Use the model module for get the data
+     * Save if you add or edit one.
+     * Use the model module to get the data
      *
      * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
+     * If not, it returns a string with the same format than the Phprojekt_PublishedException
      * but with success type
      *
      * @requestparam integer id ...
@@ -605,11 +605,11 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Set some values deppend on the params
-     * Each module can implement this function for change their values
+     * Each module can implement this function to change their values
      *
      * @param array                     $params  The post values
      * @param Phprojekt_Model_Interface $model   The current module to save
-     * @param boolean                   $newItem If is new item or not
+     * @param boolean                   $newItem If it is a new item or not
      *
      * @return array
      */
