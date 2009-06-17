@@ -5,8 +5,8 @@ $lang["Period"] = "Período";
 $lang["End time can not be before Start time"] = "La Fecha de fin no puede ser anterior a la Fecha de comienzo";
 
 // Tooltip Help
-$lang["Choose here the period for the statistics to be calculated."] = "Elija aquí el período que quiere que abarque la"
-    . " estadística.";
+$lang["Choose here the period for the statistics to be calculated."] = "Elija aquí el período que quiere que abarque "
+    . "la estadística.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
