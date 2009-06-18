@@ -174,6 +174,7 @@ $lang["Contact"] = "Kontakte";
 $lang["Module Designer"] = "Moduldesigner";
 $lang["Helpdesk"] = "Helpdesk";
 $lang["Minutes"] = "Protokolle";
+$lang['People'] = "Personen";
 
 // Titles
 $lang["Search results"] = "Suchergebnisse";
