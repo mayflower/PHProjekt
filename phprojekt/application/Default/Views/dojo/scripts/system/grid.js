@@ -48,14 +48,16 @@ phpr.grid.formatText = function(value) {
     // adds '...' at the end.
     const MAX_LENGTH = 25;
 
+    value = value.toString();
+
     var output = value.replace(/&/g, "&amp;");
     output     = output.replace(/</g, "&lt;");
     output     = output.replace(/>/g, "&gt;");
 
-    if (value.length > MAX_LENGTH) {
-        var notShownCharsLength = output.length - value.length;
-        var allowedLength       = MAX_LENGTH + notShownCharsLength;
-        output                  = value.substr(0, MAX_LENGTH) + '...';
+    if (value == output) {
+        if (output.length > MAX_LENGTH) {
+            output = output.substr(0, MAX_LENGTH) + '...';
+        }
     }
 
     return output;
