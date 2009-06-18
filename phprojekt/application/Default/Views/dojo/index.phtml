@@ -81,7 +81,7 @@
             ?>
             init();
             <?php
-            if (false === $this->isLoggedIn) {
+            if (true !== $this->isLoggedIn) {
             ?>
                 dojo.byId('username').focus();
             <?php

@@ -173,6 +173,7 @@ $lang["Contact"] = "Contacts";
 $lang["Module Designer"] = "Module Designer";
 $lang["Helpdesk"] = "Helpdesk";
 $lang["Minutes"] = "Minutes";
+$lang['People'] = "People";
 
 // Titles
 $lang["Search results"] = "Search results";
