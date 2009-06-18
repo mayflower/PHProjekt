@@ -373,7 +373,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         } elseif (array_key_exists($varname, $this->_data)) {
             $this->_data[$varname] = $value;
         } else {
-            throw new Phprojekt_ActiveRecord_Exception("{$varname} doesnot exist");
+            throw new Phprojekt_ActiveRecord_Exception("{$varname} does not exist");
         }
     }
 
@@ -514,7 +514,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _belongsTo($key)
     {
         if (!array_key_exists($key, $this->belongsTo)) {
-            throw new Phprojekt_ActiveRecord_Exception("BelongsTo {$key} doesnot exist");
+            throw new Phprojekt_ActiveRecord_Exception("BelongsTo {$key} does not exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
@@ -549,7 +549,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected function _hasMany($key)
     {
         if (!array_key_exists($key, $this->hasMany)) {
-            throw new Phprojekt_ActiveRecord_Exception("HasMany {$key} doesnot exist");
+            throw new Phprojekt_ActiveRecord_Exception("HasMany {$key} does not exist");
         }
 
         if (!array_key_exists($key, $this->_data)) {
