@@ -42,10 +42,10 @@ phpr.grid.formatTime = function(value) {
 
 phpr.grid.formatText = function(value) {
     // Summary:
-    //    Tries to convert the characters '<' and '>' into readable HTML entities. Example: receives 'This is very
-    // <important>' and returns 'This is very &#60;important&#62;'
-    //    If there weren't any of those characters to convert, then strips the string after the 25th character and
-    // adds '...' at the end.
+    //    Converts characters '<', '>' and '&' into readable HTML entities. Example: receives 'This is very
+    // <important>' and returns 'This is very &lt;important&gt;'
+    //    If there weren't converted any characters and length of string exceeds maximum allowed length, it is stripped
+
     const MAX_LENGTH = 25;
 
     value = value.toString();
@@ -79,9 +79,9 @@ phpr.grid.formatUpload = function(value) {
 
 dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
     // summary:
-    //    Redefine the function for return the correct value
+    //    Redefine the function to return the correct value
     // description:
-    //    Redefine the function for return the correct value
+    //    Redefine the function to return the correct value
     widgetClass: "dijit.form.HorizontalSlider",
 
     getValue:function(inRowIndex) {
@@ -101,9 +101,9 @@ dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
 
 dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     // summary:
-    //    Redefine the function for return the correct value
+    //    Redefine the function to return the correct value
     // description:
-    //    Redefine the function for return the correct value
+    //    Redefine the function to return the correct value
     format:function(inRowIndex, inItem) {
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
@@ -122,9 +122,9 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
 
 dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     // summary:
-    //    Redefine the function for work with iso format
+    //    Redefine the function to work with iso format
     // description:
-    //    Redefine the function for work with iso format
+    //    Redefine the function to work with iso format
     widgetClass: "dijit.form.DateTextBox",
 
     getValue:function(inRowIndex) {
