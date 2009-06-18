@@ -546,11 +546,13 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         } else if (data.type && data.type == "error") {
             phpr.handleError(this.url, 'error', data.message);
         } else {
+            var customData = false;
             if (typeof data.data == 'undefined') {
-                data.data = new Array();
+                customData = true;
+                data.data  = new Array();
             }
 
-            if (data.data.length == 0 && typeof data.metadata == 'undefined') {
+            if (true == customData && data.data.length == 0 && typeof data.metadata == 'undefined') {
                 retData     = data;
             } else {
                 retData     = data.data;
