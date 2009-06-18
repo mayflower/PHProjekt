@@ -518,7 +518,6 @@ CREATE TABLE `minutes_item` (
   `owner_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   `minutes_id` int(11) NOT NULL,
-  `topic_id` int(11) NOT NULL,
   `topic_type` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -636,7 +635,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'recipients', 2, 'recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 13, 1, NULL, '1#Planned|2#Created|3#Filled|4#Final', '0', 6, 'center', 1, 0, '1', 1, 0, 0);
+(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 13, 1, NULL, '1#Planned|2#Created|3#Filled|4#Final', '1', 6, 'center', 1, 0, '1', 1, 0, 0);
 
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES
 (1,'david', 'David', 'Soria Parra', 'A', 1),

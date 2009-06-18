@@ -1,75 +1,71 @@
-<!-- <form id="minutesMailForm" action="javascript:;" dojoType="dijit.form.Form" class="form"> -->
-    <input type="hidden" name="id" value="{{id}}" />
-    
-    <table id="minutesMailFormTable" class="form">
-    <col class="col1" />
-    <col class="col2" />
-    <col class="col3" />
-    <tbody>
-    <tr>
-        <td class="label">
-            <label for="minutesMailFormRecipients">{{lblRecipients}}</label>
-        </td>
-        <td>
-            <select dojoType="dijit.form.MultiSelect" id="minutesMailFormRecipients" name="recipients[]" size="4">
+<input type="hidden" name="id" value="{{id}}" />
+<table id="minutesMailFormTable" class="form">
+<col class="col1" />
+<col class="col2" />
+<col class="col3" />
+<tbody>
+<tr>
+    <td class="label">
+        <label for="minutesMailFormRecipients">{{lblRecipients}}</label>
+    </td>
+    <td>
+        <select dojoType="dijit.form.MultiSelect" id="minutesMailFormRecipients" name="recipients[]" size="4">
             {% for recipient in people %}
                 <option value="{{recipient.id}}">
-                  {{recipient.display}}
+                {{recipient.display}}
                 </option>
-              {% endfor %}
-            </select>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    
-    <tr>
-        <td class="label">
-            <label for="minutesMailFormAdditionalRecipients">{{lblAdditional}}</label>
-        </td>
-        <td>
-            <input type="text" id="minutesMailFormAdditionalRecipients" name="additional" dojoType="dijit.form.ValidationTextBox"
-                    required="false" value="" invalidMessage="" trim="true" />
-        </td>
-        <td><!-- Tooltip -->
-            <span class="dijitInline help" id="minutesMailFormAdditionalRecipientsTooltip" />
-        </td>
-    </tr>
-    
-    <!-- 
-    <tr>
-        <td class="label">
-            <label for="minutesMailFormComment">{{lblComment}}</label>
-        </td>
-        <td>
-            <textarea id="minutesMailFormComment" name="comment" dojoType="dijit.form.Textarea"
-                   value="" style="width: 300px"></textarea>
-        </td>
-        <td><span class="dijitInline help" id="minutesMailFormCommentTooltip" /></td>
-    </tr>
-    -->
-    
-    <tr>
-        <td class="label">
-            <label>{{lblOptions}}</label>
-        </td>
-        <td>
-            <input id="minutesMailFormOptionPdf" name="options[]" dojoType="dijit.form.CheckBox"
-                   type="checkbox" value="pdf"  />
-            <label for="minutesMailFormOptionPdf" style="color:black; font-weight:normal; text-transform:none;">{{lblAttachPdf}}</label>
-        </td>
-        <td>&nbsp;</td>
-    </tr>
-        
-    <tr>
-        <td class="label">
-            &nbsp;
-        </td>
-        <td>
-            <button dojoType="dijit.form.Button" id="minutesMailFormSend" disabled="false" style="float: left">{{lblSendMail}}</button>
-            <button dojoType="dijit.form.Button" id="minutesMailFormPreview" disabled="false" style="float: left">{{lblPreview}}</button>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    </tbody>
-    </table>
-<!-- </form> -->
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        <label for="minutesMailFormAdditionalRecipients">{{lblAdditional}}</label>
+    </td>
+    <td>
+        <input type="text" id="minutesMailFormAdditionalRecipients" name="additional"
+        dojoType="dijit.form.ValidationTextBox" required="false" value="" invalidMessage="" trim="true" />
+    </td>
+    <td>
+        <span class="dijitInline help" id="minutesMailFormAdditionalRecipientsTooltip" />
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        <label>{{lblOptions}}</label>
+    </td>
+    <td>
+        <input id="minutesMailFormOptionPdf" name="options[]" dojoType="dijit.form.CheckBox"
+        type="checkbox" value="pdf"  />
+        <label for="minutesMailFormOptionPdf"
+        style="color:black; font-weight:normal; text-transform:none;">
+            {{lblAttachPdf}}
+        </label>
+    </td>
+    <td>
+        &nbsp;
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" id="minutesMailFormSend" disabled="false"
+        style="float: left">
+            {{lblSendMail}}
+        </button>
+        <button dojoType="dijit.form.Button" id="minutesMailFormPreview" disabled="false"
+        style="float: left">
+            {{lblPreview}}
+        </button>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+</tbody>
+</table>

@@ -51,22 +51,6 @@ class Minutes_IndexController extends IndexController
     const MAIL_SUCCESS_TEXT = 'The mail was sent successfully.';
 
     /**
-     * @var Phprojekt_Log
-     */
-    protected $_log = NULL;
-
-    /**
-     * Init method adds a log object
-     *
-     * @return void
-     */
-    public function init()
-    {
-        parent::init();
-        $this->_log = Phprojekt::getInstance()->getLog();
-    }
-
-    /**
      * Get a user list in JSON
      *
      * Produces a list of users that should be selectable in the frontend.
@@ -81,10 +65,10 @@ class Minutes_IndexController extends IndexController
         $minutes->find($id);
 
         if (!empty($minutes->id)) {
+            $data         = array();
             $data['data'] = Minutes_Helpers_Userlist::expandIdList($minutes->participantsInvited,
                 $minutes->participantsExcused, $minutes->participantsAttending, $minutes->recipients);
             $data['numRows'] = count($data['data']);
-
             Phprojekt_Converter_Json::echoConvert($data);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
@@ -110,12 +94,9 @@ class Minutes_IndexController extends IndexController
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
             foreach ($minutesItems as $item) {
-                $this->_log->debug('Deleting minutesItem' . $item->id);
                 $success = $success && (false !== Default_Helpers_Delete::delete($item));
-                $this->_log->debug('Deletion was successful:' . ($success?'yes':'no'));
             }
             $success = $success && (false !== Default_Helpers_Delete::delete($minutes));
-            $this->_log->debug('Main Deletion was successful:' . ($success?'yes':'no'));
 
             if ($success === false) {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
@@ -166,16 +147,15 @@ class Minutes_IndexController extends IndexController
                 $address = $setting->getSetting('email', (int) $record->id);
 
                 if ($validator->isValid($address)) {
-                    $this->_log->debug('Adding mail to: ' . $address . ' (' .
-                        $record->firstname . ' ' . $record->lastname . ')');
-                    $userMailList[] = array('mail' => $address, 'name' => $record->applyDisplay($display, $record));
+                    $userMailList[] = array('mail' => $address,
+                                            'name' => $record->applyDisplay($display, $record));
                 } else {
-                    $this->_log->debug('Invalid mail: ' . $address);
-                    $userMailList[] = array('message' => 'Invalid email address detected: %s',
-                                      'value'   => $address) ;
+                    $userMailList[] = array('message' => 'Invalid email address detected:',
+                                            'value'   => $address) ;
                 }
             }
         }
+
         return $userMailList;
     }
 
@@ -196,15 +176,15 @@ class Minutes_IndexController extends IndexController
             foreach ($additional as $recipient) {
                 $address = trim($recipient);
                 if ($validator->isValid($address)) {
-                    $this->_log->debug('Adding mail to: ' . $address);
-                    $mailList[] = array('mail' => $address, 'name' => '');
+                    $mailList[] = array('mail' => $address,
+                                        'name' => '');
                 } else {
-                    $this->_log->debug('Invalid mail: ' . $address);
-                    $mailList[] = array('message' => 'Invalid email address detected: %s',
-                                      'value'   => $address);
+                    $mailList[] = array('message' => 'Invalid email address detected:',
+                                        'value'   => $address);
                 }
             }
         }
+
         return $mailList;
     }
 
@@ -226,6 +206,7 @@ class Minutes_IndexController extends IndexController
                 $errors[] = $mailUser;
             }
         }
+
         return $errors;
     }
 
@@ -234,7 +215,6 @@ class Minutes_IndexController extends IndexController
      */
     public function jsonSendMailAction()
     {
-        $this->_log->debug('Entering jsonSendMailAction... ');
         $errors = array();
         $params = $this->getRequest()->getParams();
 
@@ -257,14 +237,14 @@ class Minutes_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::USER_IS_NOT_OWNER);
         }
 
-        $mail          = new Phprojekt_Mail_Notification(); // @todo Refactor mail classes and use base class here!
+        $mail = new Phprojekt_Mail_Notification(); // @todo Refactor mail classes and use base class here!
         /* @var $mail Zend_Mail */
         $smtpTransport = $mail->setTransport();
         $validator     = new Zend_Validate_EmailAddress();
 
-        $userMails  = array_merge($this->_getMailFromUserIds($this->getRequest()->getParam('recipients', array()),
+        $userMails = array_merge($this->_getMailFromUserIds($this->getRequest()->getParam('recipients', array()),
             $validator), $this->_getMailFromCsvString($this->getRequest()->getParam('additional', ''), $validator));
-        $errors     = $this->_addRecipients($mail, $userMails, $errors);
+        $errors = $this->_addRecipients($mail, $userMails, $errors);
 
         // Sanity check
         if (array() === $mail->getRecipients()) {
@@ -278,7 +258,7 @@ class Minutes_IndexController extends IndexController
                 if (in_array('pdf', $params['options'])) {
                     $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
                     $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
-                                            Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
+                        Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
                 }
             }
 
@@ -288,12 +268,10 @@ class Minutes_IndexController extends IndexController
             $ownerEmail = $ownerModel->getSetting('email');
             $display    = $ownerModel->getDisplay();
             $mail->setFrom($ownerEmail, $ownerModel->applyDisplay($display, $ownerModel));
-            $this->_log->debug('Setting FROM: ' . $ownerEmail . ' ('
-                . $ownerModel->applyDisplay($display, $ownerModel) . ')');
 
             // Set subject
-            $subject = sprintf(Phprojekt::getInstance()->translate('Meeting minutes for "%s", %s'), $minutes->title,
-                $minutes->startTime);
+            $subject = sprintf('%s "%s", %s', Phprojekt::getInstance()->translate('Meeting minutes for'),
+                $minutes->title, $minutes->startTime);
             $mail->setSubject($subject);
 
             // Set mail content
@@ -311,7 +289,7 @@ class Minutes_IndexController extends IndexController
             $message = Phprojekt::getInstance()->translate(self::MAIL_FAIL_TEXT);
             foreach ($errors as $error) {
                 $message .= "\n";
-                $message .= sprintf(Phprojekt::getInstance()->translate($error['message']), $error['value']);
+                $message .= sprintf("%s %s", Phprojekt::getInstance()->translate($error['message']), $error['value']);
             }
 
             $return = array('type'    => 'error',
@@ -332,16 +310,24 @@ class Minutes_IndexController extends IndexController
      */
     protected function _getHtmlList(Phprojekt_Model_Interface $minutes)
     {
-        $items = $minutes->items->fetchAll();
+        $items     = $minutes->items->fetchAll();
+        $translate = Phprojekt::getInstance()->getTranslate();
+        $newitem   = array();
 
-        $newitem = array();
         foreach ($items as $item) {
-            $newitem[] = $item->toArray();
+            $data              = array();
+            $data['topicId']   = $this->view->escape($item->topicId);
+            $data['topicType'] = $this->view->escape($item->information->getTopicType($item->topicType));
+            $data['display']   = nl2br($this->view->escape($item->getDisplay()));
+            $newitem[] = $data;
         }
 
-        $this->view->translate = Phprojekt::getInstance()->getTranslate();
-        $this->view->items = $items; //$newitem;
-        $this->view->minutes = $minutes->toArray();
+        $this->view->items       = $newitem;
+        $this->view->title       = $this->view->escape($minutes->title);
+        $this->view->description = nl2br($this->view->escape($minutes->description));
+        $this->view->txtNo       = $translate->translate('No.');
+        $this->view->txtType     = $translate->translate('Type');
+        $this->view->txtItem     = $translate->translate('Item');
 
         Phprojekt_Loader::loadViewScript($this->view);
         return $this->view->render('table.phtml');
@@ -388,7 +374,7 @@ class Minutes_IndexController extends IndexController
     {
         if (4 == $model->itemStatus) {
             if (isset($params['itemStatus'])) {
-                return array('itemStatus' => $params['itemStatus']);
+                return array('itemStatus' => (int) $params['itemStatus']);
             } else {
                 return array();
             }

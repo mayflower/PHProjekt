@@ -1,5 +1,4 @@
 <?php
-
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Minutes"] = "<br/>
@@ -27,96 +26,90 @@ $lang["Content Help"]["History"] = "DEFAULT";
 // General translation strings:
 
 // [Form.js] - Form labels
-$lang['Title'] = 'Titel';
-$lang['Comment'] = 'Kommentar';
-$lang['Who'] = 'Wer';
-$lang['Type'] = 'Typ';
-$lang['Date'] = 'Datum';
-$lang['Sort'] = 'Einordnen nach';
-$lang['Save'] = 'Speichern';
-$lang['Delete'] = 'Löschen';
-$lang['New'] = 'Neu';
-$lang['Topic'] = 'Thema';
-
-// [Form.js] - Validation messages
-$lang['Title must not be empty'] = 'Der Titel darf nicht leer sein';
-$lang['Please choose a type for this item'] = 'Bitte wählen Sie den Typ dieses Eintrags';
-$lang['Please choose a user name'] = 'Bitte wählen Sie einen gültigen Benutzernamen aus';
-$lang['No date given or date format is not valid (must be YYYY-MM-DD)'] = 'Das Datumsformat ist ungültig
-    (Schema: YYYY-MM-DD)';
+$lang["Title"] = "Titel";
+$lang["Comment"] = "Kommentar";
+$lang["Who"] = "Wer";
+$lang["Type"] = "Typ";
+$lang["Date"] = "Datum";
+$lang["Sort"] = "Einordnen nach";
+$lang["Save"] = "Speichern";
+$lang["Delete"] = "Löschen";
+$lang["New"] = "Neu";
+$lang["Topic"] = "Thema";
 
 // [Form.js] - Tab name
-$lang['Items'] = 'Einträge';
-$lang['People'] = 'Personen';
+$lang["Items"] = "Einträge";
 
 // [Form.js] - Selectbox values
-$lang['TOPIC'] = 'TOP';
-$lang['STATEMENT'] = 'Stellungnahme';
-$lang['TODO'] = 'Aufgabe';
-$lang['DECISION'] = 'Entscheidung';
-$lang['DATE'] = 'Datum';
+$lang["Topic"] = "Top";
+$lang["Statement"] = "Stellungnahme";
+$lang["Todo"] = "Aufgabe";
+$lang["Decision"] = "Entscheidung";
+$lang["Date"] = "Datum";
 
 // Grid headers - field names from DatabaseDesigner
-$lang['Date of Meeting'] = 'Meeting-Datum';
-$lang['Description'] = 'Beschreibung';
-$lang['Start Time'] = 'Startzeit';
-$lang['Place'] = 'Ort';
-$lang['Status'] = 'Status';
+$lang["Date of Meeting"] = "Meeting-Datum";
+$lang["Description"] = "Beschreibung";
+$lang["Start Time"] = "Startzeit";
+$lang["Place"] = "Ort";
+$lang["Status"] = "Status";
 
 // Grid values - from DatabaseDesigner
-$lang['Planned'] = 'Geplant';
-$lang['Created'] = 'Noch leer';
-$lang['Filled'] = 'Ausgefüllt';
-$lang['Final']   = 'Fixiert';
+$lang["Planned"] = "Geplant";
+$lang["Created"] = "Noch leer";
+$lang["Filled"] = "Ausgefüllt";
+$lang["Final"]   = "Fixiert";
 
 // Field labels from DatabaseDesigner
-$lang['Moderator'] = 'Moderator';
-$lang['End time'] = 'Endzeit';
-$lang['Tag'] = 'Tag';
-$lang['Invited'] = 'Eingeladen';
-$lang['Attending'] = 'Teilnehmer';
-$lang['Excused'] = 'Entschuldigt';
-$lang['Recipients'] = 'Empfänger';
+$lang["Moderator"] = "Moderator";
+$lang["End time"] = "Endzeit";
+$lang["Tag"] = "Tag";
+$lang["Invited"] = "Eingeladen";
+$lang["Attending"] = "Teilnehmer";
+$lang["Excused"] = "Entschuldigt";
+$lang["Recipients"] = "Empfänger";
 
 // Mail tab
-$lang['Recipients'] = 'Empfänger';
-$lang['Additional Recipients'] = 'Weitere Empfänger';
-//$lang['Comment'] = 'Zusatztext';
-$lang['Options'] = 'Optionen';
-$lang['Include PDF attachment'] = 'PDF als Anhang hinzufügen';
-$lang['Email addresses of unlisted recipients, comma-separated.'] = 'E-Mail Adressen für hier nicht gelistete
-    Empfänger, kommasepariert';
-$lang['Send mail'] = 'E-Mail absenden';
-$lang['Preview'] = 'Vorschau';
-$lang['Mail'] = 'E-Mail';
+$lang["Recipients"] = "Empfänger";
+$lang["Additional Recipients"] = "Weitere Empfänger";
+$lang["Options"] = "Optionen";
+$lang["Include PDF attachment"] = "PDF als Anhang hinzufügen";
+$lang["Email addresses of unlisted recipients, comma-separated."] = "E-Mail Adressen für hier nicht gelistete
+    Empfänger, kommasepariert";
+$lang["Send mail"] = "E-Mail absenden";
+$lang["Preview"] = "Vorschau";
+$lang["Mail"] = "E-Mail";
 
 // Mail functions
-$lang['Meeting minutes for "%s", %s'] = 'Meeting-Protokoll "%s", %s';
-$lang['The mail could not be sent.'] = 'Die E-Mail konnte nicht gesendet werden.';
-$lang['The mail was sent successfully.'] = 'Die E-Mail wurde erfolgreich versandt.';
-$lang['Invalid email address detected: %s'] = 'Ungültige E-Mail Adresse: %s';
+$lang["Meeting minutes for"] = "Meeting-Protokoll";
+$lang["The mail could not be sent."] = "Die E-Mail konnte nicht gesendet werden.";
+$lang["The mail was sent successfully."] = "Die E-Mail wurde erfolgreich versandt.";
+$lang["Invalid email address detected:"] = "Ungültige E-Mail Adresse:";
+$lang["No recipient addresses have been specified."] = "Keine Empfänger-Adressen angegeben wurden.";
 
 // PDF formatting strings
-$lang["%1\$s\n%2\$s"] = "%1\$s\n%2\$s";
-$lang["%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s"] = "%1\$s\n%2\$s\nZuständig: %4\$s\nDatum: %3\$s";
-$lang["%1\$s\n%2\$s\nDATE: %3\$s"] = "%1\$s\n%2\$s\nDatum: %3\$s";
 $lang["Undefined topicType"] = "Undefinierter Typ";
-$lang['No.'] = 'Nr.';
-$lang['TYPE'] = 'Typ';
-$lang['ITEM'] = 'Eintrag';
+$lang["No."] = "Nr.";
+$lang["Item"] = "Eintrag";
 
 // Confirmation dialogs
-$lang['Confirm'] = 'Bestätigen';
-$lang['Are you sure?'] = 'Sind Sie sicher?';
-$lang['OK'] = 'OK';
-$lang['Cancel'] = 'Abbrechen';
-$lang['Unfinalize Minutes'] = 'Protokoll unfinalisieren';
-$lang['Are you sure this Minutes entry should no longer be finalized? After proceeding, changes to the data will be '
-    . 'possible again.'] = 'Sind Sie sicher, daß dieses Protokol nicht mehr finalisiert sein soll? Änderungen wären '
-    . 'dann wieder möglich.';
-$lang['Finalize Minutes'] = 'Protokoll finalisieren';
-$lang['Are you sure this Minutes entry should be finalized? Write access will be prohibited!'] = 'Sind Sie sicher, daß'
-    . ' dieses Protokoll finalisiert werden soll? Änderungen sind danach nicht mehr möglich!';
-$lang['Minutes are finalized'] = 'Protokoll ist finalisiert';
-$lang['This Minutes entry is finalized. Editing data is no longer possible. Your changes have not been saved.'] =
-    'Dieses Protokoll ist finalisiert. Einträge sind nicht mehr möglich. Ihre Änderungen wurden nicht gespeichert.';
+$lang["Confirm"] = "Bestätigen";
+$lang["Are you sure?"] = "Sind Sie sicher?";
+$lang["OK"] = "OK";
+$lang["Cancel"] = "Abbrechen";
+$lang["Unfinalize Minutes"] = "Protokoll unfinalisieren";
+$lang["Are you sure this Minutes entry should no longer be finalized?"] = "Sind Sie sicher, daß dieses Protokol nicht "
+    . "mehr finalisiert sein soll?";
+$lang["After proceeding, changes to the data will be possible again."] = "Änderungen wären dann wieder möglich.";
+$lang["Finalize Minutes"] = "Protokoll finalisieren";
+$lang["Are you sure this Minutes entry should be finalized?"] = "Sind Sie sicher, daß dieses Protokoll finalisiert "
+    . "werden soll?";
+$lang["Write access will be prohibited!"] = "Änderungen sind danach nicht mehr möglich!";
+$lang["Minutes are finalized"] = "Protokoll ist finalisiert";
+$lang["This Minutes entry is finalized."] = "Dieses Protokoll ist finalisiert.";
+$lang["Editing data is no longer possible."] = "Einträge sind nicht mehr möglich.";
+$lang["Your changes have not been saved."] = "Ihre Änderungen wurden nicht gespeichert.";
+
+// Messages
+$lang["The currently logged-in user is not owner of the given minutes entry."] = "Die derzeit angemeldeten Benutzers "
+    . "ist nicht Eigentümer der gegebenen Minuten Eintrag.";

@@ -124,29 +124,12 @@ final class Minutes_Helpers_Pdf
         $items     = $minutesModel->items->fetchAll();
 
         foreach ($items as $item) {
-            switch ($item->topicType) {
-                case 1: // TOPIC
-                case 2: // STATEMENT
-                case 4: // DECISION
-                    $form = $phpr->translate("%1\$s\n%2\$s");
-                    break;
-                case 3: // TODO
-                    $form = $phpr->translate("%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s");
-                    break;
-                case 5: // DATE
-                    $form = $phpr->translate("%1\$s\n%2\$s\nDATE: %3\$s");
-                    break;
-                default:
-                    $form = $phpr->translate("Undefined topicType");
-                    break;
-            }
             $itemtable[]  = array(
                                 array('text'  => $item->topicId,
                                       'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
                                 array('text'  => $phpr->translate($item->information->getTopicType($item->topicType)),
                                       'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                array('text'  => sprintf($form, $item->title, $item->comment, $item->topicDate,
-                                                    $item->information->getUserName($item->userId)),
+                                array('text'  => $item->getDisplay(),
                                       'width' => 12.4 * Phprojekt_Pdf_Page::PT_PER_CM),
                             );
         }
@@ -157,9 +140,9 @@ final class Minutes_Helpers_Pdf
                                         array('isHeader' => true,
                                             array('text'  => $phpr->translate('No.'),
                                                   'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            array('text'  => $phpr->translate('TYPE'),
+                                            array('text'  => $phpr->translate('Type'),
                                                   'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                            array('text'  => $phpr->translate('ITEM'),
+                                            array('text'  => $phpr->translate('Item'),
                                                   'width' => 12.4 * Phprojekt_Pdf_Page::PT_PER_CM),
                                         )
                                       ), $itemtable)

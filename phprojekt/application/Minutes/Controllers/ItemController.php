@@ -97,7 +97,6 @@ class Minutes_ItemController extends IndexController
      *
      * @return void
      */
-
     public function jsonSaveAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
@@ -115,25 +114,15 @@ class Minutes_ItemController extends IndexController
             if (empty($id)) {
                 $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId);
                 $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+                $newItem = true;
             } else {
                 $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
                 $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+                $newItem = false;
             }
 
             if ($model instanceof Phprojekt_Model_Interface) {
-                $params = $this->getRequest()->getParams();
-
-                $params['projectId'] = $minutes->projectId;
-                $params['ownerId']   = $minutes->ownerId;
-
-                if (isset($params['parentOrder']) && is_numeric($params['parentOrder']) && $params['parentOrder'] > 0) {
-                    // This item is supposed to be sorted after the given order
-                    $params['sortOrder'] = $params['parentOrder'] + 1;
-                    unset($params['parentOrder']);
-                }
-
-                Phprojekt::getInstance()->getLog()->debug('Saving Item model with params: '.print_r($params, true));
-
+                $params = $this->setParams($this->getRequest()->getParams(), $minutes);
                 Default_Helpers_Save::save($model, $params);
 
                 $return = array('type'    => 'success',
@@ -159,6 +148,7 @@ class Minutes_ItemController extends IndexController
     public function jsonDeleteAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
+        $id        = (int) $this->getRequest()->getParam('id');
 
         $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $minutes->find($minutesId);
@@ -168,8 +158,6 @@ class Minutes_ItemController extends IndexController
         } elseif (4 == $minutes->itemStatus) {
             throw new Phprojekt_PublishedException(self::MINUTES_READ_ONLY);
         }
-
-        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -206,15 +194,49 @@ class Minutes_ItemController extends IndexController
     public function jsonListItemSortOrderAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
+        $items     = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->fetchAll();
 
-        $items = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->fetchAll();
-
-        $return = array();
+        $return = array('data' => array());
         foreach ($items as $item) {
-            // @var item MinutesItem
-            $return[] = array('sortOrder' => $item->sortOrder, 'title' => $item->title);
+            $return['data'][] = array('sortOrder' => $item->sortOrder,
+                                      'title'     => $item->title);
         }
 
         Phprojekt_Converter_Json::echoConvert($return);
+    }
+
+    /**
+     * Set some values deppend on the params
+     *
+     * @param array                     $params  The post values
+     * @param Phprojekt_Model_Interface $model   The current module to save
+     * @param boolean                   $newItem If is new item or not
+     *
+     * @return array
+     */
+    public function setParams($params, $model, $newItem = false)
+    {
+        if (empty($params['topicDate'])) {
+            unset($params['topicDate']);
+        } else {
+            $params['topicDate'] = Cleaner::sanitize('date', $params['topicDate']);
+        }
+
+        if (empty($params['userId'])) {
+            unset($params['userId']);
+        } else {
+            $params['userId'] = (int) $params['userId'];
+        }
+
+        $params['projectId'] = $model->projectId;
+        $params['ownerId']   = $model->ownerId;
+
+        if (isset($params['parentOrder']) && is_numeric($params['parentOrder']) && $params['parentOrder'] > 0) {
+            // This item is supposed to be sorted after the given order
+            $params['sortOrder'] = $params['parentOrder'] + 1;
+            unset($params['parentOrder']);
+        }
+
+        return $params;
     }
 }

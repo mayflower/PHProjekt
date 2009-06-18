@@ -52,10 +52,7 @@ final class Minutes_Helpers_Userlist
             }
         }
 
-        Phprojekt::getInstance()->getLog()->debug('called with "' . $idList . '"');
-
         $data = array();
-
         if (!empty($idList)) {
             $user     = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $display  = $user->getDisplay();
@@ -66,6 +63,7 @@ final class Minutes_Helpers_Userlist
                                 'display' => $record->applyDisplay($display, $record));
             }
         }
+
         return $data;
     }
 }

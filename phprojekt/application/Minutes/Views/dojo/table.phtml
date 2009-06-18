@@ -1,50 +1,30 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
-<title><?php echo $this->escape($this->minutes['title']); ?></title>
+<title><?php echo $this->title; ?></title>
 </head>
 
 <body>
-<h1><?php echo $this->escape($this->minutes['title']); ?></h1>
-<p><?php echo nl2br($this->escape($this->minutes['description'])); ?></p>
+<h1><?php echo $this->title; ?></h1>
+<p><?php echo $this->description; ?></p>
 
 <table border="1">
 <thead>
 <tr>
-  <th><?php $this->escape($this->translate->translate('No.'));?></th>
-  <th><?php $this->escape($this->translate->translate('Type'));?></th>
-  <th><?php $this->escape($this->translate->translate('Item'));?></th>
+    <th><?php echo $this->txtNo; ?></th>
+    <th><?php echo $this->txtType; ?></th>
+    <th><?php echo $this->txtItem; ?></th>
 </tr>
 </thead>
 <tbody>
 <?php
-/* @var $item Minutes_Model_MinutesItem */
 foreach ($this->items as $item): ?>
 <tr>
-    <td rowspan="2"><?php echo $this->escape($item->topicId); ?></td>
-    <td><?php echo $this->escape($item->information->getTopicType($item->topicType)); ?></td>
-<?php
-switch ($item->topicType):
-    case 1: // TOPIC
-    case 2: // STATEMENT
-    case 4: // DECISION
-        $form = $this->translate->translate("%1\$s\n%2\$s");
-        break;
-    case 3: // TODO
-        $form = $this->translate->translate("%1\$s\n%2\$s\nWHO: %4\$s\nDATE: %3\$s");
-        break;
-    case 5: // DATE
-        $form = $this->translate->translate("%1\$s\n%2\$s\nDATE: %3\$s");
-        break;
-    default:
-        $form = $this->translate->translate("Undefined topicType");
-        break;
-endswitch;
-?>
-    <td colspan="2"><?php echo nl2br($this->escape(sprintf($form, $item->title, $item->comment, $item->topicDate,
-                                                    $item->information->getUserName($item->userId)))); ?></td>
+    <td><?php echo $item['topicId']; ?></td>
+    <td><?php echo $item['topicType']; ?></td>
+    <td><?php echo $item['display']; ?></td>
 </tr>
-<?php endforeach;?>
+<?php endforeach; ?>
 </tbody>
 </table>
 </body>

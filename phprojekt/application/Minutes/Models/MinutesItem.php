@@ -199,8 +199,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = 'sort_order', $count = null, $offset = null, $select = null,
-                             $join = null)
+    public function fetchAll($where = null, $order = array('sort_order ASC', 'id DESC'), $count = null, $offset = null,
+        $select = null, $join = null)
     {
         if (null !== $where) {
             $where .= ' AND ';
@@ -221,9 +221,10 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
                 $topicSubCount = -1;
             }
             $topicSubCount++;
-            $item->topicId = (1 == $item->topicType? sprintf('%d', $topicCount)
-                                                    : sprintf('%d.%d', $topicCount, $topicSubCount));
+            $item->topicId = (1 == $item->topicType ? sprintf('%d', $topicCount)
+                : sprintf('%d.%d', $topicCount, $topicSubCount));
         }
+
         return $result;
     }
 
@@ -239,7 +240,7 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         if (trim($this->sortOrder) == '' || is_null($this->sortOrder) || !$this->sortOrder) {
             // We don't have a sort order yet, most probably a brand-new record.
             // Detect highest available sort order up until now and use next-higher number.
-            $sql     = 'SELECT MAX(' . $db->quoteIdentifier('sort_order') . ') FROM '
+            $sql = 'SELECT MAX(' . $db->quoteIdentifier('sort_order') . ') FROM '
                 . $db->quoteIdentifier($this->getTableName()) . ' WHERE '.$db->quoteIdentifier('minutes_id').' = ?';
             $result  = $db->fetchCol($sql, $this->_minutesId);
             $maxSort = $result[0];
@@ -260,5 +261,58 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         }
 
         return parent::save();
+    }
+
+    /**
+     * Define a getter for the "display" field
+     *
+     * @return integer
+     */
+    public function getTopicId()
+    {
+        return 0;
+    }
+
+    /**
+     * Define a setter for the "display" field
+     *
+     * @param integer $value The value
+     *
+     * @return void
+     */
+    public function setTopicId($value)
+    {
+        $this->topicId = $value;
+    }
+
+    /**
+     * Return the display depend on the topicType
+     *
+     * @return string
+     */
+    public function getDisplay()
+    {
+        $translate = Phprojekt::getInstance()->getTranslate();
+
+        switch ($this->topicType) {
+            case 1: // Topic
+            case 2: // Statement
+            case 4: // Decision
+                $form = "%1\$s\n%2\$s";
+                break;
+            case 3: // Todo
+                $form = "%1\$s\n%2\$s\n" . $translate->translate('Who') . ": %4\$s\n"
+                    . $translate->translate("Date") . ": %3\$s";
+                break;
+            case 5: // Date
+                $form = "%1\$s\n%2\$s\n" . $translate->translate("Date") . ": %3\$s";
+                break;
+            default:
+                $form = $translate->translate("Undefined topicType");
+                break;
+        }
+
+        return sprintf($form, $this->title, $this->comment, $this->topicDate,
+            $this->information->getUserName($this->userId));
     }
 }

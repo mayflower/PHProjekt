@@ -38,14 +38,14 @@
 class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Phprojekt_ModelInformation_Interface
 {
     /**
-     * @var array List of available topic types. Keywords need to be translated.
+     * @var array List of available topic types.
      */
     protected static $_topicTypeListTemplate = array(
-            1 => 'TOPIC',
-            2 => 'STATEMENT',
-            3 => 'TODO',
-            4 => 'DECISION',
-            5 => 'DATE',
+            1 => 'Topic',
+            2 => 'Statement',
+            3 => 'Todo',
+            4 => 'Decision',
+            5 => 'Date',
         );
 
     /**
@@ -78,7 +78,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
     {
         if (array() === self::$_topicTypeList) {
             foreach (self::$_topicTypeListTemplate as $key => $value) {
-                self::$_topicTypeList[$key] = Phprojekt::getInstance()->translate($value);
+                self::$_topicTypeList[(int) $key] = Phprojekt::getInstance()->translate($value);
             }
         }
         return self::$_topicTypeList;
@@ -127,25 +127,6 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
     {
         $users = $this->_getUserIdList();
         return (isset($users[$userId])? $users[$userId] : NULL);
-    }
-
-    /**
-     * Lazy load the projectList list
-     *
-     * @return array _projectList
-     */
-    protected function _getProjectList()
-    {
-        if (array() === self::$_projectList) {
-            /* @var $projectModel Project_Models_Project */
-            $projectModel = Phprojekt_Loader::getModel('Project', 'Project');
-            $tree         = new Phprojekt_Tree_Node_Database($projectModel, 1);
-            $tree->setup();
-            foreach ($tree as $node) {
-                self::$_projectList[$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
-            }
-        }
-        return self::$_projectList;
     }
 
     /**
@@ -210,10 +191,10 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             }
         }
 
-        $result['key']   = $key;
-        $result['label'] = Phprojekt::getInstance()->translate($label);
-        $result['type']  = $type;
-        $result['hint']  = Phprojekt::getInstance()->getTooltip($hint);
+        $result['key']      = $key;
+        $result['label']    = Phprojekt::getInstance()->translate($label);
+        $result['type']     = $type;
+        $result['hint']     = Phprojekt::getInstance()->getTooltip($hint);
         $result['position'] = (int) $position;
 
         return $result;
@@ -229,45 +210,45 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
         $converted = array();
 
         // projectId
-        $converted[] = $this->_fillTemplate('projectId', 'Project', 'selectbox', 'projectId', 2, array(
-            'range'    => $this->convertArray($this->_getProjectList()),
+        $converted[] = $this->_fillTemplate('projectId', 'Project', 'hidden', 'projectId', 0, array(
             'required' => true,
             'readOnly' => true,
             'integer'  => true));
 
         // minutesId
-        $converted[] = $this->_fillTemplate('minutesId', 'minutesId', 'display', 'minutesId', 3, array(
+        $converted[] = $this->_fillTemplate('minutesId', 'minutesId', 'hidden', 'minutesId', 0, array(
             'required' => true,
             'readOnly' => true,
             'integer'  => true));
 
         // topicId
-        $converted[] = $this->_fillTemplate('topicId', 'topicId', 'display', 'topicId', 4, array(
+        $converted[] = $this->_fillTemplate('topicId', 'topicId', 'hidden', 'topicId', 0, array(
             'readOnly' => true,
+            'integer'  => false));
+
+        // sortOrder
+        $converted[] = $this->_fillTemplate('sortOrder', 'sortOrder', 'hidden', 'sortOrder', 1, array(
             'integer'  => true));
 
+        // title
+        $converted[] = $this->_fillTemplate('title', 'title', 'text', 'title', 2, array(
+            'required' => true));
+
         // topicType
-        $converted[] = $this->_fillTemplate('topicType', 'topicType', 'selectbox', 'topicType', 5, array(
+        $converted[] = $this->_fillTemplate('topicType', 'topicType', 'selectbox', 'topicType', 3, array(
             'range'    => $this->convertArray($this->_getTopicTypeList()),
             'required' => true,
             'integer'  => true));
 
-        // sortOrder
-        $converted[] = $this->_fillTemplate('sortOrder', 'sortOrder', 'integer', 'sortOrder', 6);
-
-        // title
-        $converted[] = $this->_fillTemplate('title', 'title', 'text', 'title', 7, array('required' => true));
-
         // comment
-        $converted[] = $this->_fillTemplate('comment', 'comment', 'textarea', 'comment', 8);
+        $converted[] = $this->_fillTemplate('comment', 'comment', 'textarea', 'comment', 4);
 
         // topicDate
-        $converted[] = $this->_fillTemplate('topicDate', 'topicDate', 'date', 'topicDate', 9);
+        $converted[] = $this->_fillTemplate('topicDate', 'topicDate', 'date', 'topicDate', 5);
 
         // userId
-        $converted[] = $this->_fillTemplate('userId', 'userId', 'selectbox', 'userId', 10, array(
-            'range'    => $this->convertArray($this->_getUserIdList()),
-            ));
+        $converted[] = $this->_fillTemplate('userId', 'userId', 'selectbox', 'userId', 6, array(
+            'range' => $this->convertArray($this->_getUserIdList())));
 
         return $converted;
     }

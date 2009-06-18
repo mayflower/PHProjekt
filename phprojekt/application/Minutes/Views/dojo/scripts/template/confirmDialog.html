@@ -1,11 +1,19 @@
 <div id="minutesConfirmDialogContainer" dojoType="dijit.layout.ContentPane" region="center">
-	<div id="minutesConfirmDialogContent" dojoType="dijit.layout.ContentPane" region="center">
-	    <p>{{message}}</p>
-	</div>
-	{% if displayButtons %}
-	<div id="minutesConfirmDialogButtons" dojoType="dijit.layout.ContentPane" region="bottom" gutter="yes">
-		<button style="float: left;"  id="minutesConfirmDialogButtonOK" dojoType="dijit.form.Button" baseClass="positive" iconClass="tick">{{labelOK}}</button>
-		<button style="float: right;" id="minutesConfirmDialogButtonCancel" dojoType="dijit.form.Button" baseClass="negative" iconClass="cross">{{labelCancel}}</button>
-	</div>
-	{% endif %}
+    <div id="minutesConfirmDialogContent" dojoType="dijit.layout.ContentPane" region="center">
+        <p>{{message||safe}}</p>
+    </div>
+    <br />
+    {% if displayButtons %}
+    <div id="minutesConfirmDialogButtons" dojoType="dijit.layout.ContentPane" region="bottom" gutter="yes">
+        <button id="minutesConfirmDialogButtonOK" dojoType="dijit.form.Button" baseClass="positive" iconClass="tick"
+        style="float: left;">
+            {{labelOK}}
+        </button>
+        <button id="minutesConfirmDialogButtonCancel" dojoType="dijit.form.Button" baseClass="negative"
+        iconClass="cross"
+        style="float: right;">
+            {{labelCancel}}
+        </button>
+    </div>
+    {% endif %}
 </div>

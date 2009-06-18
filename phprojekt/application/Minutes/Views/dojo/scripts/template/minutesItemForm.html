@@ -1,112 +1,154 @@
 <form id="minutesItemForm" action="javascript:;" dojoType="dijit.form.Form" class="form">
-    <input type="hidden" name="id" value="{{id}}" />
-    <input type="hidden" name="minutesId" value="{{minutesId}}" />
-    <input type="hidden" name="projectId" value="{{projectId}}" />
-    <input type="hidden" name="topicId" value="{{topicId}}" />
-    <input type="hidden" name="sortOrder" value="{{sortOrder}}" />
-    <!-- ownerId is handled internally by the backend -->
-    <table id="minutesItemFormTable">
-    <tr>
-        <td class="label">
-            <label for="minutesItemFormTitle">{{lblTitle}} (*)</label>
-        </td>
-        <td>
-            <input type="text" id="minutesItemFormTitle" name="title" dojoType="dijit.form.ValidationTextBox"
-                    required="true" value="{{title}}" invalidMessage="{{msgTitle}}" trim="true" />
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    
-    <tr>
-        <td class="label">
-            <label>{{lblTopicType}} (*)</label>
-        </td>
-        <td>
-            <select id="minutesItemFormTopicType" name="topicType" dojoType="dijit.form.FilteringSelect"
-                    required="true" autocomplete="true" value="{{topicType}}" invalidMessage="{{msgTopicType}}" >
-                {% for type in types %}
-                <option value="{{type.id}}">
-                  {{type.name}}
-                </option>
-                <!-- {% ifequal topicType type.id %}selected="selected"{% endifequal %} -->
-                {% endfor %}
-            </select>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    
-    <tr>
-        <td class="label">
-            <label>{{lblComment}}</label>
-        </td>
-        <td>
-            <textarea id="minutesItemFormComment" name="comment" dojoType="dijit.form.Textarea"
-                   value="{{comment}}" style="width: 300px"></textarea>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    
-    <tr id="minutesItemFormRowUser" style="visibility: collapse">
-        <td class="label">
-            <label>{{lblUserId}}</label>
-        </td>
-        <td>
-            <select id="minutesItemFormUserId" name="userId" dojoType="dijit.form.FilteringSelect"
-                    required="true" autocomplete="true" value="{{userId}}" invalidMessage="{{msgUserId}}" >
-                <option value=""></option>
-                {% for user in users %}
-                <option value="{{user.id}}">
-                  {{user.display}}
-                </option>
-                <!-- {% ifequal ownerId user.id %}selected="selected"{% endifequal %} -->
-                {% endfor %}
-            </select>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    
-    <tr id="minutesItemFormRowDate" style="visibility: collapse">
-        <td class="label">
-            <label>{{lblTopicDate}}</label>
-        </td>
-        <td>
-            <input type="text" id="topicDate" name="topicDate" dojoType="phpr.DateTextBox"
-                   constraints="{datePattern: 'yyyy-MM-dd', strict: true}" promptMessage="yyyy-MM-dd"
-                   invalidMessage="{{msgDate}}" value="{{topicDate}}" />
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    
-    {% if items.length %}
-    <tr>
-        <td class="label">
-            <label>{{lblParentOrder}}</label>
-        </td>
-        <td>
-            <select id="minutesItemFormParentOrder" name="parentOrder" dojoType="dijit.form.FilteringSelect"
-                    required="false" autocomplete="true" value="{{parentOrder}}">
-                <option value=""></option>
-                {% for item in items %}
-                <option value="{{item.sortOrder}}">
-                  {{item.title}}
-                </option>
-                {% endfor %}
-            </select>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    {% endif %}
-        
-    <tr>
-        <td class="label">
-            &nbsp;
-        </td>
-        <td>
-            <button dojoType="dijit.form.Button" baseClass="positive" iconClass="tick" id="minutesItemFormSubmit" disabled="true" style="float: left">{{lblSubmit}}</button>
-            <button dojoType="dijit.form.Button" baseClass="negative" iconClass="cross" id="minutesItemFormDelete" style="float: left">{{lblDelete}}</button>
-            <button dojoType="dijit.form.Button" baseClass="positive" iconClass="add" id="minutesItemFormClear" style="float: right">{{lblClear}}</button>
-        </td>
-        <td><!-- Tooltip --></td>
-    </tr>
-    </table>
+<input type="hidden" name="sortOrder" value="{{sortOrder}}" />
+<table id="minutesItemFormTable">
+<tr>
+    <td class="label">
+        <label for="minutesItemFormTitle">
+            {{lblTitle}} (*)
+        </label>
+    </td>
+    <td>
+        <input type="text" id="minutesItemFormTitle" name="title" dojoType="dijit.form.ValidationTextBox"
+        required="true" value="{{title}}" trim="true" />
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        <label>
+            {{lblTopicType}} (*)
+        </label>
+    </td>
+    <td>
+        <select id="minutesItemFormTopicType" name="topicType" dojoType="dijit.form.FilteringSelect"
+        required="true" autocomplete="true" value="{{topicType}}" >
+            {% for type in types %}
+            <option value="{{type.id}}">
+                {{type.name}}
+            </option>
+            <!-- {% ifequal topicType type.id %}selected="selected"{% endifequal %} -->
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        <label>
+            {{lblComment}}
+        </label>
+    </td>
+    <td>
+        <textarea id="minutesItemFormComment" name="comment" dojoType="dijit.form.Textarea" value="{{comment}}"
+        style="width: 300px"></textarea>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+<tr id="minutesItemFormRowUser"
+style="visibility: collapse">
+    <td class="label">
+        <label>
+            {{lblUserId}}
+        </label>
+    </td>
+    <td>
+        <select id="minutesItemFormUserId" name="userId" dojoType="dijit.form.FilteringSelect"
+        autocomplete="true" value="{{userId}}">
+            <option value=""></option>
+            {% for user in users %}
+            <option value="{{user.id}}">
+                {{user.display}}
+            </option>
+            <!-- {% ifequal ownerId user.id %}selected="selected"{% endifequal %} -->
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+<tr id="minutesItemFormRowDate"
+style="visibility: collapse">
+    <td class="label">
+        <label>
+            {{lblTopicDate}}
+        </label>
+    </td>
+    <td>
+        <input type="text" id="topicDate" name="topicDate" dojoType="phpr.DateTextBox"
+        constraints="{datePattern: 'yyyy-MM-dd'}" promptMessage="yyyy-MM-dd"
+        invalidMessage="Invalid date. Use yyyy-MM-dd format." value="{{topicDate}}" />
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+{% if items.length %}
+<tr>
+    <td class="label">
+        <label>
+            {{lblParentOrder}}
+        </label>
+    </td>
+    <td>
+        <select id="minutesItemFormParentOrder" name="parentOrder" dojoType="dijit.form.FilteringSelect"
+        autocomplete="true" value="{{parentOrder}}">
+            <option value=""></option>
+            {% for item in items %}
+            <option value="{{item.sortOrder}}">
+            {{item.title}}
+            </option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+{% endif %}
+<tr>
+    <td class="label">
+        <label>
+        </label>
+    </td>
+    <td>
+        <label>
+            (*) {{lblRequired}}
+        </label>
+    </td>
+    <td>
+        &nbsp;
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" baseClass="positive" iconClass="tick" id="minutesItemFormSubmit"
+        style="float: left">
+            {{lblSubmit}}
+        </button>
+        {% if editItem %}
+        <button dojoType="dijit.form.Button" baseClass="negative" iconClass="cross" id="minutesItemFormDelete"
+        style="float: left">
+            {{lblDelete}}
+        </button>
+        <button dojoType="dijit.form.Button" baseClass="positive" iconClass="add" id="minutesItemFormClear"
+        style="float: right">
+            {{lblClear}}
+        </button>
+        {% endif %}
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
+</table>
 </form>
