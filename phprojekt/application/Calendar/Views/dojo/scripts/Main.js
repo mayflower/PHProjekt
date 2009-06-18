@@ -20,9 +20,17 @@
 dojo.provide("phpr.Calendar.Main");
 
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
-    _date:               new Date(),
-    _usersSelectionMode: false,
-    _usersSelected:      Array(),
+    _date:                 new Date(),
+    _usersSelectionMode:   false,
+    _usersSelected:        Array(),
+    _scrollLastDirection:  0,
+    _gridLastScrollTop:    0,
+    _scrollDelayed:        0,
+    _scrollConnection:     null,
+
+    SCROLL_UP:    1,
+    SCROLL_DOWN: -1,
+    SCROLL_DELAY: 5,
 
     constructor:function() {
         this.module = "Calendar";
@@ -38,6 +46,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".usersSelectionDoneClick", this, "usersSelectionDoneClick");
         dojo.subscribe(this.module + ".anotherViewDayClick", this, "anotherViewDayClick");
         dojo.subscribe(this.module + ".loadAppropriateList", this, "loadAppropriateList");
+        dojo.subscribe(this.module + ".connectMouseScroll", this, "connectMouseScroll");
+        dojo.subscribe(this.module + ".scrollDone", this, "scrollDone");
 
         this.gridWidget          = phpr.Calendar.Grid;
         this.dayListSelfWidget   = phpr.Calendar.ViewDayListSelf;
@@ -604,5 +614,60 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (this.form) {
             this.form.updateData();
         }
+    },
+
+    connectMouseScroll:function() {
+        // Summary
+        //    Makes the connection between the Grid event for Mouse Wheel Scroll, and the 'scrollDone' function
+        var grid = dojo.byId("gridBox");
+
+        this._scrollConnection = dojo.connect(grid, (!dojo.isMozilla ? "onmousewheel" : "DOMMouseScroll"), function(e){
+           // except the direction is REVERSED, and the event isn't normalized! one more line to normalize that:
+           var scrollValue = e[(!dojo.isMozilla ? "wheelDelta" : "detail")] * (!dojo.isMozilla ? 1 : -1);
+           dojo.publish('Calendar.scrollDone', [scrollValue]);
+        });
+    },
+
+    scrollDone:function(scrollValue) {
+        // Summary
+        //    Called whenever the user scrolls the mouse wheel over the grid. Detects whether to interpret it as a
+        // request for changing to previous or next month grid.
+        var grid   = dojo.byId('gridBox');
+
+        // Scrolled UP or DOWN?
+        if (scrollValue > 0) {
+            // UP - Is this the second time user scrolls up, and the grid scrolling space has reached its top?
+            if (this._scrollLastDirection == this.SCROLL_UP && this._gridLastScrollTop == grid.scrollTop) {
+                this._scrollDelayed ++;
+                // Wait for a specific amount of scroll movements, so that month change doesn't happen without intention
+                if (this._scrollDelayed >= this.SCROLL_DELAY) {
+                    // Delayed 'time' reached, reset variables and go previous month
+                    this._scrollLastDirection = 0;
+                    this._scrollDelayed       = 0;
+                    dojo.disconnect(this._scrollConnection);
+                    dojo.publish('Calendar.setDate', [0])
+                }
+            } else {
+                this._scrollLastDirection = this.SCROLL_UP;
+                this._scrollDelayed       = 0;
+            }
+        } else {
+            // DOWN - Is this the second time user scrolls up, and the grid scrolling space has reached its bottom?
+            if (this._scrollLastDirection == this.SCROLL_DOWN && this._gridLastScrollTop == grid.scrollTop) {
+                this._scrollDelayed ++;
+                // Wait for a specific amount of scroll movements, so that month change doesn't happen without intention
+                if (this._scrollDelayed >= this.SCROLL_DELAY) {
+                    // Delayed 'time' reached, reset variables and go next month
+                    this._scrollLastDirection = 0;
+                    this._scrollDelayed       = 0;
+                    dojo.disconnect(this._scrollConnection);
+                    dojo.publish('Calendar.setDate', [2])
+                }
+            } else {
+                this._scrollLastDirection = this.SCROLL_DOWN;
+                this._scrollDelayed       = 0;
+            }
+        }
+        this._gridLastScrollTop = grid.scrollTop;
     }
 });

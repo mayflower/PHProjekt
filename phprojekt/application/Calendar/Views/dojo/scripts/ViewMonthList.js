@@ -24,8 +24,9 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     //    Class for displaying a Calendar Month List
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
-    _header:   Array(7),
-    _schedule: Array(),
+    _header:              Array(7),
+    _schedule:            Array(),
+    _scrollLastDirection: 0,
 
     COLOR_WEEKDAY:      '#FFFFFF',
     COLOR_WEEKEND:      '#EFEFEF',
@@ -75,6 +76,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
             header:     this._header,
             schedule:   this._schedule
         });
+        dojo.publish('Calendar.connectMouseScroll');
     },
 
     exportData:function() {
