@@ -377,7 +377,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.scale        = (resolutionFix / years);
 
         // Draw the timeline with the correct scale
-        var totalWidth = 0;
+        var totalWidth   = 0;
+        var displayCount = 0;
         for (var i = 0 ; true ; i++) {
             startDate = dojo.date.add(startDate, 'month', 1);
             var check = dojo.date.compare(startDate, endDate);
@@ -397,15 +398,16 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             html += '<li class="splitter" style="float: left; width: 1px; height: ' + height + 'px;';
             html += 'border-left: 1px dotted #3d3d3d; margin-left: -2px;"></li>';
 
-            var x = 260 + (totalWidth - (width / 2));
-            if (years > 3) {
-                var size = 7 * (this.scale * 2);
-            } else {
+            if (displayCount == 0 || displayCount == years) {
+                var x = 260 + (totalWidth - (width / 2));
                 var size = 7;
+                phpr.Gfx.makeText(surface, {x: x, y: 85, text: phpr.nls.get(month) + " " + year, align: "start"},
+                {family: "Verdana", size: size + "pt"}, "black", "black")
+                .setTransform(m.rotategAt(-75, x, 85));
+                displayCount = 1;
+            } else {
+                displayCount++;
             }
-            phpr.Gfx.makeText(surface, {x: x, y: 85, text: phpr.nls.get(month) + " " + year, align: "start"},
-            {family: "Verdana", size: size + "pt"}, "black", "black")
-            .setTransform(m.rotategAt(-75, x, 85));
         }
         html += '</ul></li></ul>';
 
