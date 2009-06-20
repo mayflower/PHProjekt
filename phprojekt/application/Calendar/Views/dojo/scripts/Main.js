@@ -27,6 +27,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _gridLastScrollTop:    0,
     _scrollDelayed:        0,
     _scrollConnection:     null,
+    _actionPending:        false,
 
     SCROLL_UP:    1,
     SCROLL_DOWN: -1,
@@ -108,6 +109,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     loadGrid:function() {
         // Summary:
         //   This function loads the Dojo Grid
+        this.scrollDisconnect();
         this.destroyOtherLists('grid');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -116,11 +118,13 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         this.setSubmoduleNavigation();
         this.setScheduleBar(false, false);
+        this._actionPending = false;
     },
 
     loadDayListSelf:function() {
         // Summary:
         //    This function loads the Day List in Self mode
+        this.scrollDisconnect();
         this.destroyOtherLists('dayListSelf');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -133,6 +137,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     loadDayListSelect:function() {
         // Summary:
         //    This function loads the Day List in a Selection mode
+        this.scrollDisconnect();
         this.destroyOtherLists('dayListSelect');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -145,6 +150,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     loadWeekList:function() {
         // Summary:
         //    This function loads the Week List
+        this.scrollDisconnect();
         this.destroyOtherLists('weekList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -157,6 +163,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     loadMonthList:function() {
         // Summary:
         //    This function loads the Month List
+        this.scrollDisconnect();
         this.destroyOtherLists('monthList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -175,12 +182,21 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     listViewClick:function() {
         // Summary:
         //    List button clicked, loads the regular grid
+        if (this.actionRequested()) {
+            return;
+        }
+
         this.loadGrid();
     },
 
     dayViewClick:function() {
         // Summary:
         //    This function loads the Day List with the entered date, if any.
+
+        if (this.actionRequested()) {
+            return;
+        }
+
         if (!this._usersSelectionMode) {
             this.loadDayListSelf();
         } else {
@@ -191,12 +207,22 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     weekViewClick:function() {
         // Summary:
         //    This function loads the Week List with the entered date, if any.
+
+        if (this.actionRequested()) {
+            return;
+        }
+
         this.loadWeekList();
     },
 
     monthViewClick:function() {
         // Summary:
         //    This function loads the Month List with the entered date, if any.
+
+        if (this.actionRequested()) {
+            return;
+        }
+
         this.loadMonthList();
     },
 
@@ -206,6 +232,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         var PREVIOUS = 0;
         var TODAY    = 1;
         var NEXT     = 2;
+
+        if (this.actionRequested()) {
+            return;
+        }
 
         if (this.dayListSelf || this.dayListSelect) {
             var interval = 'day';
@@ -626,6 +656,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
            var scrollValue = e[(!dojo.isMozilla ? "wheelDelta" : "detail")] * (!dojo.isMozilla ? 1 : -1);
            dojo.publish('Calendar.scrollDone', [scrollValue]);
         });
+        this._actionPending = false;
     },
 
     scrollDone:function(scrollValue) {
@@ -669,5 +700,27 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             }
         }
         this._gridLastScrollTop = grid.scrollTop;
+    },
+
+    scrollDisconnect:function() {
+        // Summary
+        //    Disconnects the event of mouse wheel scroll, of the gridBox
+        if (this._scrollConnection != null) {
+            dojo.disconnect(this._scrollConnection);
+            this._scrollConnection = null;
+        }
+    },
+
+    actionRequested:function() {
+        // Summary
+        //    The following lines are to avoid repetition of the Mouse Wheel scroll event connection, that could be
+        // produced by clicking many times anxiously the same link or tab.
+        //   If there is an action pending, it returns 'true' so that the caller function gets stopped.
+        if (this._actionPending) {
+            return true;
+        } else {
+            this._actionPending = true;
+            return false;
+        }
     }
 });
