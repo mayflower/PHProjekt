@@ -128,7 +128,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('dayListSelf');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        dateString       = this.dateToString();
+        var dateString   = this.dateToString();
         this.dayListSelf = new this.dayListSelfWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
@@ -141,7 +141,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('dayListSelect');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        dateString         = this.dateToString();
+        var dateString     = this.dateToString();
         this.dayListSelect = new this.dayListSelectWidget(this, phpr.currentProjectId, dateString, this._usersSelected);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
@@ -154,8 +154,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('weekList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        dateString    = this.dateToString();
-        this.weekList = new this.weekListWidget(this, phpr.currentProjectId, dateString);
+        var dateString = this.dateToString();
+        this.weekList  = new this.weekListWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },
@@ -167,7 +167,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('monthList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        dateString     = this.dateToString();
+        var dateString = this.dateToString();
         this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
