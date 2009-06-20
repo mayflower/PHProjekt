@@ -219,19 +219,17 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         }
 
         // Make an array with the current participants
-        if (urlRelatedData.data != '') {
-            if (urlRelatedData.participants.length > 0) {
-                var temp = urlRelatedData.participants.split(',');
-                for (var i in temp) {
-                    if (temp[i] != currentUser) {
-                        for (var j in userList) {
-                            if (userList[j].id == temp[i]) {
-                                var userName = userList[j].display;
-                                break;
-                            }
+        if (urlRelatedData.participants && urlRelatedData.participants.length > 0) {
+            var temp = urlRelatedData.participants.split(',');
+            for (var i in temp) {
+                if (temp[i] != currentUser) {
+                    for (var j in userList) {
+                        if (userList[j].id == temp[i]) {
+                            var userName = userList[j].display;
+                            break;
                         }
-                        participants.push({'userId': temp[i], 'userName': userName});
                     }
+                    participants.push({'userId': temp[i], 'userName': userName});
                 }
             }
         }
@@ -535,7 +533,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         // Delete the cache of the 3 urls for every related event?
         var urlRelatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
-        if (urlRelatedData.data != '') {
+        if (urlRelatedData.relatedEvents) {
             // Make an array with the related events
             this._updateCacheIds = urlRelatedData.relatedEvents.split(',');
             if (this._updateCacheIds.length > 0 && this.useCache) {
