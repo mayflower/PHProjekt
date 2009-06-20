@@ -86,6 +86,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
             header:          this._header,
             schedule:        this._schedule
         });
+        dojo.publish('Calendar.connectMouseScroll');
     },
 
     exportData:function() {

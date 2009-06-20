@@ -86,6 +86,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             furtherEvents:        this._furtherEvents,
             furtherEventsMessage: phpr.nls.get('Further events')
         });
+        dojo.publish('Calendar.connectMouseScroll');
     },
 
     exportData:function() {

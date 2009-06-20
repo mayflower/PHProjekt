@@ -73,6 +73,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
             furtherEvents:        this._furtherEvents,
             furtherEventsMessage: phpr.nls.get('Further events')
         });
+        dojo.publish('Calendar.connectMouseScroll');
     },
 
     exportData:function() {
