@@ -58,13 +58,13 @@
     background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom left;
 }
 
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderProgressBarH,
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderLeftBumper {
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderProgressBarH,
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderLeftBumper {
     background-image: url("images/sliderFullFocus.png");
 }
 
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderProgressBarV,
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderBottomBumper {
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderProgressBarV,
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderBottomBumper {
     background-image: url("images/sliderFullVerticalFocus.png");
 }
 
@@ -83,7 +83,7 @@
     outline: 1px;
 }
 
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderBar {
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderBar {
     border-color: #888;
 }
 
@@ -101,7 +101,7 @@
     top: 0 !important;
 }
 
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderImageHandleH {
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderImageHandleH {
     background-image: url("images/preciseSliderThumbFocus.png");
 }
 
@@ -129,11 +129,11 @@
     cursor: pointer;
 }
 
-.phprojekt #ganttChart .dijitSliderFocused .dijitSliderImageHandleV {
+.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderImageHandleV {
     background-image: url("images/sliderThumbFocus.png");
 }
 
-.dj_ie6 .phprojekt #ganttChart .dijitSliderFocused .dijitSliderImageHandleV {
+.dj_ie6 .phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderImageHandleV {
     background-image: url("images/sliderThumbFocus.gif");
 }
 

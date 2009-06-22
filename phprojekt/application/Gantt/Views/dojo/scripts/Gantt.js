@@ -250,6 +250,8 @@ dojo.declare('phpr.Project.GanttBase', null, {
                 node:        "gantSelectDates",
                 duration:    1000,
                 beforeBegin: function() {
+                    var pos = dojo.byId('centerMainContent').scrollLeft;
+                    dojo.style("gantSelectDates", "margin", "10px " + pos + "px");
                     dojo.style("gantSelectDates", "opacity", 0);
                     dojo.style("gantSelectDates", "display", "block");
                 }
@@ -257,7 +259,12 @@ dojo.declare('phpr.Project.GanttBase', null, {
             if (this.activeSlider && this.activeSlider == sliderName) {
                 return;
             }
+
+            if (dojo.byId(this.activeSlider)) {
+                dojo.removeClass(dojo.byId(this.activeSlider), "dijitSliderPhprFocused");
+            }
             this.activeSlider = sliderName;
+            dojo.addClass(dojo.byId(this.activeSlider), "dijitSliderPhprFocused");
 
             // Try to find the named project element in the list and store last values
             var listIndex = this.findArrayIndex(sliderName);

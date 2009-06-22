@@ -17,11 +17,10 @@
     </li>
     <li class="separator">&nbsp;</li>
     <li class="slider">
-        <div id="{{data.name}}" secondary="33" name="{{data.name}}" dojotype="dojox.form.HorizontalRangeSlider"
-        onchange="dijit.byId('ganttObject').container.processUpdate(arguments[0], '{{data.name}}');"
-        onfocus="dijit.byId('ganttObject').container.setActiveSlider('{{data.name}}');" clickSelect="false"
-        minimum="1" maximum="{{STEPPING}}" value="{{data.value}}"
+        <div id="{{data.name}}" secondary="33" name="{{data.name}}" dojotype="phpr.form.HorizontalRangeSlider"
+        clickSelect="false" minimum="1" maximum="{{STEPPING}}" value="{{data.value}}"
         discreteValues="{{STEPPING}}" showbuttons="false"
+        onchange="dijit.byId('ganttObject').container.processUpdate(arguments[0], '{{data.name}}');"
         style="margin-top: 0px; width: {{width}}px;"></div>
     </li>
     <br clear="all" />

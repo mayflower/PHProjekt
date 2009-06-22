@@ -340,13 +340,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var element   =  dojo.byId('gantt_timeline');
         var startDate = new Date(this.gantt.MIN_DATE);
         var endDate   = new Date(this.gantt.MAX_DATE);
-        var months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-            'October', 'November', 'December'];
-        var maxWidth  = dojo.byId('timeLine').offsetWidth;
-        var surface   = dojox.gfx.createSurface("timeLine", maxWidth + 10, 100);
-        var m         = dojox.gfx.matrix;
-
-        var height = this.getProjectsHeight(phpr.currentProjectId);
+        var height    = this.getProjectsHeight(phpr.currentProjectId);
 
         var html = '<ul class="sub_project">';
         html += '<li style="border-left: none; border-right: none; width: 250px; float: left;">&nbsp;</li>';
@@ -371,47 +365,47 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             }
         }
 
-        // Make the scale witht the current resolution
-        var resolutionFix = (document.getElementById("timeLine").offsetWidth - (268 + (years * 3))) / 365;
-        resolutionFix     = resolutionFix.toString().substr(0,4);
-        this.scale        = (resolutionFix / years);
+        var maxWidth  = 268 + (365 * 2 * years);
+        var surface   = dojox.gfx.createSurface("timeLine", maxWidth, 100);
+
+        // Make the scale
+        this.scale = 2;
+
+        // Change the width to the maxWidth
+        dojo.style(dojo.byId('ganttChart'), "width", maxWidth + "px");
 
         // Draw the timeline with the correct scale
-        var totalWidth   = 0;
-        var displayCount = 0;
+        var totalWidth = 0;
         for (var i = 0 ; true ; i++) {
             startDate = dojo.date.add(startDate, 'month', 1);
             var check = dojo.date.compare(startDate, endDate);
             if (check == 1) {
                 break;
             }
-            var year   = startDate.getFullYear();
+            var year   = startDate.getFullYear().toString().substr(2,2);
             var width  = Math.round(dojo.date.getDaysInMonth(startDate) * this.scale);
             totalWidth = totalWidth + width;
 
             if (i > 11) {
                 i = 0;
             }
-            var month = months[i];
+
+            var monthNumber = (i < 9) ? '0' + Math.round(i+1) : Math.round(i+1);
+            var monthString = monthNumber + '.' + year;
 
             html += '<li style="width:' + width + 'px; float: left;">&nbsp;</li>';
             html += '<li class="splitter" style="float: left; width: 1px; height: ' + height + 'px;';
             html += 'border-left: 1px dotted #3d3d3d; margin-left: -2px;"></li>';
 
-            if (displayCount == 0 || displayCount == years) {
-                var x = 260 + (totalWidth - (width / 2));
-                var size = 7;
-                phpr.Gfx.makeText(surface, {x: x, y: 85, text: phpr.nls.get(month) + " " + year, align: "start"},
-                {family: "Verdana", size: size + "pt"}, "black", "black")
-                .setTransform(m.rotategAt(-75, x, 85));
-                displayCount = 1;
-            } else {
-                displayCount++;
-            }
+            var x    = 275 + (totalWidth - width);
+            var size = 7;
+            phpr.Gfx.makeText(surface, {x: x, y: 85, text: monthString, align: "start"},
+                {family: "Verdana", size: size + "pt"}, "black", "black");
+
         }
         html += '</ul></li></ul>';
 
-        element.innerHTML = html;
+        element.innerHTML    = html;
         this.gantt.FIX_VALUE = this.scale;
 
         return totalWidth;
