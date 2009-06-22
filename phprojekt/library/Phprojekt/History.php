@@ -106,8 +106,11 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 if ($value['type'] == 'textarea') {
                     $objectFieldName = str_replace("\n", "", strip_tags($object->$fieldName));
                     $cloneFieldName  = str_replace("\n", "", strip_tags($clone->$fieldName));
+                } else {
+                    $objectFieldName = $object->$fieldName;
+                    $cloneFieldName  = $clone->$fieldName;
                 }
-                if ($object->$fieldName != $clone->$fieldName) {
+                if ($objectFieldName != $cloneFieldName) {
                     $differences[$fieldName] = array('oldValue' => $cloneFieldName,
                                                      'newValue' => $objectFieldName);
                 }
