@@ -378,7 +378,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             case this.DATETIME_LONG:
             default:
                 description = startDate + ' ' + this.formatTime(startTime) + ' - ' + endDate + ' '
-                    + this.formatTime(endTime) + '<br>';
+                    + this.formatTime(endTime) + '<br />';
                 break;
             case this.DATETIME_SHORT:
                 description = this.formatTime(startTime) + ' - ' +  this.formatTime(endTime);

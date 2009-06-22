@@ -18,38 +18,38 @@ $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 
 // Tooltip Help
 $lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop";
-$lang["Tooltip"]["timeZone"] = "The Time Zone (UTC) for the region or country you will be using Phprojekt.<br>"
+$lang["Tooltip"]["timeZone"] = "The Time Zone (UTC) for the region or country you will be using Phprojekt.<br />"
     . "This is required for all users but specially useful for international events time coordination.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Setting"] = "<br/>
+$lang["Content Help"]["Setting"] = "<br />
     This is the <b>General Help of Setting module</b><br />
     <br />
     This module is for the user to set and change specific configuration parameters of his/her profile.<br />
-    <br/>
-    It has 2 tabs: <b>User</b> and <b>Timecard</b>.<br/>
-    To see their help, click on the respective tab inside this window.<br/>
-    <br/>
-    <br/>";
+    <br />
+    It has 2 tabs: <b>User</b> and <b>Timecard</b>.<br />
+    To see their help, click on the respective tab inside this window.<br />
+    <br />
+    <br />";
 
-$lang["Content Help"]["User"] = "<br/>
-    <b>User tab</b><br/>
-    <br/>
-    Inside this tab the user basic settings are configured.<br/>
-    <br/>
-    The title of every field is self-descriptive about its content.<br/>
-    It can be changed: <i>Password</i>, <i>Email</i>, <i>Language</i> y <i>Time zone</i>.<br/>
-    <br/>
-    <br/>";
+$lang["Content Help"]["User"] = "<br />
+    <b>User tab</b><br />
+    <br />
+    Inside this tab the user basic settings are configured.<br />
+    <br />
+    The title of every field is self-descriptive about its content.<br />
+    It can be changed: <i>Password</i>, <i>Email</i>, <i>Language</i> y <i>Time zone</i>.<br />
+    <br />
+    <br />";
 
-$lang["Content Help"]["Timecard"] = "<br/>
-    <b>Timecard tab</b><br/>
-    <br/>
+$lang["Content Help"]["Timecard"] = "<br />
+    <b>Timecard tab</b><br />
+    <br />
     Here the user can configure the Projects where is working the most, so that they will appear for drag and drop
-    inside the Timecard module.<br/>
-    <br/>
-    The title of every field is self descriptive about its content.<br/>
-    It can be changed: <i>Max Number of favorites projects</i> and which <i>Favorite projects</i> to choose.<br/>
-    <br/>
-    <br/>";
+    inside the Timecard module.<br />
+    <br />
+    The title of every field is self descriptive about its content.<br />
+    It can be changed: <i>Max Number of favorites projects</i> and which <i>Favorite projects</i> to choose.<br />
+    <br />
+    <br />";

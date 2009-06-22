@@ -1,19 +1,19 @@
 <?php
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutes"] = "<br/>
-    This is the <b>General Help of the Minutes module</b><br/>
-    <br/>
-    This module is meant for the transcription of meeting minutes.<br/>
+$lang["Content Help"]["Minutes"] = "<br />
+    This is the <b>General Help of the Minutes module</b><br />
+    <br />
+    This module is meant for the transcription of meeting minutes.<br />
     ";
 $lang["Content Help"]["Basic data"] = "DEFAULT";
-$lang["Content Help"]["People"] = "<br/>
+$lang["Content Help"]["People"] = "<br />
     Define people invited to the meeting, actual attendees and people who are excused.
     ";
-$lang["Content Help"]["Items"] = "<br/>
+$lang["Content Help"]["Items"] = "<br />
     Help text for Minutes Items
     ";
-$lang["Content Help"]["Mail"] = "<br/>
+$lang["Content Help"]["Mail"] = "<br />
     Help text for Minutes Mail tab
     ";
 $lang["Content Help"]["Access"] = "DEFAULT";

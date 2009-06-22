@@ -1,21 +1,21 @@
 <?php
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutes"] = "<br/>
-    Dies ist die <b>Allgemeine Hilfe zum Protokoll-Modul</b><br/>
-    <br/>
-    Dieses Modul ist für die Erfassung von Meeting-Protokollen gedacht.<br/>
+$lang["Content Help"]["Minutes"] = "<br />
+    Dies ist die <b>Allgemeine Hilfe zum Protokoll-Modul</b><br />
+    <br />
+    Dieses Modul ist für die Erfassung von Meeting-Protokollen gedacht.<br />
     ";
 $lang["Content Help"]["Basic data"] = "DEFAULT";
-$lang["Content Help"]["People"] = "<br/>
+$lang["Content Help"]["People"] = "<br />
     Dieser Karteireiter dient zur Festlegung von Personen, die zu dem Meeting eingeladen sind bzw. tatsächlich daran
     teilnehmen,
     oder die entschuldigt sind. Darüber hinaus können Personen angegeben werden, die das Protokoll erhalten sollen.
     ";
-$lang["Content Help"]["Items"] = "<br/>
+$lang["Content Help"]["Items"] = "<br />
     Hilfetext für Protokolleinträge
     ";
-$lang["Content Help"]["E-Mail"] = "<br/>
+$lang["Content Help"]["E-Mail"] = "<br />
     Hilfetext für den E-Mail Versand von Protokollen
     ";
 

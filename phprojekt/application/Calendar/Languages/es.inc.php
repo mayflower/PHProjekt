@@ -75,40 +75,40 @@ $lang["Delete for all participants"] = "Borrar para todos los participantes";
 
 // Tooltip Help
 // 'Interval' field
-$lang["The interval for the option selected in Repeats.<br>"] = "El intervalo para la opción seleccionada en "
-    . "Repeticiones.<br>";
+$lang["The interval for the option selected in Repeats."] = "El intervalo para la opción seleccionada en "
+    . "Repeticiones.";
 $lang["E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks."] = "Ej.: Repeticiones Semanal - "
     . "Intervalo 2, se creará un evento cada 2 semanas.";
 // 'Until' field
-$lang["The day the recurrence will stop happening. <br>The last event's day could not match this day."] = "El día en "
-    . "que la recurrencia terminará. <br>El día del último evento puede no coincidir con este día.";
+$lang["The day the recurrence will stop happening. <br />The last event's day could not match this day."] = "El día en "
+    . "que la recurrencia terminará. <br />El día del último evento puede no coincidir con este día.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Evento"] = "<br/>
-    Esta es la <b>Ayuda General del módulo Evento</b><br/>
-    <br/>
+$lang["Content Help"]["Evento"] = "<br />
+    Esta es la <b>Ayuda General del módulo Evento</b><br />
+    <br />
     El módulo Evento es una forma muy completa de administrar eventos. Puede crear uno, ingresar información
     descriptiva sobre él, asignarle fecha y hora, especificar participantes, crearle recurrencia y el resto de
-    propiedades generales de los módulos, como permisos de Acceso, Notificación por email e Historial.<br/>
-    <br/>
-    La <b>pantalla</b> se divide en 5 secciones:<br/>
-    <br/>
+    propiedades generales de los módulos, como permisos de Acceso, Notificación por email e Historial.<br />
+    <br />
+    La <b>pantalla</b> se divide en 5 secciones:<br />
+    <br />
     <ol>
         <li><b>Botonera superior derecha:</b> aquí, según los ítems mostrados y los permisos del usuario,
             se mostrarán
-            hasta 3 botones.<br/>
+            hasta 3 botones.<br />
             <ul>
-                <li><b>Agregar:</b> lo presiona y un formulario vacío se abre para que cree un nuevo evento.<br/>
+                <li><b>Agregar:</b> lo presiona y un formulario vacío se abre para que cree un nuevo evento.<br />
                 <li><b>Grabar:</b> la grilla puede ser editada sólo cliqueando en los campos que desee cambiar. Luego
-                    presiona este botón para grabar los cambios hechos.<br/>
-                <li><b>Exportar:</b> exporta a un archivo CSV los resultados y ofrece descargarlo.<br/>
+                    presiona este botón para grabar los cambios hechos.<br />
+                <li><b>Exportar:</b> exporta a un archivo CSV los resultados y ofrece descargarlo.<br />
             </ul>
-        <li><b>Solapas de Vistas:</b> hay cuatro tipos de listados que se activan por medio de estas solapas.<br/>
+        <li><b>Solapas de Vistas:</b> hay cuatro tipos de listados que se activan por medio de estas solapas.<br />
             <ul>
-                <li><b>Lista:</b> una grilla con todos los eventos para el usuario logueado.<br/>
+                <li><b>Lista:</b> una grilla con todos los eventos para el usuario logueado.<br />
                 <li><b>Día:</b> una agenda desde las 8:00 hasta las 20:00 hs. donde se muestran todos los eventos de un
-                    día determinado.<br/>
+                    día determinado.<br />
                     <u>Tiene dos subtipos</u> que son elegidos a través de las solapas <b>Propio</b> y
                     <b>Selección</b>
                     que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> está activo:
@@ -127,43 +127,43 @@ $lang["Content Help"]["Evento"] = "<br/>
             </ul>
             Cuando Día, Semana o Mes son la vista activa, aparece una barra adicional sobre los listados. Esta tiene
             los vínculos <i>previo</i>, <i>hoy</i> y <i>siguiente</i>, para cambiar el día / semana / mes
-            secuencialmente. Además muestra la fecha del período seleccionado.<br/>
-            <br/>
+            secuencialmente. Además muestra la fecha del período seleccionado.<br />
+            <br />
         <li><b>Grilla / Lista:</b> aquí se muestra la lista de ítems o la agenda de un día determinado,
-            según la vista elegida.<br/>
-        <br/>
+            según la vista elegida.<br />
+        <br />
         <li><b>Formulario:</b> cuando un ítem esta por ser creado o se cliquea en uno del listado, un formulario se
-            muestra aquí para completar o modificar sus datos.<br/>
-        <br/>
+            muestra aquí para completar o modificar sus datos.<br />
+        <br />
         <li><b>Botonera inferior:</b> aquí, según los permisos del usuario, cuando un ítem está siendo creado o
-            modificado se muestran los botones <b>Grabar</b> y <b>Borrar</b>.<br/>
+            modificado se muestran los botones <b>Grabar</b> y <b>Borrar</b>.<br />
     </ol>
-    <br/>
-    <br/>";
+    <br />
+    <br />";
 
 $lang["Content Help"]["Datos Básicos"] = "DEFAULT";
-$lang["Content Help"]["Repetición"] = "<br/>
-    <b>Solapa Repetición</b><br/>
-    <br/>
+$lang["Content Help"]["Repetición"] = "<br />
+    <b>Solapa Repetición</b><br />
+    <br />
     Esta solapa permite asignar repetición al evento para que suceda tantas veces como se especifique, con la
-    frecuencia y días de la semana definidos.<br/>
-    <br/>
-    <b>Campos</b><br/>
-    <br/>
+    frecuencia y días de la semana definidos.<br />
+    <br />
+    <b>Campos</b><br />
+    <br />
     <b>Repeticiones</b>: aquí elige cuán seguido quiere que ocurra el evento. <i>Una vez</i> es la
     repetición predeterminada y significa que no habrá repetición. Puede elegir <i>Diario</i>,
     <i>Semanal</i>, <i>Mensual</i> o <i>Anual</i> y el evento se repetirá con dicha frecuencia hasta el día elegido
-    en el campo <u>Hasta</u>.<br/>
-    <br/>
+    en el campo <u>Hasta</u>.<br />
+    <br />
     <b>Intervalo</b>: especifique aquí el intervalo que quiere para las repeticiones. Ej.: si elige <i>Mensual</i> en
-    el campo <u>Repeticiones</u> y <i>2</i> en <u>Intervalo</u>, el evento sucederá cada 2 meses.<br/>
-    <br/>
+    el campo <u>Repeticiones</u> y <i>2</i> en <u>Intervalo</u>, el evento sucederá cada 2 meses.<br />
+    <br />
     <b>Hasta</b>: si elige una opción distinta a <i>Una vez</i> en el campo <u>Repeticiones</u>, aquí debe elegir
-    cuándo quiere que las repeticiones cesen.<br/>
-    <br/>
-    <b>Días de la semana</b>: puede elegir qué días de la semana sucederá la repetición del evento.<br/>
-    <br/>
-    <br/>";
+    cuándo quiere que las repeticiones cesen.<br />
+    <br />
+    <b>Días de la semana</b>: puede elegir qué días de la semana sucederá la repetición del evento.<br />
+    <br />
+    <br />";
 
 $lang["Content Help"]["Accesos"] = "DEFAULT";
 $lang["Content Help"]["Notificación"] = "DEFAULT";

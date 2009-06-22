@@ -19,39 +19,39 @@ $lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos
 
 // Tooltip Help
 $lang["Tooltip"]["amount"] = "Proyectos que serán vistos en Asistencia y estarán listos para Arrastrar y Soltar";
-$lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br> "
+$lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br /> "
     . "Es un dato requerido para todos los usuarios pero especialmente útil para coordinación temporal de eventos "
     . "internacionales.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Configuración"] = "<br/>
+$lang["Content Help"]["Configuración"] = "<br />
     Esta es la <b>Ayuda General del módulo Configuración</b><br />
     <br />
     Este módulo permite al usuario cambiar atributos específicos de configuración de su perfil.<br />
-    <br/>
-    Tiene 2 solapas: <b>Usuario</b> y <b>Asistencia</b>.<br/>
-    Para ver su ayuda, haga clic en las respectivas solapas dentro de esta ventana.<br/>
-    <br/>
-    <br/>";
+    <br />
+    Tiene 2 solapas: <b>Usuario</b> y <b>Asistencia</b>.<br />
+    Para ver su ayuda, haga clic en las respectivas solapas dentro de esta ventana.<br />
+    <br />
+    <br />";
 
-$lang["Content Help"]["Usuario"] = "<br/>
-    <b>Solapa Usuario</b><br/>
-    <br/>
-    Dentro de esta solapa se configuran los parámetros básicos del usuario.<br/>
-    <br/>
-    El título de cada campo dentro de esta sección es auto-descriptivo sobre su contenido.<br/>
-    Se permite cambiar: <i>Contraseña</i>, <i>Dirección de correo</i>, <i>Idioma</i> y <i>Huso horario</i>.<br/>
-    <br/>
-    <br/>";
+$lang["Content Help"]["Usuario"] = "<br />
+    <b>Solapa Usuario</b><br />
+    <br />
+    Dentro de esta solapa se configuran los parámetros básicos del usuario.<br />
+    <br />
+    El título de cada campo dentro de esta sección es auto-descriptivo sobre su contenido.<br />
+    Se permite cambiar: <i>Contraseña</i>, <i>Dirección de correo</i>, <i>Idioma</i> y <i>Huso horario</i>.<br />
+    <br />
+    <br />";
 
-$lang["Content Help"]["Asistencia"] = "<br/>
-    <b>Solapa Asistencia</b><br/>
-    <br/>
+$lang["Content Help"]["Asistencia"] = "<br />
+    <b>Solapa Asistencia</b><br />
+    <br />
     Aquí el usuario puede configurar los Proyectos donde mayormente está trabajando, de modo que ellos aparecerán
-    para arrastrar y soltar (drag and drop) dentro del módulo Asistencia.<br/>
-    <br/>
-    El título de cada campo dentro de esta sección es auto-descriptivo sobre su contenido.<br/>
-    Se permite cambiar: <i>Max. Número de Proyectos favoritos</i> y qué <i>Proyectos favoritos</i> se eligen.<br/>
-    <br/>
-    <br/>";
+    para arrastrar y soltar (drag and drop) dentro del módulo Asistencia.<br />
+    <br />
+    El título de cada campo dentro de esta sección es auto-descriptivo sobre su contenido.<br />
+    Se permite cambiar: <i>Max. Número de Proyectos favoritos</i> y qué <i>Proyectos favoritos</i> se eligen.<br />
+    <br />
+    <br />";

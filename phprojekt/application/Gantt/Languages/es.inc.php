@@ -30,18 +30,18 @@ $lang["Click on a Project timeline and see and/or change here the Start and End 
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Gantt"] = "<br/>
-    Esta es la <b>Ayuda General del módulo Gantt</b><br/>
-    <br/>
+$lang["Content Help"]["Gantt"] = "<br />
+    Esta es la <b>Ayuda General del módulo Gantt</b><br />
+    <br />
     Este módulo es un diagrama Gantt dinámico, editable vía mouse, sincronizado automáticamente con los datos
-    cargados en la base de datos.<br/>
-    <br/>
+    cargados en la base de datos.<br />
+    <br />
     El módulo lee los Proyectos y Subproyectos y elabora este gráfico que tiene una barra horizontal por proyecto
     (línea de tiempo) la cual puede ser desplazada con el mouse sobre el eje temporal, o sólo aumentando o
-    disminuyendo las fechas de comienzo y fin.<br/>
-    <br/>
+    disminuyendo las fechas de comienzo y fin.<br />
+    <br />
     Arriba del gráfico hay un panel 'Fechas del proyecto seleccionado', cuando hace click en una línea de tiempo de
     un proyecto, los campos de este panel se cargan con las fechas de inicio y fin para verlas y/o modificarlas
-    escribiendo otra fecha o gráficamente eligiendo un día en el calendario que aparece.<br/>
-    <br/>
-    <br/>";
+    escribiendo otra fecha o gráficamente eligiendo un día en el calendario que aparece.<br />
+    <br />
+    <br />";

@@ -293,113 +293,113 @@ $lang["Check this box to send an email notification to the participants"] = "Che
     . "notification to the participants";
 
 // General Help
-$lang["Content Help"]["General"] = "<br/>
-    This is the <b>General Help</b><br/>
-    <br/>
-    The Phprojekt screen is divided into many sections:<br/>
-    <br/>
+$lang["Content Help"]["General"] = "<br />
+    This is the <b>General Help</b><br />
+    <br />
+    The Phprojekt screen is divided into many sections:<br />
+    <br />
     <ul>
         <li>The <b>upper section</b> that has the system logo at the left and some links and a search box at the right
-            side.<br/>
-        <br/>
+            side.<br />
+        <br />
         <ol>
             <li>The <b>logo</b> is a link to the Project module and will show all the root Projects in the left tree
-                panel and also in the grid on the screen's center.<br/>
+                panel and also in the grid on the screen's center.<br />
             <li>The right top section contains <b>many links</b> to modules that are not directly linked to a
                 particular Project. Too see each one's help close this pop-up window, open the module and click on the
-                Help top link again.<br/>
+                Help top link again.<br />
             <ol>
                 <li><b>Calendar:</b> a module for managing events that are situated in a specific date and time in a
-                    calendar.<br/>
+                    calendar.<br />
                 <li><b>Timecard:</b> a module for charging working hours to the Projects. It has a visual interface and
-                    is very easy to use.<br/>
+                    is very easy to use.<br />
                 <li><b>Setting:</b> here the user sets and changes specific configurations parameters of his/her
-                    profile, like password, e-mail, etc.<br/>
+                    profile, like password, e-mail, etc.<br />
                 <li><b>Administration:</b> this is the general site administration section and is only visible and
-                    accessible to users with Admin profile.<br/>
+                    accessible to users with Admin profile.<br />
                 <li><b>Help:</b> that is this dynamic window. Whenever it is clicked it shows the general help plus the
-                    help for the active module.<br/>
-                <li><b>Logout:</b> finishes the current session and returns to the login page.<br/>
+                    help for the active module.<br />
+                <li><b>Logout:</b> finishes the current session and returns to the login page.<br />
             </ol>
             <li><b>Search box:</b> this box permits searching across the site for items containing the portion of string
-                typed.<br/>
+                typed.<br />
         </ol>
-        <li>Two lefts panels:<br/>
-        <br/>
+        <li>Two lefts panels:<br />
+        <br />
         <ol>
             <li><b>Projects tree:</b> it has a hierarchical tree of Projects and Subprojects. They are opened just
-                clicking them.<br/>
+                clicking them.<br />
             <li><b>Tags box:</b> it is a <i>tag cloud</i> with links to items of the system. The tags are
                 defined by the user when editing every item. The more times a tag is repeated in the system, the bigger
-                it appears.<br/>
+                it appears.<br />
         </ol>
-        <li>The center panels:<br/>
-        <br/>
-        This section varies depending on the module selected. Generally it has:<br/>
+        <li>The center panels:<br />
+        <br />
+        This section varies depending on the module selected. Generally it has:<br />
         <ol>
-            <li>A <b>top bar</b> with tabs at the left and some buttons at the right side:<br/>
+            <li>A <b>top bar</b> with tabs at the left and some buttons at the right side:<br />
             <ol>
-                <li>The <b>left tabs</b> could represent modules or submodules.<br/>
-                <li>Generally the right buttons are three:<br/>
+                <li>The <b>left tabs</b> could represent modules or submodules.<br />
+                <li>Generally the right buttons are three:<br />
                 <ol>
-                    <li><b>Add:</b> to create a new item in the active module.<br/>
-                    <li><b>Save:</b> to save the changes made to the grid below (in-line editing).<br/>
+                    <li><b>Add:</b> to create a new item in the active module.<br />
+                    <li><b>Save:</b> to save the changes made to the grid below (in-line editing).<br />
                     <li><b>Export:</b> to export the items that are being shown in the grid, to a file in CSV
-                        format.<br/>
+                        format.<br />
                 </ol>
             </ol>
             <li>A <b>grid</b> with the listing of the items of the module. Depending on the user rights they can be
-                edited simply clicking on a cell and modifying it.<br/>
+                edited simply clicking on a cell and modifying it.<br />
                 Clicking on the headers of each column the list is rearranged alphabetically according to that column
-                contents.<br/>
-                When an item is clicked on its Id, it is opened in the form below.<br/>
-            <li>A <b>form</b> that is shown whenever it is being created a new item or it is open an existing one.<br/>
+                contents.<br />
+                When an item is clicked on its Id, it is opened in the form below.<br />
+            <li>A <b>form</b> that is shown whenever it is being created a new item or it is open an existing one.<br />
         </ol>
-    </ul><br/>
-    <br/>";
+    </ul><br />
+    <br />";
 
-$lang["Content Help"]["Basic data"] = "<br/>
-    <b>Basic data tab</b><br/>
-    <br/>
-    Inside this tab it goes the main information about an item.<br/>
-    It has several fields to fill, according to the module it belongs to.<br/>
-    <br/>
-    <br/>";
+$lang["Content Help"]["Basic data"] = "<br />
+    <b>Basic data tab</b><br />
+    <br />
+    Inside this tab it goes the main information about an item.<br />
+    It has several fields to fill, according to the module it belongs to.<br />
+    <br />
+    <br />";
 
-$lang["Content Help"]["Access"] = "<br/>
-    <b>Access tab</b><br/>
-    <br/>
-    This tab allows to establish the individual rights for every user for the item being created or edited.<br/>
+$lang["Content Help"]["Access"] = "<br />
+    <b>Access tab</b><br />
+    <br />
+    This tab allows to establish the individual rights for every user for the item being created or edited.<br />
     The users that can be worked with, in this tab, are all but the logged one. The aim of this section is to select
-    what users do you want to give access to the item, and what kind of access.<br/>
+    what users do you want to give access to the item, and what kind of access.<br />
     For example, you create an item and choose some users to give them 'read' access and if you want you can choose
-    another user and give him/her 'write' access (apart from the creator that naturally has admin access).<br/>
-    <br/>
-    The different permissions are:<br/>
-    <b>Read:</b> see the item.<br/>
-    <b>Write:</b> modify the item.<br/>
-    <b>Access:</b> pass through the item (e.g.: see the sub projects but not to see the project itself).<br/>
-    <b>Create:</b> create sub items.<br/>
-    <b>Copy:</b> copy the item to create other one.<br/>
-    <b>Delete:</b> delete the item.<br/>
-    <b>Download:</b> download files (for example in the <b>Filemanager</b> module).<br/>
-    <b>Admin:</b> allows to do all, including editing the access of the item.<br/>
-    <b>None:</b> the user can't even see the item.<br/>
-    <br/>
-    <u>Note:</u> the owner (creator) of the item has by default all the permissions.<br/>";
+    another user and give him/her 'write' access (apart from the creator that naturally has admin access).<br />
+    <br />
+    The different permissions are:<br />
+    <b>Read:</b> see the item.<br />
+    <b>Write:</b> modify the item.<br />
+    <b>Access:</b> pass through the item (e.g.: see the sub projects but not to see the project itself).<br />
+    <b>Create:</b> create sub items.<br />
+    <b>Copy:</b> copy the item to create other one.<br />
+    <b>Delete:</b> delete the item.<br />
+    <b>Download:</b> download files (for example in the <b>Filemanager</b> module).<br />
+    <b>Admin:</b> allows to do all, including editing the access of the item.<br />
+    <b>None:</b> the user can't even see the item.<br />
+    <br />
+    <u>Note:</u> the owner (creator) of the item has by default all the permissions.<br />";
 
-$lang["Content Help"]["Notification"] = "<br/>
-    <b>Notification tab</b><br/>
-    <br/>
+$lang["Content Help"]["Notification"] = "<br />
+    <b>Notification tab</b><br />
+    <br />
     This tab makes possible to send an automatic
     email notification to all the users with read access to the current item, or the users that the current module has
     defined according its own criteria. That email will tell them about the creation or modification of the item
-    giving details about it.<br/>
-    <br/>
-    <br/>";
+    giving details about it.<br />
+    <br />
+    <br />";
 
-$lang["Content Help"]["History"] = "<br/>
-    <b>History tab</b><br/>
-    <br/>
-    It shows a listing of the changes made to the item since its creation.<br/>
+$lang["Content Help"]["History"] = "<br />
+    <b>History tab</b><br />
+    <br />
+    It shows a listing of the changes made to the item since its creation.<br />
     It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";
