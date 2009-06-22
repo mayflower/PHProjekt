@@ -104,12 +104,12 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
             foreach ($fields as $value) {
                 $fieldName = $value['key'];
                 if ($value['type'] == 'textarea') {
-                    $object->$fieldName = str_replace("\n", "", strip_tags($object->$fieldName));
-                    $clone->$fieldName  = str_replace("\n", "", strip_tags($clone->$fieldName));
+                    $objectFieldName = str_replace("\n", "", strip_tags($object->$fieldName));
+                    $cloneFieldName  = str_replace("\n", "", strip_tags($clone->$fieldName));
                 }
                 if ($object->$fieldName != $clone->$fieldName) {
-                    $differences[$fieldName] = array('oldValue' => $clone->$fieldName,
-                                                     'newValue' => $object->$fieldName);
+                    $differences[$fieldName] = array('oldValue' => $cloneFieldName,
+                                                     'newValue' => $objectFieldName);
                 }
             }
         } else if ($action == 'add') {
