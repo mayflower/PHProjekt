@@ -382,8 +382,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 userId:     0,
                 sortOrder:  0,
                 title:      '',
-                comment:	'',
-                topicDate:  '',
+                comment:    '',
+                topicDate:  ''
             };
         }
 
@@ -435,22 +435,23 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Hides or shows the appropriate form fields for the currently
         //    selected topicType. Currently registered types are:
         //    1='Topic', 2='Statement',3='TODO',4='Decision',5='Date'
+        var display = (dojo.isIE) ? 'block' : 'table-row';
         switch(parseInt(typeValue)) {
             case 3:
-                dojo.byId('minutesItemFormRowUser').style.visibility = 'visible';
-                dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
+                dojo.style(dojo.byId('minutesItemFormRowUser'), "display", display);
+                dojo.style(dojo.byId('minutesItemFormRowDate'), "display", display);
                 dijit.byId('minutesItemFormUserId').attr("disabled", false);
                 dijit.byId('topicDate').attr("disabled", false);
                 break;
             case 5:
-                dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
-                dojo.byId('minutesItemFormRowDate').style.visibility = 'visible';
+                dojo.style(dojo.byId('minutesItemFormRowUser'), "display", "none");
+                dojo.style(dojo.byId('minutesItemFormRowDate'), "display", display);
                 dijit.byId('minutesItemFormUserId').attr("disabled", true);
                 dijit.byId('topicDate').attr("disabled", false);
                 break;
             default:
-                dojo.byId('minutesItemFormRowUser').style.visibility = 'collapse';
-                dojo.byId('minutesItemFormRowDate').style.visibility = 'collapse';
+                dojo.style(dojo.byId('minutesItemFormRowUser'), "display", "none");
+                dojo.style(dojo.byId('minutesItemFormRowDate'), "display", "none");
                 dijit.byId('minutesItemFormUserId').attr("disabled", true);
                 dijit.byId('topicDate').attr("disabled", true);
                 break;

@@ -46,7 +46,7 @@ phpr.grid.formatText = function(value) {
     // <important>' and returns 'This is very &lt;important&gt;'
     //    If there weren't converted any characters and length of string exceeds maximum allowed length, it is stripped
 
-    const MAX_LENGTH = 25;
+    var maxLength = 25;
 
     value = value.toString();
 
@@ -55,8 +55,8 @@ phpr.grid.formatText = function(value) {
     output     = output.replace(/>/g, "&gt;");
 
     if (value == output) {
-        if (output.length > MAX_LENGTH) {
-            output = output.substr(0, MAX_LENGTH) + '...';
+        if (output.length > maxLength) {
+            output = output.substr(0, maxLength) + '...';
         }
     }
 
