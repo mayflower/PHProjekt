@@ -400,7 +400,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var x    = 275 + (totalWidth - width);
             var size = 7;
             phpr.Gfx.makeText(surface, {x: x, y: 85, text: monthString, align: "start"},
-                {family: "Verdana", size: size + "pt"}, "black", "black");
+                {family: "Verdana", size: size + "pt"}, "black");
 
         }
         html += '</ul></li></ul>';
