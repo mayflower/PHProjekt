@@ -123,11 +123,12 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
             $where  = 'word IN ('. implode(', ', $quotedWords) .')';
             $result = $this->fetchAll($where);
             foreach ($result as $row) {
-                $data  = array('count' => $row->count + 1);
-                $where = sprintf('id = %d', (int) $row->id);
-                $this->update($data, $where);
                 $foundWords[] = $row->word;
                 $ids[]        = $row->id;
+            }
+            if (!empty($ids)) {
+                $data = array('count' => new Zend_Db_Expr($this->_db->quoteIdentifier('count') . ' + 1'));
+                $this->update($data, array($this->_db->quoteIdentifier('id') . ' IN (' . implode(',', $ids) . ')'));
             }
         }
 
@@ -162,14 +163,21 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
         if (!empty($ids)) {
             $where  = 'id IN ('. implode(', ', $ids) .')';
             $result = $this->fetchAll($where);
+            $deleteIds = array();
+            $updateIds = array();
             foreach ($result as $row) {
-                $where = array('id = '. (int) $row->id);
                 if ($row->count == 1) {
-                    $this->delete($where);
+                    $deleteIds[] = (int) $row->id;
                 } else {
-                    $data = array('count' => $row->count - 1);
-                    $this->update($data, $where);
+                    $updateIds[] = (int) $row->id;
                 }
+            }
+            if (!empty($deleteIds)) {
+                $this->delete(array($this->_db->quoteIdentifier('id') . ' IN (' . implode(',', $deleteIds) . ')'));
+            }
+            if (!empty($updateIds)) {
+                $data = array('count' => new Zend_Db_Expr($this->_db->quoteIdentifier('count') . ' - 1'));
+                $this->update($data, array($this->_db->quoteIdentifier('id') . ' IN (' . implode(',', $updateIds) . ')'));
             }
         }
     }
