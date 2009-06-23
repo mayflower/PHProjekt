@@ -230,6 +230,17 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
+                case 'textarea':
+                    this.gridLayout.push({
+                        width:     percent,
+                        name:      meta[i]["label"],
+                        field:     meta[i]["key"],
+                        type:      phpr.grid.cells.Textarea,
+                        styles:    "",
+                        editable:  false
+                    });
+                    break;
+
                 default:
                     this.gridLayout.push({
                         width:     percent,
