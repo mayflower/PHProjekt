@@ -167,6 +167,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         field:      meta[i]["key"],
                         styles:     "text-align: center;",
                         type:       phpr.grid.cells.Text,
+                        formatter:  phpr.grid.formatTime,
                         editable:   meta[i]['readOnly'] ? false : true
                     });
                     break;
