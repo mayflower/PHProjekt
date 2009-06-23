@@ -227,7 +227,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         field:     meta[i]["key"],
                         type:      phpr.grid.cells.Text,
                         styles:    "",
-                        formatter: phpr.grid.formatText,
                         editable:  meta[i]['readOnly'] ? false : true
                     });
                     break;

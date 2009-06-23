@@ -40,29 +40,6 @@ phpr.grid.formatTime = function(value) {
     }
 },
 
-phpr.grid.formatText = function(value) {
-    // Summary:
-    //    Converts characters '<', '>' and '&' into readable HTML entities. Example: receives 'This is very
-    // <important>' and returns 'This is very &lt;important&gt;'
-    //    If there weren't converted any characters and length of string exceeds maximum allowed length, it is stripped
-
-    var maxLength = 25;
-
-    value = value.toString();
-
-    var output = value.replace(/&/g, "&amp;");
-    output     = output.replace(/</g, "&lt;");
-    output     = output.replace(/>/g, "&gt;");
-
-    if (value == output) {
-        if (output.length > maxLength) {
-            output = output.substr(0, maxLength) + '...';
-        }
-    }
-
-    return output;
-},
-
 phpr.grid.formatUpload = function(value) {
     if (value.indexOf('|') > 0) {
         files = value.split('||');
@@ -169,6 +146,30 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
             this.widget.setValue(inValue);
         } else {
             this.inherited(arguments);
+        }
+    },
+
+    format:function(inRowIndex, inItem) {
+        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+            return this.formatEditing(d, inRowIndex);
+        } else {
+            var maxLength = 25;
+
+            d = d.toString();
+
+            var output = d.replace(/&/g, "&amp;");
+            output     = output.replace(/</g, "&lt;");
+            output     = output.replace(/>/g, "&gt;");
+
+            // Only if there were not converted html entities, strip string if it exceeds max length
+            // That is because if the string is cut by inside an html entity, it will be shown wrong:
+            if (d == output) {
+                if (output.length > maxLength) {
+                    output = output.substr(0, maxLength) + '...';
+                }
+            }
+            return output;
         }
     }
 });
