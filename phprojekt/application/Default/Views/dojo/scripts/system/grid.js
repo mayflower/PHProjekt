@@ -162,6 +162,17 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         });
     }
 });
+
+dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
+    setValue: function(inRowIndex, inValue) {
+        if (this.widget && this.widget.setValue) {
+            this.widget.setValue(inValue);
+        } else {
+            this.inherited(arguments);
+        }
+    }
+});
+
 var dgc = dojox.grid.cells;
 dgc.DateTextBox.markupFactory = function(node, cell){
     dgc._Widget.markupFactory(node, cell);

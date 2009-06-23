@@ -225,7 +225,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:     percent,
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
-                        type:      dojox.grid.cells.Input,
+                        type:      phpr.grid.cells.Text,
                         styles:    "",
                         formatter: phpr.grid.formatText,
                         editable:  meta[i]['readOnly'] ? false : true
