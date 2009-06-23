@@ -364,14 +364,14 @@ class Minutes_IndexController extends IndexController
      * Final minutes only allow write access to status field
      * @todo This should really be placed inside the model itself
      *
-     * @param array                     $params  The post values
-     * @param Phprojekt_Model_Interface $model   The current module to save
-     * @param boolean                   $newItem If is new item or not
-     *
      * @return array
      */
-    public function setParams($params, Phprojekt_Model_Interface $model, $newItem = false)
+    public function setParams()
     {
+        $args   = func_get_args();
+        $params = $args[0];
+        $model  = $args[1];
+
         if (4 == $model->itemStatus) {
             if (isset($params['itemStatus'])) {
                 return array('itemStatus' => (int) $params['itemStatus']);

@@ -607,14 +607,16 @@ class IndexController extends Zend_Controller_Action
      * Set some values deppend on the params
      * Each module can implement this function to change their values
      *
-     * @param array                     $params  The post values
-     * @param Phprojekt_Model_Interface $model   The current module to save
-     * @param boolean                   $newItem If it is a new item or not
-     *
      * @return array
      */
-    public function setParams($params, $model, $newItem = false)
+    public function setParams()
     {
-        return $params;
+        $args = func_get_args();
+
+        if (1 > count($args)) {
+            throw new Exception('Missing argument');
+        }
+
+        return $args[0];
     }
 }

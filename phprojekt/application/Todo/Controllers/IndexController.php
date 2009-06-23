@@ -38,14 +38,15 @@ class Todo_IndexController extends IndexController
      *
      * Set the rights for each user (owner, userId and the normal access tab)
      *
-     * @param array                     $params  The post values
-     * @param Phprojekt_Model_Interface $model   The current module to save
-     * @param boolean                   $newItem If is new item or not
-     *
      * @return array
      */
-    public function setParams($params, $model, $newItem = false)
+    public function setParams()
     {
+        $args    = func_get_args();
+        $params  = $args[0];
+        $model   = $args[1];
+        $newItem = (isset($args[2])) ? $args[2] : false;
+
         return Default_Helpers_Right::addRightsToAssignedUser('userId', $params, $model, $newItem);
     }
 }
