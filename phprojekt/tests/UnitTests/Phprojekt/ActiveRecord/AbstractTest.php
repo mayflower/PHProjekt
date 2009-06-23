@@ -436,4 +436,38 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
                           'contactId'       => "");
         $this->assertEquals($expected, $project->toArray());
     }
+
+    /**
+     * Test what happens if calling find() with no argument
+     */
+    public function testFindWithNoArgument()
+    {
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $this->setExpectedException('Phprojekt_ActiveRecord_Exception');
+        // This triggers an undefined index error, should throw an exception instead
+        $project->find();
+    }
+
+    /**
+     * Test what happens if calling find() with NULL argument
+     */
+    public function testFindWithNull()
+    {
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $this->setExpectedException('Phprojekt_ActiveRecord_Exception');
+        // This acts like find(0), should throw an exception instead.
+        $project->find(NULL);
+    }
+
+    /**
+     * Test what happens if calling find() with 2 arguments
+     */
+    public function testFindWithTwoArgument()
+    {
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $this->setExpectedException('Phprojekt_ActiveRecord_Exception');
+        // Should throw an exception instead.
+        $project->find(1, 2);
+    }
 }
+

@@ -998,6 +998,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         $args = func_get_args();
 
+        if (1 > count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Missing argument');
+        }
+        if (1 < count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Too many arguments');
+        }
+        if (is_null($args[0])) {
+            throw new Phprojekt_ActiveRecord_Exception('Argument cannot be NULL');
+        }
+
         $find = parent::find($args[0]);
 
         if (false === is_array($find) || count($find) === 0) {
