@@ -1177,26 +1177,39 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     /**
      * Callback function for _quoteTableAndFieldName
      *
-     * @param string
+     * @param array $data Identifier to convert
      *
      * return string
      */
-    private function _callbackQuoteIdentifier1($string)
+    private function _callbackQuoteIdentifier1($data)
     {
-        return Phprojekt::getInstance()->getDb()->quoteIdentifier($string[0]);
+        return Phprojekt::getInstance()->getDb()->quoteIdentifier($data[0]);
     }
 
     /**
      * Callback function for _quoteTableAndFieldName
      *
-     * @param string
+     * @param array $data Array with the string to be quoted
      *
      * @return string
      */
-    private function _callbackQuoteIdentifier2($string)
+    private function _callbackQuoteIdentifier2($data)
     {
-        return " " . Phprojekt::getInstance()->getDb()->quoteIdentifier(trim($string[0])) . " ";
+        return " " . Phprojekt::getInstance()->getDb()->quoteIdentifier(trim($data[0])) . " ";
     }
+
+    /**
+     * Callback function for _quoteTableAndFieldName
+     *
+     * @param array $data Array with the string to be converter
+     *
+     * @return string
+     */
+    private function _callbackUpper($data)
+    {
+        return strtoupper($data[1]);
+    }
+
     /**
      * Quote all the table.field and table.field_name
      * that are not already quoted
@@ -1208,18 +1221,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     private function _quoteTableAndFieldName($string)
     {
         // Quote value.value
-        $string = preg_replace_callback("/([a-z0-9_]+\.[a-z0-9_]+)/",
-            array($this, '_callbackQuoteIdentifier1'),
-            $string);
+        $string = preg_replace_callback("/[a-z0-9_]+\.[a-z0-9_]+/", array($this, '_callbackQuoteIdentifier1'), $string);
 
         // Put some common words in uppercase
-        $string = preg_replace("/\s(and|or|as|in|on|null|not|join|left|right|inner)\s/e",
-                               "strtoupper('\\1')", $string);
+        $string = preg_replace_callback("/\s(and|or|as|in|on|null|not|join|left|right|inner)\s/",
+            array($this, '_callbackUpper'), $string);
 
         // Quote the single table or fields in lowercase
-        return preg_replace_callback("/(\s[a-z_]+\s)/",
-            array($this, '_callbackQuoteIdentifier2'),
-            $string);
+        return preg_replace_callback("/\s[a-z_]+\s/", array($this, '_callbackQuoteIdentifier2'), $string);
     }
 
     /**
@@ -1234,9 +1243,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function convertVarToSql($varName)
     {
-        $varName = preg_replace("/^([A-Z])/e", "strtolower('\\1')", $varName);
-        return preg_replace("/([A-Z])/e", "'_'.strtolower('\\1')", $varName);
+        static $replace = array();
+        if (empty($replace)) {
+            foreach (range('A','Z') as $char) {
+                $replace[$char] = '_' . strtolower($char);
+            }
+        }
+
+        return ltrim(strtr($varName, $replace), '_');
     }
+
     /**
      * Convert from SQl to Camel case
      * var_name   => varName
@@ -1248,7 +1264,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function convertVarFromSql($varName)
     {
-        return preg_replace("/_([a-z])/e", "strtoupper('\\1')", $varName);
+        static $replace = array();
+        if (empty($replace)) {
+            foreach (range('A','Z') as $char) {
+                $replace['_' . strtolower($char)] = $char;
+            }
+        }
+
+        return strtr($varName, $replace);
     }
 
     /**
