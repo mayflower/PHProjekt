@@ -166,8 +166,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         name:       meta[i]["label"],
                         field:      meta[i]["key"],
                         styles:     "text-align: center;",
-                        type:       dojox.grid.cells.Input,
-                        formatter:  phpr.grid.formatTime,
+                        type:       phpr.grid.cells.Text,
                         editable:   meta[i]['readOnly'] ? false : true
                     });
                     break;
@@ -212,9 +211,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                             width:     percent,
                             name:      meta[i]["label"],
                             field:     meta[i]["key"],
-                            type:      dojox.grid.cells.Input,
+                            type:      phpr.grid.cells.Text,
                             styles:    "text-align: center;",
-                            formatter: phpr.grid.formatText,
                             editable:  false
                         });
                     }
@@ -236,9 +234,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         width:     percent,
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
-                        type:      dojox.grid.cells.Input,
+                        type:      phpr.grid.cells.Text,
                         styles:    "",
-                        formatter: phpr.grid.formatText,
                         editable:  meta[i]['readOnly'] ? false : true
                     });
                     break;
@@ -333,7 +330,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 structure: [{
                             defaultCell: {
                                 editable: true,
-                                type:     dojox.grid.cells.Input,
+                                type:     phpr.grid.cells.Text,
                                 styles:   'text-align: left;'
                             },
                             rows: [this.gridLayout]
