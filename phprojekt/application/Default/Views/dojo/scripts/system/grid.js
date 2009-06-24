@@ -184,11 +184,16 @@ dojo.declare("phpr.grid.cells.Textarea", dojox.grid.cells._Widget, {
     },
 
     format:function(inRowIndex, inItem) {
+        var maxLength = 35;
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
         } else {
             output = this.strip_tags(d);
+            if (output.length > maxLength) {
+                output = output.substr(0, maxLength) + '...';
+            }
             return output;
         }
     },
