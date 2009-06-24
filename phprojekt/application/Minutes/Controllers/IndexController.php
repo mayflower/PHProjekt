@@ -349,11 +349,8 @@ class Minutes_IndexController extends IndexController
         $minutes = $this->getModelObject()->find($id);
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
-            // @todo Throw out this check for sent headers, its only here for running unittest
-            if ($this->getResponse()->canSendHeaders()) {
-                $this->getResponse()->setHeader("Content-Disposition", "inline; filename=minutes-".$minutes->id.".pdf");
-                $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
-            }
+            $this->getResponse()->setHeader("Content-Disposition", "inline; filename=minutes-" . $minutes->id . ".pdf");
+            $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
             echo Minutes_Helpers_Pdf::getPdf($minutes);
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);

@@ -297,20 +297,6 @@ class Minutes_ItemController_Test extends FrontInit
     /**
      * Test various methods to get a PDF
      */
-    public function testPdfGeneration()
-    {
-        $this->setRequestUrl('Minutes/index/pdf/id/3');
-        $response = $this->getResponse();
-
-        $this->assertContains('SecondTestTitle', $response);
-        $this->assertContains('SecondTestDescription', $response);
-        $this->assertContains('DerTitel', $response);
-        $this->assertContains('SecondTitleSecondSave', $response);
-    }
-
-    /**
-     * Test various methods to get a PDF
-     */
     public function testPdfNoId()
     {
         $this->setRequestUrl('Minutes/index/pdf');
