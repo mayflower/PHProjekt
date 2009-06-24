@@ -155,20 +155,15 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
             return this.formatEditing(d, inRowIndex);
         } else {
             var maxLength = 25;
+            var output = d.toString();
 
-            d = d.toString();
-
-            var output = d.replace(/&/g, "&amp;");
-            output     = output.replace(/</g, "&lt;");
-            output     = output.replace(/>/g, "&gt;");
-
-            // Only if there were not converted html entities, strip string if it exceeds max length
-            // That is because if the string is cut by inside an html entity, it will be shown wrong:
-            if (d == output) {
-                if (output.length > maxLength) {
-                    output = output.substr(0, maxLength) + '...';
-                }
+            if (output.length > maxLength) {
+                output = output.substr(0, maxLength) + '...';
             }
+            output = output.replace(/&/g, "&amp;");
+            output = output.replace(/</g, "&lt;");
+            output = output.replace(/>/g, "&gt;");
+
             return output;
         }
     }
@@ -194,6 +189,10 @@ dojo.declare("phpr.grid.cells.Textarea", dojox.grid.cells._Widget, {
             if (output.length > maxLength) {
                 output = output.substr(0, maxLength) + '...';
             }
+            output = output.replace(/&/g, "&amp;");
+            output = output.replace(/</g, "&lt;");
+            output = output.replace(/>/g, "&gt;");
+
             return output;
         }
     },
