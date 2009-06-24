@@ -34,9 +34,6 @@ dojo.declare("phpr.Minutes.Grid", phpr.Default.Grid, {
                     this.gridLayout[i].width = '10%';
                     break;
                 case 'title':
-                    this.gridLayout[i].formatter = function(value) {
-                        return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    }
                     this.gridLayout[i].width = '35%';
                     break;
                 case 'description':
