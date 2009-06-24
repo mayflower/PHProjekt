@@ -28,10 +28,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _scrollDelayed:        0,
     _scrollConnection:     null,
     _actionPending:        false,
+    _dateWheelChanged:     false, // Whether the current date has just changed using the mouse wheel
 
     SCROLL_UP:    1,
     SCROLL_DOWN: -1,
-    SCROLL_DELAY: 5,
+    SCROLL_DELAY: 12,
 
     constructor:function() {
         this.module = "Calendar";
@@ -119,6 +120,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.setSubmoduleNavigation();
         this.setScheduleBar(false, false);
         this._actionPending = false;
+        phpr.loading.hide();
     },
 
     loadDayListSelf:function() {
@@ -656,6 +658,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
            var scrollValue = e[(!dojo.isMozilla ? "wheelDelta" : "detail")] * (!dojo.isMozilla ? 1 : -1);
            dojo.publish('Calendar.scrollDone', [scrollValue]);
         });
+        if (this._dateWheelChanged) {
+            this.highlightScheduleBarDate();
+            this._dateWheelChanged = false;
+        }
         this._actionPending = false;
     },
 
@@ -667,7 +673,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
         // Scrolled UP or DOWN?
         if (scrollValue > 0) {
-            // UP - Is this the second time user scrolls up, and the grid scrolling space has reached its top?
+            // UP - Is this at least the second time user scrolls up, and the grid scrolling space has reached its top?
             if (this._scrollLastDirection == this.SCROLL_UP && this._gridLastScrollTop == grid.scrollTop) {
                 this._scrollDelayed ++;
                 // Wait for a specific amount of scroll movements, so that month change doesn't happen without intention
@@ -677,13 +683,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
                     dojo.publish('Calendar.setDate', [0])
+                    this._dateWheelChanged = true;
                 }
             } else {
                 this._scrollLastDirection = this.SCROLL_UP;
                 this._scrollDelayed       = 0;
             }
         } else {
-            // DOWN - Is this the second time user scrolls up, and the grid scrolling space has reached its bottom?
+            // DOWN - Is this at least the second time user scrolls up, and the grid scrolling space has reached its
+            // bottom?
             if (this._scrollLastDirection == this.SCROLL_DOWN && this._gridLastScrollTop == grid.scrollTop) {
                 this._scrollDelayed ++;
                 // Wait for a specific amount of scroll movements, so that month change doesn't happen without intention
@@ -692,6 +700,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollLastDirection = 0;
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
+                    this._dateWheelChanged = true;
                     dojo.publish('Calendar.setDate', [2])
                 }
             } else {
@@ -720,7 +729,21 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             return true;
         } else {
             this._actionPending = true;
+            phpr.loading.show();
             return false;
         }
+    },
+
+    highlightScheduleBarDate:function() {
+        // Summary:
+        //    Highlights the date after it has been changed using the mouse wheel
+        text = dojo.byId('scheduleBarDate');
+        text.style.color="white";
+        dojox.fx.highlight({
+            node:     'scheduleBarDate',
+            color:    '#ffff99',
+            duration: 1200
+        }).play();
+        setTimeout('text.style.color="black";', 1200);
     }
 });
