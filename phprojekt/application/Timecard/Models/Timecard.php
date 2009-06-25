@@ -279,8 +279,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $startTime = $this->getAdapter()->quote($this->startTime);
         $date      = $this->getAdapter()->quote($this->date);
         if (null !== $this->endTime) {
-            $endTime   = $this->getAdapter()->quote($this->endTime);
-            $where = sprintf(" owner_id = %d AND date = %s AND "
+            $endTime = $this->getAdapter()->quote($this->endTime);
+            $where   = sprintf(" owner_id = %d AND date = %s AND "
                 . " ((start_time <= %s AND end_time > %s) OR (start_time < %s AND end_time >= %s) "
                 . " OR (start_time <= %s AND end_time >= %s) OR (start_time >= %s AND end_time <= %s) ) ",
                 (int) Phprojekt_Auth::getUserId(), $date,
@@ -304,7 +304,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
-     * Return an array with information about the records, the fields and some convinations
+     * Return an array with information about the records, the fields and some combinations
      * with other tables (timecard and timeproj)
      *
      * @param string  $view   Type of view
