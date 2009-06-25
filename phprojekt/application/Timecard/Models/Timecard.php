@@ -205,21 +205,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $startTime = substr($startTime, 0, 4);
                 }
                 $startTime = (int) $startTime;
-                if (($startTime >= 2100) || ($startTime < 800)) {
-                    $this->_validate->error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Hours'),
-                        'label'   => Phprojekt::getInstance()->translate('Hours'),
-                        'message' => Phprojekt::getInstance()->translate('Start time has to be between 8:00 and '
-                            . '21:00')));
-                    return false;
-                }
 
+                $showError = false;
+                $records = $this->fetchAll($this->_getWhereForTimes());
                 if ($this->id != 0) {
                     // Stop Working Times button pressed, or it is being saved an existing period
                     // Check if end time overlaps any existing period but the current one
-                    $records = $this->fetchAll($this->_getWhereForTimes());
                     if (count($records) > 0) {
-                        $showError = false;
                         foreach ($records as $record) {
                             if ($record->id != $this->id) {
                                 $showError = true;
@@ -235,25 +227,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                             return false;
                         }
                     }
-                }
-
-                // Check if new period overlaps any existing one
-                $records = $this->fetchAll($this->_getWhereForTimes());
-                if (count($records) > 0) {
-                    if ($this->id != 0) {
-                        // Stop Working Times button pressed, or it is being saved an existing period
-                        // Check if end time overlaps any existing period but the current one
-                        $showError = false;
-                        foreach ($records as $record) {
-                            if ($record->id != $this->id) {
-                                $showError = true;
-                                break;
-                            }
-                        }
-                    } else {
+                } else {
+                    if (count($records) > 0 && $this->id == 0) {
                         $showError = true;
                     }
-
                     if ($showError) {
                         $this->_validate->error->addError(array(
                             'field'   => Phprojekt::getInstance()->translate('Time period'),
