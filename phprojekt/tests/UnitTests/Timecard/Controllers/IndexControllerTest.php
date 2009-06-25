@@ -84,6 +84,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', date("Y-m-d"));
         $this->request->setParam('startTime', '10:00');
+        $this->request->setParam('endTime', '');
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -103,6 +104,7 @@ class Timecard_IndexController_Test extends FrontInit
         // INSERT. Just defined end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', date("Y-m-d"));
+        $this->request->setParam('startTime', '');
         $this->request->setParam('endTime', '19:00');
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
