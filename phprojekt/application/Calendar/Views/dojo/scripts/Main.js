@@ -661,7 +661,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         });
         if (this._dateWheelChanged) {
             this.highlightScheduleBarDate();
-            this._dateWheelChanged = false;
+            this._dateWheelChanged         = false;
+            dojo.byId('gridBox').scrollTop = 0;
         }
         this._actionPending = false;
     },
@@ -738,8 +739,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     highlightScheduleBarDate:function() {
         // Summary:
         //    Highlights the date after it has been changed using the mouse wheel
-        text = dojo.byId('scheduleBarDate');
-        text.style.color="white";
+        text             = dojo.byId('scheduleBarDate');
+        text.style.color = "white";
         dojox.fx.highlight({
             node:     'scheduleBarDate',
             color:    '#ffff99',
