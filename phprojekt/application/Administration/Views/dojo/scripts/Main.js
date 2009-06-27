@@ -44,6 +44,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
+        this.checkTreeSize();
     },
 
     loadSubModule:function(/*String*/module) {

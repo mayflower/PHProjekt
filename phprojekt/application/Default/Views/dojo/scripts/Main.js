@@ -213,6 +213,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        this.checkTreeSize();
     },
 
     setGlobalModulesNavigation:function() {
@@ -916,5 +917,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // description:
         //    Open a dialog for edit the HTML content
         this.form.openHtmlEditor(nodeId, value);
+    },
+
+    checkTreeSize:function() {
+        // Summary
+        //    This avoids unwanted vertical scrollbar in the tree when general height is not too much
+        var treeHeight = dojo.byId('treeBox').offsetHeight;
+        if (treeHeight < 300) {
+            dojo.byId('tree-navigation').style.height='90%';
+        }
     }
 });

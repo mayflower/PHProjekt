@@ -61,6 +61,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         var updateUrl = null;
         this.grid     = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         this.form     = new this.formWidget(this, 0, this.module, this._date);
+        this.checkTreeSize();
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {

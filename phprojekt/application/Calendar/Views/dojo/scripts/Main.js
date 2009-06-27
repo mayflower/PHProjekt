@@ -88,6 +88,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
         this.loadAppropriateList();
+        this.checkTreeSize();
     },
 
     loadAppropriateList:function() {
