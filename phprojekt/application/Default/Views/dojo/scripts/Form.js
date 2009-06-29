@@ -673,7 +673,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                             if (this.sendData['string']) {
                                 new phpr.handleResponse('serverFeedback', data);
                             }
-                            if (data.type =='success') {
+                            if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 this.publish("setUrlHash", [phpr.module]);
                             }
@@ -699,7 +699,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                             + '/id/' + this.id,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
-                            if (data.type =='success') {
+                            if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 this.publish("setUrlHash", [phpr.module]);
                             }

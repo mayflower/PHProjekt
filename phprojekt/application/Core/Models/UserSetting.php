@@ -211,6 +211,7 @@ class Core_Models_UserSetting
         if (!array_key_exists($params['language'], $this->_languageRange)) {
             $message = Phprojekt::getInstance()->translate("The Language value do not exists");
         }
+
         return $message;
     }
 

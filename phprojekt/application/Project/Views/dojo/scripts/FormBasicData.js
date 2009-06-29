@@ -48,7 +48,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
                             if (this.sendData['string']) {
                                 new phpr.handleResponse('serverFeedback', data);
                             }
-                            if (data.type =='success') {
+                            if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 this.publish("changeProject", [this.id]);
                             }

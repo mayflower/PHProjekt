@@ -61,11 +61,11 @@ dojo.declare("phpr.Administration.Form", phpr.Default.Form, {
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/moduleName/' + phpr.submodule,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (!this.id) {
-                   this.id = data['id'];
-               }
-               if (data.type =='success') {
+                new phpr.handleResponse('serverFeedback', data);
+                if (!this.id) {
+                    this.id = data['id'];
+                }
+                if (data.type == 'success') {
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }

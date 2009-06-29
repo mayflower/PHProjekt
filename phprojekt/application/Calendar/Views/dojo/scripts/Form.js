@@ -442,7 +442,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
                             + '/id/' + this.id,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
-                            if (data.type =='success') {
+                            if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 this.publish("setUrlHash", [phpr.module]);
                             }
