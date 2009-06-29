@@ -207,7 +207,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $startTime = (int) $startTime;
 
                 $showError = false;
-                $records = $this->fetchAll($this->_getWhereForTimes());
+                $records   = $this->fetchAll($this->_getWhereForTimes());
                 if ($this->id != 0) {
                     // Stop Working Times button pressed, or it is being saved an existing period
                     // Check if end time overlaps any existing period but the current one
