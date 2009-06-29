@@ -694,7 +694,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $tableDataForCreate['owner_id'] = array('type'   => 'int',
                                                 'length' => 11);
         array_merge($tableDataForCreate, $tableData);
-        $tableName   = strtolower($tableName);
+        $tableName   = strtolower(Phprojekt_ActiveRecord_Abstract::convertVarToSql($tableName));
         $tableFields = $tableManager->getTableFields($tableName, $tableDataForCreate);
 
         // Search for Modify and Delete
@@ -703,6 +703,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $found = false;
             foreach ($newFields as $newValues) {
                 if ($oldValues['id'] == $newValues['id']) {
+                    $newValues['tableField']    = preg_replace('/[^a-zA-Z0-9_]/i', '', $newValues['tableField']);
                     $fieldDefinition            = $tableData[$newValues['tableField']];
                     $fieldDefinition['name']    = $newValues['tableField'];
                     if ($oldValues['tableField'] == $newValues['tableField']) {
@@ -731,6 +732,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         // Search for Add
         foreach ($newFields as $newValues) {
             if ($newValues['id'] == 0) {
+                $newValues['tableField'] = preg_replace('/[^a-zA-Z0-9_]/i', '', $newValues['tableField']);
                 $fieldDefinition         = $tableData[$newValues['tableField']];
                 $fieldDefinition['name'] = $newValues['tableField'];
                 if (!$tableManager->addField($tableName, $fieldDefinition)) {
