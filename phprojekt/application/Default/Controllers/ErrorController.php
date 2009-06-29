@@ -65,7 +65,7 @@ class ErrorController extends Zend_Controller_Action
                     $error = array('type'    => 'error',
                                    'message' => $exception->getMessage(),
                                    'code'    => $exception->getCode());
-                    echo '{}&&('.Zend_Json_Encoder::encode($error).')';
+                    echo '{}&&(' . Zend_Json_Encoder::encode($error) . ')';
                 } else {
                     $logger = Phprojekt::getInstance()->getLog();
                     $logger->err($exception->getMessage() . "\n" . $exception->getTraceAsString());
