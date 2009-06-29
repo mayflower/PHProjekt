@@ -33,5 +33,27 @@ dojo.declare("phpr.User.Form", phpr.Core.Form, {
 
     useCache:function() {
         return false;
+    },
+
+    submitForm:function() {
+        if (!this.prepareSubmission()) {
+            return false;
+        }
+
+        phpr.send({
+            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/id/' + this.id,
+            content:   this.sendData,
+            onSuccess: dojo.hitch(this, function(data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    var result     = Array();
+                    result.type    = 'success';
+                    result.message = phpr.nls.get('You need reload the browser in order to let changes have effect');
+                    new phpr.handleResponse('serverFeedback', result);
+                    this.publish("updateCacheData");
+                    this.publish("setUrlHash", [phpr.module]);
+                }
+            })
+        });
     }
 });

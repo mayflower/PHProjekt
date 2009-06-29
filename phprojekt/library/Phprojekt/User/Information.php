@@ -169,6 +169,12 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $converted[] = $data;
 
             // timeZone
+            $timeZoneRange = array("0" => 0, "1" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5,
+                                   "6" => 6, "7" => 7, "8" => 8, "9" => 9, "10" =>10, "11" => 11,
+                                   "12" => 12, "-12" => -12, "-11" => -11, "-10" => -10, "-9" => -9,
+                                   "-8" => -8, "-7" => -7, "-6" => -6, "-5" => -5, "-4" => -4,
+                                   "-3" => -3, "-2" => -2, "-1" => -1);
+
             $data = array();
             $data['key']      = 'timeZone';
             $data['label']    = Phprojekt::getInstance()->translate('Time Zone');
@@ -178,11 +184,9 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['position'] = 7;
             $data['fieldset'] = '';
             $data['range'] = array();
-            for ($i = -12; $i <= 12; $i++) {
-                $tmp = array();
-                $tmp['id'] = $i;
-                $tmp['name'] = $i;
-                $data['range'][] = $tmp;
+            foreach ($timeZoneRange as $key => $value) {
+                $data['range'][] = array('id'   => $key,
+                                         'name' => $value);
             }
             $data['required'] = true;
             $data['readOnly'] = false;

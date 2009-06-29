@@ -61,11 +61,18 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/moduleName/' + phpr.submodule,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (!this.id) {
-                   this.id = data['id'];
-               }
-               if (data.type =='success') {
+                new phpr.handleResponse('serverFeedback', data);
+                if (!this.id) {
+                    this.id = data['id'];
+                }
+                if (data.type == 'success') {
+                    if (phpr.submodule == 'User') {
+                        var result     = Array();
+                        result.type    = 'success';
+                        result.message = phpr.nls.get('You need reload the browser in order to let changes have '
+                            + 'effect');
+                        new phpr.handleResponse('serverFeedback', result);
+                    }
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }

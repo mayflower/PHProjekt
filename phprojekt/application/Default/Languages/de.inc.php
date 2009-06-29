@@ -150,6 +150,8 @@ $lang["Invalid json format"] = "Ungültiges JSON-Format";
 $lang["User error"] = "User Error";
 $lang["Internal javascript error"] = "Interne JavaScript-Fehler";
 $lang["Unexpected error"] = "Unerwarteter Fehler";
+$lang["You need reload the browser in order to let changes have effect"] = "Sie müssen den Browser neu laden, um zu "
+    . "lassen änderungen wirksam";
 
 // System Modules
 $lang["Administration"] = "Administration";
