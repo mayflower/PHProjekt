@@ -85,7 +85,9 @@ class Timecard_IndexController extends IndexController
             $model   = $this->getModelObject()->find($id);
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
-        $startTime = $this->getRequest()->getParam('startTime');
+
+        $startTime = $this->getRequest()->getParam('startTime', null);
+        $endTime   = $this->getRequest()->getParam('endTime', null);
         if (empty($startTime)) {
             // Date filter to find the open register
             $db      = Phprojekt::getInstance()->getDb();
@@ -104,7 +106,7 @@ class Timecard_IndexController extends IndexController
                 $message = Phprojekt::getInstance()->translate(self::NOT_FOUND);
                 $showId  = null;
             }
-        } else if (null == $this->getRequest()->getParam('endTime', null)) {
+        } else if (empty($endTime)) {
             $params = $this->getRequest()->getParams();
             unset($params['endTime']);
             Default_Helpers_Save::save($model, $params);
