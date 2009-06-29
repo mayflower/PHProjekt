@@ -90,6 +90,7 @@
       $ chmod -R 0750 /srv/www
       $ find /srv/www -type f -exec chmod -x '{}' ';'
       $ chmod -R g+w /srv/www/{tmp,application,logs}
+      $ chmod -R g+w /srv/www/library/HTMLPurifier/standalone/HTMLPurifier/DefinitionCache/Serializer/{HTML,CSS,URI}
       $ chgrp -R www /srv/www
 
 5. Finalize
