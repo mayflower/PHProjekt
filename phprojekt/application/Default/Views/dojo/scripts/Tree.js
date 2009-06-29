@@ -19,17 +19,19 @@
 
 dojo.provide("phpr.Default.Tree");
 
+phpr.treePaths               = new Array();
+phpr.treeLastProjectSelected = null;
+
 dojo.declare("phpr.Default.Tree", phpr.Component, {
-    // summary: This class is responsible for rendering the Tree of a default module
-    _treeNode:  null,
-    _url:       null,
-    _idName:    null,
-    _store:     null,
-    _model:     null,
-    _paths:     new Array(),
+    // Summary: This class is responsible for rendering the Tree of a default module
+    _treeNode: null,
+    _url:      null,
+    _idName:   null,
+    _store:    null,
+    _model:    null,
 
     constructor:function(main) {
-        // summary: The tree is rendere on construction
+        // Summary: The tree is rendere on construction
         this.main  = main;
         this.setUrl();
         this.setId();
@@ -40,24 +42,32 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     loadTree:function() {
         if (!dijit.byId(this._idName)) {
             // Data of the tree
-            this.getStore();
-            this.getModel();
-            this.tree = this.getTree();
+            var _this = this;
+            phpr.DataStore.addStore({url: this._url});
+            phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
+                var content = _this.processData(dojo.clone(phpr.DataStore.getData({url: _this._url})));
+                _this._store = new dojo.data.ItemFileWriteStore({data: content});
+                _this.getModel();
+                _this.tree = _this.getTree();
 
-            this._treeNode.attr('content', this.tree.domNode);
-            this.tree.startup();
-            dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
+                _this._treeNode.attr('content', _this.tree.domNode);
+                _this.tree.startup();
+                dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
+                _this.finishDraw();
+            })});
         } else {
             this.tree = dijit.byId(this._idName);
+            this.finishDraw();
         }
-        this.checkTreeSize();
-        this.initTree(1);
-        this.selecteCurrent(phpr.currentProjectId);
-        this.closeTree(phpr.currentProjectId);
     },
 
-    getStore:function() {
-        this._store = new dojo.data.ItemFileWriteStore({url: this._url});
+    finishDraw:function() {
+        // Summary:
+        //    Finish the draw process
+        // Description:
+        //    Fix width and select the current project
+        this.checkTreeSize();
+        this.selecteCurrent(phpr.currentProjectId);
     },
 
     getModel:function() {
@@ -77,25 +87,25 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     },
 
     setUrl:function() {
-        // summary:
+        // Summary:
         //    Set the url for get the tree
-        // description:
+        // Description:
         //    Set the url for get the tree
         this._url = phpr.webpath + "index.php/Project/index/jsonTree";
     },
 
     setNode:function() {
-        // summary:
+        // Summary:
         //    Set the node to put the tree
-        // description:
+        // Description:
         //    Set the node to put the tree
         this._treeNode = dijit.byId("treeBox");
     },
 
     setId:function() {
-        // summary:
+        // Summary:
         //    Set the id of the widget
-        // description:
+        // Description:
         //    Set the id of the widget
         this._idName = 'treeNode';
     },
@@ -105,7 +115,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     },
 
     onItemClick:function(item) {
-        // summary: publishes "changeProject" as soon as a tree Node is clicked
+        // Summary: publishes "changeProject" as soon as a tree Node is clicked
         if (!item) {
           item = [];
         }
@@ -113,13 +123,26 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     },
 
     selecteCurrent:function(id) {
-        // summary:
+        // Summary:
         //    Select the current projects and all the parents
-        // description:
+        // Description:
         //    Select the current projects and all the parents
+        var _tree = this.tree;
+        var _this = this;
+
+        // Remove last bold
+        this.tree.model.store.fetchItemByIdentity({identity: phpr.treeLastProjectSelected,
+            onItem:function(item) {
+                if (item) {
+                    var node = _tree._itemNodeMap[item.id];
+                    if (node) {
+                        dojo.removeClass(node.labelNode, "selected");
+                    }
+                }
+        }});
+
         if (id > 1) {
-            var _tree = this.tree;
-            var _this = this;
+            // Add new bold
             this.tree.model.store.fetchItemByIdentity({identity: id,
                 onItem:function(item) {
                     if (item) {
@@ -133,79 +156,46 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                         var node = _tree._itemNodeMap[item.id];
                         if (node) {
                             _tree.focusNode(node);
-                            node.labelNode.style.fontWeight = "bold";
+                            dojo.addClass(node.labelNode, "selected");
+                            phpr.treeLastProjectSelected = item.id;
                         }
                     }
             }});
         }
     },
 
-    initTree:function(id) {
-        // summary:
-        //    Add the path of every project into an array
-        // description:
-        //    Add the path of every project into an array
-        var _tree  = this.tree;
-        var _this  = this;
-        var _paths = this._paths;
-        this.tree.model.store.fetch({
-            query:  {parent: id.toString()},
-            onItem: function(item) {
-                var name  = item.name.toString();
-                var width = dojo.byId('navigation-container').style.width.replace(/px/, "")
-                var depth = item.path[0].match(/\//g).length;
+    processData:function(data) {
+        // Summary:
+        //    Process the data for the tree
+        // Description:
+        //    Collect path and change the long names
+        var width = dojo.byId('navigation-container').style.width.replace(/px/, "");
+        for(var i in data.items) {
+            for(var j in data.items[i]) {
+                var name  = data.items[i]['name'].toString();
+                var depth = data.items[i]['path'][0].match(/\//g).length;
                 if (depth > 5) {
                     depth = 5;
                 }
                 var maxLength = Math.round((width / 11) - (depth - 1));
                 if (name.length > maxLength) {
                     var shortName = name.substr(0, maxLength) + '...';
-                    _tree.model.store.setValue(item, "name", shortName);
+                    data.items[i]['name'] = shortName;
                 }
-                _paths[item.id] = item.path;
-                _this.initTree(item.id);
-                node = _tree._itemNodeMap[item.id];
-                if (node) {
-                    node.labelNode.style.fontWeight = "normal";
-                }
-            }
-        });
-    },
-
-    closeTree:function(id) {
-        // summary:
-        //    Close all the projects exept the current branch
-        // description:
-        //    Close all the projects exept the current branch
-        if (id > 1) {
-            var _tree = this.tree;
-            var _this = this;
-            if (this._paths[id]) {
-                var usedPath = this._paths[id].toString().split("\/");
-                for (i in this._paths) {
-                    if (id != i) {
-                        path = this._paths[i].toString().split("\/");
-                        for (j in path) {
-                            if (path[j] != usedPath[j]) {
-                                node = _tree._itemNodeMap[path[j]];
-                                if (node) {
-                                    _tree._collapseNode(node);
-                                }
-                            }
-                        }
-                    }
-                }
+                phpr.treePaths[data.items[i]['id']] = data.items[i]['path'];
             }
         }
+
+        return data;
     },
 
     getParentId:function(id) {
-        // summary:
+        // Summary:
         //    Return the parent id of one project
-        // description:
+        // Description:
         //    Return the parent id of one project
-        if (this._paths[id]) {
-            var paths = this._paths[id].toString().split("\/").reverse();
+        if (phpr.treePaths[id]) {
+            var paths = phpr.treePaths[id].toString().split("\/").reverse();
             for (i in paths) {
                 if (paths[i] > 0) {
                     return paths[i];

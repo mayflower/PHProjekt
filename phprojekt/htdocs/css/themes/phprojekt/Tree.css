@@ -61,6 +61,10 @@
     cursor: pointer;
 }
 
+.phprojekt .dijitTreeNode .dijitTreeContent .selected {
+    color: #000;
+}
+
 /**** Level 2 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
     margin-left: 0px;
@@ -86,6 +90,10 @@
     text-transform: uppercase;
     text-decoration: none;
     cursor: pointer;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
+    color: #000;
 }
 
 /**** Level 3 ****/
@@ -114,6 +122,10 @@
     margin-left: 0px;
 }
 
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
+    font-weight: bold;
+}
+
 /**** Level 4 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
     margin-left: 24px;
@@ -140,6 +152,10 @@
     margin-left: 0px;
 }
 
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
+    font-weight: bold;
+}
+
 /**** Level 5 ****/
 .phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
     margin-left: 36px;
@@ -164,6 +180,10 @@
     text-transform: none;
     text-decoration: none;
     margin-left: 0px;
+}
+
+.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
+    font-weight: bold;
 }
 
 /* same style as IE selection */
