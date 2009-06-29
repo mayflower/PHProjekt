@@ -68,6 +68,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $dateData['readOnly'] = true;
         $dateData['tab']      = 1;
         $dateData['integer']  = false;
+        $dateData['length']   = 0;
 
         // startDate
         $startDateData = array();
@@ -84,6 +85,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $startDateData['readOnly'] = false;
         $startDateData['tab']      = 1;
         $startDateData['integer']  = false;
+        $startDateData['length']   = 0;
 
         // endDate
         $endDateData = array();
@@ -100,6 +102,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
         $endDateData['readOnly'] = false;
         $endDateData['tab']      = 1;
         $endDateData['integer']  = false;
+        $endDateData['length']   = 0;
 
         switch ($ordering) {
             case 'today':
@@ -131,6 +134,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 $data['integer']  = false;
+                $data['length']   = 0;
 
                 $converted[] = $data;
 
@@ -149,6 +153,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 $data['integer']  = false;
+                $data['length']   = 0;
 
                 $converted[] = $data;
                 break;

@@ -77,6 +77,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     protected $_model;
 
     /**
+     * Info of the model fields in the database
+     *
+     * @var array
+     */
+    protected $_modelInfo = array();
+
+    /**
      * Cache
      *
      * @var array
@@ -113,6 +120,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         parent::__construct($db);
         $this->_model = $model;
+        if (null !== $this->_model) {
+            $this->_modelInfo = $this->_model->info();
+        }
         $this->getTypes();
     }
 
@@ -286,6 +296,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['readOnly'] = false;
         $converted['tab']      = $field->formTab;
         $converted['integer']  = (boolean) $field->isInteger;
+
+        $maxLength = isset($this->_modelInfo['metadata'][$field->tableField]['LENGTH']) ?
+            (int) $this->_modelInfo['metadata'][$field->tableField]['LENGTH'] : 0;
+        $converted['length'] = $maxLength;
 
         return $converted;
     }
@@ -635,7 +649,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 while ($field->valid()) {
                     $key = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->key());
                     if ($key != 'tableName') {
-
                         $value = $field->$key;
                         if (is_numeric($value)) {
                             $data[$i][$key] = (int) $value;

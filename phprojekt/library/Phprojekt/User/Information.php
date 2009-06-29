@@ -68,6 +68,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 255;
 
         $converted[] = $data;
 
@@ -87,6 +88,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['readOnly'] = false;
             $data['tab']      = 1;
             $data['integer']  = false;
+            $data['length']   = 50;
 
             $converted[] = $data;
         }
@@ -106,6 +108,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 255;
 
         $converted[] = $data;
 
@@ -124,6 +127,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 255;
 
         $converted[] = $data;
 
@@ -143,6 +147,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['readOnly'] = false;
             $data['tab']      = 1;
             $data['integer']  = false;
+            $data['length']   = 255;
 
             $converted[] = $data;
 
@@ -165,6 +170,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['readOnly'] = false;
             $data['tab']      = 1;
             $data['integer']  = false;
+            $data['length']   = 0;
 
             $converted[] = $data;
 
@@ -192,6 +198,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['readOnly'] = false;
             $data['tab']      = 1;
             $data['integer']  = false;
+            $data['length']   = 0;
 
             $converted[] = $data;
         }
@@ -213,6 +220,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 0;
 
         $converted[] = $data;
 
@@ -233,6 +241,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = true;
+        $data['length']   = 0;
 
         $converted[] = $data;
 

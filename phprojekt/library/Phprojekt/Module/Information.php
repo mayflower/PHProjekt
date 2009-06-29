@@ -68,6 +68,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 255;
 
         $converted[] = $data;
 
@@ -87,6 +88,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 255;
 
         $converted[] = $data;
 
@@ -107,6 +109,7 @@ class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_Mo
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = true;
+        $data['length']   = 0;
 
         $converted[] = $data;
 

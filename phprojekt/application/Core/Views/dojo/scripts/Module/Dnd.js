@@ -204,7 +204,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     var render        = new phpr.Component();
 
     // Table
-    fieldsTable += template.textFieldRender(phpr.nls.get('Field Name'), 'tableField', tableField, true, false);
+    fieldsTable += template.textFieldRender(phpr.nls.get('Field Name'), 'tableField', tableField, 50, true, false);
     var tableTypeRange = new Array();
     switch (formType) {
         case 'text':
@@ -215,7 +215,7 @@ phpr.editModuleDesignerField = function(nodeId) {
             fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType,
                 true, false);
             fieldsTable += template.textFieldRender(phpr.nls.get('Table Lenght'), 'tableLength', tableLength,
-                true, false);
+                3, true, false);
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
@@ -266,7 +266,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsTable += '</td></tr>';
 
     // Form
-    fieldsForm += template.textFieldRender(phpr.nls.get('Label'), 'formLabel', formLabel, true, false);
+    fieldsForm += template.textFieldRender(phpr.nls.get('Label'), 'formLabel', formLabel, 255, true, false);
 
     switch (formType) {
         case 'selectValues':
@@ -276,7 +276,7 @@ phpr.editModuleDesignerField = function(nodeId) {
             fieldsForm += template.textAreaRender(phpr.nls.get('Range'), 'formRange', formRange, true, false);
             break;
     }
-    fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, true, false);
+    fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, true, false);
 
     fieldsForm += '<tr><td class="label">';
     fieldsForm += '<label for="moduleDesignerSubmitButtonForm">&nbsp;</label>';
@@ -286,7 +286,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsForm += '</td></tr>';
 
     // List
-    fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, true, false);
+    fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, 4, true, false);
 
     fieldsList += '<tr><td class="label">';
     fieldsList += '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>';

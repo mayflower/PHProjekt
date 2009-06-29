@@ -251,6 +251,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data1['readOnly'] = true;
         $data1['tab']      = 1;
         $data1['integer']  = false;
+        $data1['length']   = 0;
 
         // startDate
         $data2 = array();
@@ -267,6 +268,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data2['readOnly'] = false;
         $data2['tab']      = 1;
         $data2['integer']  = false;
+        $data2['length']   = 0;
 
         // endDate
         $data3 = array();
@@ -283,6 +285,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data3['readOnly'] = false;
         $data3['tab']      = 1;
         $data3['integer']  = false;
+        $data3['length']   = 0;
 
         $timecardModel = clone($this->_model);
         $expected = array($data2, $data3);

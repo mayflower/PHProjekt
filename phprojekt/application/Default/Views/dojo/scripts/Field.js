@@ -40,17 +40,18 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    textFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    textFieldRender:function(itemlabel, itemid, itemvalue, itemlength, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
         var html = this.render(["phpr.Default.template", "formtext.html"], null, {
-                            label:    itemlabel,
-                            labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
-                            id:       (itemdisabled) ? itemid + "_disabled" : itemid,
-                            value:    itemvalue,
-                            required: itemrequired,
-                            type:     'text',
-                            disabled: (itemdisabled) ? "disabled" : '',
+                            label:     itemlabel,
+                            labelfor:  (itemdisabled) ? itemid + "_disabled" : itemid,
+                            id:        (itemdisabled) ? itemid + "_disabled" : itemid,
+                            value:     itemvalue,
+                            required:  itemrequired,
+                            type:      'text',
+                            disabled:  (itemdisabled) ? "disabled" : '',
+                            maxlength: (itemlength > 0) ? 'maxlength="' + itemlength + '"' : '',
                             tooltip:   this.getTooltip(itemhint)
                 });
         return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
@@ -69,18 +70,19 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                 });
     },
 
-    passwordFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+    passwordFieldRender:function(itemlabel, itemid, itemvalue, itemlength, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
         var html = this.render(["phpr.Default.template", "formtext.html"], null, {
-                            label:    itemlabel,
-                            labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
-                            id:       (itemdisabled) ? itemid + "_disabled" : itemid,
-                            value:    itemvalue,
-                            required: itemrequired,
-                            type:     'password',
-                            disabled: (itemdisabled) ? "disabled" : '',
-                            tooltip:  this.getTooltip(itemhint)
+                            label:     itemlabel,
+                            labelfor:  (itemdisabled) ? itemid + "_disabled" : itemid,
+                            id:        (itemdisabled) ? itemid + "_disabled" : itemid,
+                            value:     itemvalue,
+                            required:  itemrequired,
+                            type:      'password',
+                            maxlength: (itemlength > 0) ? 'maxlength="' + itemlength + '"' : '',
+                            disabled:  (itemdisabled) ? "disabled" : '',
+                            tooltip:   this.getTooltip(itemhint)
                 });
         return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
     },

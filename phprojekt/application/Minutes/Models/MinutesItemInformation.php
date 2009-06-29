@@ -166,7 +166,8 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             'required' => false,
             'readOnly' => false,
             'tab'      => 1,
-            'integer'  => false);
+            'integer'  => false,
+            'length'   => 0);
     }
 
     /**
@@ -232,6 +233,7 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
 
         // title
         $converted[] = $this->_fillTemplate('title', 'title', 'text', 'title', 2, array(
+            'length'   => 255,
             'required' => true));
 
         // topicType

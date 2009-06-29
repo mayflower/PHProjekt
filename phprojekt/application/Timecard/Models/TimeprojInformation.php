@@ -70,6 +70,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 $data['integer']  = false;
+                $data['length']   = 0;
 
                 $converted[] = $data;
 
@@ -97,6 +98,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 $data['integer']  = true;
+                $data['length']   = 0;
 
                 $converted[] = $data;
 
@@ -115,6 +117,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 $data['integer']  = false;
+                $data['length']   = 0;
 
                 $converted[] = $data;
 
@@ -133,6 +136,7 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $data['readOnly'] = true;
                 $data['tab']      = 1;
                 $data['integer']  = false;
+                $data['length']   = 0;
 
                 $converted[] = $data;
                 break;

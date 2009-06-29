@@ -68,6 +68,7 @@ class Phprojekt_Groups_Information extends EmptyIterator implements Phprojekt_Mo
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
+        $data['length']   = 255;
 
         $converted[] = $data;
 

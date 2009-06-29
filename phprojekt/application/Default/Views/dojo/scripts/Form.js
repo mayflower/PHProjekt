@@ -312,6 +312,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var itemrange    = meta[i]["range"];
                 var itemtab      = meta[i]["tab"] || 1;
                 var itemhint     = meta[i]["hint"];
+                var itemlength   = meta[i]["length"] || 0;
 
                 // Get the first required field
                 if (itemrequired && itemtype != 'hidden' && !firstRequiredField) {
@@ -358,7 +359,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         break;
                     case 'password':
                         this.formdata[itemtab] += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                                                    itemlength, itemrequired, itemdisabled, itemhint);
                         break;
                     case 'percentage':
                         this.formdata[itemtab] += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue,
@@ -380,7 +381,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         break;
                     default:
                         this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                                                    itemlength, itemrequired, itemdisabled, itemhint);
                         break;
                 }
             }
@@ -733,7 +734,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Draw the tags
         this.publish("drawTagsBox", [currentTags]);
 
-        return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, false, false);
+        return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, 0, false, false);
     },
 
     showHistory:function() {
