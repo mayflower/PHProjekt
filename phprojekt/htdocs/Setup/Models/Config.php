@@ -243,10 +243,10 @@ class Setup_Models_Config
 
         $content .= $this->_eol;
         $content .= '; This is another type of logging.' . $this->_eol;
-        $content .= '; E.G.: (PHP) Phprojekt::getInstance()->getLog()->crit("String to be logged");' . $this->_eol;
+        $content .= '; E.G.: (PHP) Phprojekt::getInstance()->getLog()->err("String to be logged");' . $this->_eol;
         $content .= '; Note for developers: there are many different type of logs defined that can be' . $this->_eol;
         $content .= '; added here, see the complete list in phprojekt\library\Phprojekt\Log.php' . $this->_eol;
-        $content .= 'log.crit.filename = "' . $this->_baseDir . 'logs\crit.log"' . $this->_eol;
+        $content .= 'log.err.filename = "' . $this->_baseDir . 'logs\err.log"' . $this->_eol;
 
         return $content;
     }

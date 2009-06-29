@@ -151,8 +151,8 @@ class Setup_Models_Setup
                 $this->_error[] = 'The debug log can not be created';
                 $valid = false;
             }
-            if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'crit.log', 'a', false)) {
-                $this->_error[] = 'The crit log can not be created';
+            if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'err.log', 'a', false)) {
+                $this->_error[] = 'The err log can not be created';
                 $valid = false;
             }
         } else if (!is_writable($logsDir)) {

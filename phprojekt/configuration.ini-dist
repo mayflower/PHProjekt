@@ -69,13 +69,13 @@ log.debug.filename = "/var/www/phprojekt/logs/debug.log"
 
 
 ; This is another type of logging.
-; E.G.: (PHP) Phprojekt::getInstance()->getLog()->crit("String to be logged");
+; E.G.: (PHP) Phprojekt::getInstance()->getLog()->err("String to be logged");
 ; Note for developers: there are many different type of logs defined that can be
 ; added here, see the complete list in phprojekt\library\Phprojekt\Log.php
 ; UNIX
-log.crit.filename = "/var/www/phprojekt/logs/crit.log"
+log.err.filename = "/var/www/phprojekt/logs/err.log"
 ; WINDOWS
-;log.crit.filename = "C:\phprojekt\logs\crit.log"
+;log.err.filename = "C:\phprojekt\logs\err.log"
 
 ;;;;;;;;;;;
 ; MODULES ;
@@ -139,7 +139,7 @@ database.params.password = "phprojekt"
 database.params.dbname   = "phprojekt-testing"
 
 log.debug.filename = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
-log.crit.filename  = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\crit.log"
+log.err.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\err.log"
 
 itemsPerPage       = 3
 userDisplayFormat  = 1
