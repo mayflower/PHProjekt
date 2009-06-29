@@ -93,7 +93,12 @@
       $ chmod -R g+w /srv/www/library/HTMLPurifier/standalone/HTMLPurifier/DefinitionCache/Serializer/{HTML,CSS,URI}
       $ chgrp -R www /srv/www
 
-5. Finalize
+5. Logs
+
+    If the logs do not exist, please, create them
+    /logs/err.log and /logs/debug.log
+
+6. Finalize
 
     Enter the site from your browser (see Browser notes in the Notes section of
     this document).
