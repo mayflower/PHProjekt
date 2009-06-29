@@ -65,7 +65,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this._url = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
-        this.checkTreeSize();
     },
 
     setNewEntry:function() {

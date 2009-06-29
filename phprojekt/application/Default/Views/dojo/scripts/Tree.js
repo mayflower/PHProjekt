@@ -50,6 +50,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         } else {
             this.tree = dijit.byId(this._idName);
         }
+        this.checkTreeSize();
         this.initTree(1);
         this.selecteCurrent(phpr.currentProjectId);
         this.closeTree(phpr.currentProjectId);
@@ -212,5 +213,14 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             }
         }
         return 1;
+    },
+
+    checkTreeSize:function() {
+        // Summary
+        //    This avoids unwanted vertical scrollbar in the tree when general height is not too much
+        var treeHeight = dojo.byId('treeBox').offsetHeight;
+        if (treeHeight < 300) {
+            dojo.byId('tree-navigation').style.height = '90%';
+        }
     }
 });

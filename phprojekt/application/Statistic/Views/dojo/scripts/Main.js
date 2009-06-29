@@ -73,7 +73,6 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var exportButton = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(exportButton.domNode);
         dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
-        this.checkTreeSize();
     },
 
     changeDate:function(start, end) {
