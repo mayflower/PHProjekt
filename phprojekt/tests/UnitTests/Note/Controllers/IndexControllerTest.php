@@ -56,7 +56,6 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title');
         $this->request->setParam('comments', 'comment test');
-        $this->request->setParam('category', 'my category');
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -65,7 +64,6 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title 2');
         $this->request->setParam('comments', 'comment test 2');
-        $this->request->setParam('category', 'my category 2');
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -85,7 +83,6 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title MODIFIED');
         $this->request->setParam('comments', 'comment test MODIFIED');
-        $this->request->setParam('category', 'my category MODIFIED');
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -94,7 +91,6 @@ class Note_IndexController_Test extends FrontInit
         $model->find(1);
         $this->assertEquals('test title MODIFIED', $model->title);
         $this->assertEquals('comment test MODIFIED', $model->comments);
-        $this->assertEquals('my category MODIFIED', $model->category);
     }
 
     /**
@@ -149,7 +145,7 @@ class Note_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":3,"itemId":0,"userId":1,'
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}},"comments":"","projectId":0,"category":""}],"numRows":1})';
+            . '"download":true,"admin":true}},"comments":"","projectId":0}],"numRows":1})';
         $this->assertContains($expected, $response);
 
         // Existing item
@@ -158,8 +154,8 @@ class Note_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","rights":{"currentUser":{"moduleId":3,'
             . '"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}},"comments":"comment test MODIFIED AGAIN","projectId":1,'
-            . '"category":"my category MODIFIED"}],"numRows":1})';
+            . '"delete":true,"download":true,"admin":true}},"comments":"comment test MODIFIED AGAIN","projectId":1'
+            . '}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 

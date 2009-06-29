@@ -53,13 +53,11 @@ class Note_Models_Note_Test extends PHPUnit_Framework_TestCase
         $model->title     = 'Title 3';
         $model->comments  = 'Comments 3';
         $model->projectId = 1;
-        $model->category  = 'category 3';
         $model->save();
 
         $this->assertEquals("Title 3", $model->title);
         $this->assertEquals("Comments 3", $model->comments);
         $this->assertEquals(1, $model->projectId);
-        $this->assertEquals("category 3", $model->category);
     }
 
     /**
@@ -72,12 +70,10 @@ class Note_Models_Note_Test extends PHPUnit_Framework_TestCase
         $model->title     = 'Title 3 modified';
         $model->comments  = 'Comments 3 modified';
         $model->projectId = 1;
-        $model->category  = 'category 3 modified';
         $model->save();
 
         $this->assertEquals("Title 3 modified", $model->title);
         $this->assertEquals("Comments 3 modified", $model->comments);
-        $this->assertEquals("category 3 modified", $model->category);
     }
 
     /**

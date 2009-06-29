@@ -338,7 +338,6 @@ CREATE TABLE `note` (
   `project_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `comments` text default NULL,
-  `category` varchar(50) default NULL,
   `owner_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -579,7 +578,6 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Note', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
 (0, 'Note', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Note', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Note', 'category', 1, 'Category', 'text', 4, 1, NULL, NULL, '', 3, 'center', 1, 3, '1', 0, 0, 0),
 
 (0, 'Calendar', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Calendar', 'place', 1, 'Place', 'text', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),

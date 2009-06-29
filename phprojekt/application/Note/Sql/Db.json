@@ -12,7 +12,6 @@
                 "project_id": {"type": "int", "notNull": "true"},
                 "title":      {"type": "varchar", "notNull": "true"},
                 "comments":   {"type": "text"},
-                "category":   {"type": "varchar", "length": "50"},
                 "owner_id":   {"type": "int"}
             }
         }
@@ -81,27 +80,6 @@
                     "list_align":      "NULL",
                     "list_use_filter": "1",
                     "alt_position":    "0",
-                    "status":          "1",
-                    "is_integer":      "0",
-                    "is_required":     "0",
-                    "is_unique":       "0"
-                },
-
-                {
-                    "table_name":      "Note",
-                    "table_field":     "category",
-                    "form_tab":        "1",
-                    "form_label":      "Category",
-                    "form_type":       "text",
-                    "form_position":   "4",
-                    "form_columns":    "1",
-                    "form_regexp":     "NULL",
-                    "form_range":      "NULL",
-                    "default_value":   "NULL",
-                    "list_position":   "3",
-                    "list_align":      "center",
-                    "list_use_filter": "1",
-                    "alt_position":    "3",
                     "status":          "1",
                     "is_integer":      "0",
                     "is_required":     "0",
