@@ -173,7 +173,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         for(var i in data.items) {
             for(var j in data.items[i]) {
                 var name  = data.items[i]['name'].toString();
-                var depth = data.items[i]['path'][0].match(/\//g).length;
+                var depth = data.items[i]['path'].match(/\//g).length;
                 if (depth > 5) {
                     depth = 5;
                 }
