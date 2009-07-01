@@ -396,7 +396,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 if (this.formdata[tabs[t].id]) {
                     this.formdata[tabs[t].id] += this.fieldTemplate.displayFieldRender('', 'requiredField' + tabs[t].id,
                         '(*) ' + phpr.nls.get('Required Field'), '');
-                    this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, phpr.nls.get(tabs[t].name),
+                    this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, tabs[t].name,
                         'dataFormTab' + tabs[t].id);
                 }
             }

@@ -74,7 +74,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Display minute items grid and input form.
         //    See Default/Form.js, method addAccessTab for
         //    a more detailed example of adding tabs.
-        this.addTab('', 'tabItems', phpr.nls.get('Items'), 'itemsFormTab');
+        this.addTab('', 'tabItems', 'Items', 'itemsFormTab');
 
         dojo.byId('itemsFormTab').style.display = 'none';
 
@@ -138,7 +138,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             'lblPreview':    phpr.nls.get('Preview')
         });
 
-        this.addTab(mailForm, 'tabMail', phpr.nls.get('Mail'), 'mailFormTab');
+        this.addTab(mailForm, 'tabMail', 'Mail', 'mailFormTab');
 
         new dijit.Tooltip({
             connectId:  ['minutesMailFormAdditionalRecipientsTooltip'],
