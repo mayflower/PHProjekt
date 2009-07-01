@@ -71,7 +71,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
     postRenderForm:function() {
         // Add onBlur to the label field for update the tableName
-        dojo.connect(dojo.byId('label'), "onchange",  dojo.hitch(this, "updateDedignerData"));
+        dojo.connect(dojo.byId('label'), "onchange",  dojo.hitch(this, "updateDesignerData"));
     },
 
     openDialog:function() {
@@ -188,7 +188,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         dijit.byId('designerData').attr('value', json);
     },
 
-    updateDedignerData:function(event) {
+    updateDesignerData:function(event) {
         // summary:
         //    Update the field "name" with the value of the name or label
         // description:
