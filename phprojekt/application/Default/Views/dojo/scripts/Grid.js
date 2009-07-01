@@ -20,24 +20,24 @@
 dojo.provide("phpr.Default.Grid");
 
 dojo.declare("phpr.Default.Grid", phpr.Component, {
-    // summary:
+    // Summary:
     //    Class for displaying a PHProjekt grid
-    // description:
+    // Description:
     //    This Class takes care of displaying the list information we receive from our Server in a dojo grid
-    main:               null,
-    id:                 0,
-    updateUrl:          null,
-    _newRowValues:      new Array(),
-    _oldRowValues:      new Array(),
-    gridData:           new Array(),
-    url:                null,
-    _tagUrl:            null,
-    _saveChanges:       null,
+    main:          null,
+    id:            0,
+    updateUrl:     null,
+    _newRowValues: new Array(),
+    _oldRowValues: new Array(),
+    gridData:      new Array(),
+    url:           null,
+    _tagUrl:       null,
+    _saveChanges:  null,
 
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
-        // summary:
+        // Summary:
         //    render the grid on construction
-        // description:
+        // Description:
         //    this function receives the list data from the server and renders the corresponding grid
         this.main          = main;
         this.id            = id;
@@ -60,25 +60,25 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     setUrl:function() {
-        // summary:
+        // Summary:
         //    Set the url for getting the data
-        // description:
+        // Description:
         //    Set the url for getting the data
         this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + this.id;
     },
 
     setNode:function() {
-        // summary:
+        // Summary:
         //    Set the node to put the grid
-        // description:
+        // Description:
         //    Set the node to put the grid
         this._node = dijit.byId("gridBox");
     },
 
     showTags:function() {
-        // summary:
+        // Summary:
         //    Draw the tags
-        // description:
+        // Description:
         //    Draw the tags
         // Get the module tags
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
@@ -90,20 +90,18 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     useIdInGrid:function() {
-        // summary:
+        // Summary:
         //    Draw the ID on the grid
-        // description:
+        // Description:
         //    Draw the ID on the grid
         return true;
     },
 
     setGridLayout:function(meta) {
-        // summary:
+        // Summary:
         //    Create the layout using the different field types
-        // description:
+        // Description:
         //    Create the layout using the different field types
-        var percent = (100 / meta.length) + '%';
-
         if (this.useIdInGrid()) {
             this.gridLayout.push({
                 name:     "ID",
@@ -116,20 +114,24 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         for (var i = 0; i < meta.length; i++) {
             switch(meta[i]["type"]) {
                 case 'selectbox':
-                    var range = meta[i]["range"];
-                    var opts  = new Array();
-                    var vals  = new Array();
-                    var j     = 0;
+                    var range     = meta[i]["range"];
+                    var opts      = new Array();
+                    var vals      = new Array();
+                    var j         = 0;
+                    var maxLength = meta[i]["key"].length;
                     for (j in range){
                         vals.push(range[j]["id"]);
                         opts.push(range[j]["name"]);
+                        if (range[j]["name"].length > maxLength) {
+                            maxLength = range[j]["name"].length;
+                        }
                     }
                     this.gridLayout.push({
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
                         styles:   "text-align: center;",
                         type:     phpr.grid.cells.Select,
-                        width:    percent,
+                        width:    (maxLength * 8) + 'px',
                         options:  opts,
                         values:   vals,
                         editable: meta[i]['readOnly'] ? false : true
@@ -138,7 +140,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'date':
                     this.gridLayout.push({
-                        width:         percent,
+                        width:         '90px',
                         name:          meta[i]["label"],
                         field:         meta[i]["key"],
                         styles:        "text-align: center;",
@@ -151,7 +153,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'percentage':
                     this.gridLayout.push({
-                        width:       percent,
+                        width:       '90px',
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
                         styles:      "text-align: center;",
@@ -162,7 +164,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'time':
                     this.gridLayout.push({
-                        width:      percent,
+                        width:      '60px',
                         name:       meta[i]["label"],
                         field:      meta[i]["key"],
                         styles:     "text-align: center;",
@@ -174,7 +176,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'upload':
                     this.gridLayout.push({
-                        width:       percent,
+                        width:       'auto',
                         name:        meta[i]["label"],
                         field:       meta[i]["key"],
                         styles:      "text-align: center;",
@@ -189,19 +191,23 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     // Has it values for translating an Id into a descriptive String?
                     if (range[0] != undefined) {
                         // Yes
-                        var opts  = new Array();
-                        var vals  = new Array();
-                        var j     = 0;
+                        var opts      = new Array();
+                        var vals      = new Array();
+                        var j         = 0;
+                        var maxLength = meta[i]["key"].length;
                         for (j in range){
                             vals.push(range[j]["id"]);
                             opts.push(range[j]["name"]);
+                            if (range[j]["name"].length > maxLength) {
+                                maxLength = range[j]["name"].length;
+                            }
                         }
                         this.gridLayout.push({
                             name:     meta[i]["label"],
                             field:    meta[i]["key"],
                             styles:   "text-align: center;",
                             type:     phpr.grid.cells.Select,
-                            width:    percent,
+                            width:    (maxLength * 8) + 'px',
                             options:  opts,
                             values:   vals,
                             editable: false
@@ -209,7 +215,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     } else {
                         // No
                         this.gridLayout.push({
-                            width:     percent,
+                            width:     'auto',
                             name:      meta[i]["label"],
                             field:     meta[i]["key"],
                             type:      phpr.grid.cells.Text,
@@ -221,7 +227,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'text':
                     this.gridLayout.push({
-                        width:     percent,
+                        width:     'auto',
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
                         type:      phpr.grid.cells.Text,
@@ -232,7 +238,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 case 'textarea':
                     this.gridLayout.push({
-                        width:     percent,
+                        width:     'auto',
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
                         type:      phpr.grid.cells.Textarea,
@@ -243,7 +249,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
                 default:
                     this.gridLayout.push({
-                        width:     percent,
+                        width:     'auto',
                         name:      meta[i]["label"],
                         field:     meta[i]["key"],
                         type:      phpr.grid.cells.Text,
@@ -256,26 +262,25 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.customGridLayout(meta);
     },
 
-
     customGridLayout:function(meta) {
-        // summary:
+        // Summary:
         //    Custom functions for the layout
-        // description:
+        // Description:
         //    Custom functions for the layout
     },
 
     setClickEdit:function() {
-        // summary:
+        // Summary:
         //    Set the edit type
-        // description:
+        // Description:
         //    Set if each field is ediatable with one or two clicks
         this.grid.singleClickEdit = true;
     },
 
     setExportButton:function(meta) {
-        // summary:
+        // Summary:
         //    Set the export button
-        // description:
+        // Description:
         //    If there is any row, render export Button
         if (meta.length > 0) {
             var params = {
@@ -291,9 +296,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     setSaveChangesButton:function(meta) {
-        // summary:
+        // Summary:
         //    Set the Save changes button
-        // description:
+        // Description:
         //    If there is any row, render Save changes button
         if (meta.length > 0) {
             var params = {
@@ -309,9 +314,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     onLoaded:function(dataContent) {
-        // summary:
+        // Summary:
         //    This function is called when the grid is loaded
-        // description:
+        // Description:
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
         // Layout of the grid
@@ -338,7 +343,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         } else {
             this.setGridLayout(meta);
             this.grid = new dojox.grid.DataGrid({
-                store: store,
+                store:     store,
                 structure: [{
                             defaultCell: {
                                 editable: true,
@@ -361,9 +366,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     showForm:function(e) {
-        // summary:
+        // Summary:
         //    This function publishes a "openForm" Topic
-        // description:
+        // Description:
         //    As soon as a ID cell is clicked the openForm Topic is published
         if (e.cellIndex == 0) {
             var item = this.grid.getItem(e.rowIndex);
@@ -373,9 +378,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     checkCanEdit:function(inCell, inRowIndex) {
-        // summary:
+        // Summary:
         //    Check the access of the item for the user
-        // description:
+        // Description:
         //    If the user can't edit the item keep the current value to restore it later
         //    We can't stop the edition, but we can restore the value
         if (!this.canEdit(inRowIndex)) {
@@ -390,9 +395,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     canEdit:function(inRowIndex) {
-        // summary:
+        // Summary:
         //    Check the access of the item for the user
-        // description:
+        // Description:
         //    Return true if has write or admin accees
         var writePermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["write"];
         var adminPermissions = this.gridData.items[inRowIndex]["rights"][0]["currentUser"][0]["admin"];
@@ -404,9 +409,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     cellEdited:function(inValue, inRowIndex, inFieldIndex) {
-        // summary:
+        // Summary:
         //    Save the changed values for store
-        // description:
+        // Description:
         //    Save only the items that have changed, to save them later
         //    If the user can't edit the item, restore the last value
         if (!this.canEdit(inRowIndex)) {
@@ -427,9 +432,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     toggleSaveButton:function() {
-        // summary:
+        // Summary:
         //    highlight when button gets activated
-        // description:
+        // Description:
         //    highlight when button gets activated
         if (this._saveChanges.disabled == true) {
             dojox.fx.highlight({
@@ -445,9 +450,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     saveChanges:function() {
-        // summary:
+        // Summary:
         //    Apply the changes into the server
-        // description:
+        // Description:
         //    Get all the new values into the _newRowValues
         //    and send them to the server
         this.grid.edit.apply();
@@ -484,18 +489,18 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     },
 
     exportData:function() {
-        // summary:
+        // Summary:
         //    Open a new window in CSV mode
-        // description:
+        // Description:
         //    Open a new window in CSV mode
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList/nodeId/" + this.id);
         return false;
     },
 
     updateData:function() {
-        // summary:
+        // Summary:
         //    Delete the cache for this grid
-        // description:
+        // Description:
         //    Delete the cache for this grid
         phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.deleteData({url: this._tagUrl});

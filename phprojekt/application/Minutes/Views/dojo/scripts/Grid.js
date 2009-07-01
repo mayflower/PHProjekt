@@ -20,37 +20,4 @@
 dojo.provide("phpr.Minutes.Grid");
 
 dojo.declare("phpr.Minutes.Grid", phpr.Default.Grid, {
-    customGridLayout:function(meta) {
-        // Summary:
-        //    Custom functions for the layout
-        // Description:
-        //    Custom functions for the layout
-        for (var i = 0; i < this.gridLayout.length; i++) {
-            switch (this.gridLayout[i].field) {
-                case 'meetingDate':
-                    this.gridLayout[i].width = '10%';
-                    break;
-                case 'startTime':
-                    this.gridLayout[i].width = '10%';
-                    break;
-                case 'title':
-                    this.gridLayout[i].width = '35%';
-                    break;
-                case 'description':
-                    this.gridLayout[i].formatter = function(value) {
-                        return (value.length>50) ?
-                            value.substr(0,50).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")+'...'
-                            : value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    }
-                    this.gridLayout[i].width = '30%';
-                    break;
-                case 'place':
-                    this.gridLayout[i].width = '10%';
-                    break;
-                case 'itemStatus':
-                    this.gridLayout[i].width = '5%';
-                    break;
-            }
-        }
-    }
 });
