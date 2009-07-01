@@ -3,12 +3,14 @@
         <label>
         {{label}}
         {% if required %}
-        &nbsp;(*)
+        &nbsp;<span class="required">(*)</span>
         {% endif %}
         </label>
     </td>
     <td>
-        <label>{{value}}</label>
+        <label>
+            <span class="required">{{value}}</span>
+        </label>
     </td>
     <td>
         {{tooltip|safe}}
