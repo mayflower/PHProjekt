@@ -11,6 +11,7 @@ $lang["No"] = "No";
 $lang["Yes"] = "Yes";
 $lang["Count"] = "Count";
 $lang["Help"] = "Help";
+$lang["Projects"] = "Projects";
 
 // General Fields
 $lang["project"] = "Project";

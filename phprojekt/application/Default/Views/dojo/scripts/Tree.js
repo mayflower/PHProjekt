@@ -53,6 +53,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                 _this._treeNode.attr('content', _this.tree.domNode);
                 _this.tree.startup();
                 dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
+                dojo.byId("navigation-container-title").innerHTML = phpr.nls.get('Projects');
                 _this.finishDraw();
             })});
         } else {

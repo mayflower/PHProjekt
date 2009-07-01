@@ -90,17 +90,16 @@
     background: white;
 }
 
-.phprojekt #subheader #navigation-container-titel {
+.phprojekt #subheader #navigation-container-title {
     background: #294064;
     height: 26px;
-    margin: 0;
     line-height: 24px;
-    text-transform: uppercase;
     color: #ffffff;
     font-weight: 700;
+    padding-left: 8px;
 }
 
-.phprojekt #subheader #navigation-container-titel p {
+.phprojekt #subheader #navigation-container-title p {
     margin-left: 15px;
 }
 
