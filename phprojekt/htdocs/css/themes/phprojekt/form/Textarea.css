@@ -9,7 +9,6 @@
      For TextBox, ComboBox, Spinner: the table that contains the input.
      Otherwise the actual input element.
      */
-    background: #fff url("../images/validationInputBg.png") repeat-x top left;
     padding: 0 0.3em 0.1em 0.3em;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
 }
