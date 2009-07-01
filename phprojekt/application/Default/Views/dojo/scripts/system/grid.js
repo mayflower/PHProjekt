@@ -154,8 +154,8 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
         } else {
-            var maxLength = 25;
-            var output = d.toString();
+            var maxLength = (this.getHeaderNode().offsetWidth - 21) / 7;
+            var output    = d.toString();
 
             if (output.length > maxLength) {
                 output = output.substr(0, maxLength) + '...';
@@ -169,23 +169,14 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
     }
 });
 
-dojo.declare("phpr.grid.cells.Textarea", dojox.grid.cells._Widget, {
-    setValue: function(inRowIndex, inValue) {
-        if (this.widget && this.widget.setValue) {
-            this.widget.setValue(inValue);
-        } else {
-            this.inherited(arguments);
-        }
-    },
-
+dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
     format:function(inRowIndex, inItem) {
-        var maxLength = 35;
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
         } else {
-            output = this.strip_tags(d);
+            var maxLength = (this.getHeaderNode().offsetWidth - 21) / 7;
+            var output    = this.strip_tags(d);
             if (output.length > maxLength) {
                 output = output.substr(0, maxLength) + '...';
             }
