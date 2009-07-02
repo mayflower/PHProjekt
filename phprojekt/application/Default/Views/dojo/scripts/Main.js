@@ -158,6 +158,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             currentModule: phpr.module
         });
 
+        phpr.InitialScreen.start();
         this.hideSuggest();
 
         // Get all the tabs

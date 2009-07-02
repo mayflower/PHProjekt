@@ -734,6 +734,21 @@ dojo.declare("phpr.TreeContent", null, {
     }
 });
 
+dojo.declare("phpr.InitialScreen", null, {
+    // Summary:
+    //     Manage the visibility of the page on init
+    // Description:
+    //     Manage the visibility of the page on init
+    start:function() {
+        dojo.style("completeContent", "opacity", 0);
+    },
+
+    end:function() {
+        dojo.style("completeContent", "opacity", 1);
+        dojo.style("initLoading", "display", "none");
+    }
+});
+
 phpr.loadJsFile = function(fileName) {
     // Load a js and insert into the head
     var fileRef = document.createElement('script')

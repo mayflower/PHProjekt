@@ -131,6 +131,7 @@ class JsController extends IndexController
                 phpr.loading          = new phpr.loading();
                 phpr.DataStore        = new phpr.DataStore();
                 phpr.TreeContent      = new phpr.TreeContent();
+                phpr.InitialScreen    = new phpr.InitialScreen();
         ';
 
         foreach ($this->_modules as $module) {
