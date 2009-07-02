@@ -46,8 +46,8 @@ class Phprojekt_Converter_CsvTest extends PHPUnit_Framework_TestCase
         $object          = Phprojekt_Loader::getModel('Project', 'Project');
         $records         = $object->fetchAll();
         $result          = Phprojekt_Converter_Csv::convert($records);
-        $this->assertTrue(strlen(strstr($result, $convertedFields)) > 0);
-        $this->assertTrue(strlen(strstr($result, $convertedValues)) > 0);
+        $this->assertContains($convertedFields, $result);
+        $this->assertContains($convertedValues, $result);
 
         $result = Phprojekt_Converter_Csv::convert($object->find(1));
         $this->assertEquals($result, "");
@@ -71,7 +71,7 @@ class Phprojekt_Converter_CsvTest extends PHPUnit_Framework_TestCase
         $convertedFields = '"Title 1","Title 2"';
         $convertedValues = '"Data 1","Data 2"';
         $result          = Phprojekt_Converter_Csv::convert($data);
-        $this->assertTrue(strlen(strstr($result, $convertedFields)) > 0);
-        $this->assertTrue(strlen(strstr($result, $convertedValues)) > 0);
+        $this->assertContains($convertedFields, $result);
+        $this->assertContains($convertedValues, $result);
     }
 }
