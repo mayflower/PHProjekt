@@ -65,6 +65,12 @@
             }
             recentHash = window.location.hash;
             setInterval(initialiseStateFromUrl, 500);
+            // Add shortcut icon
+            var link  = document.createElement("link");
+            link.type = "image/x-icon";
+            link.rel  = "shortcut icon";
+            link.href = "<?php echo $this->webpath; ?>img/favicon.ico";
+            document.getElementsByTagName("head")[0].appendChild(link);
             <?php
             } else {
             ?>
