@@ -8,21 +8,21 @@
 /* Icons used with PHProjekt Buttons */
 
 .phprojekt .cross {
-    background-image: url("../images/cross.png");
+    background-image: url("../images/cross.gif");
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
 }
 
 .phprojekt .tick {
-    background-image: url("../images/tick.png");
+    background-image: url("../images/tick.gif");
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
 }
 
 .phprojekt .tinytick {
-    background-image: url("../images/tick.png");
+    background-image: url("../images/tick.gif");
     background-repeat: no-repeat;
     width: 8px;
     height: 8px;
@@ -36,28 +36,28 @@
 }
 
 .phprojekt .export {
-    background-image: url("../images/export.png");
+    background-image: url("../images/export.gif");
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
 }
 
 .phprojekt .add {
-    background-image: url("../images/add.png");
+    background-image: url("../images/add.gif");
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
 }
 
 .phprojekt .start {
-    background-image: url("../images/clock_play.png");
+    background-image: url("../images/clock_play.gif");
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
 }
 
 .phprojekt .stop {
-    background-image: url("../images/clock_stop.png");
+    background-image: url("../images/clock_stop.gif");
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
