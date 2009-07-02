@@ -34,7 +34,7 @@
 class Core_UserController extends Core_IndexController
 {
     /**
-     * Return a list of all the users except the current user
+     * Return a list of all the active users
      *
      * @return void
      */
@@ -45,11 +45,13 @@ class Core_UserController extends Core_IndexController
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $display = $user->getDisplay();
         $records = $user->fetchAll($where, $display);
+        $current = Phprojekt_Auth::getUserId();
 
         $data = array();
         foreach ($records as $record) {
             $data['data'][] = array('id'      => (int) $record->id,
-                                    'display' => $record->applyDisplay($display, $record));
+                                    'display' => $record->applyDisplay($display, $record),
+                                    'current' => $current == $record->id);
         }
 
         Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);

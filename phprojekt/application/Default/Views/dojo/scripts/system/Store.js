@@ -83,7 +83,8 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         this._list = new Array();
         for (i in users) {
             this._list.push({"id":      users[i]['id'],
-                             "display": users[i]['display']});
+                             "display": users[i]['display'],
+                             "current": users[i]['current']});
         }
     }
 });

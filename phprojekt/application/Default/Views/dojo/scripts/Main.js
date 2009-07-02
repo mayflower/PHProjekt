@@ -20,20 +20,21 @@
 dojo.provide("phpr.Default.Main");
 
 dojo.declare("phpr.Default.Main", phpr.Component, {
-    // summary: class for initialilzing a default module
-    tree:             null,
-    grid:             null,
-    module:           null,
-    gridWidget:       null,
-    formWidget:       null,
-    treeWidget:       null,
-    globalModules:    null,
-    _langUrl:         null,
+    // Summary: class for initialilzing a default module
+    tree:          null,
+    grid:          null,
+    module:        null,
+    gridWidget:    null,
+    formWidget:    null,
+    treeWidget:    null,
+    globalModules: null,
+    _langUrl:      null,
+    userStore:     null,
 
     loadFunctions:function(module) {
-        // summary:
+        // Summary:
         //    Add the all the functions for the current module
-        // description:
+        // Description:
         //    Add the all the functions for the current module
         //    So is possible use Module.Function
         dojo.subscribe(module + ".load", this, "load");
@@ -59,7 +60,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     openForm:function(/*int*/id, /*String*/module) {
-        //summary: this function opens a new Detail View
+        //Summary: this function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
@@ -78,9 +79,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     loadSubElements:function(projectId, functionFrom) {
-        // summary:
+        // Summary:
         //    this function loads a new project with the default submodule
-        // description:
+        // Description:
         //    If the current submodule don´t have access, the first found submodule is used
         //    When a new submodule is called, the new grid is displayed,
         //    the navigation changed and the Detail View is resetted
@@ -143,9 +144,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     load:function() {
-        // summary:
+        // Summary:
         //    This function initially renders the page
-        // description:
+        // Description:
         //    This function should only be called once as there is no need to render the whole page
         //    later on. Use reload instead to only replace those parts of the page which should change
 
@@ -164,8 +165,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         tabStore.fetch();
 
         // Get all the active users
-        var userStore = new phpr.Store.User();
-        userStore.fetch();
+        this.userStore = new phpr.Store.User();
+        this.userStore.fetch(dojo.hitch(this, "addUserTooltip"));
 
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
@@ -188,9 +189,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     reload:function() {
-        // summary:
+        // Summary:
         //    This function reloads the current module
-        // description:
+        // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
 
@@ -290,9 +291,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     _isGlobalModule:function(module) {
-        // summary:
+        // Summary:
         //    Return if the module is global or per project
-        // description:
+        // Description:
         //    Return if the module is global or per project
         var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
         var globalModules = phpr.DataStore.getData({url: globalUrl});
@@ -316,9 +317,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     setSubmoduleNavigation:function(currentModule) {
-        // summary:
+        // Summary:
         //    This function is responsible for displaying the Navigation of the current Module
-        // description:
+        // Description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
         var subModuleUrl      = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
@@ -391,7 +392,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     setNewEntry:function() {
-        // summary:
+        // Summary:
         //    Create the Add button
         var params = {
             baseClass: "positive",
@@ -405,21 +406,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        // summary:
+        // Summary:
         //    This function is responsible for displaying the Navigation of the current Global Module
-        // description:
+        // Description:
         //    Delete all the submodules and put the add button
         this.setNewEntry();
     },
 
     customSetSubmoduleNavigation:function() {
-        // summary:
+        // Summary:
         //     This function is called after the submodules are created
         //     Is used for extend the navigation routine
     },
 
     cleanPage:function() {
-        // summary:
+        // Summary:
         //     Clean the submodule div and destroy all the buttons
         phpr.destroySubWidgets('buttonRow');
         phpr.destroySubWidgets('formButtons');
@@ -427,9 +428,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     setUrlHash:function(module, id, params) {
-        // summary:
+        // Summary:
         //    Return the hash url
-        // description:
+        // Description:
         //    Make the url with the module params
         //    The url have all the values with "," separator
         //    First value: is the module
@@ -468,9 +469,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     processUrlHash:function(hash) {
-        // summary:
+        // Summary:
         //    Process the hash and run the correct function
-        // description:
+        // Description:
         //    The function will parse the hash and run the correct action
         //    The hash is "," separated
         //    First value is the module
@@ -535,29 +536,29 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     processActionFromUrlHash:function(data) {
-        // summary:
+        // Summary:
         //     Check the action params and run the correct function
         //     reload is the default, but each function can redefine it
         this.reload();
     },
 
     newEntry:function() {
-        // summary:
+        // Summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
         this.setUrlHash(phpr.module, 0);
     },
 
     setSearchForm:function() {
-        // summary:
+        // Summary:
         //    Add the onkeyup to the search field
         dojo.connect(dojo.byId("searchfield"), "onkeyup", dojo.hitch(this, "waitForSubmitSearchForm"));
     },
 
     waitForSubmitSearchForm:function(event) {
-        // summary:
+        // Summary:
         //    This function call the search itself After 1000ms of the last letter
-        // description:
+        // Description:
         //    The function will wait for 1000 ms on each keyup for try to
         //    call the search query when the user finish to write the text
         //    If the enter is presses, the suggest disapear.
@@ -579,9 +580,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     showSearchSuggest:function() {
-        // summary:
+        // Summary:
         //    This function show a box with suggest or quick result of the search
-        // description:
+        // Description:
         //    The server return the found records and the function display it
         var words = dojo.byId("searchfield").value;
 
@@ -646,10 +647,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     showSearchResults:function(/*String*/words) {
-        // summary:
+        // Summary:
         //    This function reload the grid place with a search template
         //    And show the detail view of the item selected
-        // description:
+        // Description:
         //    The server return the found records and the function display it
         if (undefined == words) {
             words = dojo.byId("searchfield").value;
@@ -744,9 +745,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     showTagsResults:function(/*String*/tag) {
-        // summary:
+        // Summary:
         //    This function reload the grid place with the result of the tag search
-        // description:
+        // Description:
         //    The server return the found records and the function display it
         var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag;
         var resultsTitle = phpr.nls.get('Tag results');
@@ -754,9 +755,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     showResults:function(/*String*/getDataUrl, /*String*/resultsTitle) {
-        // summary:
+        // Summary:
         //    This function reload the grid place with the result of a search or a tagt
-        // description:
+        // Description:
         //    The server return the found records and the function display it
         var self = this;
 
@@ -826,9 +827,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     setLanguage:function(language) {
-        // summary:
+        // Summary:
         //    Request to the server the languagues strings and change the current lang
-        // description:
+        // Description:
         //    Request to the server the languagues strings and change the current lang
         //    Call the reload function then
         phpr.language = language;
@@ -842,9 +843,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     showHelp:function() {
-        // summary:
+        // Summary:
         //    Display the Help for one module
-        // description:
+        // Description:
         //    The function will show the help under the string "Content Help"
         //    The translation must be an array and each index is a different tab
         phpr.destroyWidget('helpContent');
@@ -911,10 +912,29 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     },
 
     openHtmlEditor:function(nodeId, value) {
-        // summary:
+        // Summary:
         //    Open a dialog for edit the HTML content
-        // description:
+        // Description:
         //    Open a dialog for edit the HTML content
         this.form.openHtmlEditor(nodeId, value);
+    },
+
+    addUserTooltip:function() {
+        // Summary:
+        //    Add a tooltip to the logo with the current user
+        // Description:
+        //    Add a tooltip to the logo with the current user
+        var userList = this.userStore.getList();
+
+        // Add a tooltip with the current user
+        for (var i = 0; i < userList.length; i++) {
+            if (userList[i].current) {
+                new dijit.Tooltip({
+                    label:     userList[i].display + ' (ID: ' + userList[i].id + ')',
+                    connectId: ["PHProjektLogo"],
+                    showDelay: 50
+                });
+            }
+        }
     }
 });
