@@ -34,19 +34,21 @@
 class Core_HistoryController extends Core_IndexController
 {
     /**
-     * Returns the list for a Timecard in JSON.
+     * Returns the list for History items in JSON.
      *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
-     * @requestparam date startDate to limit the list start date
-     * @requestparam date endDate to limit the list end date
+     * @requestparam integer moduleId    Id of the module (if moduleName is sent, this is not necessary)
+     * @requestparam integer itemId      Id of the item
+     * @requestparam integer userId      Id of the user (optional)
+     * @requestparam string  moduleName  Name of the module (if moduleId is sent, this is not necessary)
+     * @requestparam date    startDate   To limit the list start date (optional)
+     * @requestparam date    endDate     To limit the list end date (optional)
      *
      * @return void
      */
     public function jsonListAction()
     {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set. This is also used for loading a
+        // Every dojox.data.QueryReadStore may use "start" and "count" for paging,
+        // This could be applied to the query set. This is also used for loading a
         // grid on demand (initially only a part is shown, scrolling down loads what is needed).
         $moduleId   = (int) $this->getRequest()->getParam('moduleId', null);
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
