@@ -90,8 +90,9 @@ class Timecard_IndexController extends IndexController
         $endTime   = $this->getRequest()->getParam('endTime', null);
         if (empty($startTime)) {
             // Date filter to find the open register
+            $date    = $this->getRequest()->getParam('date', null);
             $db      = Phprojekt::getInstance()->getDb();
-            $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote(date("Y-m-d")));
+            $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote($date));
             $records = $this->getModelObject()->fetchAll($where, null, 1);
 
             if (isset($records[0])) {

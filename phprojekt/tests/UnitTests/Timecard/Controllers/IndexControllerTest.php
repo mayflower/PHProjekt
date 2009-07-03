@@ -82,7 +82,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // INSERT. Just defined start time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', date("Y-m-d"));
+        $this->request->setParam('date', '2009-07-02');
         $this->request->setParam('startTime', '10:00');
         $this->request->setParam('endTime', '');
         $response = $this->getResponse();
@@ -90,7 +90,7 @@ class Timecard_IndexController_Test extends FrontInit
 
         // Check that the period has been added
         $this->setRequestUrl('Timecard/index/jsonDetail/');
-        $this->request->setParam('date', date("Y-m-d"));
+        $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
         $expected = '"data":[{"id":9,"startTime":"10:00:00","rights":[],"endTime":""}],"numRows":1}';
         $this->assertContains($expected, $response);
@@ -103,7 +103,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // INSERT. Just defined end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', date("Y-m-d"));
+        $this->request->setParam('date', '2009-07-02');
         $this->request->setParam('startTime', '');
         $this->request->setParam('endTime', '19:00');
         $response = $this->getResponse();
@@ -111,7 +111,7 @@ class Timecard_IndexController_Test extends FrontInit
 
         // Check that the period has been modified
         $this->setRequestUrl('Timecard/index/jsonDetail/');
-        $this->request->setParam('date', date("Y-m-d"));
+        $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
         $expected = '"data":[{"id":9,"startTime":"10:00:00","rights":[],"endTime":"19:00:00"}],"numRows":1}';
         $this->assertContains($expected, $response);
