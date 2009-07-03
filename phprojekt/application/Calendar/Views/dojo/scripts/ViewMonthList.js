@@ -103,6 +103,8 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         // It includes not only the days of this month but the necessary days of the previous and next month in
         // order to fill 4 or 6 week rows, from Monday to Sunday.
 
+        var today       = new Date();
+        today           = this.formatDate(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate());
         this._schedule  = new Array();
         var dateTemp    = this.stringToDate();
         var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
@@ -126,7 +128,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
                 this._schedule[i][j]['day']  = dateTemp.getDate();
                 this._schedule[i][j]['date'] = this.formatDate(dateTemp.getFullYear() + '-' + (dateTemp.getMonth() + 1)
                         + '-' + dateTemp.getDate());
-                if (this._schedule[i][j]['date'] == this.formatDate(this._date)) {
+                if (this._schedule[i][j]['date'] == today) {
                     this._schedule[i][j]['color'] = this.COLOR_TODAY;
                 } else if (((i == 0) && (this._schedule[i][j]['day'] > 22))
                     || ((i > 3) && (this._schedule[i][j]['day'] < 7))) {
