@@ -1,27 +1,5 @@
 <?php
-// General Help
-$lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutes"] = "<br />
-    This is the <b>General Help of the Minutes module</b><br />
-    <br />
-    This module is meant for the transcription of meeting minutes.<br />
-    ";
-$lang["Content Help"]["Basic data"] = "DEFAULT";
-$lang["Content Help"]["People"] = "<br />
-    Define people invited to the meeting, actual attendees and people who are excused.
-    ";
-$lang["Content Help"]["Items"] = "<br />
-    Help text for Minutes Items
-    ";
-$lang["Content Help"]["Mail"] = "<br />
-    Help text for Minutes Mail tab
-    ";
-$lang["Content Help"]["Access"] = "DEFAULT";
-$lang["Content Help"]["Notification"] = "DEFAULT";
-$lang["Content Help"]["History"] = "DEFAULT";
-
 // General translation strings:
-
 // [Form.js] - Form labels
 $lang["Title"] = "Title";
 $lang["Comment"] = "Comment";
@@ -110,3 +88,24 @@ $lang["Your changes have not been saved."] = "Your changes have not been saved."
 // Messages
 $lang["The currently logged-in user is not owner of the given minutes entry."] = "The currently logged-in user is not "
     . "owner of the given minutes entry.";
+
+// General Help
+$lang["Content Help"]["General"] = "DEFAULT";
+$lang["Content Help"]["Minutes"] = "<br />
+    This is the <b>General Help of the Minutes module</b><br />
+    <br />
+    This module is meant for the transcription of meeting minutes.<br />
+    ";
+$lang["Content Help"]["Basic data"] = "DEFAULT";
+$lang["Content Help"]["People"] = "<br />
+    Define people invited to the meeting, actual attendees and people who are excused.
+    ";
+$lang["Content Help"]["Items"] = "<br />
+    Help text for Minutes Items
+    ";
+$lang["Content Help"]["Mail"] = "<br />
+    Help text for Minutes Mail tab
+    ";
+$lang["Content Help"]["Access"] = "DEFAULT";
+$lang["Content Help"]["Notification"] = "DEFAULT";
+$lang["Content Help"]["History"] = "DEFAULT";

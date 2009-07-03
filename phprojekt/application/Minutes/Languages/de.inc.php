@@ -1,30 +1,5 @@
 <?php
-// General Help
-$lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutes"] = "<br />
-    Dies ist die <b>Allgemeine Hilfe zum Protokoll-Modul</b><br />
-    <br />
-    Dieses Modul ist für die Erfassung von Meeting-Protokollen gedacht.<br />
-    ";
-$lang["Content Help"]["Basic data"] = "DEFAULT";
-$lang["Content Help"]["People"] = "<br />
-    Dieser Karteireiter dient zur Festlegung von Personen, die zu dem Meeting eingeladen sind bzw. tatsächlich daran
-    teilnehmen,
-    oder die entschuldigt sind. Darüber hinaus können Personen angegeben werden, die das Protokoll erhalten sollen.
-    ";
-$lang["Content Help"]["Items"] = "<br />
-    Hilfetext für Protokolleinträge
-    ";
-$lang["Content Help"]["E-Mail"] = "<br />
-    Hilfetext für den E-Mail Versand von Protokollen
-    ";
-
-$lang["Content Help"]["Access"] = "DEFAULT";
-$lang["Content Help"]["Notification"] = "DEFAULT";
-$lang["Content Help"]["History"] = "DEFAULT";
-
 // General translation strings:
-
 // [Form.js] - Form labels
 $lang["Title"] = "Titel";
 $lang["Comment"] = "Kommentar";
@@ -113,3 +88,27 @@ $lang["Your changes have not been saved."] = "Ihre Änderungen wurden nicht gesp
 // Messages
 $lang["The currently logged-in user is not owner of the given minutes entry."] = "Die derzeit angemeldeten Benutzers "
     . "ist nicht Eigentümer der gegebenen Minuten Eintrag.";
+
+// General Help
+$lang["Content Help"]["General"] = "DEFAULT";
+$lang["Content Help"]["Minutes"] = "<br />
+    Dies ist die <b>Allgemeine Hilfe zum Protokoll-Modul</b><br />
+    <br />
+    Dieses Modul ist für die Erfassung von Meeting-Protokollen gedacht.<br />
+    ";
+$lang["Content Help"]["Basic data"] = "DEFAULT";
+$lang["Content Help"]["People"] = "<br />
+    Dieser Karteireiter dient zur Festlegung von Personen, die zu dem Meeting eingeladen sind bzw. tatsächlich daran
+    teilnehmen,
+    oder die entschuldigt sind. Darüber hinaus können Personen angegeben werden, die das Protokoll erhalten sollen.
+    ";
+$lang["Content Help"]["Items"] = "<br />
+    Hilfetext für Protokolleinträge
+    ";
+$lang["Content Help"]["E-Mail"] = "<br />
+    Hilfetext für den E-Mail Versand von Protokollen
+    ";
+
+$lang["Content Help"]["Access"] = "DEFAULT";
+$lang["Content Help"]["Notification"] = "DEFAULT";
+$lang["Content Help"]["History"] = "DEFAULT";
