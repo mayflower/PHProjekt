@@ -10,7 +10,6 @@ $lang["Sort"] = "Einordnen nach";
 $lang["Save"] = "Speichern";
 $lang["Delete"] = "Löschen";
 $lang["New"] = "Neu";
-$lang["Topic"] = "Thema";
 
 // [Form.js] - Tab name
 $lang["Items"] = "Einträge";
@@ -45,7 +44,6 @@ $lang["Excused"] = "Entschuldigt";
 $lang["Recipients"] = "Empfänger";
 
 // Mail tab
-$lang["Recipients"] = "Empfänger";
 $lang["Additional Recipients"] = "Weitere Empfänger";
 $lang["Options"] = "Optionen";
 $lang["Include PDF attachment"] = "PDF als Anhang hinzufügen";
