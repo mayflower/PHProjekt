@@ -10,7 +10,6 @@ $lang["Sort"] = "Sort after";
 $lang["Save"] = "Save";
 $lang["Delete"] = "Delete";
 $lang["New"] = "New";
-$lang["Topic"] = "Topic";
 
 // [Form.js] - Tab name
 $lang["Items"] = "Items";
@@ -45,7 +44,6 @@ $lang["Excused"] = "Excused";
 $lang["Recipients"] = "Recipients";
 
 // Mail tab
-$lang["Recipients"] = "Recipients";
 $lang["Additional Recipients"] = "Additional Recipients";
 $lang["Options"] = "Options";
 $lang["Include PDF attachment"] = "Include PDF attachment";
@@ -136,12 +134,12 @@ $lang["Content Help"]["Items"] = "<br />
 $lang["Content Help"]["Mail"] = "<br />
     <b>Mail tab</b><br />
     <br />
-    From here it can be sent an email containing all the information of the selected Minutes item, with an optional PDF
-    attachment.<br/>
+    From here it can be sent an email containing all the information of the selected Minutes register, with an optional
+    PDF attachment.<br/>
     <br/>
     Recipients can be selected in the <b>Recipients</b> field and also may be written plain email addresses in the
     <b>Additional Recipients</b> field below it.<br/>
-    Check the box <b>Include PDF attachment</b> to include the same info as a PDF file.<br/>
+    Check the box <b>Include PDF attachment</b> to send also the same info as a PDF file.<br/>
     <br/>
     Then the button <b>Send mail</b> sends it, or the button <b>Preview</b> shows you the attachment so that you can
     verify the content before sending the email.<br/>
