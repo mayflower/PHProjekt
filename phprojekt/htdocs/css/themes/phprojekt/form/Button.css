@@ -10,6 +10,7 @@
 .phprojekt .cross {
     background-image: url("../images/cross.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -17,6 +18,7 @@
 .phprojekt .tick {
     background-image: url("../images/tick.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -24,6 +26,7 @@
 .phprojekt .tinytick {
     background-image: url("../images/tick.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 8px;
     height: 8px;
 }
@@ -31,6 +34,7 @@
 .phprojekt .disk {
     background-image: url("../images/disk.png");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -38,6 +42,7 @@
 .phprojekt .export {
     background-image: url("../images/export.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -45,6 +50,7 @@
 .phprojekt .add {
     background-image: url("../images/add.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -52,6 +58,7 @@
 .phprojekt .start {
     background-image: url("../images/clock_play.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -59,6 +66,7 @@
 .phprojekt .stop {
     background-image: url("../images/clock_stop.gif");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -66,6 +74,7 @@
 .phprojekt .help {
     background-image: url("../images/help.png");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
@@ -73,6 +82,7 @@
 .phprojekt .close {
     background-image: url("../images/close.png");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 13px;
     height: 13px;
 }
@@ -80,6 +90,7 @@
 .phprojekt .edit {
     background-image: url("../images/edit.png");
     background-repeat: no-repeat;
+    margin-left: 5px;
     width: 16px;
     height: 16px;
 }
