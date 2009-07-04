@@ -162,6 +162,44 @@ class Helpdesk_IndexController_Test extends FrontInit
     }
 
     /**
+     * Test of json save Helpdesk Part 4
+     */
+    public function testJsonSavePart4()
+    {
+        // INSERT. Solved status
+        $this->setRequestUrl('Helpdesk/index/jsonSave/');
+        $this->request->setParam('title', 'My Helpdesk task 3');
+        $this->request->setParam('assigned', '2');
+        $this->request->setParam('dueDate', '2009-05-31');
+        $this->request->setParam('projectId', '1');
+        $this->request->setParam('priority', '3');
+        $this->request->setParam('attachments', '');
+        $this->request->setParam('description', 'My Helpdesk description 3');
+        $this->request->setParam('status', '3');
+        $this->request->setParam('contactId', '0');
+        $this->request->setParam('sendNotification', '');
+        $response = $this->getResponse();
+        $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
+
+        // Check saved data - Solved user and date should have been autocompleted
+        $model = clone($this->_model);
+        $model->find(3);
+        $this->assertEquals('My Helpdesk task 3', $model->title);
+        $this->assertEquals(1, $model->author);
+        $this->assertEquals(2, $model->assigned);
+        $this->assertEquals(date("Y-m-d"), $model->date);
+        $this->assertEquals('2009-05-31', $model->dueDate);
+        $this->assertEquals('1', $model->projectId);
+        $this->assertEquals('3', $model->priority);
+        $this->assertEquals('', $model->attachments);
+        $this->assertEquals(1, $model->solvedBy);
+        $this->assertEquals(date("Y-m-d"), $model->solvedDate);
+        $this->assertEquals('My Helpdesk description 3', $model->description);
+        $this->assertEquals(3, $model->status);
+        $this->assertEquals(0, $model->contactId);
+    }
+
+    /**
      * Test of json save Helpdesk with wrong id
      */
     public function testJsonSaveWrongId()
@@ -224,7 +262,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonList');
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":2', $response);
+        $this->assertContains('"numRows":3', $response);
 
         $this->setRequestUrl('Helpdesk/index/jsonList');
         $this->request->setParam('id', 1);

@@ -81,6 +81,10 @@ class Helpdesk_IndexController extends IndexController
         if ($newItem) {
             $params['author'] = (int) Phprojekt_Auth::getUserId();
             $params['date']   = date("Y-m-d");
+            if ($params['status'] == Helpdesk_Models_Helpdesk::STATUS_SOLVED) {
+                $params['solvedBy']   = (int) Phprojekt_Auth::getUserId();
+                $params['solvedDate'] = date("Y-m-d");
+            }
         } else {
             // The author comes as a STRING but must be saved as an INT (and it doesn't change since the item creation)
             $params['author'] = (int) $model->author;
