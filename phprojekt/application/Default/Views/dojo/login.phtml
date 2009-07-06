@@ -47,7 +47,8 @@
                 </div>
                 <!-- Main Content -->
                 <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
-                <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post" action="<?php echo $this->url(array('controller' => 'login', 'action' => 'login')); ?>">
+                <form dojoType="dijit.form.Form" id="loginForm" name="loginForm" method="post"
+                action="<?php echo $this->webpath; ?>index.php/login/login">
                     <input dojoType="dijit.form.TextBox" id="hash" type="hidden" name="hash" value="" />
                     <table width="100%" align="center" class="form">
                     <col class="col1" />
