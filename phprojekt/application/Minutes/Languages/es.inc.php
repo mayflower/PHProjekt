@@ -71,8 +71,8 @@ $lang["Are you sure?"] = "Está seguro/a?";
 $lang["OK"] = "Aceptar";
 $lang["Cancel"] = "Cancelar";
 $lang["Unfinalize Minutes"] = "Des-finalizar Minutas";
-$lang["Are you sure this Minutes entry should no longer be finalized?"] = "Está seguro/a que esta Minuta no estará más
-    finalizada?";
+$lang["Are you sure this Minutes entry should no longer be finalized?"] = "Está seguro/a que esta Minuta no estará
+    más finalizada?";
 $lang["After proceeding, changes to the data will be possible again."] = "Luego de proceder, se podrán efectuar cambios
     a los datos nuevamente.";
 $lang["Finalize Minutes"] = "Finalizar Minutas";
@@ -112,7 +112,8 @@ $lang["Content Help"]["Items"] = "<br />
     Cada ítem agregado al listado tiene los siguientes campos en el formulario, para que los edite:<br/>
     <br/>
     <ul>
-        <li><b>Título:</b> un título descriptivo para el ítem que se agrega, como 'Nuevo diseño de teléfono celular'.
+        <li><b>Título:</b> un título descriptivo para el ítem que se agrega, como 'Nuevo diseño de teléfono
+        celular'.
         <li><b>Tipo:</b> el tipo de ítem que se agrega, puede ser uno de los siguientes.
             <ul>
                 <li>Tópico
@@ -124,8 +125,8 @@ $lang["Content Help"]["Items"] = "<br />
         <li><b>Comentario:</b> El contenido descriptivo del ítem.
         <li><b>Quién (sólo visible cuando el tipo 'Pendiente' está elegido):</b> quién es responsable de hacer la
             actividad.
-        <li><b>Fecha (sólo visible cuando el tipo 'Pendiente' o 'Fecha' está elegido):</b> la fecha para la actividad o
-            el ítem que se ha discutido.
+        <li><b>Fecha (sólo visible cuando el tipo 'Pendiente' o 'Fecha' está elegido):</b> la fecha para la 
+        actividad o el ítem que se ha discutido.
         <li><b>Ubicar luego de:</b> en qué lugar del listado se situará este ítem.
     </ul>
     <br/>
@@ -138,12 +139,13 @@ $lang["Content Help"]["Correo"] = "<br />
     Desde aquí se puede enviar un correo electrónico conteniendo toda la información del registro de Minutas
     seleccionado, con un archivo adjunto PDF opcional.<br/>
     <br/>
-    Destinatarios pueden ser seleccionados en el campo <b>Destinatarios</b> y también pueden ser escritas direcciones de
-    correo electrónico en el campo <b>Destinatarios adicionales</b> que se encuentra debajo de él.<br/>
+    Destinatarios pueden ser seleccionados en el campo <b>Destinatarios</b> y también pueden ser escritas 
+    direcciones de correo electrónico en el campo <b>Destinatarios adicionales</b> que se encuentra debajo de él.
+    <br/>
     Tilde la caja <b>Incluir archivo adjunto PDF</b> para mandar también la misma información en un archivo PDF.<br/>
     <br/>
-    Luego el botón <b>Enviar correo</b> lo envía, o el botón <b>Vista previa</b> le muestra el adjunto de modo que pueda
-    verificar el contenido antes de enviar el correo electrónico.<br/>
+    Luego el botón <b>Enviar correo</b> lo envía, o el botón <b>Vista previa</b> le muestra el adjunto de modo que
+    pueda verificar el contenido antes de enviar el correo electrónico.<br/>
     <br/>
     <br/>";
 $lang["Content Help"]["Accesos"] = "DEFAULT";
