@@ -102,19 +102,6 @@ class Setup_Models_Config
     private function _setBaseDir()
     {
         $this->_baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
-        if ($this->_isWindows()) {
-            $this->_baseDir = str_replace('/', '\\', $this->_baseDir);
-        }
-    }
-
-    /**
-     * Return if the system is Windows
-     *
-     * @return boolean
-     */
-    private function _isWindows()
-    {
-        return ($this->_os == self::OS_WINDOWS);
     }
 
     /**
@@ -181,7 +168,7 @@ class Setup_Models_Config
         $content .= $this->_eol;
 
         $content .= '; Path where will be placed files uploaded by the user.' . $this->_eol;
-        $content .= 'uploadpath = "' . $this->_baseDir . 'upload\"' . $this->_eol;
+        $content .= 'uploadpath = "' . $this->_baseDir . 'upload/"' . $this->_eol;
 
         return $content;
     }
@@ -238,15 +225,15 @@ class Setup_Models_Config
 
         $content .= '; Here will be logged things explicitly declared.' . $this->_eol;
         $content .= '; E.G.: (PHP) Phprojekt::getInstance()->getLog()->debug("String to be logged");' . $this->_eol;
-        $content .= 'log.debug.filename = "' . $this->_baseDir . 'logs\debug.log"' . $this->_eol;
+        $content .= 'log.debug.filename = "' . $this->_baseDir . 'logs/debug.log"' . $this->_eol;
         $content .= $this->_eol;
 
         $content .= $this->_eol;
         $content .= '; This is another type of logging.' . $this->_eol;
         $content .= '; E.G.: (PHP) Phprojekt::getInstance()->getLog()->err("String to be logged");' . $this->_eol;
         $content .= '; Note for developers: there are many different type of logs defined that can be' . $this->_eol;
-        $content .= '; added here, see the complete list in phprojekt\library\Phprojekt\Log.php' . $this->_eol;
-        $content .= 'log.err.filename = "' . $this->_baseDir . 'logs\err.log"' . $this->_eol;
+        $content .= '; added here, see the complete list in phprojekt/library/Phprojekt/Log.php' . $this->_eol;
+        $content .= 'log.err.filename = "' . $this->_baseDir . 'logs/err.log"' . $this->_eol;
 
         return $content;
     }
