@@ -89,10 +89,8 @@ class Timecard_Models_TimeprojInformation extends EmptyIterator implements Phpro
                 $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree->setup();
                 foreach ($tree as $node) {
-                    $key   = $node->id;
-                    $value = str_repeat('....', $node->getDepth()) . $node->title;
-                    $data['range'][] = array('id'   => $key,
-                                             'name' => $value);
+                    $data['range'][] = array('id'   => (int) $node->id,
+                                             'name' => $node->getDepthDisplay('title'));
                 }
                 $data['required'] = true;
                 $data['readOnly'] = true;

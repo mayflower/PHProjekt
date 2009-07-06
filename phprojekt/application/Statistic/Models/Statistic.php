@@ -60,8 +60,8 @@ class Statistic_Models_Statistic
         $projectsId = array(0);
         foreach ($tree as $node) {
             if ($node->id) {
-                $projectsId[] = (int) $node->id;
-                $data['data']['projects'][$node->id] = str_repeat('....', $node->getDepth()) . $node->title;
+                $projectsId[]                        = (int) $node->id;
+                $data['data']['projects'][$node->id] = $node->getDepthDisplay('title');
             }
         }
 

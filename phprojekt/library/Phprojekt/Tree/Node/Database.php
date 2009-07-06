@@ -486,12 +486,20 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function getDepth()
     {
-        /*
-        * We need to count the tree path ourself and NOT call getDepth on the
-        * root node, as if we can be the tree and we will call us into a loop
-        */
+        // We need to count the tree path ourself and NOT call getDepth on the
+        // root node, as if we can be the tree and we will call us into a loop
         return substr_count($this->path, self::NODE_SEPARATOR)
         - substr_count($this->getRootNode()->path, self::NODE_SEPARATOR);
+    }
+
+    /**
+     * Returns a formatted string for display purpose
+     *
+     * @param string Name of property to include in the output
+     */
+    public function getDepthDisplay($value)
+    {
+        return str_repeat('....', $this->getDepth()) . $this->$value;
     }
 
     /**

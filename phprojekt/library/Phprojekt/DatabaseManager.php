@@ -384,10 +384,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree->setup();
                 foreach ($tree as $node) {
-                    $showKey   = (int) $node->$key;
-                    $showValue = str_repeat('....', $node->getDepth()) . $node->$value;
-                    $options[] = array('id'   => $showKey,
-                                       'name' => $showValue);
+                    $options[] = array('id'   => (int) $node->$key,
+                                       'name' => $node->getDepthDisplay($value));
                 }
                 break;
             case 'User':

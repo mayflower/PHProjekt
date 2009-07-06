@@ -81,6 +81,18 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tree list formatter
+     */
+    public function testGetDepthDisplay()
+    {
+        $node = $this->_tree->getNodeById(2);
+        $this->assertEquals('....Project 1', $node->getDepthDisplay('title'));
+        $node = $this->_tree->getNodeById(5);
+        $this->assertEquals('........Test Project', $node->getDepthDisplay('title'));
+        $this->assertEquals('........2009-08-01', $node->getDepthDisplay('startDate'));
+    }
+
+    /**
      * childrens
      */
     public function testGetFirstChild()
