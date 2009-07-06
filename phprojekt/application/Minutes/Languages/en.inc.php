@@ -6,9 +6,7 @@ $lang["Comment"] = "Comment";
 $lang["Who"] = "Who";
 $lang["Type"] = "Type";
 $lang["Date"] = "Date";
-$lang["Sort"] = "Sort after";
-$lang["Save"] = "Save";
-$lang["Delete"] = "Delete";
+$lang["Sort after"] = "Sort after";
 $lang["New"] = "New";
 
 // [Form.js] - Tab name

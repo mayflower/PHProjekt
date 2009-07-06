@@ -46,9 +46,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         if (this.id > 0) {
             this._peopleUrl = phpr.webpath + "index.php/Minutes/index/jsonListUser/id/" + this.id;
             this._initData.push({'url': this._peopleUrl});
-
-            this._itemsUrl = phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/" + this.id;
-            this._initData.push({'url': this._itemsUrl, 'noCache': true});
         }
     },
 
@@ -131,6 +128,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             'people':        phpr.DataStore.getData({url: this._peopleUrl}),
             'lblRecipients': phpr.nls.get('Recipients'),
             'lblAdditional': phpr.nls.get('Additional Recipients'),
+            'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
             'lblComment':    phpr.nls.get('Comment'),
             'lblOptions':    phpr.nls.get('Options'),
             'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
@@ -139,11 +137,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         });
 
         this.addTab(mailForm, 'tabMail', 'Mail', 'mailFormTab');
-
-        new dijit.Tooltip({
-            connectId:  ['minutesMailFormAdditionalRecipientsTooltip'],
-            label:      phpr.nls.get('Email addresses of unlisted recipients, comma-separated.')
-        });
 
         dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', function() {
             phpr.send({
@@ -191,14 +184,14 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                          name:    phpr.nls.get('Topic'),
                          field:   'topicId',
                          styles:  "text-align: center;",
-                         width:   '5%',
+                         width:   '9%',
                          rowSpan: 2
                      },
                      {
                          name:   phpr.nls.get('Title'),
                          field:  'title',
                          styles: "text-align: left;",
-                         width:  '50%'
+                         width:  '46%'
                      },
                      {
                          name:   phpr.nls.get('Type'),
@@ -373,59 +366,65 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Loads the detail form template for MinutesItems and populates it with
         //    either default data or data from a loaded MinutesItem. Also registers
         //    event listeners for various detail form behaviours.
-        if (this.itemId && this.itemId > 0) {
-            var itemFormData = dojo.clone(phpr.DataStore.getData({url: this._itemUrl})).shift();
-        } else {
-            // Use default empty dataset
-            var itemFormData = {
-                topicType:  1,
-                userId:     0,
-                sortOrder:  0,
-                title:      '',
-                comment:    '',
-                topicDate:  ''
+        this._itemsUrl = phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/" + this.id;
+        phpr.DataStore.addStore({"url": this._itemsUrl, "noCache": true });
+        phpr.DataStore.requestData({"url": this._itemsUrl, processData: dojo.hitch(this, function() {
+            if (this.itemId && this.itemId > 0) {
+                var itemFormData = dojo.clone(phpr.DataStore.getData({url: this._itemUrl})).shift();
+            } else {
+                // Use default empty dataset
+                var itemFormData = {
+                    topicType:  1,
+                    userId:     0,
+                    sortOrder:  0,
+                    title:      '',
+                    comment:    '',
+                    topicDate:  ''
+                };
+            }
+
+            var placeholders = {
+                lblTitle:       phpr.nls.get('Title'),
+                lblComment:     phpr.nls.get('Comment'),
+                lblUserId:      phpr.nls.get('Who'),
+                lblTopicType:   phpr.nls.get('Type'),
+                lblTopicDate:   phpr.nls.get('Date'),
+                lblParentOrder: phpr.nls.get('Sort after'),
+                lblSubmit:      phpr.nls.get('Save'),
+                lblDelete:      phpr.nls.get('Delete'),
+                lblClear:       phpr.nls.get('New'),
+                parentOrder:    itemFormData.sortOrder - 1 >= 0 ? itemFormData.sortOrder - 1 : 0,
+                users:          phpr.DataStore.getData({url: this._peopleUrl}),
+                items:          phpr.DataStore.getData({url: this._itemsUrl}),
+                types:          this.getItemTypes(),
+                editItem:       this.itemId > 0,
+                lblRequired:    phpr.nls.get('Required Field')
             };
-        }
+            placeholders = dojo.mixin(placeholders, itemFormData);
 
-        var placeholders = {
-            lblTitle:       phpr.nls.get('Title'),
-            lblComment:     phpr.nls.get('Comment'),
-            lblUserId:      phpr.nls.get('Who'),
-            lblTopicType:   phpr.nls.get('Type'),
-            lblTopicDate:   phpr.nls.get('Date'),
-            lblParentOrder: phpr.nls.get('Sort'),
-            lblSubmit:      phpr.nls.get('Save'),
-            lblDelete:      phpr.nls.get('Delete'),
-            lblClear:	    phpr.nls.get('New'),
-            parentOrder:    itemFormData.sortOrder - 1 >= 0 ? itemFormData.sortOrder - 1 : 0,
-            users:          phpr.DataStore.getData({url: this._peopleUrl}),
-            items:          phpr.DataStore.getData({url: this._itemsUrl}),
-            types:          this.getItemTypes(),
-            editItem:       this.itemId > 0,
-            lblRequired:    phpr.nls.get('Required Field')
-        };
-        placeholders = dojo.mixin(placeholders, itemFormData);
+            // Render the template
+            this.render(["phpr.Minutes.template", "minutesItemForm.html"], dojo.byId('minutesDetailsRight'),
+                placeholders);
 
-        // Render the template
-        this.render(["phpr.Minutes.template", "minutesItemForm.html"], dojo.byId('minutesDetailsRight'),
-            placeholders);
+            // Connect save/delete events to buttons
+            dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', dojo.hitch(this, this.saveSubFormData));
+            dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', dojo.hitch(this, this.deleteSubFormData));
 
-        // Connect save/delete events to buttons
-        dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', dojo.hitch(this, this.saveSubFormData));
-        dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', dojo.hitch(this, this.deleteSubFormData));
+            // Have reset button reload the form using defaults
+            dojo.connect(dijit.byId('minutesItemFormClear'), 'onClick', dojo.hitch(this, function() {
+                this.itemId = null;
+                this.loadSubForm();
+            }));
 
-        // Have reset button reload the form using defaults
-        dojo.connect(dijit.byId('minutesItemFormClear'), 'onClick', dojo.hitch(this, function() {
-            this.itemId = null;
-            this.loadSubForm();
-        }));
+            // Have the appropriate input fields appear for each type
+            this._switchItemFormFields(placeholders.topicType); // defaults
+            dojo.connect(dijit.byId('minutesItemFormTopicType'), 'onChange', dojo.hitch(this, this._switchItemFormFields));
 
-        // Have the appropriate input fields appear for each type
-        this._switchItemFormFields(placeholders.topicType); // defaults
-        dojo.connect(dijit.byId('minutesItemFormTopicType'), 'onChange', dojo.hitch(this, this._switchItemFormFields));
+            // Set cursor to title field when all is done
+            dojo.byId("minutesItemFormTitle").focus();
+        })
+        });
 
-        // Set cursor to title field when all is done
-        dojo.byId("minutesItemFormTitle").focus();
     },
 
     _switchItemFormFields: function(typeValue) {

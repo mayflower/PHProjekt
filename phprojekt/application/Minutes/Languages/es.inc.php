@@ -6,9 +6,7 @@ $lang["Comment"] = "Comentario";
 $lang["Who"] = "Quién";
 $lang["Type"] = "Tipo";
 $lang["Date"] = "Fecha";
-$lang["Sort"] = "Ubicar luego de";
-$lang["Save"] = "Grabar";
-$lang["Delete"] = "Borrar";
+$lang["Sort after"] = "Ubicar luego de";
 $lang["New"] = "Nuevo";
 
 // [Form.js] - Tab name
@@ -125,7 +123,7 @@ $lang["Content Help"]["Items"] = "<br />
         <li><b>Comentario:</b> El contenido descriptivo del ítem.
         <li><b>Quién (sólo visible cuando el tipo 'Pendiente' está elegido):</b> quién es responsable de hacer la
             actividad.
-        <li><b>Fecha (sólo visible cuando el tipo 'Pendiente' o 'Fecha' está elegido):</b> la fecha para la 
+        <li><b>Fecha (sólo visible cuando el tipo 'Pendiente' o 'Fecha' está elegido):</b> la fecha para la
         actividad o el ítem que se ha discutido.
         <li><b>Ubicar luego de:</b> en qué lugar del listado se situará este ítem.
     </ul>
@@ -139,7 +137,7 @@ $lang["Content Help"]["Correo"] = "<br />
     Desde aquí se puede enviar un correo electrónico conteniendo toda la información del registro de Minutas
     seleccionado, con un archivo adjunto PDF opcional.<br/>
     <br/>
-    Destinatarios pueden ser seleccionados en el campo <b>Destinatarios</b> y también pueden ser escritas 
+    Destinatarios pueden ser seleccionados en el campo <b>Destinatarios</b> y también pueden ser escritas
     direcciones de correo electrónico en el campo <b>Destinatarios adicionales</b> que se encuentra debajo de él.
     <br/>
     Tilde la caja <b>Incluir archivo adjunto PDF</b> para mandar también la misma información en un archivo PDF.<br/>
