@@ -73,22 +73,22 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                     "name":           "Module",
                     "label":          phpr.nls.get("Module"),
                     "moduleFunction": "setUrlHash",
-                    "functionParams": "'Module'"});
+                    "functionParams": "'Administration', null, ['Module']"});
                 modules.push({
                     "name":           "Tab",
                     "label":          phpr.nls.get("Tab"),
                     "moduleFunction": "setUrlHash",
-                    "functionParams": "'Tab'"});
+                    "functionParams": "'Administration', null, ['Tab']"});
                 modules.push({
                     "name":           "User",
                     "label":          phpr.nls.get("User"),
                     "moduleFunction": "setUrlHash",
-                    "functionParams": "'User'"});
+                    "functionParams": "'Administration', null, ['User']"});
                 modules.push({
                     "name":           "Role",
                     "label":          phpr.nls.get("Role"),
                     "moduleFunction": "setUrlHash",
-                    "functionParams": "'Role'"});
+                    "functionParams": "'Administration', null, ['Role']"});
                 tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
                     modules.push({
@@ -136,7 +136,14 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
 
     processActionFromUrlHash:function(data) {
         if (data[0]) {
-            this.loadSubModule(data[0]);
+            if (data[0] == 'Module' ||
+                data[0] == 'Tab' ||
+                data[0] == 'User' ||
+                data[0] == 'Role') {
+                dojo.publish(data[0] + ".reload");
+            } else {
+                this.loadSubModule(data[0]);
+            }
         }
     },
 
