@@ -13,7 +13,7 @@ $lang["New"] = "Neu";
 $lang["Items"] = "Einträge";
 
 // [Form.js] - Selectbox values
-$lang["Topic"] = "Top";
+$lang["Topic"] = "TOP"; // Short form of Tagesordnungspunkt
 $lang["Statement"] = "Stellungnahme";
 $lang["Todo"] = "Aufgabe";
 $lang["Decision"] = "Entscheidung";
