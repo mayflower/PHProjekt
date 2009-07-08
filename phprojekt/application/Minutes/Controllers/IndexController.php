@@ -242,9 +242,12 @@ class Minutes_IndexController extends IndexController
         $smtpTransport = $mail->setTransport();
         $validator     = new Zend_Validate_EmailAddress();
 
-        $userMails = array_merge($this->_getMailFromUserIds($this->getRequest()->getParam('recipients', array()),
-            $validator), $this->_getMailFromCsvString($this->getRequest()->getParam('additional', ''), $validator));
-        $errors = $this->_addRecipients($mail, $userMails, $errors);
+        $emailsListed  = $this->getRequest()->getParam('recipients', array());
+        $emailsListed  = $this->_getMailFromUserIds($emailsListed, $validator);
+        $emailsWritten = $this->getRequest()->getParam('additional', '');
+        $emailsWritten = $this->_getMailFromCsvString($emailsWritten, $validator);
+        $userMails     = array_merge($emailsListed, $emailsWritten);
+        $errors        = $this->_addRecipients($mail, $userMails, $errors);
 
         // Sanity check
         if (array() === $mail->getRecipients()) {
