@@ -84,11 +84,11 @@ class Phprojekt
     protected $_log;
 
     /**
-     * Translate class
+     * Cache class
      *
-     * @var Phprojekt_Language
+     * @var Zend_Cache
      */
-    protected $_translate;
+    protected $_cache;
 
     /**
      * View class
@@ -176,6 +176,7 @@ class Phprojekt
             self::$_instance = new self();
             self::$_instance->_initialize();
         }
+
         return self::$_instance;
     }
 
@@ -205,6 +206,7 @@ class Phprojekt
                 die();
             }
         }
+
         return $this->_db;
     }
 
@@ -220,10 +222,10 @@ class Phprojekt
             try {
                 $this->_log = new Phprojekt_Log($this->_config);
             } catch (Zend_Log_Exception $error) {
-                echo $error->getMessage();
-                die();
+                die($error->getMessage());
             }
         }
+
         return $this->_log;
     }
 
@@ -231,16 +233,22 @@ class Phprojekt
      * Return the Translate class
      * If don't exists, try to create it
      *
+     * @param string|Zend_Locale $locale  Locale/Language to set
+     *
      * @return Phprojekt_Language
      */
-    public function getTranslate()
+    public function getTranslate($locale = null)
     {
-        if (null === $this->_translate) {
-            $language         = Phprojekt_User_User::getSetting("language", $this->_config->language);
-            $this->_translate = new Phprojekt_Language($language);
+        if (null === $locale) {
+            $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
         }
 
-        return $this->_translate;
+        if (!($translate = $this->_cache->load('Phprojekt_getTranslate_' . $locale))) {
+            $translate = new Phprojekt_Language($locale);
+            $this->_cache->save($translate, 'Phprojekt_getTranslate_' . $locale, array('Language'));
+        }
+
+        return $translate;
     }
 
     /**
@@ -253,14 +261,14 @@ class Phprojekt
      */
     public function translate($message, $locale = null)
     {
-        $translate  = Phprojekt::getInstance()->getTranslate();
+        $translate  = Phprojekt::getInstance()->getTranslate($locale);
         $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
 
         if (null === $locale) {
             $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
         }
 
-        return $this->_translate->translate($message, $moduleName, $locale);
+        return $translate->translate($message, $moduleName, $locale);
     }
 
     /**
@@ -281,9 +289,9 @@ class Phprojekt
         $translate  = Phprojekt::getInstance()->getTranslate();
         $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
 
-        $hints = $this->_translate->translate('Tooltip', $moduleName);
+        $hints = $translate->translate('Tooltip', $moduleName);
         if (!is_array($hints)) {
-            $hints = $this->_translate->translate('Tooltip', $moduleName, 'en');
+            $hints = $translate->translate('Tooltip', $moduleName, 'en');
             if (!is_array($hints)) {
                 $hints = array();
             }
@@ -300,6 +308,16 @@ class Phprojekt
     public function getView()
     {
         return $this->_view;
+    }
+
+    /**
+     * Return the Cache class
+     *
+     * @return Zend_Cache
+     */
+    public function getCache()
+    {
+        return $this->_cache;
     }
 
     /**
@@ -351,12 +369,19 @@ class Phprojekt
 
         // Set a metadata cache and clean it
         $frontendOptions = array('automatic_serialization' => true);
-        $cache           = Zend_Cache::factory('Core', 'File', $frontendOptions);
-        Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
-        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
+        $backendOptions  = array('cache_dir' => PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR
+            . 'zendCache' . DIRECTORY_SEPARATOR);
+        $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+        Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
-        $helperPaths  = $this->_getHelperPaths();
-        $view         = $this->_setView($helperPaths);
+        // Use for Debug only
+        //Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
+
+        // Check Logs
+        $this->getLog();
+
+        $helperPaths = $this->_getHelperPaths();
+        $view        = $this->_setView($helperPaths);
 
         $viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
         $viewRenderer->setViewBasePathSpec(':moduleDir/Views');
@@ -389,7 +414,7 @@ class Phprojekt
      */
     private function _setView($helperPaths)
     {
-        $viewNamespace = new Zend_Session_Namespace('index_View');
+        $viewNamespace = new Zend_Session_Namespace('Phprojekt-_setView');
         if (!isset($viewNamespace->view)) {
             $view = new Zend_View();
             $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
@@ -415,7 +440,7 @@ class Phprojekt
      */
     private function _getHelperPaths()
     {
-        $helperPathNamespace = new Zend_Session_Namespace('index_HelperPath');
+        $helperPathNamespace = new Zend_Session_Namespace('Phprojekt-_getHelperPaths');
         if (!isset($helperPathNamespace->helperPaths)) {
             $helperPaths = array();
             foreach (scandir(PHPR_CORE_PATH) as $module) {

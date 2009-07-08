@@ -86,6 +86,7 @@ class Phprojekt_Language extends Zend_Translate
             $this->_loadLangFile($locale);
             $this->_loacale = $locale;
         }
+
         return $this->_adapter->get($message, $moduleName, $this->_loacale);
     }
 
@@ -122,6 +123,7 @@ class Phprojekt_Language extends Zend_Translate
         if (null !== $locale) {
             $this->_loadLangFile($locale);
         }
+
         return $this->_adapter->getTranslatedStrings($locale);
     }
 }

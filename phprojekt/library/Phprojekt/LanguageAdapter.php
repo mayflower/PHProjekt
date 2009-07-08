@@ -128,53 +128,57 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             $this->_translate[$locale] = array ();
         }
 
-        // Get the translated string from the session if exists
-        $session = new Zend_Session_Namespace('Phprojekt_LanguageAdapter-_loadTranslationData-' . $locale);
-        if (true === isset($session->translatedStrings)) {
-            $this->_translate = $session->translatedStrings;
-        } else {
-            $session->translatedStrings = array();
-        }
-
-        // Collect a new translation set
-        if (true === empty($this->_translate[$locale]) && empty($session->translatedStrings)) {
-            // Default
-            $langFile    = $this->_getLangFile($locale);
-            $languageDir = PHPR_CORE_PATH . '/Default/Languages/';
-            $lang        = array();
-            if (file_exists($languageDir . $langFile)) {
-                include_once($languageDir . $langFile);
-                if (isset($lang)) {
-                    if (!isset($this->_translate[$locale]['Default'])) {
-                        $this->_translate[$locale]['Default'] = array();
+        // Get the translated string from the cache if exists
+        $cache = Phprojekt::getInstance()->getCache();
+        if (!($this->_translate[$locale] = $cache->load('Phprojekt_LanguageAdapter_loadTranslationData_' . $locale))) {
+            // Collect a new translation set
+            Phprojekt::getInstance()->getLog()->debug('translate' . $locale);
+            if (true === empty($this->_translate[$locale])) {
+                // Default
+                $langFile    = $this->_getLangFile($locale);
+                $languageDir = PHPR_CORE_PATH . '/Default/Languages/';
+                $lang        = array();
+                if (file_exists($languageDir . $langFile)) {
+                    include_once($languageDir . $langFile);
+                    if (isset($lang)) {
+                        if (!isset($this->_translate[$locale]['Default'])) {
+                            $this->_translate[$locale]['Default'] = array();
+                        }
+                        $this->_translate[$locale]['Default'] = array_merge($this->_translate[$locale]['Default'], $lang);
+                        $this->_langLoaded[$locale] = 1;
                     }
-                    $this->_translate[$locale]['Default'] = array_merge($this->_translate[$locale]['Default'], $lang);
-                    $this->_langLoaded[$locale] = 1;
                 }
-            }
 
-            // Modules
-            $files = scandir(PHPR_CORE_PATH);
-            foreach ($files as $module) {
-                if ($module != '.' && $module != '..' && $module != 'Default' && $module != '.svn') {
-                    // Get the translation file
-                    $lang        = array ();
-                    $langFile    = $this->_getLangFile($locale);
-                    $languageDir = PHPR_CORE_PATH . '/' . $module . '/Languages/';
-                    if (file_exists($languageDir . $langFile)) {
-                        include_once($languageDir . $langFile);
-                        if (isset($lang)) {
-                            if (!isset($this->_translate[$locale][$module])) {
-                                $this->_translate[$locale][$module] = array();
+                // Modules
+                $files = scandir(PHPR_CORE_PATH);
+                foreach ($files as $module) {
+                    if ($module != '.' && $module != '..' && $module != 'Default' && $module != '.svn') {
+                        // Get the translation file
+                        $lang        = array ();
+                        $langFile    = $this->_getLangFile($locale);
+                        $languageDir = PHPR_CORE_PATH . '/' . $module . '/Languages/';
+                        if (file_exists($languageDir . $langFile)) {
+                            include_once($languageDir . $langFile);
+                            if (isset($lang)) {
+                                if (!isset($this->_translate[$locale][$module])) {
+                                    $this->_translate[$locale][$module] = array();
+                                }
+                                $this->_langLoaded[$locale]         = 1;
+                                $this->_translate[$locale][$module] = array_merge($this->_translate[$locale][$module],
+                                    $lang);
                             }
-                            $this->_langLoaded[$locale]         = 1;
-                            $this->_translate[$locale][$module] = array_merge($this->_translate[$locale][$module],
-                                $lang);
                         }
                     }
                 }
             }
-            $session->translatedStrings = $this->_translate;
+
+            if (true === empty($this->_translate[$locale])) {
+                $temp                      = explode('_', (string) $locale);
+                $this->_translate[$locale] = $temp[0];
+            }
+
+            $cache->save($this->_translate[$locale], 'Phprojekt_LanguageAdapter_loadTranslationData_' . $locale,
+                array('Language'));
         }
     }
 
