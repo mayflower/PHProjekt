@@ -132,7 +132,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         $cache = Phprojekt::getInstance()->getCache();
         if (!($this->_translate[$locale] = $cache->load('Phprojekt_LanguageAdapter_loadTranslationData_' . $locale))) {
             // Collect a new translation set
-            Phprojekt::getInstance()->getLog()->debug('translate' . $locale);
             if (true === empty($this->_translate[$locale])) {
                 // Default
                 $langFile    = $this->_getLangFile($locale);
