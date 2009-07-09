@@ -28,8 +28,8 @@ if (!empty($this->changes))
     <br />
     <table>
         <tr>
-            <td style="color: #888888;" width=120><b><?php echo strtoupper($this->translate->translate('Field')); ?></b></td>
-            <td style="color: #888888;" width=120><b><?php echo strtoupper($this->translate->translate('Old value')); ?></b></td>
+            <th style="color: #888888; text-transform: uppercase;" width=120><?php echo $this->translate->translate('Field'); ?></th>
+            <th style="color: #888888; text-transform: uppercase;" width=120><?php echo $this->translate->translate('Old value'); ?></th>
         </tr>
     <?php
     foreach ($this->changes as $change) { ?>
