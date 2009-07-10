@@ -160,12 +160,11 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['order']    = 0;
             $data['position'] = 6;
             $data['fieldset'] = '';
-            $data['range']    = array(array('id'   => 'es',
-                                            'name' => 'Spanish'),
-                                      array('id'   => 'en',
-                                            'name' => 'English'),
-                                      array('id'   => 'de',
-                                            'name' => 'German'));
+            $languageRange    = Phprojekt_LanguageAdapter::getLanguageList();
+            foreach ($languageRange as $key => $value) {
+                $data['range'][] = array('id'   => $key,
+                                         'name' => $value);
+            }
             $data['required'] = true;
             $data['readOnly'] = false;
             $data['tab']      = 1;

@@ -40,7 +40,7 @@ class Core_Models_UserSetting
      *
      * @var array
      */
-    private $_languageRange = array('de' => 'German', 'en' => 'English', 'es' => 'Spanish');
+    private $_languageRange = array();
 
     /**
      * Range of available timezones
@@ -52,6 +52,11 @@ class Core_Models_UserSetting
                                     "12" => 12, "-12" => -12, "-11" => -11, "-10" => -10, "-9" => -9,
                                     "-8" => -8, "-7" => -7, "-6" => -6, "-5" => -5, "-4" => -4,
                                     "-3" => -3, "-2" => -2, "-1" => -1);
+
+    public function __construct()
+    {
+        $this->_languageRange = Phprojekt_LanguageAdapter::getLanguageList();
+    }
 
     /**
      * Return an array of field information.

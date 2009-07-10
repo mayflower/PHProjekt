@@ -173,7 +173,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 
             if (true === empty($this->_translate[$locale])) {
                 $temp                      = explode('_', (string) $locale);
-                $this->_translate[$locale] = $temp[0];
+                $this->_translate[$locale] = array($temp[0]);
             }
 
             $cache->save($this->_translate[$locale], 'Phprojekt_LanguageAdapter_loadTranslationData_' . $locale,
@@ -304,6 +304,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 $langFile = self::LANG_EN;
                 break;
         }
+
         return $langFile;
     }
 
@@ -324,10 +325,25 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         } else {
             $toReturn = array();
         }
+
         return $toReturn;
     }
 
-    public function get($messageId, $moduleName, $locale = null)
+    /**
+     * Return the message translated
+     *
+     * Search first in the Module translations
+     * Then in the Default translations
+     * Then return the message
+     *
+     * @param string             $message    Message to translate
+     * @param string             $moduleName Module where search the translation
+     * @param string|Zend_Locale $locale     Locale/Language to set,
+     *                                       identical with Locale identifiers
+     *                                       see Zend_Locale for more information
+     * @return string
+     */
+    public function get($message, $moduleName, $locale = null)
     {
         $locale = $this->_convertToZendLocale($locale);
 
@@ -337,14 +353,15 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         }
 
         if (isset($this->_translate[$locale][$moduleName]) &&
-            isset($this->_translate[$locale][$moduleName][$messageId])) {
-            $toReturn = $this->_translate[$locale][$moduleName][$messageId];
+            isset($this->_translate[$locale][$moduleName][$message])) {
+            $toReturn = $this->_translate[$locale][$moduleName][$message];
         } else if (isset($this->_translate[$locale]['Default']) &&
-            isset($this->_translate[$locale]['Default'][$messageId])) {
-            $toReturn = $this->_translate[$locale]['Default'][$messageId];
+            isset($this->_translate[$locale]['Default'][$message])) {
+            $toReturn = $this->_translate[$locale]['Default'][$message];
         } else {
-            $toReturn = $messageId;
+            $toReturn = $message;
         }
+
         return $toReturn;
     }
 
@@ -429,5 +446,28 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 return $locale;
                 break;
         }
+    }
+
+    /**
+     * Return an array with all the languages name in English
+     *
+     * @return array
+     */
+    public static function getLanguageList()
+    {
+        $reflect   = new ReflectionClass('Phprojekt_LanguageAdapter');
+        $constants = $reflect->getConstants();
+        $languages = array();
+        foreach ($constants as $value) {
+            if (strstr($value, 'inc.php')) {
+                $value     = str_replace('.inc.php', '', $value);
+                $zendValue = substr(self::_convertToZendLocale($value), 0, 2);
+                $langName  = Zend_Locale::getTranslation($zendValue, 'language', 'en');
+
+                $languages[$value] = $langName;
+            }
+        }
+
+        return $languages;
     }
 }
