@@ -172,10 +172,10 @@ $lang["Notification"] = "Notification";
 $lang["Filemanager"] = "Filemanager";
 $lang["Gantt"] = "Gantt";
 $lang["Statistic"] = "Statistic";
-$lang["Contact"] = "Contacts";
+$lang["Contact"] = "Contact";
 $lang["Module Designer"] = "Module Designer";
 $lang["Helpdesk"] = "Helpdesk";
-$lang["Minutes"] = "Minutes";
+$lang["Minute"] = "Minute";
 $lang['People'] = "People";
 
 // Titles

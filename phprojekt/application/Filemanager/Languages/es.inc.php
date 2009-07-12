@@ -4,8 +4,8 @@ $lang["Tooltip"]["files"] = "Puede subir tantos archivos como desee";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Archivos"] = "<br />
-    Esta es la <b>Ayuda General del módulo Archivos</b><br />
+$lang["Content Help"]["Archivo"] = "<br />
+    Esta es la <b>Ayuda General del módulo Archivo</b><br />
     <br />
     El módulo Archivos está hecho exclusivamente para subir archivos al sistema.<br />
     <br />

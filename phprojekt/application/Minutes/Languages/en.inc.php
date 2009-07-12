@@ -87,8 +87,8 @@ $lang["The currently logged-in user is not owner of the given minutes entry."] =
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutes"] = "<br />
-    This is the <b>General Help of the Minutes module</b><br />
+$lang["Content Help"]["Minute"] = "<br />
+    This is the <b>General Help of the Minute module</b><br />
     <br />
     This module is meant for the transcription of meeting minutes.<br />
     ";

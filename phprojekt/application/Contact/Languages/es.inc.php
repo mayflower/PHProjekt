@@ -4,8 +4,8 @@ $lang["Tooltip"]["private"] = "No: todos los usuarios pueden verlo - Si: sólo e
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Contactos"] = "<br />
-    Esta es la <b>Ayuda General del módulo Contactos</b><br />
+$lang["Content Help"]["Contacto"] = "<br />
+    Esta es la <b>Ayuda General del módulo Contacto</b><br />
     <br />
     Este módulo es para almacenar información de gente y compañías. Tiene varios campos para cargar datos.<br />
     <br />

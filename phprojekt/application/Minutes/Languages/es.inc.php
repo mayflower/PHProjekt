@@ -87,8 +87,8 @@ $lang["The currently logged-in user is not owner of the given minutes entry."] =
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutas"] = "<br />
-    Esta es la <b>Ayuda General del módulo Minutas</b><br />
+$lang["Content Help"]["Minuta"] = "<br />
+    Esta es la <b>Ayuda General del módulo Minuta</b><br />
     <br />
     Este módulo está destinado a la transcripción de minutas de reuniones.<br/>
     ";
@@ -134,7 +134,7 @@ $lang["Content Help"]["Items"] = "<br />
 $lang["Content Help"]["Correo"] = "<br />
     <b>Solapa Correo</b><br />
     <br />
-    Desde aquí se puede enviar un correo electrónico conteniendo toda la información del registro de Minutas
+    Desde aquí se puede enviar un correo electrónico conteniendo toda la información del registro de Minuta
     seleccionado, con un archivo adjunto PDF opcional.<br/>
     <br/>
     Destinatarios pueden ser seleccionados en el campo <b>Destinatarios</b> y también pueden ser escritas
