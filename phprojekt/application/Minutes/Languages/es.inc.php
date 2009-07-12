@@ -87,7 +87,7 @@ $lang["The currently logged-in user is not owner of the given minutes entry."] =
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Minutes"] = "<br />
+$lang["Content Help"]["Minutas"] = "<br />
     Esta es la <b>Ayuda General del módulo Minutas</b><br />
     <br />
     Este módulo está destinado a la transcripción de minutas de reuniones.<br/>
