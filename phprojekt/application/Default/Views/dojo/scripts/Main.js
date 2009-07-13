@@ -396,10 +396,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Summary:
         //    Create the Add button
         var params = {
+            label:     phpr.nls.get('Open an empty form to add a new item'),
+            showLabel: false,
             baseClass: "positive",
-            label:     '',
-            iconClass: 'add',
-            alt:       'Add'
+            iconClass: 'add'
         };
         var newEntry = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(newEntry.domNode);

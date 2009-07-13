@@ -284,9 +284,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    If there is any row, render export Button
         if (meta.length > 0) {
             var params = {
+                label:     phpr.nls.get('Export all items to a CSV file'),
+                showLabel: false,
                 baseClass: "positive",
                 iconClass: "export",
-                alt:       "Export",
                 disabled:  false
             };
             var exportButton = new dijit.form.Button(params);
@@ -302,9 +303,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    If there is any row, render Save changes button
         if (meta.length > 0) {
             var params = {
+                label:     phpr.nls.get('Save changes made to the grid through in-place editing'),
+                showLabel: false,
                 baseClass: "positive",
                 iconClass: "disk",
-                alt:       "Save",
                 disabled:  true
             };
             this._saveChanges = new dijit.form.Button(params);

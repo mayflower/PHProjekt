@@ -104,6 +104,10 @@ $lang["Delete"] = "Delete";
 $lang["Cancel"] = "Cancel";
 $lang["Close"]  = "Close";
 $lang["Edit"]  = "Edit";
+// Alt text
+$lang["Export all items to a CSV file"] = "Export all items to a CSV file";
+$lang["Save changes made to the grid through inline editing"] = "Save changes made to the grid through inline editing";
+$lang["Open an empty form to add a new item"] = "Open an empty form to add a new item";
 
 // Messages
 $lang["There are no entries on this level"] = "There are no entries on this level";
