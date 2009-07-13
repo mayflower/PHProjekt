@@ -818,15 +818,21 @@ dojo.declare("phpr.BreadCrumb", null, {
     _lastParent: null,
 
     setProjects:function(projectsNames) {
-        console.debug('set pro');
+        // Summary:
+        //     Set the projects tree as one string
+        // Description:
+        //     Set the projects tree as one string
         this._projects = projectsNames.join(':');
         this._module   = null;
         this._item     = null;
     },
 
     setModule:function() {
+        // Summary:
+        //     Set the module and sub-module
+        // Description:
+        //     Change the module and sub-module only if these change
         if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent) {
-                console.debug('set mod');
             if (phpr.parentmodule) {
                 this._module = phpr.parentmodule + ':' + phpr.module;;
                 this._lastParent = phpr.parentmodule;
@@ -839,7 +845,11 @@ dojo.declare("phpr.BreadCrumb", null, {
     },
 
     setItem:function(item) {
-        console.debug('set item');
+        // Summary:
+        //     Set the item value
+        // Description:
+        //     Display the item info (By default, the first field value)
+        //     Show "New" if is a new item
         if (!item) {
             item = phpr.nls.get('New');
         }
@@ -847,6 +857,10 @@ dojo.declare("phpr.BreadCrumb", null, {
     },
 
     draw:function() {
+        // Summary:
+        //     Draw the breadcrumb
+        // Description:
+        //     Show the breadcrumb in the title
         var breadCrumb = this._projects + ' - ' + this._module;
         if (this._item) {
             breadCrumb += ' - ' + this._item;
