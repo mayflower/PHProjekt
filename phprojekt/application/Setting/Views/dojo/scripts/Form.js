@@ -78,5 +78,9 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
                 }
             })
         });
+    },
+
+    setBreadCrumbItem:function() {
+        phpr.BreadCrumb.setItem(phpr.submodule);
     }
 });

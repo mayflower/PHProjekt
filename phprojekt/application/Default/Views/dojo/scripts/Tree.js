@@ -69,6 +69,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         // Description:
         //    Fix width and select the current project
         this.checkTreeSize();
+        this.drawBreadScrum();
         this.selecteCurrent(phpr.currentProjectId);
     },
 
@@ -163,6 +164,8 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                         }
                     }
             }});
+        } else {
+            phpr.treeLastProjectSelected = id;
         }
     },
 
@@ -214,5 +217,33 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         if (treeHeight < 300) {
             dojo.byId('tree-navigation').style.height = '90%';
         }
+    },
+
+    drawBreadScrum:function() {
+        var projectsNames = new Array();
+        var _this         = this;
+        if (phpr.treeLastProjectSelected != phpr.currentProjectId) {
+            this.tree.model.store.fetchItemByIdentity({identity: phpr.currentProjectId,
+                onItem:function(item) {
+                    if (item) {
+                        var paths = phpr.treePaths[phpr.currentProjectId].toString().split("\/");
+                        for (i in paths) {
+                            if (paths[i] > 0 && paths[i] != phpr.currentProjectId) {
+                                _this.tree.model.store.fetchItemByIdentity({identity: paths[i],
+                                    onItem:function(item) {
+                                        if (item) {
+                                            projectsNames.push(item.name);
+                                        }
+                                }});
+                            }
+                        }
+                        projectsNames.push(item.name);
+                    }
+            }});
+
+            phpr.BreadCrumb.setProjects(projectsNames);
+        }
+        phpr.BreadCrumb.setModule();
+        phpr.BreadCrumb.draw();
     }
 });

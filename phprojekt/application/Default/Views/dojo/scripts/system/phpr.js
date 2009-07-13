@@ -805,3 +805,53 @@ phpr.handleError = function(url, type, message) {
 
     new phpr.handleResponse('serverFeedback', response);
 };
+
+dojo.declare("phpr.BreadCrumb", null, {
+    // Summary:
+    //     Manage the Breadcrumb
+    // Description:
+    //     Manage the Breadcrumb
+    _module:     '',
+    _projects:   '',
+    _item:       '',
+    _lastModule: null,
+    _lastParent: null,
+
+    setProjects:function(projectsNames) {
+        console.debug('set pro');
+        this._projects = projectsNames.join(':');
+        this._module   = null;
+        this._item     = null;
+    },
+
+    setModule:function() {
+        if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent) {
+                console.debug('set mod');
+            if (phpr.parentmodule) {
+                this._module = phpr.parentmodule + ':' + phpr.module;;
+                this._lastParent = phpr.parentmodule;
+            } else {
+                this._module = phpr.module;
+            }
+            this._item       = null;
+            this._lastModule = phpr.module;
+        }
+    },
+
+    setItem:function(item) {
+        console.debug('set item');
+        if (!item) {
+            item = phpr.nls.get('New');
+        }
+        this._item = item;
+    },
+
+    draw:function() {
+        var breadCrumb = this._projects + ' - ' + this._module;
+        if (this._item) {
+            breadCrumb += ' - ' + this._item;
+        }
+        document.title = breadCrumb;
+    }
+
+});

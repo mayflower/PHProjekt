@@ -314,6 +314,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var itemhint     = meta[i]["hint"];
                 var itemlength   = meta[i]["length"] || 0;
 
+                if (i == 0) {
+                    this.setBreadCrumbItem(itemvalue);
+                    phpr.BreadCrumb.draw();
+                }
+
                 // Get the first required field
                 if (itemrequired && itemtype != 'hidden' && !firstRequiredField) {
                     firstRequiredField = itemid;
@@ -847,5 +852,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 data[0][field] = this._presetValues[field];
             }
         }
+    },
+
+    setBreadCrumbItem:function(itemValue) {
+        // Summary:
+        //    Set the Breadcrumb with the first item value
+        // Description:
+        //    Set the Breadcrumb with the first item value
+        phpr.BreadCrumb.setItem(itemValue);
     }
 });
