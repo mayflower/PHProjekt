@@ -35,7 +35,7 @@
     background-image: url("../images/disk.png");
     background-repeat: no-repeat;
     margin-left: 5px;
-    width: 16px;
+    width: 20px;
     height: 16px;
 }
 
@@ -43,7 +43,7 @@
     background-image: url("../images/export.gif");
     background-repeat: no-repeat;
     margin-left: 5px;
-    width: 16px;
+    width: 20px;
     height: 16px;
 }
 
@@ -51,7 +51,7 @@
     background-image: url("../images/add.gif");
     background-repeat: no-repeat;
     margin-left: 5px;
-    width: 16px;
+    width: 20px;
     height: 16px;
 }
 
