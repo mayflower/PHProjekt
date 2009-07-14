@@ -110,7 +110,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 + phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
             phpr.DataStore.requestData({
-                url: subModuleUrl,
+                url:         subModuleUrl,
                 processData: dojo.hitch(this, function() {
                     var usefirstModule = true;
                     var firstModule    = null;
@@ -354,8 +354,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     phpr.module = 'Project';
                 }
 
-                var navigation ='<ul id="nav_main">';
-                var activeTab = false;
+                var navigation = '<ul id="nav_main">';
+                var activeTab  = false;
+                var modules    = this.sortModuleTabs(modules);
                 for (var i = 0; i < modules.length; i++) {
                     var liclass ='';
                     var moduleName     = modules[i].name;
@@ -937,5 +938,40 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 });
             }
         }
+    },
+
+    sortModuleTabs:function(modules) {
+        // Summary:
+        //    Sort the system modules in a fixed order
+        // Description:
+        //    Sort the system modules in a fixed order
+        var sort          = new Array('Project', 'Gantt', 'Statistic', 'Todo', 'Note', 'Filemanager', 'Minutes');
+        var sortedModules = new Array();
+
+        // Sort the modules with the sort array
+        for (var i in sort) {
+            for (var j in modules) {
+                if (modules[j].name == sort[i]) {
+                    sortedModules.push(modules[j]);
+                }
+            }
+        }
+
+        // Include modules out of the sort array
+        for (var j in modules) {
+            if (modules[j].name) {
+                var found = false;
+                for (var i in sortedModules) {
+                    if (modules[j].name == sortedModules[i].name) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    sortedModules.push(modules[j]);
+                }
+            }
+        }
+
+        return sortedModules;
     }
 });
