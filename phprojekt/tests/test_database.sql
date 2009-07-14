@@ -552,7 +552,7 @@ INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `version`, `active`) V
 (8, 'Statistic', 'Statistic', 0, '6.0.0', 1),
 (9, 'Contact', 'Contact', 1, '6.0.0', 1),
 (10, 'Helpdesk', 'Helpdesk', 0, '6.0.0', 1),
-(11, 'Minutes','Minutes', 0, '6.0.0', 1);
+(11, 'Minutes','Minute', 0, '6.0.0', 1);
 
 INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `form_label`, `form_type`, `form_position`, `form_columns`, `form_regexp`, `form_range`, `default_value`, `list_position`, `list_align`, `list_use_filter`, `alt_position`, `status`, `is_integer`, `is_required`, `is_unique`) VALUES
 (0, 'Project', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),

@@ -331,7 +331,7 @@
             [
                 {
                     "name":      "Minutes",
-                    "label":     "Minutes",
+                    "label":     "Minute",
                     "save_type": "0",
                     "active":    "1",
                     "_relations":
