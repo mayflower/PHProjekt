@@ -284,10 +284,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             }
         }
 
-        if (null !== $value && is_string($value)) {
-            $value = stripslashes($value);
-        }
-
         return $value;
     }
 
