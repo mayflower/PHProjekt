@@ -225,6 +225,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
     setGlobalModulesNavigation:function() {
         var toolbar       = dijit.byId('mainNavigation');
+        var systemToolbar = dijit.byId('systemNavigation');
         var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
         var globalModules = phpr.DataStore.getData({url: globalUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: globalUrl});
@@ -240,8 +241,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             toolbar.addChild(button);
-            var separator = new dijit.ToolbarSeparator();
-            toolbar.addChild(separator);
         }
 
         // Setting
@@ -254,8 +253,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             })
         });
         toolbar.addChild(button);
-        var separator = new dijit.ToolbarSeparator();
-        toolbar.addChild(separator);
 
         if (isAdmin > 0) {
             // Administration
@@ -268,8 +265,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             toolbar.addChild(button);
-            var separator = new dijit.ToolbarSeparator();
-            toolbar.addChild(separator);
         }
 
         // Help
@@ -281,9 +276,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 dojo.publish(this.module + ".showHelp");
             })
         });
-        toolbar.addChild(button);
+        systemToolbar.addChild(button);
         var separator = new dijit.ToolbarSeparator();
-        toolbar.addChild(separator);
+        systemToolbar.addChild(separator);
 
         // Logout
         var button = new dijit.form.Button({
@@ -294,7 +289,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 location = phpr.webpath + "index.php/Login/logout";
             })
         });
-        toolbar.addChild(button);
+        systemToolbar.addChild(button);
     },
 
     _isGlobalModule:function(module) {
@@ -433,6 +428,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroySubWidgets('buttonRow');
         phpr.destroySubWidgets('formButtons');
         dojo.byId("subModuleNavigation").innerHTML = '';
+
+        var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
+        var globalModules = phpr.DataStore.getData({url: globalUrl});
+        globalModules[1000] = {id: "Settings", "name": "Setting"};
+        globalModules[1001] = {id: "Admin", "name": "Administration"};
+        console.debug(globalModules);
+        for (i in globalModules) {
+            if (this.module == globalModules[i].name) {
+                dojo.addClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+                console.debug('add class' + globalModules[i].name);
+            } else {
+                console.debug('remove class' + globalModules[i].name);
+                dojo.removeClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+            }
+        }
     },
 
     setUrlHash:function(module, id, params) {

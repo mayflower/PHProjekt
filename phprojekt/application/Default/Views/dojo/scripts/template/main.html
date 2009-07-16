@@ -37,9 +37,11 @@
         <div id="search-bar" class="last right align-right">
             <input id="searchfield" name="searchfield"
             onmousedown='this.focus(); dojo.publish("{{currentModule}}.showSuggest");' />
+            <div id="systemNavigation" dojoType="dijit.Toolbar">
+            </div>
         </div>
         </form>
-        <div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
+        <div id="mainNavigation" class="right align-right" dojoType="dijit.Toolbar">
         </div>
         <div id="loadingIcon" class="right align-right"
         style="margin-top: 5px; margin-bottom: 5px">
