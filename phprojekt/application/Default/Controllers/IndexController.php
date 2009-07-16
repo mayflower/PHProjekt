@@ -412,9 +412,11 @@ class IndexController extends Zend_Controller_Action
     {
         $fronVars = Phprojekt::getInstance()->getConfig()->front;
         $data     = array();
-        foreach ($fronVars as $key => $value) {
-            $data[] = array('name'  => $key,
-                            'value' => $value);
+        if (null !== $fronVars) {
+            foreach ($fronVars as $key => $value) {
+                $data[] = array('name'  => $key,
+                                'value' => $value);
+            }
         }
 
         Phprojekt_Converter_Json::echoConvert($data);
