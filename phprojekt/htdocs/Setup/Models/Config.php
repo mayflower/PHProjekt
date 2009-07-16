@@ -264,6 +264,10 @@ class Setup_Models_Config
         $content .= '; 3 = firstname, lastname' . $this->_eol;
         $content .= 'userDisplayFormat  = ' . (int) $userDisplayFormat . $this->_eol;
 
+        $content .= $this->_eol;
+        $content .= '; File containing words that should not be indexed in the search' . $this->_eol;
+        $content .= 'searchStopwordList = ""' . $this->_eol;
+
         return $content;
     }
 

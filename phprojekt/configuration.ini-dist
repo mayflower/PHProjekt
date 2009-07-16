@@ -92,6 +92,9 @@ itemsPerPage = 3
 ; 3 = firstname, lastname
 userDisplayFormat  = 0
 
+; File containing words that should not be indexed in the search
+searchStopwordList = ""
+
 ;;;;;;;;;;;;;;;;;;;;;
 ; MAIL NOTIFICATION ;
 ;;;;;;;;;;;;;;;;;;;;;
@@ -150,6 +153,7 @@ log.err.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\err.log"
 
 itemsPerPage       = 3
 userDisplayFormat  = 1
+searchStopwordList = ""
 
 mailEndOfLine = 0;
 smtpServer    = "localhost"

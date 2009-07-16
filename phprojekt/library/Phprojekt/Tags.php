@@ -310,7 +310,7 @@ class Phprojekt_Tags
      */
     private function _index($moduleId, $itemId, $data)
     {
-        $array = $this->_getWordsFromText($data);
+        $array = $this->_stringToArray($data);
 
         // Found all the relations moduleId-itemId <-> userId-tagId
         $oldTagUserRelations = $this->getRelationIdByModule($moduleId, $itemId);
@@ -356,18 +356,6 @@ class Phprojekt_Tags
     }
 
     /**
-     * Get all the words into an array
-     *
-     * @param string $string The string to store
-     *
-     * @return array
-     */
-    private function _getWordsFromText($string)
-    {
-        return $this->_stringToArray($string);
-    }
-
-    /**
      * Return all the words accepted for index into an array
      *
      * @param string $string The string to store
@@ -377,63 +365,13 @@ class Phprojekt_Tags
     private function _stringToArray($string)
     {
         // Clean up the string
-        $string = $this->_cleanupstring($string);
+        $string = Phprojekt_Converter_String::cleanupString($string);
         // Split the string into an array
-        $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
+        $tempArray = explode(" ", $string);
         // Strip off short or long words
-        $tempArray = array_filter($tempArray, array($this, "_stripLengthWords"));
+        $tempArray = array_filter($tempArray, array("Phprojekt_Converter_String", "stripLengthWords"));
 
         return $tempArray;
-    }
-
-    /**
-     * Clean Up a string for search or index
-     *
-     * @param string $string The string for cleanup
-     *
-     * @return string
-     */
-    private function _cleanupString($string)
-    {
-        // Clean up HTML
-        $string = utf8_decode($string);
-        $string = preg_replace('#\W+#msiU', ' ', strtolower(strtr(strip_tags($string),
-                               array_flip(get_html_translation_table(HTML_ENTITIES)))));
-        // Translate bad
-        $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i",
-                         "'&(gt|#62);'i", "'&(nbsp|#160);'i",
-                         "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i",
-                         "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
-                         "'&auml;'", "'&Auml;'",
-                         "'&euml;'", "'&Euml;'",
-                         "'&iuml;'", "'&Iuml;'",
-                         "'&ouml;'", "'&Ouml;'",
-                         "'&uuml;'", "'&Uuml;'",
-                         "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
-        $replace = array (" ", " ", " ", " ", " ",
-                          " ", " ", " ", " ", " ",
-                          chr(228), chr(196),
-                          chr(235), chr(203),
-                          chr(239), chr(207),
-                          chr(246), chr(214),
-                          chr(252), chr(220),
-                          chr(223), " ", " ", " ", " ");
-        $string = preg_replace($search, $replace, strip_tags($string));
-        $string = utf8_encode($string);
-
-        return $string;
-    }
-
-    /**
-     * Remove the short or long words from the index
-     *
-     * @param array $var String to check
-     *
-     * @return boolean
-     */
-    private function _stripLengthWords($var)
-    {
-        return (strlen($var) > 2 && strlen($var) < 256);
     }
 
     /**

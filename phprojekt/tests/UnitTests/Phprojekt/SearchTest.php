@@ -40,7 +40,7 @@ class Phprojekt_SearchTest extends PHPUnit_Framework_TestCase
     public function testIndex()
     {
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $project->title = 'CCCC DDDD TTTT';
+        $project->title = 'CCÄC DDÖD TTÜT';
         $project->path = '/1/';
         $project->ownerId = 1;
         $project->projectId = 1;
@@ -49,10 +49,10 @@ class Phprojekt_SearchTest extends PHPUnit_Framework_TestCase
         Zend_Registry::set('searchInsertedId', $project->id);
 
         $search = new Phprojekt_Search();
-        $result = $search->search('CCCC');
+        $result = $search->search('CCÄC');
         $this->assertEquals(1, count($result));
 
-        $result = $search->search('CCCC DDDD');
+        $result = $search->search('CCÄC DDÖD');
         $this->assertEquals(1, count($result));
     }
 
@@ -62,10 +62,24 @@ class Phprojekt_SearchTest extends PHPUnit_Framework_TestCase
     public function testSearch()
     {
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CCCC DDDD');
+        $result = (array)$search->search('CCÄC DDÖD');
         $this->assertEquals(1, count($result));
 
         $result = (array)$search->search('NOTINDATABASE');
+        $this->assertEquals(0, count($result));
+    }
+
+    /**
+     * Test search
+     */
+    public function testSearchShortString()
+    {
+        $search = new Phprojekt_Search();
+        $result = (array)$search->search('CC');
+        $this->assertEquals(0, count($result));
+
+        $search = new Phprojekt_Search();
+        $result = (array)$search->search('CÄ');
         $this->assertEquals(0, count($result));
     }
 
@@ -79,7 +93,7 @@ class Phprojekt_SearchTest extends PHPUnit_Framework_TestCase
         $project->delete();
 
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CCCC DDDD TTTT');
+        $result = (array)$search->search('CCÄC DDÖD');
         $this->assertEquals(0, count($result));
     }
 }

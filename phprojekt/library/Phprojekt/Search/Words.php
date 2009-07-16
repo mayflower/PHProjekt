@@ -44,7 +44,14 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     protected $_name = 'search_words';
 
     /**
-     * Chaneg the tablename for use with the Zend db class
+     * Stopwords that should not be indexed
+     *
+     * @var array
+     */
+    protected $_stopWords = array();
+
+    /**
+     * Change the tablename for use with the Zend db class
      *
      * This function is only for PHProjekt6
      *
@@ -53,6 +60,13 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     public function __construct()
     {
         $config = array('db' => Phprojekt::getInstance()->getDb());
+
+        $file = Phprojekt::getInstance()->getConfig()->searchStopwordList;
+
+        if (file_exists($file)) {
+            $tmp              = file_get_contents($file);
+            $this->_stopWords = $this->_stringToArray($tmp);
+        }
 
         parent::__construct($config);
     }
@@ -70,7 +84,7 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function indexWords($data)
     {
-        $words = $this->_getWordsFromText($data);
+        $words = $this->_stringToArray($data);
         $ids   = $this->_save($words);
 
         return $ids;
@@ -89,15 +103,20 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     public function searchWords($words, $count = null, $offset = null)
     {
-        $words = $this->_getWordsFromText($words);
-        $where = array();
+        $words = $this->_stringToArray($words);
 
-        foreach ($words as $word) {
-            $where[] = '(word LIKE ' . $this->getAdapter()->quote('%' . $word . '%') . ')';
+        if (empty($words)) {
+            return array();
+        } else {
+            $where = array();
+
+            foreach ($words as $word) {
+                $where[] = '(word LIKE ' . $this->getAdapter()->quote('%' . $word . '%') . ')';
+            }
+            $where = implode('OR', $where);
+
+            return $this->fetchAll($where, 'count DESC', $count, $offset)->toArray();
         }
-        $where = implode('OR', $where);
-
-        return $this->fetchAll($where, 'count DESC', $count, $offset)->toArray();
     }
 
     /**
@@ -183,18 +202,6 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Get all the words into an array
-     *
-     * @param string $string The string to store
-     *
-     * @return array
-     */
-    private function _getWordsFromText($string)
-    {
-        return $this->_stringToArray($string);
-    }
-
-    /**
      * Return all the words accepted for index into an array
      *
      * @param string $string The string to store
@@ -204,67 +211,19 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     private function _stringToArray($string)
     {
         // Clean up the string
-        $string = $this->_cleanupstring($string);
+        $string = Phprojekt_Converter_String::cleanupString($string);
         // Split the string into an array
-        $tempArray = preg_split("/[\s,_!:\.\-\/\+@\(\)\? ]+/", $string);
+        $tempArray = explode(" ", $string);
         // Strip off short or long words
-        $tempArray = array_filter($tempArray, array($this, "_stripLengthWords"));
+        $tempArray = array_filter($tempArray, array("Phprojekt_Converter_String", "stripLengthWords"));
         // Strip off stop words
-        $tempArray = array_filter($tempArray, array($this, "_stripStops"));
+        if (!empty($this->_stopWords)) {
+            $tempArray = array_filter($tempArray, array($this, "_stripStops"));
+        }
         // Remove duplicate entries
         $tempArray = array_unique($tempArray);
 
         return $tempArray;
-    }
-
-    /**
-     * Clean Up a string for search or index
-     *
-     * @param string $string The string for cleanup
-     *
-     * @return string
-     */
-    private function _cleanupString($string)
-    {
-        // Clean up HTML
-        $string = utf8_decode($string);
-        $string = preg_replace('#\W+#msiU', ' ', strtolower(strtr(strip_tags($string),
-                               array_flip(get_html_translation_table(HTML_ENTITIES)))));
-        // Translate bad
-        $search = array ("'&(quot|#34);'i", "'&(amp|#38);'i", "'&(lt|#60);'i",
-                         "'&(gt|#62);'i", "'&(nbsp|#160);'i",
-                         "'&(iexcl|#161);'i", "'&(cent|#162);'i", "'&(pound|#163);'i",
-                         "'&(copy|#169);'i", "'&(ldquo|bdquo);'i",
-                         "'&auml;'", "'&Auml;'",
-                         "'&euml;'", "'&Euml;'",
-                         "'&iuml;'", "'&Iuml;'",
-                         "'&ouml;'", "'&Ouml;'",
-                         "'&uuml;'", "'&Uuml;'",
-                         "'&szlig;'", "'\''", "'\"'", "'\('", "'\)'");
-        $replace = array (" ", " ", " ", " ", " ",
-                          " ", " ", " ", " ", " ",
-                          chr(228), chr(196),
-                          chr(235), chr(203),
-                          chr(239), chr(207),
-                          chr(246), chr(214),
-                          chr(252), chr(220),
-                          chr(223), " ", " ", " ", " ");
-        $string = preg_replace($search, $replace, strip_tags($string));
-        $string = utf8_encode($string);
-
-        return $string;
-    }
-
-    /**
-     * Remove the short or long words from the index
-     *
-     * @param array $string String to check
-     *
-     * @return boolean
-     */
-    private function _stripLengthWords($string)
-    {
-        return (strlen($string) > 2 && strlen($string) < 256);
     }
 
     /**
@@ -277,20 +236,6 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
      */
     private function _stripStops($string)
     {
-        $searchStopWords = array();
-
-        $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
-                . 'Phprojekt' . DIRECTORY_SEPARATOR
-                . 'stopwords.txt';
-
-        if (file_exists($file)) {
-            $tmp             = file($file);
-            $searchStopWords = array();
-            if (!empty($tmp[0])) {
-                $searchStopWords = explode(" ", $tmp[0]);
-            }
-        }
-
-        return (!in_array(strtoupper($string), $searchStopWords));
+        return (!in_array($string, $this->_stopWords));
     }
 }
