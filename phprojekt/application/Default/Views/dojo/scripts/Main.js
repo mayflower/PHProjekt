@@ -433,13 +433,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var globalModules = phpr.DataStore.getData({url: globalUrl});
         globalModules[1000] = {id: "Settings", "name": "Setting"};
         globalModules[1001] = {id: "Admin", "name": "Administration"};
-        console.debug(globalModules);
         for (i in globalModules) {
             if (this.module == globalModules[i].name) {
                 dojo.addClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
-                console.debug('add class' + globalModules[i].name);
             } else {
-                console.debug('remove class' + globalModules[i].name);
                 dojo.removeClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
             }
         }
