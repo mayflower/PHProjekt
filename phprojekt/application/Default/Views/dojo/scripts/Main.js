@@ -161,6 +161,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.InitialScreen.start();
         this.hideSuggest();
 
+        // Get all configuration.ini vars for the front
+        var config = new phpr.Store.Config();
+        config.fetch(dojo.hitch(this, function() {
+            phpr.config = config.getList();
+        }));
+
         // Get all the tabs
         var tabStore = new phpr.Store.Tab();
         tabStore.fetch();

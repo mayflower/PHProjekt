@@ -125,6 +125,7 @@ class JsController extends IndexController
                 phpr.rootProjectId    = rootProjectId;
                 phpr.currentProjectId = rootProjectId ;
                 phpr.language         = language;
+                phpr.config           = new Array();
                 phpr.serverFeedback   = new phpr.ServerFeedback();
                 phpr.Date             = new phpr.Date();
                 phpr.Gfx              = new phpr.Gfx();

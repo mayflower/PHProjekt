@@ -23,20 +23,21 @@ dojo.provide("phpr.Store.Module");
 dojo.provide("phpr.Store.Role");
 dojo.provide("phpr.Store.RoleModuleAccess");
 dojo.provide("phpr.Store.Tab");
+dojo.provide("phpr.Store.Config");
 
 dojo.declare("phpr.Store", phpr.Component, {
-    // summary:
+    // Summary:
     //    Get all the active users
-    // description:
+    // Description:
     //    Get the users and return the list
     //    for use with dojo fields
     _url:  null,
     _list: null,
 
     fetch:function(processData) {
-        // summary:
+        // Summary:
         //    Get all the active users
-        // description:
+        // Description:
         //    Get all the active users
         var self = this;
         if (typeof processData == "undefined") {
@@ -60,9 +61,9 @@ dojo.declare("phpr.Store", phpr.Component, {
     },
 
     update:function() {
-        // summary:
+        // Summary:
         //    Delete de cache
-        // description:
+        // Description:
         //    Delete de cache
         phpr.DataStore.deleteData({url: this._url});
     }
@@ -74,9 +75,9 @@ dojo.declare("phpr.Store.User", phpr.Store, {
     },
 
     makeSelect:function() {
-        // summary:
+        // Summary:
         //    This function get all the active users
-        // description:
+        // Description:
         //    This function get all the active users, except the current user
         //    and make the array for the select
         var users  = phpr.DataStore.getData({url: this._url});
@@ -95,9 +96,9 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
     },
 
     makeSelect:function() {
-        // summary:
+        // Summary:
         //    This function get all the active modules
-        // description:
+        // Description:
         //    This function get all the active modules,
         //    and make the array for draw it with the relation module-project
         var modules = phpr.DataStore.getData({url: this._url});
@@ -119,9 +120,9 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
     },
 
     makeSelect:function() {
-        // summary:
+        // Summary:
         //    This function get all the roles and their assignes user for onw project
-        // description:
+        // Description:
         //    This function get all the roles and their assignes user for onw project
         var roles          = phpr.DataStore.getData({url: this._url});
         this._list         = new Array();
@@ -148,9 +149,9 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
     },
 
     makeSelect:function() {
-        // summary:
+        // Summary:
         //    This function get all the roles and their assignes user for onw project
-        // description:
+        // Description:
         //    This function get all the roles and their assignes user for onw project
         var modules = phpr.DataStore.getData({url: this._url});
         this._list  = new Array();
@@ -172,9 +173,9 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
     },
 
     makeSelect:function() {
-        // summary:
+        // Summary:
         //    This function get all the roles and their assignes user for onw project
-        // description:
+        // Description:
         //    This function get all the roles and their assignes user for onw project
         var tabs   = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
@@ -183,6 +184,26 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
             this._list.push({"id":     tabs[i]['id'],
                              "name":   tabs[i]['label'],
                              "nameId": nameId})
+        }
+    }
+});
+
+dojo.declare("phpr.Store.Config", phpr.Store, {
+    constructor:function(id) {
+        this._url = phpr.webpath + "index.php/Default/index/jsonGetConfigurations/"
+    },
+
+    makeSelect:function() {
+        // Summary:
+        //    Return all the front configurations from the configuration.ini
+        // Description:
+        //    Return all the front configurations from the configuration.ini
+        var config = phpr.DataStore.getData({url: this._url});
+        this._list = new Object();
+        for (i in config) {
+            if (config[i]['name']) {
+                this._list[config[i]['name']] = config[i]['value'];
+            }
         }
     }
 });

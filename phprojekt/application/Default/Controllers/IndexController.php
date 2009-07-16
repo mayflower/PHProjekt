@@ -404,6 +404,23 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Return the front configurations from the configuration.ini
+     *
+     * @return void
+     */
+    public function jsonGetConfigurationsAction()
+    {
+        $fronVars = Phprojekt::getInstance()->getConfig()->front;
+        $data     = array();
+        foreach ($fronVars as $key => $value) {
+            $data[] = array('name'  => $key,
+                            'value' => $value);
+        }
+
+        Phprojekt_Converter_Json::echoConvert($data);
+    }
+
+    /**
      * Shows the template page form
      *
      * @return void
