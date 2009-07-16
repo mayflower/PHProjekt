@@ -68,6 +68,7 @@ class Setup_Models_Config
         $content .= $this->_getModules();
         $content .= $this->_getMail();
         $content .= $this->_getMisc();
+        $content .= $this->_getFront();
 
         return $content;
     }
@@ -328,5 +329,21 @@ class Setup_Models_Config
         $content .= 'useCacheForClasses = ' . $useCacheForClasses . $this->_eol;
 
         return $content;
+    }
+
+    /**
+     * Return the front text
+     *
+     * @return string
+     */
+    private function _getFront()
+    {
+        $content  = $this->_eol;
+        $content .= ';;;;;;;;;' . $this->_eol;
+        $content .= '; FRONT ;' . $this->_eol;
+        $content .= ';;;;;;;;;' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; Activate the mail notification by default' . $this->_eol;
+        $content .= 'front.notificationEnabledByDefault = false' . $this->_eol;
     }
 }

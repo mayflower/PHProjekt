@@ -124,6 +124,13 @@ compressedDojo = true;
 ; Use Zend_Registry for cache classes in the same request
 useCacheForClasses = true;
 
+;;;;;;;;;
+; FRONT ;
+;;;;;;;;;
+
+; Activate the mail notification by default
+front.notificationEnabledByDefault = false
+
 
 [test-other-config]
 

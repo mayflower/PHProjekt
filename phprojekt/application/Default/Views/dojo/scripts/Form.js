@@ -20,9 +20,9 @@
 dojo.provide("phpr.Default.Form");
 
 dojo.declare("phpr.Default.Form", phpr.Component, {
-    // summary:
+    // Summary:
     //    Class for displaying a PHProjekt Detail View
-    // description:
+    // Description:
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
@@ -39,9 +39,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _presetValues:      null,
 
     constructor:function(main, id, module, params) {
-        // summary:
+        // Summary:
         //    render the form on construction
-        // description:
+        // Description:
         //    this function receives the form data from the server and renders the corresponding form
         //    If the module is a param, is setted
         this.main = main;
@@ -65,9 +65,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     openHtmlEditor:function(nodeId, value) {
-        // summary:
+        // Summary:
         //    Open a dialog for edit the HTML content
-        // description:
+        // Description:
         //    Open a dialog for edit the HTML content
         phpr.destroyWidget('editorFor_' + nodeId);
         var editor = new dijit.Editor({
@@ -86,25 +86,25 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     setUrl:function() {
-        // summary:
+        // Summary:
         //    Set the url for get the data
-        // description:
+        // Description:
         //    Set the url for get the data
         this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id;
     },
 
     setNode:function() {
-        // summary:
+        // Summary:
         //    Set the node to put the grid
-        // description:
+        // Description:
         //    Set the node to put the grid
         this._formNode = dijit.byId("detailsBox");
     },
 
     getInitData:function() {
-        // summary:
+        // Summary:
         //    Process all the POST in cascade for get all the data from the server
-        // description:
+        // Description:
         //    Process all the POST in cascade for get all the data from the server
         var params = this._initData.pop();
 
@@ -126,9 +126,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     initData:function() {
-        // summary:
+        // Summary:
         //    Init all the data before draw the form
-        // description:
+        // Description:
         //    This function call all the needed data before the form is drawed
         //    The form will wait for all the data are loaded.
         //    Each module can overwrite this function for load the own data
@@ -144,9 +144,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     addAccessTab:function(data) {
-        // summary:
+        // Summary:
         //    Access tab
-        // description:
+        // Description:
         //    Display all the users and the acces
         //    The user can assign to each user different access on the item
         var userList      = this.userStore.getList();
@@ -226,9 +226,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     setPermissions:function(data) {
-        // summary:
+        // Summary:
         //    Get the permission
-        // description:
+        // Description:
         //    Get the permission for the current user on the item
         if (this.id > 0) {
             if (this.main._isGlobalModule(phpr.module)) {
@@ -244,9 +244,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     addTab:function(innerTabs, id, title, formId) {
-        // summary:
+        // Summary:
         //    Add a tab
-        // description:
+        // Description:
         //    Add a tab and if have form, add the values
         //    to the array of values for save it later
         phpr.destroyWidget(id);
@@ -270,9 +270,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     getTabs:function() {
-        // summary:
+        // Summary:
         //    Return the tab list for make the form
-        // description:
+        // Description:
         //    Return the tab list for make the form or an empty array
         if (this.tabStore) {
             result = this.tabStore.getList();
@@ -281,9 +281,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     getFormData:function(items, request) {
-        // summary:
+        // Summary:
         //    This function renders the form data according to the database manager settings
-        // description:
+        // Description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
         this.formdata    = new Array();
@@ -442,17 +442,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     useCache:function() {
-        // summary:
+        // Summary:
         //    Return true or false if the cache is used
-        // description:
+        // Description:
         //    Return true or false if the cache is used
         return true;
     },
 
     setFormContent:function() {
-        // summary:
+        // Summary:
         //    Set the Container
-        // description:
+        // Description:
         //    Set the Container
         var tabContainer = new dijit.layout.TabContainer({
             style: 'height:100%;'
@@ -464,9 +464,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     addModuleTabs:function(data) {
-        // summary:
+        // Summary:
         //    Add all the tabs
-        // description:
+        // Description:
         //    Add all the tabs that are not the basic data
         this.addAccessTab(data);
         this.addNotificationTab(data);
@@ -476,24 +476,24 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     addBasicFields:function() {
-        // summary:
+        // Summary:
         //    Add some special fields
-        // description:
+        // Description:
         //    Add some special fields
         this.formdata[1] += this.displayTagInput();
     },
 
     postRenderForm:function() {
-        // summary:
+        // Summary:
         //    User functions after render the form
-        // description:
+        // Description:
         //    Apply for special events on the fields
     },
 
     newAccess:function() {
-        // summary:
+        // Summary:
         //    Add a new row of one user-accees
-        // description:
+        // Description:
         //    Add a the row of one user-accees
         //    with the values selected on the first row
         var userId = dijit.byId("dataAccessAdd").attr('value');
@@ -577,9 +577,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     deleteAccess:function(userId) {
-        // summary:
+        // Summary:
         //    Remove the row of one user-accees
-        // description:
+        // Description:
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
         phpr.destroyWidget("dataAccess[" + userId + "]");
@@ -600,9 +600,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     checkAllAccess:function(str) {
-        // summary:
+        // Summary:
         //    Select all the access
-        // description:
+        // Description:
         //    Select all the access
         if (dijit.byId("checkAdminAccess"+str).checked) {
             dijit.byId("checkReadAccess"+str).attr('checked', true);
@@ -617,9 +617,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     checkNoneAccess:function(str) {
-        // summary:
+        // Summary:
         //    Un-select all the access
-        // description:
+        // Description:
         //    Un-select all the access
         if (dijit.byId("checkNoneAccess"+str).checked) {
             dijit.byId("checkReadAccess"+str).attr('checked', false);
@@ -634,9 +634,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     prepareSubmission:function() {
-        // summary:
+        // Summary:
         //    This function prepares the data for submission
-        // description:
+        // Description:
         //    This function prepares the content of this.sendData before it is
         //    submitted to the Server.
         this.sendData = new Array();
@@ -653,9 +653,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     submitForm:function() {
-        // summary:
+        // Summary:
         //    This function is responsible for submitting the formdata
-        // description:
+        // Description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
         if (!this.prepareSubmission()) {
@@ -691,9 +691,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     deleteForm:function() {
-        // summary:
+        // Summary:
         //    This function is responsible for deleting a dojo element
-        // description:
+        // Description:
         //    This function calls jsonDeleteAction
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
@@ -717,9 +717,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     displayTagInput:function() {
-        // summary:
+        // Summary:
         // This function manually receives the Tags for the current element
-        // description:
+        // Description:
         // By calling the TagController this function receives all data it needs
         // for rendering a Tag from the server and renders those tags in a Input separated by coma
         // The function also render the tags in the moveable pannel for click it and search by tags
@@ -743,9 +743,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     showHistory:function() {
-        // summary:
+        // Summary:
         //    This function renders the history data
-        // description:
+        // Description:
         //    This function renders the history data
         if (this.id > 0) {
             this._historyUrl = phpr.webpath + "index.php/Core/history/jsonList/moduleName/" + phpr.module
@@ -765,9 +765,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     getHistoryData:function() {
-        // summary:
+        // Summary:
         //    This function collect and process the history data
-        // description:
+        // Description:
         //    This function collect and process the history data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
         var userList    = this.userStore.getList();
@@ -820,23 +820,25 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     },
 
     updateData:function() {
-        // summary:
+        // Summary:
         //    Delete the cache for this form
-        // description:
+        // Description:
         //    Delete the cache for this form
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._tagUrl});
     },
 
     addNotificationTab:function(data) {
-        // summary:
+        // Summary:
         //    Adds a tab for sending a notification.
-        // description:
+        // Description:
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //    or modified. It has a "Send Notification" checkbox.
+        // Default value
+        var defaultValue = (phpr.config.notificationEnabledByDefault) ? 'on' : '';
         // Add field
-        var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification', '',
-                phpr.nls.get('Check this box to send an email notification to the participants'));
+        var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification',
+            defaultValue, phpr.nls.get('Check this box to send an email notification to the participants'));
         // Add the tab to the form
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
     },
