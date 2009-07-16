@@ -405,6 +405,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Return the front configurations from the configuration.ini
+     * And some others Core Settings
      *
      * @return void
      */
@@ -418,6 +419,8 @@ class IndexController extends Zend_Controller_Action
                                 'value' => $value);
             }
         }
+        $data[] = array('name'  => 'phprojektVersion',
+                        'value' => Phprojekt::getVersion());
 
         Phprojekt_Converter_Json::echoConvert($data);
     }

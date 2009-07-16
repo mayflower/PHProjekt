@@ -173,7 +173,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Get all the active users
         this.userStore = new phpr.Store.User();
-        this.userStore.fetch(dojo.hitch(this, "addUserTooltip"));
+        this.userStore.fetch(dojo.hitch(this, "addLogoTooltip"));
 
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
@@ -927,18 +927,19 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.form.openHtmlEditor(nodeId, value);
     },
 
-    addUserTooltip:function() {
+    addLogoTooltip:function() {
         // Summary:
-        //    Add a tooltip to the logo with the current user
+        //    Add a tooltip to the logo with the current user and p6 version
         // Description:
-        //    Add a tooltip to the logo with the current user
+        //    Add a tooltip to the logo with the current user and p6 version
         var userList = this.userStore.getList();
 
         // Add a tooltip with the current user
         for (var i = 0; i < userList.length; i++) {
             if (userList[i].current) {
+                var version = (phpr.config.phprojektVersion) ? phpr.config.phprojektVersion : '';
                 new dijit.Tooltip({
-                    label:     userList[i].display + ' (ID: ' + userList[i].id + ')',
+                    label:     'PHProjekt ' + version + " - " + userList[i].display + ' (ID: ' + userList[i].id + ')',
                     connectId: ["PHProjektLogo"],
                     showDelay: 50
                 });
