@@ -37,7 +37,7 @@
     background: #294064;
     background-repeat: repeat-x;
     width: 100%;
-    height: 40px;
+    height: 32px;
 }
 
 .phprojekt #header img {
@@ -272,7 +272,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .phprojekt .footer{
-    margin-top: 5px;
+    margin-top: 1px;
 }
 
 /* DnD avatar-specific settings */

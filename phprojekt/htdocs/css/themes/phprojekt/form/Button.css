@@ -220,6 +220,9 @@
     margin-left: 5px;
 }
 
+.dj_ie .phprojekt #systemNavigation {
+    margin: 0;
+}
 .dj_ie .phprojekt #mainNavigation .selected {
     background: transparent url("../images/globalModuleLeft.gif") no-repeat scroll left 40%;
     margin-left: 4px;
