@@ -45,7 +45,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var hours = new Array();
         var pair  = 0;
         var show  = '';
-        for (var i = 8; i < 21; i++) {
+        for (var i = 0; i < 24; i++) {
             show = '';
             if ((i % 2) == 0) {
                 pair = 1;
@@ -70,7 +70,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         dojo.connect(dojo.byId('buttonManageFavorites'), "click",  dojo.hitch(this, "openManageFavorites"));
 
         this._contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
-
 
         this.setDate(date);
         this.loadView();
@@ -266,7 +265,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
         // Clean "Day View"
         dijit.byId("projectBookingContainer").destroyDescendants();
-        this._surface   = dojox.gfx.createSurface('projectBookingContainer', 400, 260);
+        this._surface   = dojox.gfx.createSurface('projectBookingContainer', 400, 480);
         var lastHour    = 0;
         var totalHeight = 0;
         for (j in timeprojData) {
@@ -403,7 +402,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 notes:          timeprojData[i].notes,
                 notesLabel:     phpr.nls.get('Notes'),
                 amount:         phpr.Date.convertTime(this.getDiffTime(timeprojData[i].amount, '00:00:00')),
-                amountLabel:    phpr.nls.get('Amount [hhmm]'),
+                amountLabel:    phpr.nls.get('Amount'),
                 saveText:       phpr.nls.get('Save'),
                 deleteText:     phpr.nls.get('Delete'),
                 id:             timeprojData[i].id
@@ -419,7 +418,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             notes:          '',
             notesLabel:     phpr.nls.get('Notes'),
             amount:         '',
-            amountLabel:    phpr.nls.get('Amount [hhmm]'),
+            amountLabel:    phpr.nls.get('Amount'),
             saveText:       phpr.nls.get('Save'),
             deleteText:     phpr.nls.get('Cancel'),
             id:             0
@@ -451,7 +450,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Render the projects for drag and drop
         //    Destroy the oldest first
         for (i in values) {
-            phpr.destroyWidget(values[i].id);
+            phpr.destroyWidget('projectSource' + values[i].id);
         }
         var html = this.render(["phpr.Timecard.template", "projectSource.html"], null, {
             values: values

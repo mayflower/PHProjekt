@@ -480,6 +480,7 @@ h1,h2,h3,h4,h5,h6 {
     -khtml-box-sizing: border-box;
     box-sizing: border-box;
     overflow: hidden;
+    width: 95%;
 }
 
 .phprojekt .greyContainer td {

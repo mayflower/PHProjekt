@@ -129,11 +129,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $startTime = substr($startTime, 0, 4);
             }
             $startTime = (int) $startTime;
-            if (($startTime >= 2100) || ($startTime < 800)) {
+            if (($startTime >= 2400) || ($startTime < 0)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
-                    'message' => Phprojekt::getInstance()->translate('Start time has to be between 8:00 and 21:00')));
+                    'message' => Phprojekt::getInstance()->translate('Start time has to be between 0:00 and 24:00')));
                 return false;
             } else {
                 $startMinutes = substr($startTime, strlen($startTime) - 2, 2);
@@ -174,11 +174,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $endTime = substr($endTime, 0, 4);
             }
             $endTime = (int) $endTime;
-            if (($endTime > 2100) || ($endTime < 800)) {
+            if (($endTime > 2400) || ($endTime < 0)) {
                 $this->_validate->error->addError(array(
                     'field'   => Phprojekt::getInstance()->translate('Hours'),
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
-                    'message' => Phprojekt::getInstance()->translate('End time has to be between 8:00 and 21:00')));
+                    'message' => Phprojekt::getInstance()->translate('End time has to be between 0:00 and 24:00')));
                 return false;
             } else {
                 $endMinutes = substr($endTime, strlen($endTime) - 2, 2);

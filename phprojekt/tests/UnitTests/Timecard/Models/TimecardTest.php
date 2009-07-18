@@ -67,15 +67,6 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(true, $response);
 
-        // Wrong data - Start time too early
-        $timecardModel->date      = '2009-05-17';
-        $timecardModel->startTime = '07:00:00';
-        $timecardModel->endTime   = '18:00:00';
-        $response                 = $timecardModel->recordValidate();
-        $this->assertEquals(false, $response);
-        $error = $timecardModel->getError();
-        $this->assertEquals('Start time has to be between 8:00 and 21:00', $error[0]['message']);
-
         // Wrong data - Start time invalid
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '09:60:00';
@@ -108,11 +99,11 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         // Wrong data - End time too late
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '10:00:00';
-        $timecardModel->endTime   = '22:00:00';
+        $timecardModel->endTime   = '25:00:00';
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
-        $expectedMessage = 'End time has to be between 8:00 and 21:00';
+        $expectedMessage = 'End time has to be between 0:00 and 24:00';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data - Invalid end time
@@ -153,16 +144,6 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
         $expectedMessage = 'The start time is invalid';
-        $this->assertEquals($expectedMessage, $error[0]['message']);
-
-        // Wrong data - Invalid start time
-        $timecardModel->date      = '2009-05-17';
-        $timecardModel->startTime = '07:00:00';
-        $timecardModel->endTime   = '12:00:00';
-        $response                 = $timecardModel->recordValidate();
-        $this->assertEquals(false, $response);
-        $error           = $timecardModel->getError();
-        $expectedMessage = 'Start time has to be between 8:00 and 21:00';
         $this->assertEquals($expectedMessage, $error[0]['message']);
     }
 

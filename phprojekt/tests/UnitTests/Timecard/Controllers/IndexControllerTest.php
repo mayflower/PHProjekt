@@ -383,24 +383,18 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonStart');
         $response = $this->getResponse();
-        $hour     = date("G");
-        if ($hour < 21 && $hour >= 8) {
-            $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
-            // Check that the period has been added
-            $this->setRequestUrl('Timecard/index/jsonDetail/');
-            $this->request->setParam('date', date('Y-m-d'));
-            $response = $this->getResponse();
-            // We don't expect the complete string containing date('Y-m-d') because the seconds usually change
-            $expected = '"data":[{"id":11,"startTime":"';
-            $this->assertContains($expected, $response);
+        // Check that the period has been added
+        $this->setRequestUrl('Timecard/index/jsonDetail/');
+        $this->request->setParam('date', date('Y-m-d'));
+        $response = $this->getResponse();
+        // We don't expect the complete string containing date('Y-m-d') because the seconds usually change
+        $expected = '"data":[{"id":11,"startTime":"';
+        $this->assertContains($expected, $response);
 
-            $expected = '","rights":[],"endTime":""}],"numRows":1}';
-            $this->assertContains($expected, $response);
-        } else {
-            $this->assertTrue($this->error, "Based on server time ($hour h UTC), starting work should have failed.");
-            $this->assertContains('Start time has to be between 8:00 and 21:00', $this->errormessage);
-        }
+        $expected = '","rights":[],"endTime":""}],"numRows":1}';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -410,13 +404,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonStop');
         $response = $this->getResponse();
-        $hour     = date("G");
-        if ($hour < 21 && $hour >= 8) {
-            $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
-        } else {
-            $this->assertContains('The Item was not found', $response,
-                "Based on server time ($hour h UTC), stopping work should have failed.");
-        }
+        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**

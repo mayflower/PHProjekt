@@ -5,6 +5,8 @@
     <input dojoType="dijit.form.TextBox" type="hidden" name="date" id="bookingDate_{{id}}" value="{{date}}" />
     <input dojoType="dijit.form.TextBox" type="hidden" name="projectId" id="projectId_{{id}}" value="{{projectId}}" />
     <table class="greyContainer">
+    <col style="width: 20px;" />
+    <col />
     <tr>
         <td>
             <label>{{projectIdLabel}}</label>
@@ -20,7 +22,21 @@
         <td>
             <input type="text" id="amount_{{id}}"  name="amount" dojoType="dijit.form.TextBox"
             constraints=" {formatLength: 'short', timePattern: 'HHmm'}" value="{{amount}}"
-            style="width: 55px" />
+            style="width: 55px" />&nbsp;[hhmm]
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="{{notes}}">{{notesLabel}}</label>
+        </td>
+        <td>
+            <input type="text" id="notes_{{id}}" name="notes" dojoType="dijit.form.TextBox" required="true"
+            ucfirst="false" value="{{notes}}"
+            style="width: 90%;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
             <button dojoType="dijit.form.Button" baseClass="positive" id="saveBookingButton_{{id}}" type="button"
             iconClass="tick">
                 {{saveText}}
@@ -30,16 +46,6 @@
             iconClass="cross">
                 {{deleteText}}
             </button>
-        </td>
-    </tr>
-    <tr>
-        <td class="label">
-            <label for="{{notes}}">{{notesLabel}}</label>
-        </td>
-        <td>
-            <input type="text" id="notes_{{id}}" name="notes" dojoType="dijit.form.TextBox" required="true"
-            ucfirst="false" value="{{notes}}"
-            style="width: 90%;" />
         </td>
     </tr>
     </table>

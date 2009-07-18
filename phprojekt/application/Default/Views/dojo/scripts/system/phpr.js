@@ -169,6 +169,8 @@ dojo.require("dojox.dtl.tag.logic");
 
 // Dojox fx
 dojo.require("dojox.fx._base");
+dojo.require("dojox.fx._core");
+dojo.require("dojox.fx.scroll");
 dojo.require("dojox.gfx");
 dojo.require("dojox.gfx.shape");
 dojo.require("dojox.gfx.path");

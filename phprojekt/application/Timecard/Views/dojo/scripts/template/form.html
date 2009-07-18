@@ -49,7 +49,7 @@
 
         <!-- Right Panel -->
         <div id="rightTimecardPanel"
-        style="position: absolute; top: 10%; left: 50%; width: 48%; height: 260px; float: right; overflow: hidden;">
+        style="position: absolute; top: 10%; left: 50%; width: 48%; height: 480px; float: right; overflow: hidden;">
             {% for hour in hours %}
                 {% ifequal hour.pair 0 %}
             <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane"
@@ -63,7 +63,7 @@
             {% endfor %}
 
             <div id="projectBookingContainer" dojoType="dijit.layout.ContentPane"
-            style="position: absolute; top: 0%; left: 15%; margin: 0px; height: 260px; padding-top: 0px;
+            style="position: absolute; top: 0%; left: 15%; margin: 0px; height: 480px; padding-top: 0px;
             overflow: hidden; float: right; filter: alpha(opacity=50); opacity: .5; width: 100%;">
             </div>
         </div>

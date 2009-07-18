@@ -82,14 +82,14 @@ class Timecard_Models_Timeproj_Test extends PHPUnit_Framework_TestCase
         $response                 = $timeprojModel->recordValidate();
         $this->assertEquals(false, $response);
         $error = $timeprojModel->getError();
-        $this->assertEquals('The amount is invalid (from 30 to 1300)', $error[0]['message']);
+        $this->assertEquals('The amount is invalid (from 30 to 2400)', $error[0]['message']);
 
         // Wrong data
-        $timeprojModel->amount    = '13:01';
+        $timeprojModel->amount    = '26:01';
         $response                 = $timeprojModel->recordValidate();
         $this->assertEquals(false, $response);
         $error = $timeprojModel->getError();
-        $this->assertEquals('The amount is invalid (from 30 to 1300)', $error[0]['message']);
+        $this->assertEquals('The amount is invalid (from 30 to 2400)', $error[0]['message']);
     }
 
     /**

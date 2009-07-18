@@ -23,7 +23,7 @@ dojo.provide("phpr.Timecard.ContentBar");
 dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
     onDndDrop:function(source, nodes, copy) {
         if (source.node.id == 'projectBookingSource') {
-            dojo.byId('projectId_0').value       = nodes[0].id;
+            dojo.byId('projectId_0').value       = nodes[0].id.replace(/projectSource/, "");
             dojo.byId('projectName_0').innerHTML = nodes[0].innerHTML;
             for (var i in timecardProjectPositions) {
                 var id   = timecardProjectPositions[i].id;
@@ -39,6 +39,11 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
                     var node = dojo.byId('projectBookingForm_0');
                     dojo.style(node, "opacity", 0);
                     dojo.style(node, "display", "block");
+                    var scroll = dojox.fx.smoothScroll({
+                        node:     node,
+                        win:      dojo.byId('TimecardBooking'),
+                        duration: 500
+                    }).play();
                 }
             }).play();
             this.onDndCancel(); // cleanup the drop state
@@ -78,6 +83,11 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
                             dojo.style(node, "opacity", 0);
                             dojo.style(node, "display", "block");
                         }
+                        var scroll = dojox.fx.smoothScroll({
+                            node:     node,
+                            win:      dojo.byId('TimecardBooking'),
+                            duration: 500
+                        }).play();
                     }
                 }).play();
             }
@@ -89,8 +99,8 @@ dojo.declare("phpr.Timecard.Booking", dojo.dnd.Target, {
 dojo.declare("phpr.Timecard.ContentBar", null, {
     dojoNode: null,
     node:     null,
-    start:    8,
-    end:      20,
+    start:    0,
+    end:      24,
 
     constructor:function(id) {
         this.dojoNode = dojo.byId(id);
