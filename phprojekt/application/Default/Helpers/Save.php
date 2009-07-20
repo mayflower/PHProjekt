@@ -220,7 +220,7 @@ final class Default_Helpers_Save
             // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
-                    $model->getNotification()->sendNotificationText($model->getActiveRecord());
+                    $model->getActiveRecord()->getNotification()->sendNotificationText();
                 }
             }
 
