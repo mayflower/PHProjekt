@@ -380,7 +380,6 @@ class Phprojekt_Notification extends Phprojekt_Mail
         // Creates the Zend_Mail_Transport_Smtp object
         $smtpTransport = $this->setTransport();
         try {
-            Phprojekt::getInstance()->getLog()->debug("String to be logged");
             $this->send($smtpTransport);
         } catch(Exception $e){
             throw new Phprojekt_PublishedException('SMTP error: ' . $e->getMessage());
