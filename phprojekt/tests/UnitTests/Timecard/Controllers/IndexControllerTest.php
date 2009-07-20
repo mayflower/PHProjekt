@@ -122,7 +122,7 @@ class Timecard_IndexController_Test extends FrontInit
      */
     public function testJsonSaveEdit()
     {
-        // INSERT. Sending id
+        // EDIT. Sending id
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('id', 7);
         $this->request->setParam('date', '2009-05-16');
@@ -138,28 +138,6 @@ class Timecard_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":7,"startTime":"10:30:00","rights":[],"endTime":"12:30:00"},{"id":8,'
             . '"startTime":"14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2})';
         $this->assertContains($expected, $response);
-    }
-
-    /**
-     * Test of json Save
-     */
-    public function testJsonSaveOutOfSchedule()
-    {
-        // Try to INSERT a very early period. Returns nothing here
-        $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '5:30');
-        $this->request->setParam('endTime', '12:30');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
-
-        // Try to INSERT a very late period. Returns nothing here
-        $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '15:30');
-        $this->request->setParam('endTime', '22:30');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
     }
 
     /**
@@ -203,20 +181,6 @@ class Timecard_IndexController_Test extends FrontInit
 
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('endTime', '18:00');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
-    }
-
-    /**
-     * Test of json Save
-     */
-    public function testJsonSaveTooEarly()
-    {
-        // Try to INSERT a very early event. Returns nothing here
-        $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '5:30');
-        $this->request->setParam('endTime', '12:30');
         $response = $this->getResponse();
         $this->assertEquals('', $response);
     }
