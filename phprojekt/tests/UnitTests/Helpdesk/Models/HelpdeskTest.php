@@ -41,15 +41,19 @@ class Helpdesk_Models_Helpdesk_Test extends PHPUnit_Framework_TestCase
     {
         $helpdeskModel = new Helpdesk_Models_Helpdesk();
         $helpdeskModel->find(1);
-        $response = $helpdeskModel->getNotificationRecipients();
-        $this->assertEquals("1", $response);
+        $response = $helpdeskModel->getNotification()->setTo();
+        $expected = array(array("david@example.com",
+                                "David Soria Parra (david)"));
+        $this->assertEquals($expected, $response);
 
         $helpdeskModel->find(2);
         $helpdeskModel->assigned = 2;
         $helpdeskModel->save();
         $helpdeskModel->assigned = 1;
         $helpdeskModel->save();
-        $response = $helpdeskModel->getNotificationRecipients();
-        $this->assertEquals("1,2", $response);
+        $response   = $helpdeskModel->getNotification()->setTo();
+        $expected[] = array("gus@example.com",
+                            "Gustavo Solt (gus)");
+        $this->assertEquals($expected, $response);
     }
 }

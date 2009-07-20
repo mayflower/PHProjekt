@@ -34,33 +34,27 @@
 class Todo_Models_Todo extends Phprojekt_Item_Abstract
 {
     /**
-     * Get all the recipients for the mail notification
+     * Initializes new object.
+     * Replaces the default Notification class by this specific one for Todo module.
      *
-     * @return string
+     * @param array $db Configuration for Zend_Db_Table
      */
-    public function getNotificationRecipients()
+    public function __construct($db = null)
     {
-        $recipients = $this->ownerId;
-        if ($this->userId != 0 && $this->userId != $this->ownerId) {
-            $recipients .= "," . $this->userId;
-        }
+        parent::__construct($db);
 
-        // If the todo has been reassigned, add the previous assigned user to the recipients
-        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $changes = $history->getLastHistoryData($this);
-        if ($changes[0]['action'] == 'edit') {
-            foreach ($changes as $change) {
-                if ($change['field'] == 'userId') {
-                    // The user has changed
-                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0'
-                        && $change['oldValue'] !== null) {
-                        $recipients .= "," . $change['oldValue'];
-                        break;
-                    }
-                }
-            }
-        }
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Todo_Models_Notification', 'UTF-8');
+    }
 
-        return $recipients;
+    /**
+     * Defines the clone function to prevent the same point to same object.
+     * Replaces the default Notification class by this specific one for Todo module.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Todo_Models_Notification', 'UTF-8');
     }
 }

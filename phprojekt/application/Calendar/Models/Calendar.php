@@ -63,9 +63,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     const EVENT_TYPE_ANUAL = 5;
 
-    private $_notifParticipants;
-    private $_startDate;
-    private $_endDate;
+    public $notifParticipants;
+    public $startDateNotif;
+    public $endDateNotif;
 
     /**
      * Save or inserts an event. It inserts one envent by participant
@@ -344,9 +344,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     private function _saveNewEvent($request, $eventDates, $daysDuration, $participantId, $lastParticipant,
         $sendNotification, $participantsList, $parentId)
     {
-        $this->_startDate         = $request['startDate'];
-        $this->_endDate           = $request['endDate'];
-        $this->_notifParticipants = implode(",", $participantsList);
+        $this->startDateNotif     = $request['startDate'];
+        $this->endDateNotif       = $request['endDate'];
+        $this->notifParticipants  = $participantsList;
 
         $totalEvents = count($eventDates);
         $eventNumber = 0;
@@ -386,9 +386,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     private function _updateMultipleEvents($request, $id, $eventDates, $daysDuration, $participantsList,
         $multipleParticipants)
     {
-        $this->_startDate         = $request['startDate'];
-        $this->_endDate           = $request['startDate'];
-        $this->_notifParticipants = implode(",", $participantsList);
+        $this->startDateNotif     = $request['startDate'];
+        $this->endDateNotif       = $request['endDate'];
+        $this->notifParticipants  = $participantsList;
 
         $this->find($id);
 
@@ -525,9 +525,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     private function _updateSingleEvent($request, $id, $eventDates, $daysDuration, $participantsList,
         $multipleParticipants)
     {
-        $this->_startDate         = $request['startDate'];
-        $this->_endDate           = $request['endDate'];
-        $this->_notifParticipants = implode(",", $participantsList);
+        $this->startDateNotif     = $request['startDate'];
+        $this->endDateNotif       = $request['endDate'];
+        $this->notifParticipants  = $participantsList;
 
         $this->find($id);
 
@@ -640,180 +640,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Gets all the recipients for the mail notification
-     *
-     * @return string
-     */
-    public function getNotificationRecipients()
-    {
-        return $this->_notifParticipants;
-    }
-
-    /**
-     * Returns the body 'Current data' part of the Notification email
-     *
-     * @return array
-     */
-    public function getNotificationBodyData()
-    {
-        $bodyData   = array();
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Title'),
-                            'value' => $this->title);
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Place'),
-                            'value' => $this->place);
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Notes'),
-                            'value' => $this->notes);
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start date'),
-                            'value' => $this->_translateDate($this->_startDate));
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Start time'),
-                            'value' => substr($this->startTime, 0, 5));
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End date'),
-                            'value' => $this->_translateDate($this->_endDate));
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('End time'),
-                            'value' => substr($this->endTime, 0, 5));
-
-        $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $participants      = explode(",", $this->_notifParticipants);
-        $participantsValue = "";
-        $i                 = 0;
-        $lastItem          = count($participants);
-
-        // Participants field
-        foreach ($participants as $participant) {
-            $i++;
-            $phpUser->find((int) $participant);
-            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-            if (!empty($fullname)) {
-                $participantsValue .= $fullname . ' (' . $phpUser->username . ')';
-            } else {
-                $participantsValue .= $phpUser->username;
-            }
-            if ($i < $lastItem) {
-                $participantsValue .= ", ";
-            }
-        }
-        $bodyData[] = array('label' => Phprojekt::getInstance()->translate('Participants'),
-                            'value' => $participantsValue);
-
-        if ($this->rrule !== null) {
-            $bodyData = array_merge($bodyData, $this->_getRruleDescriptive($this->rrule));
-        }
-
-        return $bodyData;
-    }
-
-    /**
-     * Returns the body 'Changes done' part of the Notification email
-     *
-     * @return array
-     */
-    public function getNotificationBodyChanges($changes)
-    {
-        $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->getInformation()->getFieldDefinition($order);
-
-        // Iterate in every change done
-        for ($i = 0; $i < count($changes); $i++) {
-            // Translate the name of the field
-            foreach ($fieldDefinition as $field) {
-                // Find the field definition for the field that has been modified
-                if ($field['key'] == $changes[$i]['field']) {
-                    $changes[$i]['field'] = $field['label'];
-                }
-            }
-
-            // Recurrence
-            if (strtolower($changes[$i]['field']) == 'rrule') {
-                $oldRruleEmpty = false;
-                $newRruleEmpty = false;
-                if ($changes[$i]['oldValue'] !== null) {
-                    $oldRrule = $this->_getRruleDescriptive($changes[$i]['oldValue']);
-                } else {
-                    $oldRruleEmpty = true;
-                }
-                if ($changes[$i]['newValue'] !== null) {
-                    $newRrule = $this->_getRruleDescriptive($changes[$i]['newValue']);
-                } else {
-                    $newRruleEmpty = true;
-                }
-
-                // FIELDS: Repeats, Interval and Until
-                for ($i=0; $i < 3; $i++) {
-                    if (!$oldRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $oldRrule[$i]['label'];
-                    } else {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $newRrule[$i]['label'];
-                    }
-                    if (!$oldRruleEmpty) {
-                        $fieldOldValue = $oldRrule[$i]['value'];
-                    } else {
-                        $fieldOldValue = "";
-                    }
-                    if (!$newRruleEmpty) {
-                        $fieldNewValue = $newRrule[$i]['value'];
-                    } else {
-                        $fieldNewValue = "";
-                    }
-                    if ($fieldOldValue != $fieldNewValue) {
-                        $changes[] = array('field'    => $fieldName,
-                                           'oldValue' => $fieldOldValue,
-                                           'newValue' => $fieldNewValue);
-                    }
-                }
-
-                // FIELD: Weekday (optional)
-                $oldWeekDayExists = false;
-                if (!$oldRruleEmpty) {
-                    if (count($oldRrule) == 4) {
-                        $oldWeekDayExists = true;
-                    }
-                }
-                $newWeekDayExists = false;
-                if (!$newRruleEmpty) {
-                    if (count($newRrule) == 4) {
-                        $newWeekDayExists = true;
-                    }
-                }
-                if ($oldWeekDayExists || $newWeekDayExists) {
-                    if (!$oldRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence')
-                            . " - " . $oldRrule[3]['label'];
-                        $fieldOldValue = $oldRrule[3]['value'];
-                    } else {
-                        $fieldOldValue = "";
-                    }
-                    if (!$newRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence')
-                            . " - " . $newRrule[3]['label'];
-                        $fieldNewValue = $newRrule[3]['value'];
-                    } else {
-                        $fieldOldValue = "";
-                    }
-
-                    if ($fieldOldValue != $fieldNewValue) {
-                        $changes[] = array('field'    => $fieldName,
-                                           'oldValue' => $fieldOldValue,
-                                           'newValue' => $fieldNewValue);
-                    }
-                }
-            } else if ($changes[$i]['field'] == 'startDate') {
-                $changes[$i]['oldValue'] = $this->_translateDate($changes[$i]['oldValue']);
-                $changes[$i]['newValue'] = $this->_translateDate($changes[$i]['newValue']);
-            }
-        }
-
-        // Take out the original confusing 'rrule' element, if it is there
-        for ($i = 0; $i < count($changes); $i++) {
-            if ($changes[$i]['field'] == 'rrule') {
-                unset($changes[$i]);
-            }
-        }
-
-        return $changes;
-    }
-
-    /**
-     * Returns the body 'Changes done' part of the Notification email
+     * Returns the rrule in descriptive mode
      *
      * @param string $rrule String with the recurrence 'rrule' field, as it is saved in the DB.
      *
@@ -847,7 +674,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $untilDesc = $dayDesc . " " . $monthDesc . " " . $dayNum . " " . $year;
 
             $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Until'),
-                                   'value' => $this->_translateDate($untilDesc));
+                                   'value' => $this->translateDate($untilDesc));
         }
 
         if ($byday !== null) {
@@ -890,7 +717,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return string
      */
-    private function _translateDate($date)
+    public function translateDate($date)
     {
         if (strlen($date) == 10) {
             // '2009-04-25' style
@@ -1055,5 +882,29 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         }
 
         return $return;
+    }
+
+    /**
+     * Initializes new object.
+     * Replaces the default Notification class by this specific one for Calendar module.
+     *
+     * @param array $db Configuration for Zend_Db_Table
+     */
+    public function __construct($db = null)
+    {
+        parent::__construct($db);
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Calendar_Models_Notification', 'UTF-8');
+    }
+
+    /**
+     * Defines the clone function to prevent the same point to same object.
+     * Replaces the default Notification class by this specific one for Calendar module.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Calendar_Models_Notification', 'UTF-8');
     }
 }

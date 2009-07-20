@@ -41,12 +41,16 @@ class Todo_Models_Todo_Test extends PHPUnit_Framework_TestCase
     {
         $todoModel = new Todo_Models_Todo();
         $todoModel->find(2);
-        $response = $todoModel->getNotificationRecipients();
-        $this->assertEquals("1", $response);
+        $response = $todoModel->getNotification()->setTo();
+        $expected = array(array("david@example.com",
+                                "David Soria Parra (david)"));
+        $this->assertEquals($expected, $response);
 
         $todoModel->userId = 2;
         $todoModel->save();
-        $response = $todoModel->getNotificationRecipients();
-        $this->assertEquals("1,2", $response);
+        $response   = $todoModel->getNotification()->setTo();
+        $expected[] = array("gus@example.com",
+                            "Gustavo Solt (gus)");
+        $this->assertEquals($expected, $response);
     }
 }

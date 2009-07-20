@@ -237,7 +237,7 @@ class Minutes_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::USER_IS_NOT_OWNER);
         }
 
-        $mail = new Phprojekt_Mail_Notification(); // @todo Refactor mail classes and use base class here!
+        $mail = new Phprojekt_Mail();
         /* @var $mail Zend_Mail */
         $smtpTransport = $mail->setTransport();
         $validator     = new Zend_Validate_EmailAddress();

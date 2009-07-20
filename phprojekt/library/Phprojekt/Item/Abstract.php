@@ -71,6 +71,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     protected $_rights = null;
 
     /**
+     * Notification class object
+     *
+     * @var Phprojekt_Notification
+     */
+    protected $_notification = null;
+
+    /**
      * Field for display in the search results
      *
      * @var string
@@ -100,12 +107,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         parent::__construct($db);
 
-        $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
-        $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $this->_timezone  = (int)Phprojekt_User_User::getSetting("timeZone", 'UTC');
+        $this->_dbManager    = new Phprojekt_DatabaseManager($this, $db);
+        $this->_validate     = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_history      = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $this->_search       = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
+        $this->_rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification', 'UTF-8');
+        $this->_timezone     = (int)Phprojekt_User_User::getSetting("timeZone", 'UTC');
     }
 
     /**
@@ -116,10 +124,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __clone()
     {
         parent::__clone();
-        $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_validate     = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
+        $this->_history      = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $this->_search       = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
+        $this->_rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification', 'UTF-8');
     }
 
     /**
@@ -130,6 +139,17 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function getInformation()
     {
         return $this->_dbManager;
+    }
+
+    /**
+     * Returns the notification instance used by this phprojekt item
+     *
+     * @return Phprojekt_Notification
+     */
+    public function getNotification()
+    {
+        $this->_notification->setModel($this);
+        return $this->_notification;
     }
 
     /**

@@ -642,11 +642,11 @@ INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`
 
 INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `identifier`) VALUES
 (1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
-(2, 1, 0, 'email','test@example.com', 'Core'),
+(2, 1, 0, 'email','david@example.com', 'Core'),
 (3, 1, 0, 'language','en', 'Core'),
 (4, 1, 0, 'timeZone','2', 'Core'),
 (5, 2, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
-(6, 2, 0, 'email','test@example.com', 'Core'),
+(6, 2, 0, 'email','gus@example.com', 'Core'),
 (7, 2, 0, 'language','en', 'Core'),
 (8, 2, 0, 'timeZone','2', 'Core'),
 (9, 3, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),

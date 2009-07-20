@@ -43,47 +43,27 @@ class Helpdesk_Models_Helpdesk extends Phprojekt_Item_Abstract
     const STATUS_CLOSED   = 5;
 
     /**
-     * Get all the recipients for the mail notification
+     * Initializes new object.
+     * Replaces the default Notification class by this specific one for Helpdesk module.
      *
-     * @return string
+     * @param array $db Configuration for Zend_Db_Table
      */
-    public function getNotificationRecipients()
+    public function __construct($db = null)
     {
-        // Currently the user selects whether to send a notification or not, so the criteria is the following:
-        // Is there any assigned user?
-        if ($this->assigned != 0) {
-            // Yes
-            $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $phpUser->find(Phprojekt_Auth::getUserId());
-            // The assigned user is the logged user?
-            if ($this->assigned != $phpUser->id) {
-                // No - Send it to the assigned user
-                $recipients = $this->assigned;
-            } else {
-                // Yes - Send it to the creator of the ticket
-                $recipients = $this->author;
-            }
-        } else {
-            // No - Send it to the creator of the ticket
-            $recipients = $this->author;
-        }
+        parent::__construct($db);
 
-        // If the item has been reassigned, add the previous assigned user to the recipients
-        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $changes = $history->getLastHistoryData($this);
-        if ($changes[0]['action'] == 'edit') {
-            foreach ($changes as $change) {
-                if ($change['field'] == 'assigned') {
-                    // The user has changed
-                    if ($change['oldValue'] != $this->ownerId && $change['oldValue'] != '0'
-                        && $change['oldValue'] !== null) {
-                        $recipients .= "," . $change['oldValue'];
-                        break;
-                    }
-                }
-            }
-        }
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Helpdesk_Models_Notification', 'UTF-8');
+    }
 
-        return $recipients;
+    /**
+     * Defines the clone function to prevent the same point to same object.
+     * Replaces the default Notification class by this specific one for Calendar module.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_notification = Phprojekt_Loader::getLibraryClass('Helpdesk_Models_Notification', 'UTF-8');
     }
 }
