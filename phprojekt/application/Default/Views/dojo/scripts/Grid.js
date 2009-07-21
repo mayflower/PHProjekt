@@ -374,14 +374,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     saveGridScroll:function() {
         // Summary:
         //    Stores in cookies the new scroll position for the current grid
-        var cookie = 'p6.' + phpr.module + ".grid.scroll";
+        //    Use the hash for identify the cookie
+        var cookie = 'p6.' + phpr.Url.getHashForCookie() + ".grid.scroll";
         dojo.cookie(cookie, this.grid.scrollTop, {expires: 500});
     },
 
     loadGridScroll:function() {
         // Summary:
         //    Retrieves from cookies the scroll position for the current grid, if there is one
-        var scrollTop = dojo.cookie('p6.' + phpr.module + ".grid.scroll");
+        //    Use the hash for identify the module grid
+        var scrollTop = dojo.cookie('p6.' + phpr.Url.getHashForCookie() + ".grid.scroll");
         if (scrollTop != undefined) {
             this.grid.scrollTop = scrollTop;
         }
@@ -390,21 +392,23 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     saveGridSorting:function(e) {
         // Summary:
         //    Stores in cookies the new sorting criterion for the current grid
+        //    Use the hash for identify the cookie
         var sortColumn = this.grid.getSortIndex();
         var sortAsc    = this.grid.getSortAsc();
 
-        var cookie = 'p6.' + phpr.module + ".grid.sortColumn";
+        var cookie = 'p6.' + phpr.Url.getHashForCookie() + ".grid.sortColumn";
         dojo.cookie(cookie, sortColumn, {expires: 500});
 
-        cookie = 'p6.' + phpr.module + ".grid.sortAsc";
+        cookie = 'p6.' + phpr.Url.getHashForCookie() + ".grid.sortAsc";
         dojo.cookie(cookie, sortAsc, {expires: 500});
     },
 
     loadGridSorting:function() {
         // Summary:
         //    Retrieves from cookies the sorting criterion for the current grid if any
-        var sortColumn = dojo.cookie('p6.' + phpr.module + ".grid.sortColumn");
-        var sortAsc    = dojo.cookie('p6.' + phpr.module + ".grid.sortAsc");
+        //    Use the hash for identify the cookie
+        var sortColumn = dojo.cookie('p6.' + phpr.Url.getHashForCookie() + ".grid.sortColumn");
+        var sortAsc    = dojo.cookie('p6.' + phpr.Url.getHashForCookie() + ".grid.sortAsc");
         if (sortColumn != undefined && sortAsc != undefined) {
             this.grid.setSortIndex(parseInt(sortColumn), eval(sortAsc));
         }

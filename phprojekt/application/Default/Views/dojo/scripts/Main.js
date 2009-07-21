@@ -177,15 +177,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
-
-        // If current hash if empty, try to fetch one from browser cookies
-        if(!window.location.hash) {
-            var hash = dojo.cookie('p6.location.hash');
-            if (hash != undefined) {
-                window.location.hash = hash;
-            }
-        }
-
         phpr.DataStore.requestData({
             url:         this._langUrl,
             processData: dojo.hitch(this, function() {

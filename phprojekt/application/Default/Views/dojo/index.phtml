@@ -61,7 +61,15 @@
             if (true === $this->isLoggedIn) {
             ?>
             if (!window.location.hash) {
-                window.location.hash = "Project";
+                // If current hash if empty,
+                // try to fetch one from browser cookies
+                // or use the default
+                var hash = dojo.cookie('p6.location.hash');
+                if (hash != undefined) {
+                    window.location.hash = hash;
+                } else {
+                    window.location.hash = "Project";
+                }
             }
             recentHash = window.location.hash;
             setInterval(initialiseStateFromUrl, 500);

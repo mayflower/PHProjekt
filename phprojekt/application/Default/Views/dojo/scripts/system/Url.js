@@ -62,6 +62,10 @@ dojo.declare("phpr.Url", null, {
             recentHash = window.location.hash;
             dojo.publish(module + ".processUrlHash", [recentHash]);
         }
+    },
+
+    getHashForCookie:function() {
+        return window.location.hash.replace.(/#/,"").replace(/,/,".");
     }
 });
 
