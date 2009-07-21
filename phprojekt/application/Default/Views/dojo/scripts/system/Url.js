@@ -65,7 +65,7 @@ dojo.declare("phpr.Url", null, {
     },
 
     getHashForCookie:function() {
-        return window.location.hash.replace.(/#/,"").replace(/,/,".");
+        return window.location.hash.toString().substring(1).replace(/,/g,".");
     }
 });
 
