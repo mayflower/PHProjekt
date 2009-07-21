@@ -885,26 +885,15 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Initializes new object.
-     * Replaces the default Notification class by this specific one for Calendar module.
+     * Returns the notification class for this module
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @return Phprojekt_Notification
      */
-    public function __construct($db = null)
+    public function getNotification()
     {
-        parent::__construct($db);
-        $this->_notification = Phprojekt_Loader::getLibraryClass('Calendar_Models_Notification', 'UTF-8');
-    }
+        $notification = Phprojekt_Loader::getModel('Calendar', 'Notification', 'UTF-8');
+        $notification->setModel($this);
 
-    /**
-     * Defines the clone function to prevent the same point to same object.
-     * Replaces the default Notification class by this specific one for Calendar module.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-        $this->_notification = Phprojekt_Loader::getLibraryClass('Calendar_Models_Notification', 'UTF-8');
+        return $notification;
     }
 }

@@ -43,27 +43,15 @@ class Helpdesk_Models_Helpdesk extends Phprojekt_Item_Abstract
     const STATUS_CLOSED   = 5;
 
     /**
-     * Initializes new object.
-     * Replaces the default Notification class by this specific one for Helpdesk module.
+     * Returns the notification class for this module
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @return Phprojekt_Notification
      */
-    public function __construct($db = null)
+    public function getNotification()
     {
-        parent::__construct($db);
+        $notification = Phprojekt_Loader::getModel('Helpdesk', 'Notification', 'UTF-8');
+        $notification->setModel($this);
 
-        $this->_notification = Phprojekt_Loader::getLibraryClass('Helpdesk_Models_Notification', 'UTF-8');
-    }
-
-    /**
-     * Defines the clone function to prevent the same point to same object.
-     * Replaces the default Notification class by this specific one for Calendar module.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-        $this->_notification = Phprojekt_Loader::getLibraryClass('Helpdesk_Models_Notification', 'UTF-8');
+        return $notification;
     }
 }

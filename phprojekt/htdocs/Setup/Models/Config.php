@@ -279,28 +279,24 @@ class Setup_Models_Config
     private function _getMail($endOfLine = 0, $server = 'localhost', $user = '', $password = '')
     {
         $content  = $this->_eol;
-        $content .= ';;;;;;;;;;;;;;;;;;;;;' . $this->_eol;
-        $content .= '; MAIL NOTIFICATION ;' . $this->_eol;
-        $content .= ';;;;;;;;;;;;;;;;;;;;;' . $this->_eol;
+        $content .= ';;;;;;;;' . $this->_eol;
+        $content .= '; MAIL ;' . $this->_eol;
+        $content .= ';;;;;;;;' . $this->_eol;
         $content .= $this->_eol;
-
-        $content .= '; Inside many modules, when adding or editing an item, there is a tab' . $this->_eol;
-        $content .= '; "Notification" that allows the user to send an email notification to the' . $this->_eol;
-        $content .= '; people involved in that item, telling them about the creation or modification' . $this->_eol;
-        $content .= '; of it.' . $this->_eol;
+        $content .= '; Mail class is currently used by Notification class and Minutes module.' . $this->_eol;
         $content .= $this->_eol;
-        $content .= '; If the email is configured to be sent in Text mode, whether to use \r\n or \n' . $this->_eol;
-        $content .= '; for the end of line.' . $this->_eol;
-        $content .= '; (0 = \r\n  1 = \n)' . $this->_eol;
-        $content .= 'mailEndOfLine = ' . (int) $endOfLine . $this->_eol;
+        $content .= '; 0 = Read SMTP parameters from here (smtpServer, smtpUser, smtpPassword, etc)' . $this->_eol;
+        $content .= '; 1 = Read SMTP parameters from php.ini' . $this->_eol;
+        $content .= 'mailTransport = 0;' . $this->_eol;
         $content .= $this->_eol;
-
+        $content .= '; If mailTransport is set to 0, then fill all the needed \'smtp*\' values:' . $this->_eol;
         $content .= '; Name or IP address of the SMTP server to be used to send that notifications.' . $this->_eol;
-        $content .= 'smtpServer = "' . $server . '"' . $this->_eol;
-        $content .= $this->_eol;
-        $content .= '; If the SMTP server requires authentication, remove the semicolons \';\' and' . $this->_eol;
-        $content .= '; write inside the inverted commas "" the appropriate username and password.' . $this->_eol;
-
+        $content .= 'smtpServer = "localhost"' . $this->_eol;
+        $content .= '; If the SMTP server requires authentication, remove the semicolons \';\' in the' . $this->_eol;
+        $content .= '; three following lines and write inside the inverted commas "" the appropriate' . $this->_eol;
+        $content .= '; username and password. Auth mode: leave this as "login" if you don\'t know.' . $this->_eol;
+        $content .= '; Other available options: plain, cram-md5' . $this->_eol;
+        $content .= ';smtpAuth     = "login"' . $this->_eol;
         if (empty($user) && empty($password)) {
             $content .= ';smtpUser     = "' . $user . '"' . $this->_eol;
             $content .= ';smtpPassword = "' . $password . '"' . $this->_eol;
@@ -308,6 +304,14 @@ class Setup_Models_Config
             $content .= 'smtpUser     = "' . $user . '"' . $this->_eol;
             $content .= 'smtpPassword = "' . $password . '"' . $this->_eol;
         }
+        $content .= '; You may specify SSL and Port, if the SMTP server of your choice requires them.' . $this->_eol;
+        $content .= ';smtpSsl      = ""' . $this->_eol;
+        $content .= ';smtpPort     = ""' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; If the email is configured to be sent in Text mode, whether to use \r\n or \n' . $this->_eol;
+        $content .= '; for the end of line.' . $this->_eol;
+        $content .= '; (0 = \r\n  1 = \n)' . $this->_eol;
+        $content .= 'mailEndOfLine = ' . (int) $endOfLine . $this->_eol;
 
         return $content;
     }

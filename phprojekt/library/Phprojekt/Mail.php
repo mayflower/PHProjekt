@@ -105,14 +105,15 @@ class Phprojekt_Mail extends Zend_Mail
     protected function getEndOfLine()
     {
         switch (Phprojekt::getInstance()->getConfig()->mailEndOfLine) {
-                case self::LINEEND_N:
-                    $endOfLine = "\n";
-                    break;
-                case self::LINEEND_RN:
-                default:
-                    $endOfLine = "\r\n";
-                    break;
-            }
+            case self::LINEEND_N:
+                $endOfLine = "\n";
+                break;
+            case self::LINEEND_RN:
+            default:
+                $endOfLine = "\r\n";
+                break;
+        }
+
         return $endOfLine;
     }
 }

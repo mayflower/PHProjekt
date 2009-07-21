@@ -66,6 +66,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 $recipients[$lastItem][1] = $phpUser->username;
             }
         }
+
         return $recipients;
     }
 

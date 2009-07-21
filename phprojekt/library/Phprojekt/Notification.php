@@ -199,6 +199,7 @@ class Phprojekt_Notification extends Phprojekt_Mail
                 $recipients[$lastItem][1] = $phpUser->username;
             }
         }
+
         return $recipients;
     }
 
@@ -214,6 +215,7 @@ class Phprojekt_Notification extends Phprojekt_Mail
             $mailTitle = $this->_model->{$this->_model->searchFirstDisplayField};
         }
         $subject = trim('[' . $this->_tableName . ' #' . $this->_model->id . '] ' . $mailTitle);
+
         return $subject;
     }
 
@@ -256,6 +258,7 @@ class Phprojekt_Notification extends Phprojekt_Mail
         }
 
         Phprojekt_Loader::loadViewScript();
+
         return $this->_view->render('mail' . $this->_bodyMode . '.phtml');
     }
 
@@ -275,6 +278,7 @@ class Phprojekt_Notification extends Phprojekt_Mail
             $bodyFields[] = array('label' => $field['label'],
                                   'value' => $value);
         }
+
         return $bodyFields;
     }
 
@@ -330,6 +334,7 @@ class Phprojekt_Notification extends Phprojekt_Mail
                 }
             }
         }
+
         return $bodyChanges;
     }
 
