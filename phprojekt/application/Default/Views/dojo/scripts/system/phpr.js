@@ -392,6 +392,8 @@ dojo.declare("phpr.DataStore", null, {
     //    and then is cached for the future used.
     _internalCache: new Array(),
 
+    _active: false,
+
     addStore:function(params) {
         // Summary:
         //    Set a new store for save the data
@@ -423,16 +425,21 @@ dojo.declare("phpr.DataStore", null, {
         }
         if (this._internalCache[params.url]['data'].length == 0) {
             phpr.loading.show();
-            this._internalCache[params.url]['store'].fetch({
-                onComplete: dojo.hitch(this, "saveData", {
-                    url:         params.url,
-                    processData: params.processData
-                }),
-                onError: dojo.hitch(this, "errorHandler", {
-                    url:         params.url,
-                    processData: params.processData
-                })}
-            );
+            if (this._active == true) {
+                setTimeout(dojo.hitch(this, "requestData", params), 500);
+            } else {
+                this._active = true;
+                this._internalCache[params.url]['store'].fetch({
+                    onComplete: dojo.hitch(this, "saveData", {
+                        url:         params.url,
+                        processData: params.processData
+                    }),
+                    onError: dojo.hitch(this, "errorHandler", {
+                        url:         params.url,
+                        processData: params.processData
+                    })}
+                );
+            }
         } else if (params.processData) {
             params.processData.call();
         }
@@ -469,6 +476,7 @@ dojo.declare("phpr.DataStore", null, {
         // Description:
         //    Store the data in the cache
         //    Then return to the processData function
+        this._active = false;
         this._internalCache[params.url]['data'] = data;
         phpr.loading.hide();
         if (params.processData) {

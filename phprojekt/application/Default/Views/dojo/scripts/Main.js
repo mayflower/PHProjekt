@@ -165,34 +165,37 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var config = new phpr.Store.Config();
         config.fetch(dojo.hitch(this, function() {
             phpr.config = config.getList();
+
+            // Get all the tabs
+            var tabStore = new phpr.Store.Tab();
+            tabStore.fetch(dojo.hitch(this, function() {
+
+                // Get all the active users
+                this.userStore = new phpr.Store.User();
+                this.userStore.fetch(
+                    dojo.hitch(this, function() {
+                    this.addLogoTooltip();
+                    this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
+                    phpr.DataStore.addStore({url: this._langUrl});
+                    phpr.DataStore.requestData({
+                        url:         this._langUrl,
+                        processData: dojo.hitch(this, function() {
+                            // Load the components, tree, list and details.
+                            phpr.nls      = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+                            var globalUrl = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
+                            phpr.DataStore.addStore({url: globalUrl});
+                            phpr.DataStore.requestData({
+                                url:         globalUrl,
+                                processData: dojo.hitch(this, function() {
+                                    this.setGlobalModulesNavigation();
+                                    this.processUrlHash(window.location.hash);
+                                })
+                            });
+                        })
+                    });
+                }));
+            }));
         }));
-
-        // Get all the tabs
-        var tabStore = new phpr.Store.Tab();
-        tabStore.fetch();
-
-        // Get all the active users
-        this.userStore = new phpr.Store.User();
-        this.userStore.fetch(dojo.hitch(this, "addLogoTooltip"));
-
-        this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
-        phpr.DataStore.addStore({url: this._langUrl});
-        phpr.DataStore.requestData({
-            url:         this._langUrl,
-            processData: dojo.hitch(this, function() {
-                // Load the components, tree, list and details.
-                phpr.nls      = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
-                var globalUrl = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
-                phpr.DataStore.addStore({url: globalUrl});
-                phpr.DataStore.requestData({
-                    url:         globalUrl,
-                    processData: dojo.hitch(this, function() {
-                        this.setGlobalModulesNavigation();
-                        this.processUrlHash(window.location.hash);
-                    })
-                });
-            })
-        });
     },
 
     reload:function() {

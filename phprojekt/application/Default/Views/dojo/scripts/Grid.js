@@ -54,9 +54,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
-
-        // Draw the tags
-        this.showTags();
     },
 
     setUrl:function() {
@@ -369,6 +366,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             dojo.connect(this.grid, "onHeaderCellClick", this, "saveGridSorting");
             dojo.connect(this.grid.views.views[0].scrollboxNode, "onscroll", this, "saveGridScroll");
         }
+
+        // Draw the tags
+        this.showTags();
     },
 
     saveGridScroll:function() {
