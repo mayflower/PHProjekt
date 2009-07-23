@@ -35,22 +35,20 @@ require_once 'PHPUnit/Framework.php';
 class Todo_Models_Todo_Test extends PHPUnit_Framework_TestCase
 {
     /**
-     * Test getNotificationRecipients method
+     * Test getTo method
      */
     public function testGetNotificationRecipients()
     {
         $todoModel = new Todo_Models_Todo();
         $todoModel->find(2);
-        $response = $todoModel->getNotification()->setTo();
-        $expected = array(array("david@example.com",
-                                "David Soria Parra (david)"));
+        $response = $todoModel->getNotification()->getTo();
+        $expected = array("1");
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 2;
         $todoModel->save();
-        $response   = $todoModel->getNotification()->setTo();
-        $expected[] = array("gus@example.com",
-                            "Gustavo Solt (gus)");
+        $response   = $todoModel->getNotification()->getTo();
+        $expected[] = "2";
         $this->assertEquals($expected, $response);
     }
 }

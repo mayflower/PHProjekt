@@ -34,15 +34,14 @@
 class Helpdesk_Models_Notification extends Phprojekt_Notification
 {
     /**
-     * Fills and returns a variable with recipients using a custom criterion for Helpdesk class
+     * Returns the recipients for this Helpdesk item
      *
      * @return array
      */
-    public function setTo()
+    public function getTo()
     {
-        $phpUser       = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $setting       = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $recipientsIds = Array();
+        $phpUser    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $recipients = Array();
 
         // Currently the user selects whether to send a notification or not, so the criteria is the following:
         // Is there any assigned user?
@@ -53,14 +52,14 @@ class Helpdesk_Models_Notification extends Phprojekt_Notification
             // The assigned user is the logged user?
             if ($this->_model->assigned != $phpUser->id) {
                 // No - Send it to the assigned user
-                $recipientsIds[] = $this->_model->assigned;
+                $recipients[] = $this->_model->assigned;
             } else {
                 // Yes - Send it to the creator of the ticket
-                $recipientsIds[] = $this->_model->author;
+                $recipients[] = $this->_model->author;
             }
         } else {
             // No - Send it to the creator of the ticket
-            $recipientsIds[] = $this->_model->author;
+            $recipients[] = $this->_model->author;
         }
 
         // If the item has been reassigned, add the previous assigned user to the recipients
@@ -72,33 +71,10 @@ class Helpdesk_Models_Notification extends Phprojekt_Notification
                     // The user has changed
                     if ($change['oldValue'] != $this->_model->ownerId && $change['oldValue'] != '0'
                         && $change['oldValue'] !== null) {
-                        $recipientsIds[] = $change['oldValue'];
+                        $recipients[] = $change['oldValue'];
                         break;
                     }
                 }
-            }
-        }
-
-        // All the recipients IDs are inside $recipientsIds, now add emails and descriptive names to $recipients
-        $recipients = array();
-        foreach ($recipientsIds as $recipient) {
-            $email = $setting->getSetting('email', (int) $recipient);
-
-            if ((int) $recipient) {
-                $phpUser->find($recipient);
-            } else {
-                $phpUser->find(Phprojekt_Auth::getUserId());
-            }
-
-            $recipients[]             = array();
-            $lastItem                 = count($recipients) - 1;
-            $recipients[$lastItem][0] = $email;
-
-            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-            if (!empty($fullname)) {
-                $recipients[$lastItem][1] = $fullname . ' (' . $phpUser->username . ')';
-            } else {
-                $recipients[$lastItem][1] = $phpUser->username;
             }
         }
 

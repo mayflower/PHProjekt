@@ -34,19 +34,16 @@
 class Todo_Models_Notification extends Phprojekt_Notification
 {
     /**
-     * Fills and returns a variable with recipients using a custom criterion for Todo class
+     * Returns the recipients for this Todo item
      *
      * @return array
      */
-    public function setTo()
+    public function getTo()
     {
-        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-
-        $recipientsIdsIds = Array();
-        $recipientsIds[] = $this->_model->ownerId;
+        $recipients = Array();
+        $recipients[] = $this->_model->ownerId;
         if ($this->_model->userId != 0 && $this->_model->userId != $this->_model->ownerId) {
-            $recipientsIds[] = $this->_model->userId;
+            $recipients[] = $this->_model->userId;
         }
 
         // If the todo has been reassigned, add the previous assigned user to the recipients
@@ -58,33 +55,10 @@ class Todo_Models_Notification extends Phprojekt_Notification
                     // The user has changed
                     if ($change['oldValue'] != $this->_model->ownerId && $change['oldValue'] != '0'
                         && $change['oldValue'] !== null) {
-                        $recipientsIds[] = $change['oldValue'];
+                        $recipients[] = $change['oldValue'];
                         break;
                     }
                 }
-            }
-        }
-
-        // All the recipients IDs are inside $recipientsIds, now add emails and descriptive names to $recipients
-        $recipients = array();
-        foreach ($recipientsIds as $recipient) {
-            $email = $setting->getSetting('email', (int) $recipient);
-
-            if ((int) $recipient) {
-                $phpUser->find($recipient);
-            } else {
-                $phpUser->find(Phprojekt_Auth::getUserId());
-            }
-
-            $recipients[]             = array();
-            $lastItem                 = count($recipients) - 1;
-            $recipients[$lastItem][0] = $email;
-
-            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-            if (!empty($fullname)) {
-                $recipients[$lastItem][1] = $fullname . ' (' . $phpUser->username . ')';
-            } else {
-                $recipients[$lastItem][1] = $phpUser->username;
             }
         }
 

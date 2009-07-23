@@ -35,15 +35,14 @@ require_once 'PHPUnit/Framework.php';
 class Helpdesk_Models_Helpdesk_Test extends PHPUnit_Framework_TestCase
 {
     /**
-     * Test getNotificationRecipients method
+     * Test getTo method
      */
     public function testGetNotificationRecipients()
     {
         $helpdeskModel = new Helpdesk_Models_Helpdesk();
         $helpdeskModel->find(1);
-        $response = $helpdeskModel->getNotification()->setTo();
-        $expected = array(array("david@example.com",
-                                "David Soria Parra (david)"));
+        $response = $helpdeskModel->getNotification()->getTo();
+        $expected = array("1");
         $this->assertEquals($expected, $response);
 
         $helpdeskModel->find(2);
@@ -51,9 +50,8 @@ class Helpdesk_Models_Helpdesk_Test extends PHPUnit_Framework_TestCase
         $helpdeskModel->save();
         $helpdeskModel->assigned = 1;
         $helpdeskModel->save();
-        $response   = $helpdeskModel->getNotification()->setTo();
-        $expected[] = array("gus@example.com",
-                            "Gustavo Solt (gus)");
+        $response   = $helpdeskModel->getNotification()->getTo();
+        $expected[] = "2";
         $this->assertEquals($expected, $response);
     }
 }

@@ -220,7 +220,7 @@ final class Default_Helpers_Save
             // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
-                    $model->getActiveRecord()->getNotification()->sendNotificationText();
+                    $model->getActiveRecord()->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 }
             }
 
@@ -233,7 +233,7 @@ final class Default_Helpers_Save
             // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on') {
-                    $model->getNotification()->sendNotificationText();
+                    $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 }
             }
 

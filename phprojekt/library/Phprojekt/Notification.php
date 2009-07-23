@@ -33,88 +33,35 @@
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
-class Phprojekt_Notification extends Phprojekt_Mail
+class Phprojekt_Notification
 {
-    const LAST_ACTION_ADD   = 'add';
-    const LAST_ACTION_EDIT  = 'edit';
-    const LAST_ACTION_NONE  = 'none';
+    const LAST_ACTION_ADD     = 'add';
+    const LAST_ACTION_EDIT    = 'edit';
+    const TRANSPORT_MAIL_TEXT = 0;
+    const TRANSPORT_MAIL_HTML = 1;
 
-    protected $_tableName;
     protected $_lastHistory;
-    protected $_customFrom;
-    protected $_customTo = Array();
-    protected $_customSubject;
-    protected $_bodyMode;
-    protected $_view;
-    protected $_model;
-    protected $_customBody;
 
     /**
-     * Sends an email notification in HTML mode, with the contents according to a
-     * specific module and a specific event.
-     *
-     * The sender, recipients, subject and body are generated dynamically depending
-     * on the module received in the $model parameter.
-     * To send a notification in Text mode, use function sendNotificationText()
-     *
-     * @param Phprojekt_Model_Interface    $model E.g.: A object of the type
-     *                                            Todo_Models_Todo
-     *
-     * @uses    $mailNotif = new Phprojekt_Mail_Notification()
-     *          $mailNotif->sendNotificationHtml($model);
-     *
-     * @see _sendNotification()
+     * Stores in the private variable $_model the received model
      *
      * @return void
      */
-    public function sendNotificationHtml(Phprojekt_Model_Interface $model = null)
+    public function setModel(Phprojekt_Model_Interface $model)
     {
-        if ($model != null) {
-            $this->_model = $model;
-        }
-        $this->_bodyMode = self::MODE_HTML;
-        $this->_sendNotification();
+        $this->_model = $model;
     }
 
     /**
-     * Sends an email notification in Text mode, with the contents according to a
-     * specific module and a specific event.
-     *
-     * The sender, recipients, subject and body are generated dynamically depending
-     * on the module received in the $model parameter.
-     * To send a notification in Html mode, use function sendNotificationHtml()
-     *
-     * @param Phprojekt_Model_Interface $model E.g.: A object of the type Todo_Models_Todo
-     *
-     * @uses $mailNotif = new Phprojekt_Mail_Notification();
-     *       $mailNotif->sendNotificationText($model);
-     *
-     * @see _sendNotification()
+     * Sends an notification through the indicated transport, the contents are made according to a specific module and a
+     * specific event.
+     * Previous to this function it has to be called setModel so that the internal variable _model has the model where
+     * to obtain the data from.
+     * Depending on the indicated transport the notification will be sent currently via text or html email.
      *
      * @return void
      */
-    public function sendNotificationText(Phprojekt_Model_Interface $model = null)
-    {
-        if ($model != null) {
-            $this->_model = $model;
-        }
-        $this->_bodyMode = self::MODE_TEXT;
-        $this->_sendNotification();
-    }
-
-    /**
-     * Sends an email notification in Html/Text mode, with
-     * the contents according to a specific module and a specific event.
-     *
-     * The function is called by both sendNotificationHtml() and sendNotificationText()
-     * It calls several functions to set the sender, the recipients, the subject
-     * and the body. Then calls _mailNotifSend() to send the email.
-     *
-     * @see _sendNotification()
-     *
-     * @return void
-     */
-    private function _sendNotification()
+    public function send($transport)
     {
         // Sometimes, the user may try to modify an existing item and presses Save without having modified even one
         // field. In that case, no mail should be sent.
@@ -123,80 +70,60 @@ class Phprojekt_Notification extends Phprojekt_Mail
         if (empty($this->_lastHistory)) {
             return;
         }
-        $this->_tableName     = trim($this->_model->getModelName());
-        $this->_customFrom    = $this->setFrom();
-        $this->_customTo      = $this->setTo();
-        $this->_customSubject = $this->setCustomSubject();
-        $this->_customBody    = $this->setCustomBody();
-        $this->_mailNotifSend();
-    }
 
-    /**
-     * Fills and return an array with the name and email of the logued user.
-     *
-     * @see Phprojekt_User_User()
-     *
-     * @return array
-     */
-    public function setFrom()
-    {
-        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $phpUser->find(Phprojekt_Auth::getUserId());
-
-        $from = array();
-        // Email assignment
-        $from[0] = $phpUser->getSetting('email');
-
-        // Name assignment
-        $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-        if (!empty($fullname)) {
-            $from[1] = $fullname . ' (' . $phpUser->username . ')';
-        } else {
-            $from[1] = $phpUser->username;
+        $params = array();
+        switch ($transport) {
+            case self::TRANSPORT_MAIL_TEXT:
+            case self::TRANSPORT_MAIL_HTML:
+            default:
+                $adapterName = "Phprojekt_Notification_Mail";
+                $showSubject = true;
+                $params[Phprojekt_Notification_Mail::PARAMS_CHARSET] = "UTF-8";
+                if ($transport == self::TRANSPORT_MAIL_TEXT) {
+                    $params[Phprojekt_Notification_Mail::PARAMS_BODYMODE] = Phprojekt_Notification_Mail::MODE_TEXT;
+                } else {
+                    $params[Phprojekt_Notification_Mail::PARAMS_BODYMODE] = Phprojekt_Notification_Mail::MODE_HTML;
+                }
+                break;
         }
-
-        return $from;
+        $adapter = new $adapterName($params);
+        $adapter->setCustomFrom($this->getFrom());
+        $adapter->setTo($this->getTo());
+        if ($showSubject) {
+            $adapter->setCustomSubject($this->getSubject());
+        }
+        if ($this->_lastHistory[0]['action'] == self::LAST_ACTION_EDIT) {
+            $changes = $this->getBodyChanges();
+            $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields(), $changes);
+        } else {
+            $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields());
+        }
+        $adapter->sendNotification();
     }
 
     /**
-     * Fills and returns a variable with recipients obtained from $this->_model through class Phprojekt_Item_Rights()
+     * Return the id of the sender, that's the logged user
+     *
+     * @return int
+     */
+    public function getFrom()
+    {
+        return Phprojekt_Auth::getUserId();
+    }
+
+    /**
+     * Returns an array with recipients obtained from $this->_model through class Phprojekt_Item_Rights()
      *
      * @return array
      */
-    public function setTo()
+    public function getTo()
     {
-        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-
         // The recipients are all the users with at least 'read' access to the item
         $rights     = $this->_model->getRights();
-        $recipientsIds = Array();
+        $recipients = Array();
         foreach ($rights as $userId => $userRights) {
             if ($userRights['read']) {
-                $recipientsIds[] = $userId;
-            }
-        }
-
-        // All the recipients IDs are inside $recipientsIds, now add emails and descriptive names to $recipients
-        $recipients = array();
-        foreach ($recipientsIds as $recipient) {
-            $email = $setting->getSetting('email', (int) $recipient);
-
-            if ((int) $recipient) {
-                $phpUser->find($recipient);
-            } else {
-                $phpUser->find(Phprojekt_Auth::getUserId());
-            }
-
-            $recipients[]             = array();
-            $lastItem                 = count($recipients) - 1;
-            $recipients[$lastItem][0] = $email;
-
-            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-            if (!empty($fullname)) {
-                $recipients[$lastItem][1] = $fullname . ' (' . $phpUser->username . ')';
-            } else {
-                $recipients[$lastItem][1] = $phpUser->username;
+                $recipients[] = $userId;
             }
         }
 
@@ -204,70 +131,62 @@ class Phprojekt_Notification extends Phprojekt_Mail
     }
 
     /**
-     * Returns the subject of the email according to the current module, stored in $this->_model.
+     * Returns the subject of the notification according to the current module, stored in $this->_model.
      *
      * @return string
      */
-    public function setCustomSubject()
+    public function getSubject()
     {
         $mailTitle = "";
         if (isset($this->_model->searchFirstDisplayField)) {
             $mailTitle = $this->_model->{$this->_model->searchFirstDisplayField};
         }
-        $subject = trim('[' . $this->_tableName . ' #' . $this->_model->id . '] ' . $mailTitle);
+        $subject = trim('[' . $this->_model->getModelName() . ' #' . $this->_model->id . '] ' . $mailTitle);
 
         return $subject;
     }
 
     /**
-     * Returns the body of the email according to the current module and the event we are informing to the users.
-     * It obtains all the data dinamically from the $this->_model object.
-     *
-     * @return string
-     */
-    public function setCustomBody()
-    {
-        $this->_view             = Phprojekt::getInstance()->getView();
-        $action                  = $this->_lastHistory[0]['action'];
-        $this->_view->mainFields = $this->setBodyFields();
-
-        // Is it an ADD or EDIT action?
-        switch ($action) {
-            case self::LAST_ACTION_ADD:
-                $actionLabel          = "created";
-                $this->_view->changes = "";
-                break;
-            case self::LAST_ACTION_EDIT:
-            default:
-                $action               = self::LAST_ACTION_EDIT;
-                $this->_view->changes = $this->setBodyChanges();
-                $actionLabel          = "modified";
-        }
-
-        $this->_view->title = Phprojekt::getInstance()->translate('A ')
-            . $this->_tableName
-            . Phprojekt::getInstance()->translate(' item has been ')
-            . Phprojekt::getInstance()->translate($actionLabel);
-
-
-        $this->_view->url       = $this->_setUrl();
-        $this->_view->translate = Phprojekt::getInstance()->getTranslate();
-
-        if ($this->_bodyMode == self::MODE_TEXT) {
-            $this->_view->endOfLine = $this->getEndOfLine();
-        }
-
-        Phprojekt_Loader::loadViewScript();
-
-        return $this->_view->render('mail' . $this->_bodyMode . '.phtml');
-    }
-
-    /**
-     * Returns the fields part of the Notification body (for internal variable _bodyFields)
+     * Returns some params for the body of the notification according to the current module and the event we are
+     * informing to the users.
      *
      * @return array
      */
-    public function setBodyFields()
+    public function getBodyParams()
+    {
+        $bodyParams = array();
+
+        // Action
+        switch ($this->_lastHistory[0]['action']) {
+            case self::LAST_ACTION_ADD:
+                $bodyParams['actionLabel'] = "created";
+                break;
+            case self::LAST_ACTION_EDIT:
+            default:
+                $bodyParams['actionLabel'] = "modified";
+        }
+
+        // Module
+        $bodyParams['moduleTable'] = $this->_model->getModelName();
+
+        // Url
+        $url      = Phprojekt::getInstance()->getConfig()->webpath . "index.php#" . $this->_model->getModelName();
+        $saveType = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_model->getModelName()));
+        if ($saveType == 0) {
+            $url .= "," . $this->_model->projectId;
+        }
+        $url              .= ",id," . $this->_model->id;
+        $bodyParams['url'] = $url;
+
+        return $bodyParams;
+    }
+
+    /**
+     * Returns the fields part of the Notification body
+     *
+     * @return array
+     */
+    public function getBodyFields()
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
@@ -283,12 +202,12 @@ class Phprojekt_Notification extends Phprojekt_Mail
     }
 
     /**
-     * Goes into the contents of the 'changes' part of the Notification body (internal variable _lastHistory) and checks
-     * for contents that have to be translated, then returns the final array
+     * Goes into the contents of the 'changes' part of the Notification body (from internal variable _lastHistory) and
+     * checks for contents that have to be translated, then returns the final array.
      *
      * @return array
      */
-    public function setBodyChanges()
+    public function getBodyChanges()
     {
         // The following algorithm loops inside $this->_lastHistory and prepares $bodyChanges while:
         // * Translates the name of the fields
@@ -336,85 +255,5 @@ class Phprojekt_Notification extends Phprojekt_Mail
         }
 
         return $bodyChanges;
-    }
-
-    /**
-     * Sends an email notification using the inherited method send().
-     *
-     * The function sends an email to the users listed in the $_customTo array.
-     * There are many private properties that must have been defined previously:
-     * _customFrom, _customTo, _customSubject, _bodyMode and _customBody.
-     *
-     * @return void
-     */
-    private function _mailNotifSend()
-    {
-        // Has the name been set?
-        if (sizeof($this->_customFrom) == 2) {
-            // Address, Name
-            $this->setFrom($this->_customFrom[0], $this->_customFrom[1]);
-        } else {
-            // Address
-            $this->setFrom($this->_customFrom[0]);
-        }
-
-        // Iterates on the array to fill every recipient
-        foreach ($this->_customTo as $recipient) {
-            // Has the name been set?
-            if (sizeof($recipient) == 2) {
-                // Address, Name
-                $this->addTo($recipient[0], $recipient[1]);
-            } else {
-                // Address
-                $this->addTo($recipient[0]);
-            }
-        }
-
-        $this->setSubject($this->_customSubject);
-
-        switch ($this->_bodyMode) {
-            case self::MODE_TEXT:
-                $this->setBodyText($this->_customBody);
-                break;
-            case self::MODE_HTML:
-            default:
-                $this->setBodyHtml($this->_customBody);
-                break;
-        }
-
-        // Creates the Zend_Mail_Transport_Smtp object
-        $smtpTransport = $this->setTransport();
-        try {
-            $this->send($smtpTransport);
-        } catch(Exception $e){
-            throw new Phprojekt_PublishedException('SMTP error: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Sets the url link to access to the created/modified item.
-     *
-     * @return string The url
-     */
-    protected function _setUrl()
-    {
-        $url      = Phprojekt::getInstance()->getConfig()->webpath . "index.php#" . $this->_model->getModelName();
-        $saveType = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->_model->getModelName()));
-        if ($saveType == 0) {
-            $url .= "," . $this->_model->projectId;
-        }
-        $url .= ",id," . $this->_model->id;
-
-        return $url;
-    }
-
-    /**
-     * Stores in the private variable $_model the received model
-     *
-     * @return void
-     */
-    public function setModel(Phprojekt_Model_Interface $model)
-    {
-        $this->_model = $model;
     }
 }

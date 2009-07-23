@@ -34,49 +34,21 @@
 class Calendar_Models_Notification extends Phprojekt_Notification
 {
     /**
-     * Fills and returns a variable with recipients using a custom criterion for Calendar class
+     * Returns the recipients for this Calendar item
      *
      * @return array
      */
-    public function setTo()
+    public function getTo()
     {
-        $phpUser       = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $setting       = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $recipientsIds = $this->_model->notifParticipants;
-
-        // All the recipients IDs are inside $recipientsIds, now add emails and descriptive names to $recipients
-        $recipients = array();
-        foreach ($recipientsIds as $recipient) {
-            $email = $setting->getSetting('email', (int) $recipient);
-
-            if ((int) $recipient) {
-                $phpUser->find($recipient);
-            } else {
-                $phpUser->find(Phprojekt_Auth::getUserId());
-            }
-
-            $recipients[]             = array();
-            $lastItem                 = count($recipients) - 1;
-            $recipients[$lastItem][0] = $email;
-
-            $fullname = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-            if (!empty($fullname)) {
-                $recipients[$lastItem][1] = $fullname . ' (' . $phpUser->username . ')';
-            } else {
-                $recipients[$lastItem][1] = $phpUser->username;
-            }
-        }
-
-        return $recipients;
+        return $this->_model->notifParticipants;
     }
 
     /**
-     * Returns the fields part of the Notification body (for internal variable _bodyFields) using a custom criterion for
-     * the Calendar module.
+     * Returns the fields part of the Notification body using a custom criterion for the Calendar module.
      *
      * @return array
      */
-    public function setBodyFields()
+    public function getBodyFields()
     {
         $bodyFields   = array();
         $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Title'),
@@ -132,7 +104,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      *
      * @return array
      */
-    public function setBodyChanges()
+    public function getBodyChanges()
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);

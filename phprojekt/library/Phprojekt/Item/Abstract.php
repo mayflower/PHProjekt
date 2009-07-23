@@ -139,7 +139,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getNotification()
     {
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification', 'UTF-8');
+        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
         $notification->setModel($this);
 
         return $notification;

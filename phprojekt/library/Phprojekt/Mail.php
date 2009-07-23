@@ -35,8 +35,6 @@
  */
 class Phprojekt_Mail extends Zend_Mail
 {
-    const MODE_HTML          = 'Html';
-    const MODE_TEXT          = 'Text';
     //External use (configuration.ini):
     const LINEEND_RN         = 0;
     const LINEEND_N          = 1;

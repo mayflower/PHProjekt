@@ -34,13 +34,13 @@
 class Todo_Models_Todo extends Phprojekt_Item_Abstract
 {
     /**
-     * Returns the notification class for this module
+     * Returns an instance of notification class for this module
      *
      * @return Phprojekt_Notification
      */
     public function getNotification()
     {
-        $notification = Phprojekt_Loader::getModel('Todo', 'Notification', 'UTF-8');
+        $notification = Phprojekt_Loader::getModel('Todo', 'Notification');
         $notification->setModel($this);
 
         return $notification;
