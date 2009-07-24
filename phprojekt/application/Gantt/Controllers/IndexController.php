@@ -120,9 +120,55 @@ class Gantt_IndexController extends IndexController
     {
         $projects     = (array) $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+
+        // Error check: no project received
+        if (empty($projects)) {
+            $label   = Phprojekt::getInstance()->translate("Projects");
+            $message = Phprojekt::getInstance()->translate("No project info was received");
+            throw new Phprojekt_PublishedException($label . ': ' . $message);
+        }
+
         foreach ($projects as $project) {
             list($id, $startDate, $endDate) = explode(",", $project);
-            $activeRecord->find((int) $id);
+
+            // Check: are the three values available?
+            if (empty($id) || empty($startDate) || empty($endDate)) {
+                $label   = Phprojekt::getInstance()->translate("Projects");
+                $message = Phprojekt::getInstance()->translate("Incomplete data received");
+                throw new Phprojekt_PublishedException($label . ': ' . $message);
+            }
+
+            $id = (int) $id;
+            $activeRecord->find($id);
+            // Check: project id exists?
+            if (empty($activeRecord->id)) {
+                $label   = Phprojekt::getInstance()->translate("Project");
+                $message = Phprojekt::getInstance()->translate("Id not found #") . $id;
+                throw new Phprojekt_PublishedException($label . ': ' . $message);
+            }
+
+            // Check: dates are valid?
+            $validStart = Cleaner::validate('date', $startDate, false);
+            $validEnd   = Cleaner::validate('date', $endDate, false);
+            if (!$validStart || !$validEnd) {
+                $label   = Phprojekt::getInstance()->translate("Project id #") . $id;
+                if (!$validStart) {
+                    $message = Phprojekt::getInstance()->translate("Start date invalid");
+                } else {
+                    $message = Phprojekt::getInstance()->translate("End date invalid");
+                }
+                throw new Phprojekt_PublishedException($label . ': ' . $message);
+            }
+
+            // Check: start date after end date?
+            $startDateTemp = strtotime($startDate);
+            $endDateTemp   = strtotime($endDate);
+            if ($startDateTemp > $endDateTemp) {
+                $label   = Phprojekt::getInstance()->translate("Project id #") . $id;
+                $message = Phprojekt::getInstance()->translate("Start date can not be after End date");
+                throw new Phprojekt_PublishedException($label . ': ' . $message);
+            }
+
             $activeRecord->startDate = $startDate;
             $activeRecord->endDate   = $endDate;
             if ($activeRecord->recordValidate()) {

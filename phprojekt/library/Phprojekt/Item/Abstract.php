@@ -236,8 +236,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $value = Cleaner::sanitize('string', $value);
         }
 
-        if ($value === false) {
-            throw new InvalidArgumentException('Type doesnot match it\'s definition: ' . $varname .
+        if ($value === null) {
+            throw new InvalidArgumentException('Type does not match it\'s definition: ' . $varname .
                                                ' expected to be ' . $type .'.');
         }
 

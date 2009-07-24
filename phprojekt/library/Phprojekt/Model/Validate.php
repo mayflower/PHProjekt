@@ -86,13 +86,13 @@ class Phprojekt_Model_Validate
                             }
                         }
 
-                        $error = $this->validateValue($class, $varname, $value);
-                        if (false === $error) {
+                        $error = $this->validateValue($class, $varname, $value, $field['length']);
+                        if (null !== $error) {
                             $valid = false;
                             $this->error->addError(array(
                                 'field'   => $varname,
                                 'label'   => Phprojekt::getInstance()->translate($field['label']),
-                                'message' => Phprojekt::getInstance()->translate("Invalid Format")));
+                                'message' => $error));
                         }
                         break;
                     }
@@ -118,21 +118,23 @@ class Phprojekt_Model_Validate
     }
 
     /**
-     * Validate a value use the database type of the field
+     * Validates a value using the database type of the field
      *
-     * @param string $varname Name of the field
-     * @param mix    $value   Value to validate
+     * @param Phprojekt_Model_Interface  $class      Model object
+     * @param string                     $varname    Name of the field
+     * @param mix                        $value      Value to validate
+     * @param int                        $maxLength  Maximum length allowed
      *
      * @return string Error message or null if is valid
      */
-    public function validateValue($class, $varname, $value)
+    public function validateValue(Phprojekt_Model_Interface $class, $varname, $value, $maxLength)
     {
         $info  = $class->info();
         $valid = true;
-        if (isset($info['metadata'][$varname]) && !empty($value)) {
+        $error = null;
 
-            $type = $info['metadata'][$varname]['DATA_TYPE'];
-
+        if (isset($info['metadata'][$class->convertVarToSql($varname)]) && !empty($value)) {
+            $type = $info['metadata'][$class->convertVarToSql($varname)]['DATA_TYPE'];
             switch ($type) {
                 case 'int':
                     $valid = Cleaner::validate('integer', $value, false);
@@ -149,13 +151,23 @@ class Phprojekt_Model_Validate
                 case 'timestamp':
                     $valid = Cleaner::validate('timestamp', $value, false);
                     break;
+                case 'varchar':
+                    $valid = Cleaner::validate('string', $value, true);
+                    if (strlen($value) > $maxLength) {
+                        $error = Phprojekt::getInstance()->translate("Maximum length exceeded for field.");
+                    }
+                    break;
+                case 'text':
                 default:
                     $valid = Cleaner::validate('string', $value, true);
                     break;
+                    break;
             }
         }
-
-        return $valid !== false;
+        if ($valid == false && $error === null) {
+            $error = Phprojekt::getInstance()->translate("Invalid Format");
+        }
+        return $error;
     }
 
     /**

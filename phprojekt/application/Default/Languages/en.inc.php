@@ -156,6 +156,14 @@ $lang["Internal javascript error"] = "Internal javascript error";
 $lang["Unexpected error"] = "Unexpected error";
 $lang["You need reload the browser in order to let changes have effect"] = "You need reload the browser in order to "
     . "let changes have effect";
+$lang["No project info was received"] = "No project info was received";
+$lang["Incomplete data received"] = "Incomplete data received";
+$lang["Id not found #"] = "Id not found #";
+$lang["Project id #"] = "Project id #";
+$lang["Start date invalid"] = "Start date invalid";
+$lang["End date invalid"] = "End date invalid";
+$lang["Start date can not be after End date"] = "Start date can not be after End date";
+$lang["Maximum length exceeded for field"] = "Maximum length exceeded for field";
 
 // System Modules
 $lang["Administration"] = "Administration";

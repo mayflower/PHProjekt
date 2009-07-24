@@ -156,6 +156,14 @@ $lang["Internal javascript error"] = "Error interno de Javascript";
 $lang["Unexpected error"] = "Error inesperado";
 $lang["You need reload the browser in order to let changes have effect"] = "Usted necesita volver a cargar el "
     . "navegador para que los cambios surtan efecto";
+$lang["No project info was received"] = "No se han recibido datos de proyectos";
+$lang["Incomplete data received"] = "Se recibieron datos incompletos";
+$lang["Id not found #"] = "Id no encontrado #";
+$lang["Project id #"] = "Project id #";
+$lang["Start date invalid"] = "Fecha de inicio inválida";
+$lang["End date invalid"] = "Fecha final inválida";
+$lang["Start date can not be after End date"] = "La fecha de inicio no puede ser posterior a la de fin";
+$lang["Maximum length exceeded for field"] = "Largo máximo de campo excedido";
 
 // System Modules
 $lang["Administration"] = "Administración";
