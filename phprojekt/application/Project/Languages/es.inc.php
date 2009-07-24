@@ -28,8 +28,8 @@ $lang["Content Help"]["Proyecto"] = "<br />
             entra allí, verá los ítems de módulos que no están asociados a ningún proyecto (aunque técnicamente,
             lo están al proyecto 'PHProjekt').<br />
             Si quiere ver la información principal del proyecto, puede cliquearlo en la grilla y sus solapas
-            principales se abrirán en el formulario debajo. Pero si quiere ver los ítems de los módulos generales 
-            que están directamente asociados a ese proyecto, tiene que acceder al proyecto desde el árbol a la 
+            principales se abrirán en el formulario debajo. Pero si quiere ver los ítems de los módulos generales
+            que están directamente asociados a ese proyecto, tiene que acceder al proyecto desde el árbol a la
             izquierda, tal como se explica en el siguiente punto aquí.
         <li><b>El árbol:</b> el panel de árbol de proyectos a la izquierda permite acceder a los Proyectos y
             Subproyectos de un modo completo, significa que la fila principal de solapas arriba mostrará la solapa
