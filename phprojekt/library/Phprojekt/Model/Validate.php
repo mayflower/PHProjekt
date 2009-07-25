@@ -69,7 +69,7 @@ class Phprojekt_Model_Validate
 
         foreach ($data as $varname => $value) {
             if (isset($class->$varname)) {
-                /* Validate with the database_manager stuff */
+                // Validate with the database_manager stuff
                 foreach ($fields as $field) {
                     if ($field['key'] == $varname) {
                         $validations = $field;
@@ -86,19 +86,30 @@ class Phprojekt_Model_Validate
                             }
                         }
 
-                        $error = $this->validateValue($class, $varname, $value, $field['length']);
-                        if (null !== $error) {
+                        if (isset($field['length']) && $field['length'] > 0) {
+                            if (strlen($value) > $field['length']) {
+                                $this->error->addError(array(
+                                    'field'   => $varname,
+                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'message' => Phprojekt::getInstance()->translate('Maximum length exceeded for '
+                                        . 'field')));
+                                break;
+                            }
+                        }
+
+                        $error = $this->validateValue($class, $varname, $value);
+                        if (false === $error) {
                             $valid = false;
                             $this->error->addError(array(
                                 'field'   => $varname,
                                 'label'   => Phprojekt::getInstance()->translate($field['label']),
-                                'message' => $error));
+                                'message' => Phprojekt::getInstance()->translate("Invalid Format")));
                         }
                         break;
                     }
                 }
 
-                /* Validate an special fieldName */
+                // Validate an special fieldName
                 $validator  = 'validate' . ucfirst($varname);
                 if ($validator != 'validateIsRequired') {
                     if (method_exists($class, $validator)) {
@@ -114,27 +125,26 @@ class Phprojekt_Model_Validate
                 }
             }
         }
+
         return $valid;
     }
 
     /**
      * Validates a value using the database type of the field
      *
-     * @param Phprojekt_Model_Interface  $class      Model object
-     * @param string                     $varname    Name of the field
-     * @param mix                        $value      Value to validate
-     * @param int                        $maxLength  Maximum length allowed
+     * @param Phprojekt_Model_Interface $class   Model object
+     * @param string                    $varname Name of the field
+     * @param mix                       $value   Value to validate
      *
-     * @return string Error message or null if is valid
+     * @return boolean
      */
-    public function validateValue(Phprojekt_Model_Interface $class, $varname, $value, $maxLength)
+    public function validateValue(Phprojekt_Model_Interface $class, $varname, $value)
     {
-        $info  = $class->info();
-        $valid = true;
-        $error = null;
-
-        if (isset($info['metadata'][$class->convertVarToSql($varname)]) && !empty($value)) {
-            $type = $info['metadata'][$class->convertVarToSql($varname)]['DATA_TYPE'];
+        $info       = $class->info();
+        $varForInfo = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
+        $valid      = true;
+        if (isset($info['metadata'][$varForInfo]) && !empty($value)) {
+            $type = $info['metadata'][$varForInfo]['DATA_TYPE'];
             switch ($type) {
                 case 'int':
                     $valid = Cleaner::validate('integer', $value, false);
@@ -151,23 +161,13 @@ class Phprojekt_Model_Validate
                 case 'timestamp':
                     $valid = Cleaner::validate('timestamp', $value, false);
                     break;
-                case 'varchar':
-                    $valid = Cleaner::validate('string', $value, true);
-                    if (strlen($value) > $maxLength) {
-                        $error = Phprojekt::getInstance()->translate("Maximum length exceeded for field.");
-                    }
-                    break;
-                case 'text':
                 default:
                     $valid = Cleaner::validate('string', $value, true);
                     break;
-                    break;
             }
         }
-        if ($valid == false && $error === null) {
-            $error = Phprojekt::getInstance()->translate("Invalid Format");
-        }
-        return $error;
+
+        return $valid !== false;
     }
 
     /**
@@ -184,6 +184,7 @@ class Phprojekt_Model_Validate
         if (empty($value)) {
             $error = 'Is a required field';
         }
+
         return $error;
     }
 }
