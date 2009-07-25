@@ -162,8 +162,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      * @param string $varname Name of the var to assign
      * @param mixed  $value   Value for assign to the var
      *
-     * @throws InvalidArgumentException
-     *
      * @return void
      */
     public function __set($varname, $value)
@@ -172,9 +170,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $info       = $this->info();
 
         if (isset($info['metadata'][$varForInfo])) {
-
             $type = $info['metadata'][$varForInfo]['DATA_TYPE'];
-
             switch ($type) {
                 case 'int':
                     $value = Cleaner::sanitize('integer', $value, 0);
@@ -234,11 +230,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             }
         } else {
             $value = Cleaner::sanitize('string', $value);
-        }
-
-        if ($value === null) {
-            throw new InvalidArgumentException('Type does not match it\'s definition: ' . $varname .
-                                               ' expected to be ' . $type .'.');
         }
 
         parent::__set($varname, $value);
@@ -403,10 +394,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         // Only fetch records with read access
         $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
-                         AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
-                         $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
-                         Phprojekt_Module::getId($this->getModelName()),
-                         Phprojekt_Auth::getUserId());
+            AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
+            $this->getAdapter()->quoteIdentifier($this->getTableName().'.id'),
+            Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth::getUserId());
 
         // Set where
         if (null !== $where) {
