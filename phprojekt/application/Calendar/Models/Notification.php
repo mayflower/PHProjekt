@@ -136,7 +136,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 }
 
                 // FIELDS: Repeats, Interval and Until
-                for ($i=0; $i < 3; $i++) {
+                for ($i = 0; $i < 3; $i++) {
                     if (!$oldRruleEmpty) {
                         $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $oldRrule[$i]['label'];
                     } else {

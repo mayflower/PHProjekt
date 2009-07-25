@@ -112,9 +112,8 @@ final class Default_Helpers_Save
             // Save the role-user-project relation
             if (isset($params['userRelation'])) {
                 $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-                $model->saveRelation($params['roleRelation'],
-                                     array_keys($params['userRelation']),
-                                     $node->getActiveRecord()->id);
+                $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
+                    $node->getActiveRecord()->id);
             }
 
             return $node->getActiveRecord();

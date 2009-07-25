@@ -278,11 +278,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     protected function _initDataArray()
     {
-        /*
-        * We have to fill our data array with the colum names, as
-        * __set makes a lookup on the _data keys to validate if
-        * a column exists on the activerecord
-        */
+        // We have to fill our data array with the colum names, as
+        // __set makes a lookup on the _data keys to validate if
+        // a column exists on the activerecord
         foreach ($this->_colInfo as $col) {
             $this->_data[self::convertVarFromSql($col)] = null;
         }
@@ -445,11 +443,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $select->where(sprintf("%s = %d", $adapter->quoteIdentifier("rel." . self::convertVarToSql($myKeyName)),
                 (int) $classId));
         }
-        /*
-        * somewhat special, we might have a better solution here once.
-        * At the moment we asume that the where clause contains the id string,
-        * as it is called from find()
-        */
+
+        // Somewhat special, we might have a better solution here once.
+        // At the moment we asume that the where clause contains the id string,
+        // as it is called from find()
         if (null !== $where) {
             $select->where(str_replace($adapter->quoteIdentifier($foreignTable),
                 $adapter->quoteIdentifier("foreign"), $where));
@@ -553,22 +550,18 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         if (!array_key_exists($key, $this->_data)) {
-            /*
-            * There is no object in the data array yet, so we have to
-            * create a new instance with all the necessary relation information
-            * This is done by passing a simple where clause to the object.
-            * We also do a guess on the real class name. Either there is a
-            * 'classname' key in the hasMany array or we use the provided key
-            * itself.
-            */
+            // There is no object in the data array yet, so we have to
+            // create a new instance with all the necessary relation information
+            // This is done by passing a simple where clause to the object.
+            // We also do a guess on the real class name. Either there is a
+            // 'classname' key in the hasMany array or we use the provided key
+            // itself.
             $className = $this->_getClassNameForRelationship($key,
             $this->hasMany);
 
             $instance = new $className(array('db' => $this->getAdapter()));
 
-            /*
-            * $instance->_relations['simple'] = );
-            */
+            // $instance->_relations['simple'] = );
             $instance->_relations['hasMany'] = array('id'        => $this->id,
                                                      'classname' => get_class($this),
                                                      'refclass'  => $className);
@@ -633,13 +626,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $this->_log->debug($query);
             }
 
-            /* @var Zend_Db_Statement $stmt */
+            // @var Zend_Db_Statement $stmt
             $stmt   = $this->getAdapter()->prepare($query);
             $result = $stmt->execute(array($newId, $oldId)) && $result;
 
-            /*
-            * Manually update. Not nice, but effective.
-            */
+            // Manually update. Not nice, but effective.
             if (array_key_exists($key, $this->_data)) {
                 foreach ($this->_data[$key] as $instance) {
                     if (is_object($instance)) {
@@ -677,13 +668,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $this->_log->debug($query);
             }
 
-            /* @var Zend_Db_Statement $stmt */
+            // @var Zend_Db_Statement $stmt
             $stmt   = $this->getAdapter()->prepare($query);
             $result = $stmt->execute(array($newId, $oldId)) && $result;
 
-            /*
-            * Manually update. Not nice, but effective.
-            */
+            // Manually update. Not nice, but effective.
             if (array_key_exists($key, $this->_data)) {
                 foreach ($this->_data[$key] as $instance) {
                     $instance->_data[$myKeyName] = $newId;
@@ -842,11 +831,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         $result = true;
-        /*
-        * If we have a storedId, the item was received from the database
-        * and therefore should exist on the database, so we trigger an update.
-        * Otherwise we create the entry.
-        */
+        // If we have a storedId, the item was received from the database
+        // and therefore should exist on the database, so we trigger an update.
+        // Otherwise we create the entry.
         if (null !== $this->_storedId) {
             $result = ($this->update($data, sprintf('id = %d', (int) $this->_storedId)) > 0);
 
@@ -858,10 +845,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $result = $this->_updateHasManyAndBelongsToMany($this->_storedId, $this->id) && $result;
             }
         } else {
-            /*
-            * We have to insert before we update the relations, as we
-            * need the new id for the relations (e.g.: n:m relations).
-            */
+            // We have to insert before we update the relations, as we
+            // need the new id for the relations (e.g.: n:m relations).
             if (array_key_exists('hasMany', $this->_relations)) {
                 $foreignKeyName        = $this->_translateKeyFormat($this->_relations['hasMany']['classname']);
                 $data[$foreignKeyName] = (int) $this->_relations['hasMany']['id'];
@@ -903,11 +888,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
             if (array_key_exists('hasManyAndBelongsToMany', $this->_relations)
             || count($this->hasManyAndBelongsToMany) > 0) {
-                /*
-                * We just delete the data from the relations and do
-                * not do an lookup for a cascade delete if there is no
-                * relation anymore
-                */
+                // We just delete the data from the relations and do
+                // not do an lookup for a cascade delete if there is no
+                // relation anymore
                 foreach (array_keys($this->hasManyAndBelongsToMany) as $key) {
                     $className = $this->_getClassNameForRelationship($key,
                     $this->hasManyAndBelongsToMany);
@@ -941,7 +924,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return Zend_Db_Table_Rowset
      */
-    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null , $join = null)
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         $wheres = array();
         if (array_key_exists('hasMany', $this->_relations)) {
@@ -959,9 +942,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->_log->debug($where);
         }
 
-        /*
-         * In case of join strings please note that the resultset is read only.
-         */
+        // In case of join strings please note that the resultset is read only.
         if (null !== $join) {
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
         } else {
@@ -1016,10 +997,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
         $find = $find[0];
 
-        /*
-        * reset data as all our relatios, etc stuff has to
-        * deal with a new id
-        */
+        // Reset data as all our relatios, etc stuff has to
+        // deal with a new id
         $this->_data     = array();
         $this->_storedId = null;
 
