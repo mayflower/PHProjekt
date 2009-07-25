@@ -87,10 +87,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Initialize a new node and sets the tree the node belongs to
      *
-     * @param Phprojekt_ActiveRecord_Abstract $activeRecord The active Record that holds the tree
-     * @param integer                         $id           The requested node, that will be the root node
+     * @param stdClass $activeRecord The Object that holds the tree
+     * @param integer  $id           The requested node, that will be the root node
      */
-    public function __construct(Phprojekt_ActiveRecord_Abstract $activeRecord, $id = null)
+    public function __construct($activeRecord, $id = null)
     {
         $this->_activeRecord = $activeRecord;
 
@@ -141,7 +141,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function setup(Phprojekt_Filter_Abstract $filter = null)
     {
-        /* @todo: fix this, must be possible with requestid === null */
+        // @todo: fix this, must be possible with requestid === null
         if (null === $this->_requestedId) {
             throw new Phprojekt_Tree_Node_Exception('You have to set a requested treeid in the constructor');
         }
@@ -164,25 +164,39 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             throw new Phprojekt_Tree_Node_Exception('Requested node not found');
         }
 
-        $where = sprintf("%s OR id = %d", $database->quoteInto("path LIKE ?", $rootPath . '%'), (int) $this->id);
-
-        $rows = $this->_activeRecord->fetchAll($where, 'path');
-        $this->_index = array();
-        foreach ($rows as $record) {
-            $node   = null;
-            $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-            if ($rights->getItemRight(1, $record->id, Phprojekt_Auth::getUserId()) > 0) {
-                if ($record->id == $this->_requestedId) {
-                    $node                = $this;
-                    $this->_activeRecord = $record;
-                } elseif (array_key_exists($record->projectId, $this->_index)) {
-                    $node = new Phprojekt_Tree_Node_Database($record);
-                    $this->_index[$record->projectId]->appendNode($node);
+        $treeNamespace = new Zend_Session_Namespace('Phprojekt_Tree_Node_Database-setup-' . $this->_requestedId);
+        if (!isset($treeNamespace->treeData)) {
+            $where = sprintf("(%s OR t.id = %d) AND i.access > 0",
+                $database->quoteInto("t.path LIKE ?", $rootPath . '%'), (int) $this->id);
+            $whereJoin = sprintf('(i.item_id = t.id AND i.module_id = %d AND i.user_id = %d)',
+                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
+            $select = $database->select();
+            $select->from(array('t' => $table))
+                   ->joinInner(array('i' => 'item_rights'), $whereJoin)
+                   ->where($where)
+                   ->order('t.path');
+            $data = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
+            foreach ($data as $index => $record) {
+                foreach ($record as $key => $value) {
+                    $newKey = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($key);
+                    $data[$index]->$newKey = $value;
                 }
+            }
+            $treeNamespace->treeData = $data;
+        }
 
-                if (null !== $node) {
-                    $this->_index[$node->id] = $node;
-                }
+        foreach ($treeNamespace->treeData as $record) {
+            $node = null;
+            if ($record->id == $this->_requestedId) {
+                $node                = $this;
+                $this->_activeRecord = $record;
+            } elseif (array_key_exists($record->projectId, $this->_index)) {
+                $node = new Phprojekt_Tree_Node_Database($record);
+                $this->_index[$record->projectId]->appendNode($node);
+            }
+
+            if (null !== $node) {
+                $this->_index[$node->id] = $node;
             }
         }
 
@@ -196,6 +210,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function getActiveRecord()
     {
+        if (!$this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
+            $model = Phprojekt_Loader::getModel('Project', 'Project');
+            $this->_activeRecord = $model->find($this->_requestedId);
+        }
+
         return $this->_activeRecord;
     }
 
@@ -230,6 +249,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 $node->_activeRecord->projectId = (int) $this->id;
                 $node->_activeRecord->path      = sprintf('%s%s%s', $this->path, $this->id, self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
+                $this->deleteCache($this->id);
             }
 
             $node->setParentNode($this);
@@ -270,19 +290,17 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (null === $this->id) {
             throw new Phprojekt_Tree_Node_Exception('Node not received or stored'
-            .' from/to the database yet');
+                . ' from/to the database yet');
         }
 
         if ($this->id == 1) {
             throw new Phprojekt_Tree_Node_Exception('You can not delete the Invisible Root');
         }
 
-        $table    = $this->_activeRecord->getTableName();
-        $database = $this->_activeRecord->getAdapter();
-        /* @var $database Zend_Db_Adapter_Abstract */
+        $table    = $this->getActiveRecord()->getTableName();
+        $database = Phprojekt::getInstance()->getDb();
         $database->delete($table, $database->quoteInto('path LIKE ?', $this->path . '%'));
         $this->_deleteChildren($this->getChildren());
-        $this->_activeRecord = null;
         $this->_initialize();
     }
 
@@ -299,14 +317,14 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function setParentNode(Phprojekt_Tree_Node_Database $node)
     {
         if ($node->id != $this->_activeRecord->projectId) {
-            /* update move */
-            $this->_activeRecord->projectId = (int) $node->id;
-
+            // Update move
+            $this->getActiveRecord()->projectId = (int) $node->id;
             $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
             $node->getActiveRecord()->save();
         }
 
         $this->_parentNode = $node;
+        $this->deleteCache($node->id);
 
         return $this;
     }
@@ -321,14 +339,19 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     protected function _rebuildPaths(Phprojekt_Tree_Node_Database $node, $basePath)
     {
-        $node->_activeRecord->path = $basePath;
+        if ($node->_activeRecord->path != $basePath) {
+            $node->getActiveRecord()->path = $basePath;
 
-        foreach ($node->getChildren() as $id => $child) {
-            $node->_children[$id] = $this->_rebuildPaths($child, $basePath . $node->id . self::NODE_SEPARATOR);
+            foreach ($node->getChildren() as $id => $child) {
+                $node->_children[$id] = $this->_rebuildPaths($child, $basePath . $node->id . self::NODE_SEPARATOR);
 
-            $this->getRootNode()->_index[$child->id] = $node->_children[$id];
-            $node->_children[$id]->getActiveRecord()->parentSave();
+                $this->getRootNode()->_index[$child->id] = $node->_children[$id];
+                $node->_children[$id]->getActiveRecord()->parentSave();
+                $this->deleteCache($child->id);
+                $this->deleteCache($id);
+            }
         }
+
         return $node;
     }
 
@@ -346,7 +369,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 return $this->getParentNode();
                 break;
             default:
-                if ($this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
+                if (null !== $this->_activeRecord) {
                     return $this->_activeRecord->$key;
                 }
                 break;
@@ -366,9 +389,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function __set($key, $value)
     {
         if (null !== $this->_activeRecord) {
-            /* dont allow to set the tree dependent stuff */
+            // Don´t allow to set the tree dependent stuff
             if (!in_array($key, array('id', 'path'))) {
-                $this->_activeRecord->$key = $value;
+                $this->getActiveRecord()->$key = $value;
             }
         }
     }
@@ -382,7 +405,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function __isset($key)
     {
-        return array_key_exists($key, get_object_vars($this)) || isset($this->_activeRecord->$key);
+        return array_key_exists($key, get_object_vars($this)) || isset($this->getActiveRecord()->$key);
     }
 
     /**
@@ -461,10 +484,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return RecursiveIteratorIterator
      */
-    public function getIterator ()
+    public function getIterator()
     {
         return new RecursiveIteratorIterator(new Phprojekt_Tree_Node_Iterator($this),
-        RecursiveIteratorIterator::SELF_FIRST);
+            RecursiveIteratorIterator::SELF_FIRST);
     }
 
     /**
@@ -489,7 +512,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         // We need to count the tree path ourself and NOT call getDepth on the
         // root node, as if we can be the tree and we will call us into a loop
         return substr_count($this->path, self::NODE_SEPARATOR)
-        - substr_count($this->getRootNode()->path, self::NODE_SEPARATOR);
+            - substr_count($this->getRootNode()->path, self::NODE_SEPARATOR);
     }
 
     /**
@@ -536,5 +559,18 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         return null;
+    }
+
+    /**
+     * Delete the tree cache
+     *
+     * @param integer $id The node id for delete
+     *
+     * @return void;
+     */
+    public function deleteCache($id)
+    {
+        $treeNamespace = new Zend_Session_Namespace('Phprojekt_Tree_Node_Database-setup-' . $id);
+        $treeNamespace->unsetAll();
     }
 }
