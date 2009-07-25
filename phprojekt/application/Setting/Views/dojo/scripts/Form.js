@@ -69,8 +69,8 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
                     if (phpr.submodule == 'User') {
                         var result     = Array();
                         result.type    = 'success';
-                        result.message = phpr.nls.get('You need reload the browser in order to let changes have '
-                            + 'effect');
+                        result.message = phpr.nls.get('You need to log out and log in again in order to let changes '
+                            + 'have effect');
                         new phpr.handleResponse('serverFeedback', result);
                     }
                     this.publish("updateCacheData");

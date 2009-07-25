@@ -154,8 +154,8 @@ $lang["Invalid json format"] = "Invalid json format";
 $lang["User error"] = "User error";
 $lang["Internal javascript error"] = "Internal javascript error";
 $lang["Unexpected error"] = "Unexpected error";
-$lang["You need reload the browser in order to let changes have effect"] = "You need reload the browser in order to "
-    . "let changes have effect";
+$lang["You need to log out and log in again in order to let changes have effect"] = "You need to log out and log in "
+    . "again in order to let changes have effect";
 $lang["No project info was received"] = "No project info was received";
 $lang["Incomplete data received"] = "Incomplete data received";
 $lang["Id not found #"] = "Id not found #";
