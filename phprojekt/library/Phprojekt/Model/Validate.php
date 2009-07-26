@@ -88,6 +88,7 @@ class Phprojekt_Model_Validate
 
                         if (isset($field['length']) && $field['length'] > 0) {
                             if (strlen($value) > $field['length']) {
+                                $valid = false;
                                 $this->error->addError(array(
                                     'field'   => $varname,
                                     'label'   => Phprojekt::getInstance()->translate($field['label']),
