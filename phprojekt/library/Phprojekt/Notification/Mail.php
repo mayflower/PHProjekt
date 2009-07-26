@@ -63,7 +63,7 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
 
         $name = trim($phpUser->firstname . ' ' . $phpUser->lastname);
         if (!empty($name)) {
-            $name .= $this->_customFrom[1] = $name . ' (' . $phpUser->username . ')';
+            $name .= ' (' . $phpUser->username . ')';
         } else {
             $name = $phpUser->username;
         }
