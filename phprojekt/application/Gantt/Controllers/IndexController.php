@@ -151,7 +151,7 @@ class Gantt_IndexController extends IndexController
             $validStart = Cleaner::validate('date', $startDate, false);
             $validEnd   = Cleaner::validate('date', $endDate, false);
             if (!$validStart || !$validEnd) {
-                $label   = Phprojekt::getInstance()->translate("Project id #") . $id;
+                $label = Phprojekt::getInstance()->translate("Project id #") . $id;
                 if (!$validStart) {
                     $message = Phprojekt::getInstance()->translate("Start date invalid");
                 } else {

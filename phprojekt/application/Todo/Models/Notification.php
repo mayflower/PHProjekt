@@ -40,7 +40,7 @@ class Todo_Models_Notification extends Phprojekt_Notification
      */
     public function getTo()
     {
-        $recipients = Array();
+        $recipients   = Array();
         $recipients[] = $this->_model->ownerId;
         if ($this->_model->userId != 0 && $this->_model->userId != $this->_model->ownerId) {
             $recipients[] = $this->_model->userId;

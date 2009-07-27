@@ -165,7 +165,7 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
 
         try {
             $this->send($smtpTransport);
-        } catch(Exception $e){
+        } catch(Exception $e) {
             throw new Phprojekt_PublishedException('SMTP error: ' . $e->getMessage());
         }
     }
