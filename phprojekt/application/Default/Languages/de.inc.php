@@ -151,8 +151,8 @@ $lang["Invalid json format"] = "Ungültiges JSON-Format";
 $lang["User error"] = "User Error";
 $lang["Internal javascript error"] = "Interne JavaScript-Fehler";
 $lang["Unexpected error"] = "Unerwarteter Fehler";
-$lang["You need to log out and log in again in order to let changes have effect"] = "Sie müssen den Browser neu laden, "
-    . "um zu lassen änderungen wirksam";
+$lang["You need to log out and log in again in order to let changes have effect"] = "Sie müssen sich erneut anmelden, "
+    . "damit die Änderungen wirksam werden";
 
 // System Modules
 $lang["Administration"] = "Administration";
