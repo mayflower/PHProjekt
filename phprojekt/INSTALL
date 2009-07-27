@@ -102,7 +102,7 @@
 4. Permission
 
     Make sure that the webserver or the webserver group can write to the
-    tmp/ and to the log directory. You can set these permission using the chmod(1) command.
+    tmp/ and logs/ directories. You can set these permission using the chmod(1) command.
     Assuming your webserver runs on the group "www-data":
 
     UNIX
