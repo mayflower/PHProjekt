@@ -39,22 +39,6 @@
 class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
 {
     /**
-     * Format a string into a controller class name.
-     *
-     * @param string $unformatted current controller name
-     *
-     * @return string
-     */
-    public function formatControllerName($unformatted)
-    {
-        $module = $this->getFrontController()->getRequest()->getModuleName();
-        $module = self::formatModuleName($module);
-
-        $controller = parent::formatControllerName($unformatted);
-        return $controller;
-    }
-
-    /**
      * Formats a string from a URI into a PHP-friendly name.
      *
      * By default, replaces words separated by the word separator character(s)
