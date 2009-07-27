@@ -13,9 +13,28 @@
 
   * HTTP Server
   * MySQL version 5.x
-  * PHP 5.2.x with pdo_mysql drivers installed
+  * PHP 5.2.4 with pdo_mysql drivers installed
+  * PHP extensions:
+    mbstring
+    iconv
+    ctype
+    gd
+    pcre
+    pdo (pdo_mysql / pdo_sqlite2 / pdo_pgsql
+    Reflection
+    session
+    SPL
+    zlib
+  * PHP Settings:
+    magic_quotes_gpc     = 0
+    magic_quotes_runtime = 0
+    magic_quotes_sybase  = 0
 
-  Note: Phprojekt 6 has been tested with:
+  * Recommend PHP Settings:
+    register_globals     = 0
+    safe_mode            = 0
+
+    Note: Phprojekt 6 has been tested with:
 
     * Apache HTTP Server 2.2
     * PHP 5.2.6

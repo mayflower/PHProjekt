@@ -33,8 +33,9 @@
  */
 class Setup_Models_Setup
 {
-    private $_error = array();
-    private $_db    = null;
+    private $_error   = array();
+    private $_message = array();
+    private $_db      = null;
 
     public function __construct()
     {
@@ -50,25 +51,64 @@ class Setup_Models_Setup
      */
     private function _checkServer()
     {
+        $missingRequirements = array();
+
+        // The following extensions are either needed by components of the Zend Framework that are used
+        // or by P6 components itself.
+        $extensionsNeeded = array('mbstring', 'iconv', 'ctype', 'gd', 'pcre', 'pdo', 'Reflection', 'session', 'SPL',
+            'zlib');
+
+        // These settings need to be properly configured by the admin
+        $settingsNeeded = array('magic_quotes_gpc' => 0, 'magic_quotes_runtime' => 0, 'magic_quotes_sybase' => 0);
+
+        // These settings should be properly configured by the admin
+        $settingsRecommended = array('register_globals' => 0, 'safe_mode' => 0);
+
         // Check the PHP version
-        if (substr(phpversion(), 0, 1) < 5) {
-            throw new Exception("Sorry, you need PHP 5 or newer to run PHProjekt 6");
+        $requiredPhpVersion = "5.2.4";
+        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
+            // This is a requirement of the Zend Framework
+            $missingRequirements[] = "PHP Version $requiredPhpVersion or newer";
+        }
+
+        foreach ($extensionsNeeded as $extension) {
+            if (!extension_loaded($extension)) {
+                $missingRequirements[] = "The $extension extension must be enabled.";
+            }
         }
 
         // Check pdo library
-        $mysql  = phpversion('pdo_mysql');
-        $sqlite = phpversion('pdo_sqlite2');
-        $pgsql  = phpversion('pdo_pgsql');
+        $mysql  = extension_loaded('pdo_mysql');
+        $sqlite = extension_loaded('pdo_sqlite2');
+        $pgsql  = extension_loaded('pdo_pgsql');
 
-        if (empty($mysql) && empty($sqlite) && empty($pgsql)) {
-            throw new Exception("Sorry, you need pdo_mysql, pdo_pgsql or pdo_sqlite "
-                . "extension to install PHProjekt 6");
+        if (!$mysql && !$sqlite && !$pgsql) {
+            $missingRequirements[] = "You need one of these PDO extensions: pdo_mysql, pdo_pgsql or pdo_sqlite";
+        }
+
+        foreach ($settingsNeeded as $conf => $value) {
+            if (ini_get($conf) != $value) {
+                $missingRequirements[] = "The php.ini setting of \"$conf\" has to be \"$value\".";
+            }
         }
 
         // Checking if configuration.ini exists
         $baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         if (file_exists($baseDir . "configuration.ini")) {
             throw new Exception("Configuration file found. Please, delete it before run setup again.");
+        }
+
+        if (!empty($missingRequirements)) {
+            $message = "Your PHP does not meet the requirements needed for P6.\n"
+                . implode("\n", $missingRequirements);
+            throw new Exception($message);
+        }
+
+        foreach ($settingsRecommended as $conf => $value) {
+            if (ini_get($conf) != $value) {
+                $this->_message[] = "It is recommend to have \"$conf\" set to \"$value\", but it is not required "
+                    . "to run PHProjekt.";
+            }
         }
     }
 
@@ -112,14 +152,14 @@ class Setup_Models_Setup
                 );
                 $this->_db = Zend_Db::factory($params['serverType'], $dbParams);
             } catch (Exception $error) {
-                $this->_error[] = 'Can not connect to server at ' . $params['dbHost']
+                $this->_error[] = 'Cannot connect to server at ' . $params['dbHost']
                     . ' using ' . $params['dbUser'] . ' user ' . '(' . $error->getMessage() . ')';
                 $valid = false;
             }
         }
 
         if (!isset($params['adminPass']) || empty($params['adminPass'])) {
-            $this->_error[] = 'The admin password can not be empty';
+            $this->_error[] = 'The admin password cannot be empty';
             $valid = false;
         } else if ($params['adminPassConfirm'] != $params['adminPass']) {
             $this->_error[] = 'The admin password and confirmation are different';
@@ -148,7 +188,7 @@ class Setup_Models_Setup
                 $valid = false;
             }
             if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'debug.log', 'a', false)) {
-                $this->_error[] = 'The debug log can not be created';
+                $this->_error[] = 'The debug log cannot be created';
                 $valid = false;
             }
             if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'err.log', 'a', false)) {
@@ -156,7 +196,7 @@ class Setup_Models_Setup
                 $valid = false;
             }
         } else if (!is_writable($logsDir)) {
-            $this->_error[] = 'Please, set apache permission to writo on ' . $logsDir . ' to allow write logs';
+            $this->_error[] = 'Please set permission to allow writing logs in ' . $logsDir;
             $valid = false;
         }
 
@@ -169,8 +209,7 @@ class Setup_Models_Setup
                 $valid = false;
             }
         } else if (!is_writable($uploadDir)) {
-            $this->_error[] = 'Please, set apache permission to writo on ' . $uploadDir . ' to allow upload '
-                . 'files on modules.';
+            $this->_error[] = 'Please set permission to allow writing uploaded files in ' . $uploadDir;
             $valid = false;
         }
 
@@ -188,6 +227,19 @@ class Setup_Models_Setup
         $this->_error = array();
 
         return $error;
+    }
+
+    /**
+     * Return the messages created by _checkServer()
+     *
+     * @return array
+     */
+    public function getMessage()
+    {
+        $message        = $this->_message;
+        $this->_message = array();
+
+        return implode("\n", $message);
     }
 
     /**

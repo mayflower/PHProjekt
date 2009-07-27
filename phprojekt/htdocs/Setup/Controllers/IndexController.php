@@ -42,10 +42,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-        if (file_exists(PHPR_CONFIG_FILE)) {
-            throw new Exception('Config file exists');
-        }
-
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
 
@@ -54,9 +50,10 @@ class IndexController extends Zend_Controller_Action
         $this->view->webPath = $webPath;
 
         try {
-            $this->_setup = new Setup_Models_Setup();
+            $this->_setup        = new Setup_Models_Setup();
+            $this->view->message = nl2br($this->_setup->getMessage());
         } catch (Exception $error) {
-            $this->view->error = $error->getMessage();
+            $this->view->error = nl2br($error->getMessage());
         }
     }
 
@@ -86,13 +83,16 @@ class IndexController extends Zend_Controller_Action
     {
         $params = $this->_setParams();
 
-        if ($this->_setup->validate($params)) {
-            ob_start();
-            $this->_setup->install($params);
-            $this->view->success = ob_get_flush();
-            $this->view->finish  = true;
-        } else {
-            $this->view->message = array_shift($this->_setup->getError());
+        if (null !== $this->_setup) {
+            if ($this->_setup->validate($params)) {
+                ob_start();
+                $this->_setup->install($params);
+                $this->view->success = ob_get_flush();
+                $this->view->finish  = true;
+                $this->view->message = null;
+            } else {
+                $this->view->message = array_shift($this->_setup->getError());
+            }
         }
         $this->view->dbHost              = $params['dbHost'];
         $this->view->dbUser              = $params['dbUser'];

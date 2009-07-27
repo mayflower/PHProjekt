@@ -116,7 +116,7 @@
                     <?php
                     if (empty($this->success) && null === $this->error) {
                         include ("form.phtml");
-                    } else {
+                    } else if (empty($this->error)) {
                         include ("finish.phtml");
                     }
                     ?>
