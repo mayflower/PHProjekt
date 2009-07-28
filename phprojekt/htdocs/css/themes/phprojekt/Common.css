@@ -522,3 +522,12 @@ h1,h2,h3,h4,h5,h6 {
 .phprojekt #historyTable .white {
     background-color: white;
 }
+
+.phprojekt #breadCrumb {
+    font-family: Verdana;
+    font-size: 10px;
+    font-weight: 600;
+    color: #CBCBCB;
+    margin-left: 1%;
+    margin-top: 8px;
+}

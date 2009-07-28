@@ -56,15 +56,21 @@
         style="height: 100%;">
             <!-- Second Top Bar -->
             <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
-            style="height: 7%; border-bottom: 5px solid #294064;">
-                <div class="column">
+            style="height: 10%; border-bottom: 5px solid #294064; overflow: hidden;">
+                <div class="column"
+                style="height: 1px;">
                     <img src="{{webpath}}img/subheaderborder.png" alt="" />
                 </div>
                 <!-- Submodule navigation -->
-                <div class="column left span-19 append-1 align-left" id="subModuleNavigation">
+                <div class="left align-left" id="subModuleNavigation"
+                style="width: 99%; margin-top: -1px;">
                 </div>
                 <!-- Add / Save Buttons -->
-                <div id="buttonRow" class="align-right append-0">
+                <div id="buttonRow" class="align-right left""
+                style="margin-left: 10px; margin-top: 5px;">
+                </div>
+                <!-- Breadcum -->
+                <div id="breadCrumb" class="left align-left">
                 </div>
                 <!-- Exception Form -->
                 <div id="ServerFeedback" dojoType="dojox.widget.Toaster" messageTopic="ServerFeedback"

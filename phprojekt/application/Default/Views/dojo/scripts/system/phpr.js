@@ -821,18 +821,20 @@ dojo.declare("phpr.BreadCrumb", null, {
     //     Manage the Breadcrumb
     // Description:
     //     Manage the Breadcrumb
-    _module:     '',
-    _projects:   '',
-    _item:       '',
-    _lastModule: null,
-    _lastParent: null,
+    _module:       '',
+    _projects:     '',
+    _item:         '',
+    _lastModule:   null,
+    _lastParent:   null,
+    _separatorOne: ' / ',
+    _separatorTwo: '-',
 
     setProjects:function(projectsNames) {
         // Summary:
         //     Set the projects tree as one string
         // Description:
         //     Set the projects tree as one string
-        this._projects = projectsNames.join(':');
+        this._projects = projectsNames.join(this._separatorTwo.toString());
         this._module   = null;
         this._item     = null;
     },
@@ -844,7 +846,7 @@ dojo.declare("phpr.BreadCrumb", null, {
         //     Change the module and sub-module only if these change
         if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent) {
             if (phpr.parentmodule) {
-                this._module = phpr.parentmodule + ':' + phpr.module;;
+                this._module = phpr.parentmodule + this._separatorTho + phpr.module;;
                 this._lastParent = phpr.parentmodule;
             } else {
                 this._module = phpr.module;
@@ -871,11 +873,12 @@ dojo.declare("phpr.BreadCrumb", null, {
         //     Draw the breadcrumb
         // Description:
         //     Show the breadcrumb in the title
-        var breadCrumb = this._projects + ' - ' + this._module;
+        var breadCrumb = this._projects + this._separatorOne + this._module;
         if (this._item) {
-            breadCrumb += ' - ' + this._item;
+            breadCrumb += this._separatorOne + this._item;
         }
-        document.title = breadCrumb;
+        document.title                    = breadCrumb;
+        dojo.byId("breadCrumb").innerHTML = breadCrumb;
     }
 
 });
