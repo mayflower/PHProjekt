@@ -356,7 +356,7 @@ class Timecard_IndexController extends IndexController
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where   = sprintf('(owner_id = %d AND date LIKE %s', (int) $userId, $db->quote($year . '-' . $month . '-%'));
+        $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
         $records = $this->getModelObject()->fetchAll($where);
 
         Phprojekt_Converter_Csv::echoConvert($records, 'export');
@@ -380,7 +380,7 @@ class Timecard_IndexController extends IndexController
             $month = '0' . $month;
         }
 
-        $where   = sprintf('(owner_id = %d AND date LIKE %s', (int) $userId, $db->quote($year . '-' . $month . '-%'));
+        $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
         $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         $records = $model->fetchAll($where);
 

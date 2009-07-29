@@ -510,6 +510,17 @@ dojo.declare("phpr.DataStore", null, {
         }
     },
 
+    deleteDataPartialString:function(params) {
+        // Summary:
+        //    Deletes the cache for the urls that start with the received string.
+        for (url in this._internalCache) {
+            var urlLeft = url.substring(0, params.url.length);
+            if (urlLeft == params.url) {
+                this._internalCache[url]['data'] = new Array();
+            }
+        }
+    },
+
     getStore:function(params) {
         // Summary:
         //    Return the current data.store

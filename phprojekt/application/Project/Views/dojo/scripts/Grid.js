@@ -28,5 +28,9 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         var parentId = this.main.tree.getParentId(phpr.currentProjectId);
         var url      = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + parentId;
         phpr.DataStore.deleteData({url: url});
+
+        // Delete cache for Timecard on places where Projects are shown
+        phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
+        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonBookingDetail/'});
     }
 });
