@@ -358,7 +358,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     phpr.module = 'Project';
                 }
 
-                var navigation = '<ul id="nav_main">';
+                var navigation = '<table id="nav_main"><tr>';
                 var activeTab  = false;
                 var modules    = this.sortModuleTabs(modules);
                 for (var i = 0; i < modules.length; i++) {
@@ -389,9 +389,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         this.setNewEntry();
                     }
                 }
-                navigation += "</ul>";
-                dojo.byId("subModuleNavigation").innerHTML = navigation;
+                navigation += "</tr></table>";
+
+                var tmp       = document.createElement('div');
+                tmp.innerHTML = navigation;
+                var widget    = new phpr.ScrollPane({}, tmp);
+                dojo.byId("subModuleNavigation").appendChild(widget.domNode);
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
+                widget.layout();
+
                 this.customSetSubmoduleNavigation();
             })
         })
@@ -430,6 +436,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //     Clean the submodule div and destroy all the buttons
         phpr.destroySubWidgets('buttonRow');
         phpr.destroySubWidgets('formButtons');
+
+        // Remove all children from element
+        phpr.destroySubWidgets("subModuleNavigation");
         dojo.byId("subModuleNavigation").innerHTML = '';
 
         var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";

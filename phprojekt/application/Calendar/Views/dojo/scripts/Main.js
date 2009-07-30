@@ -469,7 +469,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
 
         navigation = '<div id="nav_main" class="left" style="width: 300px;">'
-                       + '<ul>';
+                       + '<table><tr>';
 
         for (var i = 0; i < moduleViews.length; i++) {
             var liclass = '';
@@ -485,10 +485,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             });
         }
 
-        navigation += '   </ul>'
+        navigation += '   </tr></table>'
                    + '</div>'
                    + '<div id="nav_sub">'
-                       + '<ul>';
+                       + '<table><tr>';
 
         var moduleViews = new Array();
         if (!this.isListActive('dayList')) {
@@ -512,7 +512,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             });
         }
 
-        navigation += '   </ul>'
+        navigation += '   </tr></table>'
                    + '</div>';
 
         dojo.byId("subModuleNavigation").innerHTML = navigation;

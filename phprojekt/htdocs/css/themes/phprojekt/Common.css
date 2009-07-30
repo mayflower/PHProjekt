@@ -139,6 +139,15 @@
     overflow: none;
 }
 
+.phprojekt #subModuleNavigation {
+    margin-top: 0px;
+    height: 30px;
+}
+
+.dj_ie .phprojekt #subModuleNavigation {
+    margin-top: -2px;
+}
+
 .phprojekt #nav_main a,
 .phprojekt #nav_sub a {
     color: #CBCBCB;
@@ -187,10 +196,6 @@
     padding-right: 7px;
 }
 
-.phprojekt #nav_main,
-.phprojekt #nav_sub {
-}
-
 .phprojekt #nav_main li,
 .phprojekt #nav_sub li {
     float: left;
@@ -199,11 +204,20 @@
     padding: 0 4px 0 0;
 }
 
+.phprojekt #nav_main td {
+    margin: 0;
+    padding: 0 3px 0 0;
+}
+
+.dj_ieaa .phprojekt #nav_main td {
+    margin: 0;
+    padding: 0 1px 0 0;
+}
+
 /* Tabs ACTIVE */
 .phprojekt #nav_main .active a span,
 .phprojekt #nav_sub .active a span {
     margin-top: 0px;
-    padding-bottom: 3px;
 }
 
 .phprojekt #nav_main .active a,
@@ -218,6 +232,48 @@
 .phprojekt #nav_sub .active a span {
     background: url("images/nav_main/tab-right-hover.gif") right bottom no-repeat;
     padding-right: 7px;
+}
+
+
+/* Scroll for Tabs */
+.phprojekt .phprScrollWindow {
+    position: relative;
+}
+
+.phprojekt .phprScrollArrowLeft,
+.phprojekt .phprScrollArrowRight {
+    width: 2%;
+    float: left;
+    height: 24px;
+    background-color: #fff;
+    background-repeat: no-repeat;
+}
+
+.phprojekt .phprScrollArrowLeft {
+    background-image: url("images/nav_main/arrow-left.gif");
+    background-position: left;
+}
+
+.phprojekt .phprScrollArrowRight {
+    background-image: url("images/nav_main/arrow-right.gif");
+    background-position: right;
+}
+
+.phprojekt .phprScrollArrowLeftHide,
+.phprojekt .phprScrollArrowRightHide {
+    width: 2%;
+    float: left;
+    background-color: #fff;
+}
+
+.phprojekt .phprScrollWrapper {
+    width: 96%;
+    float: left;
+    height: 28px;
+}
+
+.phprojekt .phprScrollPane {
+    height: 28px;
 }
 
 /* Negative */
