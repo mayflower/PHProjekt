@@ -49,10 +49,8 @@ class Gantt_IndexController extends IndexController
         $tree->setup();
         $min = gmmktime(0, 0, 0, 12, 31, 2030);
         $max = gmmktime(0, 0, 0, 1, 1, 1970);
+        $ids = array();
 
-        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-
-        $data['data']['rights']["currentUser"]["write"] = true;
         foreach ($tree as $node) {
             if ($node->id != self::INVISIBLE_ROOT) {
                 $key    = $node->id;
@@ -71,6 +69,7 @@ class Gantt_IndexController extends IndexController
                     if ($end > $max) {
                         $max = $end;
                     }
+                    $ids[]                      = (int) $key;
                     $data['data']["projects"][] = array('id'      => (int) $key,
                                                         'level'   => (int) $node->getDepth() * 10,
                                                         'parent'  => (int) $parent,
@@ -85,14 +84,18 @@ class Gantt_IndexController extends IndexController
                                                         'startD'  => $startDay,
                                                         'endM'    => $endMonth,
                                                         'endY'    => $endYear);
-                    // Only allow write if all the projects have write or hight access
-                    if ($data['data']['rights']["currentUser"]["write"]) {
-                        if ($rights->getItemRight(1, $node->id, Phprojekt_Auth::getUserId()) < Phprojekt_Acl::WRITE) {
-                            $data['data']['rights']["currentUser"]["write"] = false;
-                        }
-                    }
                 }
             }
+        }
+
+        // Only allow write if all the projects have write or hight access
+        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1 AND access < %d',
+            Phprojekt_Auth::getUserId(), implode(", ", $ids), Phprojekt_Acl::WRITE);
+        if (count($rights->fetchAll($where)) > 0) {
+            $data['data']['rights']["currentUser"]["write"] = false;
+        } else {
+            $data['data']['rights']["currentUser"]["write"] = true;
         }
 
         $data['data']['min']  = gmmktime(0, 0, 0, 1, 1, date("Y", $min));
@@ -120,6 +123,8 @@ class Gantt_IndexController extends IndexController
     {
         $projects     = (array) $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $userId       = Phprojekt_Auth::getUserId();
 
         // Error check: no project received
         if (empty($projects)) {
@@ -171,8 +176,9 @@ class Gantt_IndexController extends IndexController
 
             $activeRecord->startDate = $startDate;
             $activeRecord->endDate   = $endDate;
-            if ($activeRecord->recordValidate()) {
-                $activeRecord->save();
+
+            if ($rights->getItemRight(1, $id, $userId) >= Phprojekt_Acl::WRITE) {
+                $activeRecord->parentSave();
             }
         }
 

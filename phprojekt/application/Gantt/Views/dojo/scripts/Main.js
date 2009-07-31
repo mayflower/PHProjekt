@@ -440,10 +440,14 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         while (++listIndex < listLength) {
             var name  = this.gantt.projectDataBuffer[listIndex][0];
             var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));
-            var id    = name.split(':')[2];
-            projects[listIndex] = id + "," + this.gantt.convertIndex2DateString(value[0]) + ","
-                + this.gantt.convertIndex2DateString(value[1]);
-            ids.push(id);
+            // Only send the changed values
+            if ((value[0] != this.gantt.projectDataBuffer[listIndex][1]) ||
+                (value[1] != this.gantt.projectDataBuffer[listIndex][2])) {
+                var id = name.split(':')[2];
+                projects.push(id + "," + this.gantt.convertIndex2DateString(value[0]) + ","
+                    + this.gantt.convertIndex2DateString(value[1]));
+                ids.push(id);
+            }
         }
         sendData['projects[]'] = projects;
         phpr.send({
