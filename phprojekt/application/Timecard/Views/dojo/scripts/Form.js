@@ -131,16 +131,17 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     phpr.DataStore.addStore({url: this._bookUrl});
                     phpr.DataStore.requestData({
                         url:         this._bookUrl,
-                        processData: dojo.hitch(this, "reloadBookingView")
+                        processData: dojo.hitch(this, function() {
+                            this.reloadBookingView();
+                            if (hours) {
+                                // Render the form element on the right bottom
+                                phpr.DataStore.addStore({url: this._hourUrl});
+                                phpr.DataStore.requestData({url: this._hourUrl, processData: dojo.hitch(this, "reloadHoursView")});
+                            }
+                        })
                     });
                 })
             });
-        }
-
-        if (hours) {
-            // Render the form element on the right bottom
-            phpr.DataStore.addStore({url: this._hourUrl});
-            phpr.DataStore.requestData({url: this._hourUrl, processData: dojo.hitch(this, "reloadHoursView")});
         }
     },
 
@@ -243,25 +244,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             }
         }
 
-        // Get All Projects
-        var allProjects   = new Array();
-        for (var j in range) {
-            var found = false;
-            for (var k in favorites) {
-                if (range[j]['id'] == favorites[k]) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                allProjects.push(range[j]);
-            }
-        }
-
         // Show Drag and Drop Projects
         this.showProjectsSources(favoritesList);
-
-        // Make Dialog
-        this.createFavoritesDialog(allProjects, favoritesList);
 
         // Clean "Day View"
         dijit.byId("projectBookingContainer").destroyDescendants();
@@ -571,6 +555,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     phpr.DataStore.deleteData({url: this._favoritesUrl});
+                    phpr.DataStore.requestData({url: this._favoritesUrl});
                }
             })
         });
@@ -640,8 +625,39 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
     openManageFavorites:function() {
         // Summary:
         //    Function called on manageFavorites button click, to regulate the popup project's boxes height, and then
-        // open the Manage Favorites dialog
+        //    open the Manage Favorites dialog
+        if (dojo.byId("dialogContent").innerHTML.replace(/\s/g, "") == "") {
+            var meta         = phpr.DataStore.getMetaData({url: this._bookUrl});
+            var favorites    = phpr.DataStore.getData({url: this._favoritesUrl});
+            var range        = meta[1]['range'];
 
+            // Get Favorites
+            var favoritesList = new Array();
+            for (var k in favorites) {
+                 for (var j in range) {
+                    if (range[j]['id'] == favorites[k]) {
+                        favoritesList.push(range[j]);
+                    }
+                }
+            }
+
+            // Get All Projects
+            var allProjects   = new Array();
+            for (var j in range) {
+                var found = false;
+                for (var k in favorites) {
+                    if (range[j]['id'] == favorites[k]) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    allProjects.push(range[j]);
+                }
+            }
+
+            // Make Dialog
+            this.createFavoritesDialog(allProjects, favoritesList);
+        }
         dijit.byId('manageFavorites').show();
 
         // If there are no projects in any of the boxes, don't let it reduce its height so much
