@@ -59,15 +59,22 @@ class LoginController extends Zend_Controller_Action
      */
     public function loginAction()
     {
-        $username = (string) $this->getRequest()->getParam('username', null);
-        $password = (string) $this->getRequest()->getParam('password', null);
-        $hash     = (string) $this->getRequest()->getParam('hash', null);
+        $username   = (string) $this->getRequest()->getParam('username', null);
+        $password   = (string) $this->getRequest()->getParam('password', null);
+        $hash       = (string) $this->getRequest()->getParam('hash', null);
+        $keepLogged = (string) $this->getRequest()->getParam('keepLogged', null);
+
+        if ($keepLogged == "on") {
+            $keepLogged = true;
+        } else {
+            $keepLogged = false;
+        }
 
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {
-            $success = Phprojekt_Auth::login($username, $password);
+            $success = Phprojekt_Auth::login($username, $password, $keepLogged);
             if ($success === true) {
                 $config = Phprojekt::getInstance()->getConfig();
                 $this->_redirect($config->webpath . 'index.php' . $hash);
