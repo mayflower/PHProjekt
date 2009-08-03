@@ -255,7 +255,7 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public static function cryptString($string)
     {
-        $cryptedString = 'phprojektmd5'.$string;
+        $cryptedString = 'phprojektmd5' . $string;
         return Phprojekt_Auth::_cryptPassword($cryptedString);
     }
 
@@ -300,7 +300,7 @@ class Phprojekt_Auth extends Zend_Auth
         // DB Settings table: create new md5 hash and update expiration time for it
 
         // Set the settings pair to save
-        $pair = array(self::LOGGED_TOKEN . '_hash'    => md5(time()),
+        $pair = array(self::LOGGED_TOKEN . '_hash'    => md5(time() . mt_rand()),
                       self::LOGGED_TOKEN . '_expires' => strtotime('+1 week'));
 
         // Store matching keepLogged data in DB and browser
