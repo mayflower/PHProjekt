@@ -49,7 +49,6 @@ class Phprojekt_LoginController_Test extends FrontInit
 
     /**
      * Tests login action on login controller
-     *
      */
     public function testLoginLoginAction()
     {
@@ -74,7 +73,6 @@ class Phprojekt_LoginController_Test extends FrontInit
 
     /**
      * Tests login action on login controller, with Keep Logged set to 'on'
-     *
      */
     public function testLoginLoginKeepLoggedAction()
     {
@@ -105,7 +103,6 @@ class Phprojekt_LoginController_Test extends FrontInit
 
     /**
      * Tests logout action on login controller
-     *
      */
     public function testLoginLogoutAction()
     {
@@ -125,9 +122,11 @@ class Phprojekt_LoginController_Test extends FrontInit
                 $where = sprintf("user_id = 1 AND key_value LIKE %s", $db->quote(Phprojekt_Auth::LOGGED_TOKEN . '%'));
                 $rows  = $settingsModel->fetchAll($where);
                 $this->assertTrue(count($rows) == 0);
+
                 return;
             }
         }
+
         $this->fail('An error occured on logout action');
     }
 }

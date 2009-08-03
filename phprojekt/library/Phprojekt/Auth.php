@@ -53,58 +53,32 @@ class Phprojekt_Auth extends Zend_Auth
             // No - Read cookies
             $readingPrefix  = str_replace('.', '_', self::COOKIES_PREFIX);
             $cookieHashName = $readingPrefix . self::LOGGED_TOKEN . '_hash';
-            $cookieUserName = $readingPrefix . self::LOGGED_TOKEN . '_user';
+            $cookieUserId   = $readingPrefix . self::LOGGED_TOKEN . '_user';
             // Are there cookies?
-            if (isset($_COOKIE[$cookieHashName]) && isset($_COOKIE[$cookieUserName])) {
+            if (isset($_COOKIE[$cookieHashName]) && isset($_COOKIE[$cookieUserId])
+                && (int) $_COOKIE[$cookieUserId] > 0) {
                 // Yes
-                $tokenCookieHash = $_COOKIE[$cookieHashName];
-                $tokenCookieUser = (int) $_COOKIE[$cookieUserName];
-                $goToLoginPage   = false;
-                $setting         = Phprojekt_Loader::getModel('Setting', 'Setting');
+                $tokenCookieHash   = Cleaner::sanitize('alnum', $_COOKIE[$cookieHashName]);
+                $tokenCookieUserId = (int) $_COOKIE[$cookieUserId];
+                $goToLoginPage     = false;
+                $setting           = Phprojekt_Loader::getModel('Setting', 'Setting');
                 $setting->setModule('User');
-                $tokenDbHash    = $setting->getSetting(self::LOGGED_TOKEN . '_hash', $tokenCookieUser);
-                $tokenDbExpires = (int) $setting->getSetting(self::LOGGED_TOKEN . '_expires', (int) $tokenCookieUser);
+                $tokenDbHash    = $setting->getSetting(self::LOGGED_TOKEN . '_hash', $tokenCookieUserId);
+                $tokenDbExpires = (int) $setting->getSetting(self::LOGGED_TOKEN . '_expires', (int) $tokenCookieUserId);
 
                 // Is there valid DB token data, which has not expired?
                 if ($tokenDbExpires > time()) {
                     // Yes - The expiration time exists and is valid. The hashes match?
                     if ($tokenCookieHash == $tokenDbHash) {
                         // Yes - Log in the user
-                        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-                        $user->find($tokenCookieUser);
+                        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+                        $user->find($tokenCookieUserId);
                         // If the user was found we will save the user information in the session
                         $authNamespace->userId = $user->id;
                         $authNamespace->admin  = $user->admin;
 
-                        // The hash string is changed everytime it is used, and the expiration time updated.
-                        // DB Settings table: create new md5 hash and update expiration time for it
-                        $hash    = md5(time());
-                        $expires = strtotime('+1 week');
-                        $db      = Phprojekt::getInstance()->getDb();
-                        $where   = sprintf("user_id = %d AND key_value LIKE %s", (int) $tokenCookieUser,
-                            $db->quote(self::LOGGED_TOKEN . '%'));
-                        $rows = $setting->fetchAll($where);
-                        foreach ($rows as $row) {
-                            if ($row->keyValue == self::LOGGED_TOKEN . '_hash') {
-                                $row->value = $hash;
-                                $row->save();
-                            } else if ($row->keyValue == self::LOGGED_TOKEN . '_expires') {
-                                $row->value = $expires;
-                                $row->save();
-                            }
-                        }
-
-                        // Cookies: update md5 hash and expiration time
-                        // If we are under Unittest execution, don't work with cookies:
-                        if (!headers_sent()) {
-                            $completePath     = Phprojekt::getInstance()->getConfig()->webpath;
-                            $partialPathBegin = strpos($completePath, "/", 8);
-                            $partialPath      = substr($completePath, $partialPathBegin);
-                            $cookieHash       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.hash';
-                            $cookieUser       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.user';
-                            setcookie($cookieHash, $hash, $expires, $partialPath);
-                            setcookie($cookieUser, $tokenCookieUser, $expires, $partialPath);
-                        }
+                        // Save the data into the DB and Cookies
+                        self::_saveLoginData($tokenCookieUserId);
                     } else {
                         $goToLoginPage = true;
                     }
@@ -113,7 +87,7 @@ class Phprojekt_Auth extends Zend_Auth
                 }
 
                 if ($goToLoginPage) {
-                    self::_deleteDbAndCookies($tokenCookieUser);
+                    self::_deleteDbAndCookies($tokenCookieUserId);
                     throw new Phprojekt_Auth_UserNotLoggedInException('User not logged in', 1);
                 }
             } else {
@@ -127,8 +101,9 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * Makes the login process
      *
-     * @param string $username username provided
-     * @param string $password clean password typed by user
+     * @param string  $username   username provided
+     * @param string  $password   Clean password typed by user
+     * @param boolean $keepLogged Keep the user logued for next uses
      *
      * @return boolean true if login process was sucessful
      */
@@ -169,38 +144,7 @@ class Phprojekt_Auth extends Zend_Auth
             // Delete previous existing data, just in case
             self::_deleteDbAndCookies($userId);
             // Store matching keepLogged data in DB and browser
-            $hash    = md5(time());
-            $expires = strtotime('+1 week');
-            $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $user->find($userId);
-
-            // Save in DB the md5 hash
-            $record             = $user->settings->create();
-            $record->moduleId   = 0;
-            $record->keyValue   = self::LOGGED_TOKEN . '_hash';
-            $record->value      = $hash;
-            $record->identifier = 'Login';
-            $record->save();
-
-            // Save in DB the expiration time
-            $record             = $user->settings->create();
-            $record->moduleId   = 0;
-            $record->keyValue   = self::LOGGED_TOKEN . '_expires';
-            $record->value      = $expires;
-            $record->identifier = 'Login';
-            $record->save();
-
-            // Create cookies only if headers haven't already been sent (don't create them on Unittest)
-            if (!headers_sent()) {
-                // Save cookies
-                $completePath     = Phprojekt::getInstance()->getConfig()->webpath;
-                $partialPathBegin = strpos($completePath, "/", 8);
-                $partialPath      = substr($completePath, $partialPathBegin);
-                $cookieHash       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.hash';
-                $cookieUser       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.user';
-                setcookie($cookieHash, $hash, $expires, $partialPath);
-                setcookie($cookieUser, $userId, $expires, $partialPath);
-            }
+            self::_saveLoginData($userId);
         }
 
         // Please, put any extra info of user to be saved on session here
@@ -255,10 +199,10 @@ class Phprojekt_Auth extends Zend_Auth
             $userId = $authNamespace->userId;
         } else {
             // Try to read user id from cookies
-            $readingPrefix  = str_replace('.', '_', self::COOKIES_PREFIX);
-            $cookieUserName = $readingPrefix . self::LOGGED_TOKEN . '_user';
-            if (isset($_COOKIE[$cookieUserName])) {
-                $userId = (int) $_COOKIE[$cookieUserName];
+            $readingPrefix = str_replace('.', '_', self::COOKIES_PREFIX);
+            $cookieUserId  = $readingPrefix . self::LOGGED_TOKEN . '_user';
+            if (isset($_COOKIE[$cookieUserId])) {
+                $userId = (int) $_COOKIE[$cookieUserId];
             }
         }
 
@@ -340,13 +284,77 @@ class Phprojekt_Auth extends Zend_Auth
             return;
         }
 
-        // Delete cookies
+        self::_setCookies("", 0, 1);
+    }
+
+    /**
+     * Save the login data into Settings and Cookies
+     *
+     * @param int $userId Current userId
+     *
+     * @return void
+     */
+    private function _saveLoginData($userId)
+    {
+        // The hash string is changed everytime it is used, and the expiration time updated.
+        // DB Settings table: create new md5 hash and update expiration time for it
+
+        // Set the settings pair to save
+        $pair = array(self::LOGGED_TOKEN . '_hash'    => md5(time()),
+                      self::LOGGED_TOKEN . '_expires' => strtotime('+1 week'));
+
+        // Store matching keepLogged data in DB and browser
+        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user->find($userId);
+        $settings = $user->settings->fetchAll();
+
+        foreach($pair as $key => $value) {
+            $found = false;
+            foreach ($settings as $setting) {
+                // Update
+                if ($setting->keyValue == $key) {
+                    $setting->value = $value;
+                    $setting->save();
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                // Create
+                $record             = $user->settings->create();
+                $record->moduleId   = 0;
+                $record->keyValue   = $key;
+                $record->value      = $value;
+                $record->identifier = 'Login';
+                $record->save();
+            }
+        }
+
+        // Cookies: update md5 hash and expiration time
+        // If we are under Unittest execution, don't work with cookies:
+        if (!headers_sent()) {
+            self::_setCookies($pair[self::LOGGED_TOKEN . '_hash'], $userId, $pair[self::LOGGED_TOKEN . '_expires']);
+        }
+    }
+
+    /**
+     * Set the cookies
+     *
+     * @param string $hash    User hash for check
+     * @param int    $userId  Current userId
+     * @param int    $expires Timestamp for expire
+     *
+     * @return void
+     */
+    private function _setCookies($hash, $userId, $expires)
+    {
+        // Set cookies
         $completePath     = Phprojekt::getInstance()->getConfig()->webpath;
         $partialPathBegin = strpos($completePath, "/", 8);
         $partialPath      = substr($completePath, $partialPathBegin);
         $cookieHash       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.hash';
         $cookieUser       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.user';
-        setcookie($cookieHash, "", 1, $partialPath);
-        setcookie($cookieUser, "", 1, $partialPath);
+        setcookie($cookieHash, $hash, $expires, $partialPath);
+        setcookie($cookieUser, $userId, $expires, $partialPath);
     }
 }
