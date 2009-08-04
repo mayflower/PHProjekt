@@ -446,10 +446,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         globalModules[1000] = {id: "Settings", "name": "Setting"};
         globalModules[1001] = {id: "Admin", "name": "Administration"};
         for (i in globalModules) {
-            if (this.module == globalModules[i].name) {
-                dojo.addClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
-            } else {
-                dojo.removeClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+            if (dojo.byId("globalModule" + globalModules[i].id)) {
+                if (this.module == globalModules[i].name) {
+                    dojo.addClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+                } else {
+                    dojo.removeClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+                }
             }
         }
     },
