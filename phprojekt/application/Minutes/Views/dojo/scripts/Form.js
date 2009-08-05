@@ -36,6 +36,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     // Global flag needed for confirm dialogs
     _allowSubmit: false,
 
+    // Internal Widgets
+    _minutesGridBox:      null,
+    _minutesDetailsRight: null,
+
     initData:function() {
         // Summary:
         //    Init all the data before draw the form
@@ -75,45 +79,25 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 
         dojo.byId('itemsFormTab').style.display = 'none';
 
-        if (!dijit.byId('minutesBox')) {
-            var minutesBox = new dijit.layout.ContentPane({
-                region: 'center',
-                id:     'minutesBox'
-            }, dojo.doc.createElement('div'));
-        } else {
-            var minutesBox = dijit.byId('minutesBox');
-        }
+        var minutesBox = new dijit.layout.ContentPane({
+            region: 'center'
+        }, dojo.doc.createElement('div'));
 
-        if (!dijit.byId('minutesLayout')) {
-            var minutesLayout = new dijit.layout.BorderContainer({
-                design: 'sidebar',
-                id:     'minutesLayout'
-            }, dojo.doc.createElement('div'));
-        } else {
-            var minutesLayout = dijit.byId('minutesLayout');
-        }
+        var minutesLayout = new dijit.layout.BorderContainer({
+            design: 'sidebar'
+        }, dojo.doc.createElement('div'));
 
-        if (!dijit.byId('minutesGridBox')) {
-            var minutesGridBox = new dijit.layout.ContentPane({
-                region: 'center',
-                id:     'minutesGridBox'
-            }, dojo.doc.createElement('div'));
-        } else {
-            var minutesGridBox = dijit.byId('minutesGridBox');
-        }
+        this._minutesGridBox = new dijit.layout.ContentPane({
+            region: 'center'
+        }, dojo.doc.createElement('div'));
 
-        if (!dijit.byId('minutesDetailsRight')) {
-            var minutesDetailsRight = new dijit.layout.ContentPane({
-                region: 'right',
-                id:     'minutesDetailsRight',
-                style:  'width: 50%;'
-            }, dojo.doc.createElement('div'));
-        } else {
-            var minutesDetailsRight = dijit.byId('minutesDetailsRight');
-        }
+        this._minutesDetailsRight = new dijit.layout.ContentPane({
+            region: 'right',
+            style:  'width: 50%;'
+        }, dojo.doc.createElement('div'));
 
-        minutesLayout.addChild(minutesGridBox);
-        minutesLayout.addChild(minutesDetailsRight);
+        minutesLayout.addChild(this._minutesGridBox);
+        minutesLayout.addChild(this._minutesDetailsRight);
         minutesBox.attr("content", minutesLayout.domNode);
         dijit.byId('tabItems').attr('content', minutesBox.domNode);
     },
@@ -160,13 +144,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Render the datagrid after the rest of the form has been
         //    processed. Neccessary because the datagrid won't render
         //    unless dimensions of all surrounding elements are known.
-        var tabs = this.form;
-        dojo.connect(tabs, "selectChild", dojo.hitch(this, function(child) {
-            if (child.id == 'tabItems') {
-                this._itemGridUrl = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
-                phpr.DataStore.addStore({"url": this._itemGridUrl});
-                phpr.DataStore.requestData({"url": this._itemGridUrl, processData: dojo.hitch(this, "_buildGrid")});
-            }
+        dojo.connect(dijit.byId("tabItems"), "onShow", dojo.hitch(this, function() {
+            this._itemGridUrl = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
+            phpr.DataStore.addStore({"url": this._itemGridUrl});
+            phpr.DataStore.requestData({"url": this._itemGridUrl, processData: dojo.hitch(this, "_buildGrid")});
         }));
     },
 
@@ -263,7 +244,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             })});
         }));
 
-        dijit.byId('minutesGridBox').attr('content', grid.domNode);
+        this._minutesGridBox.attr('content', grid.domNode);
         grid.startup();
     },
 
@@ -403,7 +384,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             placeholders = dojo.mixin(placeholders, itemFormData);
 
             // Render the template
-            this.render(["phpr.Minutes.template", "minutesItemForm.html"], dojo.byId('minutesDetailsRight'),
+            this.render(["phpr.Minutes.template", "minutesItemForm.html"], this._minutesDetailsRight.domNode,
                 placeholders);
 
             // Connect save/delete events to buttons
