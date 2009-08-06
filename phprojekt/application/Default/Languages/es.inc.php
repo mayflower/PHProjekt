@@ -111,18 +111,18 @@ $lang["Open an empty form to add a new item"] = "Abrir un formulario vacío para
 
 // Messages
 $lang["There are no entries on this level"] = "No hay elementos en este nivel";
-$lang["You do not have access to edit this item"] = "No tiene permisos para editar este item";
-$lang["The Item was added correctly"] = "El item fue agregado correctamente";
-$lang["The Item was edited correctly"] = "El item fue editado correctamente";
+$lang["You do not have access to edit this item"] = "No tiene permisos para editar este ítem";
+$lang["The Item was added correctly"] = "El ítem fue agregado correctamente";
+$lang["The Item was edited correctly"] = "El ítem fue editado correctamente";
 $lang["The Items were edited correctly"] = "Los ítems fueron editados correctamente";
-$lang["The Item can't be deleted"] = "El item no puede ser borrado";
-$lang["The Item was deleted correctly"] = "El item fue borrado correctamente";
+$lang["The Item can't be deleted"] = "El ítem no puede ser borrado";
+$lang["The Item was deleted correctly"] = "El ítem fue borrado correctamente";
 $lang["Is a required field"] = "Es un campo requerido";
 $lang["Invalid format for date"] = "Formato de fecha inválida";
 $lang["Invalid Format"] = "Formato inválido";
 $lang["The Tags were added correctly"] = "Los tags fueron agregados correctamente";
 $lang["The Tags were deleted correctly"] = "Los tags fueron borrados correctamente";
-$lang["The Item was not found"] = "No se encontró el item";
+$lang["The Item was not found"] = "No se encontró el ítem";
 $lang["You do not have write access into the parent project"] = "No tiene permisos de escritura en el proyecto padre";
 
 $lang["You do not have access to add projects on the parent project"] = "No tiene permiso "
@@ -238,7 +238,7 @@ $lang["Send Notification"] = "Enviar notificación";
 
 // Notification email
 $lang["A "] = "Un ";
-$lang[" item has been "] = " item ha sido ";
+$lang[" item has been "] = " ítem ha sido ";
 $lang["modified"] = "modificado";
 $lang["created"] = "creado";
 $lang["Current data"] = "Datos actuales";
