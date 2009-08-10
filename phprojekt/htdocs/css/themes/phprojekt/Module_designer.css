@@ -84,6 +84,10 @@
      width: 100%;
 }
 
+.phprojekt #moduleDesignerContent .form .col1 {
+     width: 19%;
+}
+
 .phprojekt #moduleDesignerContent .form .col2 {
      text-align: left;
      width: 50%;
@@ -91,7 +95,21 @@
 
 .phprojekt #moduleDesignerContent .form .col3 {
      text-align: left;
-     width: 25%;
+     width: 31%;
+}
+
+.phprojekt #moduleDesignerContent #moduleDesignerEditor .form .col1 {
+     width: 35%;
+}
+
+.phprojekt #moduleDesignerContent #moduleDesignerEditor .form .col2 {
+     text-align: left;
+     width: 50%;
+}
+
+.phprojekt #moduleDesignerContent #moduleDesignerEditor .form .col3 {
+     text-align: left;
+     width: 15%;
 }
 
 .phprojekt #moduleDesignerContent .form td {

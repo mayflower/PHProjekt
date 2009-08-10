@@ -9,17 +9,43 @@
  dijit.form.ComboBox (partial)
  */
 
-.phprojekt .dijitInputField INPUT,
+.phprojekt input {
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif !important;
+}
+
+.phprojekt .dijitInputField input,
 .phprojekt .dijitTextBox {
-    margin: 0em 0.1em;
+    margin: 0em 0.2em;
     width: 300px;
+}
+.phprojekt .dijitDateTextBox input {
+    padding-top: 1px;
+    padding-left: 0em;
+}
+
+.phprojekt .dijitComboBox {
+    padding: 0;
+}
+.phprojekt .dijitComboBox .dijitInputField input {
+    margin-left: 0.3em !important;
+}
+
+.phprojekt .dijitTextBox,
+.phprojekt .dijitTextArea {
+    padding: 0 0.3em 0.1em 0.3em; !important;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 100%;
 }
 
 .phprojekt .dijitMultiSelect,
 .phprojekt .dijitComboBox,
 .phprojekt .dijitSpinner,
 .phprojekt .dijitSlider {
-    margin: 0em 0.1em;
+    margin: 0em 0.1em !important;
+    width: 307px;
+}
+
+.dj_ie7 .phprojekt .dijitComboBox{
     width: 308px;
 }
 
@@ -37,6 +63,7 @@
      */
     border: 1px solid #8ba0bd;
     line-height: normal;
+    font-size: 100%;
 }
 
 .phprojekt .dijitTextBoxDisabled,
@@ -115,4 +142,9 @@
 /* The highlight is shown in the ComboBox menu. */
 .phprojekt .dijitComboBoxHighlightMatch {
     background-color: #f9f7ba;
+}
+
+.phprojekt .dijitMenuItemSelected {
+	background-color: #d9e6f9;
+	color: #243C5F;
 }

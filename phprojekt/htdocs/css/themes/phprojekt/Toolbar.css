@@ -22,8 +22,15 @@ a:focus.dijitToolbar {
     margin: 0px;
 }
 
-.dj_ie .phprojekt .dijitToolbar {
+.dj_ie .phprojekt .dijitToolbar  {
     padding-bottom: 1px;
+}
+
+.phprojekt .dijitToolbar .dijitButtonText {
+    margin: 0 0 -1px 0 !important
+}
+.dj_ie .phprojekt .dijitToolbar .dijitButtonText {
+    margin: 1px 0 1px 3px !important;
 }
 
 .phprojekt .dijitToolbar .dijitButtonNode {

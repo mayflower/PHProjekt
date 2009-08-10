@@ -2,20 +2,13 @@
     margin: 0em 0.1em 0.1em;
 }
 
-.phprojekt .dijitTextBox,
 .phprojekt .dijitTextArea {
-    /*
-     For all except dijit.form.NumberSpinner:  the actual input element.
-     For TextBox, ComboBox, Spinner: the table that contains the input.
-     Otherwise the actual input element.
-     */
-    padding: 0 0.3em 0.1em 0.3em;
-    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    margin-left: 1px;
+    width: 310px;
 }
 
-.phprojekt .dijitTextArea{
-    width: 302px;
-    border: 1px solid #c0c0c0;
+.dj_ie7 .phprojekt .dijitTextArea {
+    width: 300px;
 }
 
 .phprojekt .dijitTextArea > div {
