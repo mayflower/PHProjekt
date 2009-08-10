@@ -37,6 +37,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _tagUrl:            null,
     _historyUrl:        null,
     _presetValues:      null,
+    _htmlEditorWidget:  null,
 
     constructor:function(main, id, module, params) {
         // Summary:
@@ -62,27 +63,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._initData.push({'store': this.tabStore});
         this.initData();
         this.getInitData();
-    },
-
-    openHtmlEditor:function(nodeId, value) {
-        // Summary:
-        //    Open a dialog for edit the HTML content
-        // Description:
-        //    Open a dialog for edit the HTML content
-        phpr.destroyWidget('editorFor_' + nodeId);
-        var editor = new dijit.Editor({
-            id:      'editorFor_' + nodeId,
-            plugins: ['undo', 'redo', '|',
-                      'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', 'removeFormat','|',
-                      'justifyCenter', 'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|',
-                      'insertOrderedList', 'insertUnorderedList', '|',
-                      'insertHorizontalRule', 'createLink', 'insertImage', '|',
-                      'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']
-        });
-
-        editor.setValue(value);
-        dijit.byId('dialogContentFor_' + nodeId).attr('content', editor);
-        dijit.byId('dialogFor_' + nodeId).show();
     },
 
     setUrl:function() {

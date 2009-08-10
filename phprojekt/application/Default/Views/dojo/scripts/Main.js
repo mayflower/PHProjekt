@@ -52,7 +52,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
         dojo.subscribe(module + ".showHelp", this, "showHelp");
-        dojo.subscribe(module + ".openHtmlEditor", this, "openHtmlEditor");
         dojo.subscribe(module + "._isGlobalModule", this, "_isGlobalModule");
         dojo.subscribe(module + ".processUrlHash", this, "processUrlHash");
         dojo.subscribe(module + ".processActionFromUrlHash", this, "processActionFromUrlHash");
@@ -121,7 +120,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         var moduleFunction = modules[i].moduleFunction || null;
                         var functionParams = modules[i].functionParams;
                         if (modules[i].rights.read) {
-                            if (moduleName == this.module && functionParams !="'Project', null, ['basicData']") {
+                            if (moduleName == this.module && functionParams != "'Project', null, ['basicData']") {
                                 usefirstModule = false;
                                 currentModule  = moduleName;
                             }
@@ -327,7 +326,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        var subModuleUrl      = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
+        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
             + phpr.currentProjectId;
         var self              = this;
         var createPermissions = false;
@@ -447,7 +446,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         globalModules[1001] = {id: "Admin", "name": "Administration"};
         for (i in globalModules) {
             if (dojo.byId("globalModule" + globalModules[i].id)) {
-                if (this.module == globalModules[i].name) {
+                if (phpr.module == globalModules[i].name || phpr.parentmodule == globalModules[i].name) {
                     dojo.addClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
                 } else {
                     dojo.removeClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
@@ -941,14 +940,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dijit.byId('helpContainer').attr("content", container);
         container.startup();
         dijit.byId('helpDialog').show();
-    },
-
-    openHtmlEditor:function(nodeId, value) {
-        // Summary:
-        //    Open a dialog for edit the HTML content
-        // Description:
-        //    Open a dialog for edit the HTML content
-        this.form.openHtmlEditor(nodeId, value);
     },
 
     addLogoTooltip:function() {
