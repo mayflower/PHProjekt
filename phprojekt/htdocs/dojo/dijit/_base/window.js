@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dijit._base.window"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._base.window"] = true;
 dojo.provide("dijit._base.window");
+
+// TODO: remove this in 2.0, it's not used anymore, or at least not internally
 
 dijit.getDocumentWindow = function(doc){
 	// summary:

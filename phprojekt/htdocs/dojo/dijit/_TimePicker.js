@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -18,15 +18,15 @@ dojo.declare(
 	[dojo.date.locale.__FormatOptions],
 	{
 		// clickableIncrement: String
-		//		see dijit._TimePicker.clickableIncrement
+		//		See `dijit._TimePicker.clickableIncrement`
 		clickableIncrement: "T00:15:00",
 
 		// visibleIncrement: String
-		//		see dijit._TimePicker.visibleIncrement
+		//		See `dijit._TimePicker.visibleIncrement`
 		visibleIncrement: "T01:00:00",
 
 		// visibleRange: String
-		//		see dijit._TimePicker.visibleRange
+		//		See `dijit._TimePicker.visibleRange`
 		visibleRange: "T05:00:00"
 	}
 );
@@ -41,6 +41,9 @@ dojo.declare("dijit._TimePicker",
 		//		as a standalone widget.
 
 		templateString:"<div id=\"widget_${id}\" class=\"dijitMenu ${baseClass}\"\r\n    ><div dojoAttachPoint=\"upArrow\" class=\"dijitButtonNode dijitUpArrowButton\" dojoAttachEvent=\"onmouseenter:_buttonMouse,onmouseleave:_buttonMouse\"\r\n\t\t><div class=\"dijitReset dijitInline dijitArrowButtonInner\" wairole=\"presentation\" role=\"presentation\">&nbsp;</div\r\n\t\t><div class=\"dijitArrowButtonChar\">&#9650;</div></div\r\n    ><div dojoAttachPoint=\"timeMenu,focusNode\" dojoAttachEvent=\"onclick:_onOptionSelected,onmouseover,onmouseout\"></div\r\n    ><div dojoAttachPoint=\"downArrow\" class=\"dijitButtonNode dijitDownArrowButton\" dojoAttachEvent=\"onmouseenter:_buttonMouse,onmouseleave:_buttonMouse\"\r\n\t\t><div class=\"dijitReset dijitInline dijitArrowButtonInner\" wairole=\"presentation\" role=\"presentation\">&nbsp;</div\r\n\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div></div\r\n></div>\r\n",
+
+		// baseClass: [protected] String
+		//		The root className to use for the various states of this widget
 		baseClass: "dijitTimePicker",
 
 		// clickableIncrement: String
@@ -84,9 +87,21 @@ dojo.declare("dijit._TimePicker",
 		_clickableIncrement:1,
 		_totalIncrements:10,
 
-		// constraints: dijit._TimePicker.__Constraints 
+		// constraints: dijit._TimePicker.__Constraints
+		//		Specifies valid range of times (start time, end time)
 		constraints:{},
 
+/*=====
+		serialize: function(val, options){
+			// summary:
+			//		User overridable function used to convert the attr('value') result to a String
+			// val: Date
+			//		The current value
+			// options: Object?
+			// tags:
+			//		protected
+		},
+=====*/
 		serialize: dojo.date.stamp.toISOString,
 		
 		// _filterString: string
@@ -94,6 +109,10 @@ dojo.declare("dijit._TimePicker",
 		_filterString: "",
 
 		setValue: function(/*Date*/ value){
+			// summary:
+			//		Deprecated.  Used attr('value') instead.
+			// tags:
+			//		deprecated
 			dojo.deprecated("dijit._TimePicker:setValue() is deprecated.  Use attr('value') instead.", "", "2.0");
 			this.attr('value', value);
 		},
@@ -103,12 +122,19 @@ dojo.declare("dijit._TimePicker",
 			// description:
 			//		Set the value of the TimePicker.
 			//		Redraws the TimePicker around the new date.
-
+			// tags:
+			//		protected
 			this.value = date;
 			this._showText();
 		},
 
 		onOpen: function(best){
+			// summary:
+			//		This is called by the popup manager when a TimeTextBox is displayed on the screen
+			// best:
+			//		Whether it is being displayed above or below the `dijit.form.TimeTextBox`
+			// tags:
+			//		protected
 			if(this._beenOpened && this.domNode.parentNode){
 				// We've been opened before - so set our filter to to the
 				// currently-displayed value (or empty string if it's already
@@ -127,18 +153,22 @@ dojo.declare("dijit._TimePicker",
 			this._beenOpened = true;
 		},
 
-		isDisabledDate: function(/*Date*/dateObject, /*String?*/locale){
+		isDisabledDate: function(/*Date*/ dateObject, /*String?*/ locale){
 			// summary:
-			//	May be overridden to disable certain dates in the TimePicker e.g. `isDisabledDate=dojo.date.locale.isWeekend`
+			//		May be overridden to disable certain dates in the TimePicker e.g. `isDisabledDate=dojo.date.locale.isWeekend`
+			// type:
+			//		extension
 			return false; // Boolean
 		},
 
-		_getFilteredNodes: function(/*number*/start, /*number*/maxNum, /*Boolean*/before){
+		_getFilteredNodes: function(/*number*/ start, /*number*/ maxNum, /*Boolean*/ before){
 			// summary:
-			//  Returns an array of nodes with the filter applied.  At most maxNum nodes
-			//  will be returned - but fewer may be returned as well.  If the
-			//  before parameter is set to true, then it will return the elements
-			//  before the given index
+			//		Returns an array of nodes with the filter applied.  At most maxNum nodes
+			//		will be returned - but fewer may be returned as well.  If the
+			//		before parameter is set to true, then it will return the elements
+			//		before the given index
+			// tags:
+			//		private
 			var nodes = [], n, i = start, max = this._maxIncrement + Math.abs(i),
 				chk = before?-1:1, dec = before?1:0, inc = before?0:1;
 			do{
@@ -151,7 +181,11 @@ dojo.declare("dijit._TimePicker",
 			return nodes; 
 		},
 
-		_showText:function(){
+		_showText: function(){
+			// summary:
+			//		Displays the relevant choices in the drop down list
+			// tags:
+			//		private
 			this.timeMenu.innerHTML = "";
 			var fromIso = dojo.date.stamp.fromISOString;
 			this._clickableIncrementDate=fromIso(this.clickableIncrement);
@@ -199,7 +233,7 @@ dojo.declare("dijit._TimePicker",
 			// dijit.focus(this.timeMenu);
 		},
 
-		postCreate:function(){
+		postCreate: function(){
 			// instantiate constraints
 			if(this.constraints===dijit._TimePicker.prototype.constraints){
 				this.constraints={};
@@ -221,8 +255,8 @@ dojo.declare("dijit._TimePicker",
 					dijit.typematic.addMouseListener.apply(null, arguments)
 				);
 			};
-			typematic(this.upArrow,this,this._onArrowUp, 0.8, 500);
-			typematic(this.downArrow,this,this._onArrowDown, 0.8, 500);
+			typematic(this.upArrow,this,this._onArrowUp, 1.0, 50);
+			typematic(this.downArrow,this,this._onArrowDown, 1.0, 50);
 			
 			// Connect some callback functions to the hover event of the arrows
 			var triggerFx = function(cb){
@@ -234,7 +268,7 @@ dojo.declare("dijit._TimePicker",
 			var hoverFx = function(node, cb){
 				return function(e){
 					dojo.stopEvent(e);
-					dijit.typematic.trigger(e, this, node, triggerFx(cb), node, 0.85, 250);
+					dijit.typematic.trigger(e, this, node, triggerFx(cb), node, 1.0, 50);
 				};
 			};
 			this.connect(this.upArrow, "onmouseover", hoverFx(this.upArrow, this._onArrowUp));
@@ -243,12 +277,19 @@ dojo.declare("dijit._TimePicker",
 			this.inherited(arguments);
 		},
 
-		_buttonMouse:function(/*Event*/ e){
+		_buttonMouse: function(/*Event*/ e){
+			// summary:
+			//		Handler for mouse button presses
+			// tags:
+			//		private
 			dojo.toggleClass(e.currentTarget, "dijitButtonNodeHover", e.type == "mouseover");
 		},
 		
-		_createOption:function(/*Number*/ index){
-			// summary: creates a clickable time option
+		_createOption: function(/*Number*/ index){
+			// summary:
+			//		Creates a clickable time option
+			// tags:
+			//		private
 			var date = new Date(this._refDate);
 			var incrementDate = this._clickableIncrementDate;
 			date.setHours(date.getHours() + incrementDate.getHours() * index,
@@ -260,14 +301,13 @@ dojo.declare("dijit._TimePicker",
 				return null;
 			}
 
-			var div = dojo.doc.createElement("div");
+			var div = dojo.create("div", {"class": this.baseClass+"Item"});
 			div.date = date;
 			div.index = index;
-			var innerDiv = dojo.doc.createElement('div');
-			dojo.addClass(div,this.baseClass+"Item");
-			dojo.addClass(innerDiv,this.baseClass+"ItemInner");
-			innerDiv.innerHTML = dateString;
-			div.appendChild(innerDiv);
+			dojo.create('div',{
+				"class": this.baseClass + "ItemInner",
+				innerHTML: dateString
+			}, div);
 
 			if(index%this._visibleIncrement<1 && index%this._visibleIncrement>-1){
 				dojo.addClass(div, this.baseClass+"Marker");
@@ -291,7 +331,11 @@ dojo.declare("dijit._TimePicker",
 			return div;
 		},
 
-		_onOptionSelected:function(/*Object*/ tgt){
+		_onOptionSelected: function(/*Object*/ tgt){
+			// summary:
+			//		Called when user clicks an option in the drop down list
+			// tags:
+			//		private
 			var tdate = tgt.target.date || tgt.target.parentNode.date;			
 			if(!tdate || this.isDisabledDate(tdate)){ return; }
 			this._highlighted_option = null;
@@ -299,11 +343,22 @@ dojo.declare("dijit._TimePicker",
 			this.onValueSelected(tdate);
 		},
 
-		onValueSelected:function(value){
+		onValueSelected: function(/*Date*/ time){
+			// summary:
+			//		Notification that a time was selected.  It may be the same as the previous value.
+			// description:
+			//      Used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.TimeTextBox`)
+			//      to get notification when the user has clicked a time.
+			// tags:
+			//      protected
 		},
 
 
-		_highlightOption: function(/*node*/node, /*Boolean*/ highlight){
+		_highlightOption: function(/*node*/ node, /*Boolean*/ highlight){
+			// summary:
+			//		Turns on/off hover effect on a node based on mouse out/over event
+			// tags:
+			//		private
 			if(!node){return;}
 			if(highlight){
 				if(this._highlighted_option){
@@ -323,28 +378,46 @@ dojo.declare("dijit._TimePicker",
 			}
 		},
 		
-		onmouseover:function(/*Event*/ e){
+		onmouseover: function(/*Event*/ e){
+			// summary:
+			//		Handler for onmouseover event
+			// tags:
+			//		private
 			var tgr = (e.target.parentNode === this.timeMenu) ? e.target : e.target.parentNode;			
 			// if we aren't targeting an item, then we return
 			if(!dojo.hasClass(tgr, this.baseClass+"Item")){return;}
 			this._highlightOption(tgr, true);
 		},
 
-		onmouseout:function(/*Event*/ e){
+		onmouseout: function(/*Event*/ e){
+			// summary:
+			//		Handler for onmouseout event
+			// tags:
+			//		private
 			var tgr = (e.target.parentNode === this.timeMenu) ? e.target : e.target.parentNode;
 			this._highlightOption(tgr, false);
 		},
 
-		_mouseWheeled:function(/*Event*/e){
-			// summary: handle the mouse wheel listener
+		_mouseWheeled: function(/*Event*/ e){
+			// summary:
+			//		Handle the mouse wheel events
+			// tags:
+			//		private
 			dojo.stopEvent(e);
 			// we're not _measuring_ the scroll amount, just direction
 			var scrollAmount = (dojo.isIE ? e.wheelDelta : -e.detail);
 			this[(scrollAmount>0 ? "_onArrowUp" : "_onArrowDown")](); // yes, we're making a new dom node every time you mousewheel, or click
 		},
 
-		_onArrowUp:function(){
-			// summary: remove the bottom time and add one to the top
+		_onArrowUp: function(count){
+			// summary:
+			//		Handler for up arrow key.
+			// description:
+			//		Removes the bottom time and add one to the top
+			// tags:
+			//		private
+			if(typeof count == "number" && count == -1){ return; } // typematic end
+			if(!this.timeMenu.childNodes.length){ return; }
 			var index = this.timeMenu.childNodes[0].index;
 			var divs = this._getFilteredNodes(index, 1, true);
 			if(divs.length){
@@ -353,8 +426,15 @@ dojo.declare("dijit._TimePicker",
 			}
 		},
 
-		_onArrowDown:function(){
-			// summary: remove the top time and add one to the bottom
+		_onArrowDown: function(count){
+			// summary:
+			//		Handler for up arrow key.
+			// description:
+			//		Remove the top time and add one to the bottom
+			// tags:
+			//		private
+			if(typeof count == "number" && count == -1){ return; } // typematic end
+			if(!this.timeMenu.childNodes.length){ return; }
 			var index = this.timeMenu.childNodes[this.timeMenu.childNodes.length - 1].index + 1;
 			var divs = this._getFilteredNodes(index, 1, false);
 			if(divs.length){
@@ -363,7 +443,12 @@ dojo.declare("dijit._TimePicker",
 			}
 		},
 
-		handleKey:function(/*Event*/e){
+		handleKey: function(/*Event*/ e){
+			// summary:
+			//		Called from `dijit.form._DateTimeTextBox` to pass a keypress event
+			//		from the `dijit.form.TimeTextBox` to be handled in this widget
+			// tags:
+			//		protected
 			var dk = dojo.keys;
 			if(e.keyChar || e.charOrCode === dk.BACKSPACE || e.charOrCode == dk.DELETE){
 				// Set a timeout to kick off our filter

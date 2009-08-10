@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -24,17 +24,29 @@ dojo.declare(
 	dijit.form._DateTimeTextBox,
 	{
 		// summary:
-		//		A validating, serializable, range-bound time text box with a popup time picker
+		//		A validating, serializable, range-bound time text box with a drop down time picker
 
 		baseClass: "dijitTextBox dijitTimeTextBox",
 		popupClass: "dijit._TimePicker",
-		_selector: "time"
+		_selector: "time",
 
 /*=====
-		,
-		// constraints: dijit.form.TimeTextBox.__Constraints 
-		constraints:{}
+		// constraints: dijit.form.TimeTextBox.__Constraints
+		constraints:{},
 =====*/
+
+		//	value: Date
+		//		The value of this widget as a JavaScript Date object, with only hours/minutes/seconds specified.
+		//
+		//		Example:
+		// |	new dijit.form.TimeTextBox({value: dojo.date.local.fromISOString("T:12:59:59")})
+		//
+		//		When passed to the parser in markup, must be specified according to locale-independent
+		//		`dojo.date.stamp.fromISOString` format.
+		//
+		//		Example:
+		// |	<input dojotype='dijit.form.TimeTextBox' value='T12:34:00'>
+		value: new Date("")		// value.toString()="NaN"
 	}
 );
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -16,17 +16,29 @@ dojo.declare(
 	dijit._Widget,
 	{
 		// summary:
-		//		The Declaration widget allows a user to declare new widget
+		//		The Declaration widget allows a developer to declare new widget
 		//		classes directly from a snippet of markup.
 
+		// _noScript: [private] Boolean
+		//		Flag to parser to leave alone the script tags contained inside of me
 		_noScript: true,
+
+		// widgetClass: String
+		//		Name of class being declared, ex: "acme.myWidget"
 		widgetClass: "",
-		replaceVars: true,
+
+		// propList: Object
+		//		Set of attributes for this widget along with default values, ex:
+		//		{delay: 100, title: "hello world"}
 		defaults: null,
+
+		// mixins: String[]
+		//		List containing the prototype for this widget, and also any mixins,
+		//		ex: ["dijit._Widget", "dijit._Container"]
 		mixins: [],
+
 		buildRendering: function(){
 			var src = this.srcNodeRef.parentNode.removeChild(this.srcNodeRef),
-				preambles = dojo.query("> script[type='dojo/method'][event='preamble']", src).orphan(),
 				methods = dojo.query("> script[type^='dojo/method'][event]", src).orphan(),
 				postscriptConnects = dojo.query("> script[type^='dojo/method']", src).orphan(),
 				regularConnects = dojo.query("> script[type^='dojo/connect']", src).orphan(),

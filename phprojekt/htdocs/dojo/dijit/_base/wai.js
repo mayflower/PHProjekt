@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,15 +20,17 @@ dijit.wai = {
 		// DO NOT USE "this" within this function.
 
 		// create div for testing if high contrast mode is on or images are turned off
-		var div = dojo.doc.createElement("div");
-		div.id = "a11yTestNode";
-		div.style.cssText = 'border: 1px solid;'
-			+ 'border-color:red green;'
-			+ 'position: absolute;'
-			+ 'height: 5px;'
-			+ 'top: -999px;'
-			+ 'background-image: url("' + (dojo.config.blankGif || dojo.moduleUrl("dojo", "resources/blank.gif")) + '");';
-		dojo.body().appendChild(div);
+		var div = dojo.create("div",{
+			id: "a11yTestNode",
+			style:{
+				cssText:'border: 1px solid;'
+					+ 'border-color:red green;'
+					+ 'position: absolute;'
+					+ 'height: 5px;'
+					+ 'top: -999px;'
+					+ 'background-image: url("' + (dojo.config.blankGif || dojo.moduleUrl("dojo", "resources/blank.gif")) + '");'
+			}
+		}, dojo.body());
 
 		// test it
 		var cs = dojo.getComputedStyle(div);
@@ -56,20 +58,19 @@ dojo.mixin(dijit,
 	_XhtmlRoles: /banner|contentinfo|definition|main|navigation|search|note|secondary|seealso/,
 
 	hasWaiRole: function(/*Element*/ elem, /*String*/ role){
-		// summary: Determines if an element has a particular non-XHTML role.
-		// returns: true if elem has the specific non-XHTML role attribute and false if not.
-		// 		for backwards compatibility if role parameter not provided, 
+		// summary:
+		//		Determines if an element has a particular non-XHTML role.
+		// returns:
+		//		True if elem has the specific non-XHTML role attribute and false if not.
+		// 		For backwards compatibility if role parameter not provided, 
 		// 		returns true if has non XHTML role 
 		var waiRole = this.getWaiRole(elem);		
-		if (role){
-			return (waiRole.indexOf(role) > -1);
-		}else{
-			return (waiRole.length >0);
-		}
+		return role ? (waiRole.indexOf(role) > -1) : (waiRole.length > 0);
 	},
 
 	getWaiRole: function(/*Element*/ elem){
-		// summary: Gets the non-XHTML role for an element (which should be a wai role).
+		// summary:
+		//		Gets the non-XHTML role for an element (which should be a wai role).
 		// returns:
 		//		The non-XHTML role of elem or an empty string if elem
 		//		does not have a role.
@@ -77,18 +78,19 @@ dojo.mixin(dijit,
 	},
 
 	setWaiRole: function(/*Element*/ elem, /*String*/ role){
-		// summary: Sets the role on an element.
+		// summary:
+		//		Sets the role on an element.
 		// description:
-		//  	in other than FF2 replace existing role attribute with new role
+		//		In other than FF2 replace existing role attribute with new role.
 		//		FF3 supports XHTML and ARIA roles so    
-		//		If elem already has an XHTML role, append this role to XHTML role 
-		//		and remove other ARIA roles
+		//		if elem already has an XHTML role, append this role to XHTML role 
+		//		and remove other ARIA roles.
 		//		On Firefox 2 and below, "wairole:" is
 		//		prepended to the provided role value.
 
-		var curRole = (theRole = dojo.attr(elem, "role")) ? theRole : "";
-		if (dojo.isFF<3 || !this._XhtmlRoles.test(curRole)){
-			dojo.attr(elem, "role", dojo.isFF<3 ? "wairole:" + role : role);
+		var curRole = dojo.attr(elem, "role") || "";
+		if(dojo.isFF < 3 || !this._XhtmlRoles.test(curRole)){
+			dojo.attr(elem, "role", dojo.isFF < 3 ? "wairole:" + role : role);
 		}else{
 			if((" "+ curRole +" ").indexOf(" " + role + " ") < 0){
 				var clearXhtml = dojo.trim(curRole.replace(this._XhtmlRoles, ""));
@@ -99,11 +101,12 @@ dojo.mixin(dijit,
 	},
 
 	removeWaiRole: function(/*Element*/ elem, /*String*/ role){
-		// summary: Removes the specified non-XHTML role from an element.
-		// 		removes role attribute if no specific role provided (for backwards compat.)
-		
+		// summary:
+		//		Removes the specified non-XHTML role from an element.
+		// 		Removes role attribute if no specific role provided (for backwards compat.)
+
 		var roleValue = dojo.attr(elem, "role"); 
-		if (!roleValue){ return; }
+		if(!roleValue){ return; }
 		if(role){
 			var searchRole = dojo.isFF < 3 ? "wairole:" + role : role;
 			var t = dojo.trim((" " + roleValue + " ").replace(" " + searchRole + " ", " "));
@@ -114,7 +117,8 @@ dojo.mixin(dijit,
 	},
 
 	hasWaiState: function(/*Element*/ elem, /*String*/ state){
-		// summary: Determines if an element has a given state.
+		// summary:
+		//		Determines if an element has a given state.
 		// description:
 		//		On Firefox 2 and below, we check for an attribute in namespace
 		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
@@ -125,13 +129,13 @@ dojo.mixin(dijit,
 		//		false if it does not.
 		if(dojo.isFF < 3){
 			return elem.hasAttributeNS("http://www.w3.org/2005/07/aaa", state);
-		}else{
-			return elem.hasAttribute ? elem.hasAttribute("aria-"+state) : !!elem.getAttribute("aria-"+state);
 		}
+		return elem.hasAttribute ? elem.hasAttribute("aria-"+state) : !!elem.getAttribute("aria-"+state);
 	},
 
 	getWaiState: function(/*Element*/ elem, /*String*/ state){
-		// summary: Gets the value of a state on an element.
+		// summary:
+		//		Gets the value of a state on an element.
 		// description:
 		//		On Firefox 2 and below, we check for an attribute in namespace
 		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
@@ -142,14 +146,13 @@ dojo.mixin(dijit,
 		//		or an empty string if elem has no value for state.
 		if(dojo.isFF < 3){
 			return elem.getAttributeNS("http://www.w3.org/2005/07/aaa", state);
-		}else{
-			var value = elem.getAttribute("aria-"+state);
-			return value ? value : "";
 		}
+		return elem.getAttribute("aria-"+state) || "";
 	},
 
 	setWaiState: function(/*Element*/ elem, /*String*/ state, /*String*/ value){
-		// summary: Sets a state on an element.
+		// summary:
+		//		Sets a state on an element.
 		// description:
 		//		On Firefox 2 and below, we set an attribute in namespace
 		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
@@ -164,7 +167,8 @@ dojo.mixin(dijit,
 	},
 
 	removeWaiState: function(/*Element*/ elem, /*String*/ state){
-		// summary: Removes a state from an element.
+		// summary:
+		//		Removes a state from an element.
 		// description:
 		//		On Firefox 2 and below, we remove the attribute in namespace
 		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.

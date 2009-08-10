@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,7 +17,7 @@ var __updateDocument = doh.robot._updateDocument;
 dojo.mixin(doh.robot,{
 	_updateDocument: function(){
 		__updateDocument();
-		var win = (dojo.doc.parentWindow || dojo.doc.defaultView);
+		var win = dojo.global;
 		if(win["dijit"]){
 			dijit.registry = win.dijit.registry;
 		}

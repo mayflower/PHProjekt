@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,13 +11,31 @@ dojo.provide("dijit._base.manager");
 
 dojo.declare("dijit.WidgetSet", null, {
 	// summary:
-	//	A set of widgets indexed by id
-
+	//		A set of widgets indexed by id. A default instance of this class is 
+	//		available as `dijit.registry`
+	//
+	// example:
+	//		Create a small list of widgets:
+	//		|	var ws = new dijit.WidgetSet();
+	//		|	ws.add(dijit.byId("one"));
+	//		| 	ws.add(dijit.byId("two"));
+	//		|	// destroy both:
+	//		|	ws.forEach(function(w){ w.destroy(); });
+	//
+	// example:
+	//		Using dijit.registry:
+	//		|	dijit.registry.forEach(function(w){ /* do something */ });
+	
 	constructor: function(){
-		this._hash={};
+		this._hash = {};
 	},
 
 	add: function(/*Widget*/ widget){
+		// summary:
+		//		Add a widget to this list. If a duplicate ID is detected, a error is thrown.
+		//
+		// widget: dijit._Widget
+		//		Any dijit._Widget subclass.
 		if(this._hash[widget.id]){
 			throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
 		}
@@ -25,36 +43,81 @@ dojo.declare("dijit.WidgetSet", null, {
 	},
 
 	remove: function(/*String*/ id){
+		// summary:
+		//		Remove a widget from this WidgetSet. Does not destroy the widget; simply
+		//		removes the reference.
 		delete this._hash[id];
 	},
 
 	forEach: function(/*Function*/ func){
+		// summary:
+		//		Call specified function for each widget in this set.
+		//
+		// func:
+		//		A callback function to run for each item. Is passed a the widget.
+		//
+		// example:
+		//		Using the default `dijit.registry` instance:
+		//		|	dijit.registry.forEach(function(widget){
+		//		|		console.log(widget.declaredClass);	
+		//		|	});
 		for(var id in this._hash){
 			func(this._hash[id]);
 		}
 	},
 
 	filter: function(/*Function*/ filter){
+		// summary:
+		//		Filter down this WidgetSet to a smaller new WidgetSet
+		//		Works the same as `dojo.filter` and `dojo.NodeList.filter`
+		//		
+		// filter:
+		//		Callback function to test truthiness.
+		//
+		// example:
+		//		Arbitrary: select the odd widgets in this list
+		//		|	var i = 0;
+		//		|	dijit.registry.filter(function(w){
+		//		|		return ++i % 2 == 0;
+		//		|	}).forEach(function(w){ /* odd ones */ });
+
 		var res = new dijit.WidgetSet();
 		this.forEach(function(widget){
 			if(filter(widget)){ res.add(widget); }
 		});
-		return res;		// dijit.WidgetSet
+		return res; // dijit.WidgetSet
 	},
 
 	byId: function(/*String*/ id){
-		return this._hash[id];
+		// summary:
+		//		Find a widget in this list by it's id. 
+		// example:
+		//		Test if an id is in a particular WidgetSet
+		//		| var ws = new dijit.WidgetSet();
+		//		| ws.add(dijit.byId("bar"));
+		//		| var t = ws.byId("bar") // returns a widget
+		//		| var x = ws.byId("foo"); // returns undefined
+		
+		return this._hash[id];	// dijit._Widget
 	},
 
 	byClass: function(/*String*/ cls){
+		// summary:
+		//		Reduce this widgetset to a new WidgetSet of a particular declaredClass
+		// 
+		// example:
+		//		Find all titlePane's in a page:
+		//		|	dijit.registry.byClass("dijit.TitlePane").forEach(function(tp){ tp.close(); });
+		
 		return this.filter(function(widget){ return widget.declaredClass==cls; });	// dijit.WidgetSet
 	}
-	});
+	
+});
 
 /*=====
 dijit.registry = {
 	// summary: A list of widgets on a page.
-	// description: Is an instance of dijit.WidgetSet
+	// description: Is an instance of `dijit.WidgetSet`
 };
 =====*/
 dijit.registry = new dijit.WidgetSet();
@@ -62,8 +125,7 @@ dijit.registry = new dijit.WidgetSet();
 dijit._widgetTypeCtr = {};
 
 dijit.getUniqueId = function(/*String*/widgetType){
-	// summary
-	//	Generates a unique id for a given widgetType
+	// summary: Generates a unique id for a given widgetType
 
 	var id;
 	do{
@@ -74,31 +136,61 @@ dijit.getUniqueId = function(/*String*/widgetType){
 	return id; // String
 };
 
+dijit.findWidgets = function(/*DomNode*/ root){
+	// summary:
+	//		Search subtree under root, putting found widgets in outAry.
+	//		Doesn't search for nested widgets (ie, widgets inside other widgets)
+	
+	var outAry = [];
+
+	function getChildrenHelper(root){
+		var list = dojo.isIE ? root.children : root.childNodes, i = 0, node;
+		while(node = list[i++]){
+			if(node.nodeType != 1){ continue; }
+			var widgetId = node.getAttribute("widgetId");
+			if(widgetId){
+				var widget = dijit.byId(widgetId);
+				outAry.push(widget);
+			}else{
+				getChildrenHelper(node);
+			}
+		}
+	}
+
+	getChildrenHelper(root);
+	return outAry;
+};
 
 if(dojo.isIE){
 	// Only run this for IE because we think it's only necessary in that case,
 	// and because it causes problems on FF.  See bug #3531 for details.
 	dojo.addOnWindowUnload(function(){
-		dijit.registry.forEach(function(widget){ widget.destroy(); });
+		dojo.forEach(dijit.findWidgets(dojo.body()), function(widget){
+			if(widget.destroyRecursive){
+				widget.destroyRecursive();
+			}else if(widget.destroy){
+				widget.destroy();
+			}
+		});
 	});
 }
 
 dijit.byId = function(/*String|Widget*/id){
 	// summary:
-	//		Returns a widget by its id, or if passed a widget, no-op (like dojo.byId())
+	//		Returns a widget by it's id, or if passed a widget, no-op (like dojo.byId())
 	return (dojo.isString(id)) ? dijit.registry.byId(id) : id; // Widget
 };
 
 dijit.byNode = function(/* DOMNode */ node){
 	// summary:
-	//		Returns the widget as referenced by node
+	//		Returns the widget corresponding to the given DOMNode
 	return dijit.registry.byId(node.getAttribute("widgetId")); // Widget
 };
 
 dijit.getEnclosingWidget = function(/* DOMNode */ node){
 	// summary:
-	//		Returns the widget whose dom tree contains node or null if
-	//		the node is not contained within the dom tree of any widget
+	//		Returns the widget whose DOM tree contains the specified DOMNode, or null if
+	//		the node is not contained within the DOM tree of any widget
 	while(node){
 		if(node.getAttribute && node.getAttribute("widgetId")){
 			return dijit.registry.byId(node.getAttribute("widgetId"));
@@ -147,6 +239,9 @@ dijit.isTabNavigable = function(/*Element*/elem){
 
 dijit._getTabNavigable = function(/*DOMNode*/root){
 	// summary:
+	//		Finds descendants of the specified root node.
+	//
+	// description:
 	//		Finds the following descendants of the specified root node:
 	//		* the first tab-navigable element in document order
 	//		  without a tabindex or with tabindex="0"
@@ -187,7 +282,7 @@ dijit.getFirstInTabbingOrder = function(/*String|DOMNode*/root){
 	//		Finds the descendant of the specified root node
 	//		that is first in the tabbing order
 	var elems = dijit._getTabNavigable(dojo.byId(root));
-	return elems.lowest ? elems.lowest : elems.first; // Element
+	return elems.lowest ? elems.lowest : elems.first; // DomNode
 };
 
 dijit.getLastInTabbingOrder = function(/*String|DOMNode*/root){
@@ -195,11 +290,20 @@ dijit.getLastInTabbingOrder = function(/*String|DOMNode*/root){
 	//		Finds the descendant of the specified root node
 	//		that is last in the tabbing order
 	var elems = dijit._getTabNavigable(dojo.byId(root));
-	return elems.last ? elems.last : elems.highest; // Element
+	return elems.last ? elems.last : elems.highest; // DomNode
 };
 
-// dijit.defaultDuration
-//	Default duration for wipe and fade animations within dijits
+/*=====
+dojo.mixin(dijit, {
+	// defaultDuration: Integer
+	//		The default animation speed (in ms) to use for all Dijit
+	//		transitional animations, unless otherwise specified 
+	//		on a per-instance basis. Defaults to 200, overrided by 
+	//		`djConfig.defaultDuration`
+	defaultDuration: 300
+});
+=====*/
+
 dijit.defaultDuration = dojo.config["defaultDuration"] || 200;
 
 }

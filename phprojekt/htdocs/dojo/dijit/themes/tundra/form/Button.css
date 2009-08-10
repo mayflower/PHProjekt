@@ -65,14 +65,18 @@
 .tundra .dijitToggleButtonHover .dijitButtonNode,
 .tundra .dijitDropDownButtonHover .dijitButtonNode,
 .tundra .dijitComboButtonHover .dijitButtonContents,
-.tundra .dijitComboButtonDownArrowHover .dijitDownArrowButton,
-.tundra .dijitComboBoxHover .dijitDownArrowButton,
-.tundra .dijitSpinnerUpArrowHover .dijitUpArrowButton,
-.tundra .dijitSpinnerDownArrowHover .dijitDownArrowButton {
+.tundra .dijitComboButtonDownArrowHover .dijitDownArrowButton {
 	/* hover state - inner */
 	/* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
 	border-color:		#a5beda; 
 	border-bottom-color:#5c7590; 
+	color:#243C5F;
+	background:#fcfdff url("../images/buttonHover.png") repeat-x bottom;
+}
+.tundra .dijitComboBoxHover .dijitDownArrowButton,
+.tundra .dijitSpinnerUpArrowHover .dijitUpArrowButton,
+.tundra .dijitSpinnerDownArrowHover .dijitDownArrowButton {
+	/* same as above except don't adjust border color (it's controlled by the containing Spinner/ComboBox) */
 	color:#243C5F;
 	background:#fcfdff url("../images/buttonHover.png") repeat-x bottom;
 }
@@ -84,9 +88,10 @@
 .tundra .dijitDropDownButtonActive .dijitButtonNode,
 .tundra .dijitComboButtonActive .dijitButtonContents,
 .tundra .dijitDownArrowActive .dijitDownArrowButton,
-.tundra .dijitComboBoxActive .dijitDownArrowButton {
+.tundra .dijitComboBoxActive .dijitDownArrowButton,
+.tundra .dijitStackController .dijitToggleButtonChecked .dijitButtonNode {
 	/* active state - inner (for when you are pressing a normal button, or
-	 * when a toggle button is in a depressed state
+	 * when a radio-type button is in a depressed state
 	 */
 	border-color:#366dba;
 	background: #ededed url("../images/buttonActive.png") bottom repeat-x;

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -18,11 +18,13 @@ dojo.declare(
 	"dijit.TitlePane",
 	[dijit.layout.ContentPane, dijit._Templated],
 {
-	// summary: A pane with a title on top, that can be opened or collapsed.
+	// summary:
+	//		A pane with a title on top, that can be expanded or collapsed.
 	//
-	// description: An accessible container with a Title Heading, and a content
-	//	section that slides open and closed. TitlePane is an extension to 
-	//	ContentPane, providing all the usesful content-control aspects from.
+	// description:
+	//		An accessible container with a Title Heading, and a content
+	//		section that slides open and closed. TitlePane is an extension to 
+	//		`dijit.layout.ContentPane`, providing all the usesful content-control aspects from it.
 	//
 	// example:
 	// | 	// load a TitlePane from remote file:
@@ -51,14 +53,14 @@ dojo.declare(
 	//		Time in milliseconds to fade in/fade out
 	duration: dijit.defaultDuration,
 
-	// baseClass: String
-	//	The root className to use for the various states of this widget
+	// baseClass: [protected] String
+	//		The root className to use for the various states of this widget
 	baseClass: "dijitTitlePane",
 
-	templateString:"<div class=\"${baseClass}\">\r\n\t<div dojoAttachEvent=\"onclick:toggle,onkeypress: _onTitleKey,onfocus:_handleFocus,onblur:_handleFocus\" tabindex=\"0\"\r\n\t\t\twaiRole=\"button\" class=\"dijitTitlePaneTitle\" dojoAttachPoint=\"titleBarNode,focusNode\">\r\n\t\t<img src=\"${_blankGif}\" alt=\"\" dojoAttachPoint=\"arrowNode\" class=\"dijitArrowNode\" waiRole=\"presentation\"\r\n\t\t><span dojoAttachPoint=\"arrowNodeInner\" class=\"dijitArrowNodeInner\"></span\r\n\t\t><span dojoAttachPoint=\"titleNode\" class=\"dijitTitlePaneTextNode\"></span>\r\n\t</div>\r\n\t<div class=\"dijitTitlePaneContentOuter\" dojoAttachPoint=\"hideNode\">\r\n\t\t<div class=\"dijitReset\" dojoAttachPoint=\"wipeNode\">\r\n\t\t\t<div class=\"dijitTitlePaneContentInner\" dojoAttachPoint=\"containerNode\" waiRole=\"region\" tabindex=\"-1\">\r\n\t\t\t\t<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n",
+	templateString:"<div class=\"${baseClass}\">\r\n\t<div dojoAttachEvent=\"onclick:toggle, onkeypress:_onTitleKey, onfocus:_handleFocus, onblur:_handleFocus, onmouseenter:_onTitleEnter, onmouseleave:_onTitleLeave\" tabindex=\"0\"\r\n\t\t\twaiRole=\"button\" class=\"dijitTitlePaneTitle\" dojoAttachPoint=\"titleBarNode,focusNode\">\r\n\t\t<img src=\"${_blankGif}\" alt=\"\" dojoAttachPoint=\"arrowNode\" class=\"dijitArrowNode\" waiRole=\"presentation\"\r\n\t\t><span dojoAttachPoint=\"arrowNodeInner\" class=\"dijitArrowNodeInner\"></span\r\n\t\t><span dojoAttachPoint=\"titleNode\" class=\"dijitTitlePaneTextNode\"></span>\r\n\t</div>\r\n\t<div class=\"dijitTitlePaneContentOuter\" dojoAttachPoint=\"hideNode\">\r\n\t\t<div class=\"dijitReset\" dojoAttachPoint=\"wipeNode\">\r\n\t\t\t<div class=\"dijitTitlePaneContentInner\" dojoAttachPoint=\"containerNode\" waiRole=\"region\" tabindex=\"-1\">\r\n\t\t\t\t<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n",
 
-	attributeMap: dojo.mixin(dojo.clone(dijit.layout.ContentPane.prototype.attributeMap), {
-		title: {node: "titleNode", type: "innerHTML" }
+	attributeMap: dojo.delegate(dijit.layout.ContentPane.prototype.attributeMap, {
+		title: { node: "titleNode", type: "innerHTML" }
 	}),
 
 	postCreate: function(){
@@ -100,7 +102,7 @@ dojo.declare(
 	_setContentAttr: function(content){
 		// summary:
 		//		Hook to make attr("content", ...) work.
-		// 		Typically called when an href is loaded.  Our job is to make the animation smooth
+		// 		Typically called when an href is loaded.  Our job is to make the animation smooth.
 
 		if(!this.open || !this._wipeOut || this._wipeOut.status() == "playing"){
 			// we are currently *closing* the pane (or the pane is closed), so just let that continue
@@ -126,7 +128,11 @@ dojo.declare(
 	},
 
 	toggle: function(){
-		// summary: switches between opened and closed state
+		// summary:
+		//		Switches between opened and closed state
+		// tags:
+		//		private
+
 		dojo.forEach([this._wipeIn, this._wipeOut], function(animation){
 			if(animation && animation.status() == "playing"){
 				animation.stop();
@@ -137,19 +143,23 @@ dojo.declare(
 		if(anim){
 			anim.play();
 		}else{
-			this._hideNode.style.display = this.open ? "" : "none";
+			this.hideNode.style.display = this.open ? "" : "none";
 		}
 		this.open =! this.open;
 
 		// load content (if this is the first time we are opening the TitlePane
 		// and content is specified as an href, or href was set when hidden)
-		this._loadCheck();
+		this._onShow();
 
 		this._setCss();
 	},
 
 	_setCss: function(){
-		// summary: set the open/close css state for the TitlePane
+		// summary:
+		//		Set the open/close css state for the TitlePane
+		// tags:
+		//		private
+
 		var classes = ["dijitClosed", "dijitOpen"];
 		var boolIndex = this.open;
 		var node = this.titleBarNode || this.focusNode;
@@ -161,7 +171,11 @@ dojo.declare(
 	},
 
 	_onTitleKey: function(/*Event*/ e){
-		// summary: callback when user hits a key
+		// summary:
+		//		Handler for when user hits a key
+		// tags:
+		//		private
+
 		if(e.charOrCode == dojo.keys.ENTER || e.charOrCode == ' '){
 			this.toggle();
 		}else if(e.charOrCode == dojo.keys.DOWN_ARROW && this.open){
@@ -170,15 +184,37 @@ dojo.declare(
 	 	}
 	},
 	
+	_onTitleEnter: function(){
+		// summary:
+		//		Handler for when someone hovers over my title
+		// tags:
+		//		private
+		dojo.addClass(this.focusNode, "dijitTitlePaneTitle-hover");
+	},
+
+	_onTitleLeave: function(){
+		// summary:
+		//		Handler when someone stops hovering over my title
+		// tags:
+		//		private
+		dojo.removeClass(this.focusNode, "dijitTitlePaneTitle-hover");
+	},
+
 	_handleFocus: function(/*Event*/ e){
-		// summary: handle blur and focus for this widget
+		// summary:
+		//		Handle blur and focus for this widget
+		// tags:
+		//		private
 		
 		// add/removeClass is safe to call without hasClass in this case
 		dojo[(e.type == "focus" ? "addClass" : "removeClass")](this.focusNode, this.baseClass + "Focused");
 	},
 
 	setTitle: function(/*String*/ title){
-		// summary: sets the text of the title
+		// summary:
+		//		Deprecated.  Use attr('title', ...) instead.
+		// tags:
+		//		deprecated
 		dojo.deprecated("dijit.TitlePane.setTitle() is deprecated.  Use attr('title', ...) instead.", "", "2.0");
 		this.titleNode.innerHTML = title;
 	}

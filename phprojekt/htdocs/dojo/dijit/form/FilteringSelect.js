@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,34 +15,42 @@ dojo.declare(
 	"dijit.form.FilteringSelect",
 	[dijit.form.MappedTextBox, dijit.form.ComboBoxMixin],
 	{
-		// summary
-		// An enhanced version of the HTML SELECT tag, populated dynamically
+		// summary:
+		//		An enhanced version of the HTML SELECT tag, populated dynamically
 		//
-		// description
-		// An enhanced version of the HTML SELECT tag, populated dynamically. It works
-		// very nicely with very large data sets because it can load and page data as needed.
-		// It also resembles ComboBox, but does not allow values outside of the provided ones.
-		//  
-		// Similar features:
-		//  - There is a drop down list of possible values.
-		//	- You can only enter a value from the drop down list.  (You can't
-		//	  enter an arbitrary value.)
-		//	- The value submitted with the form is the hidden value (ex: CA),
-		//	  not the displayed value a.k.a. label (ex: California)
+		// description:
+		//		An enhanced version of the HTML SELECT tag, populated dynamically. It works
+		//		very nicely with very large data sets because it can load and page data as needed.
+		//		It also resembles ComboBox, but does not allow values outside of the provided ones.
+		//		If OPTION tags are used as the data provider via markup, then the
+		//		OPTION tag's child text node is used as the displayed value when selected
+		//		while the OPTION tag's value attribute is used as the widget value on form submit.
+		//		To set the default value when using OPTION tags, specify the selected
+		//		attribute on 1 of the child OPTION tags.
+		//
+		//		Similar features:
+		//			- There is a drop down list of possible values.
+		//			- You can only enter a value from the drop down list.  (You can't
+		//				enter an arbitrary value.)
+		//			- The value submitted with the form is the hidden value (ex: CA),
+		//				not the displayed value a.k.a. label (ex: California)
 		// 
-		//	Enhancements over plain HTML version:
-		//	- If you type in some text then it will filter down the list of
-		//	  possible values in the drop down list.
-		//	- List can be specified either as a static list or via a javascript
-		//	  function (that can get the list from a server)
-		//
-		_isvalid:true,
+		//		Enhancements over plain HTML version:
+		//			- If you type in some text then it will filter down the list of
+		//				possible values in the drop down list.
+		//			- List can be specified either as a static list or via a javascript
+		//				function (that can get the list from a server)
 
-		required:true,
+		_isvalid: true,
+
+		// required: Boolean
+		//		True if user is required to enter a value into this field.
+		required: true,
 
 		_lastDisplayedValue: "",
 
-		isValid:function(){
+		isValid: function(){
+			// Overrides ValidationTextBox.isValid()
 			return this._isvalid || (!this.required && this.attr('displayedValue') == ""); // #5974
 		},
 
@@ -64,17 +72,19 @@ dojo.declare(
 				//#3268: do nothing on bad input
 				//this._setValue("", "");
 				//#3285: change CSS to indicate error
-				if(priorityChange || !this._focused){ this.valueNode.value=""; }
-				dijit.form.TextBox.superclass._setValueAttr.call(this, "", priorityChange || !this._focused);
-				this._isvalid=false;
+				this.valueNode.value = "";
+				dijit.form.TextBox.superclass._setValueAttr.call(this, "", priorityChange || (priorityChange===undefined && !this._focused));
+				this._isvalid = false;
 				this.validate(this._focused);
-				this.item=null;
+				this.item = null;
 			}else{
 				this._setValueFromItem(result[0], priorityChange);
 			}
 		},
 
 		_openResultList: function(/*Object*/ results, /*Object*/ dataObject){
+			// Overrides ComboBox._openResultList()
+
 			// #3285: tap into search callback to see if user's query resembles a match
 			if(dataObject.query[this.searchAttr] != this._lastQuery){
 				return;
@@ -94,14 +104,20 @@ dojo.declare(
 			return this.valueNode.value;
 		},
 
-		_getValueField:function(){
-			// used for option tag selects
+		_getValueField: function(){
+			// Overrides ComboBox._getValueField()
 			return "value";
 		},
 
 		_setValue: function(	/*String*/ value, 
 					/*String*/ displayedValue,
 					/*Boolean?*/ priorityChange){
+			// summary:
+			//		Internal function for setting the displayed value and hidden value.
+			//		Differs from _setValueAttr() in that _setValueAttr() only takes a single
+			//		value argument, and has to look up the displayed value from that.
+			// tags:
+			//		private
 			this.valueNode.value = value;
 			dijit.form.FilteringSelect.superclass._setValueAttr.call(this, value, priorityChange, displayedValue);
 			this._lastDisplayedValue = displayedValue;
@@ -114,15 +130,15 @@ dojo.declare(
 			//		Sets the value of the select.
 			//		Also sets the label to the corresponding value by reverse lookup.
 			if(!this._onChangeActive){ priorityChange = null; }
-			this._lastQuery=value;
+			this._lastQuery = value;
 
-			if(value === null){
+			if(value === null || value === ''){
 				this._setDisplayedValueAttr('', priorityChange);
 				return;
 			}
 
 			//#3347: fetchItemByIdentity if no keyAttr specified
-			var self=this;
+			var self = this;
 			var handleFetchByIdentity = function(item, priorityChange){
 				if(item){
 					if(self.store.isItemLoaded(item)){
@@ -136,11 +152,11 @@ dojo.declare(
 						});
 					}
 				}else{
-					self._isvalid=false;
+					self._isvalid = false;
 					// prevent errors from Tooltip not being created yet
 					self.validate(false);
 				}
-			}
+			};
 			this.store.fetchItemByIdentity({
 				identity: value, 
 				onItem: function(item){
@@ -151,12 +167,14 @@ dojo.declare(
 
 		_setValueFromItem: function(/*item*/ item, /*Boolean?*/ priorityChange){
 			//	summary:
-			//		Set the displayed valued in the input box, based on a
-			//		selected item.
+			//		Set the displayed valued in the input box, and the hidden value
+			//		that gets submitted, based on a dojo.data store item.
 			//	description:
 			//		Users shouldn't call this function; they should be calling
-			//		attr('displayedValue', value) instead
-			this._isvalid=true;
+			//		attr('displayedValue', value) or attr('value', ...) instead
+			// tags:
+			//		private
+			this._isvalid = true;
 			this.item = item; // Fix #6381
 			this._setValue(	this.store.getIdentity(item), 
 							this.labelFunc(item, this.store), 
@@ -164,17 +182,21 @@ dojo.declare(
 		},
 
 		labelFunc: function(/*item*/ item, /*dojo.data.store*/ store){
-			// summary: Event handler called when the label changes
-			// return: the label that the ComboBox should display
+			// summary:
+			//		Computes the label to display based on the dojo.data store item.
+			// returns:
+			//		The label that the ComboBox should display
+			// tags:
+			//		private
 			return store.getValue(item, this.searchAttr);
 		},
 
 		_doSelect: function(/*Event*/ tgt){
 			// summary:
-			//		ComboBox's menu callback function
+			//		Overrides ComboBox._doSelect(), the method called when an item in the menu is selected.
 			//	description:
 			//		FilteringSelect overrides this to set both the visible and
-			//		hidden value from the information stored in the menu
+			//		hidden value from the information stored in the menu.
 			this._setValueFromItem(tgt.item, true);
 		},
 
@@ -182,13 +204,13 @@ dojo.declare(
 			// summary:
 			//		Hook so attr('displayedValue', label) works.
 			// description:
-			//		Set textbox to display label. Also performs reverse lookup
+			//		Sets textbox to display label. Also performs reverse lookup
 			//		to set the hidden value.
 
 			// When this is called during initialization it'll ping the datastore
 			// for reverse lookup, and when that completes (after an XHR request)
 			// will call setValueAttr()... but that shouldn't trigger an onChange()
-			//  event, even when it happens after creation has finished
+			// event, even when it happens after creation has finished
 			if(!this._created){
 				priorityChange = false;
 			}
@@ -224,27 +246,12 @@ dojo.declare(
 		},
 
 		postMixInProperties: function(){
-			// FIXME: shouldn't this just be a call to inherited?
-			dijit.form.ComboBoxMixin.prototype.postMixInProperties.apply(this, arguments);
-			dijit.form.MappedTextBox.prototype.postMixInProperties.apply(this, arguments);
-		},
-
-		postCreate: function(){
-			dijit.form.ComboBoxMixin.prototype._postCreate.apply(this, arguments);
-			dijit.form.MappedTextBox.prototype.postCreate.apply(this, arguments);
-		},
-		
-		_setDisabledAttr: function(/*String*/ attr, /*anything*/ value){
-			dijit.form.MappedTextBox.prototype._setDisabledAttr.apply(this, arguments);
-			dijit.form.ComboBoxMixin.prototype._setDisabledAttr.apply(this, arguments);
+			this.inherited(arguments);
+			this._isvalid = !this.required;
 		},
 
 		undo: function(){
 			this.attr('displayedValue', this._lastDisplayedValue);
-		},
-
-		_valueChanged: function(){
-			return this.attr('displayedValue')!=this._lastDisplayedValue;
 		}
 	}
 );

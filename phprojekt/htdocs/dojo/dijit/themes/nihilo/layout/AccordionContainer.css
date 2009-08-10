@@ -4,40 +4,20 @@
  */
 
 .nihilo .dijitAccordionContainer {
-	border-color: #ccc;	
-}
-
-/* nested classes */
-
-.nihilo .dijitTabContainer-dijitAccordionContainer {
-    border: none;
-}
-
-.nihilo .dijitAccordionContainer-dijitAccordionContainer {
-    border: none;
-    background-color: #fff;
-}
-
-.nihilo .dijitSplitContainer-dijitAccordionContainer,
-.nihilo .dijitBorderContainer-dijitAccordionContainer {
-    border: 1px #ccc solid;
-    background-color: #fff;
+	border-color: #ccc;
+	background-color: #fff;
 }
 
 /* common */
-
-.nihilo .dijitAccordionPane {
-	background-color: #e7e7e7;
-	font-size: 0.9em;
-	font-weight: bold;
-	color: #6d6d6d;
-}
 
 .nihilo .dijitAccordionTitle {
 	background:#fafafa url("../images/titleBar.png") repeat-x top left;
 	border-top: 1px solid #dedede;
 	padding: 5px 4px 6px 8px;
 	cursor:pointer;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #6d6d6d;
 }
 
 .nihilo .dijitAccordionTitle-selected  {
@@ -65,8 +45,4 @@
 .nihilo .dijitAccordionText {
 	margin-left: 4px;
 	margin-right: 4px;
-}
-
-.nihilo .dijitAccordionBody {
-	background: #fff;
 }

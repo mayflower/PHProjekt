@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -16,7 +16,9 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
 dojo.declare("dijit.ProgressBar", [dijit._Widget, dijit._Templated], {
-	// summary: A progress indication widget
+	// summary:
+	//		A progress indication widget, showing the amount completed
+	//		(often the percentage completed) of a task.
 	//
 	// example:
 	// |	<div dojoType="ProgressBar"
@@ -24,43 +26,59 @@ dojo.declare("dijit.ProgressBar", [dijit._Widget, dijit._Templated], {
 	// |		 progress="..." maximum="...">
 	// |	</div>
 	//
-	// progress: String (Percentage or Number)
-	// 	initial progress value.
-	// 	with "%": percentage value, 0% <= progress <= 100%
-	// 	or without "%": absolute value, 0 <= progress <= maximum
+	// description:
+	//		Note that the progress bar is updated via (a non-standard)
+	//		update() method, rather than via attr() like other widgets.
+
+	// progress: [const] String (Percentage or Number)
+	//		Number or percentage indicating amount of task completed.
+	// 		With "%": percentage value, 0% <= progress <= 100%, or
+	// 		without "%": absolute value, 0 <= progress <= maximum
+	// TODO: rename to value for 2.0
 	progress: "0",
 
-	// maximum: Float
-	// 	max sample number
+	// maximum: [const] Float
+	//		Max sample number
 	maximum: 100,
 
-	// places: Number
-	// 	number of places to show in values; 0 by default
+	// places: [const] Number
+	//		Number of places to show in values; 0 by default
 	places: 0,
 
-	// indeterminate: Boolean
-	// 	If false: show progress.
-	// 	If true: show that a process is underway but that the progress is unknown
+	// indeterminate: [const] Boolean
+	// 		If false: show progress value (number or percentage).
+	// 		If true: show that a process is underway but that the amount completed is unknown.
 	indeterminate: false,
 
-	templateString:"<div class=\"dijitProgressBar dijitProgressBarEmpty\"\r\n\t><div waiRole=\"progressbar\" tabindex=\"0\" dojoAttachPoint=\"internalProgress\" class=\"dijitProgressBarFull\"\r\n\t\t><div class=\"dijitProgressBarTile\"></div\r\n\t\t><span style=\"visibility:hidden\">&nbsp;</span\r\n\t></div\r\n\t><div dojoAttachPoint=\"label\" class=\"dijitProgressBarLabel\" id=\"${id}_label\">&nbsp;</div\r\n\t><img dojoAttachPoint=\"inteterminateHighContrastImage\" class=\"dijitProgressBarIndeterminateHighContrastImage\"\r\n\t></img\r\n></div>\r\n",
+	templateString:"<div class=\"dijitProgressBar dijitProgressBarEmpty\"\r\n\t><div waiRole=\"progressbar\" tabindex=\"0\" dojoAttachPoint=\"internalProgress\" class=\"dijitProgressBarFull\"\r\n\t\t><div class=\"dijitProgressBarTile\"></div\r\n\t\t><span style=\"visibility:hidden\">&nbsp;</span\r\n\t></div\r\n\t><div dojoAttachPoint=\"label\" class=\"dijitProgressBarLabel\" id=\"${id}_label\">&nbsp;</div\r\n\t><img dojoAttachPoint=\"indeterminateHighContrastImage\" class=\"dijitProgressBarIndeterminateHighContrastImage\"\r\n\t></img\r\n></div>\r\n",
 
+	// _indeterminateHighContrastImagePath: [private] dojo._URL
+	//		URL to image to use for indeterminate progress bar when display is in high contrast mode
 	_indeterminateHighContrastImagePath:
 		dojo.moduleUrl("dijit", "themes/a11y/indeterminate_progress.gif"),
 
 	// public functions
 	postCreate: function(){
 		this.inherited(arguments);
-		this.inteterminateHighContrastImage.setAttribute("src",
+		this.indeterminateHighContrastImage.setAttribute("src",
 			this._indeterminateHighContrastImagePath);
 		this.update();
 	},
 
 	update: function(/*Object?*/attributes){
-		// summary: update progress information
+		// summary:
+		//		Change attributes of ProgressBar, similar to attr(hash).
 		//
-		// attributes: may provide progress and/or maximum properties on this parameter,
-		//	see attribute specs for details.
+		// attributes:
+		//		May provide progress and/or maximum properties on this parameter;
+		//		see attribute specs for details.
+		//
+		// example:
+		//	|	myProgressBar.update({'indeterminate': true});
+		//	|	myProgressBar.update({'progress': 80});
+
+		// TODO: deprecate this method and use attr() instead
+
 		dojo.mixin(this, attributes || {});
 		var tip = this.internalProgress;
 		var percent = 1, classFunc;
@@ -91,12 +109,20 @@ dojo.declare("dijit.ProgressBar", [dijit._Widget, dijit._Templated], {
 	},
 
 	report: function(/*float*/percent){
-		// summary: Generates message to show; may be overridden by user
+		// summary:
+		//		Generates message to show inside progress bar (normally indicating amount of task completed).
+		//		May be overridden.
+		// tags:
+		//		extension
+
 		return dojo.number.format(percent, { type: "percent", places: this.places, locale: this.lang });
 	},
 
 	onChange: function(){
-		// summary: User definable function fired when progress updates.
+		// summary:
+		//		Callback fired when progress updates.
+		// tags:
+		//		progress
 	}
 });
 

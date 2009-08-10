@@ -1,13 +1,19 @@
-
 /* Tree */
 
 .soria .dijitTreeNode {
     background : url('images/treeI.gif') no-repeat;
     background-position : top left;
     background-repeat : repeat-y;
-    margin-left: 19px;
     zoom: 1;	/* MOW: what the heck is this doing in here? */
 }
+
+.soria .dijitTreeNodeHover {
+	/* using a transparent png so that we can still see grid lines, which are (unfortunately) behind the dijitRowNode that we are hovering over */
+	background-image: url(images/treeHover.png);
+	background-repeat: repeat;
+	background-color: none !important;
+}
+
 
 /* left vertical line (grid) for all nodes */
 .soria .dijitTreeIsLast {
@@ -27,6 +33,11 @@
 .soria .dijitTreeExpando {
     width: 18px;
     height: 18px;
+}
+
+.soria .dijitTreeRow {
+	/* so insert line shows up on IE when dropping after a target element */
+	padding-bottom: 2px;
 }
 
 .soria .dijitTreeContent {
@@ -51,7 +62,9 @@
 /* don't use :focus due to opera and IE's lack of support on div's */
 .soria .dijitTreeLabelFocused {
 	outline: 1px invert dotted;
-	background:#dde7f2;
+}
+.soria .dijitTreeNodeSelected .dijitTreeLabel{
+	background:#b8cbec;
 }
 
 .soria .dijitTreeExpandoOpened {
@@ -85,4 +98,25 @@
 
 .soria .dijitLeaf {
 	background: url('images/spriteDivIcons.gif') no-repeat -32px top;
+}
+
+/* Drag and Drop on TreeNodes
+ * Put insert line on dijitTreeContent node so it's aligned w/
+ * (ie, indented equally with) target element, even
+ * though dijitTreeRowNode is the actual "drag object"
+ */
+.soria .dijitTreeNode .dojoDndItemBefore,
+.soria .dijitTreeNode .dojoDndItemAfter {
+	border-bottom: none;
+	border-top: none;
+}
+
+.soria .dijitTreeNode .dojoDndItemBefore .dijitTreeContent {
+	/* copied from Common.css */
+	border-top: 2px solid #369;
+}
+
+.soria .dijitTreeNode .dojoDndItemAfter .dijitTreeContent {
+	/* copied from Common.css */
+	border-bottom: 2px solid #369;
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -38,55 +38,61 @@ dojo.declare(
 		//		HTML INPUT tag maxLength declaration.
 		maxLength: "",
 
-		templateString:"<input class=\"dijit dijitReset dijitLeft\" dojoAttachPoint='textbox,focusNode' name=\"${name}\"\r\n\tdojoAttachEvent='onmouseenter:_onMouse,onmouseleave:_onMouse,onfocus:_onMouse,onblur:_onMouse,onkeypress:_onKeyPress'\r\n\tautocomplete=\"off\" type=\"${type}\"\r\n\t/>\r\n",
+		templateString:"<input class=\"dijit dijitReset dijitLeft\" dojoAttachPoint='textbox,focusNode'\r\n\tdojoAttachEvent='onmouseenter:_onMouse,onmouseleave:_onMouse'\r\n\tautocomplete=\"off\" type=\"${type}\" ${nameAttrSetting}\r\n\t/>\r\n",
 		baseClass: "dijitTextBox",
 
-		attributeMap: dojo.mixin(dojo.clone(dijit.form._FormValueWidget.prototype.attributeMap),
-			{maxLength:"focusNode"}),
+		attributeMap: dojo.delegate(dijit.form._FormValueWidget.prototype.attributeMap, {
+			maxLength: "focusNode" 
+		}),
 
 		_getValueAttr: function(){
 			// summary:
 			//		Hook so attr('value') works as we like.
 			// description:
-			//		For TextBox this simply returns the value of the <input>,
-			//		but the parse() call is so subclasses can change this
-			//		behavior w/out overriding this method.
+			//		For `dijit.form.TextBox` this basically returns the value of the <input>.
+			//
+			//		For `dijit.form.MappedTextBox` subclasses, which have both
+			//		a "displayed value" and a separate "submit value",
+			//		This treats the "displayed value" as the master value, computing the
+			//		submit value from it via this.parse().
 			return this.parse(this.attr('displayedValue'), this.constraints);
 		},
 
 		_setValueAttr: function(value, /*Boolean?*/ priorityChange, /*String?*/ formattedValue){
-			//	summary:
+			// summary:
 			//		Hook so attr('value', ...) works.
 			//
-			//	description: 
+			// description: 
 			//		Sets the value of the widget to "value" which can be of
 			//		any type as determined by the widget.
 			//
-			//	value:
+			// value:
 			//		The visual element value is also set to a corresponding,
 			//		but not necessarily the same, value.
 			//
-			//	formattedValue:
+			// formattedValue:
 			//		If specified, used to set the visual element value,
 			//		otherwise a computed visual value is used.
 			//
-			//	priorityChange:
+			// priorityChange:
 			//		If true, an onChange event is fired immediately instead of 
 			//		waiting for the next blur event.
 
 			var filteredValue;
 			if(value !== undefined){
+				// TODO: this is calling filter() on both the display value and the actual value.
+				// I added a comment to the filter() definition about this, but it should be changed.
 				filteredValue = this.filter(value);
-				if(filteredValue !== null && ((typeof filteredValue != "number") || !isNaN(filteredValue))){
-					if(typeof formattedValue != "string"){
-						formattedValue = this.format(filteredValue, this.constraints);
-					}
-				}else{ formattedValue = ''; }
+				if(typeof formattedValue != "string"){
+					if(filteredValue !== null && ((typeof filteredValue != "number") || !isNaN(filteredValue))){
+						formattedValue = this.filter(this.format(filteredValue, this.constraints));
+					}else{ formattedValue = ''; }
+				}
 			}
-			if(formattedValue != null && formattedValue != undefined){
+			if(formattedValue != null && formattedValue != undefined && ((typeof formattedValue) != "number" || !isNaN(formattedValue)) && this.textbox.value != formattedValue){
 				this.textbox.value = formattedValue;
 			}
-			dijit.form.TextBox.superclass._setValueAttr.call(this, filteredValue, priorityChange);
+			this.inherited(arguments, [filteredValue, priorityChange]);
 		},
 
 		// displayedValue: String
@@ -104,14 +110,18 @@ dojo.declare(
 		displayedValue: "",
 
 		getDisplayedValue: function(){
+			// summary:
+			//		Deprecated.   Use attr('displayedValue') instead.
+			// tags:
+			//		deprecated
 			dojo.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use attr('displayedValue') instead.", "", "2.0");
 			return this.attr('displayedValue');
 		},
 
 		_getDisplayedValueAttr: function(){
-			//	summary:
+			// summary:
 			//		Hook so attr('displayedValue') works.
-			//	description:
+			// description:
 			//		Returns the displayed value (what the user sees on the screen),
 			// 		after filtering (ie, trimming spaces etc.).
 			//
@@ -123,6 +133,10 @@ dojo.declare(
 		},
 
 		setDisplayedValue: function(/*String*/value){
+			// summary:
+			//		Deprecated.   Use attr('displayedValue', ...) instead.
+			// tags:
+			//		deprecated
 			dojo.deprecated(this.declaredClass+"::setDisplayedValue() is deprecated. Use attr('displayedValue', ...) instead.", "", "2.0");
 			this.attr('displayedValue', value);
 		},
@@ -135,27 +149,69 @@ dojo.declare(
 			//		The widget value is also set to a corresponding,
 			//		but not necessarily the same, value.
 
+			if(value === null || value === undefined){ value = '' }
+			else if(typeof value != "string"){ value = String(value) }
 			this.textbox.value = value;
-			this._setValueAttr(this.attr('value'));
+			this._setValueAttr(this.attr('value'), undefined, value);
 		},
 
 		format: function(/* String */ value, /* Object */ constraints){
-			//	summary:
-			//		Replacable function to convert a value to a properly formatted string
+			// summary:
+			//		Replacable function to convert a value to a properly formatted string.
+			// tags:
+			//		protected extension
 			return ((value == null || value == undefined) ? "" : (value.toString ? value.toString() : value));
 		},
 
 		parse: function(/* String */ value, /* Object */ constraints){
-			//	summary:
+			// summary:
 			//		Replacable function to convert a formatted string to a value
-			return value;
+			// tags:
+			//		protected extension
+
+			return value;	// String
+		},
+
+		_refreshState: function(){
+			// summary:
+			//		After the user types some characters, etc., this method is
+			//		called to check the field for validity etc.  The base method
+			//		in `dijit.form.TextBox` does nothing, but subclasses override.
+			// tags:
+			//		protected
+		},
+
+		_onInput: function(e){
+			if(e && e.type && /key/i.test(e.type) && e.keyCode){
+				switch(e.keyCode){
+					case dojo.keys.SHIFT:
+					case dojo.keys.ALT:
+					case dojo.keys.CTRL:
+					case dojo.keys.TAB:
+						return;
+				}
+			}
+			if(this.intermediateChanges){
+				var _this = this;
+				// the setTimeout allows the key to post to the widget input box
+				setTimeout(function(){ _this._handleOnChange(_this.attr('value'), false); }, 0);
+			}
+			this._refreshState();
 		},
 
 		postCreate: function(){
 			// setting the value here is needed since value="" in the template causes "undefined"
 			// and setting in the DOM (instead of the JS object) helps with form reset actions
-			this.textbox.setAttribute("value", this.attr('displayedValue'));
+			this.textbox.setAttribute("value", this.textbox.value); // DOM and JS values shuld be the same
 			this.inherited(arguments);
+			if(dojo.isMoz || dojo.isOpera){
+				this.connect(this.textbox, "oninput", this._onInput);
+			}else{
+				this.connect(this.textbox, "onkeydown", this._onInput);
+				this.connect(this.textbox, "onkeyup", this._onInput);
+				this.connect(this.textbox, "onpaste", this._onInput);
+				this.connect(this.textbox, "oncut", this._onInput);
+			}
 
 			/*#5297:if(this.srcNodeRef){
 				dojo.style(this.textbox, "cssText", this.style);
@@ -164,10 +220,26 @@ dojo.declare(
 			this._layoutHack();
 		},
 
+		_blankValue: '', // if the textbox is blank, what value should be reported
 		filter: function(val){
-			//	summary:
+			// summary:
 			//		Auto-corrections (such as trimming) that are applied to textbox
-			//		value on blur or form submit
+			//		value on blur or form submit.
+			// description:
+			//		For MappedTextBox subclasses, this is called twice
+			// 			- once with the display value
+			//			- once the value as set/returned by attr('value', ...)
+			//		and attr('value'), ex: a Number for NumberTextBox.
+			//
+			//		In the latter case it does corrections like converting null to NaN.  In
+			//		the former case the NumberTextBox.filter() method calls this.inherited()
+			//		to execute standard trimming code in TextBox.filter().
+			//
+			//		TODO: break this into two methods in 2.0
+			//
+			// tags:
+			//		protected extension
+			if(val === null){ return this._blankValue; }
 			if(typeof val != "string"){ return val; }
 			if(this.trim){
 				val = dojo.trim(val);
@@ -187,19 +259,32 @@ dojo.declare(
 		},
 
 		_setBlurValue: function(){
-			this._setValueAttr(this.attr('value'), (this.isValid ? this.isValid() : true));
+			this._setValueAttr(this.attr('value'), true);
 		},
 
-		_onBlur: function(){
+		_onBlur: function(e){
+			if(this.disabled){ return; }
 			this._setBlurValue();
 			this.inherited(arguments);
-		}
+		},
 
+		_onFocus: function(e){
+			if(this.disabled){ return; }
+			this._refreshState();
+			this.inherited(arguments);
+		},
+
+		reset: function(){
+			// Overrides dijit._FormWidget.reset().
+			// Additionally resets the displayed textbox value to ''
+			this.textbox.value = '';
+			this.inherited(arguments);
+		}
 	}
 );
 
 dijit.selectInputText = function(/*DomNode*/element, /*Number?*/ start, /*Number?*/ stop){
-	//	summary:
+	// summary:
 	//		Select text in the input element argument, from start (default 0), to stop (default end).
 
 	// TODO: use functions in _editor/selection.js?
@@ -220,12 +305,12 @@ dijit.selectInputText = function(/*DomNode*/element, /*Number?*/ start, /*Number
 			}
 		}
 	}else if(_window["getSelection"]){
-		var selection = _window.getSelection();
+		var selection = _window.getSelection();	// TODO: unused, remove
 		// FIXME: does this work on Safari?
 		if(element.setSelectionRange){
 			element.setSelectionRange(start, stop);
 		}
 	}
-}
+};
 
 }

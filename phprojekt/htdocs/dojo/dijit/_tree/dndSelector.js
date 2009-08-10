@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,7 +14,18 @@ dojo.require("dijit._tree.dndContainer");
 dojo.declare("dijit._tree.dndSelector",
 	dijit._tree.dndContainer,
 	{
+		// summary:
+		//		This is a base class for `dijit._tree.dndSource` , and isn't meant to be used directly.
+		//		It's based on `dojo.dnd.Selector`.
+		// tags:
+		//		protected
+
 		constructor: function(tree, params){
+			// summary:
+			//		Initialization
+			// tags:
+			//		private
+
 			this.selection={};
 			this.anchor = null;
 			this.simpleSelection=false;
@@ -25,12 +36,24 @@ dojo.declare("dijit._tree.dndSelector",
 			);
 		},
 	
-		// object attributes (for markup)
+		// singular: [readonly] Boolean
+		//		Apparently this is indicates whether a single or multiple elements are
+		//		selected, but AFAIK Tree doesn't support multiple selection, so it doesn't
+		//		do anything.   (There is, however, a bunch of dead code that would only run
+		//		if singular == true)
 		singular: false,	// is singular property
 	
 		// methods
+
 		getSelectedItems: function(){
-			var selectedItems = []
+			// summary:
+			//		Returns selected items, for which there is only one for Tree?
+			// tags:
+			//		private
+
+			// TODO: apparently no one is calling this; get rid of it?
+
+			var selectedItems = [];
 			for (var i in this.selection){
 				selectedItems.push(dijit.getEnclosingWidget(this.selection[i]).item);
 			}
@@ -38,33 +61,56 @@ dojo.declare("dijit._tree.dndSelector",
 		},
 
 		getSelectedNodes: function(){
+			// summary:
+			//		Returns the set of selected nodes.
+			//		Used by dndSource on the start of a drag.
+			// tags:
+			//		protected
 			return this.selection;
 		},
 
 		selectNone: function(){
-			// summary: unselects all items
+			// summary:
+			//		Unselects all items
+			// tags:
+			//		private
+
 			return this._removeSelection()._removeAnchor();	// self
 		},
 
 		insertItems: function(item, parent){
-			// summary: inserts new data items (see Container's insertNodes method for details)
+			// summary:
+			//		Inserts new data items (see Container's insertNodes method for details).
+			//		Apparently an unused method.
+			// tags:
+			//		private
+
+			// TODO: this isn't used anywhere, delete it
 			
 			//we actually need to add things to the store here instead of adding nodes directly to the tree		
 		},
 
 		destroy: function(){
-			// summary: prepares the object to be garbage-collected
+			// summary:
+			//		Prepares the object to be garbage-collected
 			dijit._tree.dndSelector.superclass.destroy.call(this);
 			this.selection = this.anchor = null;
 		},
 
 		// mouse events
 		onMouseDown: function(e){
-			// summary: event processor for onmousedown
-			// e: Event: mouse event
+			// summary:
+			//		Event processor for onmousedown
+			// e: Event
+			//		mouse event
+			// tags:
+			//		protected
+			
 			if(!this.current){ return; }
 
-			var item = dijit.getEnclosingWidget(this.current).item
+			if(e.button == 2){ return; }	// ignore right-click
+
+			var item = dijit.getEnclosingWidget(this.current).item;
 			var id = this.tree.model.getIdentity(item);
 
 			if (!this.current.id) {
@@ -80,7 +126,6 @@ dojo.declare("dijit._tree.dndSelector",
 				dojo.stopEvent(e);
 				return;
 			}
-
 			if(this.singular){
 				if(this.anchor == this.current){
 					if(dojo.dnd.getCopyKeyState(e)){
@@ -120,7 +165,8 @@ dojo.declare("dijit._tree.dndSelector",
 							}
 						}
 					}else{
-						var item = dijit.getEnclosingWidget(this.current).item
+					    // TODO: item and id are already declared and set above, remove these lines?
+						var item = dijit.getEnclosingWidget(this.current).item;
 						var id = this.tree.model.getIdentity(item);
 						if(!(id in this.selection)){
 							this.selectNone();
@@ -135,17 +181,13 @@ dojo.declare("dijit._tree.dndSelector",
 			dojo.stopEvent(e);
 		},
 
-		onMouseMove: function() {
-
-		},
-
-		onOverEvent: function() {
-			this.onmousemoveEvent = dojo.connect(this.node, "onmousemove", this, "onMouseMove");
-		},
-
 		onMouseUp: function(e){
-			// summary: event processor for onmouseup
-			// e: Event: mouse event
+			// summary:
+			//		Event processor for onmouseup
+			// e: Event
+			//		mouse event
+			// tags:
+			//		protected
 			if(!this.simpleSelection){ return; }
 			this.simpleSelection = false;
 			this.selectNone();
@@ -156,7 +198,10 @@ dojo.declare("dijit._tree.dndSelector",
 			}
 		},
 		_removeSelection: function(){
-			// summary: unselects all items
+			// summary:
+			//		Unselects all items
+			// tags:
+			//		private
 			var e = dojo.dnd._empty;
 			for(var i in this.selection){
 				if(i in e){ continue; }
@@ -166,7 +211,15 @@ dojo.declare("dijit._tree.dndSelector",
 			this.selection = {};
 			return this;	// self
 		},
+
 		_removeAnchor: function(){
+			// summary:
+			//		Removes the Anchor CSS class from a node.
+			//		According to `dojo.dnd.Selector`, anchor means that
+			//		"an item is selected, and is an anchor for a 'shift' selection".
+			//		It's not relevant for Tree at this point, since we don't support multiple selection.
+			// tags:
+			//		private
 			if(this.anchor){
 				this._removeItemClass(this.anchor, "Anchor");
 				this.anchor = null;

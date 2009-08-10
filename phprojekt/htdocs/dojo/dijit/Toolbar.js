@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,13 +10,14 @@ dojo._hasResource["dijit.Toolbar"] = true;
 dojo.provide("dijit.Toolbar");
 
 dojo.require("dijit._Widget");
-dojo.require("dijit._Container");
+dojo.require("dijit._KeyNavContainer");
 dojo.require("dijit._Templated");
 
 dojo.declare("dijit.Toolbar",
 	[dijit._Widget, dijit._Templated, dijit._KeyNavContainer],
 	{
-	// summary: A Toolbar widget, used to hold things like dijit.Editor buttons
+	// summary:
+	//		A Toolbar widget, used to hold things like `dijit.Editor` buttons
 
 	templateString:
 		'<div class="dijit dijitToolbar" waiRole="toolbar" tabIndex="${tabIndex}" dojoAttachPoint="containerNode">' +
@@ -24,8 +25,6 @@ dojo.declare("dijit.Toolbar",
 		//		'<tr class="dijitReset" dojoAttachPoint="containerNode"></tr>'+
 		//	'</table>' +
 		'</div>',
-
-	tabIndex: "0",
 
 	postCreate: function(){
 		this.connectKeyNavHandlers(
@@ -44,18 +43,7 @@ dojo.declare("dijit.Toolbar",
 }
 );
 
-// Combine with dijit.MenuSeparator??
-dojo.declare("dijit.ToolbarSeparator",
-	[ dijit._Widget, dijit._Templated ],
-	{
-	// summary: A spacer between two Toolbar items
-	templateString: '<div class="dijitToolbarSeparator dijitInline"></div>',
-	postCreate: function(){ dojo.setSelectable(this.domNode, false); },
-	isFocusable: function(){ 
-		// summary: This widget isn't focusable, so pass along that fact.
-		return false; 
-	}
-
-});
+// For back-compat, remove for 2.0
+dojo.require("dijit.ToolbarSeparator");
 
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -28,35 +28,42 @@ dojo.declare(
 	{
 		// summary:
 		//		A validating currency textbox
-		//
+
 		// currency: String
 		//		the [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD"
 		currency: "",
 
 		/*=====
-		// constraints: dijit.form.CurrencyTextBox.__Constraints 
+		// constraints: dijit.form.CurrencyTextBox.__Constraints
+		//		Minimum/maximum amount allowed.
 		constraints: {},
 		======*/
 
+		// Override regExpGen ValidationTextBox.regExpGen().... we use a reg-ex generating function rather
+		// than a straight regexp to deal with locale  (plus formatting options too?)
 		regExpGen: dojo.currency.regexp,
+
+		// Override NumberTextBox._formatter to deal with currencies, ex: converts "123.45" to "$123.45"
 		_formatter: dojo.currency.format,
+
 /*=====
 		parse: function(value, constraints){
-			//	summary: parses the value as a Currency, according to constraints
-			//	value: String
-			//
-			//	constraints: dojo.currency.__ParseOptions
+			// summary:
+			//		Parses string as a Currency, according to constraints
+			// value: String
+			//		The currency represented as a string
+			// constraints: dojo.currency.__ParseOptions
+			// tags:
+			//		protected
+
+			return 123.45;		// Number
 		},
 =====*/
 		parse: dojo.currency.parse,
 
 		postMixInProperties: function(){
-			if(this.constraints === dijit.form.ValidationTextBox.prototype.constraints){
-				// declare a constraints property on 'this' so we don't overwrite the shared default object in 'prototype'
-				this.constraints = {};
-			}
 			this.constraints.currency = this.currency;
-			dijit.form.CurrencyTextBox.superclass.postMixInProperties.apply(this, arguments);
+			this.inherited(arguments);
 		}
 	}
 );

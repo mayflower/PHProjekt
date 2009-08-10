@@ -1,7 +1,7 @@
 /* ContentPane */
 
 .tundra .dijitContentPane {
-    padding: 0px;
+	padding: 0px;
 }
 
 /* nested layouts */
@@ -10,14 +10,12 @@
 .tundra .dijitTabContainerBottom-dijitContentPane,
 .tundra .dijitTabContainerRight-dijitContentPane,
 .tundra .dijitAccordionContainer-dijitContentPane {
-    border: none;
-    background-color: #fff;
-    padding: 5px;
+	background-color: #fff;
+	padding: 5px;
 }
 
 .tundra .dijitSplitContainer-dijitContentPane,
 .tundra .dijitBorderContainer-dijitContentPane {
-    border: 1px #ccc solid;
-    background-color: #fff;
-    padding: 5px;
+	background-color: #fff;		/* override background-color setting on parent .dijitBorderContainer */
+	padding: 5px;
 }

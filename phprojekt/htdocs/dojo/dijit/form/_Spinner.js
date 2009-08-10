@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,44 +15,53 @@ dojo.declare(
 	"dijit.form._Spinner",
 	dijit.form.RangeBoundTextBox,
 	{
-
-		// summary: Mixin for validation widgets with a spinner
-		// description: This class basically (conceptually) extends dijit.form.ValidationTextBox.
-		//	It modifies the template to have up/down arrows, and provides related handling code.
+		// summary:
+		//		Mixin for validation widgets with a spinner.
+		// description:
+		//		This class basically (conceptually) extends `dijit.form.ValidationTextBox`.
+		//		It modifies the template to have up/down arrows, and provides related handling code.
 
 		// defaultTimeout: Number
-		//	  number of milliseconds before a held key or button becomes typematic
+		//		Number of milliseconds before a held arrow key or up/down button becomes typematic
 		defaultTimeout: 500,
 
 		// timeoutChangeRate: Number
-		//	  fraction of time used to change the typematic timer between events
-		//	  1.0 means that each typematic event fires at defaultTimeout intervals
-		//	  < 1.0 means that each typematic event fires at an increasing faster rate
+		//		Fraction of time used to change the typematic timer between events.
+		//		1.0 means that each typematic event fires at defaultTimeout intervals.
+		//		< 1.0 means that each typematic event fires at an increasing faster rate.
 		timeoutChangeRate: 0.90,
 
 		// smallDelta: Number
-		//	  adjust the value by this much when spinning using the arrow keys/buttons
+		//	  Adjust the value by this much when spinning using the arrow keys/buttons
 		smallDelta: 1,
+
 		// largeDelta: Number
-		//	  adjust the value by this much when spinning using the PgUp/Dn keys
+		//	  Adjust the value by this much when spinning using the PgUp/Dn keys
 		largeDelta: 10,
 
-		templateString:"<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\" waiRole=\"presentation\"\r\n\t><div class=\"dijitInputLayoutContainer\"\r\n\t\t><div class=\"dijitReset dijitSpinnerButtonContainer\"\r\n\t\t\t>&nbsp;<div class=\"dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitUpArrowButton\"\r\n\t\t\t\tdojoAttachPoint=\"upArrowNode\"\r\n\t\t\t\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse\"\r\n\t\t\t\tstateModifier=\"UpArrow\"\r\n\t\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t\t><div class=\"dijitArrowButtonChar\">&#9650;</div\r\n\t\t\t></div\r\n\t\t\t><div class=\"dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitDownArrowButton\"\r\n\t\t\t\tdojoAttachPoint=\"downArrowNode\"\r\n\t\t\t\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse\"\r\n\t\t\t\tstateModifier=\"DownArrow\"\r\n\t\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t\t></div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input class='dijitReset' dojoAttachPoint=\"textbox,focusNode\" type=\"${type}\" dojoAttachEvent=\"onfocus:_update,onkeyup:_update,onkeypress:_onKeyPress\"\r\n\t\t\t\twaiRole=\"spinbutton\" autocomplete=\"off\" name=\"${name}\"\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n",
+		templateString:"<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\" waiRole=\"presentation\"\r\n\t><div class=\"dijitInputLayoutContainer\"\r\n\t\t><div class=\"dijitReset dijitSpinnerButtonContainer\"\r\n\t\t\t>&nbsp;<div class=\"dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitUpArrowButton\"\r\n\t\t\t\tdojoAttachPoint=\"upArrowNode\"\r\n\t\t\t\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse\"\r\n\t\t\t\tstateModifier=\"UpArrow\"\r\n\t\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t\t><div class=\"dijitArrowButtonChar\">&#9650;</div\r\n\t\t\t></div\r\n\t\t\t><div class=\"dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitDownArrowButton\"\r\n\t\t\t\tdojoAttachPoint=\"downArrowNode\"\r\n\t\t\t\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse\"\r\n\t\t\t\tstateModifier=\"DownArrow\"\r\n\t\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t\t></div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input class='dijitReset' dojoAttachPoint=\"textbox,focusNode\" type=\"${type}\" dojoAttachEvent=\"onkeypress:_onKeyPress\"\r\n\t\t\t\twaiRole=\"spinbutton\" autocomplete=\"off\" ${nameAttrSetting}\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n",
 		baseClass: "dijitSpinner",
 
 		adjust: function(/* Object */ val, /*Number*/ delta){
-			// summary: user replaceable function used to adjust a primitive value(Number/Date/...) by the delta amount specified
-			// the val is adjusted in a way that makes sense to the object type
+			// summary:
+			//		Overridable function used to adjust a primitive value(Number/Date/...) by the delta amount specified.
+			// 		The val is adjusted in a way that makes sense to the object type.
+			// tags:
+			//		protected extension
 			return val;
 		},
 
 		_arrowState: function(/*Node*/ node, /*Boolean*/ pressed){
+			// summary:
+			//		Called when an arrow key is pressed to update the relevant CSS classes
 			this._active = pressed;
 			this.stateModifier = node.getAttribute("stateModifier") || "";
 			this._setStateClass();
 		},
 
 		_arrowPressed: function(/*Node*/ nodePressed, /*Number*/ direction, /*Number*/ increment){
+			// summary:
+			//		Handler for arrow button or arrow key being pressed
 			if(this.disabled || this.readOnly){ return; }
 			this._arrowState(nodePressed, true);
 			this._setValueAttr(this.adjust(this.attr('value'), direction*increment), false);
@@ -60,6 +69,8 @@ dojo.declare(
 		},
 
 		_arrowReleased: function(/*Node*/ node){
+			// summary:
+			//		Handler for arrow button or arrow key being released
 			this._wheelTimer = null;
 			if(this.disabled || this.readOnly){ return; }
 			this._arrowState(node, false);
@@ -68,7 +79,7 @@ dojo.declare(
 		_typematicCallback: function(/*Number*/ count, /*DOMNode*/ node, /*Event*/ evt){
 			var inc=this.smallDelta;
 			if(node == this.textbox){
-				k=dojo.keys;
+				var k=dojo.keys;
 				var key = evt.charOrCode; 
 				inc = (key == k.PAGE_UP || key == k.PAGE_DOWN) ? this.largeDelta : this.smallDelta;
 				node = (key == k.UP_ARROW ||key == k.PAGE_UP) ? this.upArrowNode : this.downArrowNode;
@@ -79,7 +90,9 @@ dojo.declare(
 
 		_wheelTimer: null,
 		_mouseWheeled: function(/*Event*/ evt){
-			// summary: Mouse wheel listener where supported
+			// summary:
+			//		Mouse wheel listener where supported
+
 			dojo.stopEvent(evt);	
 			// FIXME: Safari bubbles
 
@@ -99,7 +112,7 @@ dojo.declare(
 		},
 
 		postCreate: function(){
-			this.inherited('postCreate', arguments);
+			this.inherited(arguments);
 
 			// extra listeners
 			this.connect(this.domNode, !dojo.isMozilla ? "onmousewheel" : 'DOMMouseScroll', "_mouseWheeled");

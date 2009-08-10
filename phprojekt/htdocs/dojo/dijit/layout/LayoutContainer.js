@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,20 +15,22 @@ dojo.declare("dijit.layout.LayoutContainer",
 	dijit.layout._LayoutWidget,
 	{
 	// summary:
-	//	Provides Delphi-style panel layout semantics.
+	//		Deprecated.  Use `dijit.layout.BorderContainer` instead.
 	//
 	// description:
-	//	A LayoutContainer is a box with a specified size (like style="width: 500px; height: 500px;"),
-	//	that contains children widgets marked with "layoutAlign" of "left", "right", "bottom", "top", and "client".
-	//	It takes it's children marked as left/top/bottom/right, and lays them out along the edges of the box,
-	//	and then it takes the child marked "client" and puts it into the remaining space in the middle.
+	//		Provides Delphi-style panel layout semantics.
 	//
-	//  Left/right positioning is similar to CSS's "float: left" and "float: right",
-	//	and top/bottom positioning would be similar to "float: top" and "float: bottom", if there were such
-	//	CSS.
+	//		A LayoutContainer is a box with a specified size (like style="width: 500px; height: 500px;"),
+	//		that contains children widgets marked with "layoutAlign" of "left", "right", "bottom", "top", and "client".
+	//		It takes it's children marked as left/top/bottom/right, and lays them out along the edges of the box,
+	//		and then it takes the child marked "client" and puts it into the remaining space in the middle.
 	//
-	//	Note that there can only be one client element, but there can be multiple left, right, top,
-	//	or bottom elements.
+	//		Left/right positioning is similar to CSS's "float: left" and "float: right",
+	//		and top/bottom positioning would be similar to "float: top" and "float: bottom", if there were such
+	//		CSS.
+	//
+	//		Note that there can only be one client element, but there can be multiple left, right, top,
+	//		or bottom elements.
 	//
 	// example:
 	// |	<style>
@@ -40,9 +42,11 @@ dojo.declare("dijit.layout.LayoutContainer",
 	// |		<div dojoType="dijit.layout.ContentPane" layoutAlign="client">client area</div>
 	// |	</div>
 	//
-	//	Lays out each child in the natural order the children occur in.
-	//	Basically each child is laid out into the "remaining space", where "remaining space" is initially
-	//	the content area of this widget, but is reduced to a smaller rectangle each time a child is added.
+	//		Lays out each child in the natural order the children occur in.
+	//		Basically each child is laid out into the "remaining space", where "remaining space" is initially
+	//		the content area of this widget, but is reduced to a smaller rectangle each time a child is added.
+	// tags:
+	//		deprecated
 
 	baseClass: "dijitLayoutContainer",
 

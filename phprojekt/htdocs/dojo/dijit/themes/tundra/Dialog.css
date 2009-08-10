@@ -13,12 +13,6 @@
 	-webkit-box-shadow: 0px 5px 10px #adadad;
 }
 
-.tundra .dijitDialog .dijitDialogTitle {
-	border-top: none;
-	border-left: none;
-	border-right: none;
-}
-
 .tundra .dijitDialog .dijitDialogPaneContent {
 	background: #fff;
 	border:none;
@@ -38,8 +32,7 @@
 .tundra .dijitDialogTitle {
 	/* typography and styling of the dialog title */
 	font-weight: bold;
-	padding: 4px;
-	outline:0;
+	padding: 0px 4px;
 }
 
 .tundra .dijitDialogCloseIcon {
@@ -54,15 +47,16 @@
 	width: 15px;
 	cursor: pointer;
 }
-.dj_ie .tundra .dijitDialogCloseIcon {
+.dj_ie6 .tundra .dijitDialogCloseIcon {
 	background : url("images/tabClose.gif") no-repeat right top;
 }
 
-.tundra .dijitDialogContent {
-	/* the body of the dialog */
-	padding: 8px;
+.tundra .dijitDialogCloseIcon-hover {
+	background: url("images/tabCloseHover.png") no-repeat right top;
 }
-
+.dj_ie6 .tundra .dijitDialogCloseIcon-hover {
+	background : url("images/tabCloseHover.gif") no-repeat right top;
+}
 
 /* Tooltip and TooltipDialog */
 
@@ -116,7 +110,7 @@
 	height:14px;
 }
 
-.dj_ie .tundra .dijitTooltipBelow .dijitTooltipConnector {
+.dj_ie6 .tundra .dijitTooltipBelow .dijitTooltipConnector {
 	/* use gif for IE7 too, due to png rendering problems on fade-in (see http://trac.dojotoolkit.org/ticket/6555) */
 	background-image: url("images/tooltipConnectorUp.gif");
 }
@@ -129,7 +123,7 @@
 	width:16px;
 	height:14px;
 }
-.dj_ie .tundra .dijitTooltipAbove .dijitTooltipConnector {
+.dj_ie6 .tundra .dijitTooltipAbove .dijitTooltipConnector {
 	background-image: url("images/tooltipConnectorDown.gif");
 }
 .dj_ie6 .tundra .dijitTooltipAbove .dijitTooltipConnector {
@@ -139,7 +133,7 @@
 .tundra .dijitTooltipLeft {
 	padding-right: 14px;
 }
-.dj_ie .tundra .dijitTooltipLeft {
+.dj_ie6 .tundra .dijitTooltipLeft {
 	padding-left: 15px;
 }
 .tundra .dijitTooltipLeft .dijitTooltipConnector {
@@ -150,7 +144,7 @@
 	width:16px;
 	height:14px;
 }
-.dj_ie .tundra .dijitTooltipLeft .dijitTooltipConnector {
+.dj_ie6 .tundra .dijitTooltipLeft .dijitTooltipConnector {
 	background-image: url("images/tooltipConnectorRight.gif");
 }
 
@@ -165,12 +159,12 @@
 	width:16px;
 	height:14px;
 }
-.dj_ie .tundra .dijitTooltipRight .dijitTooltipConnector {
+.dj_ie6 .tundra .dijitTooltipRight .dijitTooltipConnector {
 	background-image: url("images/tooltipConnectorLeft.gif");
 }
 
-.dj_safari .tundra .dijitPopup .dijitTooltipContainer,
-.dj_safari .tundra .dijitPopup .dijitMenu {
+.dj_webkit .tundra .dijitPopup .dijitTooltipContainer,
+.dj_webkit .tundra .dijitPopup .dijitMenu {
 	/* -webkit-border-radius: 5px; */
 	-webkit-box-shadow: 0px 5px 10px #adadad;
 }

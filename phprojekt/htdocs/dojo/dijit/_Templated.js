@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,38 +19,39 @@ dojo.declare("dijit._Templated",
 		//	summary:
 		//		Mixin for widgets that are instantiated from a template
 		// 
-		// templateNode: DomNode
-		//		a node that represents the widget template. Pre-empts both templateString and templatePath.
-		templateNode: null,
 
-		// templateString: String
-		//		a string that represents the widget template. Pre-empts the
+		// templateString: [protected] String
+		//		A string that represents the widget template. Pre-empts the
 		//		templatePath. In builds that have their strings "interned", the
 		//		templatePath is converted to an inline templateString, thereby
 		//		preventing a synchronous network call.
 		templateString: null,
 
-		// templatePath: String
-		//	Path to template (HTML file) for this widget relative to dojo.baseUrl
+		// templatePath: [protected] String
+		//		Path to template (HTML file) for this widget relative to dojo.baseUrl
 		templatePath: null,
 
-		// widgetsInTemplate: Boolean
-		//		should we parse the template to find widgets that might be
-		//		declared in markup inside it? false by default.
+		// widgetsInTemplate: [protected] Boolean
+		//		Should we parse the template to find widgets that might be
+		//		declared in markup inside it?  False by default.
 		widgetsInTemplate: false,
 
-		// skipNodeCache: Boolean
-		//		if using a cached widget template node poses issues for a
+		// skipNodeCache: [protected] Boolean
+		//		If using a cached widget template node poses issues for a
 		//		particular widget class, it can set this property to ensure
 		//		that its template is always re-built from a string
 		_skipNodeCache: false,
 
 		_stringRepl: function(tmpl){
+			// summary:
+			//		Does substitution of ${foo} type properties in template string
+			// tags:
+			//		private
 			var className = this.declaredClass, _this = this;
 			// Cache contains a string because we need to do property replacement
 			// do the property replacement
 			return dojo.string.substitute(tmpl, this, function(value, key){
-				if(key.charAt(0) == '!'){ value = _this[key.substr(1)]; }
+				if(key.charAt(0) == '!'){ value = dojo.getObject(key.substr(1), false, _this); }
 				if(typeof value == "undefined"){ throw new Error(className+" template:"+key); } // a debugging aide
 				if(value == null){ return ""; }
 
@@ -67,6 +68,8 @@ dojo.declare("dijit._Templated",
 		buildRendering: function(){
 			// summary:
 			//		Construct the UI for this widget from a template, setting this.domNode.
+			// tags:
+			//		protected
 
 			// Lookup cached version of template, and download to cache if it
 			// isn't there already.  Returns either a DomNode or a string, depending on
@@ -75,7 +78,7 @@ dojo.declare("dijit._Templated",
 
 			var node;
 			if(dojo.isString(cached)){
-				node = dijit._Templated._createNodesFromText(this._stringRepl(cached))[0];
+				node = dojo._toDom(this._stringRepl(cached));
 			}else{
 				// if it's a node, all we have to do is clone it
 				node = cached.cloneNode(true);
@@ -87,11 +90,6 @@ dojo.declare("dijit._Templated",
 			// attachment points and events, which should be defined on the template node.
 			this._attachTemplateNodes(node);
 
-			var source = this.srcNodeRef;
-			if(source && source.parentNode){
-				source.parentNode.replaceChild(node, source);
-			}
-
 			if(this.widgetsInTemplate){
 				var cw = (this._supportingWidgets = dojo.parser.parse(node));
 				this._attachTemplateNodes(cw, function(n,p){
@@ -99,13 +97,15 @@ dojo.declare("dijit._Templated",
 				});
 			}
 
-			this._fillContent(source);
+			this._fillContent(this.srcNodeRef);
 		},
 
 		_fillContent: function(/*DomNode*/ source){
 			// summary:
-			//		relocate source contents to templated container node
-			//		this.containerNode must be able to receive children, or exceptions will be thrown
+			//		Relocate source contents to templated container node.
+			//		this.containerNode must be able to receive children, or exceptions will be thrown.
+			// tags:
+			//		protected
 			var dest = this.containerNode;
 			if(source && dest){
 				while(source.hasChildNodes()){
@@ -115,7 +115,8 @@ dojo.declare("dijit._Templated",
 		},
 
 		_attachTemplateNodes: function(rootNode, getAttrFunc){
-			// summary: Iterate through the template and attach functions and nodes accordingly.	
+			// summary:
+			//		Iterate through the template and attach functions and nodes accordingly.	
 			// description:		
 			//		Map widget properties and functions to the handlers specified in
 			//		the dom node and it's descendants. This function iterates over all
@@ -126,15 +127,16 @@ dojo.declare("dijit._Templated",
 			//			* waiState
 			// rootNode: DomNode|Array[Widgets]
 			//		the node to search for properties. All children will be searched.
-			// getAttrFunc: function?
+			// getAttrFunc: Function?
 			//		a function which will be used to obtain property for a given
 			//		DomNode/Widget
+			// tags:
+			//		private
 
 			getAttrFunc = getAttrFunc || function(n,p){ return n.getAttribute(p); };
 
 			var nodes = dojo.isArray(rootNode) ? rootNode : (rootNode.all || rootNode.getElementsByTagName("*"));
 			var x = dojo.isArray(rootNode) ? 0 : -1;
-			var attrs = {};
 			for(; x<nodes.length; x++){
 				var baseNode = (x == -1) ? rootNode : nodes[x];
 				if(this.widgetsInTemplate && getAttrFunc(baseNode, "dojoType")){
@@ -210,9 +212,9 @@ dijit._Templated.getCachedTemplate = function(templatePath, templateString, alwa
 	// templateString: String?
 	//		a string to use in lieu of fetching the template from a URL. Takes precedence
 	//		over templatePath
-	// Returns: Mixed
-	//	Either string (if there are ${} variables that need to be replaced) or just
-	//	a DOM tree (if the node can be cloned directly)
+	// returns: Mixed
+	//		Either string (if there are ${} variables that need to be replaced) or just
+	//		a DOM tree (if the node can be cloned directly)
 
 	// is it already cached?
 	var tmplts = dijit._Templated._templateCache;
@@ -224,12 +226,12 @@ dijit._Templated.getCachedTemplate = function(templatePath, templateString, alwa
 			return cached;
 		}
 		// destroy the old cached node of a different document
-		dojo._destroyElement(cached);
+		dojo.destroy(cached);
 	}
 
 	// If necessary, load template string from template path
 	if(!templateString){
-		templateString = dijit._Templated._sanitizeTemplateString(dojo._getText(templatePath));
+		templateString = dijit._Templated._sanitizeTemplateString(dojo.trim(dojo._getText(templatePath)));
 	}
 
 	templateString = dojo.string.trim(templateString);
@@ -239,7 +241,7 @@ dijit._Templated.getCachedTemplate = function(templatePath, templateString, alwa
 		return (tmplts[key] = templateString); //String
 	}else{
 		// there are no variables in the template so we can cache the DOM tree
-		return (tmplts[key] = dijit._Templated._createNodesFromText(templateString)[0]); //Node
+		return (tmplts[key] = dojo._toDom(templateString)); //Node
 	}
 };
 
@@ -267,66 +269,12 @@ if(dojo.isIE){
 		for(var key in cache){
 			var value = cache[key];
 			if(!isNaN(value.nodeType)){ // isNode equivalent
-				dojo._destroyElement(value);
+				dojo.destroy(value);
 			}
 			delete cache[key];
 		}
 	});
 }
-
-(function(){
-	var tagMap = {
-		cell: {re: /^<t[dh][\s\r\n>]/i, pre: "<table><tbody><tr>", post: "</tr></tbody></table>"},
-		row: {re: /^<tr[\s\r\n>]/i, pre: "<table><tbody>", post: "</tbody></table>"},
-		section: {re: /^<(thead|tbody|tfoot)[\s\r\n>]/i, pre: "<table>", post: "</table>"}
-	};
-
-	// dummy container node used temporarily to hold nodes being created
-	var tn;
-
-	dijit._Templated._createNodesFromText = function(/*String*/text){
-		// summary:
-		//	Attempts to create a set of nodes based on the structure of the passed text.
-
-		if(tn && tn.ownerDocument != dojo.doc){
-			// destroy dummy container of a different document
-			dojo._destroyElement(tn);
-			tn = undefined;
-		}
-		if(!tn){
-			tn = dojo.doc.createElement("div");
-			tn.style.display="none";
-			dojo.body().appendChild(tn);
-		}
-		var tableType = "none";
-		var rtext = text.replace(/^\s+/, "");
-		for(var type in tagMap){
-			var map = tagMap[type];
-			if(map.re.test(rtext)){
-				tableType = type;
-				text = map.pre + text + map.post;
-				break;
-			}
-		}
-
-		tn.innerHTML = text;
-		if(tn.normalize){
-			tn.normalize();
-		}
-
-		var tag = { cell: "tr", row: "tbody", section: "table" }[tableType];
-		var _parent = (typeof tag != "undefined") ?
-						tn.getElementsByTagName(tag)[0] :
-						tn;
-
-		var nodes = [];
-		while(_parent.firstChild){
-			nodes.push(_parent.removeChild(_parent.firstChild));
-		}
-		tn.innerHTML="";
-		return nodes;	//	Array
-	}
-})();
 
 // These arguments can be specified for widgets which are used in templates.
 // Since any widget can be specified as sub widgets in template, mix it
@@ -336,6 +284,6 @@ dojo.extend(dijit._Widget,{
 	dojoAttachPoint: "",
 	waiRole: "",
 	waiState:""
-})
+});
 
 }

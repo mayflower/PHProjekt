@@ -45,19 +45,6 @@
 	background:#fff;
 }
 
-.tundra .dijitTab .dijitClosable .closeNode {
-	/* Inline-block */
-	display:-moz-inline-box;		/* FF2 */
-	display:inline-block;			/* webkit and FF3 */
-	#zoom: 1; /* set hasLayout:true to mimic inline-block */
-	#display:inline; /* don't use .dj_ie since that increases the priority */
-	vertical-align:top;
-	width: 1em;
-	height: 1em;
-	padding: 0;
-	margin: 0;
-}
-
 .tundra .dijitTab .dijitClosable .closeImage {
 	background: url("../images/tabClose.png") no-repeat right top;
 	width: 12px;
@@ -65,25 +52,44 @@
 }
 
 .tundra .dijitTab .dijitTabButtonSpacer {
+	/* make sure tabs w/close button and w/out close button are same height, even w/small (<12px) font */
 	height: 12px;
 	width: 1px;
 }
 
-.dj_ie6 .dijitTab .dijitClosable .closeImage {
-	background-image:url("../images/tabClose.gif");
+/* Nested Tabs */
+.tundra .dijitTabContainerTabListNested .dijitTab {
+	background: none;
+	border: none;
+	top: 0px;		/* to override top: 1px/-1px for normal tabs */ 
+}
+.tundra .dijitTabContainerTabListNested .dijitTab .dijitTabContent {
+}
+.tundra .dijitTabContainerTabListNested .dijitTabHover .dijitTabContent .tabLabel {
+	text-decoration: underline;
+}
+.tundra .dijitTabContainerTabListNested .dijitTabChecked .dijitTabContent .tabLabel {
+	text-decoration: underline;
+	font-weight: bold;
+	/*background:#f3f3f3;*/
+}
+.tundra .dijitTabContainer .dijitTabPaneWrapperNested {
+	border: none;	/* prevent double border */
 }
 
-.tundra .dijitTabCloseButton .dijitClosable .closeImage {
+/* Close button */
+
+.tundra .dijitTab .closeImage {
 	background-image : url("../images/tabClose.png");
 }
-.dj_ie6 .tundra .dijitTabCloseButton .dijitClosable .closeImage {
+.dj_ie6 .tundra .dijitTab .closeImage {
 	background-image : url("../images/tabClose.gif");
 }
 
-.tundra .dijitTabCloseButtonHover .dijitClosable .closeImage {
+.tundra .dijitTab .closeButton-hover .closeImage {
 	background-image : url("../images/tabCloseHover.png");
 }
-.dj_ie6 .tundra .dijitTabCloseButtonHover .dijitClosable .closeImage {
+.dj_ie6 .tundra .dijitTab .closeButton-hover .closeImage {
 	background-image : url("../images/tabCloseHover.gif");
 }
 

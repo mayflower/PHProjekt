@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,31 +11,38 @@ dojo.provide("dijit.layout.TabContainer");
 
 dojo.require("dijit.layout.StackContainer");
 dojo.require("dijit._Templated");
-dojo.requireLocalization("dijit", "common", null, "ar,ca,ROOT,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.require("dijit.layout.TabController");
 
 dojo.declare("dijit.layout.TabContainer",
 	[dijit.layout.StackContainer, dijit._Templated],
 	{	
 	// summary: 
-	//	A Container with Title Tabs, each one pointing at a pane in the container.
+	//		A Container with tabs to select each child (only one of which is displayed at a time).
 	// description:
-	//	A TabContainer is a container that has multiple panes, but shows only
-	//	one pane at a time.  There are a set of tabs corresponding to each pane,
-	//	where each tab has the title (aka title) of the pane, and optionally a close button.
+	//		A TabContainer is a container that has multiple panes, but shows only
+	//		one pane at a time.  There are a set of tabs corresponding to each pane,
+	//		where each tab has the title (aka title) of the pane, and optionally a close button.
 	//
-	//	Publishes topics [widgetId]-addChild, [widgetId]-removeChild, and [widgetId]-selectChild
-	//	(where [widgetId] is the id of the TabContainer itself.
+	//		Publishes topics [widgetId]-addChild, [widgetId]-removeChild, and [widgetId]-selectChild
+	//		(where [widgetId] is the id of the TabContainer itself.
 
 	// tabPosition: String
-	//   Defines where tabs go relative to tab content.
-	//   "top", "bottom", "left-h", "right-h"
+	//		Defines where tabs go relative to tab content.
+	//		"top", "bottom", "left-h", "right-h"
 	tabPosition: "top",
 
 	baseClass: "dijitTabContainer",
 	
-	// tabStrip: bool
-	//   Defines whether the tablist gets an extra class for layouting
+	// tabStrip: Boolean
+	//		Defines whether the tablist gets an extra class for layouting, putting a border/shading
+	//		around the set of tabs.
 	tabStrip: false,
+
+	// nested: Boolean
+	//		If true, use styling for a TabContainer nested inside another TabContainer.
+	//		For tundra etc., makes tabs look like links, and hides the outer
+	//		border since the outer TabContainer already has a border.
+	nested: false,
 
 	templateString: null,	// override setting in StackContainer
 	templateString:"<div class=\"dijitTabContainer\">\r\n\t<div dojoAttachPoint=\"tablistNode\"></div>\r\n\t<div dojoAttachPoint=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\r\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" dojoAttachPoint=\"containerNode\"></div>\r\n</div>\r\n",
@@ -64,13 +71,26 @@ dojo.declare("dijit.layout.TabContainer",
 		}, this.tablistNode);
 		
 		// add Class for tabstrip
-		if (this.tabStrip){	dojo.addClass(this.tablist.domNode, this.baseClass+"Strip"); }			
+		if (this.tabStrip){	dojo.addClass(this.tablist.domNode, this.baseClass+"Strip"); }		
+		
+		if(!this.doLayout){ dojo.addClass(this.domNode, "dijitTabContainerNoLayout"); }
+		
+		if(this.nested){
+			/* workaround IE's lack of support for "a > b" selectors by
+			 * tagging each node in the template.
+			 */
+			dojo.addClass(this.domNode, "dijitTabContainerNested");
+			dojo.addClass(this.tablist.domNode, "dijitTabContainerTabListNested");
+			dojo.addClass(this.tablistSpacer, "dijitTabContainerSpacerNested");
+			dojo.addClass(this.containerNode, "dijitTabPaneWrapperNested");
+		}
 	},
 
 	_setupChild: function(/* Widget */tab){
+		// Overrides StackContainer._setupChild().
 		dojo.addClass(tab.domNode, "dijitTabPane");
 		this.inherited(arguments);
-		return tab; // Widget
+		return tab; // Widget		(TODO: remove this, return code is unused)
 	},
 
 	startup: function(){
@@ -82,7 +102,8 @@ dojo.declare("dijit.layout.TabContainer",
 	},
 
 	layout: function(){
-		// Summary: Configure the content pane to take up all the space except for where the tabs are
+		// Overrides StackContainer.layout().
+		// Configure the content pane to take up all the space except for where the tabs are
 		if(!this.doLayout){ return; }
 
 		// position and size the titles and the container node
@@ -114,76 +135,5 @@ dojo.declare("dijit.layout.TabContainer",
 	}
 });
 
-//TODO: make private?
-dojo.declare("dijit.layout.TabController",
-	dijit.layout.StackController,
-	{
-	// summary:
-	// 	Set of tabs (the things with titles and a close button, that you click to show a tab panel).
-	// description:
-	//	Lets the user select the currently shown pane in a TabContainer or StackContainer.
-	//	TabController also monitors the TabContainer, and whenever a pane is
-	//	added or deleted updates itself accordingly.
-
-	templateString: "<div wairole='tablist' dojoAttachEvent='onkeypress:onkeypress'></div>",
-
-	// tabPosition: String
-	//   Defines where tabs go relative to the content.
-	//   "top", "bottom", "left-h", "right-h"
-	tabPosition: "top",
-
-	// doLayout: Boolean
-	doLayout: true,
-
-	// buttonWidget: String
-	//	The name of the tab widget to create to correspond to each page
-	buttonWidget: "dijit.layout._TabButton",
-
-	_rectifyRtlTabList: function(){
-		//summary: Rectify the width of all tabs in rtl, otherwise the tab widths are different in IE
-		if(0 >= this.tabPosition.indexOf('-h')){ return; }
-		if(!this.pane2button){ return; }
-
-		var maxWidth = 0;
-		for(var pane in this.pane2button){
-			var ow = this.pane2button[pane].innerDiv.scrollWidth;
-			maxWidth = Math.max(maxWidth, ow);
-		}
-		//unify the length of all the tabs
-		for(pane in this.pane2button){
-			this.pane2button[pane].innerDiv.style.width = maxWidth + 'px';
-		}	
-	}
-});
-
-dojo.declare("dijit.layout._TabButton",
-	dijit.layout._StackButton,
-	{
-	// summary:
-	//	A tab (the thing you click to select a pane).
-	// description:
-	//	Contains the title of the pane, and optionally a close-button to destroy the pane.
-	//	This is an internal widget and should not be instantiated directly.
-
-	baseClass: "dijitTab",
-
-	templateString:"<div waiRole=\"presentation\" dojoAttachEvent='onclick:onClick,onmouseenter:_onMouse,onmouseleave:_onMouse'>\r\n    <div waiRole=\"presentation\" class='dijitTabInnerDiv' dojoAttachPoint='innerDiv'>\r\n        <div waiRole=\"presentation\" class='dijitTabContent' dojoAttachPoint='tabContent'>\r\n\t        <span dojoAttachPoint='containerNode,focusNode' class='tabLabel'>${!label}</span><img class =\"dijitTabButtonSpacer\" src=\"${_blankGif}\" />\r\n\t        <div class=\"dijitInline closeNode\" dojoAttachPoint='closeNode' dojoAttachEvent='onclick:onClickCloseButton'>\r\n\t        \t<img src=\"${_blankGif}\" alt=\"\" dojoAttachPoint='closeButtonNode' class='closeImage' dojoAttachEvent='onmouseenter:_onMouse, onmouseleave:_onMouse' stateModifier='CloseButton' waiRole=\"presentation\"/>\r\n\t            <span dojoAttachPoint='closeText' class='closeText'>x</span>\r\n\t        </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n",
-
-	postCreate: function(){
-		if(this.closeButton){
-			dojo.addClass(this.innerDiv, "dijitClosable");
-			var _nlsResources = dojo.i18n.getLocalization("dijit", "common");
-			if(this.closeNode){
-				dojo.attr(this.closeNode,"title", _nlsResources.itemClose);
-				// IE needs title set directly on image
-				dojo.attr(this.closeButtonNode,"title", _nlsResources.itemClose);
-			}
-		}else{
-			this.closeNode.style.display="none";		
-		}
-		this.inherited(arguments); 
-		dojo.setSelectable(this.containerNode, false);
-	}
-});
 
 }

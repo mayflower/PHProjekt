@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -23,8 +23,12 @@ dojo.declare("dijit._editor.plugins.AlwaysShowToolbar", dijit._editor._Plugin,
 	//	|	<div dojoType="dijit.Editor" height=""
 	//	|	extraPlugins="['dijit._editor.plugins.AlwaysShowToolbar']">
 
+	// _handleScroll: Boolean
+	//		Enables/disables the handler for scroll events
 	_handleScroll: true,
+
 	setEditor: function(e){
+		// Overrides _Plugin.setEditor().
 		if(!e.iframe){
 			console.log('Port AlwaysShowToolbar plugin to work with Editor without iframe');
 			return;
@@ -34,12 +38,19 @@ dojo.declare("dijit._editor.plugins.AlwaysShowToolbar", dijit._editor._Plugin,
 
 		e.onLoadDeferred.addCallback(dojo.hitch(this, this.enable));
 	},
+
 	enable: function(d){
+		// summary:
+		//		Enable plugin.  Called when Editor has finished initializing.
+		// tags:
+		//		private
+
 		this._updateHeight();
 		this.connect(window, 'onscroll', "globalOnScrollHandler");
 		this.connect(this.editor, 'onNormalizedDisplayChanged', "_updateHeight");
 		return d;
 	},
+
 	_updateHeight: function(){
 		// summary:
 		//		Updates the height of the editor area to fit the contents.
@@ -64,14 +75,27 @@ dojo.declare("dijit._editor.plugins.AlwaysShowToolbar", dijit._editor._Plugin,
 			console.debug("Can not figure out the height of the editing area!");
 			return; //prevent setting height to 0
 		}
+		if(dojo.isIE <= 7 && this.editor.minHeight){
+			var min = parseInt(this.editor.minHeight);
+			if(height < min){ height = min; }
+		}
 		if(height != this._lastHeight){
 			this._lastHeight = height;
 			// this.editorObject.style.height = this._lastHeight + "px";
 			dojo.marginBox(e.iframe, { h: this._lastHeight });
 		}
 	},
+
+	// _lastHeight: Integer
+	//		Height in px of the editor at the last time we did sizing
 	_lastHeight: 0,
+
 	globalOnScrollHandler: function(){
+		// summary:
+		//		Handler for scroll events that bubbled up to <html>
+		// tags:
+		//		private
+
 		var isIE6 = dojo.isIE < 7;
 		if(!this._handleScroll){ return; }
 		var tdn = this.editor.toolbar.domNode;
@@ -146,7 +170,9 @@ dojo.declare("dijit._editor.plugins.AlwaysShowToolbar", dijit._editor._Plugin,
 			this._fixEnabled = false;
 		}
 	},
+
 	destroy: function(){
+	    // Overrides _Plugin.destroy().   TODO: call this.inherited() rather than repeating code.
 		this._IEOriginalPos = null;
 		this._handleScroll = false;
 		dojo.forEach(this._connects, dojo.disconnect);

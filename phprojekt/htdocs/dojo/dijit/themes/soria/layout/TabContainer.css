@@ -44,19 +44,16 @@
 }
 
 /* hovered tab */
-.soria .dijitTabHover,
-.soria .dijitTabCloseButtonHover {
+.soria .dijitTabHover {
 	color: #243C5F;
 	background: url("../images/tabContainerSprite.gif") no-repeat 0px -150px;
 }
 
-.soria .dijitTabHover .dijitTabInnerDiv,
-.soria .dijitTabCloseButtonHover .dijitTabInnerDiv {
+.soria .dijitTabHover .dijitTabInnerDiv {
 	background: url("../images/tabContainerSprite.gif") no-repeat right -250px;
 }
 
-.soria .dijitTabHover .dijitTabInnerDiv .dijitTabContent,
-.soria .dijitTabCloseButtonHover .dijitTabInnerDiv .dijitTabContent {
+.soria .dijitTabHover .dijitTabInnerDiv .dijitTabContent {
 	background: url("../images/tabContainerSprite.gif") repeat-x 0 -200px;
 }
 
@@ -77,41 +74,52 @@
 	color: #243C5F !important;
 }
 
-.soria .dijitTab .dijitClosable .closeNode {
-	/* Inline-block */
-	display:-moz-inline-box;		/* FF2 */
-	display:inline-block;			/* webkit and FF3 */
-	#zoom: 1; /* set hasLayout:true to mimic inline-block */
-	#display:inline; /* don't use .dj_ie since that increases the priority */
-	vertical-align:top;
-	width: 1.25em;
-	height: 1.25em;
-	padding: 0;
-	margin: 0;
+/* Nested Tabs */
+.soria .dijitTabContainerTabListNested {
+	background: #F0F4FC;
+	background: #D9E9F9;
+	border: none;
+}
+.soria .dijitTabContainerTabListNested .dijitTab {
+	background: none;
+	border: none;
+	top: 0px;	/* override top:1px setting of top-level tabs */
+}
+.soria .dijitTabContainerTabListNested .dijitTab .dijitTabInnerDiv,
+.soria .dijitTabContainerTabListNested .dijitTab .dijitTabContent {
+	background: none;
+}
+.soria .dijitTabContainerTabListNested .dijitTabHover .dijitTabContent .tabLabel {
+	text-decoration: underline;
+}
+.soria .dijitTabContainerTabListNested .dijitTabChecked .tabLabel {
+	text-decoration: underline;
+	font-weight: bold;
+}
+.soria .dijitTabContainerSpacerNested .dijitTabSpacer {
+	/* thinner line between tab (labels) and content */
+	height: 0px;
+}
+.soria .dijitTabPaneWrapperNested {
+	border: none;	/* prevent double border */
 }
 
-.soria .dijitTab .dijitClosable .closeImage {
+
+/* Close Button */
+.soria .dijitTab .closeImage {
 	width: 15px;
 	height: 15px;
 	background: url("../images/spriteRoundedIconsSmall.png") no-repeat -60px top;
 }
-
 .dj_ie6 .dijitTab .dijitClosable .closeImage {
 	background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px top;
 }
 
-.soria .dijitTabCloseButton .dijitClosable .closeImage {
-	background: url("../images/spriteRoundedIconsSmall.png") no-repeat -60px top;
+.soria .dijitTab .closeButton-hover .closeImage {
+	background: url("../images/spriteRoundedIconsSmall.png") no-repeat -60px -15px;
 }
-.dj_ie6 .soria .dijitTabCloseButton .dijitClosable .closeImage {
-	background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px top;
-}
-
-.soria .dijitTabCloseButtonHover .dijitClosable .closeImage {
-	background: url("../images/spriteRoundedIconsSmall.png") no-repeat -60px top;
-}
-.dj_ie6 .soria .dijitTabCloseButtonHover .dijitClosable .closeImage {
-	background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px top;
+.dj_ie6 .soria .dijitTab .closeButton-hover .closeImage {
+	background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px -15px;
 }
 
 .soria .dijitTab .dijitTabButtonSpacer {
@@ -183,19 +191,16 @@
 	background: url("../images/tabBottomEnabledSpriteLR.gif") no-repeat bottom right;
 }
 
-.soria .dijitTabContainerBottom-tabs .dijitTabHover,
-.soria .dijitTabContainerBottom-tabs .dijitTabCloseButtonHover {
+.soria .dijitTabContainerBottom-tabs .dijitTabHover {
 	color: #243C5F;
 	background: url("../images/tabBottomHoverSpriteLR.gif") no-repeat bottom left;
 }
 
-.soria .dijitTabContainerBottom-tabs .dijitTabHover .dijitTabInnerDiv,
-.soria .dijitTabContainerBottom-tabs .dijitTabCloseButtonHover .dijitTabInnerDiv {
+.soria .dijitTabContainerBottom-tabs .dijitTabHover .dijitTabInnerDiv {
 	background: url("../images/tabBottomHoverSpriteLR.gif") no-repeat bottom right;
 }
 
-.soria .dijitTabContainerBottom-tabs .dijitTabHover .dijitTabInnerDiv .dijitTabContent,
-.soria .dijitTabContainerBottom-tabs .dijitTabCloseButtonHover .dijitTabInnerDiv .dijitTabContent {
+.soria .dijitTabContainerBottom-tabs .dijitTabHover .dijitTabInnerDiv .dijitTabContent {
 	background: url("../images/tabBottomHoverC.gif") repeat-x bottom left;
 }
 

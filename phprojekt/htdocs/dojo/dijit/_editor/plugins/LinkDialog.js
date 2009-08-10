@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -12,12 +12,12 @@ dojo.provide("dijit._editor.plugins.LinkDialog");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.Dialog");
+dojo.require("dijit.TooltipDialog");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dojo.i18n");
 dojo.require("dojo.string");
-dojo.requireLocalization("dijit._editor", "LinkDialog", null, "ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,ROOT,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit._editor", "LinkDialog", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dijit._editor.plugins.LinkDialog",
 	dijit._editor._Plugin,
@@ -30,9 +30,19 @@ dojo.declare("dijit._editor.plugins.LinkDialog",
 		//		* createLink
 		//		* insertImage
 
+		// Override _Plugin.buttonClass.   This plugin is controlled by a DropDownButton
+		// (which triggers a TooltipDialog).
 		buttonClass: dijit.form.DropDownButton,
+
+		// Override _Plugin.useDefaultCommand... processing is handled by this plugin, not by dijit.Editor.
 		useDefaultCommand: false,
-		urlRegExp: "((https?|ftps?)\\://|)(([0-9a-zA-Z]([-0-9a-zA-Z]{0,61}[0-9a-zA-Z])?\\.)+(arpa|aero|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|xxx|jobs|mobi|post|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|eu|es|et|fi|fj|fk|fm|fo|fr|ga|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sk|sl|sm|sn|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:(0|[1-9]\\d*))?(/([^?#\\s/]+/)*)?([^?#\\s/]+(\\?[^?#\\s/]*)?(#[A-Za-z][\\w.:-]*)?)?",
+
+		// urlRegExp: [protected] String
+		//		Used for validating input as correct URL
+		urlRegExp: "((https?|ftps?)\\://|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,6}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]+(?:\\?[^?#\\s/]*)?(?:#[A-Za-z][\\w.:-]*)?)?)?",
+
+		// linkDialogTemplate: [protected] String
+		//		Template for contents of TooltipDialog to pick URL
 		linkDialogTemplate: [
 			"<table><tr><td>",
 			"<label for='${id}_urlInput'>${url}</label>",
@@ -48,6 +58,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog",
 		].join(""),
 
 		_initButton: function(){
+			// Override _Plugin._initButton() to initialize DropDownButton and TooltipDialog.
 			var _this = this;
 			this.tag = this.command == 'insertImage' ? 'img' : 'a';
 			var messages = dojo.i18n.getLocalization("dijit._editor", "LinkDialog", this.lang);
@@ -72,11 +83,17 @@ dojo.declare("dijit._editor.plugins.LinkDialog",
 		},
 
 		_setContent: function(staticPanel){
+			// summary:
+			//		Helper for _initButton above.   Not sure why it's a separate method.
 			this.dropDown.attr('content', staticPanel);
 		},
 
 		setValue: function(args){
-			// summary: callback from the dialog when user hits "set" button
+			// summary:
+			//		Callback from the dialog when user presses "set" button.
+			// tags:
+			//		private
+
 			//TODO: prevent closing popup if the text is empty
 			this._onCloseDialog();
 			if(dojo.isIE){ //see #4151
@@ -95,10 +112,16 @@ dojo.declare("dijit._editor.plugins.LinkDialog",
  		},
 
 		_onCloseDialog: function(){
+			// summary:
+			//		Handler for close event on the dialog
 			this.editor.focus();
 		},
 
 		_onOpenDialog: function(){
+			// summary:
+			//		Handler for when the dialog is opened.
+			//		If the caret is currently in a URL then populate the URL's info into the dialog.
+
 			var a = dojo.withGlobal(this.editor.window, "getAncestorElement", dijit._editor.selection, [this.tag]);
 			var url, text;
 			if(a){
@@ -130,6 +153,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog",
 	}
 );
 
+// Register this plugin.
 dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	switch(o.args.name){
