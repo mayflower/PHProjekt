@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -39,5 +39,12 @@ dojo.dnd.isFormElement = function(/*Event*/ e){
 	}
 	return " button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
 };
+
+// doesn't take into account when multiple buttons are pressed
+dojo.dnd._lmb = dojo.isIE ? 1 : 0;	// left mouse button
+
+dojo.dnd._isLmbPressed = dojo.isIE ?
+	function(e){ return e.button & 1; } : // intentional bit-and
+	function(e){ return e.button === 0; };
 
 }

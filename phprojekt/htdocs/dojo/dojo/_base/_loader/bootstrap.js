@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -66,7 +66,7 @@ djConfig = {
 	//		some browsers (e.g. IE 6). The variable `dojo.baseUrl` is assigned
 	//		either the value of `djConfig.baseUrl` if one is provided or the
 	//		auto-detected root if not. Other modules are located relative to
-	//		this path.
+	//		this path. The path should end in a slash.
 	baseUrl: undefined,
 	// modulePaths: Object
 	//		A map of module names to paths relative to `dojo.baseUrl`. The
@@ -94,37 +94,49 @@ djConfig = {
 	// require: Array
 	//		An array of module names to be loaded immediately after dojo.js has been included
 	//		in a page. 
-	require: []
+	require: [],
+	// defaultDuration: Array
+	//		Default duration, in milliseconds, for wipe and fade animations within dijits.
+	//		Assigned to dijit.defaultDuration.
+	defaultDuration: 200,
+	// dojoBlankHtmlUrl: String
+	//		Used by some modules to configure an empty iframe. Used by dojo.io.iframe and
+	//		dojo.back, and dijit popup support in IE where an iframe is needed to make sure native
+	//		controls do not bleed through the popups. Normally this configuration variable 
+	//		does not need to be set, except when using cross-domain/CDN Dojo builds.
+	//		Save dojo/resources/blank.html to your domain and set `djConfig.dojoBlankHtmlUrl` 
+	//		to the path on your domain your copy of blank.html.
+	dojoBlankHtmlUrl: undefined
 }
 =====*/
 
 (function(){
 	// firebug stubs
 
-	// if((!this["console"])||(!console["firebug"])){
+	if(typeof this["loadFirebugConsole"] == "function"){
+		// for Firebug 1.2
+		this["loadFirebugConsole"]();
+	}else{
+		this.console = this.console || {};
 
-	if(!this["console"]){
-		this.console = {
-		};
-	}
-
-	//	Be careful to leave 'log' always at the end
-	var cn = [
-		"assert", "count", "debug", "dir", "dirxml", "error", "group",
-		"groupEnd", "info", "profile", "profileEnd", "time", "timeEnd",
-		"trace", "warn", "log" 
-	];
-	var i=0, tn;
-	while((tn=cn[i++])){
-		if(!console[tn]){
-			(function(){
-				var tcn = tn+"";
-				console[tcn] = ('log' in console) ? function(){ 
-					var a = Array.apply({}, arguments);
-					a.unshift(tcn+":");
-					console["log"](a.join(" "));
-				} : function(){}
-			})();
+		//	Be careful to leave 'log' always at the end
+		var cn = [
+			"assert", "count", "debug", "dir", "dirxml", "error", "group",
+			"groupEnd", "info", "profile", "profileEnd", "time", "timeEnd",
+			"trace", "warn", "log" 
+		];
+		var i=0, tn;
+		while((tn=cn[i++])){
+			if(!console[tn]){
+				(function(){
+					var tcn = tn+"";
+					console[tcn] = ('log' in console) ? function(){ 
+						var a = Array.apply({}, arguments);
+						a.unshift(tcn+":");
+						console["log"](a.join(" "));
+					} : function(){}
+				})();
+			}
 		}
 	}
 
@@ -178,12 +190,6 @@ dojo.global = {
 		}
 	}
 
-	var _platforms = ["Browser", "Rhino", "Spidermonkey", "Mobile"];
-	var t;
-	while((t=_platforms.shift())){
-		d["is"+t] = false;
-	}
-
 /*=====
 	// Override locale setting, if specified
 	dojo.locale = {
@@ -191,8 +197,8 @@ dojo.global = {
 	};
 =====*/
 	dojo.locale = d.config.locale;
-	
-	var rev = "$Rev: 15385 $".match(/\d+/);
+
+	var rev = "$Rev: 18832 $".match(/\d+/); 
 
 	dojo.version = {
 		// summary: 
@@ -207,8 +213,8 @@ dojo.global = {
 		//		Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
 		//	revision: Number
 		//		The SVN rev from which dojo was pulled
-		major: 1, minor: 2, patch: 0, flag: "",
-		revision: rev ? +rev[0] : 999999, //FIXME: use NaN?
+		major: 1, minor: 3, patch: 2, flag: "",
+		revision: rev ? +rev[0] : NaN,
 		toString: function(){
 			with(d.version){
 				return major + "." + minor + "." + patch + flag + " (" + revision + ")";	// String
@@ -216,17 +222,17 @@ dojo.global = {
 		}
 	}
 
-	// Register with the OpenAjax hub
+		// Register with the OpenAjax hub
 	if(typeof OpenAjax != "undefined"){
 		OpenAjax.hub.registerLibrary(dojo._scopeName, "http://dojotoolkit.org", d.version.toString());
 	}
-
+	
+	var tobj = {};
 	dojo._mixin = function(/*Object*/ obj, /*Object*/ props){
 		// summary:
 		//		Adds all properties and methods of props to obj. This addition
 		//		is "prototype extension safe", so that instances of objects
 		//		will not pass along prototype defaults.
-		var tobj = {};
 		for(var x in props){
 			// the "tobj" condition avoid copying properties in "props"
 			// inherited from Object.prototype.  For example, if obj has a custom
@@ -236,15 +242,15 @@ dojo.global = {
 				obj[x] = props[x];
 			}
 		}
-		// IE doesn't recognize custom toStrings in for..in
-		if(d["isIE"] && props){
+				// IE doesn't recognize custom toStrings in for..in
+		if(d.isIE && props){
 			var p = props.toString;
 			if(typeof p == "function" && p != obj.toString && p != tobj.toString &&
 				p != "\nfunction toString() {\n    [native code]\n}\n"){
 					obj.toString = props.toString;
 			}
 		}
-		return obj; // Object
+				return obj; // Object
 	}
 
 	dojo.mixin = function(/*Object*/obj, /*Object...*/props){
@@ -275,7 +281,7 @@ dojo.global = {
 		//	|			// property configuration:
 		//	|			dojo.mixin(this, properties);
 		//	|	
-		//	|			console.debug(this.quip);
+		//	|			console.log(this.quip);
 		//	|			//  ...
 		//	|		},
 		//	|		quip: "I wasn't born yesterday, you know - I've seen movies.",
@@ -297,9 +303,10 @@ dojo.global = {
 		//	|	);
 		//	|	
 		//	|	// will print "Carl Brutanananadilewski"
-		//	|	console.debug(flattened.name);
+		//	|	console.log(flattened.name);
 		//	|	// will print "true"
-		//	|	console.debug(flattened.braces);
+		//	|	console.log(flattened.braces);
+		if(!obj){ obj = {}; }
 		for(var i=1, l=arguments.length; i<l; i++){
 			d._mixin(obj, arguments[i]);
 		}
@@ -347,7 +354,7 @@ dojo.global = {
 		return obj && p ? (obj[p]=value) : undefined; // Object
 	}
 
-	dojo.getObject = function(/*String*/name, /*Boolean*/create, /*Object*/context){
+	dojo.getObject = function(/*String*/name, /*Boolean?*/create, /*Object?*/context){
 		// summary: 
 		//		Get a property from a dot-separated string, such as "A.B.C"
 		//	description: 
@@ -355,12 +362,12 @@ dojo.global = {
 		//		the chain, or when you have an object reference in string format.
 		//	name: 	
 		//		Path to an property, in the form "A.B.C".
-		//	context:
-		//		Optional. Object to use as root of path. Defaults to
-		//		'dojo.global'. Null may be passed.
 		//	create: 
 		//		Optional. Defaults to `false`. If `true`, Objects will be
 		//		created at any point along the 'path' that is undefined.
+		//	context:
+		//		Optional. Object to use as root of path. Defaults to
+		//		'dojo.global'. Null may be passed.
 		return d._getProp(name.split("."), create, context); // Object
 	}
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -42,13 +42,13 @@ dojo.require("dojox.lang.functional.fold");
 		},
 		
 		process: function(o){
-			if(!o.shape || !(o.type in this.overOutEvents)){ return; }
-			
-			if(o.type == "onmouseout"){
+			if(o.type === "onplotreset" || o.type === "onmouseout"){
 				dijit.hideTooltip(this.aroundRect);
 				this.aroundRect = null;
 				return;
 			}
+			
+			if(!o.shape || o.type !== "onmouseover"){ return; }
 			
 			// calculate relative coordinates and the position
 			var aroundRect = {type: "rect"}, position = ["after", "before"];

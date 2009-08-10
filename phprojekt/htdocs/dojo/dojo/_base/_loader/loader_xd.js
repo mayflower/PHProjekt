@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -456,7 +456,7 @@ dojo.xdRequireLocalization = function(/*String*/moduleName, /*String*/bundleName
 	//See if the bundle we are going to use is already loaded.
  	var bundleResource = dojo.getObject([moduleName, "nls", bundleName].join("."));
 	if(bundleResource && bundleResource[fixedBestLocale]){
-		bundle[jsLoc.replace('-', '_')] = bundleResource[fixedBestLocale];
+		bundleMap[jsLoc.replace('-', '_')] = bundleResource[fixedBestLocale];
 	}else{
 		//Need to remember what locale we wanted and which one we actually use.
 		//Then when we load the one we are actually using, use that bundle for the one

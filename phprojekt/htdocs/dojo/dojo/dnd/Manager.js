@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -69,7 +69,10 @@ dojo.declare("dojo.dnd.Manager", null, {
 			dojo.connect(dojo.doc, "onmousemove", this, "onMouseMove"),
 			dojo.connect(dojo.doc, "onmouseup",   this, "onMouseUp"),
 			dojo.connect(dojo.doc, "onkeydown",   this, "onKeyDown"),
-			dojo.connect(dojo.doc, "onkeyup",     this, "onKeyUp")
+			dojo.connect(dojo.doc, "onkeyup",     this, "onKeyUp"),
+			// cancel text selection and text dragging
+			dojo.connect(dojo.doc, "ondragstart",   dojo.stopEvent),
+			dojo.connect(dojo.body(), "onselectstart", dojo.stopEvent)
 		];
 		var c = "dojoDnd" + (copy ? "Copy" : "Move");
 		dojo.addClass(dojo.body(), c); 
@@ -122,9 +125,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 	onMouseUp: function(e){
 		// summary: event processor for onmouseup
 		// e: Event: mouse event
-		if(this.avatar && (!("mouseButton" in this.source) || 
-				(dojo.isSafari && dojo.dnd._isMac && this.source.mouseButton == 2 ? 
-					e.button == 0 : this.source.mouseButton == e.button))){
+		if(this.avatar){
 			if(this.target && this.canDropFlag){
 				var copy = Boolean(this.source.copyState(dojo.dnd.getCopyKeyState(e))),
 				params = [this.source, this.nodes, copy, this.target];

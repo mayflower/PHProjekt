@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,6 +14,10 @@ dojo.require("dojox.charting.Element");
 dojo.require("dojox.charting.plot2d.common");
 
 dojo.declare("dojox.charting.plot2d.Base", dojox.charting.Element, {
+	destroy: function(){
+		this.resetEvents();
+		this.inherited(arguments);
+	},
 	clear: function(){
 		this.series = [];
 		this._hAxis = null;
@@ -43,7 +47,7 @@ dojo.declare("dojox.charting.plot2d.Base", dojox.charting.Element, {
 	getRequiredColors: function(){
 		return this.series.length;
 	},
-	
+
 	// events
 	plotEvent: function(o){
 		// intentionally empty --- used for events
@@ -62,7 +66,10 @@ dojo.declare("dojox.charting.plot2d.Base", dojox.charting.Element, {
 		}
 		return false;
 	},
-	
+	resetEvents: function(){
+		this.plotEvent({type: "onplotreset", plot: this});
+	},
+
 	// utilities
 	_calc: function(dim, stats){
 		// calculate scaler
@@ -83,7 +90,7 @@ dojo.declare("dojox.charting.plot2d.Base", dojox.charting.Element, {
 			this._vScaler = dojox.charting.scaler.primitive.buildScaler(stats.vmin, stats.vmax, dim.height);
 		}
 	},
-	
+
 	_connectEvents: function(shape, o){
 		shape.connect("onmouseover", this, function(e){
 			o.type  = "onmouseover";

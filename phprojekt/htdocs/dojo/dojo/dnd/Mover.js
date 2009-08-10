@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -30,8 +30,8 @@ dojo.declare("dojo.dnd.Mover", null, {
 			dojo.connect(d, "onmousemove", this, "onMouseMove"),
 			dojo.connect(d, "onmouseup",   this, "onMouseUp"),
 			// cancel text selection and text dragging
-			dojo.connect(d, "ondragstart",   dojo, "stopEvent"),
-			dojo.connect(d, "onselectstart", dojo, "stopEvent"),
+			dojo.connect(d, "ondragstart",   dojo.stopEvent),
+			dojo.connect(d.body, "onselectstart", dojo.stopEvent),
 			firstEvent
 		];
 		// notify that the move has started
@@ -49,7 +49,7 @@ dojo.declare("dojo.dnd.Mover", null, {
 		dojo.stopEvent(e);
 	},
 	onMouseUp: function(e){
-		if(dojo.isSafari && dojo.dnd._isMac && this.mouseButton == 2 ? 
+		if(dojo.isWebKit && dojo.dnd._isMac && this.mouseButton == 2 ? 
 				e.button == 0 : this.mouseButton == e.button){
 			this.destroy();
 		}
@@ -57,7 +57,8 @@ dojo.declare("dojo.dnd.Mover", null, {
 	},
 	// utilities
 	onFirstMove: function(){
-		// summary: makes the node absolute; it is meant to be called only once
+		// summary: makes the node absolute; it is meant to be called only once. 
+		// 	relative and absolutely positioned nodes are assumed to use pixel units
 		var s = this.node.style, l, t, h = this.host;
 		switch(s.position){
 			case "relative":

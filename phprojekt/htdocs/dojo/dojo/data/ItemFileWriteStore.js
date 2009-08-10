@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -581,7 +581,7 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 			if(item !== null){
 				var serializableItem = {};
 				for(var key in item){
-					if(key !== this._storeRefPropName && key !== this._itemNumPropName){
+					if(key !== this._storeRefPropName && key !== this._itemNumPropName && key !== this._reverseRefMap && key !== this._rootItemPropName){
 						var attribute = key;
 						var valueArray = this.getValues(item, attribute);
 						if(valueArray.length == 1){
@@ -643,11 +643,11 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 				keywordArgs.onComplete.call(scope);
 			}
 		};
-		var saveFailedCallback = function(){
+		var saveFailedCallback = function(err){
 			self._saveInProgress = false;
 			if(keywordArgs && keywordArgs.onError){
 				var scope = keywordArgs.scope || dojo.global;
-				keywordArgs.onError.call(scope);
+				keywordArgs.onError.call(scope, err);
 			}
 		};
 		

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,9 +10,8 @@ dojo._hasResource["dojox.cometd.RestChannels"] = true;
 dojo.provide("dojox.cometd.RestChannels");
  
 dojo.require("dojox.rpc.Client");
-if(dojox.data && dojox.data.JsonRestStore){
-	dojo.require("dojox.data.restListener");
-}
+dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener");
+
 // Note that cometd _base is _not_ required, this can run standalone, but ifyou want 
 // cometd functionality, you must explicitly load/require it elsewhere, and cometd._base
 // MUST be loaded prior to RestChannels ifyou use it.
@@ -38,7 +37,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 // 	|		// this is called when the resource is changed in the future
 // 	|	});
 // 		Channels HTTP can be configured to a different delays:
-// 	|	dojox.cometd.RestChannels.autoReconnectTime = 60000; // reconnect after one minute
+// 	|	dojox.cometd.RestChannels.defaultInstance.autoReconnectTime = 60000; // reconnect after one minute
 //
 
 (function(){
@@ -55,7 +54,12 @@ if(dojox.data && dojox.data.JsonRestStore){
 			//		This is the url to connect to for server-sent messages. The default
 			//		is "/channels".
 			//	The *autoReconnectTime* parameter:
-			// 		This is amount time to wait to reconnect with a connection is broken	
+			// 		This is amount time to wait to reconnect with a connection is broken
+			// The *reloadDataOnReconnect* parameter:
+			// 		This indicates whether RestChannels should re-download data when a connection
+			// 		is restored (value of true), or if it should re-subscribe with retroactive subscriptions
+			// 		(Subscribe-Since header) using HEAD requests (value of false). The 
+			// 		default is true.	
 			dojo.mixin(this,options);
 			// If we have a Rest service available and we are auto subscribing, we will augment the Rest service 
 			if(dojox.rpc.Rest && this.autoSubscribeRoot){
@@ -84,10 +88,11 @@ if(dojox.data && dojox.data.JsonRestStore){
 		absoluteUrl: function(baseUrl,relativeUrl){
 			return new dojo._Url(baseUrl,relativeUrl)+'';
 		},
-		acceptType: "x-application/rest+json,application/http;q=0.9,*/*;q=0.7",
+		acceptType: "application/rest+json,application/http;q=0.9,*/*;q=0.7",
 		subscriptions: {},
 		subCallbacks: {},
 		autoReconnectTime: 3000,
+		reloadDataOnReconnect: true,
 		sendAsJson: false,
 		url: '/channels',
 		autoSubscribeRoot: '/',
@@ -99,9 +104,11 @@ if(dojox.data && dojox.data.JsonRestStore){
 			//		Note that if there is no connection open, this is automatically called when you do a subscription,
 			// 		it is often not necessary to call this
 			//
+			this.started = true;
 			if(!this.connected){
-				this.connectionId = dojox._clientId;
-				var clientIdHeader = this.started ? 'X-Client-Id' : 'X-Create-Client-Id';
+				this.connectionId = dojox.rpc.Client.clientId;
+				var clientIdHeader = this.createdClientId ? 'Client-Id' : 'Create-Client-Id';
+				this.createdClientId = true;
 				var headers = {Accept:this.acceptType};
 				headers[clientIdHeader] = this.connectionId;
 				var dfd = dojo.xhrPost({headers:headers, url: this.url, noStatus: true});
@@ -111,9 +118,13 @@ if(dojox.data && dojox.data.JsonRestStore){
 					if(typeof dojo == 'undefined'){
 						return null;// this can be called after dojo is unloaded, just do nothing in that case
 					}
-					data = data.substring(self.lastIndex);
-					var contentType = xhr && (xhr.contentType || xhr.getResponseHeader("Content-Type"));
-					self.started = true;
+					if(xhr && xhr.status > 400){
+						return onerror(true);
+					}
+					if(typeof data == 'string'){
+						data = data.substring(self.lastIndex);
+					}
+					var contentType = xhr && (xhr.contentType || xhr.getResponseHeader("Content-Type")) || (typeof data != 'string' && "already json");
 					var error = self.onprogress(xhr,data,contentType);
 					if(error){
 						if(onerror()){
@@ -136,17 +147,8 @@ if(dojox.data && dojox.data.JsonRestStore){
 						self.disconnected();
 						return null;
 					}
-					if(self.started){ // this means we need to reconnect
-						self.started = false;
-						self.connected = false;
-						var subscriptions = self.subscriptions;
-						self.subscriptions = {};
-						for(var i in subscriptions){
-							self.subscribe(i,{since:subscriptions[i]});
-						}
-					}else{
-						self.disconnected();
-					}
+					self.createdClientId = false;
+					self.disconnected();
 					return error;
 			  	};
 			  	dfd.addCallbacks(onprogress,onerror);
@@ -170,7 +172,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 			  	
 	  			 
 				if(window.attachEvent){// IE needs a little help with cleanup
-					attachEvent("onunload",function(){
+					window.attachEvent("onunload",function(){
 						self.connected= false;
 						if(xhr){
 							xhr.abort();
@@ -190,7 +192,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 					method:method,
 					content: data,
 					params:args.content,
-					subscribe:headers["X-Subscribe"]
+					subscribe:args.headers["Subscribe"]
 				});
 				args.url = this.url;
 				method = "POST";
@@ -252,9 +254,9 @@ if(dojox.data && dojox.data.JsonRestStore){
 				headers["Cache-Control"] = "max-age=0";
 				since = typeof since == 'number' ? new Date(since).toUTCString() : since;
 				if(since){
-					headers["X-Subscribe-Since"] = since;
+					headers["Subscribe-Since"] = since;
 				}
-				headers["X-Subscribe"] = args.unsubscribe ? 'none' : '*';
+				headers["Subscribe"] = args.unsubscribe ? 'none' : '*';
 				var dfd = this._send(method,args);
 				
 				var self = this;
@@ -265,7 +267,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 							args.confirmation();
 						}
 					}
-					if(xhr && xhr.getResponseHeader("X-Subscribed")  == "OK"){
+					if(xhr && xhr.getResponseHeader("Subscribed")  == "OK"){
 						var lastMod = xhr.getResponseHeader('Last-Modified');
 						
 						if(xhr.responseText){ 
@@ -273,7 +275,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 						}else{
 							return null; // don't process the response, the response will be received in the main channels response
 						}
-					}else if(xhr){ // ifit is not a 202 response, that means it is did not accept the subscription
+					}else if(xhr && !(result instanceof Error)){ // if the server response was successful and we have access to headers but it does indicate a subcription was successful, that means it is did not accept the subscription
 						delete self.subscriptions[channel];
 					}
 					if(!(result instanceof Error)){
@@ -315,7 +317,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 			return this._send("POST",{url:channel,contentType : 'application/json'},data);
 		},
 		_processMessage: function(message){
-			message.event = message.event || message.getResponseHeader('X-Event');
+			message.event = message.event || message.getResponseHeader('Event');
 			if(message.event=="connection-conflict"){
 				return "conflict"; // indicate an error
 			}
@@ -349,8 +351,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 				}
 				catch(e){
 				}
-			}
-			else if(dojox.io && dojox.io.httpParse && contentType.match(/application\/http/)){
+			}else if(dojox.io && dojox.io.httpParse && contentType.match(/application\/http/)){
 				// do HTTP tunnel parsing
 				var topHeaders = '';
 				if(xhr && xhr.getAllResponseHeaders){
@@ -358,6 +359,8 @@ if(dojox.data && dojox.data.JsonRestStore){
 					topHeaders = xhr.getAllResponseHeaders();
 				}
 				xhrs = dojox.io.httpParse(data,topHeaders,xhr.readyState != 4);
+			}else if(typeof data == "object"){
+				xhrs = data;
 			}
 			if(xhrs){
 				for(var i = 0;i < xhrs.length;i++){
@@ -398,12 +401,26 @@ if(dojox.data && dojox.data.JsonRestStore){
 			// summary:
 			// 		called when our channel gets disconnected
 			var self = this;
-			if(this.connected){ // ifwe are connected, we shall tryto reconnect 
-				setTimeout(function(){ // auto reconnect
-					self.open();
-				},this.autoReconnectTime);
+			if(this.connected){ 
+				this.connected = false;
+				if(this.started){ // if we are started, we shall try to reconnect
+					setTimeout(function(){ // auto reconnect
+						// resubscribe to our current subscriptions
+						var subscriptions = self.subscriptions;
+						self.subscriptions = {};
+						for(var i in subscriptions){
+							if(self.reloadDataOnReconnect && dojox.rpc.JsonRest){
+								// do a reload of the resource
+								delete dojox.rpc.Rest._index[i];
+								dojox.rpc.JsonRest.fetch(i);
+							}else{
+								self.subscribe(i,{since:subscriptions[i]});
+							}
+						}
+						self.open();
+					}, this.autoReconnectTime);
+				}
 			}
-			this.connected = false;
 		},
 		unsubscribe: function(/*String*/channel, /*dojo.__XhrArgs?*/args){
 			// summary:
@@ -417,7 +434,7 @@ if(dojox.data && dojox.data.JsonRestStore){
 		disconnect: function(){
 			// summary:
 			// 		disconnect from the server  
-			this.connected = false;
+			this.started = false;
 			this.xhr.abort();
 		}
 	});

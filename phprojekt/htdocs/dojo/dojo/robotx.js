@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -23,10 +23,6 @@ var iframe = document.getElementById('robotapplication');
 
 var groupStarted=dojo.connect(doh, '_groupStarted', function(){
 	dojo.disconnect(groupStarted);
-	if(!document.getElementById('robotconsole').childNodes.length){
-		document.body.removeChild(document.getElementById('robotconsole'));
-		iframe.style.height="100%";
-	}
 	iframe.style.visibility="visible";
 });
 
@@ -34,6 +30,11 @@ var onIframeLoad=function(){
 	//iframe = document.getElementById('robotapplication');
 	doh.robot._updateDocument();
 	onIframeLoad = null;
+	var scrollRoot = (document.compatMode == 'BackCompat')? document.body : document.documentElement;
+	var consoleHeight = document.getElementById('robotconsole').offsetHeight;
+	if(consoleHeight){
+		iframe.style.height = (scrollRoot.clientHeight - consoleHeight)+"px";
+	}
 	doh.run();
 };
 
@@ -42,6 +43,7 @@ var iframeLoad=function(){
 		onIframeLoad();
 	}
 	var unloadConnect = dojo.connect(dojo.body(), 'onunload', function(){
+		dojo.global = window;
 		dojo.doc = document;
 		dojo.disconnect(unloadConnect);
 	});
@@ -49,13 +51,15 @@ var iframeLoad=function(){
 
 // write the firebug console to a place it will fit
 dojo.config.debugContainerId = "robotconsole";
-document.write('<div id="robotconsole" style="position:absolute;left:0px;top:75%;width:100%; height:25%;"></div>');
+dojo.config.debugHeight = dojo.config.debugHeight || 200;
+document.write('<div id="robotconsole" style="position:absolute;left:0px;bottom:0px;width:100%;"></div>');
 
 // write the iframe
 //document.writeln('<iframe id="robotapplication" style="visibility:hidden; border:0px none; padding:0px; margin:0px; position:absolute; left:0px; top:0px; width:100%; height:100%; z-index: 1;" src="'+dojo.config.robotURL+'" onload="iframeLoad();" ></iframe>');
 iframe = document.createElement('iframe');
 iframe.setAttribute("ALLOWTRANSPARENCY","true");
-dojo.style(iframe,{visibility:'hidden', border:'0px none', padding:'0px', margin:'0px', position:'absolute', left:'0px', top:'0px', width:'100%', height:'75%', zIndex:'1'});
+iframe.scrolling = dojo.isIE? "yes" : "auto";
+dojo.style(iframe,{visibility:'hidden', border:'0px none', padding:'0px', margin:'0px', position:'absolute', left:'0px', top:'0px', width:'100%', height:'100%'});
 if(iframe['attachEvent'] !== undefined){
 	iframe.attachEvent('onload', iframeLoad);
 }else{
@@ -64,7 +68,13 @@ if(iframe['attachEvent'] !== undefined){
 
 dojo.mixin(doh.robot,{
 	_updateDocument: function(){
-		dojo.doc = iframe.contentWindow.document;
+		dojo.setContext(iframe.contentWindow, iframe.contentWindow.document);
+		var win = dojo.global;
+		if(win["dojo"]){
+			// allow the tests to subscribe to topics published by the iframe
+			dojo._topics = win.dojo._topics;
+		}
+		 
 	},
 
 	initRobot: function(/*String*/ url){
@@ -76,10 +86,15 @@ dojo.mixin(doh.robot,{
 		//
 		iframe.src=url;
 		dojo.addOnLoad(function(){
-			dojo.style(document.body,{
-				width: '100%',
-				height: '100%'
-			});
+			var emptyStyle = {
+				overflow: dojo.isWebKit? 'hidden' : 'visible',
+				margin: '0px',
+				borderWidth: '0px',
+				height: '100%',
+				width: '100%'
+			};
+			dojo.style(document.documentElement, emptyStyle);
+			dojo.style(document.body, emptyStyle);
 			document.body.appendChild(iframe);
 			var base=document.createElement('base');
 			base.href=url;

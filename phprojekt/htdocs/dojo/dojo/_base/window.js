@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -47,55 +47,58 @@ dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocu
 	dojo.doc = globalDocument;
 };
 
-dojo._fireCallback = function(callback, context, cbArguments){
-	if(context && dojo.isString(callback)){
-		callback = context[callback];
-	}
-	return callback.apply(context, cbArguments || [ ]);
-}
-
 dojo.withGlobal = function(	/*Object*/globalObject, 
 							/*Function*/callback, 
 							/*Object?*/thisObject, 
 							/*Array?*/cbArguments){
 	// summary:
-	//		Call callback with globalObject as dojo.global and
+	//		Invoke callback with globalObject as dojo.global and
+	//		globalObject.document as dojo.doc.
+	// description:
+	//		Invoke callback with globalObject as dojo.global and
 	//		globalObject.document as dojo.doc. If provided, globalObject
 	//		will be executed in the context of object thisObject
-	// description:
 	//		When callback() returns or throws an error, the dojo.global
 	//		and dojo.doc will be restored to its previous state.
-	var rval;
+
 	var oldGlob = dojo.global;
-	var oldDoc = dojo.doc;
 	try{
-		dojo.setContext(globalObject, globalObject.document);
-		rval = dojo._fireCallback(callback, thisObject, cbArguments);
+		dojo.global = globalObject;
+		return dojo.withDoc.call(null, globalObject.document, callback, thisObject, cbArguments);
 	}finally{
-		dojo.setContext(oldGlob, oldDoc);
+		dojo.global = oldGlob;
 	}
-	return rval;
 }
 
-dojo.withDoc = function(	/*Object*/documentObject, 
+dojo.withDoc = function(	/*DocumentElement*/documentObject, 
 							/*Function*/callback, 
 							/*Object?*/thisObject, 
 							/*Array?*/cbArguments){
 	// summary:
-	//		Call callback with documentObject as dojo.doc. If provided,
-	//		callback will be executed in the context of object thisObject
+	//		Invoke callback with documentObject as dojo.doc.
 	// description:
+	//		Invoke callback with documentObject as dojo.doc. If provided,
+	//		callback will be executed in the context of object thisObject
 	//		When callback() returns or throws an error, the dojo.doc will
 	//		be restored to its previous state.
-	var rval;
-	var oldDoc = dojo.doc;
+
+	var oldDoc = dojo.doc,
+		oldLtr = dojo._bodyLtr;
+
 	try{
 		dojo.doc = documentObject;
-		rval = dojo._fireCallback(callback, thisObject, cbArguments);
+		delete dojo._bodyLtr; // uncache
+
+		if(thisObject && dojo.isString(callback)){
+			callback = thisObject[callback];
+		}
+
+		return callback.apply(thisObject, cbArguments || []);
 	}finally{
 		dojo.doc = oldDoc;
+		if(oldLtr !== undefined){ dojo._bodyLtr = oldLtr; }
 	}
-	return rval;
 };
+	
 
 }

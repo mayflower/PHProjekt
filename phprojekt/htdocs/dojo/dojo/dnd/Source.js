@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -39,11 +39,15 @@ dojo.dnd.__SourceArgs = function(){
 	//	accept: Array?
 	//		list of accepted types (text strings) for a target; defaults to
 	//		["text"]
-	//	horizontal: Boolean?
-	//		a horizontal container, if true, vertical otherwise or when omitted
+	//	autoSync: Boolean
+	//		if true refreshes the node list on every operation; false by default
 	//	copyOnly: Boolean?
 	//		copy items, if true, use a state of Ctrl key otherwise,
 	//		see selfCopy and selfAccept for more details
+	//	delay: Number
+	//		the move delay in pixels before detecting a drag; 0 by default
+	//	horizontal: Boolean?
+	//		a horizontal container, if true, vertical otherwise or when omitted
 	//	selfCopy: Boolean?
 	//		copy items by default when dropping on itself,
 	//		false by default, works only if copyOnly is true
@@ -54,8 +58,10 @@ dojo.dnd.__SourceArgs = function(){
 	//		allows dragging only by handles, false by default
 	this.isSource = isSource;
 	this.accept = accept;
-	this.horizontal = horizontal;
+	this.autoSync = autoSync;
 	this.copyOnly = copyOnly;
+	this.delay = delay;
+	this.horizontal = horizontal;
 	this.selfCopy = selfCopy;
 	this.selfAccept = selfAccept;
 	this.withHandles = withHandles;
@@ -219,9 +225,8 @@ dojo.declare("dojo.dnd.Source", dojo.dnd.Selector, {
 	onMouseDown: function(e){
 		// summary: event processor for onmousedown
 		// e: Event: mouse event
-		if(this._legalMouseDown(e) && (!this.skipForm || !dojo.dnd.isFormElement(e))){
+		if(!this.mouseDown && this._legalMouseDown(e) && (!this.skipForm || !dojo.dnd.isFormElement(e))){
 			this.mouseDown = true;
-			this.mouseButton = e.button;
 			this._lastX = e.pageX;
 			this._lastY = e.pageY;
 			dojo.dnd.Source.superclass.onMouseDown.call(this, e);
@@ -287,7 +292,6 @@ dojo.declare("dojo.dnd.Source", dojo.dnd.Selector, {
 		this.before = true;
 		this.isDragging = false;
 		this.mouseDown = false;
-		delete this.mouseButton;
 		this._changeState("Source", "");
 		this._changeState("Target", "");
 	},
@@ -445,9 +449,16 @@ dojo.declare("dojo.dnd.Source", dojo.dnd.Selector, {
 	_legalMouseDown: function(e){
 		// summary: checks if user clicked on "approved" items
 		// e: Event: mouse event
+		
+		// accept only the left mouse button
+		if(!dojo.dnd._isLmbPressed(e)){ return false; }
+		
 		if(!this.withHandles){ return true; }
-		for(var node = e.target; node && !dojo.hasClass(node, "dojoDndItem"); node = node.parentNode){
+		
+		// check for handles
+		for(var node = e.target; node && node !== this.node; node = node.parentNode){
 			if(dojo.hasClass(node, "dojoDndHandle")){ return true; }
+			if(dojo.hasClass(node, "dojoDndItem")){ break; }
 		}
 		return false;	// Boolean
 	}

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -76,7 +76,7 @@ dojo.io.script = {
 	remove: function(/*String*/id, /*Document?*/frameDocument){
 		//summary: removes the script element with the given id, from the given frameDocument.
 		//If no frameDocument is passed, the current document is used.
-		dojo._destroyElement(dojo.byId(id, frameDocument));
+		dojo.destroy(dojo.byId(id, frameDocument));
 		
 		//Remove the jsonp callback on dojo.io.script, if it exists.
 		if(this["jsonp_" + id]){
@@ -161,7 +161,7 @@ dojo.io.script = {
 				dojo.io.script._addDeadScript(dfd.ioArgs);
 			}
 		}
-		console.debug("dojo.io.script error", error);
+		console.log("dojo.io.script error", error);
 		return error;
 	},
 

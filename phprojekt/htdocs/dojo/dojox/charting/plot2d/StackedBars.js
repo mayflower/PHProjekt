@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -31,6 +31,10 @@ dojo.require("dojox.lang.functional.reversed");
 			return this;
 		},
 		render: function(dim, offsets){
+			if(this._maxRunLength <= 0){
+				return this;
+			}
+
 			// stack all values
 			var acc = df.repeat(this._maxRunLength, "-> 0", 0);
 			for(var i = 0; i < this.series.length; ++i){
@@ -49,12 +53,14 @@ dojo.require("dojox.lang.functional.reversed");
 				var s = this.group;
 				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
 			}
-			var t = this.chart.theme, color, stroke, fill, f,
+			var t = this.chart.theme, color, stroke, fill, f, gap, height,
 				ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
-				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler);
-				gap = this.opt.gap < this._vScaler.bounds.scale / 3 ? this.opt.gap : 0,
-				height = this._vScaler.bounds.scale - 2 * gap,
+				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
 				events = this.events();
+			f = dc.calculateBarSize(this._vScaler.bounds.scale, this.opt);
+			gap = f.gap;
+			height = f.size;
+			this.resetEvents();
 			for(var i = this.series.length - 1; i >= 0; --i){
 				var run = this.series[i];
 				if(!this.dirty && !run.dirty){ continue; }

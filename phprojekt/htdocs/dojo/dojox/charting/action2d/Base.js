@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -16,13 +16,12 @@ dojo.require("dojox.gfx.fx");
 (function(){
 	var DEFAULT_DURATION = 400,	// ms
 		DEFAULT_EASING   = dojo.fx.easing.backOut,
+		df = dojox.lang.functional;
 
-		dfo = dojox.lang.functional.object;
-		
 	dojo.declare("dojox.charting.action2d.Base", null, {
-		
+
 		overOutEvents: {onmouseover: 1, onmouseout: 1},
-			
+
 		constructor: function(chart, plot, kwargs){
 			this.chart = chart;
 			this.plot = plot ? plot : "default";
@@ -33,28 +32,28 @@ dojo.require("dojox.gfx.fx");
 			this.duration = kwargs.duration ? kwargs.duration : DEFAULT_DURATION;
 			this.easing   = kwargs.easing   ? kwargs.easing   : DEFAULT_EASING;
 		},
-		
+
 		connect: function(){
 			this.handle = this.chart.connectToPlot(this.plot, this, "process");
 		},
-		
+
 		disconnect: function(){
 			if(this.handle){
 				dojo.disconnect(this.handle);
 				this.handle = null;
 			}
 		},
-		
+
 		reset: function(){
 			// nothing by default
 		},
-	
+
 		destroy: function(){
 			if(this.handle){
 				this.disconnect();
 			}
-			dfo.forIn(this.anim, function(o){
-				dfo.forIn(o, function(anim){
+			df.forIn(this.anim, function(o){
+				df.forIn(o, function(anim){
 					anim.action.stop(true);
 				});
 			});

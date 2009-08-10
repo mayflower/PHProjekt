@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -7,8 +7,12 @@
 
 if(!dojo._hasResource["dojo._base.query"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojo._base.query"] = true;
-dojo.provide("dojo._base.query");
-dojo.require("dojo._base.NodeList");
+if(typeof dojo != "undefined"){
+	dojo.provide("dojo._base.query");
+	dojo.require("dojo._base.NodeList");
+	dojo.require("dojo._base.lang");
+
+}
 
 /*
 	dojo.query() architectural overview:
@@ -23,8 +27,7 @@ dojo.require("dojo._base.NodeList");
 				- if so, use that with the given parameterization. Skip to step 4.
 			2.) attempt to determine which branch to dispatch the query to:
 				- JS (optimized DOM iteration)
-				- xpath (for browsers that support it and where it's fast)
-				- native (not available in any browser yet)
+				- native (FF3.1+, Safari 3.1+, IE 8+)
 			3.) tokenize and convert to executable "query dispatcher"
 				- this is where the lion's share of the complexity in the
 				  system lies. In the DOM version, the query dispatcher is
@@ -34,69 +37,147 @@ dojo.require("dojo._base.NodeList");
 				  statement dispatchers are cached (to prevent re-definition)
 				  as are entire dispatch chains (to make re-execution of the
 				  same query fast)
-				- in the xpath path, tokenization yields a concatenation of
-				  parameterized xpath selectors. As with the DOM version, both
-				  simple selector blocks and overall evaluators are cached to
-				  prevent re-defintion
-			4.) the resulting query dispatcher is called in the passed scope (by default the top-level document)
+			4.) the resulting query dispatcher is called in the passed scope
+			    (by default the top-level document)
 				- for DOM queries, this results in a recursive, top-down
 				  evaluation of nodes based on each simple query section
-				- xpath queries can, thankfully, be executed in one shot
-			5.) matched nodes are pruned to ensure they are unique
+				- for native implementations, this may mean working around spec
+				  bugs. So be it.
+			5.) matched nodes are pruned to ensure they are unique (if necessary)
 */
 
-;(function(){
+;(function(d){
 	// define everything in a closure for compressability reasons. "d" is an
-	// alias to "dojo" since it's so frequently used. This seems a
-	// transformation that the build system could perform on a per-file basis.
+	// alias to "dojo" (or the toolkit alias object, e.g., "acme").
 
 	////////////////////////////////////////////////////////////////////////
-	// Utility code
+	// Toolkit aliases
 	////////////////////////////////////////////////////////////////////////
 
-	var d = dojo;
-	var childNodesName = dojo.isIE ? "children" : "childNodes";
+	// if you are extracing dojo.query for use in your own system, you will
+	// need to provide these methods and properties. No other porting should be
+	// necessary, save for configuring the system to use a class other than
+	// dojo.NodeList as the return instance instantiator
+	var trim = 			d.trim;
+	var each = 			d.forEach;
+	// 					d.isIE; // float
+	// 					d.isSafari; // float
+	// 					d.isOpera; // float
+	// 					d.isWebKit; // float
+	// 					d.doc ; // document element
+	var qlc = d._queryListCtor = 		d.NodeList;
+	var isString = 		d.isString;
+
+	var getDoc = function(){ return d.doc; };
+	// NOTE(alex): the spec is idiotic. CSS queries should ALWAYS be case-sensitive, but nooooooo
+	var cssCaseBug = ((d.isWebKit||d.isMozilla) && ((getDoc().compatMode) == "BackCompat"));
+
+	////////////////////////////////////////////////////////////////////////
+	// Global utilities
+	////////////////////////////////////////////////////////////////////////
+
+
+	// on browsers that support the "children" collection we can avoid a lot of
+	// iteration on chaff (non-element) nodes.
+	// why.
+	var childNodesName = !!getDoc().firstChild["children"] ? "children" : "childNodes";
+
+	var specials = ">~+";
+
+	// global thunk to determine whether we should treat the current query as
+	// case sensitive or not. This switch is flipped by the query evaluator
+	// based on the document passed as the context to search.
 	var caseSensitive = false;
 
-	var getQueryParts = function(query){
-		// summary: state machine for query tokenization
-		if(">~+".indexOf(query.charAt(query.length-1)) >= 0){
-			query += " *"
-		}
-		query += " "; // ensure that we terminate the state machine
+	// how high?
+	var yesman = function(){ return true; };
 
-		var ts = function(s, e){
-			return d.trim(query.slice(s, e));
+	////////////////////////////////////////////////////////////////////////
+	// Tokenizer
+	////////////////////////////////////////////////////////////////////////
+
+	var getQueryParts = function(query){
+		//	summary: 
+		//		state machine for query tokenization
+		//	description:
+		//		instead of using a brittle and slow regex-based CSS parser,
+		//		dojo.query implements an AST-style query representation. This
+		//		representation is only generated once per query. For example,
+		//		the same query run multiple times or under different root nodes
+		//		does not re-parse the selector expression but instead uses the
+		//		cached data structure. The state machine implemented here
+		//		terminates on the last " " (space) charachter and returns an
+		//		ordered array of query component structures (or "parts"). Each
+		//		part represents an operator or a simple CSS filtering
+		//		expression. The structure for parts is documented in the code
+		//		below.
+
+
+		// NOTE: 
+		//		this code is designed to run fast and compress well. Sacrifices
+		//		to readibility and maintainability have been made.  Your best
+		//		bet when hacking the tokenizer is to put The Donnas on *really*
+		//		loud (may we recommend their "Spend The Night" release?) and
+		//		just assume you're gonna make mistakes. Keep the unit tests
+		//		open and run them frequently. Knowing is half the battle ;-)
+		if(specials.indexOf(query.slice(-1)) >= 0){
+			// if we end with a ">", "+", or "~", that means we're implicitly
+			// searching all children, so make it explicit
+			query += " * "
+		}else{
+			// if you have not provided a terminator, one will be provided for
+			// you...
+			query += " ";
+		}
+
+		var ts = function(/*Integer*/ s, /*Integer*/ e){
+			// trim and slice. 
+
+			// take an index to start a string slice from and an end position
+			// and return a trimmed copy of that sub-string
+			return trim(query.slice(s, e));
 		}
 
 		// the overall data graph of the full query, as represented by queryPart objects
-		var qparts = []; 
+		var queryParts = []; 
+
+
 		// state keeping vars
-		var inBrackets = -1;
-		var inParens = -1;
-		var inMatchFor = -1;
-		var inPseudo = -1;
-		var inClass = -1;
-		var inId = -1;
-		var inTag = -1;
-		var lc = ""; // the last character
-		var cc = ""; // the current character
-		var pStart;
+		var inBrackets = -1, inParens = -1, inMatchFor = -1, 
+			inPseudo = -1, inClass = -1, inId = -1, inTag = -1, 
+			lc = "", cc = "", pStart;
+
 		// iteration vars
-		var x = 0; // index in the query
-		var ql = query.length;
-		var currentPart = null; // data structure representing the entire clause
-		var _cp = null; // the current pseudo or attr matcher
+		var x = 0, // index in the query
+			ql = query.length,
+			currentPart = null, // data structure representing the entire clause
+			_cp = null; // the current pseudo or attr matcher
+
+		// several temporary variables are assigned to this structure durring a
+		// potential sub-expression match:
+		//		attr:
+		//			a string representing the current full attribute match in a
+		//			bracket expression
+		//		type:
+		//			if there's an operator in a bracket expression, this is
+		//			used to keep track of it
+		//		value:
+		//			the internals of parenthetical expression for a pseudo. for
+		//			:nth-child(2n+1), value might be "2n+1"
 
 		var endTag = function(){
+			// called when the tokenizer hits the end of a particular tag name.
+			// Re-sets state variables for tag matching and sets up the matcher
+			// to handle the next type of token (tag or operator).
 			if(inTag >= 0){
 				var tv = (inTag == x) ? null : ts(inTag, x); // .toLowerCase();
-				currentPart[ (">~+".indexOf(tv) < 0) ? "tag" : "oper" ] = tv;
+				currentPart[ (specials.indexOf(tv) < 0) ? "tag" : "oper" ] = tv;
 				inTag = -1;
 			}
 		}
 
 		var endId = function(){
+			// called when the tokenizer might be at the end of an ID portion of a match
 			if(inId >= 0){
 				currentPart.id = ts(inId, x).replace(/\\/g, "");
 				inId = -1;
@@ -104,6 +185,9 @@ dojo.require("dojo._base.NodeList");
 		}
 
 		var endClass = function(){
+			// called when the tokenizer might be at the end of a class name
+			// match. CSS allows for multiple classes, so we augment the
+			// current item with another class in its list
 			if(inClass >= 0){
 				currentPart.classes.push(ts(inClass+1, x).replace(/\\/g, ""));
 				inClass = -1;
@@ -111,44 +195,145 @@ dojo.require("dojo._base.NodeList");
 		}
 
 		var endAll = function(){
+			// at the end of a simple fragment, so wall off the matches
 			endId(); endTag(); endClass();
 		}
 
-		for(; lc=cc, cc=query.charAt(x),x<ql; x++){
-			if(lc == "\\"){ continue; }
-			if(!currentPart){
+		var endPart = function(){
+			endAll();
+			if(inPseudo >= 0){
+				currentPart.pseudos.push({ name: ts(inPseudo+1, x) });
+			}
+			// hint to the selector engine to tell it whether or not it
+			// needs to do any iteration. Many simple selectors don't, and
+			// we can avoid significant construction-time work by advising
+			// the system to skip them
+			currentPart.loops = (	
+					currentPart.pseudos.length || 
+					currentPart.attrs.length || 
+					currentPart.classes.length	);
+
+			currentPart.oquery = currentPart.query = ts(pStart, x); // save the full expression as a string
+
+
+			// otag/tag are hints to suggest to the system whether or not
+			// it's an operator or a tag. We save a copy of otag since the
+			// tag name is cast to upper-case in regular HTML matches. The
+			// system has a global switch to figure out if the current
+			// expression needs to be case sensitive or not and it will use
+			// otag or tag accordingly
+			currentPart.otag = currentPart.tag = (currentPart["oper"]) ? null : (currentPart.tag || "*");
+
+			if(currentPart.tag){
+				// if we're in a case-insensitive HTML doc, we likely want
+				// the toUpperCase when matching on element.tagName. If we
+				// do it here, we can skip the string op per node
+				// comparison
+				currentPart.tag = currentPart.tag.toUpperCase();
+			}
+
+			// add the part to the list
+			if(queryParts.length && (queryParts[queryParts.length-1].oper)){
+				// operators are always infix, so we remove them from the
+				// list and attach them to the next match. The evaluator is
+				// responsible for sorting out how to handle them.
+				currentPart.infixOper = queryParts.pop();
+				currentPart.query = currentPart.infixOper.query + " " + currentPart.query;
+				/*
+				console.debug(	"swapping out the infix", 
+								currentPart.infixOper, 
+								"and attaching it to", 
+								currentPart);
+				*/
+			}
+			queryParts.push(currentPart);
+
+			currentPart = null;
+		}
+
+		// iterate over the query, charachter by charachter, building up a 
+		// list of query part objects
+		for(; lc=cc, cc=query.charAt(x), x < ql; x++){
+			//		cc: the current character in the match
+			//		lc: the last charachter (if any)
+
+			// someone is trying to escape something, so don't try to match any
+			// fragments. We assume we're inside a literal.
+			if(lc == "\\"){ continue; } 
+			if(!currentPart){ // a part was just ended or none has yet been created
 				// NOTE: I hate all this alloc, but it's shorter than writing tons of if's
 				pStart = x;
+				//	rules describe full CSS sub-expressions, like:
+				//		#someId
+				//		.className:first-child
+				//	but not:
+				//		thinger > div.howdy[type=thinger]
+				//	the indidual components of the previous query would be
+				//	split into 3 parts that would be represented a structure
+				//	like:
+				//		[
+				//			{
+				//				query: "thinger",
+				//				tag: "thinger",
+				//			},
+				//			{
+				//				query: "div.howdy[type=thinger]",
+				//				classes: ["howdy"],
+				//				infixOper: {
+				//					query: ">",
+				//					oper: ">",
+				//				}
+				//			},
+				//		]
 				currentPart = {
-					query: null,
-					pseudos: [],
-					attrs: [],
-					classes: [],
-					tag: null,
-					oper: null,
-					id: null
+					query: null, // the full text of the part's rule
+					pseudos: [], // CSS supports multiple pseud-class matches in a single rule
+					attrs: [], 	// CSS supports multi-attribute match, so we need an array
+					classes: [], // class matches may be additive, e.g.: .thinger.blah.howdy
+					tag: null, 	// only one tag...
+					oper: null, // ...or operator per component. Note that these wind up being exclusive.
+					id: null, 	// the id component of a rule
+					getTag: function(){
+						return (caseSensitive) ? this.otag : this.tag;
+					}
 				};
-				inTag = x;
+
+				// if we don't have a part, we assume we're going to start at
+				// the beginning of a match, which should be a tag name. This
+				// might fault a little later on, but we detect that and this
+				// iteration will still be fine.
+				inTag = x; 
 			}
 
 			if(inBrackets >= 0){
 				// look for a the close first
-				if(cc == "]"){
+				if(cc == "]"){ // if we're in a [...] clause and we end, do assignment
 					if(!_cp.attr){
+						// no attribute match was previously begun, so we
+						// assume this is an attribute existance match in the
+						// form of [someAttributeName]
 						_cp.attr = ts(inBrackets+1, x);
 					}else{
+						// we had an attribute already, so we know that we're
+						// matching some sort of value, as in [attrName=howdy]
 						_cp.matchFor = ts((inMatchFor||inBrackets+1), x);
 					}
 					var cmf = _cp.matchFor;
 					if(cmf){
+						// try to strip quotes from the matchFor value. We want
+						// [attrName=howdy] to match the same 
+						//	as [attrName = 'howdy' ]
 						if(	(cmf.charAt(0) == '"') || (cmf.charAt(0)  == "'") ){
-							_cp.matchFor = cmf.substring(1, cmf.length-1);
+							_cp.matchFor = cmf.slice(1, -1);
 						}
 					}
+					// end the attribute by adding it to the list of attributes. 
 					currentPart.attrs.push(_cp);
-					_cp = null; // necessaray?
+					_cp = null; // necessary?
 					inBrackets = inMatchFor = -1;
 				}else if(cc == "="){
+					// if the last char was an operator prefix, make sure we
+					// record it along with the "=" operator. 
 					var addToCc = ("|~^$*".indexOf(lc) >=0 ) ? lc : "";
 					_cp.type = addToCc+cc;
 					_cp.attr = ts(inBrackets+1, x-addToCc.length);
@@ -156,6 +341,9 @@ dojo.require("dojo._base.NodeList");
 				}
 				// now look for other clause parts
 			}else if(inParens >= 0){
+				// if we're in a parenthetical expression, we need to figure
+				// out if it's attached to a pseduo-selector rule like
+				// :nth-child(1)
 				if(cc == ")"){
 					if(inPseudo >= 0){
 						_cp.value = ts(inParens+1, x);
@@ -163,24 +351,32 @@ dojo.require("dojo._base.NodeList");
 					inPseudo = inParens = -1;
 				}
 			}else if(cc == "#"){
+				// start of an ID match
 				endAll();
 				inId = x+1;
 			}else if(cc == "."){
+				// start of a class match
 				endAll();
 				inClass = x;
 			}else if(cc == ":"){
+				// start of a pseudo-selector match
 				endAll();
 				inPseudo = x;
 			}else if(cc == "["){
+				// start of an attribute match. 
 				endAll();
 				inBrackets = x;
+				// provide a new structure for the attribute match to fill-in
 				_cp = {
 					/*=====
 					attr: null, type: null, matchFor: null
 					=====*/
 				};
 			}else if(cc == "("){
+				// we really only care if we've entered a parenthetical
+				// expression if we're already inside a pseudo-selector match
 				if(inPseudo >= 0){
+					// provide a new structure for the pseudo match to fill-in
 					_cp = { 
 						name: ts(inPseudo+1, x), 
 						value: null
@@ -188,411 +384,49 @@ dojo.require("dojo._base.NodeList");
 					currentPart.pseudos.push(_cp);
 				}
 				inParens = x;
-			}else if(cc == " " && lc != cc){
-				// note that we expect the string to be " " terminated
-				endAll();
-				if(inPseudo >= 0){
-					currentPart.pseudos.push({ name: ts(inPseudo+1, x) });
-				}
-				currentPart.hasLoops = (	
-						currentPart.pseudos.length || 
-						currentPart.attrs.length || 
-						currentPart.classes.length	);
-				currentPart.query = ts(pStart, x);
-				currentPart.otag = currentPart.tag = (currentPart["oper"]) ? null : (currentPart.tag || "*");
-				if(currentPart.tag){ // FIXME: not valid in case-sensitive documents
-					currentPart.tag = currentPart.tag.toUpperCase();
-				}
-				qparts.push(currentPart);
-				currentPart = null;
+			}else if(
+				(cc == " ") && 
+				// if it's a space char and the last char is too, consume the
+				// current one without doing more work
+				(lc != cc)
+			){
+				endPart();
 			}
 		}
-		return qparts;
+		return queryParts;
 	};
 	
 
 	////////////////////////////////////////////////////////////////////////
-	// XPath query code
+	// DOM query infrastructure
 	////////////////////////////////////////////////////////////////////////
 
-	// this array is a lookup used to generate an attribute matching function.
-	// There is a similar lookup/generator list for the DOM branch with similar
-	// calling semantics.
-	var xPathAttrs = {
-		"*=": function(attr, value){
-			return "[contains(@"+attr+", '"+ value +"')]";
-		},
-		"^=": function(attr, value){
-			return "[starts-with(@"+attr+", '"+ value +"')]";
-		},
-		"$=": function(attr, value){
-			return "[substring(@"+attr+", string-length(@"+attr+")-"+(value.length-1)+")='"+value+"']";
-		},
-		"~=": function(attr, value){
-			return "[contains(concat(' ',@"+attr+",' '), ' "+ value +" ')]";
-		},
-		"|=": function(attr, value){
-			return "[contains(concat(' ',@"+attr+",' '), ' "+ value +"-')]";
-		},
-		"=": function(attr, value){
-			return "[@"+attr+"='"+ value +"']";
-		}
-	};
-
-	// takes a list of attribute searches, the overall query, a function to
-	// generate a default matcher, and a closure-bound method for providing a
-	// matching function that generates whatever type of yes/no distinguisher
-	// the query method needs. The method is a bit tortured and hard to read
-	// because it needs to be used in both the XPath and DOM branches.
-	var handleAttrs = function(	attrList, 
-								query, 
-								getDefault, 
-								handleMatch){
-		d.forEach(query.attrs, function(attr){
-			var matcher;
-			// type, attr, matchFor
-			if(attr.type && attrList[attr.type]){
-				matcher = attrList[attr.type](attr.attr, attr.matchFor);
-			}else if(attr.attr.length){
-				matcher = getDefault(attr.attr);
-			}
-			if(matcher){ handleMatch(matcher); }
-		});
-	}
-
-	var buildPath = function(query){
-		var xpath = ".";
-		var qparts = getQueryParts(d.trim(query));
-		while(qparts.length){
-			var tqp = qparts.shift();
-			var prefix;
-			var postfix = "";
-			if(tqp.oper == ">"){
-				prefix = "/";
-				// prefix = "/child::*";
-				tqp = qparts.shift();
-			}else if(tqp.oper == "~"){
-				prefix = "/following-sibling::"; // get element following siblings
-				tqp = qparts.shift();
-			}else if(tqp.oper == "+"){
-				// FIXME: 
-				//		fails when selecting subsequent siblings by node type
-				//		because the position() checks the position in the list
-				//		of matching elements and not the localized siblings
-				prefix = "/following-sibling::";
-				postfix = "[position()=1]";
-				tqp = qparts.shift();
-			}else{
-				prefix = "//";
-				// prefix = "/descendant::*"
-			}
-
-			// get the tag name (if any)
-
-			xpath += prefix + tqp.tag + postfix;
-			
-			// check to see if it's got an id. Needs to come first in xpath.
-			if(tqp.id){
-				xpath += "[@id='"+tqp.id+"'][1]";
-			}
-
-			d.forEach(tqp.classes, function(cn){
-				var cnl = cn.length;
-				var padding = " ";
-				if(cn.charAt(cnl-1) == "*"){
-					padding = ""; cn = cn.substr(0, cnl-1);
-				}
-				xpath += 
-					"[contains(concat(' ',@class,' '), ' "+
-					cn + padding + "')]";
-			});
-
-			handleAttrs(xPathAttrs, tqp, 
-				function(condition){
-						return "[@"+condition+"]";
-				},
-				function(matcher){
-					xpath += matcher;
-				}
-			);
-
-			// FIXME: need to implement pseudo-class checks!!
-		};
-		return xpath;
-	};
-
-	var _xpathFuncCache = {};
-	var getXPathFunc = function(path){
-		if(_xpathFuncCache[path]){
-			return _xpathFuncCache[path];
-		}
-
-		var doc = d.doc;
-		// don't need to memoize. The closure scope handles it for us.
-		var xpath = buildPath(path);
-
-		var tf = function(parent){
-			// XPath query strings are memoized.
-
-			var ret = [];
-			var xpathResult;
-			var tdoc = doc;
-			if(parent){
-				tdoc = (parent.nodeType == 9) ? parent : parent.ownerDocument;
-			}
-			try{
-				xpathResult = tdoc.evaluate(xpath, parent, null, 
-												// XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
-												XPathResult.ANY_TYPE, null);
-			}catch(e){
-				console.debug("failure in exprssion:", xpath, "under:", parent);
-				console.debug(e);
-			}
-			var result = xpathResult.iterateNext();
-			while(result){
-				ret.push(result);
-				result = xpathResult.iterateNext();
-			}
-			return ret;
-		}
-		return _xpathFuncCache[path] = tf;
-	};
-
-	/*
-	d.xPathMatch = function(query){
-		// XPath based DOM query system. Handles a small subset of CSS
-		// selectors, subset is identical to the non-XPath version of this
-		// function. 
-
-		return getXPathFunc(query)();
-	}
-	*/
-
-	////////////////////////////////////////////////////////////////////////
-	// DOM query code
-	////////////////////////////////////////////////////////////////////////
-
-	var _filtersCache = {};
-	var _simpleFiltersCache = {};
-
-	// the basic building block of the yes/no chaining system. agree(f1, f2)
-	// generates a new function which returns the boolean results of both of
-	// the passed functions to a single logical-anded result.
 	var agree = function(first, second){
+		// the basic building block of the yes/no chaining system. agree(f1,
+		// f2) generates a new function which returns the boolean results of
+		// both of the passed functions to a single logical-anded result. If
+		// either are not possed, the other is used exclusively.
 		if(!first){ return second; }
 		if(!second){ return first; }
 
 		return function(){
 			return first.apply(window, arguments) && second.apply(window, arguments);
 		}
-	}
+	};
 
-	var _childElements = function(root){
-		var ret = [];
-		var te, x = 0, tret = root[childNodesName];
-		while((te = tret[x++])){
-			if(te.nodeType == 1){ ret.push(te); }
-		}
-		return ret;
-	}
+	var getArr = function(i, arr){
+		// helps us avoid array alloc when we don't need it
+		var r = arr||[]; // FIXME: should this be 'new d._queryListCtor()' ?
+		if(i){ r.push(i); }
+		return r;
+	};
 
-	var _nextSiblings = function(root, single){
-		var ret = [];
-		var te = root;
-		while(te = te.nextSibling){
-			if(te.nodeType == 1){
-				ret.push(te);
-				if(single){ break; }
-			}
-		}
-		return ret;
-	}
+	var _isElement = function(n){ return (1 == n.nodeType); };
 
-	// FIXME:
-	//		we need to re-write the way "~" and "+" selectors are handled since
-	//		the left-hand selector simply modifies the right (which is the
-	//		actual search selector). We need to locate on search selector
-	//		instead of modifier to speed up these searches.
-
-	var _filterDown = function(element, queryParts, matchArr, idx){
-		// NOTE:
-		//		in the fast path! this function is called recursively and for
-		//		every run of a query.
-		var nidx = idx+1;
-		var isFinal = (queryParts.length == nidx);
-		var tqp = queryParts[idx];
-
-		// see if we can constrain our next level to direct children
-		if(tqp.oper){
-			// find some eligable children to search
-			var ecn = (tqp.oper == ">") ? 
-				_childElements(element) :
-				_nextSiblings(element, (tqp.oper == "+"));
-
-			if(!ecn || !ecn.length){
-				return;
-			}
-			nidx++;
-			isFinal = (queryParts.length == nidx);
-			// kinda janky, too much array alloc
-			var tf = getFilterFunc(queryParts[idx+1]);
-			// for(var x=ecn.length-1, te; x>=0, te=ecn[x]; x--){
-			for(var x=0, ecnl=ecn.length, te; x<ecnl, te=ecn[x]; x++){
-				if(tf(te)){
-					if(isFinal){
-						matchArr.push(te);
-					}else{
-						_filterDown(te, queryParts, matchArr, nidx);
-					}
-				}
-				/*
-				if(x==0){
-					break;
-				}
-				*/
-			}
-		}
-
-		// otherwise, keep going down, unless we'er at the end
-		var candidates = getElementsFunc(tqp)(element);
-		if(isFinal){
-			while(candidates.length){
-				matchArr.push(candidates.shift());
-			}
-			/*
-			candidates.unshift(0, matchArr.length-1);
-			matchArr.splice.apply(matchArr, candidates);
-			*/
-		}else{
-			// if we're not yet at the bottom, keep going!
-			while(candidates.length){
-				_filterDown(candidates.shift(), queryParts, matchArr, nidx);
-			}
-		}
-	}
-
-	var filterDown = function(elements, queryParts){
-		var ret = [];
-
-		// for every root, get the elements that match the descendant selector
-		// for(var x=elements.length-1, te; x>=0, te=elements[x]; x--){
-		var x = elements.length - 1, te;
-		while((te = elements[x--])){
-			_filterDown(te, queryParts, ret, 0);
-		}
-		return ret;
-	}
-
-	var getFilterFunc = function(q){
-		// note: query can't have spaces!
-		if(_filtersCache[q.query]){
-			return _filtersCache[q.query];
-		}
-		var ff = null;
-
-		// does it have a tagName component?
-		if(q.tag){
-			if(q.tag == "*"){
-				ff = agree(ff, 
-					function(elem){
-						return (elem.nodeType == 1);
-					}
-				);
-			}else{
-				// tag name match
-				ff = agree(ff, 
-					function(elem){
-						return (
-							(elem.nodeType == 1) &&
-							(q[ caseSensitive ? "otag" : "tag" ] == elem.tagName)
-							// (q.tag == elem.tagName.toLowerCase())
-						);
-						// return isTn;
-					}
-				);
-			}
-		}
-
-		// does the node have an ID?
-		if(q.id){
-			ff = agree(ff, 
-				function(elem){
-					return (
-						(elem.nodeType == 1) &&
-						(elem.id == q.id)
-					);
-				}
-			);
-		}
-
-		if(q.hasLoops){
-			// if we have other query param parts, make sure we add them to the
-			// filter chain
-			ff = agree(ff, getSimpleFilterFunc(q));
-		}
-
-		return _filtersCache[q.query] = ff;
-	}
-
-	var getNodeIndex = function(node){
-		// NOTE: 
-		//		we could have a more accurate caching mechanism by invalidating
-		//		caches after the query has finished, but I think that'd lead to
-		//		significantly more cache churn than the cache would provide
-		//		value for in the common case. Generally, we're more
-		//		conservative (and therefore, more accurate) than jQuery and
-		//		DomQuery WRT node node indexes, but there may be corner cases
-		//		in which we fall down.  How much we care about them is TBD.
-
-		var pn = node.parentNode;
-		var pnc = pn.childNodes;
-
-		// check to see if we can trust the cache. If not, re-key the whole
-		// thing and return our node match from that.
-
-		var nidx = -1;
-		var child = pn.firstChild;
-		if(!child){
-			return nidx;
-		}
-
-		var ci = node["__cachedIndex"];
-		var cl = pn["__cachedLength"];
-
-		// only handle cache building if we've gone out of sync
-		if(((typeof cl == "number")&&(cl != pnc.length))||(typeof ci != "number")){
-			// rip though the whole set, building cache indexes as we go
-			pn["__cachedLength"] = pnc.length;
-			var idx = 1;
-			do{
-				// we only assign indexes for nodes with nodeType == 1, as per:
-				//		http://www.w3.org/TR/css3-selectors/#nth-child-pseudo
-				// only elements are counted in the search order, and they
-				// begin at 1 for the first child's index
-
-				if(child === node){
-					nidx = idx;
-				}
-				if(child.nodeType == 1){
-					child["__cachedIndex"] = idx;
-					idx++;
-				}
-				child = child.nextSibling;
-			}while(child);
-		}else{
-			// NOTE: 
-			//		could be incorrect in some cases (node swaps involving the
-			//		passed node, etc.), but we ignore those due to the relative
-			//		unlikelihood of that occuring
-			nidx = ci;
-		}
-		return nidx;
-	}
-
-	var firedCount = 0;
-
+	// FIXME: need to coalesce _getAttr with defaultGetter
 	var blank = "";
 	var _getAttr = function(elem, attr){
+		if(!elem){ return blank; }
 		if(attr == "class"){
 			return elem.className || blank;
 		}
@@ -602,8 +436,8 @@ dojo.require("dojo._base.NodeList");
 		if(attr == "style"){
 			return elem.style.cssText || blank;
 		}
-		return elem.getAttribute(attr, 2) || blank;
-	}
+		return (caseSensitive ? elem.getAttribute(attr) : elem.getAttribute(attr, 2)) || blank;
+	};
 
 	var attrs = {
 		"*=": function(attr, value){
@@ -652,7 +486,7 @@ dojo.require("dojo._base.NodeList");
 			//		left) with "en"
 			var valueDash = " "+value+"-";
 			return function(elem){
-				var ea = " "+(elem.getAttribute(attr, 2) || "");
+				var ea = " "+_getAttr(elem, attr);
 				return (
 					(ea == value) ||
 					(ea.indexOf(valueDash)==0)
@@ -666,82 +500,146 @@ dojo.require("dojo._base.NodeList");
 		}
 	};
 
+	// avoid testing for node type if we can. Defining this in the negative
+	// here to avoid negation in the fast path.
+	var _noNES = (typeof getDoc().firstChild.nextElementSibling == "undefined");
+	var _ns = !_noNES ? "nextElementSibling" : "nextSibling";
+	var _ps = !_noNES ? "previousElementSibling" : "previousSibling";
+	var _simpleNodeTest = (_noNES ? _isElement : yesman);
+
+	var _lookLeft = function(node){
+		// look left
+		while(node = node[_ps]){
+			if(_simpleNodeTest(node)){ return false; }
+		}
+		return true;
+	};
+
+	var _lookRight = function(node){
+		// look right
+		while(node = node[_ns]){
+			if(_simpleNodeTest(node)){ return false; }
+		}
+		return true;
+	};
+
+	var getNodeIndex = function(node){
+		var root = node.parentNode;
+		var i = 0,
+			tret = root[childNodesName],
+			ci = (node["_i"]||-1),
+			cl = (root["_l"]||-1);
+
+		if(!tret){ return -1; }
+		var l = tret.length;
+
+		// we calcuate the parent length as a cheap way to invalidate the
+		// cache. It's not 100% accurate, but it's much more honest than what
+		// other libraries do
+		if( cl == l && ci >= 0 && cl >= 0 ){
+			// if it's legit, tag and release
+			return ci;
+		}
+
+		// else re-key things
+		root["_l"] = l;
+		ci = -1;
+		for(var te = root["firstElementChild"]||root["firstChild"]; te; te = te[_ns]){
+			if(_simpleNodeTest(te)){ 
+				te["_i"] = ++i;
+				if(node === te){ 
+					// NOTE:
+					// 	shortcuting the return at this step in indexing works
+					// 	very well for benchmarking but we avoid it here since
+					// 	it leads to potential O(n^2) behavior in sequential
+					// 	getNodexIndex operations on a previously un-indexed
+					// 	parent. We may revisit this at a later time, but for
+					// 	now we just want to get the right answer more often
+					// 	than not.
+					ci = i;
+				}
+			}
+		}
+		return ci;
+	};
+
+	var isEven = function(elem){
+		return !((getNodeIndex(elem)) % 2);
+	};
+
+	var isOdd = function(elem){
+		return ((getNodeIndex(elem)) % 2);
+	};
+
 	var pseudos = {
 		"checked": function(name, condition){
 			return function(elem){
+				// FIXME: make this more portable!!
 				return !!d.attr(elem, "checked");
 			}
 		},
-		"first-child": function(name, condition){
-			return function(elem){
-				if(elem.nodeType != 1){ return false; }
-				// check to see if any of the previous siblings are elements
-				var fc = elem.previousSibling;
-				while(fc && (fc.nodeType != 1)){
-					fc = fc.previousSibling;
-				}
-				return (!fc);
-			}
-		},
-		"last-child": function(name, condition){
-			return function(elem){
-				if(elem.nodeType != 1){ return false; }
-				// check to see if any of the next siblings are elements
-				var nc = elem.nextSibling;
-				while(nc && (nc.nodeType != 1)){
-					nc = nc.nextSibling;
-				}
-				return (!nc);
-			}
+		"first-child": function(){ return _lookLeft; },
+		"last-child": function(){ return _lookRight; },
+		"only-child": function(name, condition){
+			return function(node){ 
+				if(!_lookLeft(node)){ return false; }
+				if(!_lookRight(node)){ return false; }
+				return true;
+			};
 		},
 		"empty": function(name, condition){
 			return function(elem){
 				// DomQuery and jQuery get this wrong, oddly enough.
-				// The CSS 3 selectors spec is pretty explicit about
-				// it, too.
+				// The CSS 3 selectors spec is pretty explicit about it, too.
 				var cn = elem.childNodes;
 				var cnl = elem.childNodes.length;
 				// if(!cnl){ return true; }
 				for(var x=cnl-1; x >= 0; x--){
 					var nt = cn[x].nodeType;
-					if((nt == 1)||(nt == 3)){ return false; }
+					if((nt === 1)||(nt == 3)){ return false; }
 				}
 				return true;
 			}
 		},
 		"contains": function(name, condition){
+			var cz = condition.charAt(0);
+			if( cz == '"' || cz == "'" ){ //remove quote
+				condition = condition.slice(1, -1);
+			}
 			return function(elem){
-				// FIXME: I dislike this version of "contains", as
-				// whimsical attribute could set it off. An inner-text
-				// based version might be more accurate, but since
-				// jQuery and DomQuery also potentially get this wrong,
-				// I'm leaving it for now.
-				if(condition.charAt(0)=='"' || condition.charAt(0)=="'"){//remove quote
-					condition=condition.substr(1,condition.length-2);
-				}
 				return (elem.innerHTML.indexOf(condition) >= 0);
 			}
 		},
 		"not": function(name, condition){
-			var ntf = getFilterFunc(getQueryParts(condition)[0]);
+			var p = getQueryParts(condition)[0];
+			var ignores = { el: 1 }; 
+			if(p.tag != "*"){
+				ignores.tag = 1;
+			}
+			if(!p.classes.length){
+				ignores.classes = 1;
+			}
+			var ntf = getSimpleFilterFunc(p, ignores);
 			return function(elem){
 				return (!ntf(elem));
 			}
 		},
 		"nth-child": function(name, condition){
 			var pi = parseInt;
+			// avoid re-defining function objects if we can
 			if(condition == "odd"){
-				condition = "2n+1";
+				return isOdd;
 			}else if(condition == "even"){
-				condition = "2n";
+				return isEven;
 			}
+			// FIXME: can we shorten this?
 			if(condition.indexOf("n") != -1){
 				var tparts = condition.split("n", 2);
-				var pred = tparts[0] ? (tparts[0]=='-'?-1:pi(tparts[0])) : 1;
+				var pred = tparts[0] ? ((tparts[0] == '-') ? -1 : pi(tparts[0])) : 1;
 				var idx = tparts[1] ? pi(tparts[1]) : 0;
 				var lb = 0, ub = -1;
-				if(pred>0){
-					if(idx<0){
+				if(pred > 0){
+					if(idx < 0){
 						idx = (idx % pred) && (pred + (idx % pred));
 					}else if(idx>0){
 						if(idx >= pred){
@@ -751,21 +649,22 @@ dojo.require("dojo._base.NodeList");
 					}
 				}else if(pred<0){
 					pred *= -1;
-					if(idx>0){
+					// idx has to be greater than 0 when pred is negative;
+					// shall we throw an error here?
+					if(idx > 0){
 						ub = idx;
 						idx = idx % pred;
-					} //idx has to be greater than 0 when pred is negative; shall we throw an error here?
+					}
 				}
-				if(pred>0){
+				if(pred > 0){
 					return function(elem){
-						var i=getNodeIndex(elem);
+						var i = getNodeIndex(elem);
 						return (i>=lb) && (ub<0 || i<=ub) && ((i % pred) == idx);
 					}
 				}else{
-					condition=idx;
+					condition = idx;
 				}
 			}
-			//if(condition.indexOf("n") == -1){
 			var ncount = pi(condition);
 			return function(elem){
 				return (getNodeIndex(elem) == ncount);
@@ -775,8 +674,9 @@ dojo.require("dojo._base.NodeList");
 
 	var defaultGetter = (d.isIE) ? function(cond){
 		var clc = cond.toLowerCase();
+		if(clc == "class"){ cond = "className"; }
 		return function(elem){
-			return elem[cond]||elem[clc];
+			return (caseSensitive ? elem.getAttribute(cond) : elem[cond]||elem[clc]);
 		}
 	} : function(cond){
 		return function(elem){
@@ -784,263 +684,580 @@ dojo.require("dojo._base.NodeList");
 		}
 	};
 
-	var getSimpleFilterFunc = function(query){
-
-		var fcHit = (_simpleFiltersCache[query.query]||_filtersCache[query.query]);
-		if(fcHit){ return fcHit; }
+	var getSimpleFilterFunc = function(query, ignores){
+		// generates a node tester function based on the passed query part. The
+		// query part is one of the structures generatd by the query parser
+		// when it creates the query AST. The "ignores" object specifies which
+		// (if any) tests to skip, allowing the system to avoid duplicating
+		// work where it may have already been taken into account by other
+		// factors such as how the nodes to test were fetched in the first
+		// place
+		if(!query){ return yesman; }
+		ignores = ignores||{};
 
 		var ff = null;
 
-		// the only case where we'll need the tag name is if we came from an ID query
-		if(query.id){ // do we have an ID component?
+		if(!("el" in ignores)){
+			ff = agree(ff, _isElement);
+		}
+
+		if(!("tag" in ignores)){
 			if(query.tag != "*"){
 				ff = agree(ff, function(elem){
-					return (elem.tagName == query[ caseSensitive ? "otag" : "tag" ]);
+					return (elem && (elem.tagName == query.getTag()));
 				});
 			}
 		}
 
-		// if there's a class in our query, generate a match function for it
-		d.forEach(query.classes, function(cname, idx, arr){
-			// get the class name
-			var isWildcard = cname.charAt(cname.length-1) == "*";
-			if(isWildcard){
-				cname = cname.substr(0, cname.length-1);
-			}
-			// I dislike the regex thing, even if memozied in a cache, but it's VERY short
-			var re = new RegExp("(?:^|\\s)" + cname + (isWildcard ? ".*" : "") + "(?:\\s|$)");
-			ff = agree(ff, function(elem){
-				return re.test(elem.className);
-			});
-			ff.count = idx;
-		});
-
-		d.forEach(query.pseudos, function(pseudo){
-			if(pseudos[pseudo.name]){
-				ff = agree(ff, pseudos[pseudo.name](pseudo.name, pseudo.value));
-			}
-		});
-
-		handleAttrs(attrs, query, defaultGetter,
-			function(tmatcher){ ff = agree(ff, tmatcher); }
-		);
-		if(!ff){
-			ff = function(){ return true; };
-		}
-		return _simpleFiltersCache[query.query] = ff;
-	}
-
-	var _getElementsFuncCache = { };
-
-	var getElementsFunc = function(query, root){
-		var fHit = _getElementsFuncCache[query.query];
-		if(fHit){ return fHit; }
-
-		// NOTE: this function is in the fast path! not memoized!!!
-
-		// the query doesn't contain any spaces, so there's only so many
-		// things it could be
-
-		if(query.id && !query.hasLoops && !query.tag){
-			// ID-only query. Easy.
-			return _getElementsFuncCache[query.query] = function(root){
-				// FIXME: if root != document, check for parenting!
-				return [ d.byId(query.id) ];
-			}
-		}
-
-		var filterFunc = getSimpleFilterFunc(query);
-
-		var retFunc;
-		if(query.tag && query.id && !query.hasLoops){
-			// we got a filtered ID search (e.g., "h4#thinger")
-			retFunc = function(root){
-				var te = d.byId(query.id, (root.ownerDocument||root)); //root itself may be a document
-				if(filterFunc(te)){
-					return [ te ];
+		if(!("classes" in ignores)){
+			each(query.classes, function(cname, idx, arr){
+				// get the class name
+				/*
+				var isWildcard = cname.charAt(cname.length-1) == "*";
+				if(isWildcard){
+					cname = cname.substr(0, cname.length-1);
 				}
-			}
-		}else{
-			var tret;
+				// I dislike the regex thing, even if memozied in a cache, but it's VERY short
+				var re = new RegExp("(?:^|\\s)" + cname + (isWildcard ? ".*" : "") + "(?:\\s|$)");
+				*/
+				var re = new RegExp("(?:^|\\s)" + cname + "(?:\\s|$)");
+				ff = agree(ff, function(elem){
+					return re.test(elem.className);
+				});
+				ff.count = idx;
+			});
+		}
 
-			if(!query.hasLoops){
-				// it's just a plain-ol elements-by-tag-name query from the root
-				retFunc = function(root){
-					var ret = [];
-					var te, x=0, tret = root.getElementsByTagName(query[ caseSensitive ? "otag" : "tag"]);
-					while((te = tret[x++])){
+		if(!("pseudos" in ignores)){
+			each(query.pseudos, function(pseudo){
+				var pn = pseudo.name;
+				if(pseudos[pn]){
+					ff = agree(ff, pseudos[pn](pn, pseudo.value));
+				}
+			});
+		}
+
+		if(!("attrs" in ignores)){
+			each(query.attrs, function(attr){
+				var matcher;
+				var a = attr.attr;
+				// type, attr, matchFor
+				if(attr.type && attrs[attr.type]){
+					matcher = attrs[attr.type](a, attr.matchFor);
+				}else if(a.length){
+					matcher = defaultGetter(a);
+				}
+				if(matcher){
+					ff = agree(ff, matcher);
+				}
+			});
+		}
+
+		if(!("id" in ignores)){
+			if(query.id){
+				ff = agree(ff, function(elem){ 
+					return (!!elem && (elem.id == query.id));
+				});
+			}
+		}
+
+		if(!ff){
+			if(!("default" in ignores)){
+				ff = yesman; 
+			}
+		}
+		return ff;
+	};
+
+	var _nextSibling = function(filterFunc){
+		return function(node, ret, bag){
+			while(node = node[_ns]){
+				if(_noNES && (!_isElement(node))){ continue; }
+				if(
+					(!bag || _isUnique(node, bag)) &&
+					filterFunc(node)
+				){
+					ret.push(node);
+				}
+				break;
+			}
+			return ret;
+		}
+	};
+
+	var _nextSiblings = function(filterFunc){
+		return function(root, ret, bag){
+			var te = root[_ns];
+			while(te){
+				if(_simpleNodeTest(te)){
+					if(bag && !_isUnique(te, bag)){
+						break;
+					}
+					if(filterFunc(te)){
 						ret.push(te);
 					}
-					return ret;
 				}
-			}else{
-				retFunc = function(root){
-					var ret = [];
-					var te, x = 0, tret = root.getElementsByTagName(query[ caseSensitive ? "otag" : "tag"]);
+				te = te[_ns];
+			}
+			return ret;
+		}
+	};
+
+	// get an array of child *elements*, skipping text and comment nodes
+	var _childElements = function(filterFunc){
+		filterFunc = filterFunc||yesman;
+		return function(root, ret, bag){
+			// get an array of child elements, skipping text and comment nodes
+			var te, x = 0, tret = root[childNodesName];
+			while(te = tret[x++]){
+				if(
+					_simpleNodeTest(te) &&
+					(!bag || _isUnique(te, bag)) &&
+					(filterFunc(te, x))
+				){ 
+					ret.push(te);
+				}
+			}
+			return ret;
+		};
+	};
+	
+	/*
+	// thanks, Dean!
+	var itemIsAfterRoot = d.isIE ? function(item, root){
+		return (item.sourceIndex > root.sourceIndex);
+	} : function(item, root){
+		return (item.compareDocumentPosition(root) == 2);
+	};
+	*/
+
+	// test to see if node is below root
+	var _isDescendant = function(node, root){
+		var pn = node.parentNode;
+		while(pn){
+			if(pn == root){
+				break;
+			}
+			pn = pn.parentNode;
+		}
+		return !!pn;
+	};
+
+	var _getElementsFuncCache = {};
+
+	var getElementsFunc = function(query){
+		var retFunc = _getElementsFuncCache[query.query];
+		// if we've got a cached dispatcher, just use that
+		if(retFunc){ return retFunc; }
+		// else, generate a new on
+
+		// NOTE:
+		//		this function returns a function that searches for nodes and
+		//		filters them.  The search may be specialized by infix operators
+		//		(">", "~", or "+") else it will default to searching all
+		//		descendants (the " " selector). Once a group of children is
+		//		founde, a test function is applied to weed out the ones we
+		//		don't want. Many common cases can be fast-pathed. We spend a
+		//		lot of cycles to create a dispatcher that doesn't do more work
+		//		than necessary at any point since, unlike this function, the
+		//		dispatchers will be called every time. The logic of generating
+		//		efficient dispatchers looks like this in pseudo code:
+		//
+		//		# if it's a purely descendant query (no ">", "+", or "~" modifiers)
+		//		if infixOperator == " ":
+		//			if only(id):
+		//				return def(root):
+		//					return d.byId(id, root);
+		//
+		//			elif id:
+		//				return def(root):
+		//					return filter(d.byId(id, root));
+		//
+		//			elif cssClass && getElementsByClassName:
+		//				return def(root):
+		//					return filter(root.getElementsByClassName(cssClass));
+		//
+		//			elif only(tag):
+		//				return def(root):
+		//					return root.getElementsByTagName(tagName);
+		//
+		//			else:
+		//				# search by tag name, then filter
+		//				return def(root):
+		//					return filter(root.getElementsByTagName(tagName||"*"));
+		//
+		//		elif infixOperator == ">":
+		//			# search direct children
+		//			return def(root):
+		//				return filter(root.children);
+		//
+		//		elif infixOperator == "+":
+		//			# search next sibling
+		//			return def(root):
+		//				return filter(root.nextElementSibling);
+		//
+		//		elif infixOperator == "~":
+		//			# search rightward siblings
+		//			return def(root):
+		//				return filter(nextSiblings(root));
+
+		var io = query.infixOper;
+		var oper = (io ? io.oper : "");
+		// the default filter func which tests for all conditions in the query
+		// part. This is potentially inefficient, so some optimized paths may
+		// re-define it to test fewer things.
+		var filterFunc = getSimpleFilterFunc(query, { el: 1 });
+		var qt = query.tag;
+		var wildcardTag = ("*" == qt);
+		var ecs = getDoc()["getElementsByClassName"]; 
+
+		if(!oper){
+			// if there's no infix operator, then it's a descendant query. ID
+			// and "elements by class name" variants can be accelerated so we
+			// call them out explicitly:
+			if(query.id){
+				// testing shows that the overhead of yesman() is acceptable
+				// and can save us some bytes vs. re-defining the function
+				// everywhere.
+				filterFunc = (!query.loops && wildcardTag) ? 
+					yesman : 
+					getSimpleFilterFunc(query, { el: 1, id: 1 });
+
+				retFunc = function(root, arr){
+					var te = d.byId(query.id, (root.ownerDocument||root));
+					if(!te || !filterFunc(te)){ return; }
+					if(9 == root.nodeType){ // if root's a doc, we just return directly
+						return getArr(te, arr);
+					}else{ // otherwise check ancestry
+						if(_isDescendant(te, root)){
+							return getArr(te, arr);
+						}
+					}
+				}
+			}else if(
+				ecs && 
+				// isAlien check. Workaround for Prototype.js being totally evil/dumb.
+				/\{\s*\[native code\]\s*\}/.test(String(ecs)) && 
+				query.classes.length &&
+				!cssCaseBug
+			){
+				// it's a class-based query and we've got a fast way to run it.
+
+				// ignore class and ID filters since we will have handled both
+				filterFunc = getSimpleFilterFunc(query, { el: 1, classes: 1, id: 1 });
+				var classesString = query.classes.join(" ");
+				retFunc = function(root, arr, bag){
+					var ret = getArr(0, arr), te, x=0;
+					var tret = root.getElementsByClassName(classesString);
 					while((te = tret[x++])){
-						if(filterFunc(te)){
+						if(filterFunc(te, root) && _isUnique(te, bag)){
 							ret.push(te);
 						}
 					}
 					return ret;
-				}
+				};
+
+			}else if(!wildcardTag && !query.loops){
+				// it's tag only. Fast-path it.
+				retFunc = function(root, arr, bag){
+					var ret = getArr(0, arr), te, x=0;
+					var tret = root.getElementsByTagName(query.getTag());
+					while((te = tret[x++])){
+						if(_isUnique(te, bag)){
+							ret.push(te);
+						}
+					}
+					return ret;
+				};
+			}else{
+				// the common case:
+				//		a descendant selector without a fast path. By now it's got
+				//		to have a tag selector, even if it's just "*" so we query
+				//		by that and filter
+				filterFunc = getSimpleFilterFunc(query, { el: 1, tag: 1, id: 1 });
+				retFunc = function(root, arr, bag){
+					var ret = getArr(0, arr), te, x=0;
+					// we use getTag() to avoid case sensitivity issues
+					var tret = root.getElementsByTagName(query.getTag());
+					while((te = tret[x++])){
+						if(filterFunc(te, root) && _isUnique(te, bag)){
+							ret.push(te);
+						}
+					}
+					return ret;
+				};
+			}
+		}else{
+			// the query is scoped in some way. Instead of querying by tag we
+			// use some other collection to find candidate nodes
+			var skipFilters = { el: 1 };
+			if(wildcardTag){
+				skipFilters.tag = 1;
+			}
+			filterFunc = getSimpleFilterFunc(query, skipFilters);
+			if("+" == oper){
+				retFunc = _nextSibling(filterFunc);
+			}else if("~" == oper){
+				retFunc = _nextSiblings(filterFunc);
+			}else if(">" == oper){
+				retFunc = _childElements(filterFunc);
 			}
 		}
+		// cache it and return
 		return _getElementsFuncCache[query.query] = retFunc;
-	}
+	};
 
-	var _partsCache = {};
+	var filterDown = function(root, queryParts){
+		// NOTE:
+		//		this is the guts of the DOM query system. It takes a list of
+		//		parsed query parts and a root and finds children which match
+		//		the selector represented by the parts
+		var candidates = getArr(root), qp, x, te, qpl = queryParts.length, bag, ret;
+
+		for(var i = 0; i < qpl; i++){
+			ret = [];
+			qp = queryParts[i];
+			x = candidates.length - 1;
+			if(x > 0){
+				// if we have more than one root at this level, provide a new
+				// hash to use for checking group membership but tell the
+				// system not to post-filter us since we will already have been
+				// gauranteed to be unique
+				bag = {};
+				ret.nozip = true;
+			}
+			var gef = getElementsFunc(qp);
+			while(te = candidates[x--]){
+				// for every root, get the elements that match the descendant
+				// selector, adding them to the "ret" array and filtering them
+				// via membership in this level's bag. If there are more query
+				// parts, then this level's return will be used as the next
+				// level's candidates
+				gef(te, ret, bag);
+			}
+			if(!ret.length){ break; }
+			candidates = ret;
+		}
+		return ret;
+	};
 
 	////////////////////////////////////////////////////////////////////////
 	// the query runner
 	////////////////////////////////////////////////////////////////////////
 
+	// these are the primary caches for full-query results. The query
+	// dispatcher functions are generated then stored here for hash lookup in
+	// the future
+	var _queryFuncCacheDOM = {},
+		_queryFuncCacheQSA = {};
+
 	// this is the second level of spliting, from full-length queries (e.g.,
 	// "div.foo .bar") into simple query expressions (e.g., ["div.foo",
 	// ".bar"])
-	var _queryFuncCache = {
-		"*": d.isIE ? 
-			function(root){ 
-					return root.all;
-			} : 
-			function(root){
-				 return root.getElementsByTagName("*");
-			},
-		"~": _nextSiblings,
-		"+": function(root){ return _nextSiblings(root, true); },
-		">": _childElements
-	};
-
 	var getStepQueryFunc = function(query){
-		// if it's trivial, get a fast-path dispatcher
-		var qparts = getQueryParts(d.trim(query));
-		// if(query[query.length-1] == ">"){ query += " *"; }
+		var qparts = getQueryParts(trim(query));
+
+		// if it's trivial, avoid iteration and zipping costs
 		if(qparts.length == 1){
-			var tt = getElementsFunc(qparts[0]);
-			tt.nozip = true; // FIXME: is this right? Shouldn't this be wrapped in a closure to mark the return?
-			return tt;
+			// we optimize this case here to prevent dispatch further down the
+			// chain, potentially slowing things down. We could more elegantly
+			// handle this in filterDown(), but it's slower for simple things
+			// that need to be fast (e.g., "#someId").
+			var tef = getElementsFunc(qparts[0]);
+			return function(root){
+				var r = tef(root, new qlc());
+				if(r){ r.nozip = true; }
+				return r;
+			}
 		}
 
 		// otherwise, break it up and return a runner that iterates over the parts recursively
-		var sqf = function(root){
-			var localQueryParts = qparts.slice(0); // clone the src arr
-			var candidates;
-			if(localQueryParts[0].oper == ">"){ // FIXME: what if it's + or ~?
-				candidates = [ root ];
-				// root = document;
-			}else{
-				candidates = getElementsFunc(localQueryParts.shift())(root);
-			}
-			return filterDown(candidates, localQueryParts);
+		return function(root){
+			return filterDown(root, qparts);
 		}
-		return sqf;
-	}
+	};
 
-	// a specialized method that implements our primoridal "query optimizer".
-	// This allows us to dispatch queries to the fastest subsystem we can get.
-	var _getQueryFunc = (
-		// NOTE: 
-		//		XPath on the Webkit is slower than it's DOM iteration for most
-		//		test cases
-		// FIXME: 
-		//		we should try to capture some runtime speed data for each query
-		//		function to determine on the fly if we should stick w/ the
-		//		potentially optimized variant or if we should try something
-		//		new.
-		(document["evaluate"] && !d.isSafari) ? 
-		function(query, root){
-			// has xpath support that's faster than DOM
-			var qparts = query.split(" ");
-			// can we handle it?
-			if(	(!caseSensitive) && // not strictly necessaray, but simplifies lots of stuff
-				(document["evaluate"]) &&
-				(query.indexOf(":") == -1) &&
-				(query.indexOf("+") == -1) // skip direct sibling matches. See line ~344
-			){
-				// dojo.debug(query);
-				// should we handle it?
+	// NOTES:
+	//	* we can't trust QSA for anything but document-rooted queries, so
+	//	  caching is split into DOM query evaluators and QSA query evaluators
+	//	* caching query results is dirty and leak-prone (or, at a minimum,
+	//	  prone to unbounded growth). Other toolkits may go this route, but
+	//	  they totally destroy their own ability to manage their memory
+	//	  footprint. If we implement it, it should only ever be with a fixed
+	//	  total element reference # limit and an LRU-style algorithm since JS
+	//	  has no weakref support. Caching compiled query evaluators is also
+	//	  potentially problematic, but even on large documents the size of the
+	//	  query evaluators is often < 100 function objects per evaluator (and
+	//	  LRU can be applied if it's ever shown to be an issue).
+	//	* since IE's QSA support is currently only for HTML documents and even
+	//	  then only in IE 8's "standards mode", we have to detect our dispatch
+	//	  route at query time and keep 2 separate caches. Ugg.
 
-				// kind of a lame heuristic, but it works
-				if(	
-					// a "div div div" style query
-					((qparts.length > 2)&&(query.indexOf(">") == -1))||
-					// or something else with moderate complexity. kinda janky
-					(qparts.length > 3)||
-					(query.indexOf("[")>=0)||
-					// or if it's a ".thinger" query
-					((1 == qparts.length)&&(0 <= query.indexOf(".")))
-
-				){
-					// use get and cache a xpath runner for this selector
-					return getXPathFunc(query);
-				}
-			}
-
-			// fallthrough
-			return getStepQueryFunc(query);
-		} : getStepQueryFunc
+	// we need to determine if we think we can run a given query via
+	// querySelectorAll or if we'll need to fall back on DOM queries to get
+	// there. We need a lot of information about the environment and the query
+	// to make the determiniation (e.g. does it support QSA, does the query in
+	// question work in the native QSA impl, etc.).
+	var nua = navigator.userAgent;
+	// some versions of Safari provided QSA, but it was buggy and crash-prone.
+	// We need te detect the right "internal" webkit version to make this work.
+	var wk = "WebKit/";
+	var is525 = (
+		d.isWebKit && 
+		(nua.indexOf(wk) > 0) && 
+		(parseFloat(nua.split(wk)[1]) > 528)
 	);
-	// uncomment to disable XPath for testing and tuning the DOM path
-	// _getQueryFunc = getStepQueryFunc;
 
-	// FIXME: we've got problems w/ the NodeList query()/filter() functions if we go XPath for everything
+	// IE QSA queries may incorrectly include comment nodes, so we throw the
+	// zipping function into "remove" comments mode instead of the normal "skip
+	// it" which every other QSA-clued browser enjoys
+	var noZip = d.isIE ? "commentStrip" : "nozip";
 
-	// uncomment to disable DOM queries for testing and tuning XPath
-	// _getQueryFunc = getXPathFunc;
+	var qsa = "querySelectorAll";
+	var qsaAvail = (
+		!!getDoc()[qsa] && 
+		// see #5832
+		(!d.isSafari || (d.isSafari > 3.1) || is525 )
+	); 
+	var getQueryFunc = function(query, forceDOM){
 
-	// this is the primary caching for full-query results. The query dispatcher
-	// functions are generated here and then pickled for hash lookup in the
-	// future
-	var getQueryFunc = function(query){
-		// return a cached version if one is available
+		if(qsaAvail){
+			// if we've got a cached variant and we think we can do it, run it!
+			var qsaCached = _queryFuncCacheQSA[query];
+			if(qsaCached && !forceDOM){ return qsaCached; }
+		}
+
+		// else if we've got a DOM cached variant, assume that we already know
+		// all we need to and use it
+		var domCached = _queryFuncCacheDOM[query];
+		if(domCached){ return domCached; }
+
+		// TODO: 
+		//		today we're caching DOM and QSA branches separately so we
+		//		recalc useQSA every time. If we had a way to tag root+query
+		//		efficiently, we'd be in good shape to do a global cache.
+
 		var qcz = query.charAt(0);
-		if(d.doc["querySelectorAll"] && 
-			( (!d.isSafari) || (d.isSafari > 3.1) ) && // see #5832
+		var nospace = (-1 == query.indexOf(" "));
+
+		// byId searches are wicked fast compared to QSA, even when filtering
+		// is required
+		if( (query.indexOf("#") >= 0) && (nospace) ){
+			forceDOM = true;
+		}
+
+		var useQSA = ( 
+			qsaAvail && (!forceDOM) &&
 			// as per CSS 3, we can't currently start w/ combinator:
 			//		http://www.w3.org/TR/css3-selectors/#w3cselgrammar
-			(">+~".indexOf(qcz) == -1)
-		){
-			return function(root){
-				var r = root.querySelectorAll(query);
-				r.nozip = true; // skip expensive duplication checks and just wrap in a NodeList
-				return r;
-			};
-		}
-		if(_queryFuncCache[query]){ return _queryFuncCache[query]; }
-		if(0 > query.indexOf(",")){
-			// if it's not a compound query (e.g., ".foo, .bar"), cache and return a dispatcher
-			return _queryFuncCache[query] = _getQueryFunc(query);
-		}else{
-			// if it's a complex query, break it up into it's constituent parts
-			// and return a dispatcher that will merge the parts when run
+			(specials.indexOf(qcz) == -1) && 
+			// IE's QSA impl sucks on pseudos
+			(!d.isIE || (query.indexOf(":") == -1)) &&
 
-			// var parts = query.split(", ");
-			var parts = query.split(/\s*,\s*/);
-			var tf = function(root){
-				var pindex = 0; // avoid array alloc for every invocation
-				var ret = [];
-				var tp;
-				while((tp = parts[pindex++])){
-					ret = ret.concat(_getQueryFunc(tp, tp.indexOf(" "))(root));
+			(!(cssCaseBug && (query.indexOf(".") >= 0))) &&
+
+			// FIXME:
+			//		need to tighten up browser rules on ":contains" and "|=" to
+			//		figure out which aren't good
+			(query.indexOf(":contains") == -1) &&
+			(query.indexOf("|=") == -1) // some browsers don't grok it
+		);
+
+		// TODO: 
+		//		if we've got a descendant query (e.g., "> .thinger" instead of
+		//		just ".thinger") in a QSA-able doc, but are passed a child as a
+		//		root, it should be possible to give the item a synthetic ID and
+		//		trivially rewrite the query to the form "#synid > .thinger" to
+		//		use the QSA branch
+
+
+		if(useQSA){
+			var tq = (specials.indexOf(query.charAt(query.length-1)) >= 0) ? 
+						(query + " *") : query;
+			return _queryFuncCacheQSA[query] = function(root){
+				try{
+					// the QSA system contains an egregious spec bug which
+					// limits us, effectively, to only running QSA queries over
+					// entire documents.  See:
+					//		http://ejohn.org/blog/thoughts-on-queryselectorall/
+					//	despite this, we can also handle QSA runs on simple
+					//	selectors, but we don't want detection to be expensive
+					//	so we're just checking for the presence of a space char
+					//	right now. Not elegant, but it's cheaper than running
+					//	the query parser when we might not need to
+					if(!((9 == root.nodeType) || nospace)){ throw ""; }
+					var r = root[qsa](tq);
+					// skip expensive duplication checks and just wrap in a NodeList
+					r[noZip] = true;
+					return r;
+				}catch(e){
+					// else run the DOM branch on this query, ensuring that we
+					// default that way in the future
+					return getQueryFunc(query, true)(root);
 				}
-				return ret;
 			}
-			// ...cache and return
-			return _queryFuncCache[query] = tf;
+		}else{
+			// DOM branch
+			var parts = query.split(/\s*,\s*/);
+			return _queryFuncCacheDOM[query] = ((parts.length < 2) ? 
+				// if not a compound query (e.g., ".foo, .bar"), cache and return a dispatcher
+				getStepQueryFunc(query) : 
+				// if it *is* a complex query, break it up into its
+				// constituent parts and return a dispatcher that will
+				// merge the parts when run
+				function(root){
+					var pindex = 0, // avoid array alloc for every invocation
+						ret = [],
+						tp;
+					while((tp = parts[pindex++])){
+						ret = ret.concat(getStepQueryFunc(tp)(root));
+					}
+					return ret;
+				}
+			);
 		}
-	}
+	};
 
-	// FIXME: 
-	//		Dean's Base2 uses a system whereby queries themselves note if
-	//		they'll need duplicate filtering. We need to get on that plan!!
+	var _zipIdx = 0;
+
+	// NOTE:
+	//		this function is Moo inspired, but our own impl to deal correctly
+	//		with XML in IE
+	var _nodeUID = d.isIE ? function(node){
+		if(caseSensitive){
+			// XML docs don't have uniqueID on their nodes
+			return (node.getAttribute("_uid") || node.setAttribute("_uid", ++_zipIdx) || _zipIdx);
+
+		}else{
+			return node.uniqueID;
+		}
+	} : 
+	function(node){
+		return (node._uid || (node._uid = ++_zipIdx));
+	};
+
+	// determine if a node in is unique in a "bag". In this case we don't want
+	// to flatten a list of unique items, but rather just tell if the item in
+	// question is already in the bag. Normally we'd just use hash lookup to do
+	// this for us but IE's DOM is busted so we can't really count on that. On
+	// the upside, it gives us a built in unique ID function. 
+	var _isUnique = function(node, bag){
+		if(!bag){ return 1; }
+		var id = _nodeUID(node);
+		if(!bag[id]){ return bag[id] = 1; }
+		return 0;
+	};
 
 	// attempt to efficiently determine if an item in a list is a dupe,
 	// returning a list of "uniques", hopefully in doucment order
-	var _zipIdx = 0;
+	var _zipIdxName = "_zipIdx";
 	var _zip = function(arr){
-		if(arr && arr.nozip){ return d.NodeList._wrap(arr); }
-		var ret = new d.NodeList();
-		if(!arr){ return ret; }
+		if(arr && arr.nozip){ 
+			return (qlc._wrap) ? qlc._wrap(arr) : arr;
+		}
+		// var ret = new d._queryListCtor();
+		var ret = new qlc();
+		if(!arr || !arr.length){ return ret; }
 		if(arr[0]){
 			ret.push(arr[0]);
 		}
@@ -1052,25 +1269,32 @@ dojo.require("dojo._base.NodeList");
 		// expandos on their nodes (apparently). *sigh*
 		if(d.isIE && caseSensitive){
 			var szidx = _zipIdx+"";
-			arr[0].setAttribute("_zipIdx", szidx);
+			arr[0].setAttribute(_zipIdxName, szidx);
 			for(var x = 1, te; te = arr[x]; x++){
-				if(arr[x].getAttribute("_zipIdx") != szidx){ 
+				if(arr[x].getAttribute(_zipIdxName) != szidx){ 
 					ret.push(te);
 				}
-				te.setAttribute("_zipIdx", szidx);
+				te.setAttribute(_zipIdxName, szidx);
 			}
+		}else if(d.isIE && arr.commentStrip){
+			try{
+				for(var x = 1, te; te = arr[x]; x++){
+					if(_isElement(te)){ 
+						ret.push(te);
+					}
+				}
+			}catch(e){ /* squelch */ }
 		}else{
-			arr[0]["_zipIdx"] = _zipIdx;
+			if(arr[0]){ arr[0][_zipIdxName] = _zipIdx; }
 			for(var x = 1, te; te = arr[x]; x++){
-				if(arr[x]["_zipIdx"] != _zipIdx){ 
+				if(arr[x][_zipIdxName] != _zipIdx){ 
 					ret.push(te);
 				}
-				te["_zipIdx"] = _zipIdx;
+				te[_zipIdxName] = _zipIdx;
 			}
 		}
-		// FIXME: should we consider stripping these properties?
 		return ret;
-	}
+	};
 
 	// the main executor
 	d.query = function(/*String*/ query, /*String|DOMNode?*/ root){
@@ -1105,8 +1329,7 @@ dojo.require("dojo._base.NodeList");
 		//			|	* `[foo^='bar']` attribute start match
 		//			|	* `[foo$='bar']` attribute end match
 		//			|	* `[foo*='bar']` attribute substring match
-		//			* `:first-child`, `:last-child` positional selectors
-		//			* `:empty` content emtpy selector
+		//			* `:first-child`, `:last-child`, and `:only-child` positional selectors
 		//			* `:empty` content emtpy selector
 		//			* `:checked` pseudo selector
 		//			* `:nth-child(n)`, `:nth-child(2n+1)` style positional calculations
@@ -1117,7 +1340,7 @@ dojo.require("dojo._base.NodeList");
 		//		`dojo.query()`, including compound selectors ("," delimited).
 		//		Very complex and useful searches can be constructed with this
 		//		palette of selectors and when combined with functions for
-		//		maniplation presented by dojo.NodeList, many types of DOM
+		//		manipulation presented by dojo.NodeList, many types of DOM
 		//		manipulation operations become very straightforward.
 		//		
 		//		Unsupported Selectors:
@@ -1139,18 +1362,26 @@ dojo.require("dojo._base.NodeList");
 		//		dojo.query and XML Documents:
 		//		-----------------------------
 		//		
-		//		`dojo.query` currently only supports searching XML documents
-		//		whose tags and attributes are 100% lower-case. This is a known
-		//		limitation and will [be addressed soon](http://trac.dojotoolkit.org/ticket/3866)
+		//		`dojo.query` (as of dojo 1.2) supports searching XML documents
+		//		in a case-sensitive manner. If an HTML document is served with
+		//		a doctype that forces case-sensitivity (e.g., XHTML 1.1
+		//		Strict), dojo.query() will detect this and "do the right
+		//		thing". Case sensitivity is dependent upon the document being
+		//		searched and not the query used. It is therefore possible to
+		//		use case-sensitive queries on strict sub-documents (iframes,
+		//		etc.) or XML documents while still assuming case-insensitivity
+		//		for a host/root document.
+		//
 		//		Non-selector Queries:
 		//		---------------------
 		//
 		//		If something other than a String is passed for the query,
-		//		`dojo.query` will return a new `dojo.NodeList` constructed from
-		//		that parameter alone and all further processing will stop. This
-		//		means that if you have a reference to a node or NodeList, you
-		//		can quickly construct a new NodeList from the original by
-		//		calling `dojo.query(node)` or `dojo.query(list)`.
+		//		`dojo.query` will return a new `dojo.NodeList` instance
+		//		constructed from that parameter alone and all further
+		//		processing will stop. This means that if you have a reference
+		//		to a node or NodeList, you can quickly construct a new NodeList
+		//		from the original by calling `dojo.query(node)` or
+		//		`dojo.query(list)`.
 		//
 		//	query:
 		//		The CSS3 expression to match against. For details on the syntax of
@@ -1213,43 +1444,67 @@ dojo.require("dojo._base.NodeList");
 		//	|		});
 		//	|	});
 
+		//Set list constructor to desired value. This can change
+		//between calls, so always re-assign here.
+		qlc = d._queryListCtor;
 
-		// NOTE: elementsById is not currently supported
-		// NOTE: ignores xpath-ish queries for now
+		if(!query){
+			return new qlc();
+		}
 
-		if(query.constructor == d.NodeList){
+		if(query.constructor == qlc){
 			return query;
 		}
-		if(!d.isString(query)){
-			return new d.NodeList(query); // dojo.NodeList
+		if(!isString(query)){
+			return new qlc(query); // dojo.NodeList
 		}
-		if(d.isString(root)){
+		if(isString(root)){
 			root = d.byId(root);
+			if(!root){ return new qlc(); }
 		}
 
-		root = root||d.doc;
+		root = root||getDoc();
 		var od = root.ownerDocument||root.documentElement;
-		caseSensitive = (root.contentType && root.contentType=="application/xml") || (!!od) && (d.isIE ? od.xml : (root.xmlVersion||od.xmlVersion));
-		return _zip(getQueryFunc(query)(root)); // dojo.NodeList
+
+		// throw the big case sensitivity switch
+
+		// NOTE:
+		// 		Opera in XHTML mode doesn't detect case-sensitivity correctly
+		// 		and it's not clear that there's any way to test for it
+		caseSensitive = (root.contentType && root.contentType=="application/xml") || 
+						(d.isOpera && (root.doctype || od.toString() == "[object XMLDocument]")) ||
+						(!!od) && 
+						(d.isIE ? od.xml : (root.xmlVersion||od.xmlVersion));
+
+		// NOTE: 
+		//		adding "true" as the 2nd argument to getQueryFunc is useful for
+		//		testing the DOM branch without worrying about the
+		//		behavior/performance of the QSA branch.
+		var r = getQueryFunc(query)(root);
+
+		// FIXME:
+		//		need to investigate this branch WRT #8074 and #8075
+		if(r && r.nozip && !qlc._wrap){
+			return r;
+		}
+		return _zip(r); // dojo.NodeList
 	}
 
-	/*
-	// exposing this was a mistake
-	d.query.attrs = attrs;
-	*/
-	// exposing this because new pseudo matches are only executed through the
-	// DOM query path (never through the xpath optimizing branch)
+	// FIXME: need to add infrastructure for post-filtering pseudos, ala :last
 	d.query.pseudos = pseudos;
 
 	// one-off function for filtering a NodeList based on a simple selector
 	d._filterQueryResult = function(nodeList, simpleFilter){
-		var tnl = new d.NodeList();
-		var ff = (simpleFilter) ? getFilterFunc(getQueryParts(simpleFilter)[0]) : function(){ return true; };
+		var tmpNodeList = new d._queryListCtor();
+		var filterFunc = getSimpleFilterFunc(getQueryParts(simpleFilter)[0]);
 		for(var x = 0, te; te = nodeList[x]; x++){
-			if(ff(te)){ tnl.push(te); }
+			if(filterFunc(te)){ tmpNodeList.push(te); }
 		}
-		return tnl;
+		return tmpNodeList;
 	}
-})();
+})(this["queryPortability"]||this["acme"]||dojo);
+
+/*
+*/
 
 }

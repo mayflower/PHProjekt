@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,7 +17,7 @@ dojo.require("dojox.charting.scaler.common");
 		getLabel = dcsc.getNumericLabel;
 	
 	var calcTicks = function(min, max, kwArgs, majorTick, minorTick, microTick, span){
-		kwArgs = dojo.clone(kwArgs);
+		kwArgs = dojo.delegate(kwArgs);
 		if(!majorTick){
 			if(kwArgs.fixUpper == "major"){ kwArgs.fixUpper = "minor"; }
 			if(kwArgs.fixLower == "major"){ kwArgs.fixLower = "minor"; }
@@ -206,9 +206,16 @@ dojo.require("dojox.charting.scaler.common");
 				// no ticks
 				return null;
 			}
+			// make sure that we have finite bounds
+			var revScale = 1 / scaler.bounds.scale;
+			if(scaler.bounds.to <= scaler.bounds.from || isNaN(revScale) || !isFinite(revScale) ||
+					step <= 0 || isNaN(step) || !isFinite(step)){
+				// no ticks
+				return null;
+			}
 			// loop over all ticks
 			var majorTicks = [], minorTicks = [], microTicks = [];
-			while(next <= scaler.bounds.to + 1/scaler.bounds.scale){
+			while(next <= scaler.bounds.to + revScale){
 				if(Math.abs(nextMajor - next) < step / 2){
 					// major tick
 					tick = {value: nextMajor};

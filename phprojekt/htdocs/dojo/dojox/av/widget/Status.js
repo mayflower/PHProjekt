@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,9 +20,18 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 	//		(playing, paused, buffering, etc.) in the middle. Displays
 	//		the playhead time on the left and the duration on the right.
 	//
-	templateString:"<table class=\"Status\">\r\n    <tr>\r\n        <td class=\"Time\" dojoAttachPoint=\"timeNode\">0.00</td>\r\n        <td class=\"Status\" dojoAttachPoint=\"titleNode\">Loading...</td>\r\n        <td class=\"Duration\" dojoAttachPoint=\"durNode\">0.00</td>\r\n    </tr>\r\n</table>\r\n",
+	templateString:"<table class=\"Status\">\r\n    <tr>\r\n        <td class=\"Time\"><span dojoAttachPoint=\"timeNode\">0.00</span></td>\r\n        <td class=\"Status\"><div dojoAttachPoint=\"titleNode\">Loading...</div></td>\r\n        <td class=\"Duration\"><span dojoAttachPoint=\"durNode\">0.00</span></td>\r\n    </tr>\r\n</table>\r\n",
 	//
-	postCreate: function(){},
+	postCreate: function(){
+		this.titleNode = dojo.query(".Status", this.domNode);
+		this.durNode = dojo.query(".Duration", this.domNode);
+		this.timeNode = dojo.query(".Time", this.domNode);
+		
+		console.log("this.timeNode:", this.timeNode)
+		console.log("this.durNode:", this.durNode)
+		console.log("this.titleNode:", this.titleNode)
+		
+	},
 	
 	setMedia: function(/* Object */med){
 		// summary:
@@ -35,7 +44,7 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 			this.durNode.innerHTML = this.toSeconds(this.duration);
 		});
 		dojo.connect(this.media, "onPosition", this, function(time){
-			this.timeNode.innerHTML = this.toSeconds(time);													  
+			//this.timeNode.innerHTML = this.toSeconds(time);													  
 		});
 		
 		var cons = ["onMetaData", "onPosition", "onStart", "onBuffer", "onPlay", "onPause", "onStop", "onEnd", "onError", "onLoad"];
@@ -65,7 +74,8 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 		}
 	},
 	onPosition:function(time){
-		this.timeNode.innerHTML = this.toSeconds(time);													  
+		//console.log("onPosition:", time)
+		//	this.timeNode.innerHTML = this.toSeconds(time);													  
 	},
 	onStart: function(){
 		this.setStatus("Starting");
@@ -103,11 +113,12 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 				str = "buffering...";	
 			}
 		}
+		//console.log(this.titleNode, "title:",this.title, "str:",str)
 		this.titleNode.innerHTML = '<span class="statusTitle">'+this.title+'</span> <span class="statusInfo">'+str+'</span>';
 	},
 	
 	toSeconds: function(time){
-		ts = time.toString()
+		var ts = time.toString()
 
 		if(ts.indexOf(".")<0){
 			ts += ".00"

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -121,9 +121,17 @@ dojo.require("dojox.charting.action2d.Tooltip");
 			}, false);
 			if(render){ c.render(); }
 		},
+		destroy: function(){
+			// summary: properly destroy the widget
+			this.chart.destroy();
+			this.inherited(arguments);
+		},
 		resize: function(box){
-			dojo.marginBox(this.domNode, box);
-			this.chart.resize();
+			// summary: resize the widget
+			if(box.w > 0 && box.h > 0){
+				dojo.marginBox(this.domNode, box);
+				this.chart.resize();
+			}
 		}
 	});
 	

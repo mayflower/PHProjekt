@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -52,6 +52,8 @@ dojo.require("dojox.lang.functional");
 				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
 				events = this.events();
 
+			this.resetEvents();
+
 			for(var i = this.series.length - 1; i >= 0; --i){
 				var run = this.series[i];
 				if(!this.dirty && !run.dirty){ continue; }
@@ -95,7 +97,7 @@ dojo.require("dojox.lang.functional");
 					shadowStroke.color = shadowColor;
 					shadowStroke.width += sh.dw ? sh.dw : 0;
 					run.dyn.shadow = shadowStroke;
-					shadowMarkers = dojo.map(points, function(item){
+					var shadowMarkers = dojo.map(points, function(item){
 						var sh = this.opt.shadows;
 						return s.createCircle({
 							cx: item.x + sh.dx, cy: item.y + sh.dy, r: item.radius

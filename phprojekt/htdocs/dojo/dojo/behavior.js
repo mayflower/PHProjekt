@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -221,7 +221,6 @@ dojo.behavior = new function(){
 					var bid = "_dj_behavior_"+tBehavior.id;
 					if(typeof elem[bid] == "number"){
 						runFrom = elem[bid];
-						// console.debug(bid, runFrom);
 						if(runFrom == (tBehavior.length)){
 							return;
 						}
@@ -229,7 +228,6 @@ dojo.behavior = new function(){
 					// run through the versions, applying newer rules at each step
 
 					for(var x=runFrom, tver; tver = tBehavior[x]; x++){
-						// console.debug(tver);
 						forIn(tver, function(ruleSet, ruleSetName){
 							if(dojo.isArray(ruleSet)){
 								dojo.forEach(ruleSet, function(action){

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -60,8 +60,10 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		// e: Event: mouse event
 		if(this.skip && dojo.dnd.isFormElement(e)){ return; }
 		if(this.delay){
-			this.events.push(dojo.connect(this.handle, "onmousemove", this, "onMouseMove"));
-			this.events.push(dojo.connect(this.handle, "onmouseup", this, "onMouseUp"));
+			this.events.push(
+				dojo.connect(this.handle, "onmousemove", this, "onMouseMove"),
+				dojo.connect(this.handle, "onmouseup", this, "onMouseUp")
+			);
 			this._lastX = e.pageX;
 			this._lastY = e.pageY;
 		}else{
@@ -81,8 +83,9 @@ dojo.declare("dojo.dnd.Moveable", null, {
 	onMouseUp: function(e){
 		// summary: event processor for onmouseup, used only for delayed drags
 		// e: Event: mouse event
-		dojo.disconnect(this.events.pop());
-		dojo.disconnect(this.events.pop());
+		for(var i = 0; i < 2; ++i){
+			dojo.disconnect(this.events.pop());
+		}
 		dojo.stopEvent(e);
 	},
 	onSelectStart: function(e){

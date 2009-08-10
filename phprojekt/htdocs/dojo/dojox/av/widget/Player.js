@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -49,7 +49,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	//videoHeight: 240,
 	
 	widgetsInTemplate:true,
-	templateString:"<div class=\"playerContainer\">\r\n  <div class=\"PlayerScreen\" dojoAttachPoint=\"playerScreen\"></div>\r\n<table class=\"Controls\">\r\n  <tr>\r\n    <td colspan=\"2\" dojoAttachPoint=\"progressContainer\">\r\n    \t\r\n    </td>\r\n  </tr>\r\n  <tr>\r\n    <td class=\"PlayContainer\" dojoAttachPoint=\"playContainer\">\r\n    \t\r\n     </td>\r\n    <td class=\"ControlsRight\">\r\n      <table class=\"StatusContainer\">\r\n        <tr dojoAttachPoint=\"statusContainer\">\r\n          \r\n        </tr>\r\n     \t<tr>\r\n        \t<td colspan=\"3\" class=\"ControlsBottom\" dojoAttachPoint=\"controlsBottom\">\r\n      \t\t\t \r\n      \t\t</td>\r\n         </tr>\r\n      </table>\r\n    </td>\r\n  </tr>\r\n</table>\r\n </div>\r\n</div>\r\n",
+	templateString:"<div class=\"playerContainer\">\r\n  <div class=\"PlayerScreen\" dojoAttachPoint=\"playerScreen\"></div>\r\n<table class=\"Controls\">\r\n  <tr>\r\n    <td colspan=\"2\" dojoAttachPoint=\"progressContainer\">\r\n    \t\r\n    </td>\r\n  </tr>\r\n  <tr>\r\n    <td class=\"PlayContainer\" dojoAttachPoint=\"playContainer\">\r\n    \t\r\n     </td>\r\n    <td class=\"ControlsRight\">\r\n      <table class=\"StatusContainer\">\r\n        <tr dojoAttachPoint=\"statusContainer\">\r\n          \r\n        </tr>\r\n     \t<tr>\r\n        \t<td colspan=\"3\" class=\"ControlsBottom\" dojoAttachPoint=\"controlsBottom\">\r\n      \t\t\t \r\n      \t\t</td>\r\n         </tr>\r\n      </table>\r\n    </td>\r\n  </tr>\r\n</table>\r\n</div>\r\n",
 	
 	_fillContent: function(){ 
 		// summary
@@ -109,15 +109,20 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 		
 		//dojo.style(this.media.domNode, "width", this.videoWidth+(dojo.isString(this.playerWidth)?"":"px"));
 		//dojo.style(this.media.domNode, "height", this.videoHeight+(dojo.isString(this.playerWidth)?"":"px"));
-		
+		//return
+		//setTimeout(dojo.hitch(this, function(){
 		dojo.forEach(this.items, function(id){
-			if(id!=this.mediaNode.id){
+			//console.log("    ids:", id , this.mediaNode.id)
+			if(id !== this.mediaNode.id){
 				var child = dijit.byId(id);
-				this.children.push(child);							  
-				child.setMedia(this.media, this);
+				this.children.push(child);	
+				if(child){
+					console.log("child:", child.declaredClass, "this.media:", this.media)	
+					child.setMedia(this.media, this);
+				}
 			}
 		}, this);
-		
+		//}),1000)
 	},
 	onResize: function(evt){
 		// summary:
@@ -125,7 +130,10 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 		//		event for all children, passing the size of the player.
 		//
 		var dim = dojo.marginBox(this.domNode);
-		if(this.media.onResize){
+		
+		
+		
+		if(this.media && this.media.onResize !== null){
 			this.media.onResize(dim);	
 		}
 		dojo.forEach(this.children, function(child){

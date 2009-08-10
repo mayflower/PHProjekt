@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -73,7 +73,7 @@ dojo._loadUri = function(uri){
 	// TODO: sigh, load() does not return a useful value. 
 	// Perhaps it is returning the value of the last thing evaluated?
 	var ok = load(uri);
-	// console.debug("spidermonkey load(", uri, ") returned ", ok);
+	// console.log("spidermonkey load(", uri, ") returned ", ok);
 	return 1;
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -42,32 +42,23 @@ dojox.cometd = {
 		// You must include this prefix, and it should start with a slash like "/myprefix".
 		
 		// cometd states:
-	
-	
-		// cometd states:
+		// unconnected, handshaking, connecting, connected, disconnected
 		dojo.mixin(this, {
-			
-			// alex; OMG, these "constants" need to die. Java truly is a degenerative disease.
-		 	"DISCONNECTED": "DISCONNECTED",		// _initialized==false 	&& _connected==false
-		 	"CONNECTING": "CONNECTING",			// _initialized==true	&& _connected==false (handshake sent)
-		 	"CONNECTED": "CONNECTED",			// _initialized==true	&& _connected==true (first successful connect)
-		 	"DISCONNECTING": "DISCONNECING",	// _initialized==false 	&& _connected==true (disconnect sent)
-	        
-	        prefix: prefix,
-			_initialized: false,
-			_connected: false,
-			_polling: false,
+		prefix: prefix,
+			_status: "unconnected",
 			_handshook: false,
-	        
+			_initialized: false,
+			_polling: false,
+		
 			expectedNetworkDelay: 10000, // expected max network delay
-			connectTimeout: 0,	     // If set, used as ms to wait for a connect response and sent as the advised timeout
-	        
+			connectTimeout: 0,		 // If set, used as ms to wait for a connect response and sent as the advised timeout
+		
 			version:	"1.0",
 			minimumVersion: "0.9",
 			clientId: null,
 			messageId: 0,
 			batch: 0,
-	        
+		
 			_isXD: false,
 			handshakeReturn: null,
 			currentTransport: null,
@@ -88,9 +79,7 @@ dojox.cometd = {
 		});
 	
 		this.state = function() {
-			return this._initialized ? 
-				(this._connected ? "CONNECTED" : "CONNECTING") : 
-				(this._connected ? "DISCONNECTING" : "DISCONNECTED");
+			 return this._status;
 		}
 	
 		this.init = function(	/*String*/	root,
@@ -167,7 +156,7 @@ dojox.cometd = {
 				}),
 				error: dojo.hitch(this,function(e){
 					this._backoff();
-					this._finishInit([{}]);
+					this._finishInit(e);
 				}),
 				timeout: this.expectedNetworkDelay
 			};
@@ -179,13 +168,14 @@ dojox.cometd = {
 			for(var tname in this._subscriptions){
 				for(var sub in this._subscriptions[tname]){
 					if(this._subscriptions[tname][sub].topic){
-			 			dojo.unsubscribe(this._subscriptions[tname][sub].topic);
+						dojo.unsubscribe(this._subscriptions[tname][sub].topic);
 					}
 				}
 			}
 			this._messageQ = [];
 			this._subscriptions = [];
 			this._initialized = true;
+			this._status = "handshaking";
 			this.batch = 0;
 			this.startBatch();
 			
@@ -397,11 +387,11 @@ dojox.cometd = {
 				this.currentTransport.disconnect();
 			}
 			if(!this._polling) {
-				this._connected=false;
 				this._publishMeta("connect",false);
 			}
 			this._initialized=false;
 			this._handshook=false;
+			this._status = "disconnected"; //should be disconnecting, but we ignore the reply to this message
 			this._publishMeta("disconnect",true);
 		}
 	
@@ -463,25 +453,51 @@ dojox.cometd = {
 			//	summary:
 			//		Handle the handshake return from the server and initialize
 			//		connection if all is OK
-			data = data[0];
-			this.handshakeReturn = data;
-			// remember any advice
-			if(data["advice"]){
-				this._advice = data.advice;
-			}
-	
-			var successful = data.successful ? data.successful : false;
-			
-			// check version
-			if(data.version < this.minimumVersion){
-				if (console.log)
-				    console.log("cometd protocol version mismatch. We wanted", this.minimumVersion, "but got", data.version);
-				successful=false;
-				this._advice.reconnect="none";
-			}
-			
+
+			if(this._status!="handshaking") {return;}
+
+
+			var wasHandshook = this._handshook;
+			var successful = false;	
+			var metaMsg = {};
+
+			if (data instanceof Error) {
+				dojo.mixin(metaMsg,{
+					reestablish:false,
+					failure: true,
+					error: data,
+					advice: this._advice
+				});
+			} else {
+				data = data[0];
+				data = this._extendIn(data);
+				this.handshakeReturn = data;
+				// remember any advice
+				if(data["advice"]){
+					this._advice = data.advice;
+				}
+
+				successful = data.successful ? data.successful : false;
+
+				// check version
+				if(data.version < this.minimumVersion){
+					if (console.log)
+						console.log("cometd protocol version mismatch. We wanted", this.minimumVersion, "but got", data.version);
+					successful=false;
+					this._advice.reconnect="none";
+				}
+				dojo.mixin(metaMsg,{reestablish: successful && wasHandshook, response:data});
+			} 
+
+			this._publishMeta("handshake",successful,metaMsg);
+			//in the meta listeners, disconnect() may have been called, so recheck it now to 
+			//prevent resends or continuing with initializing the protocol
+			if(this._status!="handshaking") {return;}
+
 			// If all OK
 			if(successful){
+				this._status = "connecting";
+				this._handshook = true;
 				// pick a transport
 				this.currentTransport = dojox.cometd.connectionTypes.match(
 					data.supportedConnectionTypes,
@@ -496,15 +512,8 @@ dojox.cometd = {
 				this.tunnelInit = transport.tunnelInit && dojo.hitch(transport, "tunnelInit");
 				this.tunnelCollapse = transport.tunnelCollapse && dojo.hitch(transport, "tunnelCollapse");
 				transport.startup(data);
-			}
-	
-			this._publishMeta("handshake",successful,{reestablish: successful && this._handshook});
-			if(successful){
-				this._handshook=true;
 			}else{
-				// If there is a problem
-				console.log("cometd init failed");
-				// follow advice
+				// If there is a problem follow advice
 				if(!this._advice || this._advice["reconnect"] != "none"){
 					setTimeout(dojo.hitch(this, "init", this.url, this._props), this._interval());
 				}
@@ -557,14 +566,16 @@ dojox.cometd = {
 				// check for various meta topic actions that we need to respond to
 				switch(message.channel){
 					case "/meta/connect":
-						if(message.successful && !this._connected){
-							this._connected = this._initialized;
-							this.endBatch();
-						}else if(!this._initialized){
-							this._connected = false; // finish disconnect
+						var metaMsg = {response: message};
+						if(message.successful) {
+							if (this._status != "connected"){
+								this._status = "connected";
+								this.endBatch();
+							}
 						}
+ 
 						if(this._initialized){
-							this._publishMeta("connect",message.successful);
+							this._publishMeta("connect",message.successful, metaMsg);
 						}
 						break;
 					case "/meta/subscribe":
@@ -656,7 +667,7 @@ dojox.cometd = {
 		}
 	
 		this.endBatch = function(){
-			if(--this.batch <= 0 && this.currentTransport && this._connected){
+			if(--this.batch <= 0 && this.currentTransport && this._status == "connected"){
 				this.batch = 0;
 				var messages = this._messageQ;
 				this._messageQ = [];
@@ -673,7 +684,7 @@ dojox.cometd = {
 	
 		this._connectTimeout = function(){
 			// summary: Return the connect timeout in ms, calculated as the minimum of the advised timeout
-			// and the configured timeout.  Else 0 to indicate no client side timeout
+			// and the configured timeout. Else 0 to indicate no client side timeout
 			var advised=0;
 			if(this._advice && this._advice.timeout && this.expectedNetworkDelay > 0){
 				advised = this._advice.timeout + this.expectedNetworkDelay;
@@ -691,7 +702,7 @@ dojox.cometd = {
 }
 
 // create the default instance
-dojox.cometd.Connection.call(dojox.cometd,"/cometd");  
+dojox.cometd.Connection.call(dojox.cometd,"/cometd"); 
 
 /*
 

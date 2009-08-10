@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -16,11 +16,11 @@ dojox.analytics.plugins.consoleMessages = new (function(){
 
 	var lvls = dojo.config["consoleLogFuncs"] || ["error", "warn", "info", "rlog"];
 	if(!console){
-		console={};
+		console = {};
 	}
 
-	for(var i=0; i<lvls.length;i++){
-		if (console[lvls[i]]){
+	for(var i=0; i < lvls.length; i++){
+		if(console[lvls[i]]){
 			dojo.connect(console, lvls[i], dojo.hitch(this, "addData", lvls[i]));
 		}else{
 			console[lvls[i]] = dojo.hitch(this, "addData", lvls[i]);	

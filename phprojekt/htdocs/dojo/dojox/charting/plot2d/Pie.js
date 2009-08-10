@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -45,9 +45,14 @@ dojo.require("dojox.gfx");
 			this.run = null;
 			this.dyn = [];
 		},
+		destroy: function(){
+			this.resetEvents();
+			this.inherited(arguments);
+		},
 		clear: function(){
 			this.dirty = true;
 			this.dyn = [];
+			this.run = null;
 			return this;
 		},
 		setAxis: function(axis){
@@ -84,6 +89,9 @@ dojo.require("dojox.gfx");
 			}
 			return false;
 		},
+		resetEvents: function(){
+			this.plotEvent({type: "onplotreset", plot: this});
+		},
 		_connectEvents: function(shape, o){
 			shape.connect("onmouseover", this, function(e){
 				o.type  = "onmouseover";
@@ -107,6 +115,7 @@ dojo.require("dojox.gfx");
 			this.dirty = false;
 			this.cleanGroup();
 			var s = this.group, color, t = this.chart.theme;
+			this.resetEvents();
 
 			if(!this.run || !this.run.data.length){
 				return this;

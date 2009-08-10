@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,9 +19,9 @@ dojo.require("dojox.color.Palette");
 		kwArgs=kwArgs||{};
 		var def = dxc.Theme._def;
 		dojo.forEach(["chart", "plotarea", "axis", "series", "marker"], function(n){
-			this[n] = dojo.mixin(dojo.clone(def[n]), kwArgs[n]||{});
+			this[n] = dojo.delegate(def[n], kwArgs[n]||{});
 		}, this);
-		this.markers = dojo.mixin(dojo.clone(dxc.Theme.Markers), kwArgs.markers||{});
+		this.markers = dojo.delegate(dxc.Theme.Markers, kwArgs.markers||{});
 		this.colors = [];
 		this.antiAlias = ("antiAlias" in kwArgs)?kwArgs.antiAlias:true;
 		this.assignColors = ("assignColors" in kwArgs)?kwArgs.assignColors:true;
@@ -163,7 +163,7 @@ dojo.require("dojox.color.Palette");
 				antiAlias: this.antiAlias,
 				assignColors: this.assignColors,
 				assignMarkers: this.assigneMarkers,
-				colors: dojo.clone(this.colors)
+				colors: dojo.delegate(this.colors)
 			});
 		},
 

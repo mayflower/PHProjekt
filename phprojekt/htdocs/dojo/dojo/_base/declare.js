@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -61,7 +61,7 @@ dojo.declare = function(/*String*/ className, /*Function|Function[]*/ superclass
 	}
 	// construct intermediate classes for mixins
 	if(mixins){
-		dojo.forEach(mixins, function(m){
+		dojo.forEach(mixins, function(m, i){
 			if(!m){ throw(className + ": mixin #" + i + " is null"); } // It's likely a required module is not loaded
 			superclass = dd._delegate(superclass, m);
 		});

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -295,28 +295,22 @@ dojo.dnd._createNode = function(tag){
 	// tag: String: a tag name or empty for SPAN
 	if(!tag){ return dojo.dnd._createSpan; }
 	return function(text){	// Function
-		var n = dojo.doc.createElement(tag);
-		n.innerHTML = text;
-		return n;
+		return dojo.create(tag, {innerHTML: text});	// Node
 	};
 };
 
 dojo.dnd._createTrTd = function(text){
 	// summary: creates a TR/TD structure with given text as an innerHTML of TD
 	// text: String: a text for TD
-	var tr = dojo.doc.createElement("tr");
-	var td = dojo.doc.createElement("td");
-	td.innerHTML = text;
-	tr.appendChild(td);
+	var tr = dojo.create("tr");
+	dojo.create("td", {innerHTML: text}, tr);
 	return tr;	// Node
 };
 
 dojo.dnd._createSpan = function(text){
 	// summary: creates a SPAN element with given text as its innerHTML
 	// text: String: a text for SPAN
-	var n = dojo.doc.createElement("span");
-	n.innerHTML = text;
-	return n;	// Node
+	return dojo.create("span", {innerHTML: text});	// Node
 };
 
 // dojo.dnd._defaultCreatorNodes: Object: a dicitionary, which maps container tag names to child tag names
