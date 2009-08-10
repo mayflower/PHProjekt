@@ -86,7 +86,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         this.gantt.MIN_DATE = 1000 * data["min"];
         this.gantt.MAX_DATE = 1000 * data["max"];
 
-        if (this.gantt.projectDataBuffer.length > 0) {
+        if ((phpr.currentProjectId == 1 && this.gantt.projectDataBuffer.length > 0) ||
+            (phpr.currentProjectId != 1 && this.gantt.projectDataBuffer.length > 1)) {
             // Find how many hidden projects will be
             this.toggled = 0;
             for (var j in this.gantt.projectDataBuffer) {

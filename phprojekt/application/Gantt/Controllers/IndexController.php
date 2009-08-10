@@ -89,13 +89,14 @@ class Gantt_IndexController extends IndexController
         }
 
         // Only allow write if all the projects have write or hight access
-        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1 AND access < %d',
-            Phprojekt_Auth::getUserId(), implode(", ", $ids), Phprojekt_Acl::WRITE);
-        if (count($rights->fetchAll($where)) > 0) {
-            $data['data']['rights']["currentUser"]["write"] = false;
-        } else {
-            $data['data']['rights']["currentUser"]["write"] = true;
+        $data['data']['rights']["currentUser"]["write"] = true;
+        if (count($ids) > 0) {
+            $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1 AND access < %d',
+                Phprojekt_Auth::getUserId(), implode(", ", $ids), Phprojekt_Acl::WRITE);
+            if (count($rights->fetchAll($where)) > 0) {
+                $data['data']['rights']["currentUser"]["write"] = false;
+            }
         }
 
         $data['data']['min']  = gmmktime(0, 0, 0, 1, 1, date("Y", $min));
