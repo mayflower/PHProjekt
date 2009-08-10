@@ -18,9 +18,9 @@
  */
 
 dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
-    // summary:
+    // Summary:
     //    Extend the dojo Source
-    // description:
+    // Description:
     //    Extend the dojo Source
     onDrop:function(source, nodes, copy) {
         if (this != source) {
@@ -49,9 +49,9 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 
 contentModuleDesignerSource = new Array();
 phpr.makeModuleDesignerSource = function() {
-    // summary:
+    // Summary:
     //    Draw the source fields
-    // description:
+    // Description:
     //    Draw the source fields
     //    Cache the html result
     var element = dojo.byId('moduleDesignerSource');
@@ -78,16 +78,16 @@ phpr.makeModuleDesignerSource = function() {
 };
 
 phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
-    // summary:
+    // Summary:
     //    Draw the target fields
-    // description:
+    // Description:
     //    Draw the target fields in the correct tab
     if (jsonData) {
         var data = dojo.fromJson(jsonData);
         for (var j in tabs) {
-            var tab = eval("moduleDesignerTarget" + tabs[j]['nameId']);
+            var tab     = eval("moduleDesignerTarget" + tabs[j]['nameId']);
             var element = dojo.byId('moduleDesignerTarget' + tabs[j]['nameId']);
-            var html = '';
+            var html    = '';
 
             for (var i in data) {
                 if (data[i]['formTab'] == tabs[j]['id']) {
@@ -106,9 +106,9 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
 }
 
 phpr.deleteModuleDesignerField = function(nodeId) {
-    // summary:
+    // Summary:
     //    Delete a field
-    // description:
+    // Description:
     //    Delete only the target fields.
     //    Hide the edit form
     var node  = dojo.byId(nodeId);
@@ -133,9 +133,9 @@ phpr.deleteModuleDesignerField = function(nodeId) {
 };
 
 phpr.editModuleDesignerField = function(nodeId) {
-    // summary:
+    // Summary:
     //    Make the edit form
-    // description:
+    // Description:
     //    Make the edit form and display it
     dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
     var selectType   = '';
@@ -315,30 +315,30 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsGeneral += '</td></tr>';
 
     var formId = 'formTable' + '_' + nodeId;
-    var html = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
         innerTabs: fieldsTable,
-        formId: formId
+        formId:    formId
     });
     dijit.byId('moduleDesignerEditorTable').attr('content', html);
 
     var formId = 'formForm' + '_' + nodeId;
-    var html = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
         innerTabs: fieldsForm,
-        formId: formId
+        formId:    formId
     });
     dijit.byId('moduleDesignerEditorForm').attr('content', html);
 
     var formId = 'formList' + '_' + nodeId;
-    var html = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
         innerTabs: fieldsList,
-        formId: formId
+        formId:    formId
     });
     dijit.byId('moduleDesignerEditorList').attr('content', html);
 
     var formId = 'formGeneral' + '_' + nodeId;
-    var html = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
         innerTabs: fieldsGeneral,
-        formId: formId
+        formId:    formId
     });
     dijit.byId('moduleDesignerEditorGeneral').attr('content', html);
 
@@ -383,13 +383,12 @@ phpr.editModuleDesignerField = function(nodeId) {
     });
 
     phpr.switchOkButton('editor');
-
 };
 
 phpr.saveModuleDesignerField = function(nodeId, formType) {
-    // summary:
+    // Summary:
     //    Mix the form data and make a new field with the data
-    // description:
+    // Description:
     //    Mix the form data and make a new field with the data
     var params = new Array();
     params = dojo.mixin(params, dijit.byId('formTable' + '_' + nodeId).attr('value'));
@@ -404,9 +403,9 @@ phpr.saveModuleDesignerField = function(nodeId, formType) {
 };
 
 phpr.switchOkButton = function(type) {
-    // summary:
+    // Summary:
     //    Switch between the Save and the Edit Form
-    // description:
+    // Description:
     //    Switch between the Save and the Edit Form
     dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
     if (type == 'editor') {
@@ -425,13 +424,12 @@ phpr.switchOkButton = function(type) {
         dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
         dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "inline");
     }
-
 };
 
 phpr.makeModuleDesignerField = function(formType, params) {
-    // summary:
+    // Summary:
     //    Draw a field using the params and the formType
-    // description:
+    // Description:
     //    Draw a field using the params and the formType
     var html       = '';
     var formLabel  = null;
@@ -601,15 +599,15 @@ phpr.makeModuleDesignerField = function(formType, params) {
 
     html += '</td><td>';
     html += '<button dojoType="dijit.form.Button" baseClass="positive" iconClass="tick"';
-    html += 'onClick="'
-        + 'phpr.editModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id)";';
-    html += 'style="margin-left: 45%; margin-bottom: 5px;">';
+    html += ' onClick="'
+        + 'phpr.editModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id);"';
+    html += ' margin-bottom: 5px;">';
     html += phpr.nls.get('Edit');
     html += '</button>&nbsp;&nbsp;'
     html += '<button dojoType="dijit.form.Button" baseClass="positive" iconClass="cross"';
-    html += 'onClick="'
-        + 'phpr.deleteModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id)";';
-    html += 'style="margin-left: 45%; margin-bottom: 5px;">';
+    html += ' onClick="'
+        + 'phpr.deleteModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id);"';
+    html += ' margin-bottom: 5px;">';
     html += phpr.nls.get('Delete');
     html += '</button>'
     html += '</td></tr></table>';

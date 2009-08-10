@@ -83,6 +83,16 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             style: "width:95%; height:" + (getMaxHeight() - 10) + "px; background: #fff;"
         });
         dojo.body().appendChild(dialog.domNode);
+
+        // Disconnect onExecute
+        for (var i = 0; i < dialog._connects.length; i++) {
+            var handle = dialog._connects[i];
+            var event = handle[0][1];
+            if (event == 'onExecute') {
+                dialog.disconnect(handle);
+                break;
+            }
+        }
         dialog.startup();
 
         // Add translations
@@ -100,6 +110,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             tabs:        tabs
         });
         dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
+        dijit.byId('moduleDesignerEditor').startup();
         phpr.makeModuleDesignerSource();
         phpr.makeModuleDesignerTarget(dijit.byId('designerData').attr('value'), this.tabStore.getList());
         dialog.show();
