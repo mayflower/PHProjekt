@@ -41,6 +41,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
     basicData:function() {
         phpr.module = this.module;
+        this.cleanPage();
         this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.setSubmoduleNavigation('BasicData');
         this.hideSuggest();

@@ -204,18 +204,18 @@ phpr.destroySubWidgets = function(el) {
         var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
         for (var i = 0; i < oldWidgetNodes.length; i++) {
             if (dijit.byNode(oldWidgetNodes[i])) {
-                dijit.byNode(oldWidgetNodes[i]).destroy();
+                dijit.byNode(oldWidgetNodes[i]).destroyRecursive();
             }
         }
     } else if (dijit.byId(el)) {
-        dijit.byId(el).destroy();
+        dijit.byId(el).destroyRecursive();
     }
 };
 
 phpr.destroyWidget = function(el) {
     // Destroy only one widgwt using the id
     if (dijit.byId(el)) {
-        dijit.byId(el).destroy();
+        dijit.byId(el).destroyRecursive();
     }
 };
 
