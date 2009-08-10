@@ -256,6 +256,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     break;
             }
         }
+
         this.customGridLayout(meta);
     },
 

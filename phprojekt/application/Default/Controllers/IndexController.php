@@ -435,7 +435,7 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link   = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $link   = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/' . $this->getRequest()->getModuleName();
         $value  = (string) $this->getRequest()->getParam('value', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
@@ -503,7 +503,7 @@ class IndexController extends Zend_Controller_Action
             }
             $value .= $addedValue;
         }
-        $link   = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
+        $link   = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/' . $this->getRequest()->getModuleName();
         $itemId = (int) $this->getRequest()->getParam('itemId', null);
 
         $this->view->filesChanged   = true;
